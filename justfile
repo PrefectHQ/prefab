@@ -28,10 +28,14 @@ renderer:
 
 # Serve documentation locally (starts renderer dev server automatically)
 docs:
-    @echo "Starting renderer dev server (localhost:3333)..."
-    (cd renderer && npm run dev) & trap "kill $! 2>/dev/null" EXIT; \
-    sleep 2; \
-    echo "Starting Mintlify docs server..."; \
+    #!/usr/bin/env bash
+    set -e
+    cleanup() { kill 0 2>/dev/null; }
+    trap cleanup EXIT INT TERM
+    echo "Starting renderer dev server (localhost:3333)..."
+    (cd renderer && npm run dev) &
+    sleep 2
+    echo "Starting Mintlify docs server..."
     cd docs && npx --yes mint@latest dev
 
 # Check for broken links in documentation
