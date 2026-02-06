@@ -1,0 +1,86 @@
+---
+title: "Welcome to Prefab"
+sidebarTitle: "Welcome"
+description: Build dynamic UIs from Python. A JSON DSL compiled to React.
+icon: hand-wave
+---
+
+<img
+  src="/assets/banner.png"
+  alt="Prefab"
+  noZoom
+  className="rounded-2xl"
+/>
+
+**Prefab is a Python DSL for building interactive UIs that compile to React.** You describe your interface as a tree of Python components, and Prefab turns it into JSON that a React renderer compiles into a live, interactive application — forms, tables, cards, dialogs, and real-time state management, all without leaving Python.
+
+```python
+from prefab_ui import UIResponse, Column, Heading, Text
+from prefab_ui.components import Card, CardContent, Input, Button, Row
+from prefab_ui.actions import ToolCall
+
+def search_dashboard(query: str = "") -> UIResponse:
+    with Column() as view:
+        Heading("Search")
+        with Row():
+            Input(name="query", placeholder="Search...")
+            Button(
+                "Go",
+                on_click=ToolCall(
+                    name="search",
+                    arguments={"q": "{{ query }}"},
+                    result_key="results",
+                ),
+            )
+        with Card():
+            with CardContent():
+                Text("{{ results.length }} results found")
+
+    return UIResponse(
+        state={"query": query, "results": []},
+        view=view,
+    )
+```
+
+Prefab is made with 💙 by [Prefect](https://www.prefect.io/).
+
+## Why Prefab
+
+MCP server authors shouldn't have to leave Python to give users a real interface. Rich UIs typically mean a separate frontend stack — a bundler, a component framework, a whole ecosystem of dependencies that has nothing to do with the server logic you're writing. Prefab eliminates that gap. You describe your UI in Python, and it compiles to React.
+
+Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system and has been extracted as a standalone library so it can serve any backend. The Python side has no transport dependencies — it works with MCP servers via FastMCP, with REST APIs via FastAPI, or with anything else that can return JSON.
+
+## How It Works
+
+The core idea is a pipeline: **Python components → JSON → React**.
+
+1. You build a component tree using Prefab's Python DSL — 35+ components covering layout, forms, data display, and interactive elements
+2. The tree serializes to a JSON wire format via `UIResponse.to_json()`
+3. A React renderer (shipped as `@prefect/prefab-ui` on npm) compiles the JSON into a live interface
+
+State flows through templates. When you write `{{ query }}`, the renderer interpolates the current value of `query` from client-side state. Actions like `ToolCall` and `SetState` update that state, keeping the UI reactive without you writing any JavaScript.
+
+## Installation
+
+```bash
+pip install prefab-ui
+```
+
+Requires Python 3.10+. The only runtime dependency is Pydantic.
+
+## What's in the Box
+
+<CardGroup cols={2}>
+  <Card title="Components" icon="cube" href="/apps/overview">
+    35+ components: layout, typography, forms, data display, and interactive elements. Nest them with Python context managers.
+  </Card>
+  <Card title="Actions" icon="bolt" href="/apps/actions">
+    Declarative interactivity — state updates, server calls, navigation, and toast notifications. Chain them with lifecycle callbacks.
+  </Card>
+  <Card title="Patterns" icon="lightbulb" href="/apps/patterns/interactivity">
+    Common recipes: interactive search, form handling, data tables, and confirmation dialogs.
+  </Card>
+  <Card title="Testing" href="https://github.com/PrefectHQ/prefab" icon="flask">
+    A Simulator for testing interactive UIs without a browser. Execute actions, track state, query the component tree.
+  </Card>
+</CardGroup>
