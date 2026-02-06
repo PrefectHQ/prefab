@@ -10,10 +10,7 @@ runs:
         TIMEOUT="5"
         MAX_PROCS="4"
 
-        PARALLEL_FLAGS=""
-        if [ "${{ runner.os }}" != "Windows" ]; then
-          PARALLEL_FLAGS="--numprocesses auto --maxprocesses $MAX_PROCS --dist worksteal"
-        fi
+        PARALLEL_FLAGS="--numprocesses auto --maxprocesses $MAX_PROCS --dist worksteal"
 
         uv run --no-sync pytest \
           --timeout=$TIMEOUT \
