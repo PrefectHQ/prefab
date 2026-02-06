@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     port: 3333,
+    strictPort: true,
     cors: true,
   },
   build: {
