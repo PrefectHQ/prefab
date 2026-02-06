@@ -1,5 +1,5 @@
 export const ComponentPreview = ({ json }) => {
-  const [height, setHeight] = React.useState(120);
+  const [height, setHeight] = React.useState(60);
   const iframeRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -15,7 +15,7 @@ export const ComponentPreview = ({ json }) => {
       if (!e.data) return;
       if (e.data.type === "prefab:resize") {
         if (iframeRef.current && e.source === iframeRef.current.contentWindow) {
-          setHeight(Math.max(e.data.height, 120));
+          setHeight(e.data.height);
         }
       }
       if (e.data.type === "prefab:ready") {
