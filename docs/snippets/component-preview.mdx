@@ -3,24 +3,45 @@ export const ComponentPreview = ({ json }) => {
   const iframeRef = React.useRef(null);
 
   React.useEffect(() => {
-    const handler = (e) => {
-      if (e.data?.type !== "prefab:resize") return;
-      if (iframeRef.current && e.source === iframeRef.current.contentWindow) {
-        setHeight(e.data.height);
+    const sendTheme = () => {
+      var dark = document.documentElement.classList.contains("dark");
+      var iframe = iframeRef.current;
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: "prefab:theme", dark: dark }, "*");
       }
     };
+
+    const handler = (e) => {
+      if (!e.data) return;
+      if (e.data.type === "prefab:resize") {
+        if (iframeRef.current && e.source === iframeRef.current.contentWindow) {
+          setHeight(e.data.height);
+        }
+      }
+      if (e.data.type === "prefab:ready") {
+        sendTheme();
+      }
+    };
+
     window.addEventListener("message", handler);
-    return () => window.removeEventListener("message", handler);
+
+    var observer = new MutationObserver(sendTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      window.removeEventListener("message", handler);
+      observer.disconnect();
+    };
   }, []);
 
   return (
-    <div className="not-prose">
+    <Card>
       <iframe
         ref={iframeRef}
         data-docpreview
-        src={`http://localhost:3333/renderer.html#docpreview:${encodeURIComponent(json)}`}
-        style={{ width: "100%", height: `${height}px`, border: "none", display: "block", borderRadius: "0.75rem", transition: "height 0.15s ease" }}
+        src={"http://localhost:3333/renderer.html#docpreview:" + encodeURIComponent(json)}
+        style={{ width: "100%", height: height + "px", border: "none", display: "block" }}
       />
-    </div>
+    </Card>
   );
 };

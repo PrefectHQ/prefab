@@ -934,6 +934,22 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
     return () => window.removeEventListener("message", handler);
   }, [state]);
 
+  // For doc embeds, sync theme from parent so renderer matches the host page
+  useEffect(() => {
+    if (!isDocEmbed) return;
+    const handler = (e: MessageEvent) => {
+      if (e.data && e.data.type === "prefab:theme") {
+        document.documentElement.classList.toggle("dark", e.data.dark);
+      }
+    };
+    window.addEventListener("message", handler);
+    // Request theme from parent now that we're ready to receive it
+    window.parent.postMessage({ type: "prefab:ready" }, "*");
+    return () => {
+      window.removeEventListener("message", handler);
+    };
+  }, [isDocEmbed]);
+
   // For doc embeds, report content height to parent for iframe auto-sizing
   useEffect(() => {
     if (!isDocEmbed || !contentRef.current) return;
