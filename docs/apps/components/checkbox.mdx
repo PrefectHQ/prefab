@@ -10,27 +10,27 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Checkboxes let users select one or more options from a set.
 
-<ComponentPreview auto json={`{"label":"Accept terms and conditions","checked":false,"disabled":false,"required":false,"type":"Checkbox"}`} />
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false,"type":"Checkbox"}`} />
 
 ```python Checkbox Example
 from prefab_ui.components import Checkbox
 
-Checkbox(label="Accept terms and conditions")
+Checkbox(label="Accept terms and conditions", css_class="w-fit mx-auto")
 ```
 
 ## Checked State
 
-<ComponentPreview auto json={`{"label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false,"type":"Checkbox"}`} />
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false,"type":"Checkbox"}`} />
 
 ```python Checked Checkbox
 from prefab_ui.components import Checkbox
 
-Checkbox(label="Subscribe to newsletter", checked=True)
+Checkbox(label="Subscribe to newsletter", checked=True, css_class="w-fit mx-auto")
 ```
 
 ## Multiple Checkboxes
 
-<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"label":"Email notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"},{"label":"SMS notifications","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Push notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"}]}`} />
+<ComponentPreview auto json={`{"gap":3,"cssClass":"w-fit mx-auto","type":"Column","children":[{"label":"Email notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"},{"label":"SMS notifications","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Push notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"}]}`} />
 
 ```python Multiple Checkboxes
 from prefab_ui.components import (
@@ -38,7 +38,7 @@ from prefab_ui.components import (
     Column,
 )
 
-with Column(gap=3):
+with Column(gap=3, css_class="w-fit mx-auto"):
     Checkbox(label="Email notifications", checked=True)
     Checkbox(label="SMS notifications")
     Checkbox(label="Push notifications", checked=True)
@@ -46,7 +46,7 @@ with Column(gap=3):
 
 ## With Disabled State
 
-<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"label":"Enabled option","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Disabled option","checked":false,"disabled":true,"required":false,"type":"Checkbox"},{"label":"Disabled & checked","checked":true,"disabled":true,"required":false,"type":"Checkbox"}]}`} />
+<ComponentPreview auto json={`{"gap":3,"cssClass":"w-fit mx-auto","type":"Column","children":[{"label":"Enabled option","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Disabled option","checked":false,"disabled":true,"required":false,"type":"Checkbox"},{"label":"Disabled & checked","checked":true,"disabled":true,"required":false,"type":"Checkbox"}]}`} />
 
 ```python Disabled Checkboxes
 from prefab_ui.components import (
@@ -54,7 +54,7 @@ from prefab_ui.components import (
     Column,
 )
 
-with Column(gap=3):
+with Column(gap=3, css_class="w-fit mx-auto"):
     Checkbox(label="Enabled option")
     Checkbox(label="Disabled option", disabled=True)
     Checkbox(label="Disabled & checked", checked=True, disabled=True)
