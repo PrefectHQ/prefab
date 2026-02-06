@@ -1,0 +1,67 @@
+---
+title: Pages
+description: Multi-page layout that swaps content via state.
+icon: files
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Pages provide a multi-page layout where only the active page renders. Navigate between pages by setting client state — there's no tab bar, so you control the navigation UI yourself with buttons, links, or any other component.
+
+```python Pages Example
+from prefab_ui.components import (
+    Button,
+    Column,
+    H2,
+    Page,
+    Pages,
+    Row,
+    Text,
+)
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with Row(gap=2):
+        Button("Home", on_click=SetState("page", "home"))
+        Button("Settings", variant="outline", on_click=SetState("page", "settings"))
+        Button("Profile", variant="outline", on_click=SetState("page", "profile"))
+
+    with Pages(name="page", default_value="home"):
+        with Page("Home", value="home"):
+            H2("Welcome Home")
+            Text("This is the main content area.")
+        with Page("Settings", value="settings"):
+            H2("Settings")
+            Text("Configuration options go here.")
+        with Page("Profile", value="profile"):
+            H2("Your Profile")
+            Text("Profile details go here.")
+```
+
+The `name` prop connects the Pages component to client state. When `page` changes (via `SetState`), the corresponding page renders. This makes Pages ideal for wizard flows, multi-step forms, or any layout where you want to swap entire sections without a server round-trip.
+
+## API Reference
+
+<Card icon="code" title="Pages Parameters">
+<ParamField body="default_value" type="str | None" default="None">
+  Value of the initially active page.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for tracking the active page. Other components can read `$state[name]` or write with `SetState`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Page Parameters">
+<ParamField body="title" type="str" required>
+  Page identifier. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="str | None" default="None">
+  Unique value for this page. Defaults to the title.
+</ParamField>
+</Card>

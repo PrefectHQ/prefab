@@ -1,0 +1,95 @@
+---
+title: Switch
+description: Toggle switch for on/off states.
+icon: toggle-on
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Switches provide a visual toggle for binary states, offering an alternative to checkboxes.
+
+<ComponentPreview auto json={`{"label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false,"type":"Switch"}`} />
+
+```python Switch Example
+from prefab_ui.components import Switch
+
+Switch(label="Enable notifications")
+```
+
+## Checked State
+
+<ComponentPreview auto json={`{"label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false,"type":"Switch"}`} />
+
+```python Checked Switch
+from prefab_ui.components import Switch
+
+Switch(label="Dark mode", checked=True)
+```
+
+## Sizes
+
+Switches come in two sizes:
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"label":"Default size","checked":true,"size":"default","disabled":false,"required":false,"type":"Switch"},{"label":"Small size","checked":true,"size":"sm","disabled":false,"required":false,"type":"Switch"}]}`} />
+
+```python Switch Sizes
+from prefab_ui.components import (
+    Column,
+    Switch,
+)
+
+with Column(gap=4):
+    Switch(label="Default size", checked=True)
+    Switch(label="Small size", size="sm", checked=True)
+```
+
+## Disabled State
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false,"type":"Switch"},{"label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false,"type":"Switch"},{"label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false,"type":"Switch"}]}`} />
+
+```python Disabled Switch
+from prefab_ui.components import (
+    Column,
+    Switch,
+)
+
+with Column(gap=3):
+    Switch(label="Enabled switch")
+    Switch(label="Disabled off", disabled=True)
+    Switch(label="Disabled on", checked=True, disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Switch Parameters">
+
+<ParamField path="label" type="str | None">
+  Label text displayed next to the switch. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="checked" type="bool" default="False">
+  Whether the switch is on.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'default'" default="'default'">
+  Switch size.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the switch is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether the switch is required.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

@@ -1,0 +1,64 @@
+---
+title: Send Message
+description: Send a message to the chat from a UI interaction.
+icon: paper-plane
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`SendMessage` puts words in the user's mouth — when triggered, it sends a message to the conversation as if the user typed it. This is useful for creating quick-action buttons that trigger follow-up questions or commands.
+
+<ComponentPreview auto json={`{"label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."},"type":"Button"}`} />
+
+```python Send Message Hero
+from prefab_ui.components import Button
+from prefab_ui import SendMessage
+
+Button("Summarize", on_click=SendMessage("Please summarize the data above."))
+```
+
+The message appears in the chat attributed to the user, which means the AI assistant will respond to it naturally.
+
+## Quick Action Buttons
+
+Build a row of follow-up actions that save the user from typing:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"gap":2,"type":"Row","children":[{"label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."},"type":"Button"},{"label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."},"type":"Button"},{"label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."},"type":"Button"}]}]}`} />
+
+```python Quick Actions
+from prefab_ui.components import Button, Row, H3, Column
+from prefab_ui import SendMessage
+
+with Column(gap=3):
+    H3("Quick Actions")
+    with Row(gap=2):
+        Button("Summarize", variant="outline",
+               on_click=SendMessage("Summarize these results."))
+        Button("Explain Further", variant="outline",
+               on_click=SendMessage("Explain these results in more detail."))
+        Button("Compare Options", variant="outline",
+               on_click=SendMessage("Compare the top options and recommend one."))
+```
+
+## Dynamic Messages with State
+
+Combine with state interpolation to include UI context in the message:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false,"type":"Input"},{"label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"},"type":"Button"}]}`} />
+
+```python Dynamic Messages
+from prefab_ui.components import Input, Button, Column
+from prefab_ui import SendMessage
+
+with Column(gap=3):
+    Input(name="question", placeholder="Ask a follow-up question...")
+    Button("Ask", on_click=SendMessage("{{ question }}"))
+```
+
+## API Reference
+
+<Card icon="code" title="SendMessage Parameters">
+<ParamField body="content" type="str" required>
+  Message text to send to the conversation. Can be passed as a positional argument. Supports `{{ key }}` interpolation.
+</ParamField>
+</Card>

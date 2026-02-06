@@ -1,0 +1,92 @@
+---
+title: DatePicker
+description: Popover button that opens a calendar for date selection.
+icon: calendar-days
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+DatePicker combines a trigger button with a popover calendar. The button displays the selected date (or placeholder text when empty), and clicking it opens a calendar for selection. It's the most user-friendly way to collect a single date.
+
+<ComponentPreview auto json={`{"placeholder":"Select deadline","name":"deadline","type":"DatePicker"}`} />
+
+```python DatePicker Example
+from prefab_ui.components import DatePicker
+
+DatePicker(placeholder="Select deadline", name="deadline")
+```
+
+## Displaying the Selection
+
+Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
+
+<ComponentPreview auto json={`{"_tree":{"gap":3,"type":"Column","children":[{"cssClass":"items-center","gap":4,"type":"Row","children":[{"placeholder":"Select deadline","name":"deadline","type":"DatePicker"},{"content":"{{ deadline | date:long }}","bold":true,"type":"Text"}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`} />
+
+```python DatePicker with Display
+from prefab_ui.components import (
+    Column,
+    DatePicker,
+    Row,
+    Text,
+)
+
+set_initial_state(deadline="2025-06-15T12:00:00.000Z")
+
+with Column(gap=3):
+    with Row(gap=4, css_class="items-center"):
+        DatePicker(placeholder="Select deadline", name="deadline")
+        Text("{{ deadline | date:long }}", bold=True)
+```
+
+## In a Form
+
+DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
+
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"New Event","type":"CardTitle"}]},{"type":"CardContent","children":[{"gap":3,"type":"Column","children":[{"text":"Event Name","type":"Label"},{"inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false,"type":"Input"},{"text":"Date","type":"Label"},{"placeholder":"Pick a date","name":"eventDate","type":"DatePicker"}]}]},{"type":"CardFooter","children":[{"label":"Create Event","variant":"default","size":"default","disabled":false,"type":"Button"}]}]}`} />
+
+```python DatePicker Form
+from prefab_ui.components import (
+    Button,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+    Column,
+    DatePicker,
+    Input,
+    Label,
+)
+
+with Card():
+    with CardHeader():
+        CardTitle("New Event")
+    with CardContent():
+        with Column(gap=3):
+            Label("Event Name")
+            Input(name="eventName", placeholder="Team standup")
+            Label("Date")
+            DatePicker(placeholder="Pick a date", name="eventDate")
+    with CardFooter():
+        Button("Create Event")
+```
+
+## API Reference
+
+<Card icon="code" title="DatePicker Parameters">
+<ParamField body="placeholder" type="str" default="Pick a date">
+  Button text when no date is selected.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for the selected date (stored as an ISO string).
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) triggered when the date changes.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

@@ -1,0 +1,140 @@
+---
+title: Button
+description: Interactive button component with multiple variants and sizes.
+icon: computer-mouse-button-left
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Buttons trigger actions and communicate intent. The `variant` parameter signals what kind of action the button performs, while `size` controls its dimensions.
+
+<ComponentPreview auto json={`{"label":"Save Changes","variant":"default","size":"default","disabled":false,"type":"Button"}`} />
+
+```python Button Example
+from prefab_ui.components import Button
+
+Button("Save Changes")
+```
+
+The label can be passed as a positional argument or as a keyword (`label="Save Changes"`).
+
+## Variants
+
+Each variant communicates a different intent to the user:
+
+<ComponentPreview auto json={`{"columns":3,"gap":3,"type":"Grid","children":[{"label":"Default","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Destructive","variant":"destructive","size":"default","disabled":false,"type":"Button"},{"label":"Outline","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"Secondary","variant":"secondary","size":"default","disabled":false,"type":"Button"},{"label":"Ghost","variant":"ghost","size":"default","disabled":false,"type":"Button"},{"label":"Link","variant":"link","size":"default","disabled":false,"type":"Button"},{"label":"Success","variant":"success","size":"default","disabled":false,"type":"Button"},{"label":"Warning","variant":"warning","size":"default","disabled":false,"type":"Button"},{"label":"Info","variant":"info","size":"default","disabled":false,"type":"Button"}]}`} />
+
+```python Button Variants
+from prefab_ui.components import (
+    Button,
+    Grid,
+)
+
+with Grid(columns=3, gap=3):
+    Button("Default", variant="default")
+    Button("Destructive", variant="destructive")
+    Button("Outline", variant="outline")
+    Button("Secondary", variant="secondary")
+    Button("Ghost", variant="ghost")
+    Button("Link", variant="link")
+    Button("Success", variant="success")
+    Button("Warning", variant="warning")
+    Button("Info", variant="info")
+```
+
+## Sizes
+
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","children":[{"label":"Tiny","variant":"default","size":"xs","disabled":false,"type":"Button"},{"label":"Small","variant":"default","size":"sm","disabled":false,"type":"Button"},{"label":"Default","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Large","variant":"default","size":"lg","disabled":false,"type":"Button"}]}`} />
+
+```python Button Sizes
+from prefab_ui.components import (
+    Button,
+    Row,
+)
+
+with Row(css_class="items-center"):
+    Button("Tiny", size="xs")
+    Button("Small", size="sm")
+    Button("Default", size="default")
+    Button("Large", size="lg")
+```
+
+## Icon Sizes
+
+Square buttons optimized for single icons or characters. The icon sizes match the heights of the corresponding text button sizes.
+
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","children":[{"label":"\\u2022","variant":"default","size":"icon-xs","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon-sm","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon-lg","disabled":false,"type":"Button"}]}`} />
+
+```python Icon Button Sizes
+from prefab_ui.components import (
+    Button,
+    Row,
+)
+
+with Row(css_class="items-center"):
+    Button("•", size="icon-xs")
+    Button("•", size="icon-sm")
+    Button("•", size="icon")
+    Button("•", size="icon-lg")
+```
+
+## Disabled State
+
+<ComponentPreview auto json={`{"label":"Unavailable","variant":"default","size":"default","disabled":true,"type":"Button"}`} />
+
+```python Disabled Button
+from prefab_ui.components import Button
+
+Button("Unavailable", disabled=True)
+```
+
+## Custom Styling
+
+Every component accepts `css_class` for additional Tailwind CSS classes. When your classes target the same CSS property as a built-in style (like `rounded-full` vs the default `rounded-md`), the built-in class is automatically removed so your override wins cleanly:
+
+<ComponentPreview auto json={`{"cssClass":"items-start w-full","gap":3,"type":"Column","children":[{"cssClass":"w-full","label":"Full Width","variant":"default","size":"default","disabled":false,"type":"Button"},{"cssClass":"rounded-full","label":"Pill Shape","variant":"default","size":"default","disabled":false,"type":"Button"}]}`} />
+
+```python Custom Classes
+from prefab_ui.components import (
+    Button,
+    Column,
+)
+
+with Column(gap=3, css_class="items-start w-full"):
+    Button("Full Width", css_class="w-full")
+    Button("Pill Shape", css_class="rounded-full")
+```
+
+## Data Interpolation
+
+Button labels support `{{ field }}` placeholders that are replaced with data at render time:
+
+```python Button Interpolation
+from prefab_ui.components import Button
+
+Button("View {{ name }}'s profile")
+```
+
+## API Reference
+
+<Card icon="code" title="Button Parameters">
+<ParamField body="label" type="str" required>
+  Button text. Supports `{{ field }}` interpolation with data passed at render time.
+</ParamField>
+
+<ParamField body="variant" type="str" default="default">
+  Visual style: `"default"`, `"destructive"`, `"outline"`, `"secondary"`, `"ghost"`, `"link"`, `"success"`, `"warning"`, `"info"`.
+</ParamField>
+
+<ParamField body="size" type="str" default="default">
+  Button dimensions: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether the button is non-interactive.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>

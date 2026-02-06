@@ -1,0 +1,54 @@
+---
+title: Label
+description: Labels identify form inputs and controls.
+icon: bookmark
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Labels provide accessible text descriptions for form fields. They can contain text directly or wrap other components.
+
+<ComponentPreview auto json={`{"text":"Email address","type":"Label"}`} />
+
+```python Label Example
+from prefab_ui.components import Label
+
+Label("Email address")
+```
+
+## With Form Fields
+
+Labels are typically paired with inputs and other form controls:
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"text":"Username","forId":"username","type":"Label"},{"inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false,"type":"Input"}]}`} />
+
+```python Label with Input
+from prefab_ui.components import (
+    Column,
+    Input,
+    Label,
+)
+
+with Column(gap=2):
+    Label("Username", for_id="username")
+    Input(placeholder="Enter username", name="username")
+```
+
+## API Reference
+
+<Card icon="code" title="Label Parameters">
+
+<ParamField path="text" type="str | None">
+  Label text content. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="for_id" type="str | None">
+  ID of the associated form field element.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

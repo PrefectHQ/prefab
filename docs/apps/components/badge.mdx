@@ -1,0 +1,66 @@
+---
+title: Badge
+description: Compact status indicators and labels with semantic color variants.
+icon: tag
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Badges are small, pill-shaped labels for status indicators, counts, and categories. They're inline elements that sit naturally alongside text or within cards.
+
+<ComponentPreview auto json={`{"label":"New Feature","variant":"default","type":"Badge"}`} />
+
+```python Badge Example
+from prefab_ui.components import Badge
+
+Badge("New Feature")
+```
+
+## Variants
+
+Eight variants cover the most common use cases — five base styles from shadcn plus three semantic colors for status indicators.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"gap":2,"type":"Row","children":[{"label":"Default","variant":"default","type":"Badge"},{"label":"Secondary","variant":"secondary","type":"Badge"},{"label":"Destructive","variant":"destructive","type":"Badge"},{"label":"Outline","variant":"outline","type":"Badge"}]},{"gap":2,"type":"Row","children":[{"label":"Ghost","variant":"ghost","type":"Badge"},{"label":"Success","variant":"success","type":"Badge"},{"label":"Warning","variant":"warning","type":"Badge"},{"label":"Info","variant":"info","type":"Badge"}]}]}`} />
+
+```python Badge Variants
+from prefab_ui.components import Badge, Column, Row
+
+with Column(gap=3):
+    with Row(gap=2):
+        Badge("Default")
+        Badge("Secondary", variant="secondary")
+        Badge("Destructive", variant="destructive")
+        Badge("Outline", variant="outline")
+    with Row(gap=2):
+        Badge("Ghost", variant="ghost")
+        Badge("Success", variant="success")
+        Badge("Warning", variant="warning")
+        Badge("Info", variant="info")
+```
+
+## Data Interpolation
+
+Badge labels support `{{ field }}` placeholders:
+
+```python Badge Interpolation
+from prefab_ui.components import Badge
+
+Badge("{{ status }}")
+Badge("{{ count }} items", variant="secondary")
+```
+
+## API Reference
+
+<Card icon="code" title="Badge Parameters">
+<ParamField body="label" type="str" required>
+  Badge text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="variant" type="str" default="default">
+  Visual style: `"default"`, `"secondary"`, `"destructive"`, `"outline"`, `"ghost"`, `"success"`, `"warning"`, `"info"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>

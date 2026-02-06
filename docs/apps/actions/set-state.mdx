@@ -1,0 +1,168 @@
+---
+title: State
+description: Set and toggle client-side state variables instantly, with no server round-trip.
+icon: pen-to-square
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`SetState` is the workhorse of client-side interactivity. It sets a state variable that other components can read through `{{ key }}` interpolation — no server communication, instant feedback.
+
+<ComponentPreview auto json={`{"_tree":{"gap":3,"type":"Column","children":[{"min":0.0,"max":100.0,"name":"brightness","disabled":false,"onChange":{"action":"setState","key":"brightness","value":"{{ $event }}"},"type":"Slider"},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"_state":{"brightness":50}}`} />
+
+```python State Hero
+from prefab_ui.components import Slider, Muted, Column
+from prefab_ui import SetState
+
+set_initial_state(brightness=50)
+
+with Column(gap=3):
+    Slider(name="brightness", min=0, max=100,
+           on_change=SetState("brightness"))
+    Muted("Brightness: {{ brightness }}%")
+```
+
+Drag the slider — the text updates instantly. `set_initial_state(brightness=50)` seeds the value so the UI starts in a meaningful state.
+
+## Event Capture (the Default)
+
+When you write `SetState("brightness")` without a second argument, it defaults to `{{ $event }}` — the value from the triggering interaction. What `$event` means depends on the component:
+
+| Component | `$event` value |
+|-----------|---------------|
+| Slider | Current slider position (number) |
+| Input / Textarea | Current text value (string) |
+| Checkbox / Switch | Checked state (boolean) |
+| Select | Selected option value (string) |
+| RadioGroup | Selected radio value (string) |
+| Button | `undefined` |
+
+This means `SetState("key")` is all you need for form controls — it automatically captures the right value.
+
+## Explicit Values
+
+Pass a second argument to set a specific value instead of capturing the event. Click the buttons below to change the color:
+
+<ComponentPreview auto json={`{"_tree":{"gap":3,"type":"Column","children":[{"gap":2,"type":"Row","children":[{"cssClass":"bg-blue-500 text-white","label":"Blue","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-blue-500"},"type":"Button"},{"cssClass":"bg-emerald-500 text-white","label":"Emerald","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-emerald-500"},"type":"Button"},{"cssClass":"bg-rose-500 text-white","label":"Rose","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-rose-500"},"type":"Button"},{"cssClass":"bg-amber-500 text-white","label":"Amber","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-amber-500"},"type":"Button"}]},{"cssClass":"{{ color }} h-10 rounded-md","type":"Div"}]},"_state":{"color":"bg-blue-500"}}`} />
+
+```python Explicit Values
+from prefab_ui.components import Button, Div, Row, Column
+from prefab_ui import SetState
+
+set_initial_state(color="bg-blue-500")
+
+with Column(gap=3):
+    with Row(gap=2):
+        Button("Blue", css_class="bg-blue-500 text-white",
+               on_click=SetState("color", "bg-blue-500"))
+        Button("Emerald", css_class="bg-emerald-500 text-white",
+               on_click=SetState("color", "bg-emerald-500"))
+        Button("Rose", css_class="bg-rose-500 text-white",
+               on_click=SetState("color", "bg-rose-500"))
+        Button("Amber", css_class="bg-amber-500 text-white",
+               on_click=SetState("color", "bg-amber-500"))
+    Div(css_class="{{ color }} h-10 rounded-md")
+```
+
+The div's `css_class` uses `{{ color }}` interpolation, so clicking a button swaps the Tailwind class and the color changes instantly.
+
+## Resetting State
+
+Use explicit values to build reset buttons:
+
+<ComponentPreview auto json={`{"_tree":{"gap":3,"type":"Column","children":[{"min":0.0,"max":100.0,"name":"volume","disabled":false,"onChange":{"action":"setState","key":"volume","value":"{{ $event }}"},"type":"Slider"},{"content":"Volume: {{ volume }}","type":"Muted"},{"label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50},"type":"Button"}]},"_state":{"volume":75}}`} />
+
+```python Reset Button
+from prefab_ui.components import Button, Slider, Muted, Column
+from prefab_ui import SetState
+
+set_initial_state(volume=75)
+
+with Column(gap=3):
+    Slider(name="volume", min=0, max=100,
+           on_change=SetState("volume"))
+    Muted("Volume: {{ volume }}")
+    Button("Reset to 50", variant="outline",
+           on_click=SetState("volume", 50))
+```
+
+## Toggle State
+
+`ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. It's the shorthand for show/hide patterns, expand/collapse, and on/off toggles.
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"},"type":"Button"},{"visibleWhen":"showDetails","variant":"default","type":"Alert","children":[{"content":"Here are the details!","type":"AlertTitle"}]}]}`} />
+
+```python Toggle State
+from prefab_ui.components import Button, Alert, AlertTitle, Column
+from prefab_ui import ToggleState
+
+with Column(gap=2):
+    Button("Toggle Details", variant="outline",
+           on_click=ToggleState("showDetails"))
+    with Alert(visible_when="showDetails"):
+        AlertTitle("Here are the details!")
+```
+
+`ToggleState` pairs naturally with `visible_when` — a prop available on every component that controls whether it renders based on a state variable. Click the button above to see it in action.
+
+### Multiple Independent Toggles
+
+Each `ToggleState` key is independent, so you can manage multiple visibility states:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"gap":2,"type":"Row","children":[{"label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"},"type":"Button"},{"label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"},"type":"Button"},{"label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"},"type":"Button"}]},{"visibleWhen":"showA","content":"Content for section A","type":"P"},{"visibleWhen":"showB","content":"Content for section B","type":"P"},{"visibleWhen":"showC","content":"Content for section C","type":"P"}]}`} />
+
+```python Multiple Toggles
+from prefab_ui.components import Button, P, Row, Column
+from prefab_ui import ToggleState
+
+with Column(gap=3):
+    with Row(gap=2):
+        Button("Section A", variant="outline",
+               on_click=ToggleState("showA"))
+        Button("Section B", variant="outline",
+               on_click=ToggleState("showB"))
+        Button("Section C", variant="outline",
+               on_click=ToggleState("showC"))
+    P("Content for section A", visible_when="showA")
+    P("Content for section B", visible_when="showB")
+    P("Content for section C", visible_when="showC")
+```
+
+## Initial State
+
+Seed state with initial values using `set_initial_state()`:
+
+```python Initial State
+set_initial_state(volume=75, muted=False, theme="light")
+```
+
+Named form controls (`name="volume"`) automatically sync with state — the slider starts at 75, the switch starts off. For tools, you can also set initial state via `AppResult.state`:
+
+```python AppResult Initial State
+from prefab_ui import AppResult
+
+@mcp.tool()
+async def settings() -> AppResult:
+    return AppResult(
+        view=...,
+        state={"volume": 75, "muted": False},
+    )
+```
+
+## API Reference
+
+<Card icon="code" title="SetState Parameters">
+<ParamField body="key" type="str" required>
+  State variable name to set. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="Any" default='"{{ $event }}"'>
+  Value to assign. Defaults to the event value from the triggering interaction (slider position, input text, checkbox state, etc.).
+</ParamField>
+</Card>
+
+<Card icon="code" title="ToggleState Parameters">
+<ParamField body="key" type="str" required>
+  State variable name to toggle. Can be passed as a positional argument.
+</ParamField>
+</Card>

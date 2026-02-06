@@ -1,0 +1,184 @@
+---
+title: Forms
+description: Collect structured input with manual forms or auto-generated forms from Pydantic models.
+icon: file-lines
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Forms are how Prefab collect structured data from users. You can build forms by hand with individual input components, or generate them automatically from a Pydantic model with `Form.from_model()`.
+
+## Building Forms by Hand
+
+Combine `Input`, `Label`, and `Button` components to create a form with full control over layout and behavior. Named inputs automatically sync their values to client state, so `{{ name }}` interpolation references the current value of the input with `name="name"`.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"text":"Name","type":"Label"},{"inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false,"type":"Input"},{"text":"Email","type":"Label"},{"inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false,"type":"Input"},{"label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"type":"Button"}]}`} />
+
+```python Manual Form
+from prefab_ui.components import Button, Column, Input, Label
+from prefab_ui import ToolCall
+
+with Column(gap=3):
+    Label("Name")
+    Input(name="name", placeholder="Your name")
+    Label("Email")
+    Input(name="email", type="email", placeholder="you@example.com")
+    Button("Submit", on_click=ToolCall(
+        "create_user",
+        arguments={"name": "{{ name }}", "email": "{{ email }}"},
+    ))
+```
+
+This approach gives you complete control, but it requires wiring up every label, input type, and argument template yourself. For models with many fields, `Form.from_model()` handles all of that automatically.
+
+## Generating Forms from Pydantic Models
+
+`Form.from_model()` introspects a Pydantic model and generates a complete form -- labels, inputs, validation constraints, and submit button -- from the model's field definitions.
+
+<ComponentPreview auto json={`{"gap":4,"onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"type":"Form","children":[{"gap":2,"type":"Column","children":[{"text":"Full Name","type":"Label"},{"inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1,"type":"Input"}]},{"gap":2,"type":"Column","children":[{"text":"Email","type":"Label"},{"inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true,"type":"Input"}]},{"gap":2,"type":"Column","children":[{"text":"Message","type":"Label"},{"placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true,"type":"Textarea"}]},{"label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"type":"Button"}]}`} />
+
+```python Form from Model
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
+from prefab_ui import ToolCall
+
+class ContactInfo(BaseModel):
+    name: str = Field(title="Full Name", min_length=1)
+    email: str
+    message: str = Field(
+        description="Your message",
+        json_schema_extra={"ui": {"type": "textarea", "rows": 4}},
+    )
+
+Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
+```
+
+Each field in the model becomes a labeled input. The field's type determines what kind of input is rendered, and Pydantic `Field()` metadata controls labels, placeholders, and constraints.
+
+### Metadata Mapping
+
+Pydantic `Field()` parameters map directly to form behavior:
+
+| Field metadata | Form effect |
+|---|---|
+| `Field(title="...")` | Label text (fallback: humanized field name) |
+| `Field(description="...")` | Placeholder text |
+| `Field(min_length=..., max_length=...)` | HTML input constraints |
+| `Field(ge=..., le=...)` | Number input min/max |
+| `Field(json_schema_extra={"ui": {"type": "textarea", "rows": 4}})` | Textarea override |
+| `Field(exclude=True)` | Skip field entirely |
+
+### Type Mapping
+
+The field's Python type determines the input component:
+
+| Python type | Input component |
+|---|---|
+| `str` | Text input (auto-detects `email`, `password`, `tel`, `url` from field name) |
+| `int`, `float` | Number input |
+| `bool` | Checkbox |
+| `Literal["a", "b", "c"]` | Select dropdown |
+| `SecretStr` | Password input |
+| `datetime.date` | Date picker |
+| `datetime.time` | Time picker |
+| `datetime.datetime` | Datetime picker |
+
+## Auto-Fill Arguments
+
+When `on_submit` is a `ToolCall` with no `arguments`, `from_model()` auto-generates the arguments from the model's fields, wrapped under a `data` key.
+
+```python Auto-Fill
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
+from prefab_ui import ToolCall
+
+class ContactInfo(BaseModel):
+    name: str = Field(title="Full Name", min_length=1)
+    email: str
+    message: str
+
+Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
+```
+
+The generated `ToolCall` is equivalent to writing this explicitly:
+
+```python
+ToolCall("submit_contact", arguments={
+    "data": {
+        "name": "{{ name }}",
+        "email": "{{ email }}",
+        "message": "{{ message }}",
+    }
+})
+```
+
+This convention enables a powerful pattern: a tool that both displays the form and processes the submission.
+
+## Self-Calling Tool Pattern
+
+A single tool can serve as both the form renderer and the form handler. On the first call (no data), it returns the form. When the user submits, the auto-filled arguments pass the form values back to the same tool as a validated Pydantic model.
+
+```python Self-Calling Tool
+from pydantic import BaseModel, Field
+from prefab_ui import FastMCP
+from prefab_ui import AppResult, ToolCall, ShowToast
+from prefab_ui.components import Form, Text
+
+mcp = FastMCP("Contacts")
+
+class Contact(BaseModel):
+    name: str = Field(min_length=1)
+    email: str
+    phone: str = ""
+
+@mcp.tool(ui=True)
+async def create_contact(data: Contact | None = None) -> AppResult:
+    if data is None:
+        return AppResult(
+            view=Form.from_model(
+                Contact,
+                on_submit=ToolCall(
+                    "create_contact",
+                    on_success=ShowToast("Saved!"),
+                ),
+            ),
+        )
+    save_to_db(data)
+    return AppResult(view=Text(f"Created contact: {data.name}"))
+```
+
+When `data` is `None` (the initial call), the tool returns a form. When the user fills in the fields and clicks submit, the renderer calls `create_contact` again with `data` populated from the form values. Pydantic validates the input automatically, so `data` arrives as a fully validated `Contact` instance.
+
+## Error Handling
+
+When `on_submit` is auto-filled and no `on_error` is specified, `from_model()` adds a default error toast:
+
+```python
+ShowToast("{{ $error }}", variant="error")
+```
+
+The `$error` variable captures the error message from a failed tool call, making validation errors visible to the user without any extra configuration.
+
+You can override this with your own `on_error`:
+
+```python Custom Error Handling
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
+from prefab_ui import ToolCall, ShowToast
+
+class Contact(BaseModel):
+    name: str = Field(min_length=1)
+    email: str
+
+Form.from_model(
+    Contact,
+    on_submit=ToolCall(
+        "create_contact",
+        on_error=ShowToast("Could not save: {{ $error }}", variant="error"),
+    ),
+)
+```
+
+## Unsupported Types
+
+`from_model()` skips fields with complex types that have no natural form input mapping: `list`, `dict`, `set`, `tuple`, and nested `BaseModel` instances. If you need these, build those parts of the form manually and handle the arguments yourself.

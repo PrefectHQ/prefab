@@ -1,0 +1,121 @@
+---
+title: DataTable
+description: High-level data table with sorting, filtering, and pagination.
+icon: table-cells
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+DataTable takes flat `columns` and `rows` and renders a full-featured table with optional sorting, search filtering, and pagination. Use it when you have structured data and want interactive table features without building the markup yourself.
+
+<ComponentPreview auto json={`{"columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10,"type":"DataTable"}`} />
+
+```python DataTable Example
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
+        DataTableColumn(key="role", header="Role", sortable=True),
+    ],
+    rows=[
+        {"name": "Alice Johnson", "email": "alice@example.com", "role": "Admin"},
+        {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
+        {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"},
+    ],
+    searchable=True,
+)
+```
+
+## Pagination
+
+Enable pagination to handle large datasets. The table shows page controls and displays `page_size` rows at a time.
+
+<ComponentPreview auto json={`{"columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3,"caption":"Sprint tasks","type":"DataTable"}`} />
+
+```python DataTable Paginated
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="id", header="ID"),
+        DataTableColumn(key="task", header="Task", sortable=True),
+        DataTableColumn(key="status", header="Status"),
+    ],
+    rows=[
+        {"id": "T-001", "task": "Design system", "status": "Complete"},
+        {"id": "T-002", "task": "API integration", "status": "In Progress"},
+        {"id": "T-003", "task": "Testing", "status": "Pending"},
+        {"id": "T-004", "task": "Documentation", "status": "In Progress"},
+        {"id": "T-005", "task": "Deployment", "status": "Pending"},
+    ],
+    paginated=True,
+    page_size=3,
+    caption="Sprint tasks",
+)
+```
+
+## Data Interpolation
+
+Pass `rows` as a `{{ field }}` reference to render server data dynamically:
+
+```python DataTable Interpolation
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="status", header="Status"),
+    ],
+    rows="{{ users }}",
+    searchable=True,
+    paginated=True,
+)
+```
+
+## API Reference
+
+<Card icon="code" title="DataTable Parameters">
+<ParamField body="columns" type="list[DataTableColumn]" required>
+  Column definitions. Each column specifies a `key`, `header`, and optional `sortable` flag.
+</ParamField>
+
+<ParamField body="rows" type="list[dict] | str" default="[]">
+  Row data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="searchable" type="bool" default="False">
+  Show a search/filter input above the table.
+</ParamField>
+
+<ParamField body="paginated" type="bool" default="False">
+  Show pagination controls below the table.
+</ParamField>
+
+<ParamField body="page_size" type="int" default="10">
+  Number of rows per page when `paginated=True`.
+</ParamField>
+
+<ParamField body="caption" type="str | None" default="None">
+  Optional table caption.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="DataTableColumn Parameters">
+<ParamField body="key" type="str" required>
+  Data key — matches keys in the row dicts.
+</ParamField>
+
+<ParamField body="header" type="str" required>
+  Column header display text.
+</ParamField>
+
+<ParamField body="sortable" type="bool" default="False">
+  Enable click-to-sort on this column.
+</ParamField>
+</Card>

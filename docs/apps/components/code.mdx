@@ -1,0 +1,64 @@
+---
+title: Code
+description: Display code blocks with optional language annotation.
+icon: code
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Code blocks display source code or configuration with automatic syntax highlighting. Set the `language` parameter to enable language-aware highlighting for Python, JavaScript, TypeScript, SQL, Bash, JSON, HTML, CSS, YAML, and Markdown.
+
+<ComponentPreview auto json={`{"content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python","type":"Code"}`} />
+
+```python Code Block
+from prefab_ui.components import Code
+
+Code("""
+def greet(name: str) -> str:
+    \"\"\"Return a greeting message.\"\"\"
+    return f"Hello, {name}!"
+
+# Call the function
+message = greet("World")
+print(message)
+""".strip(), language="python")
+```
+
+## Multiple Languages
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"content":"pip install prefab-ui","language":"bash","type":"Code"},{"content":"SELECT * FROM users WHERE active = true;","language":"sql","type":"Code"},{"content":"{ \\"name\\": \\"prefab-ui\\", \\"version\\": \\"2.0\\" }","language":"json","type":"Code"}]}`} />
+
+```python Code Languages
+from prefab_ui.components import Code, Column
+
+with Column(gap=3):
+    Code("pip install prefab-ui", language="bash")
+    Code("SELECT * FROM users WHERE active = true;", language="sql")
+    Code('{ "name": "prefab-ui", "version": "2.0" }', language="json")
+```
+
+## Data Interpolation
+
+Content supports `{{ field }}` interpolation, so you can inject dynamic code from server data:
+
+```python Dynamic Code
+from prefab_ui.components import Code
+
+Code("{{ source }}", language="{{ language }}")
+```
+
+## API Reference
+
+<Card icon="code" title="Code Parameters">
+<ParamField body="content" type="str" required>
+  Code content. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="language" type="str | None" default="None">
+  Language for syntax highlighting. Supported: `python`, `javascript`/`js`, `typescript`/`ts`, `json`, `bash`/`sh`, `sql`, `html`, `xml`, `css`, `yaml`/`yml`, `markdown`/`md`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

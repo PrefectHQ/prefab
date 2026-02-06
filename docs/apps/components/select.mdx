@@ -1,0 +1,132 @@
+---
+title: Select
+description: Dropdown select for choosing from a list of options.
+icon: square-caret-down
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Select dropdowns let users pick one option from a list.
+
+<ComponentPreview auto json={`{"placeholder":"Choose size...","size":"default","disabled":false,"required":false,"type":"Select","children":[{"value":"sm","label":"Small","selected":false,"disabled":false,"type":"SelectOption"},{"value":"md","label":"Medium","selected":false,"disabled":false,"type":"SelectOption"},{"value":"lg","label":"Large","selected":false,"disabled":false,"type":"SelectOption"}]}`} />
+
+```python Select Example
+from prefab_ui.components import (
+    Select,
+    SelectOption,
+)
+
+with Select(placeholder="Choose size..."):
+    SelectOption(value="sm", label="Small")
+    SelectOption(value="md", label="Medium")
+    SelectOption(value="lg", label="Large")
+```
+
+## With Selected Value
+
+<ComponentPreview auto json={`{"placeholder":"Select country","size":"default","disabled":false,"required":false,"type":"Select","children":[{"value":"us","label":"United States","selected":false,"disabled":false,"type":"SelectOption"},{"value":"uk","label":"United Kingdom","selected":true,"disabled":false,"type":"SelectOption"},{"value":"ca","label":"Canada","selected":false,"disabled":false,"type":"SelectOption"}]}`} />
+
+```python Selected Value
+from prefab_ui.components import (
+    Select,
+    SelectOption,
+)
+
+with Select(placeholder="Select country"):
+    SelectOption(value="us", label="United States")
+    SelectOption(value="uk", label="United Kingdom", selected=True)
+    SelectOption(value="ca", label="Canada")
+```
+
+## Sizes
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"placeholder":"Default size","size":"default","disabled":false,"required":false,"type":"Select","children":[{"value":"1","label":"Option 1","selected":false,"disabled":false,"type":"SelectOption"},{"value":"2","label":"Option 2","selected":false,"disabled":false,"type":"SelectOption"}]},{"placeholder":"Small size","size":"sm","disabled":false,"required":false,"type":"Select","children":[{"value":"1","label":"Option 1","selected":false,"disabled":false,"type":"SelectOption"},{"value":"2","label":"Option 2","selected":false,"disabled":false,"type":"SelectOption"}]}]}`} />
+
+```python Select Sizes
+from prefab_ui.components import (
+    Column,
+    Select,
+    SelectOption,
+)
+
+with Column(gap=4):
+    with Select(placeholder="Default size"):
+        SelectOption(value="1", label="Option 1")
+        SelectOption(value="2", label="Option 2")
+
+    with Select(placeholder="Small size", size="sm"):
+        SelectOption(value="1", label="Option 1")
+        SelectOption(value="2", label="Option 2")
+```
+
+## With Label
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"text":"Preferred language","type":"Label"},{"placeholder":"Choose language","size":"default","disabled":false,"required":false,"type":"Select","children":[{"value":"en","label":"English","selected":false,"disabled":false,"type":"SelectOption"},{"value":"es","label":"Spanish","selected":false,"disabled":false,"type":"SelectOption"},{"value":"fr","label":"French","selected":false,"disabled":false,"type":"SelectOption"}]}]}`} />
+
+```python Select with Label
+from prefab_ui.components import (
+    Column,
+    Label,
+    Select,
+    SelectOption,
+)
+
+with Column(gap=2):
+    Label("Preferred language")
+    with Select(placeholder="Choose language"):
+        SelectOption(value="en", label="English")
+        SelectOption(value="es", label="Spanish")
+        SelectOption(value="fr", label="French")
+```
+
+## API Reference
+
+<Card icon="code" title="Select Parameters">
+
+<ParamField path="placeholder" type="str | None">
+  Placeholder text when no option is selected. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'default'" default="'default'">
+  Select size.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the select is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether a selection is required.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+
+
+<ParamField path="value" type="str">
+  Option value for form submission. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="label" type="str">
+  Display text for the option. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="selected" type="bool" default="False">
+  Whether this option is initially selected.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether this option is disabled.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

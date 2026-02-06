@@ -1,0 +1,125 @@
+---
+title: Input
+description: Text input fields for user data entry.
+icon: i-cursor
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Inputs collect text, email, passwords, and other single-line data from users.
+
+<ComponentPreview auto json={`{"inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false,"type":"Input"}`} />
+
+```python Input Example
+from prefab_ui.components import Input
+
+Input(placeholder="Enter your email...")
+```
+
+## Input Types
+
+Different input types provide appropriate keyboards and validation on mobile devices:
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"inputType":"email","placeholder":"Email","disabled":false,"required":false,"type":"Input"},{"inputType":"password","placeholder":"Password","disabled":false,"required":false,"type":"Input"},{"inputType":"number","placeholder":"Age","disabled":false,"required":false,"type":"Input"},{"inputType":"tel","placeholder":"Phone","disabled":false,"required":false,"type":"Input"}]}`} />
+
+```python Input Types
+from prefab_ui.components import (
+    Input,
+    Column,
+)
+
+with Column(gap=4):
+    Input(type="email", placeholder="Email")
+    Input(type="password", placeholder="Password")
+    Input(type="number", placeholder="Age")
+    Input(type="tel", placeholder="Phone")
+```
+
+## With Labels
+
+Pair inputs with labels for accessible forms:
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"text":"Email address","type":"Label"},{"inputType":"email","placeholder":"you@example.com","disabled":false,"required":true,"type":"Input"}]}`} />
+
+```python Input with Label
+from prefab_ui.components import (
+    Column,
+    Input,
+    Label,
+)
+
+with Column(gap=2):
+    Label("Email address")
+    Input(type="email", placeholder="you@example.com", required=True)
+```
+
+## Date & Time Inputs
+
+Native date and time pickers use the browser's built-in UI:
+
+<ComponentPreview auto json={`{"gap":4,"type":"Row","children":[{"cssClass":"flex-1","gap":2,"type":"Column","children":[{"text":"Date","type":"Label"},{"inputType":"date","name":"date","disabled":false,"required":false,"type":"Input"}]},{"cssClass":"flex-1","gap":2,"type":"Column","children":[{"text":"Time","type":"Label"},{"inputType":"time","name":"time","disabled":false,"required":false,"type":"Input"}]},{"cssClass":"flex-1","gap":2,"type":"Column","children":[{"text":"Date & Time","type":"Label"},{"inputType":"datetime-local","name":"datetime","disabled":false,"required":false,"type":"Input"}]}]}`} />
+
+```python Date and Time Inputs
+from prefab_ui.components import (
+    Column,
+    Input,
+    Label,
+    Row,
+)
+
+with Row(gap=4):
+    with Column(gap=2, css_class="flex-1"):
+        Label("Date")
+        Input(type="date", name="date")
+    with Column(gap=2, css_class="flex-1"):
+        Label("Time")
+        Input(type="time", name="time")
+    with Column(gap=2, css_class="flex-1"):
+        Label("Date & Time")
+        Input(type="datetime-local", name="datetime")
+```
+
+## Disabled State
+
+<ComponentPreview auto json={`{"inputType":"text","placeholder":"Disabled input","disabled":true,"required":false,"type":"Input"}`} />
+
+```python Disabled Input
+from prefab_ui.components import Input
+
+Input(placeholder="Disabled input", disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Input Parameters">
+
+<ParamField path="type" type="str" default="text">
+  Input type: text, email, password, number, tel, url, search, date, time, datetime-local, file
+</ParamField>
+
+<ParamField path="placeholder" type="str | None">
+  Placeholder text. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="value" type="str | None">
+  Initial value. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the input is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether the input is required for form submission.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

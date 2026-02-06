@@ -1,0 +1,102 @@
+---
+title: Tabs
+description: Tabbed interface for switching between panels of content.
+icon: window-restore
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Tabs organize content into panels that users switch between by clicking triggers. Each `Tab` child defines a trigger label and the content shown when that tab is active.
+
+<ComponentPreview auto json={`{"defaultValue":"account","type":"Tabs","children":[{"title":"Account","value":"account","disabled":false,"type":"Tab","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"Account","type":"CardTitle"},{"content":"Make changes to your account here.","type":"CardDescription"}]},{"type":"CardContent","children":[{"gap":3,"type":"Column","children":[{"text":"Name","type":"Label"},{"inputType":"text","placeholder":"Your name","name":"accountName","disabled":false,"required":false,"type":"Input"}]}]}]}]},{"title":"Password","value":"password","disabled":false,"type":"Tab","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"Password","type":"CardTitle"},{"content":"Change your password here.","type":"CardDescription"}]},{"type":"CardContent","children":[{"gap":3,"type":"Column","children":[{"text":"Current Password","type":"Label"},{"inputType":"text","name":"currentPw","disabled":false,"required":false,"type":"Input"},{"text":"New Password","type":"Label"},{"inputType":"text","name":"newPw","disabled":false,"required":false,"type":"Input"}]}]}]}]}]}`} />
+
+```python Tabs Example
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Column,
+    Input,
+    Label,
+    Tab,
+    Tabs,
+)
+
+with Tabs(default_value="account"):
+    with Tab("Account", value="account"):
+        with Card():
+            with CardHeader():
+                CardTitle("Account")
+                CardDescription("Make changes to your account here.")
+            with CardContent():
+                with Column(gap=3):
+                    Label("Name")
+                    Input(name="accountName", placeholder="Your name")
+    with Tab("Password", value="password"):
+        with Card():
+            with CardHeader():
+                CardTitle("Password")
+                CardDescription("Change your password here.")
+            with CardContent():
+                with Column(gap=3):
+                    Label("Current Password")
+                    Input(input_type="password", name="currentPw")
+                    Label("New Password")
+                    Input(input_type="password", name="newPw")
+```
+
+## State Tracking
+
+Give Tabs a `name` to sync the active tab with client state. Other components can then read or change which tab is active — useful for building wizard flows or linking navigation between different parts of the UI.
+
+```python Tabs with State
+from prefab_ui.components import Button, Column, Row, Tab, Tabs, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with Tabs(name="activeTab", default_value="general"):
+        with Tab("General", value="general"):
+            Text("General settings here.")
+        with Tab("Advanced", value="advanced"):
+            Text("Advanced settings here.")
+
+    with Row(gap=2):
+        Button("Go to General", on_click=SetState("activeTab", "general"))
+        Button("Go to Advanced", on_click=SetState("activeTab", "advanced"))
+```
+
+## API Reference
+
+<Card icon="code" title="Tabs Parameters">
+<ParamField body="default_value" type="str | None" default="None">
+  Value of the initially active tab. If omitted, the first tab is active.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for tracking the active tab. Enables reading/writing the active tab from other components.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) triggered when the active tab changes.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Tab Parameters">
+<ParamField body="title" type="str" required>
+  Tab trigger label. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="str | None" default="None">
+  Unique value identifying this tab. Defaults to the title.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether this tab is disabled.
+</ParamField>
+</Card>

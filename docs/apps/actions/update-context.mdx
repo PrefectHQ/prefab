@@ -1,0 +1,60 @@
+---
+title: Update Context
+description: Silently update the model's context from a UI interaction.
+icon: database
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`UpdateContext` feeds information into the conversation without triggering a visible response. Where `SendMessage` creates a chat message the user sees, `UpdateContext` works behind the scenes — it updates what the model knows without interrupting the flow.
+
+<ComponentPreview auto json={`{"label":"Use Advanced Mode","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","content":"User has selected advanced mode. Provide detailed technical responses."},"type":"Button"}`} />
+
+```python Update Context Hero
+from prefab_ui.components import Button
+from prefab_ui import UpdateContext
+
+Button("Use Advanced Mode", on_click=UpdateContext(
+    content="User has selected advanced mode. Provide detailed technical responses."
+))
+```
+
+## When to Use It
+
+`UpdateContext` is for situations where the UI interaction should inform the model's future behavior without generating an immediate response:
+
+- User selects a preference or mode that should influence subsequent answers
+- A form submission captures structured data the model should reference later
+- Background state changes that provide context for the next conversation turn
+
+## Structured Content
+
+For richer data, pass a dict instead of plain text:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"type":"Select","children":[{"value":"low","label":"Low","selected":false,"disabled":false,"type":"SelectOption"},{"value":"medium","label":"Medium","selected":false,"disabled":false,"type":"SelectOption"},{"value":"high","label":"High","selected":false,"disabled":false,"type":"SelectOption"}]},{"label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}},"type":"Button"}]}`} />
+
+```python Structured Content
+from prefab_ui.components import Button, Select, SelectOption, Column
+from prefab_ui import UpdateContext
+
+with Column(gap=3):
+    with Select(name="thinking", placeholder="Thinking level..."):
+        SelectOption(value="low", label="Low")
+        SelectOption(value="medium", label="Medium")
+        SelectOption(value="high", label="High")
+    Button("Set Preference", on_click=UpdateContext(
+        structured_content={"preference": {"thinking": "{{ thinking }}"}},
+    ))
+```
+
+## API Reference
+
+<Card icon="code" title="UpdateContext Parameters">
+<ParamField body="content" type="str" default="None">
+  Text content to add to the model's context. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="structured_content" type="dict[str, Any]" default="None">
+  Structured data to add to the model's context.
+</ParamField>
+</Card>

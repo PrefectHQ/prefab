@@ -1,0 +1,148 @@
+---
+title: Prefab
+sidebarTitle: Overview
+description: Build interactive UIs that render directly inside MCP host applications.
+icon: rocket
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Prefab let you build interactive user interfaces in Python that render directly inside MCP host applications like Claude Desktop. Your tools return component trees instead of plain text, and the host displays them as full HTML with buttons, forms, tables, and real-time state -- all without leaving the conversation.
+
+## The Interaction Loop
+
+The core mental model is a cycle between your server and the host's renderer:
+
+1. A tool returns a component tree (as a `Component` or wrapped in `AppResult`)
+2. The renderer displays it in the host application
+3. The user interacts -- clicks a button, fills an input, moves a slider
+4. That interaction triggers an action: either an instant client-side state change, or a server round-trip via `ToolCall`
+5. The server tool returns a new view, and the renderer updates the display
+
+This loop is what makes Prefab feel like a live application rather than a static response.
+
+## Getting Started
+
+Mark a tool with `ui=True` to enable UI rendering. This tells FastMCP to register the built-in renderer resource that the host needs to display your components.
+
+The simplest pattern returns a component directly from the tool:
+
+```python
+from prefab_ui import FastMCP
+from prefab_ui.components import Text
+
+mcp = FastMCP("Demo")
+
+@mcp.tool(ui=True)
+async def hello(name: str) -> Text:
+    return Text(f"Hello, {name}!")
+```
+
+For tools that need client-side state, return an `AppResult` instead:
+
+```python
+from prefab_ui import FastMCP
+from prefab_ui import AppResult, ToolCall
+from prefab_ui.components import Button, Column, Input, Text
+
+mcp = FastMCP("Demo")
+
+@mcp.tool(ui=True)
+async def search(query: str = "") -> AppResult:
+    results = find_items(query) if query else []
+    with Column(gap=3) as view:
+        Input(name="q", placeholder="Search...")
+        Button("Search", on_click=ToolCall("search", arguments={"query": "{{ q }}"}))
+        for r in results:
+            Text(r["title"])
+    return AppResult(view=view, state={"results": results})
+```
+
+When the user types a query and clicks "Search", the `ToolCall` action calls the `search` tool again with the current input value. The tool returns a new view with the results, and the renderer replaces the display.
+
+## State
+
+Every named form control automatically syncs its value to client-side state. When a user types in `Input(name="city")`, the key `city` is updated on every keystroke. No explicit wiring needed.
+
+You can reference state values in actions and component props using `{{ key }}` interpolation:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false,"type":"Input"},{"label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"get_weather","arguments":{"location":"{{ city }}"}},"type":"Button"}]}`} />
+
+```python
+from prefab_ui.components import Button, Column, Input
+from prefab_ui import ToolCall
+
+with Column(gap=3):
+    Input(name="city", placeholder="Enter a city...")
+    Button("Get Weather", on_click=ToolCall(
+        "get_weather",
+        arguments={"location": "{{ city }}"},
+    ))
+```
+
+For state that does not come from a form control, use `AppResult(state={...})` to seed initial values, and `SetState` or `ToggleState` to mutate them from interactions.
+
+## Actions
+
+Actions define what happens when a user interacts with a component. There are two categories.
+
+**Client actions** execute instantly with no server round-trip:
+
+| Action | Purpose |
+|--------|---------|
+| `SetState` | Set a state variable to a value |
+| `ToggleState` | Flip a boolean state variable |
+| `ShowToast` | Display a toast notification |
+| `OpenLink` | Open a URL in the host's browser |
+
+**MCP actions** send a request through the MCP protocol:
+
+| Action | Purpose |
+|--------|---------|
+| `ToolCall` | Call a server tool and update the view with the result |
+| `SendMessage` | Send a message to the chat as if the user typed it |
+| `UpdateContext` | Silently update structured data the model can see |
+
+Pass a list to compose multiple actions from a single interaction:
+
+<ComponentPreview auto json={`{"label":"Save","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"saving","value":true},{"action":"callTool","tool":"save_data","arguments":{"item":"{{ item }}"}},{"action":"setState","key":"saving","value":false}],"type":"Button"}`} />
+
+```python
+from prefab_ui.components import Button
+from prefab_ui import SetState, ToolCall
+
+Button("Save", on_click=[
+    SetState("saving", True),
+    ToolCall("save_data", arguments={"item": "{{ item }}"}),
+    SetState("saving", False),
+])
+```
+
+Actions execute in order. This pattern lets you show a loading indicator before a server call and clear it afterward.
+
+## Components
+
+FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
+
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"you@example.com","name":"email","disabled":false,"required":false,"type":"Input"},{"label":"Subscribe","variant":"default","size":"default","disabled":false,"type":"Button"}]}]}]}`} />
+
+```python
+from prefab_ui.components import Button, Card, CardContent, Column, Input
+
+with Card() as view:
+    with CardContent():
+        with Column(gap=3):
+            Input(name="email", placeholder="you@example.com")
+            Button("Subscribe")
+```
+
+See the component reference pages in the sidebar for the full catalog, and the [Playground](/servers/apps/playground) to try components interactively.
+
+## The `ui=True` Flag
+
+Adding `ui=True` to `@mcp.tool()` does two things:
+
+1. Registers a built-in renderer resource on the server, which the host reads to get the JavaScript needed to display your components
+2. Marks the tool's output as renderable, so the host knows to pass it to the renderer instead of displaying raw text
+
+Tools with `ui=True` can return either a `Component` instance directly (for simple displays) or an `AppResult` (when you need state management or a text fallback for non-UI hosts).

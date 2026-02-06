@@ -1,0 +1,79 @@
+---
+title: Separator
+description: Visual divider between content sections.
+icon: grip-lines
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Separators create visual divisions between content areas.
+
+<ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","orientation":"horizontal","type":"Separator"},{"content":"Content below the separator","type":"P"}]}`} />
+
+```python Separator Example
+from prefab_ui.components import (
+    Column,
+    P,
+    Separator,
+)
+
+with Column():
+    P("Content above the separator")
+    Separator(css_class="my-4")
+    P("Content below the separator")
+```
+
+## Vertical Orientation
+
+<ComponentPreview auto json={`{"cssClass":"items-center","gap":4,"type":"Row","children":[{"content":"Left","type":"Span"},{"cssClass":"h-4","orientation":"vertical","type":"Separator"},{"content":"Middle","type":"Span"},{"cssClass":"h-4","orientation":"vertical","type":"Separator"},{"content":"Right","type":"Span"}]}`} />
+
+```python Vertical Separator
+from prefab_ui.components import (
+    Row,
+    Separator,
+    Span,
+)
+
+with Row(gap=4, css_class="items-center"):
+    Span("Left")
+    Separator(orientation="vertical", css_class="h-4")
+    Span("Middle")
+    Separator(orientation="vertical", css_class="h-4")
+    Span("Right")
+```
+
+## In Card Content
+
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","orientation":"horizontal","type":"Separator"},{"content":"Second section","type":"P"},{"cssClass":"my-4","orientation":"horizontal","type":"Separator"},{"content":"Third section","type":"P"}]}]}`} />
+
+```python Separator in Card
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    P,
+    Separator,
+)
+
+with Card():
+    with CardContent():
+        P("First section")
+        Separator(css_class="my-4")
+        P("Second section")
+        Separator(css_class="my-4")
+        P("Third section")
+```
+
+## API Reference
+
+<Card icon="code" title="Separator Parameters">
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  Separator direction.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply. Useful for controlling height/width and spacing.
+</ParamField>
+</Card>

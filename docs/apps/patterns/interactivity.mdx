@@ -1,0 +1,148 @@
+---
+title: Interactivity
+description: Patterns for building reactive UIs with state-driven rendering, conditional visibility, and server data refresh.
+icon: wand-magic-sparkles
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+## State-Driven UI
+
+Every named form control automatically syncs its value to client state, and `{{ key }}` interpolation makes that state available to any component. There is no manual event wiring — name a control, reference the key, and the UI stays in sync.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"Type your name...","name":"name","disabled":false,"required":false,"type":"Input"},{"content":"Hello, {{ name }}!","type":"Text"}]}`} />
+
+```python State-Driven UI
+from prefab_ui.components import Column, Input, Text
+
+with Column(gap=3):
+    Input(name="name", placeholder="Type your name...")
+    Text("Hello, {{ name }}!")
+```
+
+Type in the input, and the text updates instantly. The `name="name"` prop creates a state key called `name`, and `{{ name }}` reads it wherever it appears.
+
+## Conditional Visibility
+
+Every component has a `visible_when` prop that controls whether it renders based on a boolean state variable. Pair it with `ToggleState` to show and hide content on demand.
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"},"type":"Button"},{"visibleWhen":"showDetails","variant":"default","type":"Alert","children":[{"content":"Here are the hidden details!","type":"AlertTitle"}]}]}`} />
+
+```python Conditional Visibility
+from prefab_ui.components import Alert, AlertTitle, Button, Column
+from prefab_ui import ToggleState
+
+with Column(gap=2):
+    Button("Toggle Details", variant="outline", on_click=ToggleState("showDetails"))
+    with Alert(visible_when="showDetails"):
+        AlertTitle("Here are the hidden details!")
+```
+
+Clicking the button flips `showDetails` between `True` and `False`. When `False`, the alert is removed from the rendered output entirely.
+
+## Dynamic Data Refresh
+
+`ToolCall` with `result_key` fetches data from the server and writes the return value into client state. Other components read that data through interpolation, so the UI updates as soon as the response arrives.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"Search users...","name":"search","disabled":false,"required":false,"type":"Input"},{"label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"find_users","arguments":{"query":"{{ search }}"},"resultKey":"results"},"type":"Button"},{"columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false}],"rows":"{{ results }}","searchable":true,"paginated":false,"pageSize":10,"type":"DataTable"}]}`} />
+
+```python Dynamic Data Refresh
+from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input
+from prefab_ui import ToolCall
+
+with Column(gap=3):
+    Input(name="search", placeholder="Search users...")
+    Button("Search", on_click=ToolCall(
+        "find_users",
+        arguments={"query": "{{ search }}"},
+        result_key="results",
+    ))
+    DataTable(
+        columns=[
+            DataTableColumn(key="name", header="Name", sortable=True),
+            DataTableColumn(key="email", header="Email"),
+        ],
+        rows="{{ results }}",
+        searchable=True,
+    )
+```
+
+The user types a query, clicks Search, and the `find_users` tool runs server-side. Its return value lands in `results`, and the DataTable renders the rows.
+
+## Search with ForEach
+
+The same pattern works with `ForEach` for custom result layouts. Each item in the returned list becomes the interpolation context for its iteration.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"Search products...","name":"q","disabled":false,"required":false,"type":"Input"},{"label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"search_products","arguments":{"query":"{{ q }}"},"resultKey":"products"},"type":"Button"},{"key":"products","type":"ForEach","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"{{ name }}","type":"CardTitle"},{"content":"{{ description }}","type":"CardDescription"}]}]}]}]}`} />
+
+```python Search with ForEach
+from prefab_ui.components import (
+    Button,
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Column,
+    ForEach,
+    Input,
+)
+from prefab_ui import ToolCall
+
+with Column(gap=3):
+    Input(name="q", placeholder="Search products...")
+    Button("Search", on_click=ToolCall(
+        "search_products",
+        arguments={"query": "{{ q }}"},
+        result_key="products",
+    ))
+    with ForEach("products"):
+        with Card():
+            with CardHeader():
+                CardTitle("{{ name }}")
+                CardDescription("{{ description }}")
+```
+
+When `search_products` returns a list of dicts with `name` and `description` keys, `ForEach` renders one card per result.
+
+## Action Chains
+
+Pass a list of actions to compose richer interactions. Actions execute in sequence, so you can update UI state before and after a server call.
+
+<ComponentPreview auto json={`{"label":"Process","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"processing","value":true},{"onSuccess":{"action":"showToast","message":"Analysis complete!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"run_analysis","arguments":{"data":"{{ dataset }}"}},{"action":"setState","key":"processing","value":false}],"type":"Button"}`} />
+
+```python Action Chains
+from prefab_ui.components import Button
+from prefab_ui import ToolCall, SetState, ShowToast
+
+Button("Process", on_click=[
+    SetState("processing", True),
+    ToolCall(
+        "run_analysis",
+        arguments={"data": "{{ dataset }}"},
+        on_success=ShowToast("Analysis complete!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+    SetState("processing", False),
+])
+```
+
+`SetState("processing", True)` fires instantly, then `ToolCall` makes the server request. If the tool succeeds, `on_success` fires and the chain continues to `SetState("processing", False)`. If the tool fails, `on_error` fires and the chain stops — `processing` stays `True` so you can reflect the error state in the UI.
+
+## Error Handling
+
+When a `ToolCall` action fails, the error message is available as `$error` inside `on_error` callbacks. This lets you surface server-side validation messages or exceptions directly to the user.
+
+<ComponentPreview auto json={`{"label":"Delete","variant":"destructive","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"delete_item","arguments":{"id":"{{ item_id }}"}},"type":"Button"}`} />
+
+```python Error Handling
+from prefab_ui.components import Button
+from prefab_ui import ToolCall, ShowToast
+
+Button("Delete", variant="destructive", on_click=ToolCall(
+    "delete_item",
+    arguments={"id": "{{ item_id }}"},
+    on_error=ShowToast("{{ $error }}", variant="error"),
+))
+```
+
+If `delete_item` raises an exception or returns an error, the message appears in a toast notification. The `$error` variable is scoped to the `on_error` callback and does not leak into broader state.

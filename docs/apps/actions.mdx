@@ -1,0 +1,76 @@
+---
+title: Actions
+description: Connect UI interactions to server tools, state changes, and navigation.
+icon: bolt
+---
+
+Actions define what happens when a user interacts with a component. Click a button, toggle a switch, move a slider — the action determines whether that interaction calls a server tool, updates local state, or opens a URL.
+
+Every component that supports interaction accepts action props like `on_click`, `on_change`, or `on_submit`. You pass an action instance (or a list of them) to wire up the behavior.
+
+```python
+from prefab_ui.components import Button, Slider
+from prefab_ui import ToolCall, SetState
+
+Button("Run Analysis", on_click=ToolCall("analyze"))
+Slider(name="threshold", on_change=SetState("threshold"))
+```
+
+## Client Actions
+
+Client actions mutate local state instantly — no server round-trip, no waiting. These are the building blocks for responsive UIs.
+
+| Action | Purpose |
+|--------|---------|
+| [State](/apps/actions/set-state) | Set or toggle state variables (captures event values by default) |
+| [Open Link](/apps/actions/open-link) | Open a URL through the host's link handler |
+
+## MCP Actions
+
+MCP actions communicate with the host application — they call tools, send messages, or update context. Each one triggers a round-trip through the Prefab SDK.
+
+| Action | Purpose |
+|--------|---------|
+| [Call Tool](/apps/actions/call-tool) | Call a server-side tool with optional arguments |
+| [Send Message](/apps/actions/send-message) | Send a message to the chat as if the user typed it |
+| [Update Context](/apps/actions/update-context) | Silently update what the model knows |
+
+## Form Controls and State
+
+Every form control with a `name` prop automatically syncs its value to `$state`. When a user types in `Input(name="city")`, the renderer updates `city` on every keystroke — no `SetState` or `on_change` needed.
+
+```python
+from prefab_ui.components import Input, Button, Column
+from prefab_ui import ToolCall
+
+with Column(gap=3):
+    Input(name="city", placeholder="Enter a city...")
+    Button("Get Weather", on_click=ToolCall(
+        "get_weather",
+        arguments={"location": "{{ city }}"},
+    ))
+```
+
+This works for all named controls: `Input`, `Textarea`, `Select`, `Slider`, `Checkbox`, `Switch`, and `RadioGroup`. The `name` is the state key.
+
+`SetState` is still useful when you want to set state from a button click, toggle visibility, or store a value that doesn't come from a form control.
+
+## State Interpolation
+
+Actions support `{{ key }}` templates to inject the current client state into arguments, messages, or URLs. This is how UI values flow into server calls and other actions.
+
+## Composing Actions
+
+Pass a list to execute multiple actions from a single interaction:
+
+```python
+from prefab_ui.components import Button
+from prefab_ui import SetState, ToolCall
+
+Button("Submit", on_click=[
+    SetState("status", "analyzing..."),
+    ToolCall("process", arguments={"query": "{{ query }}"}),
+])
+```
+
+Actions execute in order. This pattern is useful for updating UI state (like showing a loading indicator) before triggering a server call.

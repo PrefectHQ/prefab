@@ -1,0 +1,115 @@
+---
+title: Confirmation and Feedback
+description: Patterns for confirming destructive actions and providing feedback with dialogs, popovers, and toasts.
+icon: shield-check
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Destructive or important actions benefit from an explicit confirmation step before executing. Prefab provides Dialog and Popover components that pair naturally with `ToolCall` and `ShowToast` to build these patterns.
+
+## Confirmation Dialog
+
+Wrap a destructive trigger in a Dialog so users must confirm before the action fires. The first child is the trigger element; the remaining children form the dialog body.
+
+<ComponentPreview auto height="420px" json={`{"type":"Div","cssClass":"min-h-[420px]","children":[{"title":"Delete Item","description":"This action cannot be undone.","type":"Dialog","children":[{"label":"Delete","variant":"destructive","size":"default","disabled":false,"type":"Button"},{"content":"Are you sure you want to permanently delete this item?","type":"Text"},{"cssClass":"justify-end","gap":2,"type":"Row","children":[{"label":"Cancel","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"Confirm Delete","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"delete_item","arguments":{"id":"{{ item_id }}"}},"type":"Button"}]}]}]}`} />
+
+```python Confirmation Dialog
+from prefab_ui.components import Button, Dialog, Row, Text
+from prefab_ui import ToolCall
+
+with Dialog(title="Delete Item", description="This action cannot be undone."):
+    Button("Delete", variant="destructive")
+    Text("Are you sure you want to permanently delete this item?")
+    with Row(gap=2, css_class="justify-end"):
+        Button("Cancel", variant="outline")
+        Button(
+            "Confirm Delete",
+            variant="destructive",
+            on_click=ToolCall("delete_item", arguments={"id": "{{ item_id }}"}),
+        )
+```
+
+The Cancel button closes the dialog automatically -- no extra wiring required.
+
+## Two-Step Destructive Actions
+
+Some destructive actions need to show the user what will happen before they confirm. Combine a Dialog with `ShowToast` callbacks to give feedback after the server responds.
+
+```python Two-Step Confirmation
+from prefab_ui.components import Button, Column, Dialog, Row, Text
+from prefab_ui import ToolCall, ShowToast
+
+with Dialog(title="Remove User", description="This will revoke all access."):
+    Button("Remove", variant="destructive")
+    Column(
+        gap=3,
+        children=[
+            Text("User {{ user_name }} will lose access to all projects."),
+            Row(
+                gap=2,
+                css_class="justify-end",
+                children=[
+                    Button("Cancel", variant="outline"),
+                    Button(
+                        "Remove User",
+                        variant="destructive",
+                        on_click=ToolCall(
+                            "remove_user",
+                            arguments={"user_id": "{{ user_id }}"},
+                            on_success=ShowToast("User removed", variant="success"),
+                            on_error=ShowToast("{{ $error }}", variant="error"),
+                        ),
+                    ),
+                ],
+            ),
+        ],
+    )
+```
+
+The `on_success` and `on_error` callbacks on `ToolCall` fire after the server tool completes, giving the user immediate feedback without additional logic.
+
+## Toast Feedback
+
+`ShowToast` works on any `ToolCall` action, with or without a dialog. Use it whenever users need to know whether a server action succeeded.
+
+<ComponentPreview auto json={`{"label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"save_item","arguments":{"data":"{{ item }}"}},"type":"Button"}`} />
+
+```python Toast Feedback
+from prefab_ui.components import Button
+from prefab_ui import ToolCall, ShowToast
+
+Button(
+    "Save",
+    on_click=ToolCall(
+        "save_item",
+        arguments={"data": "{{ item }}"},
+        on_success=ShowToast("Saved successfully!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+)
+```
+
+Toast variants: `"success"`, `"error"`, `"warning"`, `"info"`, or omit for default styling.
+
+## Inline Confirmation with Popover
+
+For lighter-weight confirmations that do not need a full modal overlay, use a Popover. The same trigger-then-content pattern applies: first child is the trigger, the rest is the popover body.
+
+<ComponentPreview auto json={`{"type":"Popover","children":[{"label":"Archive","variant":"outline","size":"default","disabled":false,"type":"Button"},{"gap":2,"type":"Column","children":[{"content":"Archive this item?","type":"Text"},{"label":"Confirm","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"archive_item","arguments":{"id":"{{ item_id }}"}},"type":"Button"}]}]}`} />
+
+```python Popover Confirmation
+from prefab_ui.components import Button, Column, Popover, Text
+from prefab_ui import ToolCall
+
+with Popover():
+    Button("Archive", variant="outline")
+    with Column(gap=2):
+        Text("Archive this item?")
+        Button(
+            "Confirm",
+            on_click=ToolCall("archive_item", arguments={"id": "{{ item_id }}"}),
+        )
+```
+
+Popovers are a good fit for reversible actions where a full dialog would feel heavy.

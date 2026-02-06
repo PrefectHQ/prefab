@@ -1,0 +1,122 @@
+---
+title: Slider
+description: Range input for selecting numeric values.
+icon: sliders
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Sliders let users select a numeric value from a range by dragging a handle.
+
+<ComponentPreview auto json={`{"min":0.0,"max":100.0,"value":50.0,"disabled":false,"type":"Slider"}`} />
+
+```python Slider Example
+from prefab_ui.components import Slider
+
+Slider(min=0, max=100, value=50)
+```
+
+## With Step Increment
+
+<ComponentPreview auto json={`{"min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false,"type":"Slider"}`} />
+
+```python Slider with Step
+from prefab_ui.components import Slider
+
+Slider(min=0, max=10, step=0.5, value=5)
+```
+
+## Different Ranges
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"gap":2,"type":"Column","children":[{"text":"Volume (0-100)","type":"Label"},{"min":0.0,"max":100.0,"value":75.0,"disabled":false,"type":"Slider"}]},{"gap":2,"type":"Column","children":[{"text":"Temperature (0-10)","type":"Label"},{"min":0.0,"max":10.0,"value":7.0,"disabled":false,"type":"Slider"}]}]}`} />
+
+```python Slider Ranges
+from prefab_ui.components import (
+    Column,
+    Label,
+    Slider,
+)
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Volume (0-100)")
+        Slider(min=0, max=100, value=75)
+
+    with Column(gap=2):
+        Label("Temperature (0-10)")
+        Slider(min=0, max=10, value=7)
+```
+
+## Displaying the Value
+
+Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
+
+<ComponentPreview auto json={`{"_tree":{"gap":4,"type":"Column","children":[{"gap":2,"type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"text":"Volume","type":"Label"},{"content":"{{ volume | number }}%","bold":true,"type":"Text"}]},{"min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false,"type":"Slider"}]},{"value":"{{ volume }}","max":100.0,"type":"Progress"}]},"_state":{"volume":75}}`} />
+
+```python Slider with Value Display
+from prefab_ui.components import (
+    Column,
+    Label,
+    Progress,
+    Row,
+    Slider,
+    Text,
+)
+
+set_initial_state(volume=75)
+
+with Column(gap=4):
+    with Column(gap=2):
+        with Row(css_class="justify-between"):
+            Label("Volume")
+            Text("{{ volume | number }}%", bold=True)
+        Slider(name="volume", min=0, max=100, value=75)
+    Progress(value="{{ volume }}", max=100)
+```
+
+The slider, label, and progress bar all stay in sync — drag the slider and the displayed value and progress bar update instantly. This pattern works with any component that supports interpolation.
+
+## Disabled State
+
+<ComponentPreview auto json={`{"min":0.0,"max":100.0,"value":30.0,"disabled":true,"type":"Slider"}`} />
+
+```python Disabled Slider
+from prefab_ui.components import Slider
+
+Slider(min=0, max=100, value=30, disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Slider Parameters">
+
+<ParamField path="min" type="float" default="0">
+  Minimum value of the range.
+</ParamField>
+
+<ParamField path="max" type="float" default="100">
+  Maximum value of the range.
+</ParamField>
+
+<ParamField path="value" type="float | None">
+  Initial value. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="step" type="float | None">
+  Step increment for the slider. If not provided, slider moves continuously.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the slider is disabled.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

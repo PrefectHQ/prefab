@@ -1,0 +1,94 @@
+---
+title: Checkbox
+description: Checkbox inputs for binary or multiple selections.
+icon: square-check
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Checkboxes let users select one or more options from a set.
+
+<ComponentPreview auto json={`{"label":"Accept terms and conditions","checked":false,"disabled":false,"required":false,"type":"Checkbox"}`} />
+
+```python Checkbox Example
+from prefab_ui.components import Checkbox
+
+Checkbox(label="Accept terms and conditions")
+```
+
+## Checked State
+
+<ComponentPreview auto json={`{"label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false,"type":"Checkbox"}`} />
+
+```python Checked Checkbox
+from prefab_ui.components import Checkbox
+
+Checkbox(label="Subscribe to newsletter", checked=True)
+```
+
+## Multiple Checkboxes
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"label":"Email notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"},{"label":"SMS notifications","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Push notifications","checked":true,"disabled":false,"required":false,"type":"Checkbox"}]}`} />
+
+```python Multiple Checkboxes
+from prefab_ui.components import (
+    Checkbox,
+    Column,
+)
+
+with Column(gap=3):
+    Checkbox(label="Email notifications", checked=True)
+    Checkbox(label="SMS notifications")
+    Checkbox(label="Push notifications", checked=True)
+```
+
+## With Disabled State
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"label":"Enabled option","checked":false,"disabled":false,"required":false,"type":"Checkbox"},{"label":"Disabled option","checked":false,"disabled":true,"required":false,"type":"Checkbox"},{"label":"Disabled & checked","checked":true,"disabled":true,"required":false,"type":"Checkbox"}]}`} />
+
+```python Disabled Checkboxes
+from prefab_ui.components import (
+    Checkbox,
+    Column,
+)
+
+with Column(gap=3):
+    Checkbox(label="Enabled option")
+    Checkbox(label="Disabled option", disabled=True)
+    Checkbox(label="Disabled & checked", checked=True, disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Checkbox Parameters">
+
+<ParamField path="label" type="str | None">
+  Label text displayed next to the checkbox. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="checked" type="bool" default="False">
+  Whether the checkbox is checked.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="value" type="str | None">
+  Form value when checked. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the checkbox is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether the checkbox is required.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

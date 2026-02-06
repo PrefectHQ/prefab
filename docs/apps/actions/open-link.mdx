@@ -1,0 +1,61 @@
+---
+title: Open Link
+description: Open a URL from a UI interaction.
+icon: arrow-up-right-from-square
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`OpenLink` opens a URL through the host application's link handler. Use it for navigation buttons, "View docs" links, or any action that should take the user to an external resource.
+
+<ComponentPreview auto json={`{"label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"},"type":"Button"}`} />
+
+```python Open Link Hero
+from prefab_ui.components import Button
+from prefab_ui import OpenLink
+
+Button("View Documentation", variant="link",
+       on_click=OpenLink("https://prefab-ui.dev"))
+```
+
+## Link Buttons
+
+Pair `OpenLink` with the `link` button variant for a natural look:
+
+<ComponentPreview auto json={`{"gap":4,"type":"Row","children":[{"label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/jlowin/prefab"},"type":"Button"},{"label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"},"type":"Button"}]}`} />
+
+```python Link Buttons
+from prefab_ui.components import Button, Row
+from prefab_ui import OpenLink
+
+with Row(gap=4):
+    Button("GitHub", variant="link",
+           on_click=OpenLink("https://github.com/jlowin/prefab"))
+    Button("PyPI", variant="link",
+           on_click=OpenLink("https://pypi.org/project/prefab-ui"))
+```
+
+## Dynamic URLs with State
+
+Build URLs from client state using interpolation:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false,"type":"Input"},{"label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"},"type":"Button"}]}`} />
+
+```python Dynamic URLs
+from prefab_ui.components import Input, Button, Column
+from prefab_ui import OpenLink
+
+with Column(gap=3):
+    Input(name="repo", placeholder="owner/repo")
+    Button("Open on GitHub", on_click=OpenLink(
+        "https://github.com/{{ repo }}"
+    ))
+```
+
+## API Reference
+
+<Card icon="code" title="OpenLink Parameters">
+<ParamField body="url" type="str" required>
+  URL to open. Can be passed as a positional argument. Supports `{{ key }}` interpolation.
+</ParamField>
+</Card>

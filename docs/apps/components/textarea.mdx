@@ -1,0 +1,94 @@
+---
+title: Textarea
+description: Multi-line text input for longer content.
+icon: align-left
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Textareas provide multi-line text input for comments, descriptions, and other longer content.
+
+<ComponentPreview auto json={`{"placeholder":"Enter your message...","disabled":false,"required":false,"type":"Textarea"}`} />
+
+```python Textarea Example
+from prefab_ui.components import Textarea
+
+Textarea(placeholder="Enter your message...")
+```
+
+## With Labels
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"text":"Feedback","type":"Label"},{"placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false,"type":"Textarea"}]}`} />
+
+```python Textarea with Label
+from prefab_ui.components import (
+    Column,
+    Label,
+    Textarea,
+)
+
+with Column(gap=2):
+    Label("Feedback")
+    Textarea(
+        placeholder="Tell us what you think...",
+        rows=5,
+    )
+```
+
+## With Initial Value
+
+<ComponentPreview auto json={`{"value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false,"type":"Textarea"}`} />
+
+```python Textarea with Value
+from prefab_ui.components import Textarea
+
+Textarea(
+    value="This is some initial content that can be edited.",
+    rows=4,
+)
+```
+
+## Disabled State
+
+<ComponentPreview auto json={`{"placeholder":"This textarea is disabled","disabled":true,"required":false,"type":"Textarea"}`} />
+
+```python Disabled Textarea
+from prefab_ui.components import Textarea
+
+Textarea(placeholder="This textarea is disabled", disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Textarea Parameters">
+
+<ParamField path="placeholder" type="str | None">
+  Placeholder text. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="value" type="str | None">
+  Initial value. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name for submission.
+</ParamField>
+
+<ParamField path="rows" type="int | None">
+  Number of visible text rows.
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the textarea is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether the textarea is required for form submission.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

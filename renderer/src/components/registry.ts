@@ -1,0 +1,175 @@
+/**
+ * Component registry — maps JSON type names to React components.
+ *
+ * Each Python component class (e.g., Button, Card, Row) serializes
+ * to JSON with { "type": "Button", ... }. The renderer looks up the
+ * type name here to find the corresponding React component.
+ *
+ * For components where Python's API differs from shadcn's multi-part
+ * structure (Select, RadioGroup, Checkbox, Switch), we register
+ * wrapper components from form.tsx that bridge the gap.
+ */
+
+import type { ComponentType } from "react";
+
+// shadcn components (used directly when APIs match)
+import { Button } from "@/ui/button";
+import { Badge } from "@/ui/badge";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/ui/alert";
+import { Input } from "@/ui/input";
+import { Textarea } from "@/ui/textarea";
+import { Label } from "@/ui/label";
+import { Separator } from "@/ui/separator";
+import { Slider } from "@/ui/slider";
+import { Progress } from "@/ui/progress";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from "@/ui/table";
+
+// Wrapper components (bridge Python API → shadcn internals)
+import {
+  PrefabSelect,
+  PrefabRadioGroup,
+  PrefabRadio,
+  PrefabCheckbox,
+  PrefabSwitch,
+  PrefabButtonGroup,
+} from "./form";
+
+// Custom components
+import { Row, Column, Grid, Div, Span } from "./layout";
+import {
+  Text,
+  Heading,
+  H1,
+  H2,
+  H3,
+  H4,
+  P,
+  Lead,
+  Large,
+  Small,
+  Muted,
+  InlineCode,
+  BlockQuote,
+} from "./typography";
+import { Code, Image, Markdown } from "./content";
+import { ForEach } from "./control-flow";
+import { PrefabDataTable } from "./data-display";
+import {
+  PrefabTabs,
+  PrefabAccordion,
+  PrefabPages,
+  PrefabTooltip,
+  PrefabPopover,
+  PrefabDialog,
+  PrefabCalendar,
+  PrefabDatePicker,
+} from "./compound";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const REGISTRY: Record<string, ComponentType<any>> = {
+  // shadcn (direct — APIs match)
+  Button,
+  Badge,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  Input,
+  Textarea,
+  Label,
+  Separator,
+  Slider,
+  Progress,
+
+  // Form wrappers (Python API → shadcn multi-part)
+  Select: PrefabSelect,
+  SelectOption: () => null, // consumed by parent Select via _items
+  RadioGroup: PrefabRadioGroup,
+  Radio: PrefabRadio, // standalone renders as native radio; inside RadioGroup consumed as data
+  Checkbox: PrefabCheckbox,
+  Switch: PrefabSwitch,
+  ButtonGroup: PrefabButtonGroup,
+
+  // Table (direct shadcn — 1:1 API match)
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+
+  // DataTable (wrapper around @tanstack/react-table)
+  DataTable: PrefabDataTable,
+
+  // Layout
+  Row,
+  Column,
+  Form: Column, // Form renders as Column with vertical flex + gap
+  Grid,
+  Div,
+  Span,
+
+  // Typography
+  Text,
+  Heading,
+  H1,
+  H2,
+  H3,
+  H4,
+  P,
+  Lead,
+  Large,
+  Small,
+  Muted,
+  InlineCode,
+  BlockQuote,
+
+  // Content
+  Code,
+  Image,
+  Markdown,
+
+  // Control flow
+  ForEach,
+
+  // Compound containers (wrapper components decompose children into parts)
+  Tabs: PrefabTabs,
+  Tab: () => null, // consumed by parent Tabs
+  Accordion: PrefabAccordion,
+  AccordionItem: () => null, // consumed by parent Accordion
+  Pages: PrefabPages,
+  Page: () => null, // consumed by parent Pages
+
+  // Overlay wrappers (first child = trigger, rest = content)
+  Tooltip: PrefabTooltip,
+  Popover: PrefabPopover,
+  Dialog: PrefabDialog,
+
+  // Calendar / DatePicker
+  Calendar: PrefabCalendar,
+  DatePicker: PrefabDatePicker,
+};

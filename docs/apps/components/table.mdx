@@ -1,0 +1,131 @@
+---
+title: Table
+description: Structured data display with rows, columns, headers, and captions.
+icon: table
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Tables display structured data using HTML table semantics. They're composed from sub-components — `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, and `TableCaption` — that map directly to their HTML counterparts.
+
+<ComponentPreview auto json={`{"type":"Table","children":[{"content":"Recent invoices","type":"TableCaption"},{"type":"TableHeader","children":[{"type":"TableRow","children":[{"content":"Invoice","type":"TableHead"},{"content":"Status","type":"TableHead"},{"content":"Method","type":"TableHead"},{"cssClass":"text-right","content":"Amount","type":"TableHead"}]}]},{"type":"TableBody","children":[{"type":"TableRow","children":[{"cssClass":"font-medium","content":"INV-001","type":"TableCell"},{"content":"Paid","type":"TableCell"},{"content":"Credit Card","type":"TableCell"},{"cssClass":"text-right","content":"$250.00","type":"TableCell"}]},{"type":"TableRow","children":[{"cssClass":"font-medium","content":"INV-002","type":"TableCell"},{"content":"Pending","type":"TableCell"},{"content":"PayPal","type":"TableCell"},{"cssClass":"text-right","content":"$150.00","type":"TableCell"}]},{"type":"TableRow","children":[{"cssClass":"font-medium","content":"INV-003","type":"TableCell"},{"content":"Paid","type":"TableCell"},{"content":"Bank Transfer","type":"TableCell"},{"cssClass":"text-right","content":"$350.00","type":"TableCell"}]}]}]}`} />
+
+```python Table Example
+from prefab_ui.components import (
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    TableHead,
+    TableCell,
+    TableCaption,
+)
+
+with Table():
+    TableCaption("Recent invoices")
+    with TableHeader():
+        with TableRow():
+            TableHead("Invoice")
+            TableHead("Status")
+            TableHead("Method")
+            TableHead("Amount", css_class="text-right")
+    with TableBody():
+        with TableRow():
+            TableCell("INV-001", css_class="font-medium")
+            TableCell("Paid")
+            TableCell("Credit Card")
+            TableCell("$250.00", css_class="text-right")
+        with TableRow():
+            TableCell("INV-002", css_class="font-medium")
+            TableCell("Pending")
+            TableCell("PayPal")
+            TableCell("$150.00", css_class="text-right")
+        with TableRow():
+            TableCell("INV-003", css_class="font-medium")
+            TableCell("Paid")
+            TableCell("Bank Transfer")
+            TableCell("$350.00", css_class="text-right")
+```
+
+## Rich Cell Content
+
+Table cells are containers — they can hold any component, not just text. This makes it easy to add badges, buttons, or other elements inline.
+
+<ComponentPreview auto json={`{"type":"Table","children":[{"type":"TableHeader","children":[{"type":"TableRow","children":[{"content":"Name","type":"TableHead"},{"content":"Status","type":"TableHead"},{"content":"Role","type":"TableHead"}]}]},{"type":"TableBody","children":[{"type":"TableRow","children":[{"content":"Alice Johnson","type":"TableCell"},{"type":"TableCell","children":[{"label":"Active","variant":"success","type":"Badge"}]},{"content":"Admin","type":"TableCell"}]},{"type":"TableRow","children":[{"content":"Bob Smith","type":"TableCell"},{"type":"TableCell","children":[{"label":"Inactive","variant":"secondary","type":"Badge"}]},{"content":"Viewer","type":"TableCell"}]}]}]}`} />
+
+```python Table Rich Cells
+from prefab_ui.components import (
+    Badge,
+    Table,
+    TableBody,
+    TableHead,
+    TableHeader,
+    TableRow,
+    TableCell,
+)
+
+with Table():
+    with TableHeader():
+        with TableRow():
+            TableHead("Name")
+            TableHead("Status")
+            TableHead("Role")
+    with TableBody():
+        with TableRow():
+            TableCell("Alice Johnson")
+            with TableCell():
+                Badge("Active", variant="success")
+            TableCell("Admin")
+        with TableRow():
+            TableCell("Bob Smith")
+            with TableCell():
+                Badge("Inactive", variant="secondary")
+            TableCell("Viewer")
+```
+
+## Data Interpolation
+
+Cell content supports `{{ field }}` placeholders for rendering server data:
+
+```python Table Interpolation
+from prefab_ui.components import (
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+)
+
+with Table():
+    with TableBody():
+        with TableRow():
+            TableCell("{{ name }}")
+            TableCell("{{ email }}")
+```
+
+<Tip>
+For large datasets with sorting, filtering, and pagination, use [DataTable](/apps/components/data-table) instead.
+</Tip>
+
+## API Reference
+
+<Card icon="code" title="Table Parameters">
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="TableHead / TableCell Parameters">
+<ParamField body="content" type="str | None">
+  Text content. Can be passed as a positional argument. Supports `{{ field }}` interpolation. Alternatively, use child components for rich content.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes (e.g., `"text-right"` for right-aligned columns).
+</ParamField>
+</Card>
+
+<Card icon="code" title="TableCaption Parameters">
+<ParamField body="content" type="str" required>
+  Caption text. Can be passed as a positional argument.
+</ParamField>
+</Card>

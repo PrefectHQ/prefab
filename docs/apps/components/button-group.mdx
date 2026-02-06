@@ -1,0 +1,63 @@
+---
+title: Button Group
+description: Visually connect related buttons with merged borders.
+icon: object-group
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Button groups join related actions into a single visual unit. Borders between buttons merge, and only the outer corners stay rounded.
+
+<ComponentPreview auto json={`{"orientation":"horizontal","type":"ButtonGroup","children":[{"label":"Save","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Cancel","variant":"outline","size":"default","disabled":false,"type":"Button"}]}`} />
+
+```python Button Group
+from prefab_ui.components import Button, ButtonGroup
+
+with ButtonGroup():
+    Button("Save")
+    Button("Cancel", variant="outline")
+```
+
+## Orientation
+
+Horizontal (default) groups buttons side-by-side. Vertical stacks them:
+
+<ComponentPreview auto json={`{"orientation":"vertical","type":"ButtonGroup","children":[{"label":"Top","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Middle","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"Bottom","variant":"outline","size":"default","disabled":false,"type":"Button"}]}`} />
+
+```python Vertical Button Group
+from prefab_ui.components import Button, ButtonGroup
+
+with ButtonGroup(orientation="vertical"):
+    Button("Top")
+    Button("Middle", variant="outline")
+    Button("Bottom", variant="outline")
+```
+
+## Common Patterns
+
+Pagination controls, view toggles, and segmented controls all benefit from button groups:
+
+<ComponentPreview auto json={`{"orientation":"horizontal","type":"ButtonGroup","children":[{"label":"Previous","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"1","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"2","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"3","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"Next","variant":"outline","size":"default","disabled":false,"type":"Button"}]}`} />
+
+```python Pagination Example
+from prefab_ui.components import Button, ButtonGroup
+
+with ButtonGroup():
+    Button("Previous", variant="outline")
+    Button("1")
+    Button("2", variant="outline")
+    Button("3", variant="outline")
+    Button("Next", variant="outline")
+```
+
+## API Reference
+
+<Card icon="code" title="ButtonGroup Parameters">
+<ParamField body="orientation" type="str" default='"horizontal"'>
+  Layout direction: `"horizontal"` or `"vertical"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>

@@ -1,0 +1,57 @@
+---
+title: Tooltip
+description: Hover text that appears on any component.
+icon: comment
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Tooltips show brief helper text when users hover over a component. Wrap any single element to add a tooltip.
+
+<ComponentPreview auto height="140px" json={`{"type":"Div","cssClass":"min-h-[140px]","children":[{"gap":4,"type":"Row","children":[{"content":"Save your current work","type":"Tooltip","children":[{"label":"Save","variant":"default","size":"default","disabled":false,"type":"Button"}]},{"content":"Discard unsaved changes","side":"bottom","type":"Tooltip","children":[{"label":"Reset","variant":"outline","size":"default","disabled":false,"type":"Button"}]}]}]}`} />
+
+```python Tooltip Example
+from prefab_ui.components import Button, Row, Tooltip
+
+with Row(gap=4):
+    with Tooltip("Save your current work"):
+        Button("Save")
+    with Tooltip("Discard unsaved changes", side="bottom"):
+        Button("Reset", variant="outline")
+```
+
+## Side Placement
+
+Control which side the tooltip appears on with the `side` parameter.
+
+<ComponentPreview auto height="140px" json={`{"type":"Div","cssClass":"min-h-[140px]","children":[{"gap":4,"type":"Row","children":[{"content":"Top","side":"top","type":"Tooltip","children":[{"label":"Top","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Right","side":"right","type":"Tooltip","children":[{"label":"Right","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Bottom","side":"bottom","type":"Tooltip","children":[{"label":"Bottom","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Left","side":"left","type":"Tooltip","children":[{"label":"Left","variant":"outline","size":"default","disabled":false,"type":"Button"}]}]}]}`} />
+
+```python Tooltip Sides
+from prefab_ui.components import Button, Row, Tooltip
+
+with Row(gap=4):
+    with Tooltip("Top", side="top"):
+        Button("Top", variant="outline")
+    with Tooltip("Right", side="right"):
+        Button("Right", variant="outline")
+    with Tooltip("Bottom", side="bottom"):
+        Button("Bottom", variant="outline")
+    with Tooltip("Left", side="left"):
+        Button("Left", variant="outline")
+```
+
+## API Reference
+
+<Card icon="code" title="Tooltip Parameters">
+<ParamField body="content" type="str" required>
+  Tooltip text. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="side" type="str | None" default="None">
+  Which side to show the tooltip: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

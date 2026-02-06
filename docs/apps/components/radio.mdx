@@ -1,0 +1,100 @@
+---
+title: Radio Group
+description: Radio buttons for mutually exclusive choices.
+icon: circle-dot
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+## Usage
+
+Radio buttons let users select exactly one option from a set of choices.
+
+<ComponentPreview auto json={`{"name":"size","type":"RadioGroup","children":[{"value":"sm","label":"Small","checked":false,"disabled":false,"required":false,"type":"Radio"},{"value":"md","label":"Medium","checked":true,"disabled":false,"required":false,"type":"Radio"},{"value":"lg","label":"Large","checked":false,"disabled":false,"required":false,"type":"Radio"}]}`} />
+
+```python Radio Group Example
+from prefab_ui.components import (
+    Radio,
+    RadioGroup,
+)
+
+with RadioGroup(name="size"):
+    Radio(value="sm", label="Small")
+    Radio(value="md", label="Medium", checked=True)
+    Radio(value="lg", label="Large")
+```
+
+## Without RadioGroup
+
+Individual radio buttons can be used independently:
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"value":"yes","label":"Yes","checked":false,"name":"answer","disabled":false,"required":false,"type":"Radio"},{"value":"no","label":"No","checked":true,"name":"answer","disabled":false,"required":false,"type":"Radio"}]}`} />
+
+```python Individual Radios
+from prefab_ui.components import (
+    Column,
+    Radio,
+)
+
+with Column(gap=3):
+    Radio(value="yes", label="Yes", name="answer")
+    Radio(value="no", label="No", name="answer", checked=True)
+```
+
+## Disabled State
+
+<ComponentPreview auto json={`{"name":"plan","type":"RadioGroup","children":[{"value":"free","label":"Free","checked":true,"disabled":false,"required":false,"type":"Radio"},{"value":"pro","label":"Pro","checked":false,"disabled":false,"required":false,"type":"Radio"},{"value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false,"type":"Radio"}]}`} />
+
+```python Disabled Radio
+from prefab_ui.components import (
+    Radio,
+    RadioGroup,
+)
+
+with RadioGroup(name="plan"):
+    Radio(value="free", label="Free", checked=True)
+    Radio(value="pro", label="Pro")
+    Radio(value="enterprise", label="Enterprise", disabled=True)
+```
+
+## API Reference
+
+<Card icon="code" title="Radio Parameters">
+
+<ParamField path="name" type="str | None">
+  Form field name shared by all radio buttons in the group.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+
+
+<ParamField path="value" type="str">
+  Form value for this option. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="label" type="str | None">
+  Label text displayed next to the radio button. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField path="checked" type="bool" default="False">
+  Whether this radio button is selected.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+  Form field name (usually inherited from RadioGroup).
+</ParamField>
+
+<ParamField path="disabled" type="bool" default="False">
+  Whether the radio button is disabled.
+</ParamField>
+
+<ParamField path="required" type="bool" default="False">
+  Whether a selection is required.
+</ParamField>
+
+<ParamField path="css_class" type="str | None">
+  Additional CSS classes to apply.
+</ParamField>
+</Card>

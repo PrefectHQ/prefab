@@ -1,0 +1,154 @@
+---
+title: Alert
+description: Prominent messages for important information, warnings, and errors.
+icon: triangle-exclamation
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Alerts draw attention to important information. They pair a title with a description and use color variants to signal intent.
+
+<ComponentPreview auto json={`{"variant":"default","type":"Alert","children":[{"content":"Heads up!","type":"AlertTitle"},{"content":"You can add components to your app using the CLI.","type":"AlertDescription"}]}`} />
+
+```python Alert Example
+from prefab_ui.components import (
+    Alert,
+    AlertTitle,
+    AlertDescription,
+)
+
+with Alert():
+    AlertTitle("Heads up!")
+    AlertDescription("You can add components to your app using the CLI.")
+```
+
+## Variants
+
+Five variants cover different semantic intents — from neutral information to success confirmations and error states.
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"variant":"default","type":"Alert","children":[{"content":"Default","type":"AlertTitle"},{"content":"A neutral informational message.","type":"AlertDescription"}]},{"variant":"destructive","type":"Alert","children":[{"content":"Error","type":"AlertTitle"},{"content":"Your session has expired. Please log in again.","type":"AlertDescription"}]},{"variant":"success","type":"Alert","children":[{"content":"Success","type":"AlertTitle"},{"content":"Your changes have been saved successfully.","type":"AlertDescription"}]},{"variant":"warning","type":"Alert","children":[{"content":"Warning","type":"AlertTitle"},{"content":"Your trial expires in 3 days.","type":"AlertDescription"}]},{"variant":"info","type":"Alert","children":[{"content":"Info","type":"AlertTitle"},{"content":"A new version is available for download.","type":"AlertDescription"}]}]}`} />
+
+```python Alert Variants
+from prefab_ui.components import (
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    Column,
+)
+
+with Column(gap=4):
+    with Alert():
+        AlertTitle("Default")
+        AlertDescription("A neutral informational message.")
+
+    with Alert(variant="destructive"):
+        AlertTitle("Error")
+        AlertDescription("Your session has expired. Please log in again.")
+
+    with Alert(variant="success"):
+        AlertTitle("Success")
+        AlertDescription("Your changes have been saved successfully.")
+
+    with Alert(variant="warning"):
+        AlertTitle("Warning")
+        AlertDescription("Your trial expires in 3 days.")
+
+    with Alert(variant="info"):
+        AlertTitle("Info")
+        AlertDescription("A new version is available for download.")
+```
+
+## Without Title
+
+For simple messages, you can use just a description:
+
+<ComponentPreview auto json={`{"variant":"default","type":"Alert","children":[{"content":"Your changes have been saved.","type":"AlertDescription"}]}`} />
+
+```python Alert No Title
+from prefab_ui.components import (
+    Alert,
+    AlertDescription,
+)
+
+with Alert():
+    AlertDescription("Your changes have been saved.")
+```
+
+## In Context
+
+Alerts work well inside cards or at the top of a page to communicate status:
+
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"Deployment","type":"CardTitle"}]},{"type":"CardContent","children":[{"gap":4,"type":"Column","children":[{"variant":"default","type":"Alert","children":[{"content":"Maintenance Window","type":"AlertTitle"},{"content":"Deployments are paused from 2:00\\u20134:00 AM UTC.","type":"AlertDescription"}]},{"variant":"default","type":"Alert","children":[{"content":"Latest Deploy","type":"AlertTitle"},{"content":"v2.1.0 deployed successfully 3 hours ago.","type":"AlertDescription"}]}]}]}]}`} />
+
+```python Alert in Card
+from prefab_ui.components import (
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+    Alert,
+    AlertTitle,
+    AlertDescription,
+    Column,
+)
+
+with Card():
+    with CardHeader():
+        CardTitle("Deployment")
+    with CardContent():
+        with Column(gap=4):
+            with Alert():
+                AlertTitle("Maintenance Window")
+                AlertDescription("Deployments are paused from 2:00–4:00 AM UTC.")
+            with Alert():
+                AlertTitle("Latest Deploy")
+                AlertDescription("v2.1.0 deployed successfully 3 hours ago.")
+```
+
+## Data Interpolation
+
+Alert titles and descriptions support `{{ field }}` placeholders:
+
+```python Alert Interpolation
+from prefab_ui.components import (
+    Alert,
+    AlertTitle,
+    AlertDescription,
+)
+
+with Alert(variant="{{ severity }}"):
+    AlertTitle("{{ title }}")
+    AlertDescription("{{ message }}")
+```
+
+## API Reference
+
+<Card icon="code" title="Alert Parameters">
+<ParamField body="variant" type="str" default="default">
+  Visual style: `"default"`, `"destructive"`, `"success"`, `"warning"`, `"info"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="AlertTitle Parameters">
+<ParamField body="content" type="str" required>
+  Title text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="AlertDescription Parameters">
+<ParamField body="content" type="str" required>
+  Description text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

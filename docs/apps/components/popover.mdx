@@ -1,0 +1,71 @@
+---
+title: Popover
+description: Floating content panel triggered by clicking a child element.
+icon: message-lines
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Popovers display rich content in a floating panel when users click a trigger element. The first child becomes the trigger; all remaining children become the panel content.
+
+<ComponentPreview auto height="340px" json={`{"type":"Div","cssClass":"min-h-[340px]","children":[{"title":"Dimensions","description":"Set the dimensions for the layer.","type":"Popover","children":[{"label":"Open popover","variant":"outline","size":"default","disabled":false,"type":"Button"},{"gap":3,"type":"Column","children":[{"text":"Width","type":"Label"},{"inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false,"type":"Input"},{"text":"Height","type":"Label"},{"inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false,"type":"Input"}]}]}]}`} />
+
+```python Popover Example
+from prefab_ui.components import (
+    Button,
+    Column,
+    Input,
+    Label,
+    Popover,
+)
+
+with Popover(title="Dimensions", description="Set the dimensions for the layer."):
+    Button("Open popover", variant="outline")
+    with Column(gap=3):
+        Label("Width")
+        Input(name="width", placeholder="100%")
+        Label("Height")
+        Input(name="height", placeholder="25px")
+```
+
+## Without Header
+
+Skip the `title` and `description` to render content directly in the panel.
+
+<ComponentPreview auto height="260px" json={`{"type":"Div","cssClass":"min-h-[260px]","children":[{"type":"Popover","children":[{"label":"Settings","variant":"outline","size":"default","disabled":false,"type":"Button"},{"gap":3,"type":"Column","children":[{"text":"Volume","type":"Label"},{"min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false,"type":"Slider"}]}]}]}`} />
+
+```python Popover No Header
+from prefab_ui.components import (
+    Button,
+    Column,
+    Label,
+    Popover,
+    Slider,
+)
+
+with Popover():
+    Button("Settings", variant="outline")
+    with Column(gap=3):
+        Label("Volume")
+        Slider(min=0, max=100, value=50, name="volume")
+```
+
+## API Reference
+
+<Card icon="code" title="Popover Parameters">
+<ParamField body="title" type="str | None" default="None">
+  Optional header title for the popover panel.
+</ParamField>
+
+<ParamField body="description" type="str | None" default="None">
+  Optional description below the title.
+</ParamField>
+
+<ParamField body="side" type="str | None" default="None">
+  Which side to show the popover: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

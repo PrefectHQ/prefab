@@ -1,0 +1,65 @@
+---
+title: Image
+description: Display images with dynamic URLs and dimensions.
+icon: image
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`Image` renders an `<img>` element with support for `{{ field }}` interpolation on both `src` and `alt`, making it easy to display user avatars, product images, or any dynamic media.
+
+<ComponentPreview auto json={`{"src":"https://picsum.photos/400/300","alt":"Example image","width":"400px","type":"Image"}`} />
+
+```python Image
+from prefab_ui.components import Image
+
+Image(src="https://picsum.photos/400/300", alt="Example image", width="400px")
+```
+
+Both `width` and `height` are CSS values (with units), applied as inline styles. The `src` and `alt` attributes support `{{ field }}` interpolation for dynamic content.
+
+## In Context
+
+Images compose naturally with cards and other layout components:
+
+```python Image in Card
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Image,
+    P,
+)
+
+with Card():
+    with CardHeader():
+        CardTitle("{{ name }}")
+    with CardContent():
+        Image(src="{{ photo_url }}", alt="{{ name }}", width="100%")
+        P("{{ bio }}")
+```
+
+## API Reference
+
+<Card icon="code" title="Image Parameters">
+<ParamField body="src" type="str" required>
+  Image URL. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="alt" type="str" default='""'>
+  Alt text. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="width" type="str | None" default="None">
+  CSS width value with units (e.g., `"200px"`, `"100%"`).
+</ParamField>
+
+<ParamField body="height" type="str | None" default="None">
+  CSS height value with units.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

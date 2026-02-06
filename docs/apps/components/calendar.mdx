@@ -1,0 +1,105 @@
+---
+title: Calendar
+description: Date selection calendar with single, multiple, and range modes.
+icon: calendar
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+The Calendar component renders a month view for selecting dates. It supports single date, multiple date, and date range selection. Selected dates are stored in client state as ISO strings.
+
+<ComponentPreview auto json={`{"mode":"single","name":"selectedDate","type":"Calendar"}`} />
+
+```python Calendar Example
+from prefab_ui.components import Calendar
+
+Calendar(name="selectedDate")
+```
+
+## Range Selection
+
+Set `mode="range"` to let users select a start and end date. The selected range is stored as a JSON object with `from` and `to` ISO strings.
+
+<ComponentPreview auto json={`{"_tree":{"mode":"range","name":"dateRange","type":"Calendar"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`} />
+
+```python Calendar Range
+import json
+from prefab_ui.components import Calendar
+
+set_initial_state(
+    dateRange=json.dumps({
+        "from": "2025-06-10T12:00:00.000Z",
+        "to": "2025-06-20T12:00:00.000Z",
+    })
+)
+
+Calendar(mode="range", name="dateRange")
+```
+
+## Multiple Selection
+
+Select multiple individual dates with `mode="multiple"`. Selected dates are stored as a JSON array of ISO strings.
+
+<ComponentPreview auto json={`{"_tree":{"mode":"multiple","name":"selectedDates","type":"Calendar"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`} />
+
+```python Calendar Multiple
+import json
+from prefab_ui.components import Calendar
+
+set_initial_state(
+    selectedDates=json.dumps([
+        "2025-06-10T12:00:00.000Z",
+        "2025-06-15T12:00:00.000Z",
+        "2025-06-22T12:00:00.000Z",
+    ])
+)
+
+Calendar(mode="multiple", name="selectedDates")
+```
+
+## Displaying the Selection
+
+Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
+
+<ComponentPreview auto json={`{"_tree":{"gap":6,"type":"Row","children":[{"mode":"single","name":"selectedDate","type":"Calendar"},{"gap":2,"type":"Column","children":[{"content":"Selected date:","type":"Text"},{"content":"{{ selectedDate | date:long }}","bold":true,"type":"Text"},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`} />
+
+```python Calendar with Label
+from prefab_ui.components import (
+    Calendar,
+    Column,
+    Muted,
+    Row,
+    Text,
+)
+
+set_initial_state(selectedDate="2025-06-15T12:00:00.000Z")
+
+with Row(gap=6):
+    Calendar(name="selectedDate")
+    with Column(gap=2):
+        Text("Selected date:")
+        Text("{{ selectedDate | date:long }}", bold=True)
+        Muted("Raw: {{ selectedDate }}")
+```
+
+The label updates instantly when the user clicks a date. The `date:long` format turns an ISO string like `"2025-01-15"` into `"January 15, 2025"`.
+
+## API Reference
+
+<Card icon="code" title="Calendar Parameters">
+<ParamField body="mode" type="str" default="single">
+  Selection mode: `"single"`, `"multiple"`, or `"range"`.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for storing the selected date. Single mode stores an ISO string; range mode stores `{"from": "...", "to": "..."}`.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) triggered when the selection changes.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

@@ -1,0 +1,21 @@
+export const ComponentPlayground = ({ code, height = "500px" }) => {
+  const ref = React.useRef(null);
+  const [src, setSrc] = React.useState(null);
+  React.useEffect(() => {
+    if (window.__PLAYGROUND_HTML) {
+      const blob = new Blob([window.__PLAYGROUND_HTML], { type: "text/html" });
+      setSrc(URL.createObjectURL(blob));
+    }
+  }, []);
+  const onLoad = React.useCallback(() => {
+    if (ref.current) {
+      const c = code ? code.trim() : window.__PLAYGROUND_DEMO_CODE;
+      ref.current.contentWindow.postMessage({ type: "init", code: c, bundle: window.__PLAYGROUND_BUNDLE, css: window.__PLAYGROUND_CSS }, "*");
+    }
+  }, [code]);
+  return (
+    <div style={{ borderRadius: 8, overflow: "hidden", marginTop: 16, marginBottom: 16, border: "1px solid var(--border-color, #e5e7eb)" }}>
+      {src ? <iframe ref={ref} onLoad={onLoad} src={src} sandbox="allow-scripts allow-same-origin" style={{ width: "100%", height, border: "none", display: "block" }} /> : <div style={{ height, display: "flex", alignItems: "center", justifyContent: "center", color: "#6b7280", fontSize: 14 }}>Loading playground...</div>}
+    </div>
+  );
+};

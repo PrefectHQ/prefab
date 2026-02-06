@@ -1,0 +1,263 @@
+---
+title: Typography
+description: Semantic text components styled with shadcn/ui conventions.
+icon: font
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Typography components give you semantic heading and body text styles that follow shadcn/ui conventions — proper font sizes, weights, tracking, and color that automatically adapts to dark mode. Every component accepts a content string as a positional argument and supports `{{ field }}` interpolation.
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`} />
+
+```python Typography Overview
+from prefab_ui.components import (
+    H1,
+    H2,
+    P,
+    Lead,
+    Muted,
+    Column,
+)
+
+with Column(gap=4):
+    H1("Dashboard")
+    Lead("Monitor your application metrics and performance.")
+    P("Everything you need to manage your MCP server, organized in one place.")
+    Muted("Last updated 5 minutes ago")
+```
+
+## Headings
+
+Four heading levels with decreasing size and weight. H2 includes a subtle bottom border for section separation.
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"content":"H1 \\u2014 Page Title","type":"H1"},{"content":"H2 \\u2014 Section Heading","type":"H2"},{"content":"H3 \\u2014 Subsection","type":"H3"},{"content":"H4 \\u2014 Detail Heading","type":"H4"}]}`} />
+
+```python Heading Levels
+from prefab_ui.components import (
+    H1,
+    H2,
+    H3,
+    H4,
+    Column,
+)
+
+with Column(gap=4):
+    H1("H1 — Page Title")
+    H2("H2 — Section Heading")
+    H3("H3 — Subsection")
+    H4("H4 — Detail Heading")
+```
+
+## Body Text
+
+`P` gives you standard paragraph text with comfortable line height. `Lead` is larger and muted for introductory text, while `Large` emphasizes key information with bolder weight.
+
+<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"content":"A comprehensive guide to building MCP applications with FastMCP.","type":"Lead"},{"content":"FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.","type":"P"},{"content":"Key Takeaway: Components compose naturally.","type":"Large"}]}`} />
+
+```python Body Text
+from prefab_ui.components import (
+    P,
+    Lead,
+    Large,
+    Column,
+)
+
+with Column(gap=4):
+    Lead("A comprehensive guide to building MCP applications with FastMCP.")
+    P("FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.")
+    Large("Key Takeaway: Components compose naturally.")
+```
+
+## Small and Muted Text
+
+`Small` renders smaller text suited for metadata, while `Muted` uses the secondary foreground color for less prominent information. Both are useful for timestamps, disclaimers, and supplementary details.
+
+<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"content":"Terms and conditions apply","type":"Small"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`} />
+
+```python Small and Muted
+from prefab_ui.components import (
+    Small,
+    Muted,
+    Column,
+)
+
+with Column(gap=3):
+    Small("Terms and conditions apply")
+    Muted("Last updated 5 minutes ago")
+```
+
+## Block Quotes
+
+<ComponentPreview auto json={`{"content":"The best way to predict the future is to invent it.","type":"BlockQuote"}`} />
+
+```python Block Quote
+from prefab_ui.components import BlockQuote
+
+BlockQuote("The best way to predict the future is to invent it.")
+```
+
+## Inline Code
+
+Renders text with a monospace font and subtle background, ideal for referencing code within prose.
+
+<ComponentPreview auto json={`{"cssClass":"items-center","gap":2,"type":"Row","children":[{"content":"Run","type":"P"},{"content":"pip install prefab-ui","type":"InlineCode"},{"content":"to get started.","type":"P"}]}`} />
+
+```python Inline Code
+from prefab_ui.components import (
+    InlineCode,
+    P,
+    Row,
+)
+
+with Row(gap=2, css_class="items-center"):
+    P("Run")
+    InlineCode("pip install prefab-ui")
+    P("to get started.")
+```
+
+## Text and Markdown
+
+`Text` and `Markdown` are simpler alternatives to the styled components above. `Text` renders an unstyled `<p>`, while `Markdown` parses and renders markdown syntax. `Heading` is a parametric heading that takes a `level` kwarg instead of using separate H1-H4 classes.
+
+```python Simpler Alternatives
+from prefab_ui.components import (
+    Text,
+    Markdown,
+    Heading,
+)
+
+Text("Plain paragraph with no default styling.")
+Heading("Section Title", level=2)
+Markdown("**Bold** and *italic* text with [links](https://example.com).")
+```
+
+These are handy for data-driven UIs where the styling comes from the container rather than the text itself, or when you want exact control via `css_class`.
+
+## Bold & Italic
+
+All text components accept `bold` and `italic` props for quick emphasis without reaching for CSS classes:
+
+<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"content":"Bold and italic combined.","bold":true,"italic":true,"type":"Text"}]}`} />
+
+```python Bold and Italic
+from prefab_ui.components import (
+    P,
+    Text,
+    Column,
+)
+
+with Column(gap=2):
+    P("Regular paragraph text.")
+    P("This is bold.", bold=True)
+    P("This is italic.", italic=True)
+    Text("Bold and italic combined.", bold=True, italic=True)
+```
+
+## Data Interpolation
+
+All typography components support `{{ field }}` placeholders that are replaced with data at render time:
+
+```python Typography Interpolation
+from prefab_ui.components import (
+    H1,
+    P,
+    Muted,
+)
+
+H1("Welcome, {{ name }}")
+P("You have {{ count }} new notifications.")
+Muted("Member since {{ joined }}")
+```
+
+## Format Specifiers
+
+Add a pipe (`|`) after a field name to format its value. This is useful for displaying numbers as percentages, formatting dates, or applying locale-specific number formatting.
+
+```python Format Examples
+from prefab_ui.components import P, Column
+
+with Column(gap=2):
+    P("Completion: {{ progress | percent }}")       # 0.75 → "75%"
+    P("Completion: {{ progress | percent:1 }}")     # 0.756 → "75.6%"
+    P("Revenue: {{ amount | currency }}")           # 9999.5 → "$9,999.50"
+    P("Users: {{ count | number }}")                # 1234 → "1,234"
+    P("Created: {{ date | date }}")                 # "2025-01-15" → "Jan 15, 2025"
+    P("Created: {{ date | date:long }}")            # → "January 15, 2025"
+    P("Updated: {{ timestamp | datetime }}")        # ISO → "Jan 15, 2025, 2:30 PM"
+```
+
+Available formats:
+
+| Format | Example | Description |
+|--------|---------|-------------|
+| `percent` | `0.75` → `"75%"` | Multiply by 100, add % |
+| `percent:N` | `0.756` → `"75.6%"` | Percent with N decimals |
+| `number` | `1234` → `"1,234"` | Locale-formatted number |
+| `number:N` | `1234` → `"1,234.00"` | Number with N decimals |
+| `currency` | `99.5` → `"$99.50"` | USD currency format |
+| `currency:EUR` | `99.5` → `"€99.50"` | Specified currency |
+| `date` | ISO → `"Jan 15, 2025"` | Medium date |
+| `date:short` | ISO → `"1/15/2025"` | Short date |
+| `date:long` | ISO → `"January 15, 2025"` | Long date |
+| `time` | ISO → `"2:30 PM"` | Time only |
+| `datetime` | ISO → `"Jan 15, 2025, 2:30 PM"` | Date + time |
+| `upper` | `"hello"` → `"HELLO"` | Uppercase |
+| `lower` | `"HELLO"` → `"hello"` | Lowercase |
+
+## API Reference
+
+<Card icon="code" title="Styled Text Components">
+
+`H1`, `H2`, `H3`, `H4`, `P`, `Lead`, `Large`, `Small`, `Muted`, `BlockQuote`, `InlineCode` all share this interface:
+
+<ParamField body="content" type="str" required>
+  Text content. Supports `{{ field }}` and `{{ field | format }}` interpolation. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="bold" type="bool | None" default="None">
+  Render text in bold weight.
+</ParamField>
+
+<ParamField body="italic" type="bool | None" default="None">
+  Render text in italic style.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Text Parameters">
+<ParamField body="content" type="str" required>
+  Text content with `{{ field }}` interpolation. Renders as an unstyled `<p>`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Heading Parameters">
+<ParamField body="content" type="str" required>
+  Heading text with `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="level" type="int" default="1">
+  Heading level: `1` (h1), `2` (h2), `3` (h3), or `4` (h4).
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Markdown Parameters">
+<ParamField body="content" type="str" required>
+  Markdown content with `{{ field }}` interpolation. Parses markdown syntax to HTML.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

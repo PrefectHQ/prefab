@@ -1,0 +1,64 @@
+---
+title: Markdown
+description: Rendered markdown content with template interpolation.
+icon: markdown
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+The Markdown component renders full markdown content — headings, bold, italic, lists, links, code blocks, tables, and blockquotes. Use it for rich text blocks where the content is naturally markdown-shaped.
+
+<ComponentPreview auto json={`{"content":"\n# Release Notes\n\nVersion **2.5.0** brings several improvements:\n\n## New Features\n\n- **Dark mode** with automatic system detection\n- Keyboard shortcuts for *all* actions\n- Inline \`code\` formatting support\n\n## Migration Guide\n\n> Update your config file before upgrading.\n\n| Setting | Old | New |\n|---------|-----|-----|\n| theme | \`light\` | \`auto\` |\n| timeout | \`30s\` | \`60s\` |\n","type":"Markdown"}`} />
+
+```python Markdown Example
+from prefab_ui.components import Markdown
+
+Markdown("""
+# Release Notes
+
+Version **2.5.0** brings several improvements:
+
+## New Features
+
+- **Dark mode** with automatic system detection
+- Keyboard shortcuts for *all* actions
+- Inline `code` formatting support
+
+## Migration Guide
+
+> Update your config file before upgrading.
+
+| Setting | Old | New |
+|---------|-----|-----|
+| theme | `light` | `auto` |
+| timeout | `30s` | `60s` |
+""")
+```
+
+## Data Interpolation
+
+Use `{{ field }}` placeholders to inject server data into markdown content:
+
+```python Markdown Interpolation
+from prefab_ui.components import Markdown
+
+Markdown("""
+## {{ title }}
+
+{{ description }}
+
+**Status:** {{ status }}
+""")
+```
+
+## API Reference
+
+<Card icon="code" title="Markdown Parameters">
+<ParamField body="content" type="str" required>
+  Markdown text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>

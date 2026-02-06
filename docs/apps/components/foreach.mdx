@@ -1,0 +1,93 @@
+---
+title: ForEach
+description: Repeat components for each item in a data list.
+icon: repeat
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`ForEach` is a control-flow component that iterates over a list in your data, rendering its children once per item. Each iteration receives the list item as the interpolation context, so `{{ field }}` placeholders resolve to that item's values.
+
+<ComponentPreview auto json={`{"_tree":{"key":"users","type":"ForEach","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","gap":2,"type":"Row","children":[{"content":"{{ name }}","type":"CardTitle"},{"label":"{{ role }}","variant":"secondary","type":"Badge"}]},{"content":"{{ email }}","type":"CardDescription"}]}]}]},"users":[{"name":"Alice","role":"Admin","email":"alice@example.com"},{"name":"Bob","role":"Editor","email":"bob@example.com"},{"name":"Carol","role":"Viewer","email":"carol@example.com"}]}`} />
+
+```python ForEach
+from prefab_ui.components import (
+    ForEach,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    Badge,
+    Row,
+)
+
+set_data(users=[
+    {"name": "Alice", "role": "Admin", "email": "alice@example.com"},
+    {"name": "Bob", "role": "Editor", "email": "bob@example.com"},
+    {"name": "Carol", "role": "Viewer", "email": "carol@example.com"},
+])
+
+with ForEach("users"):
+    with Card():
+        with CardHeader():
+            with Row(gap=2, css_class="items-center"):
+                CardTitle("{{ name }}")
+                Badge("{{ role }}", variant="secondary")
+            CardDescription("{{ email }}")
+```
+
+When rendered with data like `{"users": [{"name": "Alice", ...}, ...]}`, this produces one card per user.
+
+## How It Works
+
+The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
+
+<ComponentPreview auto json={`{"_tree":{"gap":2,"type":"Row","children":[{"key":"tags","type":"ForEach","children":[{"label":"{{ _item }}","variant":"secondary","type":"Badge"}]}]},"tags":["python","mcp","prefab-ui","async"]}`} />
+
+```python Scalar Items
+from prefab_ui.components import (
+    ForEach,
+    Badge,
+    Row,
+)
+
+set_data(tags=["python", "mcp", "prefab-ui", "async"])
+
+with Row(gap=2):
+    with ForEach("tags"):
+        Badge("{{ _item }}", variant="secondary")
+```
+
+With `{"tags": ["python", "mcp", "prefab-ui", "async"]}`, this renders one badge per item.
+
+## Nested Data
+
+Since each item becomes the full interpolation context for that iteration, you can access nested fields with dot notation:
+
+```python Nested Fields
+from prefab_ui.components import (
+    ForEach,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+)
+
+with ForEach("projects"):
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("Owner: {{ owner.name }}")
+```
+
+## API Reference
+
+<Card icon="code" title="ForEach Parameters">
+<ParamField body="key" type="str" required>
+  The data field containing the list to iterate over. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes for the wrapper element.
+</ParamField>
+</Card>

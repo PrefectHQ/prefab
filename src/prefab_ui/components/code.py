@@ -1,0 +1,35 @@
+"""Code block display component."""
+
+from __future__ import annotations
+
+from typing import Any, overload
+
+from pydantic import Field
+
+from prefab_ui.components.base import Component
+
+
+class Code(Component):
+    """Code block with optional syntax highlighting.
+
+    Example::
+
+        Code("{{ source_code }}", language="python")
+    """
+
+    content: str = Field(description="Code content with {{ field }} interpolation")
+    language: str | None = Field(
+        default=None, description="Syntax highlighting language"
+    )
+
+    @overload
+    def __init__(self, content: str, /, **kwargs: Any) -> None: ...
+
+    @overload
+    def __init__(self, *, content: str, **kwargs: Any) -> None: ...
+
+    def __init__(self, content: str | None = None, **kwargs: Any) -> None:
+        """Accept content as positional or keyword argument."""
+        if content is not None:
+            kwargs["content"] = content
+        super().__init__(**kwargs)

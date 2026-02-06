@@ -1,0 +1,71 @@
+---
+title: Accordion
+description: Collapsible content sections for progressive disclosure.
+icon: bars-staggered
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Accordions let users expand and collapse sections to reveal content progressively. Each `AccordionItem` has a clickable title and hidden content that appears on expand.
+
+<ComponentPreview auto json={`{"accordionType":"single","collapsible":true,"defaultValue":"item-1","type":"Accordion","children":[{"title":"Is it accessible?","value":"item-1","type":"AccordionItem","children":[{"content":"Yes. It adheres to the WAI-ARIA design pattern.","type":"Text"}]},{"title":"Is it styled?","value":"item-2","type":"AccordionItem","children":[{"content":"Yes. It comes with default styles from shadcn/ui.","type":"Text"}]},{"title":"Is it animated?","value":"item-3","type":"AccordionItem","children":[{"content":"Yes. It uses CSS animations for smooth transitions.","type":"Text"}]}]}`} />
+
+```python Accordion Example
+from prefab_ui.components import Accordion, AccordionItem, Text
+
+with Accordion(default_value="item-1"):
+    with AccordionItem("Is it accessible?", value="item-1"):
+        Text("Yes. It adheres to the WAI-ARIA design pattern.")
+    with AccordionItem("Is it styled?", value="item-2"):
+        Text("Yes. It comes with default styles from shadcn/ui.")
+    with AccordionItem("Is it animated?", value="item-3"):
+        Text("Yes. It uses CSS animations for smooth transitions.")
+```
+
+## Multiple Open
+
+Set `accordion_type="multiple"` to allow more than one section open at a time.
+
+<ComponentPreview auto json={`{"accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"type":"Accordion","children":[{"title":"Section One","value":"s1","type":"AccordionItem","children":[{"content":"First section content.","type":"Text"}]},{"title":"Section Two","value":"s2","type":"AccordionItem","children":[{"content":"Second section content.","type":"Text"}]},{"title":"Section Three","value":"s3","type":"AccordionItem","children":[{"content":"Third section content.","type":"Text"}]}]}`} />
+
+```python Accordion Multiple
+from prefab_ui.components import Accordion, AccordionItem, Text
+
+with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
+    with AccordionItem("Section One", value="s1"):
+        Text("First section content.")
+    with AccordionItem("Section Two", value="s2"):
+        Text("Second section content.")
+    with AccordionItem("Section Three", value="s3"):
+        Text("Third section content.")
+```
+
+## API Reference
+
+<Card icon="code" title="Accordion Parameters">
+<ParamField body="accordion_type" type="str" default="single">
+  `"single"` allows one item open at a time; `"multiple"` allows several.
+</ParamField>
+
+<ParamField body="collapsible" type="bool" default="True">
+  Whether the open item can be collapsed (single mode only).
+</ParamField>
+
+<ParamField body="default_value" type="str | list[str] | None" default="None">
+  Initially expanded item(s). Pass a string for single mode, a list for multiple.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="AccordionItem Parameters">
+<ParamField body="title" type="str" required>
+  Trigger label text. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="str | None" default="None">
+  Unique value identifying this item. Defaults to the title.
+</ParamField>
+</Card>
