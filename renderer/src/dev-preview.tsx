@@ -954,7 +954,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   useEffect(() => {
     if (!isDocEmbed || !contentRef.current) return;
     const report = () => {
-      const h = contentRef.current?.scrollHeight ?? 0;
+      const h = document.documentElement.scrollHeight;
       window.parent.postMessage({ type: "prefab:resize", height: h }, "*");
     };
     // Report after initial render and on any resize
@@ -969,7 +969,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   // Doc embed mode: minimal chrome, transparent-friendly, tight padding
   if (isDocEmbed) {
     return (
-      <div ref={contentRef} className="bg-transparent text-foreground py-10 px-6">
+      <div ref={contentRef} className="bg-transparent text-foreground py-12 px-16">
         {parseError && (
           <div className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
             JSON parse error: {parseError}
