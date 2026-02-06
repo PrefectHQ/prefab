@@ -22,8 +22,10 @@ from prefab_ui.components import Card, CardContent, Input, Button, Row
 from prefab_ui.actions import ToolCall
 
 def search_dashboard(query: str = "") -> UIResponse:
+
     with Column() as view:
         Heading("Search")
+        
         with Row():
             Input(name="query", placeholder="Search...")
             Button(
@@ -34,6 +36,7 @@ def search_dashboard(query: str = "") -> UIResponse:
                     result_key="results",
                 ),
             )
+        
         with Card():
             with CardContent():
                 Text("{{ results.length }} results found")
@@ -50,9 +53,9 @@ The Python side produces JSON. The React side renders it. The transport between 
 
 ## Why Prefab
 
-Prefab was extracted from [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system. MCP servers can expose tools that return structured data, but what users actually want is a rendered interface — forms, tables, cards, interactive workflows. Prefab is the component library and rendering engine that makes that possible.
+MCP server authors shouldn't have to leave Python to give users a real interface. But rich UIs typically mean a separate frontend stack — a bundler, a component framework, a whole ecosystem of dependencies that has nothing to do with the server logic you're actually writing. Prefab eliminates that gap. You describe your UI in Python, and it compiles to React. No context switching, no second toolchain.
 
-It ships as two packages: `prefab-ui` (Python, on PyPI) for building component trees, and `@prefect/prefab-ui` (TypeScript, on npm) for rendering them. The Python side has no transport dependencies — it works with MCP servers via FastMCP, with REST APIs via FastAPI, or with anything else that can return JSON.
+Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system and has been extracted as a standalone library so it can serve any backend. It ships as two packages: `prefab-ui` (Python, on PyPI) for building component trees, and `@prefect/prefab-ui` (TypeScript, on npm) for rendering them. The Python side has no transport dependencies — it works with MCP servers via FastMCP, with REST APIs via FastAPI, or with anything else that can return JSON.
 
 ## Installation
 
