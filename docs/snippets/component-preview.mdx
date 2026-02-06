@@ -1,9 +1,26 @@
-export const ComponentPreview = ({ json, height = "120px" }) => (
-  <div className="not-prose">
-    <iframe
-      data-docpreview
-      src={`http://localhost:3333/renderer.html#docpreview:${encodeURIComponent(json)}`}
-      style={{ width: "100%", height, border: "none", display: "block", borderRadius: "0.75rem" }}
-    />
-  </div>
-);
+export const ComponentPreview = ({ json }) => {
+  const [height, setHeight] = React.useState(60);
+  const iframeRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type !== "prefab:resize") return;
+      if (iframeRef.current && e.source === iframeRef.current.contentWindow) {
+        setHeight(e.data.height);
+      }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+
+  return (
+    <div className="not-prose">
+      <iframe
+        ref={iframeRef}
+        data-docpreview
+        src={`http://localhost:3333/renderer.html#docpreview:${encodeURIComponent(json)}`}
+        style={{ width: "100%", height: `${height}px`, border: "none", display: "block", borderRadius: "0.75rem", transition: "height 0.15s ease" }}
+      />
+    </div>
+  );
+};
