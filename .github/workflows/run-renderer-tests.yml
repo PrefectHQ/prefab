@@ -1,0 +1,40 @@
+name: Renderer Tests
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "renderer/**"
+      - ".github/workflows/run-renderer-tests.yml"
+
+  pull_request:
+    paths:
+      - "renderer/**"
+      - ".github/workflows/run-renderer-tests.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "Renderer unit tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    defaults:
+      run:
+        working-directory: renderer
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: renderer/package-lock.json
+
+      - run: npm ci
+      - run: npm test

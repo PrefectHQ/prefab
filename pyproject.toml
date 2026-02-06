@@ -1,6 +1,6 @@
 [project]
 name = "prefab-ui"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Build dynamic UIs from Python. A JSON DSL compiled to React."
 authors = [{ name = "Jeremiah Lowin" }]
 dependencies = ["pydantic>=2.0"]
@@ -35,14 +35,25 @@ dev = [
     "pytest-xdist>=3.6.1",
     "ruff>=0.12.8",
     "ty>=0.0.7",
+    "prek>=0.1.0",
+    "loq>=0.1.0a3",
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "uv-dynamic-versioning>=0.7.0"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/prefab_ui"]
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
+fallback-version = "0.0.0"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -52,6 +63,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+filterwarnings = [
+    "error::RuntimeWarning:coroutine .* was never awaited",
+]
 
 [tool.ty.src]
 include = ["src", "tests"]
@@ -74,3 +88,6 @@ known-first-party = ["prefab_ui"]
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "I001", "RUF013"]
 "!src/**.py" = ["B", "C4", "PIE", "RUF", "SIM"]
+
+[tool.codespell]
+skip = "renderer/package-lock.json"

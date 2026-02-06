@@ -1,0 +1,21 @@
+name: "Run Pytest"
+description: "Run pytest with appropriate flags for the platform"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run pytest
+      shell: bash
+      run: |
+        TIMEOUT="5"
+        MAX_PROCS="4"
+
+        PARALLEL_FLAGS=""
+        if [ "${{ runner.os }}" != "Windows" ]; then
+          PARALLEL_FLAGS="--numprocesses auto --maxprocesses $MAX_PROCS --dist worksteal"
+        fi
+
+        uv run --no-sync pytest \
+          --timeout=$TIMEOUT \
+          $PARALLEL_FLAGS \
+          tests
