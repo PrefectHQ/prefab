@@ -33,3 +33,5 @@ export const buttonSchema = componentBase.extend({
   disabled: z.boolean().optional(),
   onClick: actionOrList.optional(),
 });
+
+export type ButtonWire = z.infer<typeof buttonSchema>;

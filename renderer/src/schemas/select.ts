@@ -19,3 +19,6 @@ export const selectOptionSchema = componentBase.extend({
   selected: z.boolean().optional(),
   disabled: z.boolean().optional(),
 });
+
+export type SelectWire = z.infer<typeof selectSchema>;
+export type SelectOptionWire = z.infer<typeof selectOptionSchema>;

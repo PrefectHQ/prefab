@@ -13,3 +13,6 @@ export const accordionSchema = containerBase.extend({
   collapsible: z.boolean().optional(),
   defaultValue: z.union([z.string(), z.array(z.string())]).optional(),
 });
+
+export type AccordionWire = z.infer<typeof accordionSchema>;
+export type AccordionItemWire = z.infer<typeof accordionItemSchema>;

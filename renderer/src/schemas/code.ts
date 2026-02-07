@@ -6,3 +6,5 @@ export const codeSchema = componentBase.extend({
   content: z.string(),
   language: z.string().optional(),
 });
+
+export type CodeWire = z.infer<typeof codeSchema>;

@@ -16,6 +16,8 @@ import { interpolateProps, interpolateString } from "./interpolation";
 import { executeActions, type ActionSpec } from "./actions";
 import type { StateStore } from "./state";
 import { evaluateCondition } from "./conditions";
+import { validateNode } from "./validation";
+import { ValidationError } from "./components/validation-error";
 
 /** Shape of a node in the JSON component tree. */
 export interface ComponentNode {
@@ -248,6 +250,12 @@ function filterInternalProps(
  */
 export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const { type, children, visibleWhen, ...rawProps } = node;
+
+  // Validate node against its Zod schema before any processing
+  const validationError = validateNode(node);
+  if (validationError) {
+    return <ValidationError error={validationError} node={node} />;
+  }
 
   // Conditional rendering via expression evaluator
   if (visibleWhen) {

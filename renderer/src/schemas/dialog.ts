@@ -6,3 +6,5 @@ export const dialogSchema = containerBase.extend({
   title: z.string().optional(),
   description: z.string().optional(),
 });
+
+export type DialogWire = z.infer<typeof dialogSchema>;

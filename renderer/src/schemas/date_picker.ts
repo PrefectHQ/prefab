@@ -8,3 +8,5 @@ export const datePickerSchema = componentBase.extend({
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type DatePickerWire = z.infer<typeof datePickerSchema>;

@@ -6,3 +6,5 @@ export const tooltipSchema = containerBase.extend({
   content: z.string(),
   side: z.enum(["top", "right", "bottom", "left"]).optional(),
 });
+
+export type TooltipWire = z.infer<typeof tooltipSchema>;

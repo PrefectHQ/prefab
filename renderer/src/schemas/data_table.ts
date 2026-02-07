@@ -18,3 +18,5 @@ export const dataTableSchema = componentBase.extend({
   pageSize: z.number().int().optional(),
   caption: z.string().optional(),
 });
+
+export type DataTableWire = z.infer<typeof dataTableSchema>;

@@ -12,3 +12,6 @@ export const pagesSchema = containerBase.extend({
   defaultValue: z.string().optional(),
   name: z.string().optional(),
 });
+
+export type PageWire = z.infer<typeof pageSchema>;
+export type PagesWire = z.infer<typeof pagesSchema>;

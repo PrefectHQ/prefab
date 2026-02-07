@@ -31,3 +31,10 @@ export const cardContentSchema = containerBase.extend({
 export const cardFooterSchema = containerBase.extend({
   type: z.literal("CardFooter"),
 });
+
+export type CardWire = z.infer<typeof cardSchema>;
+export type CardHeaderWire = z.infer<typeof cardHeaderSchema>;
+export type CardTitleWire = z.infer<typeof cardTitleSchema>;
+export type CardDescriptionWire = z.infer<typeof cardDescriptionSchema>;
+export type CardContentWire = z.infer<typeof cardContentSchema>;
+export type CardFooterWire = z.infer<typeof cardFooterSchema>;

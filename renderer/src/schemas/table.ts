@@ -58,3 +58,12 @@ export const dataTableSchema = componentBase.extend({
   pageSize: z.number().int().optional(),
   caption: z.string().optional(),
 });
+
+export type TableWire = z.infer<typeof tableSchema>;
+export type TableHeaderWire = z.infer<typeof tableHeaderSchema>;
+export type TableBodyWire = z.infer<typeof tableBodySchema>;
+export type TableFooterWire = z.infer<typeof tableFooterSchema>;
+export type TableRowWire = z.infer<typeof tableRowSchema>;
+export type TableHeadWire = z.infer<typeof tableHeadSchema>;
+export type TableCellWire = z.infer<typeof tableCellSchema>;
+export type TableCaptionWire = z.infer<typeof tableCaptionSchema>;

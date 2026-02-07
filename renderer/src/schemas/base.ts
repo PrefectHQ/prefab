@@ -34,3 +34,6 @@ export const gapSchema = z.union([
   z.number().int(),
   z.tuple([z.number().int().nullable(), z.number().int().nullable()]),
 ]);
+
+export type ComponentBaseWire = z.infer<typeof componentBase>;
+export type ContainerBaseWire = z.infer<typeof containerBase>;

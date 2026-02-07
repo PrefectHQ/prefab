@@ -112,3 +112,13 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   toggleState: toggleStateSchema,
   showToast: showToastSchema,
 };
+
+export type ToolCallWire = z.infer<typeof toolCallSchema>;
+export type SendMessageWire = z.infer<typeof sendMessageSchema>;
+export type UpdateContextWire = z.infer<typeof updateContextSchema>;
+export type OpenLinkWire = z.infer<typeof openLinkSchema>;
+export type SetStateWire = z.infer<typeof setStateSchema>;
+export type ToggleStateWire = z.infer<typeof toggleStateSchema>;
+export type ShowToastWire = z.infer<typeof showToastSchema>;
+export type ActionWire = z.infer<typeof actionSchema>;
+export type ActionOrListWire = z.infer<typeof actionOrList>;

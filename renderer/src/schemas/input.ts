@@ -32,3 +32,5 @@ export const inputSchema = componentBase.extend({
   pattern: z.string().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type InputWire = z.infer<typeof inputSchema>;

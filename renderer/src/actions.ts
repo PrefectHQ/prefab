@@ -28,6 +28,7 @@ import type { App } from "@modelcontextprotocol/ext-apps";
 import { toast } from "sonner";
 import type { StateStore } from "./state";
 import { interpolateProps } from "./interpolation";
+import { validateAction } from "./validation";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -112,6 +113,12 @@ export async function executeAction(
     action as Record<string, unknown>,
     ctx,
   ) as ActionSpec;
+
+  // Validate resolved action against its Zod schema
+  const validationError = validateAction(resolved);
+  if (validationError) {
+    return false;
+  }
 
   let success = true;
   let errorMessage: string | undefined;

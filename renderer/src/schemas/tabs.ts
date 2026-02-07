@@ -15,3 +15,6 @@ export const tabsSchema = containerBase.extend({
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type TabsWire = z.infer<typeof tabsSchema>;
+export type TabWire = z.infer<typeof tabSchema>;

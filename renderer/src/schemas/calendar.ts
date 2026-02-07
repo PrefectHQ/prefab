@@ -8,3 +8,5 @@ export const calendarSchema = componentBase.extend({
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type CalendarWire = z.infer<typeof calendarSchema>;
