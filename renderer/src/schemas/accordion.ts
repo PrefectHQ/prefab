@@ -9,9 +9,9 @@ export const accordionItemSchema = containerBase.extend({
 
 export const accordionSchema = containerBase.extend({
   type: z.literal("Accordion"),
-  accordionType: z.enum(["single", "multiple"]).optional(),
+  multiple: z.boolean().optional(),
   collapsible: z.boolean().optional(),
-  defaultValue: z.union([z.string(), z.array(z.string())]).optional(),
+  defaultValues: z.array(z.string()).optional(),
 });
 
 export type AccordionWire = z.infer<typeof accordionSchema>;

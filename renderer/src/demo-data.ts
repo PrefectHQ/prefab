@@ -732,9 +732,8 @@ export const DEMO_TREE: ComponentNode = {
     { type: "H2", content: "Accordion" },
     {
       type: "Accordion",
-      accordionType: "single",
       collapsible: true,
-      defaultValue: "item-1",
+      defaultValues: ["item-1"],
       children: [
         {
           type: "AccordionItem",

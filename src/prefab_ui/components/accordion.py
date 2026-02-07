@@ -65,13 +65,7 @@ class Accordion(ContainerComponent):
     type: Literal["Accordion"] = "Accordion"
     multiple: bool = Field(
         default=False,
-        exclude=True,
         description="Allow multiple items to be open simultaneously",
-    )
-    accordion_type: Literal["single", "multiple"] = Field(
-        default="single",
-        alias="accordionType",
-        description="Wire format for multiple. Prefer the `multiple` flag.",
     )
     collapsible: bool = Field(
         default=True,
@@ -85,10 +79,10 @@ class Accordion(ContainerComponent):
             "selection, or a str to match by value/title."
         ),
     )
-    default_value: str | list[str] | None = Field(
+    default_values: list[str] | None = Field(
         default=None,
-        alias="defaultValue",
-        description="Wire format for default_open_items.",
+        alias="defaultValues",
+        description="Wire format for default_open_items (always an array).",
     )
 
     def _resolve_item(self, item: int | str) -> str:
@@ -103,13 +97,11 @@ class Accordion(ContainerComponent):
         return item
 
     def to_json(self) -> dict[str, Any]:
-        if self.multiple:
-            self.accordion_type = "multiple"
-        if self.default_open_items is not None and self.default_value is None:
-            if isinstance(self.default_open_items, list):
-                self.default_value = [
-                    self._resolve_item(i) for i in self.default_open_items
-                ]
-            else:
-                self.default_value = self._resolve_item(self.default_open_items)
+        if self.default_open_items is not None and self.default_values is None:
+            items = (
+                self.default_open_items
+                if isinstance(self.default_open_items, list)
+                else [self.default_open_items]
+            )
+            self.default_values = [self._resolve_item(i) for i in items]
         return super().to_json()
