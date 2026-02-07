@@ -14,6 +14,8 @@ from typing import Any
 import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
+PROTOCOL_VERSION = "0.1"
+
 
 class UIResponse(BaseModel):
     """Return type for server functions that render interactive UIs.
@@ -67,6 +69,8 @@ class UIResponse(BaseModel):
             state_json = pydantic_core.to_jsonable_python(self.state)
             if isinstance(state_json, dict):
                 result.update(state_json)
+
+        result["_prefab_version"] = PROTOCOL_VERSION
 
         if self.view is not None:
             result["_prefab_view"] = self.view.to_json()

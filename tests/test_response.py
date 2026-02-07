@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from prefab_ui.components import Column, Heading, Text
-from prefab_ui.response import UIResponse
+from prefab_ui.response import PROTOCOL_VERSION, UIResponse
 
 
 class TestUIResponse:
@@ -25,7 +25,8 @@ class TestUIResponse:
     def test_state_only(self):
         resp = UIResponse(state={"x": 1})
         result = resp.to_json()
-        assert result == {"x": 1}
+        assert result["x"] == 1
+        assert result["_prefab_version"] == PROTOCOL_VERSION
 
     def test_view_only(self):
         resp = UIResponse(view=Text(content="hi"))
@@ -52,7 +53,7 @@ class TestUIResponse:
     def test_empty_response(self):
         resp = UIResponse()
         result = resp.to_json()
-        assert result == {}
+        assert result == {"_prefab_version": PROTOCOL_VERSION}
         assert resp.text_fallback() == "[No content]"
 
     def test_no_prefab_state_key(self):
@@ -68,6 +69,22 @@ class TestUIResponse:
     def test_reserved_key_validation_dollar(self):
         with pytest.raises(ValueError, match="reserved prefix '\\$'"):
             UIResponse(state={"$event": "bad"})
+
+
+class TestProtocolVersion:
+    def test_version_always_present(self):
+        resp = UIResponse(view=Text(content="hi"))
+        result = resp.to_json()
+        assert result["_prefab_version"] == PROTOCOL_VERSION
+
+    def test_version_with_state(self):
+        resp = UIResponse(state={"x": 1}, view=Text(content="hi"))
+        result = resp.to_json()
+        assert result["_prefab_version"] == PROTOCOL_VERSION
+        assert result["x"] == 1
+
+    def test_version_value(self):
+        assert PROTOCOL_VERSION == "0.1"
 
 
 class TestUIResponseState:
