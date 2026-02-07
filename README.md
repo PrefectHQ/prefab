@@ -2,7 +2,7 @@
 
 <img src="docs/assets/banner.png" alt="Prefab" width="700">
 
-**Build UIs from Python. Compile them to React.**
+**Build UIs in Python. Compile them to React.**
 
 *Made with 💙 by [Prefect](https://www.prefect.io/)*
 
