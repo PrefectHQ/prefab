@@ -6,9 +6,9 @@ icon: bookmark
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
+Labels provide accessible text descriptions for form fields.
 
-Labels provide accessible text descriptions for form fields. They can contain text directly or wrap other components.
+## Basic Usage They can contain text directly or wrap other components.
 
 <ComponentPreview auto json={`{"type":"Label","text":"Email address"}`}>
 <CodeGroup>
@@ -86,28 +86,13 @@ with Column(gap=2):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Label Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Label" default="Label">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="text" type="string | null">
-  Label text (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="forId" type="string | null">
-  ID of the associated form field
-</ParamField>
-
-</Card>
+```json Label
+{
+  "type": "Label",
+  "text?": "string",
+  "forId?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children?": []
+}
+```
