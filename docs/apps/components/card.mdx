@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Cards group related content into a bordered, shadowed container. They're composed from sub-components — `CardHeader`, `CardContent`, and `CardFooter` — that handle spacing and layout so you can focus on content.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
 ```python Python
@@ -356,118 +358,58 @@ with Card():
 
 ## Protocol Reference
 
-<Card icon="braces" title="Card Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Card
+{
+  "type": "Card",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [CardHeader | CardContent | CardFooter]
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
+```json CardHeader
+{
+  "type": "CardHeader",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [CardTitle | CardDescription]
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
+```json CardTitle
+{
+  "type": "CardTitle",
+  "content?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children?": []
+}
+```
 
-<ParamField body="type" type="Card" default="Card">
-  Component discriminator.
-</ParamField>
+```json CardDescription
+{
+  "type": "CardDescription",
+  "content?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children?": []
+}
+```
 
-</Card>
+```json CardContent
+{
+  "type": "CardContent",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```
 
-<Card icon="braces" title="CardHeader Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="CardHeader" default="CardHeader">
-  Component discriminator.
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="CardTitle Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="CardTitle" default="CardTitle">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string | null">
-  Title text (alternative to children)
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="CardDescription Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="CardDescription" default="CardDescription">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string | null">
-  Description text (alternative to children)
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="CardContent Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="CardContent" default="CardContent">
-  Component discriminator.
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="CardFooter Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="CardFooter" default="CardFooter">
-  Component discriminator.
-</ParamField>
-
-</Card>
+```json CardFooter
+{
+  "type": "CardFooter",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```
