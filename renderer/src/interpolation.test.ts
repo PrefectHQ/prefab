@@ -15,9 +15,9 @@ describe("interpolateString", () => {
   });
 
   it("handles deeply nested paths", () => {
-    expect(
-      interpolateString("{{ a.b.c }}", { a: { b: { c: "deep" } } }),
-    ).toBe("deep");
+    expect(interpolateString("{{ a.b.c }}", { a: { b: { c: "deep" } } })).toBe(
+      "deep",
+    );
   });
 
   // ── Type preservation ─────────────────────────────────────────
@@ -72,9 +72,7 @@ describe("interpolateString", () => {
   // ── Format specifiers ─────────────────────────────────────────
 
   it("percent format", () => {
-    expect(interpolateString("{{ val | percent }}", { val: 0.75 })).toBe(
-      "75%",
-    );
+    expect(interpolateString("{{ val | percent }}", { val: 0.75 })).toBe("75%");
   });
 
   it("percent with decimals", () => {
@@ -117,10 +115,7 @@ describe("interpolateProps", () => {
   });
 
   it("passes non-string values through", () => {
-    const result = interpolateProps(
-      { enabled: true, items: [1, 2] },
-      {},
-    );
+    const result = interpolateProps({ enabled: true, items: [1, 2] }, {});
     expect(result.enabled).toBe(true);
     expect(result.items).toEqual([1, 2]);
   });

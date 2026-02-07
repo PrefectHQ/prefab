@@ -66,7 +66,9 @@ export function PrefabDataTable({
             return (
               <button
                 className="flex items-center gap-1 hover:text-foreground"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                onClick={() =>
+                  column.toggleSorting(column.getIsSorted() === "asc")
+                }
               >
                 {spec.header}
                 {column.getIsSorted() === "asc" ? (
@@ -124,7 +126,10 @@ export function PrefabDataTable({
                 <TableHead key={header.id}>
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                 </TableHead>
               ))}
             </TableRow>

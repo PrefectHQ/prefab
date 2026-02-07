@@ -6,8 +6,17 @@ export const inputSchema = componentBase.extend({
   type: z.literal("Input"),
   inputType: z
     .enum([
-      "text", "email", "password", "number", "tel", "url",
-      "search", "date", "time", "datetime-local", "file",
+      "text",
+      "email",
+      "password",
+      "number",
+      "tel",
+      "url",
+      "search",
+      "date",
+      "time",
+      "datetime-local",
+      "file",
     ])
     .optional(),
   placeholder: z.string().optional(),

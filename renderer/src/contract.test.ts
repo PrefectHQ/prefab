@@ -14,7 +14,11 @@
 import { describe, test, expect } from "vitest";
 import fs from "fs";
 import path from "path";
-import { SCHEMA_REGISTRY, HANDLED_ACTIONS, ACTION_SCHEMA_REGISTRY } from "./schemas/index.ts";
+import {
+  SCHEMA_REGISTRY,
+  HANDLED_ACTIONS,
+  ACTION_SCHEMA_REGISTRY,
+} from "./schemas/index.ts";
 import { REGISTRY } from "./components/registry.ts";
 
 const SCHEMAS_DIR = path.resolve(__dirname, "../../schemas");
@@ -31,7 +35,10 @@ function loadManifest(): Manifest {
 }
 
 function loadFixture(dir: string, name: string): Record<string, unknown> {
-  const raw = fs.readFileSync(path.join(SCHEMAS_DIR, "fixtures", dir, `${name}.json`), "utf-8");
+  const raw = fs.readFileSync(
+    path.join(SCHEMAS_DIR, "fixtures", dir, `${name}.json`),
+    "utf-8",
+  );
   return JSON.parse(raw) as Record<string, unknown>;
 }
 
@@ -44,8 +51,13 @@ describe("Contract: Registry completeness", () => {
   });
 
   test("every Python component has a Zod schema in SCHEMA_REGISTRY", () => {
-    const missing = manifest.components.filter((name) => !(name in SCHEMA_REGISTRY));
-    expect(missing, `Missing from SCHEMA_REGISTRY: ${missing.join(", ")}`).toEqual([]);
+    const missing = manifest.components.filter(
+      (name) => !(name in SCHEMA_REGISTRY),
+    );
+    expect(
+      missing,
+      `Missing from SCHEMA_REGISTRY: ${missing.join(", ")}`,
+    ).toEqual([]);
   });
 
   test("every SCHEMA_REGISTRY entry corresponds to a Python component", () => {
@@ -67,18 +79,30 @@ describe("Contract: Action completeness", () => {
   const manifest = loadManifest();
 
   test("every Python action is in HANDLED_ACTIONS", () => {
-    const missing = manifest.actions.filter((a) => !HANDLED_ACTIONS.has(a as never));
-    expect(missing, `Missing from HANDLED_ACTIONS: ${missing.join(", ")}`).toEqual([]);
+    const missing = manifest.actions.filter(
+      (a) => !HANDLED_ACTIONS.has(a as never),
+    );
+    expect(
+      missing,
+      `Missing from HANDLED_ACTIONS: ${missing.join(", ")}`,
+    ).toEqual([]);
   });
 
   test("every HANDLED_ACTIONS entry corresponds to a Python action", () => {
-    const extra = [...HANDLED_ACTIONS].filter((a) => !manifest.actions.includes(a));
+    const extra = [...HANDLED_ACTIONS].filter(
+      (a) => !manifest.actions.includes(a),
+    );
     expect(extra, `Extra in HANDLED_ACTIONS: ${extra.join(", ")}`).toEqual([]);
   });
 
   test("every Python action has a Zod schema in ACTION_SCHEMA_REGISTRY", () => {
-    const missing = manifest.actions.filter((a) => !(a in ACTION_SCHEMA_REGISTRY));
-    expect(missing, `Missing from ACTION_SCHEMA_REGISTRY: ${missing.join(", ")}`).toEqual([]);
+    const missing = manifest.actions.filter(
+      (a) => !(a in ACTION_SCHEMA_REGISTRY),
+    );
+    expect(
+      missing,
+      `Missing from ACTION_SCHEMA_REGISTRY: ${missing.join(", ")}`,
+    ).toEqual([]);
   });
 });
 

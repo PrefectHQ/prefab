@@ -11,11 +11,20 @@ const App = lazy(() => import("./app").then((m) => ({ default: m.App })));
 
 // CLI `prefab apps preview` injects data via a global variable.
 const injected = (window as any).__FASTMCP_PREVIEW__ as
-  | { tree: any; data: Record<string, unknown>; state?: Record<string, unknown> }
+  | {
+      tree: any;
+      data: Record<string, unknown>;
+      state?: Record<string, unknown>;
+    }
   | undefined;
 
 const isPlayground = window.location.hash.startsWith("#playground");
-const isPreview = injected != null || isPlayground || window.location.hash.startsWith("#preview") || window.location.hash.startsWith("#kitchen-sink") || window.location.hash.startsWith("#docpreview");
+const isPreview =
+  injected != null ||
+  isPlayground ||
+  window.location.hash.startsWith("#preview") ||
+  window.location.hash.startsWith("#kitchen-sink") ||
+  window.location.hash.startsWith("#docpreview");
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

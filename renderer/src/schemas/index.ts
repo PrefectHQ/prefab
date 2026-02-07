@@ -9,17 +9,32 @@
 import type { z } from "zod";
 
 // Re-export for convenient access
-export { HANDLED_ACTIONS, ACTION_SCHEMA_REGISTRY, actionOrList } from "./actions.ts";
+export {
+  HANDLED_ACTIONS,
+  ACTION_SCHEMA_REGISTRY,
+  actionOrList,
+} from "./actions.ts";
 export { componentBase, containerBase, gapSchema } from "./base.ts";
 
 // One import per Python module — mirrors src/prefab_ui/components/*.py
 import { accordionSchema, accordionItemSchema } from "./accordion.ts";
-import { alertSchema, alertTitleSchema, alertDescriptionSchema } from "./alert.ts";
+import {
+  alertSchema,
+  alertTitleSchema,
+  alertDescriptionSchema,
+} from "./alert.ts";
 import { badgeSchema } from "./badge.ts";
 import { buttonSchema } from "./button.ts";
 import { buttonGroupSchema } from "./button_group.ts";
 import { calendarSchema } from "./calendar.ts";
-import { cardSchema, cardHeaderSchema, cardTitleSchema, cardDescriptionSchema, cardContentSchema, cardFooterSchema } from "./card.ts";
+import {
+  cardSchema,
+  cardHeaderSchema,
+  cardTitleSchema,
+  cardDescriptionSchema,
+  cardContentSchema,
+  cardFooterSchema,
+} from "./card.ts";
 import { checkboxSchema } from "./checkbox.ts";
 import { codeSchema } from "./code.ts";
 import { columnSchema } from "./column.ts";
@@ -44,15 +59,32 @@ import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
 import { sliderSchema } from "./slider.ts";
 import { switchSchema } from "./switch.ts";
-import { tableSchema, tableHeaderSchema, tableBodySchema, tableFooterSchema, tableRowSchema, tableHeadSchema, tableCellSchema, tableCaptionSchema } from "./table.ts";
+import {
+  tableSchema,
+  tableHeaderSchema,
+  tableBodySchema,
+  tableFooterSchema,
+  tableRowSchema,
+  tableHeadSchema,
+  tableCellSchema,
+  tableCaptionSchema,
+} from "./table.ts";
 import { tabsSchema, tabSchema } from "./tabs.ts";
 import { textSchema } from "./text.ts";
 import { textareaSchema } from "./textarea.ts";
 import { tooltipSchema } from "./tooltip.ts";
 import {
-  h1Schema, h2Schema, h3Schema, h4Schema,
-  pSchema, leadSchema, largeSchema, smallSchema,
-  mutedSchema, blockQuoteSchema, inlineCodeSchema,
+  h1Schema,
+  h2Schema,
+  h3Schema,
+  h4Schema,
+  pSchema,
+  leadSchema,
+  largeSchema,
+  smallSchema,
+  mutedSchema,
+  blockQuoteSchema,
+  inlineCodeSchema,
 } from "./typography.ts";
 
 /**

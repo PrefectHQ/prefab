@@ -112,7 +112,10 @@ function tokenize(input: string): Token[] {
     }
 
     // Number (integer or float, including negative sign handled by parser)
-    if (/\d/.test(ch) || (ch === "." && i + 1 < input.length && /\d/.test(input[i + 1]))) {
+    if (
+      /\d/.test(ch) ||
+      (ch === "." && i + 1 < input.length && /\d/.test(input[i + 1]))
+    ) {
       let num = "";
       while (i < input.length && /[\d.]/.test(input[i])) {
         num += input[i];
@@ -169,7 +172,11 @@ class Parser {
   private expect(type: TokenType, value?: string): Token {
     const tok = this.advance();
     if (tok.type !== type || (value !== undefined && tok.value !== value)) {
-      throw new Error(`Expected ${type}${value ? ` '${value}'` : ""}, got ${tok.type} '${tok.value}'`);
+      throw new Error(
+        `Expected ${type}${value ? ` '${value}'` : ""}, got ${tok.type} '${
+          tok.value
+        }'`,
+      );
     }
     return tok;
   }
@@ -222,7 +229,10 @@ class Parser {
     const left = this.parsePrimary();
 
     const tok = this.peek();
-    if (tok.type === "op" && ["==", "!=", ">", ">=", "<", "<="].includes(tok.value)) {
+    if (
+      tok.type === "op" &&
+      ["==", "!=", ">", ">=", "<", "<="].includes(tok.value)
+    ) {
       this.advance();
       const right = this.parsePrimary();
       switch (tok.value) {
@@ -290,7 +300,10 @@ class Parser {
     let current: unknown = this.ctx;
     for (const part of parts) {
       if (current == null) return undefined;
-      if (part === "length" && (Array.isArray(current) || typeof current === "string")) {
+      if (
+        part === "length" &&
+        (Array.isArray(current) || typeof current === "string")
+      ) {
         return (current as string | unknown[]).length;
       }
       if (typeof current !== "object") return undefined;

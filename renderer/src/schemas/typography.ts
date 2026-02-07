@@ -19,7 +19,9 @@ export const textSchema = typographyBase.extend({ type: z.literal("Text") });
 
 export const headingSchema = typographyBase.extend({
   type: z.literal("Heading"),
-  level: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).optional(),
+  level: z
+    .union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
+    .optional(),
 });
 
 export const h1Schema = typographyBase.extend({ type: z.literal("H1") });
@@ -31,5 +33,9 @@ export const leadSchema = typographyBase.extend({ type: z.literal("Lead") });
 export const largeSchema = typographyBase.extend({ type: z.literal("Large") });
 export const smallSchema = typographyBase.extend({ type: z.literal("Small") });
 export const mutedSchema = typographyBase.extend({ type: z.literal("Muted") });
-export const blockQuoteSchema = typographyBase.extend({ type: z.literal("BlockQuote") });
-export const inlineCodeSchema = typographyBase.extend({ type: z.literal("InlineCode") });
+export const blockQuoteSchema = typographyBase.extend({
+  type: z.literal("BlockQuote"),
+});
+export const inlineCodeSchema = typographyBase.extend({
+  type: z.literal("InlineCode"),
+});

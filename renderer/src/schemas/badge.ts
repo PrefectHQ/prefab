@@ -6,8 +6,14 @@ export const badgeSchema = componentBase.extend({
   label: z.string(),
   variant: z
     .enum([
-      "default", "secondary", "destructive", "success",
-      "warning", "info", "outline", "ghost",
+      "default",
+      "secondary",
+      "destructive",
+      "success",
+      "warning",
+      "info",
+      "outline",
+      "ghost",
     ])
     .optional(),
 });

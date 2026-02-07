@@ -53,12 +53,27 @@ interface CodeProps {
 }
 
 /** Code block — renders preformatted code with syntax highlighting. */
-export function Code({ code, content, language, className, cssClass }: CodeProps) {
+export function Code({
+  code,
+  content,
+  language,
+  className,
+  cssClass,
+}: CodeProps) {
   const source = code ?? content ?? "";
-  const highlighted = useMemo(() => highlightCode(source, language), [source, language]);
+  const highlighted = useMemo(
+    () => highlightCode(source, language),
+    [source, language],
+  );
 
   return (
-    <pre className={cn("rounded-md bg-muted p-4 text-sm overflow-x-auto font-mono", className, cssClass)}>
+    <pre
+      className={cn(
+        "rounded-md bg-muted p-4 text-sm overflow-x-auto font-mono",
+        className,
+        cssClass,
+      )}
+    >
       <code
         className={language ? `language-${language}` : undefined}
         dangerouslySetInnerHTML={{ __html: highlighted }}
@@ -76,7 +91,14 @@ interface ImageProps {
   cssClass?: string;
 }
 
-export function Image({ src, alt = "", width, height, className, cssClass }: ImageProps) {
+export function Image({
+  src,
+  alt = "",
+  width,
+  height,
+  className,
+  cssClass,
+}: ImageProps) {
   const style: React.CSSProperties = {};
   if (width) style.width = width;
   if (height) style.height = height;
@@ -99,7 +121,12 @@ interface MarkdownProps {
 }
 
 /** Markdown — renders markdown via react-markdown with GFM support. */
-export function Markdown({ content, text, className, cssClass }: MarkdownProps) {
+export function Markdown({
+  content,
+  text,
+  className,
+  cssClass,
+}: MarkdownProps) {
   const src = content ?? text ?? "";
   return (
     <div className={cn("max-w-none", className, cssClass)}>

@@ -46,7 +46,6 @@ function extractState(
   return state;
 }
 
-
 /** Apply host theme context (dark mode, CSS variables, fonts). */
 function applyTheme(ctx: McpUiHostContext) {
   if (ctx.theme) {
@@ -93,7 +92,9 @@ export function App() {
       appRef.current = newApp;
 
       newApp.ontoolresult = (params) => {
-        handleToolResult(params as { structuredContent?: Record<string, unknown> });
+        handleToolResult(
+          params as { structuredContent?: Record<string, unknown> },
+        );
       };
 
       newApp.onhostcontextchanged = (ctx) => {

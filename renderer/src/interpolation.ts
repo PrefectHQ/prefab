@@ -73,8 +73,16 @@ function applyFormat(value: unknown, format: string): string {
       const style = (arg ?? "medium") as "short" | "medium" | "long";
       if (style === "short") return d.toLocaleDateString("en-US");
       if (style === "long")
-        return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-      return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        return d.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      return d.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
     }
 
     case "time": {
@@ -83,10 +91,16 @@ function applyFormat(value: unknown, format: string): string {
         // Try parsing as time-only (HH:MM)
         const t = new Date(`1970-01-01T${value}`);
         if (!isNaN(t.getTime()))
-          return t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+          return t.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+          });
         return String(value);
       }
-      return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+      return d.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      });
     }
 
     case "datetime": {
@@ -123,7 +137,9 @@ export function interpolateString(
 ): unknown {
   // Fast path: entire string is one template → preserve the original type
   // (unless a format specifier is present, which always returns a string)
-  const singleMatch = template.match(/^\{\{\s*([\w.$]+)(?:\s*\|\s*([\w:]+))?\s*\}\}$/);
+  const singleMatch = template.match(
+    /^\{\{\s*([\w.$]+)(?:\s*\|\s*([\w:]+))?\s*\}\}$/,
+  );
   if (singleMatch) {
     const value = resolve(singleMatch[1], data);
     if (value === undefined) return template;
@@ -132,12 +148,15 @@ export function interpolateString(
   }
 
   // Mixed template: replace each {{ ... }} with its string value
-  return template.replace(TEMPLATE_RE, (_match, path: string, format?: string) => {
-    const value = resolve(path, data);
-    if (value === undefined) return "";
-    if (format) return applyFormat(value, format);
-    return String(value);
-  });
+  return template.replace(
+    TEMPLATE_RE,
+    (_match, path: string, format?: string) => {
+      const value = resolve(path, data);
+      if (value === undefined) return "";
+      if (format) return applyFormat(value, format);
+      return String(value);
+    },
+  );
 }
 
 /**
@@ -162,10 +181,7 @@ export function interpolateProps(
             : item,
       );
     } else if (typeof value === "object" && value !== null) {
-      result[key] = interpolateProps(
-        value as Record<string, unknown>,
-        data,
-      );
+      result[key] = interpolateProps(value as Record<string, unknown>, data);
     } else {
       result[key] = value;
     }

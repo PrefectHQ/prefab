@@ -30,7 +30,10 @@ function colsStyle(columns: number): CSSProperties {
 
 export function Row({ gap, className, cssClass, children }: LayoutProps) {
   return (
-    <div className={cn("flex flex-row", className, cssClass)} style={gap != null ? gapStyle(gap) : undefined}>
+    <div
+      className={cn("flex flex-row", className, cssClass)}
+      style={gap != null ? gapStyle(gap) : undefined}
+    >
       {children}
     </div>
   );
@@ -38,7 +41,10 @@ export function Row({ gap, className, cssClass, children }: LayoutProps) {
 
 export function Column({ gap, className, cssClass, children }: LayoutProps) {
   return (
-    <div className={cn("flex flex-col", className, cssClass)} style={gap != null ? gapStyle(gap) : undefined}>
+    <div
+      className={cn("flex flex-col", className, cssClass)}
+      style={gap != null ? gapStyle(gap) : undefined}
+    >
       {children}
     </div>
   );
@@ -48,13 +54,22 @@ interface GridProps extends LayoutProps {
   columns?: number;
 }
 
-export function Grid({ columns, gap, className, cssClass, children }: GridProps) {
+export function Grid({
+  columns,
+  gap,
+  className,
+  cssClass,
+  children,
+}: GridProps) {
   const style: CSSProperties = {
     ...(gap != null ? gapStyle(gap) : undefined),
     ...(columns ? colsStyle(columns) : undefined),
   };
   return (
-    <div className={cn("grid", className, cssClass)} style={Object.keys(style).length > 0 ? style : undefined}>
+    <div
+      className={cn("grid", className, cssClass)}
+      style={Object.keys(style).length > 0 ? style : undefined}
+    >
       {children}
     </div>
   );
@@ -75,6 +90,16 @@ interface SpanProps extends DivProps {
   text?: string;
 }
 
-export function Span({ className, cssClass, children, content, text }: SpanProps) {
-  return <span className={cn(className, cssClass)}>{children ?? content ?? text}</span>;
+export function Span({
+  className,
+  cssClass,
+  children,
+  content,
+  text,
+}: SpanProps) {
+  return (
+    <span className={cn(className, cssClass)}>
+      {children ?? content ?? text}
+    </span>
+  );
 }

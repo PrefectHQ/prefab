@@ -148,7 +148,11 @@ export function PrefabAccordion({
       <ShadcnAccordion
         type="multiple"
         defaultValue={
-          Array.isArray(defaultValue) ? defaultValue : defaultValue ? [defaultValue] : undefined
+          Array.isArray(defaultValue)
+            ? defaultValue
+            : defaultValue
+              ? [defaultValue]
+              : undefined
         }
         className={className}
       >
@@ -166,7 +170,9 @@ export function PrefabAccordion({
     <ShadcnAccordion
       type="single"
       collapsible={collapsible}
-      defaultValue={typeof defaultValue === "string" ? defaultValue : defaultValue?.[0]}
+      defaultValue={
+        typeof defaultValue === "string" ? defaultValue : defaultValue?.[0]
+      }
       className={className}
     >
       {_panels.map((panel) => (
@@ -221,11 +227,7 @@ interface PrefabTooltipProps {
   children?: ReactNode;
 }
 
-export function PrefabTooltip({
-  content,
-  side,
-  children,
-}: PrefabTooltipProps) {
+export function PrefabTooltip({ content, side, children }: PrefabTooltipProps) {
   return (
     <TooltipProvider>
       <ShadcnTooltip>
@@ -307,7 +309,9 @@ export function PrefabDialog({
         {(title || description) && (
           <DialogHeader>
             {title && <DialogTitle>{title}</DialogTitle>}
-            {description && <DialogDescription>{description}</DialogDescription>}
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
+            )}
           </DialogHeader>
         )}
         {content}
