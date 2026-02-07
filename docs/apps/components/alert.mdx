@@ -276,22 +276,6 @@ with Card():
 </CodeGroup>
 </ComponentPreview>
 
-## Data Interpolation
-
-Alert titles and descriptions support `{{ field }}` placeholders:
-
-```python Alert Interpolation
-from prefab_ui.components import (
-    Alert,
-    AlertTitle,
-    AlertDescription,
-)
-
-with Alert(variant="{{ severity }}"):
-    AlertTitle("{{ title }}")
-    AlertDescription("{{ message }}")
-```
-
 ## API Reference
 
 <Card icon="code" title="Alert Parameters">
@@ -306,7 +290,7 @@ with Alert(variant="{{ severity }}"):
 
 <Card icon="code" title="AlertTitle Parameters">
 <ParamField body="content" type="str" required>
-  Title text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+  Title text. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -316,7 +300,7 @@ with Alert(variant="{{ severity }}"):
 
 <Card icon="code" title="AlertDescription Parameters">
 <ParamField body="content" type="str" required>
-  Description text. Can be passed as a positional argument. Supports `{{ field }}` interpolation.
+  Description text. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -352,5 +336,3 @@ with Alert(variant="{{ severity }}"):
   "cssClass?": "string",
   "visibleWhen?": "string"
 }
-
-</Card>

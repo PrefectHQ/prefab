@@ -4,19 +4,62 @@ description: Provide scoped interpolation values to children.
 icon: database
 ---
 
-`State` is a control-flow component that provides local `{{ }}` interpolation values to its children. Children resolve template expressions against the State's values first, falling through to parent scopes and then global state.
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`State` provides local [interpolation](/apps/patterns/interpolation) values to its children. Children resolve `{{ }}` template expressions against the State's values first, falling through to parent scopes and then global state.
 
 This is useful when you want to inject data into a subtree without polluting global state or duplicating values across multiple props.
 
-```python Basic Usage
-from prefab_ui.components import State, Card, CardHeader, CardTitle, CardDescription
+## Basic Usage
 
-with State(name="Alice", role="Engineer"):
+<ComponentPreview auto json={`{"type":"State","state":{"name":"Arthur Dent","role":"Reluctant Adventurer"},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ role }}"}]}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    State,
+)
+
+with State(name="Arthur Dent", role="Reluctant Adventurer"):
     with Card():
         with CardHeader():
             CardTitle("{{ name }}")
             CardDescription("{{ role }}")
 ```
+```json Protocol
+{
+  "type": "State",
+  "state": {
+    "name": "Arthur Dent",
+    "role": "Reluctant Adventurer"
+  },
+  "children": [
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardTitle",
+              "content": "{{ name }}"
+            },
+            {
+              "type": "CardDescription",
+              "content": "{{ role }}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## How It Works
 
@@ -26,54 +69,125 @@ Any kwargs that aren't base component fields (`css_class`, `visible_when`, etc.)
 from prefab_ui.components import State, Text
 
 # Kwargs style
-with State(name="Alice", role="Engineer"):
+with State(name="Ford", role="Researcher"):
     Text("{{ name }} is a {{ role }}")
 
 # Dict style
-with State({"name": "Alice", "role": "Engineer"}):
+with State({"name": "Ford", "role": "Researcher"}):
     Text("{{ name }} is a {{ role }}")
 ```
 
-State values are resolved against the current interpolation context, so you can compose values from outer scopes:
-
-```python Composing Values
-from prefab_ui.components import State, Text, Column
-
-set_data(first="Alice", last="Smith")
-
-with Column():
-    with State(full_name="{{ first }} {{ last }}"):
-        Text("Hello, {{ full_name }}!")
-```
+Both forms produce the same wire format — a `State` node with a `state` object.
 
 ## Nested State
 
 State components can nest. Inner values shadow outer ones for the same key, and children see the merged context:
 
-```python Nested State
-from prefab_ui.components import State, Text, Column
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Column, State, Text
 
-with Column():
-    with State(greeting="Hello", name="Alice"):
-        Text("{{ greeting }}, {{ name }}")  # Hello, Alice
-        with State(name="Bob"):
-            Text("{{ greeting }}, {{ name }}")  # Hello, Bob
+with Column(gap=2):
+    with State(greeting="Don't Panic", name="Arthur"):
+        Text("{{ greeting }}, {{ name }}")
+        with State(name="Ford"):
+            Text("{{ greeting }}, {{ name }}")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "State",
+      "state": {
+        "greeting": "Don't Panic",
+        "name": "Arthur"
+      },
+      "children": [
+        {
+          "type": "Text",
+          "content": "{{ greeting }}, {{ name }}"
+        },
+        {
+          "type": "State",
+          "state": {
+            "name": "Ford"
+          },
+          "children": [
+            {
+              "type": "Text",
+              "content": "{{ greeting }}, {{ name }}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `State` shadows `name` but inherits `greeting`.
 
 ## With ForEach
 
-State works well alongside `ForEach` for providing extra context to iterated templates:
+State works well alongside [ForEach](/apps/components/foreach) for providing extra context to iterated templates:
 
-```python State with ForEach
-from prefab_ui.components import State, ForEach, Badge, Row
+<ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Badge, ForEach, Row, State
 
 set_data(languages=["Python", "TypeScript", "Rust"])
 
-with State(variant="secondary"):
-    with Row(gap=2):
+with State(prefix="Speaks"):
+    with Row(gap=2, css_class="items-center"):
         with ForEach("languages"):
-            Badge("{{ _item }}", variant="{{ variant }}")
+            Badge(
+                "{{ prefix }}: {{ _item }}",
+                variant="secondary",
+            )
 ```
+```json Protocol
+{
+  "_tree": {
+    "type": "State",
+    "state": {
+      "prefix": "Speaks"
+    },
+    "children": [
+      {
+        "cssClass": "items-center",
+        "type": "Row",
+        "gap": 2,
+        "children": [
+          {
+            "type": "ForEach",
+            "key": "languages",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "{{ prefix }}: {{ _item }}",
+                "variant": "secondary"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "languages": [
+    "Python",
+    "TypeScript",
+    "Rust"
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

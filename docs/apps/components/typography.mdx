@@ -309,57 +309,6 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-## Data Interpolation
-
-All typography components support `{{ field }}` placeholders that are replaced with data at render time:
-
-```python Typography Interpolation
-from prefab_ui.components import (
-    H1,
-    P,
-    Muted,
-)
-
-H1("Welcome, {{ name }}")
-P("You have {{ count }} new notifications.")
-Muted("Member since {{ joined }}")
-```
-
-## Format Specifiers
-
-Add a pipe (`|`) after a field name to format its value. This is useful for displaying numbers as percentages, formatting dates, or applying locale-specific number formatting.
-
-```python Format Examples
-from prefab_ui.components import P, Column
-
-with Column(gap=2):
-    P("Completion: {{ progress | percent }}")       # 0.75 → "75%"
-    P("Completion: {{ progress | percent:1 }}")     # 0.756 → "75.6%"
-    P("Revenue: {{ amount | currency }}")           # 9999.5 → "$9,999.50"
-    P("Users: {{ count | number }}")                # 1234 → "1,234"
-    P("Created: {{ date | date }}")                 # "2025-01-15" → "Jan 15, 2025"
-    P("Created: {{ date | date:long }}")            # → "January 15, 2025"
-    P("Updated: {{ timestamp | datetime }}")        # ISO → "Jan 15, 2025, 2:30 PM"
-```
-
-Available formats:
-
-| Format | Example | Description |
-|--------|---------|-------------|
-| `percent` | `0.75` → `"75%"` | Multiply by 100, add % |
-| `percent:N` | `0.756` → `"75.6%"` | Percent with N decimals |
-| `number` | `1234` → `"1,234"` | Locale-formatted number |
-| `number:N` | `1234` → `"1,234.00"` | Number with N decimals |
-| `currency` | `99.5` → `"$99.50"` | USD currency format |
-| `currency:EUR` | `99.5` → `"€99.50"` | Specified currency |
-| `date` | ISO → `"Jan 15, 2025"` | Medium date |
-| `date:short` | ISO → `"1/15/2025"` | Short date |
-| `date:long` | ISO → `"January 15, 2025"` | Long date |
-| `time` | ISO → `"2:30 PM"` | Time only |
-| `datetime` | ISO → `"Jan 15, 2025, 2:30 PM"` | Date + time |
-| `upper` | `"hello"` → `"HELLO"` | Uppercase |
-| `lower` | `"HELLO"` → `"hello"` | Lowercase |
-
 ## API Reference
 
 <Card icon="code" title="Styled Text Components">
@@ -367,7 +316,7 @@ Available formats:
 `H1`, `H2`, `H3`, `H4`, `P`, `Lead`, `Large`, `Small`, `Muted`, `BlockQuote`, `InlineCode` all share this interface:
 
 <ParamField body="content" type="str" required>
-  Text content. Supports `{{ field }}` and `{{ field | format }}` interpolation. Can be passed as a positional argument.
+  Text content. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="bold" type="bool | None" default="None">

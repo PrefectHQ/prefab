@@ -73,21 +73,11 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-## Data Interpolation
-
-Content supports `{{ field }}` interpolation, so you can inject dynamic code from server data:
-
-```python Dynamic Code
-from prefab_ui.components import Code
-
-Code("{{ source }}", language="{{ language }}")
-```
-
 ## API Reference
 
 <Card icon="code" title="Code Parameters">
 <ParamField body="content" type="str" required>
-  Code content. Supports `{{ field }}` interpolation.
+  Code content. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="language" type="str | None" default="None">
