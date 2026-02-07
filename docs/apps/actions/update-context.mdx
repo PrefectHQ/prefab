@@ -10,7 +10,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 <ComponentPreview auto json={`{"type":"Button","label":"Use Advanced Mode","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","content":"User has selected advanced mode. Provide detailed technical responses."}}`}>
 <CodeGroup>
-```python Update Context Hero
+```python Python
 from prefab_ui.components import Button
 from prefab_ui import UpdateContext
 
@@ -18,7 +18,7 @@ Button("Use Advanced Mode", on_click=UpdateContext(
     content="User has selected advanced mode. Provide detailed technical responses."
 ))
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Button",
   "label": "Use Advanced Mode",
@@ -48,7 +48,7 @@ For richer data, pass a dict instead of plain text:
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}`}>
 <CodeGroup>
-```python Structured Content
+```python Python
 from prefab_ui.components import Button, Select, SelectOption, Column
 from prefab_ui import UpdateContext
 
@@ -61,7 +61,7 @@ with Column(gap=3):
         structured_content={"preference": {"thinking": "{{ thinking }}"}},
     ))
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,

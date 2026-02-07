@@ -12,14 +12,14 @@ Every named form control automatically syncs its value to client state, and `{{ 
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Type your name...","name":"name","disabled":false,"required":false},{"type":"Text","content":"Hello, {{ name }}!"}]}`}>
 <CodeGroup>
-```python State-Driven UI
+```python Python
 from prefab_ui.components import Column, Input, Text
 
 with Column(gap=3):
     Input(name="name", placeholder="Type your name...")
     Text("Hello, {{ name }}!")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,
@@ -50,7 +50,7 @@ Every component has a `visible_when` prop that controls whether it renders based
 
 <ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}`}>
 <CodeGroup>
-```python Conditional Visibility
+```python Python
 from prefab_ui.components import Alert, AlertTitle, Button, Column
 from prefab_ui import ToggleState
 
@@ -59,7 +59,7 @@ with Column(gap=2):
     with Alert(visible_when="showDetails"):
         AlertTitle("Here are the hidden details!")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 2,
@@ -100,7 +100,7 @@ Clicking the button flips `showDetails` between `True` and `False`. When `False`
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Search users...","name":"search","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"find_users","arguments":{"query":"{{ search }}"},"resultKey":"results"}},{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false}],"rows":"{{ results }}","searchable":true,"paginated":false,"pageSize":10}]}`}>
 <CodeGroup>
-```python Dynamic Data Refresh
+```python Python
 from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input
 from prefab_ui import ToolCall
 
@@ -120,7 +120,7 @@ with Column(gap=3):
         searchable=True,
     )
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,
@@ -181,7 +181,7 @@ The same pattern works with `ForEach` for custom result layouts. Each item in th
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Search products...","name":"q","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"search_products","arguments":{"query":"{{ q }}"},"resultKey":"products"}},{"type":"ForEach","key":"products","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ description }}"}]}]}]}]}`}>
 <CodeGroup>
-```python Search with ForEach
+```python Python
 from prefab_ui.components import (
     Button,
     Card,
@@ -207,7 +207,7 @@ with Column(gap=3):
                 CardTitle("{{ name }}")
                 CardDescription("{{ description }}")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,
@@ -273,7 +273,7 @@ Pass a list of actions to compose richer interactions. Actions execute in sequen
 
 <ComponentPreview auto json={`{"type":"Button","label":"Process","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"processing","value":true},{"onSuccess":{"action":"showToast","message":"Analysis complete!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"run_analysis","arguments":{"data":"{{ dataset }}"}},{"action":"setState","key":"processing","value":false}]}`}>
 <CodeGroup>
-```python Action Chains
+```python Python
 from prefab_ui.components import Button
 from prefab_ui import ToolCall, SetState, ShowToast
 
@@ -288,7 +288,7 @@ Button("Process", on_click=[
     SetState("processing", False),
 ])
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Button",
   "label": "Process",
@@ -337,7 +337,7 @@ When a `ToolCall` action fails, the error message is available as `$error` insid
 
 <ComponentPreview auto json={`{"type":"Button","label":"Delete","variant":"destructive","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"delete_item","arguments":{"id":"{{ item_id }}"}}}`}>
 <CodeGroup>
-```python Error Handling
+```python Python
 from prefab_ui.components import Button
 from prefab_ui import ToolCall, ShowToast
 
@@ -347,7 +347,7 @@ Button("Delete", variant="destructive", on_click=ToolCall(
     on_error=ShowToast("{{ $error }}", variant="error"),
 ))
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Button",
   "label": "Delete",

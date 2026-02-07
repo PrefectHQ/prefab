@@ -10,7 +10,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 <ComponentPreview auto json={`{"_tree":{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]},"users":[{"name":"Alice","role":"Admin","email":"alice@example.com"},{"name":"Bob","role":"Editor","email":"bob@example.com"},{"name":"Carol","role":"Viewer","email":"carol@example.com"}]}`}>
 <CodeGroup>
-```python ForEach
+```python Python
 from prefab_ui.components import (
     ForEach,
     Card,
@@ -35,7 +35,7 @@ with ForEach("users"):
                 Badge("{{ role }}", variant="secondary")
             CardDescription("{{ email }}")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "ForEach",
@@ -103,7 +103,7 @@ The `key` argument (passed positionally or as a keyword) names the field in the 
 
 <ComponentPreview auto json={`{"_tree":{"type":"Row","gap":2,"children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]},"tags":["python","mcp","prefab-ui","async"]}`}>
 <CodeGroup>
-```python Scalar Items
+```python Python
 from prefab_ui.components import (
     ForEach,
     Badge,
@@ -116,7 +116,7 @@ with Row(gap=2):
     with ForEach("tags"):
         Badge("{{ _item }}", variant="secondary")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Row",

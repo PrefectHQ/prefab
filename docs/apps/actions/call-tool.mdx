@@ -10,13 +10,13 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 <ComponentPreview auto json={`{"type":"Button","label":"Refresh Data","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_latest_data","arguments":{}}}`}>
 <CodeGroup>
-```python Call Tool Hero
+```python Python
 from prefab_ui.components import Button
 from prefab_ui import ToolCall
 
 Button("Refresh Data", on_click=ToolCall("get_latest_data"))
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Button",
   "label": "Refresh Data",
@@ -41,7 +41,7 @@ Use `{{ key }}` interpolation in the `arguments` dict to pass client state to th
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}`}>
 <CodeGroup>
-```python Passing Arguments
+```python Python
 from prefab_ui.components import Input, Button, Column
 from prefab_ui import ToolCall
 
@@ -52,7 +52,7 @@ with Column(gap=3):
         arguments={"location": "{{ city }}"},
     ))
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,

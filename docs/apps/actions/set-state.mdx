@@ -10,7 +10,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 <ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false,"onChange":{"action":"setState","key":"brightness","value":"{{ $event }}"}},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"_state":{"brightness":50}}`}>
 <CodeGroup>
-```python State Hero
+```python Python
 from prefab_ui.components import Slider, Muted, Column
 from prefab_ui import SetState
 
@@ -21,7 +21,7 @@ with Column(gap=3):
            on_change=SetState("brightness"))
     Muted("Brightness: {{ brightness }}%")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Column",
@@ -76,7 +76,7 @@ Pass a second argument to set a specific value instead of capturing the event. C
 
 <ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"type":"Row","gap":2,"children":[{"cssClass":"bg-blue-500 text-white","type":"Button","label":"Blue","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-blue-500"}},{"cssClass":"bg-emerald-500 text-white","type":"Button","label":"Emerald","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-emerald-500"}},{"cssClass":"bg-rose-500 text-white","type":"Button","label":"Rose","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-rose-500"}},{"cssClass":"bg-amber-500 text-white","type":"Button","label":"Amber","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-amber-500"}}]},{"cssClass":"{{ color }} h-10 rounded-md","type":"Div"}]},"_state":{"color":"bg-blue-500"}}`}>
 <CodeGroup>
-```python Explicit Values
+```python Python
 from prefab_ui.components import Button, Div, Row, Column
 from prefab_ui import SetState
 
@@ -94,7 +94,7 @@ with Column(gap=3):
                on_click=SetState("color", "bg-amber-500"))
     Div(css_class="{{ color }} h-10 rounded-md")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Column",
@@ -180,7 +180,7 @@ Use explicit values to build reset buttons:
 
 <ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false,"onChange":{"action":"setState","key":"volume","value":"{{ $event }}"}},{"content":"Volume: {{ volume }}","type":"Muted"},{"type":"Button","label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50}}]},"_state":{"volume":75}}`}>
 <CodeGroup>
-```python Reset Button
+```python Python
 from prefab_ui.components import Button, Slider, Muted, Column
 from prefab_ui import SetState
 
@@ -193,7 +193,7 @@ with Column(gap=3):
     Button("Reset to 50", variant="outline",
            on_click=SetState("volume", 50))
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Column",
@@ -243,7 +243,7 @@ with Column(gap=3):
 
 <ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}`}>
 <CodeGroup>
-```python Toggle State
+```python Python
 from prefab_ui.components import Button, Alert, AlertTitle, Column
 from prefab_ui import ToggleState
 
@@ -253,7 +253,7 @@ with Column(gap=2):
     with Alert(visible_when="showDetails"):
         AlertTitle("Here are the details!")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 2,
@@ -294,7 +294,7 @@ Each `ToggleState` key is independent, so you can manage multiple visibility sta
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Row","gap":2,"children":[{"type":"Button","label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"}},{"type":"Button","label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"}},{"type":"Button","label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"}}]},{"visibleWhen":"showA","content":"Content for section A","type":"P"},{"visibleWhen":"showB","content":"Content for section B","type":"P"},{"visibleWhen":"showC","content":"Content for section C","type":"P"}]}`}>
 <CodeGroup>
-```python Multiple Toggles
+```python Python
 from prefab_ui.components import Button, P, Row, Column
 from prefab_ui import ToggleState
 
@@ -310,7 +310,7 @@ with Column(gap=3):
     P("Content for section B", visible_when="showB")
     P("Content for section C", visible_when="showC")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,

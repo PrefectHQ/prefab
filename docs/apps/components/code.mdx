@@ -10,7 +10,7 @@ Code blocks display source code or configuration with automatic syntax highlight
 
 <ComponentPreview auto json={`{"type":"Code","content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python"}`}>
 <CodeGroup>
-```python Code Block
+```python Python
 from prefab_ui.components import Code
 
 Code("""
@@ -23,7 +23,7 @@ message = greet("World")
 print(message)
 """.strip(), language="python")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Code",
   "content": "def greet(name: str) -> str:\n    \"\"\"Return a greeting message.\"\"\"\n    return f\"Hello, {name}!\"\n\n# Call the function\nmessage = greet(\"World\")\nprint(message)",
@@ -37,7 +37,7 @@ print(message)
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Code","content":"pip install prefab-ui","language":"bash"},{"type":"Code","content":"SELECT * FROM users WHERE active = true;","language":"sql"},{"type":"Code","content":"{ \\"name\\": \\"prefab-ui\\", \\"version\\": \\"2.0\\" }","language":"json"}]}`}>
 <CodeGroup>
-```python Code Languages
+```python Python
 from prefab_ui.components import Code, Column
 
 with Column(gap=3):
@@ -45,7 +45,7 @@ with Column(gap=3):
     Code("SELECT * FROM users WHERE active = true;", language="sql")
     Code('{ "name": "prefab-ui", "version": "2.0" }', language="json")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 3,

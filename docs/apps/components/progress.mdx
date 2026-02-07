@@ -10,12 +10,12 @@ Progress bars show how far along a process is. They fill from left to right as `
 
 <ComponentPreview auto json={`{"type":"Progress","value":60.0,"max":100}`}>
 <CodeGroup>
-```python Progress Example
+```python Python
 from prefab_ui.components import Progress
 
 Progress(value=60)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Progress",
   "value": 60.0,
@@ -31,7 +31,7 @@ By default `max` is 100, but you can set it to any positive number. The renderer
 
 <ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}`}>
 <CodeGroup>
-```python Progress Custom Max
+```python Python
 from prefab_ui.components import Column, Label, Progress
 
 with Column(gap=4):
@@ -42,7 +42,7 @@ with Column(gap=4):
         Label("75%")
         Progress(value=75)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 4,
@@ -89,7 +89,7 @@ Use `indicator_class` to change the progress bar color:
 
 <ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}`}>
 <CodeGroup>
-```python Progress Colors
+```python Python
 from prefab_ui.components import Column, Label, Progress
 
 with Column(gap=4):
@@ -103,7 +103,7 @@ with Column(gap=4):
         Label("Tasks Complete")
         Progress(value=100, indicator_class="bg-green-500")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 4,
@@ -168,7 +168,7 @@ Bind a slider to a progress bar so the label reflects the actual value. The `per
 
 <ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"_state":{"progress":0.65}}`}>
 <CodeGroup>
-```python Dynamic Progress
+```python Python
 from prefab_ui.components import (
     Column,
     Progress,
@@ -186,7 +186,7 @@ with Column(gap=3):
     Progress(value="{{ progress }}", max=1)
     Slider(name="progress", min=0, max=1, step=0.01, value=0.65)
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Column",

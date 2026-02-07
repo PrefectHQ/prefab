@@ -14,7 +14,7 @@ When you have rows-and-columns data, DataTable handles sorting, search, and pagi
 
 <ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"status","header":"Status","sortable":false},{"key":"updated","header":"Updated","sortable":true}],"rows":[{"name":"Auth service","status":"Healthy","updated":"2 min ago"},{"name":"API gateway","status":"Degraded","updated":"30 sec ago"},{"name":"Database","status":"Healthy","updated":"5 min ago"}],"searchable":true,"paginated":true,"pageSize":10}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import DataTable, DataTableColumn
 
 DataTable(
@@ -33,7 +33,7 @@ DataTable(
     page_size=10,
 )
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "DataTable",
   "columns": [
@@ -99,7 +99,7 @@ ForEach renders its children once per item in a data list. Each item's fields be
 
 <ComponentPreview auto json={`{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import (
     Badge,
     Card,
@@ -118,7 +118,7 @@ with ForEach("users"):
                 Badge("{{ role }}", variant="secondary")
             CardDescription("{{ email }}")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "ForEach",
   "key": "users",
@@ -175,7 +175,7 @@ Tabs organize related data into switchable panels. Users click a tab trigger to 
 
 <ComponentPreview auto json={`{"type":"Tabs","defaultValue":"active","children":[{"type":"Tab","title":"Active","value":"active","disabled":false,"children":[{"type":"Text","content":"Active items go here"}]},{"type":"Tab","title":"Archived","value":"archived","disabled":false,"children":[{"type":"Text","content":"Archived items go here"}]}]}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import Tab, Tabs, Text
 
 with Tabs(default_value="active"):
@@ -184,7 +184,7 @@ with Tabs(default_value="active"):
     with Tab("Archived", value="archived"):
         Text("Archived items go here")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Tabs",
   "defaultValue": "active",
@@ -225,7 +225,7 @@ Accordions work well when you have many items that benefit from progressive disc
 
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"children":[{"type":"AccordionItem","title":"Section 1","value":"s1","children":[{"type":"Text","content":"Content for section 1"}]},{"type":"AccordionItem","title":"Section 2","value":"s2","children":[{"type":"Text","content":"Content for section 2"}]}]}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
 with Accordion():
@@ -234,7 +234,7 @@ with Accordion():
     with AccordionItem("Section 2", value="s2"):
         Text("Content for section 2")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Accordion",
   "accordionType": "single",
@@ -276,7 +276,7 @@ Pages provides a multi-page layout where only the active page renders. Combined 
 
 <ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
 from prefab_ui.actions import SetState
 
@@ -291,7 +291,7 @@ with Column(gap=4):
         with Page("Complete", value="complete"):
             Text("All done!")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 4,
@@ -372,14 +372,14 @@ Progress bars show completion or loading status. The `value` prop supports inter
 
 <ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Text","content":"Processing: {{ progress }}%"},{"type":"Progress","value":"{{ progress }}","max":100}]}`}>
 <CodeGroup>
-```python
+```python Python
 from prefab_ui.components import Column, Progress, Text
 
 with Column(gap=2):
     Text("Processing: {{ progress }}%")
     Progress(value="{{ progress }}")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 2,

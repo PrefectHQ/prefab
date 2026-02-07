@@ -10,12 +10,12 @@ The Calendar component renders a month view for selecting dates. It supports sin
 
 <ComponentPreview auto json={`{"type":"Calendar","mode":"single","name":"selectedDate"}`}>
 <CodeGroup>
-```python Calendar Example
+```python Python
 from prefab_ui.components import Calendar
 
 Calendar(name="selectedDate")
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Calendar",
   "mode": "single",
@@ -31,7 +31,7 @@ Set `mode="range"` to let users select a start and end date. The selected range 
 
 <ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"range","name":"dateRange"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`}>
 <CodeGroup>
-```python Calendar Range
+```python Python
 import json
 from prefab_ui.components import Calendar
 
@@ -44,7 +44,7 @@ set_initial_state(
 
 Calendar(mode="range", name="dateRange")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Calendar",
@@ -65,7 +65,7 @@ Select multiple individual dates with `mode="multiple"`. Selected dates are stor
 
 <ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`}>
 <CodeGroup>
-```python Calendar Multiple
+```python Python
 import json
 from prefab_ui.components import Calendar
 
@@ -79,7 +79,7 @@ set_initial_state(
 
 Calendar(mode="multiple", name="selectedDates")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Calendar",
@@ -100,7 +100,7 @@ Bind the calendar's state to a label using `{{ name | date }}` to show a formatt
 
 <ComponentPreview auto json={`{"_tree":{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`}>
 <CodeGroup>
-```python Calendar with Label
+```python Python
 from prefab_ui.components import (
     Calendar,
     Column,
@@ -118,7 +118,7 @@ with Row(gap=6):
         Text("{{ selectedDate | date:long }}", bold=True)
         Muted("Raw: {{ selectedDate }}")
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Row",

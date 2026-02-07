@@ -12,12 +12,12 @@ Sliders let users select a numeric value from a range by dragging a handle.
 
 <ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}`}>
 <CodeGroup>
-```python Slider Example
+```python Python
 from prefab_ui.components import Slider
 
 Slider(min=0, max=100, value=50)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Slider",
   "min": 0.0,
@@ -33,12 +33,12 @@ Slider(min=0, max=100, value=50)
 
 <ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}`}>
 <CodeGroup>
-```python Slider with Step
+```python Python
 from prefab_ui.components import Slider
 
 Slider(min=0, max=10, step=0.5, value=5)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Slider",
   "min": 0.0,
@@ -55,7 +55,7 @@ Slider(min=0, max=10, step=0.5, value=5)
 
 <ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`}>
 <CodeGroup>
-```python Slider Ranges
+```python Python
 from prefab_ui.components import (
     Column,
     Label,
@@ -71,7 +71,7 @@ with Column(gap=4):
         Label("Temperature (0-10)")
         Slider(min=0, max=10, value=7)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Column",
   "gap": 4,
@@ -122,7 +122,7 @@ Give the slider a `name` to store its value in state, then reference it with `{{
 
 <ComponentPreview auto json={`{"_tree":{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"_state":{"volume":75}}`}>
 <CodeGroup>
-```python Slider with Value Display
+```python Python
 from prefab_ui.components import (
     Column,
     Label,
@@ -142,7 +142,7 @@ with Column(gap=4):
         Slider(name="volume", min=0, max=100, value=75)
     Progress(value="{{ volume }}", max=100)
 ```
-```json Wire Format
+```json Protocol
 {
   "_tree": {
     "type": "Column",
@@ -198,12 +198,12 @@ The slider, label, and progress bar all stay in sync — drag the slider and the
 
 <ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}`}>
 <CodeGroup>
-```python Disabled Slider
+```python Python
 from prefab_ui.components import Slider
 
 Slider(min=0, max=100, value=30, disabled=True)
 ```
-```json Wire Format
+```json Protocol
 {
   "type": "Slider",
   "min": 0.0,
