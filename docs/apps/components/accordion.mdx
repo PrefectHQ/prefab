@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Accordions let users expand and collapse sections to reveal content progressively. Each `AccordionItem` has a clickable title and hidden content that appears on expand.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"item-1","children":[{"type":"AccordionItem","title":"Is it accessible?","value":"item-1","children":[{"type":"Text","content":"Yes. It adheres to the WAI-ARIA design pattern."}]},{"type":"AccordionItem","title":"Is it styled?","value":"item-2","children":[{"type":"Text","content":"Yes. It comes with default styles from shadcn/ui."}]},{"type":"AccordionItem","title":"Is it animated?","value":"item-3","children":[{"type":"Text","content":"Yes. It uses CSS animations for smooth transitions."}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"item-1","children":[{"type":"AccordionItem","title":"Is it accessible?","value":"item-1","children":[{"type":"Text","content":"Yes. It adheres to the WAI-ARIA design pattern."}]},{"type":"AccordionItem","title":"Is it styled?","value":"item-2","children":[{"type":"Text","content":"Yes. It comes with default styles from shadcn/ui."}]},{"type":"AccordionItem","title":"Is it animated?","value":"item-3","children":[{"type":"Text","content":"Yes. It uses CSS animations for smooth transitions."}]}]}`}>
+<CodeGroup>
 ```python Accordion Example
 from prefab_ui.components import Accordion, AccordionItem, Text
 
@@ -21,13 +21,58 @@ with Accordion(default_value="item-1"):
     with AccordionItem("Is it animated?", value="item-3"):
         Text("Yes. It uses CSS animations for smooth transitions.")
 ```
+```json Wire Format
+{
+  "type": "Accordion",
+  "accordionType": "single",
+  "collapsible": true,
+  "defaultValue": "item-1",
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "Is it accessible?",
+      "value": "item-1",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It adheres to the WAI-ARIA design pattern."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Is it styled?",
+      "value": "item-2",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It comes with default styles from shadcn/ui."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Is it animated?",
+      "value": "item-3",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It uses CSS animations for smooth transitions."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Multiple Open
 
 Set `accordion_type="multiple"` to allow more than one section open at a time.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"children":[{"type":"AccordionItem","title":"Section One","value":"s1","children":[{"type":"Text","content":"First section content."}]},{"type":"AccordionItem","title":"Section Two","value":"s2","children":[{"type":"Text","content":"Second section content."}]},{"type":"AccordionItem","title":"Section Three","value":"s3","children":[{"type":"Text","content":"Third section content."}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"children":[{"type":"AccordionItem","title":"Section One","value":"s1","children":[{"type":"Text","content":"First section content."}]},{"type":"AccordionItem","title":"Section Two","value":"s2","children":[{"type":"Text","content":"Second section content."}]},{"type":"AccordionItem","title":"Section Three","value":"s3","children":[{"type":"Text","content":"Third section content."}]}]}`}>
+<CodeGroup>
 ```python Accordion Multiple
 from prefab_ui.components import Accordion, AccordionItem, Text
 
@@ -39,6 +84,54 @@ with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
     with AccordionItem("Section Three", value="s3"):
         Text("Third section content.")
 ```
+```json Wire Format
+{
+  "type": "Accordion",
+  "accordionType": "multiple",
+  "collapsible": true,
+  "defaultValue": [
+    "s1",
+    "s2"
+  ],
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "Section One",
+      "value": "s1",
+      "children": [
+        {
+          "type": "Text",
+          "content": "First section content."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Section Two",
+      "value": "s2",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Second section content."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Section Three",
+      "value": "s3",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Third section content."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

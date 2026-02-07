@@ -8,14 +8,29 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `SendMessage` puts words in the user's mouth — when triggered, it sends a message to the conversation as if the user typed it. This is useful for creating quick-action buttons that trigger follow-up questions or commands.
 
-<ComponentPreview auto json={`{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}`} />
-
+<ComponentPreview auto json={`{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}`}>
+<CodeGroup>
 ```python Send Message Hero
 from prefab_ui.components import Button
 from prefab_ui import SendMessage
 
 Button("Summarize", on_click=SendMessage("Please summarize the data above."))
 ```
+```json Wire Format
+{
+  "type": "Button",
+  "label": "Summarize",
+  "variant": "default",
+  "size": "default",
+  "disabled": false,
+  "onClick": {
+    "action": "sendMessage",
+    "content": "Please summarize the data above."
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 The message appears in the chat attributed to the user, which means the AI assistant will respond to it naturally.
 
@@ -23,8 +38,8 @@ The message appears in the chat attributed to the user, which means the AI assis
 
 Build a row of follow-up actions that save the user from typing:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"content":"Quick Actions","type":"H3"},{"type":"Row","gap":2,"children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"content":"Quick Actions","type":"H3"},{"type":"Row","gap":2,"children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}`}>
+<CodeGroup>
 ```python Quick Actions
 from prefab_ui.components import Button, Row, H3, Column
 from prefab_ui import SendMessage
@@ -39,13 +54,66 @@ with Column(gap=3):
         Button("Compare Options", variant="outline",
                on_click=SendMessage("Compare the top options and recommend one."))
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "content": "Quick Actions",
+      "type": "H3"
+    },
+    {
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Button",
+          "label": "Summarize",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "sendMessage",
+            "content": "Summarize these results."
+          }
+        },
+        {
+          "type": "Button",
+          "label": "Explain Further",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "sendMessage",
+            "content": "Explain these results in more detail."
+          }
+        },
+        {
+          "type": "Button",
+          "label": "Compare Options",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "sendMessage",
+            "content": "Compare the top options and recommend one."
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Dynamic Messages with State
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}`}>
+<CodeGroup>
 ```python Dynamic Messages
 from prefab_ui.components import Input, Button, Column
 from prefab_ui import SendMessage
@@ -54,6 +122,35 @@ with Column(gap=3):
     Input(name="question", placeholder="Ask a follow-up question...")
     Button("Ask", on_click=SendMessage("{{ question }}"))
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Input",
+      "inputType": "text",
+      "placeholder": "Ask a follow-up question...",
+      "name": "question",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Button",
+      "label": "Ask",
+      "variant": "default",
+      "size": "default",
+      "disabled": false,
+      "onClick": {
+        "action": "sendMessage",
+        "content": "{{ question }}"
+      }
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

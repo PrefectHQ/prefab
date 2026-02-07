@@ -8,20 +8,29 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Badges are small, pill-shaped labels for status indicators, counts, and categories. They're inline elements that sit naturally alongside text or within cards.
 
-<ComponentPreview auto json={`{"type":"Badge","label":"New Feature","variant":"default"}`} />
-
+<ComponentPreview auto json={`{"type":"Badge","label":"New Feature","variant":"default"}`}>
+<CodeGroup>
 ```python Badge Example
 from prefab_ui.components import Badge
 
 Badge("New Feature")
 ```
+```json Wire Format
+{
+  "type": "Badge",
+  "label": "New Feature",
+  "variant": "default"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Variants
 
 Eight variants cover the most common use cases — five base styles from shadcn plus three semantic colors for status indicators.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"}]},{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"}]},{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}]}`}>
+<CodeGroup>
 ```python Badge Variants
 from prefab_ui.components import Badge, Column, Row
 
@@ -37,6 +46,68 @@ with Column(gap=3):
         Badge("Warning", variant="warning")
         Badge("Info", variant="info")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Badge",
+          "label": "Default",
+          "variant": "default"
+        },
+        {
+          "type": "Badge",
+          "label": "Secondary",
+          "variant": "secondary"
+        },
+        {
+          "type": "Badge",
+          "label": "Destructive",
+          "variant": "destructive"
+        },
+        {
+          "type": "Badge",
+          "label": "Outline",
+          "variant": "outline"
+        }
+      ]
+    },
+    {
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Badge",
+          "label": "Ghost",
+          "variant": "ghost"
+        },
+        {
+          "type": "Badge",
+          "label": "Success",
+          "variant": "success"
+        },
+        {
+          "type": "Badge",
+          "label": "Warning",
+          "variant": "warning"
+        },
+        {
+          "type": "Badge",
+          "label": "Info",
+          "variant": "info"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 

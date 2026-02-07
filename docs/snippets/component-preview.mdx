@@ -1,4 +1,4 @@
-export const ComponentPreview = ({ json, height }) => {
+export const ComponentPreview = ({ json, height, children }) => {
   var minH = height ? parseInt(height, 10) : 0;
   const [frameHeight, setFrameHeight] = React.useState(minH);
   const iframeRef = React.useRef(null);
@@ -38,13 +38,16 @@ export const ComponentPreview = ({ json, height }) => {
   }, []);
 
   return (
-    <Card>
-      <iframe
-        ref={iframeRef}
-        data-docpreview
-        src={"http://localhost:3333/renderer.html#docpreview:" + encodeURIComponent(json)}
-        style={{ width: "100%", height: frameHeight + "px", border: "none", display: "block" }}
-      />
-    </Card>
+    <div>
+      <Card>
+        <iframe
+          ref={iframeRef}
+          data-docpreview
+          src={"http://localhost:3333/renderer.html#docpreview:" + encodeURIComponent(json)}
+          style={{ width: "100%", height: frameHeight + "px", border: "none", display: "block" }}
+        />
+      </Card>
+      {children}
+    </div>
   );
 };

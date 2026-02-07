@@ -12,8 +12,8 @@ Prefab provide several components purpose-built for displaying data. This guide 
 
 When you have rows-and-columns data, DataTable handles sorting, search, and pagination automatically. Define your columns once, pass your rows, and the renderer takes care of the rest.
 
-<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"status","header":"Status","sortable":false},{"key":"updated","header":"Updated","sortable":true}],"rows":[{"name":"Auth service","status":"Healthy","updated":"2 min ago"},{"name":"API gateway","status":"Degraded","updated":"30 sec ago"},{"name":"Database","status":"Healthy","updated":"5 min ago"}],"searchable":true,"paginated":true,"pageSize":10}`} />
-
+<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"status","header":"Status","sortable":false},{"key":"updated","header":"Updated","sortable":true}],"rows":[{"name":"Auth service","status":"Healthy","updated":"2 min ago"},{"name":"API gateway","status":"Degraded","updated":"30 sec ago"},{"name":"Database","status":"Healthy","updated":"5 min ago"}],"searchable":true,"paginated":true,"pageSize":10}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import DataTable, DataTableColumn
 
@@ -33,6 +33,50 @@ DataTable(
     page_size=10,
 )
 ```
+```json Wire Format
+{
+  "type": "DataTable",
+  "columns": [
+    {
+      "key": "name",
+      "header": "Name",
+      "sortable": true
+    },
+    {
+      "key": "status",
+      "header": "Status",
+      "sortable": false
+    },
+    {
+      "key": "updated",
+      "header": "Updated",
+      "sortable": true
+    }
+  ],
+  "rows": [
+    {
+      "name": "Auth service",
+      "status": "Healthy",
+      "updated": "2 min ago"
+    },
+    {
+      "name": "API gateway",
+      "status": "Degraded",
+      "updated": "30 sec ago"
+    },
+    {
+      "name": "Database",
+      "status": "Healthy",
+      "updated": "5 min ago"
+    }
+  ],
+  "searchable": true,
+  "paginated": true,
+  "pageSize": 10
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 For server-fetched data, use interpolation so the rows resolve from client state at render time:
 
@@ -53,8 +97,8 @@ DataTable(
 
 ForEach renders its children once per item in a data list. Each item's fields become the interpolation context for that iteration, so `{{ field }}` placeholders resolve to the current item's values.
 
-<ComponentPreview auto json={`{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import (
     Badge,
@@ -74,6 +118,46 @@ with ForEach("users"):
                 Badge("{{ role }}", variant="secondary")
             CardDescription("{{ email }}")
 ```
+```json Wire Format
+{
+  "type": "ForEach",
+  "key": "users",
+  "children": [
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "cssClass": "items-center",
+              "type": "Row",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "{{ name }}"
+                },
+                {
+                  "type": "Badge",
+                  "label": "{{ role }}",
+                  "variant": "secondary"
+                }
+              ]
+            },
+            {
+              "type": "CardDescription",
+              "content": "{{ email }}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 For scalar lists (strings, numbers), each value is available as `{{ _item }}`:
 
@@ -89,8 +173,8 @@ with Row(gap=2):
 
 Tabs organize related data into switchable panels. Users click a tab trigger to reveal its content, keeping everything on one screen without clutter.
 
-<ComponentPreview auto json={`{"type":"Tabs","defaultValue":"active","children":[{"type":"Tab","title":"Active","value":"active","disabled":false,"children":[{"type":"Text","content":"Active items go here"}]},{"type":"Tab","title":"Archived","value":"archived","disabled":false,"children":[{"type":"Text","content":"Archived items go here"}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Tabs","defaultValue":"active","children":[{"type":"Tab","title":"Active","value":"active","disabled":false,"children":[{"type":"Text","content":"Active items go here"}]},{"type":"Tab","title":"Archived","value":"archived","disabled":false,"children":[{"type":"Text","content":"Archived items go here"}]}]}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import Tab, Tabs, Text
 
@@ -100,13 +184,47 @@ with Tabs(default_value="active"):
     with Tab("Archived", value="archived"):
         Text("Archived items go here")
 ```
+```json Wire Format
+{
+  "type": "Tabs",
+  "defaultValue": "active",
+  "children": [
+    {
+      "type": "Tab",
+      "title": "Active",
+      "value": "active",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Text",
+          "content": "Active items go here"
+        }
+      ]
+    },
+    {
+      "type": "Tab",
+      "title": "Archived",
+      "value": "archived",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Text",
+          "content": "Archived items go here"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Accordion for Expandable Sections
 
 Accordions work well when you have many items that benefit from progressive disclosure. Each section collapses to a title, and users expand only the sections they care about.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"children":[{"type":"AccordionItem","title":"Section 1","value":"s1","children":[{"type":"Text","content":"Content for section 1"}]},{"type":"AccordionItem","title":"Section 2","value":"s2","children":[{"type":"Text","content":"Content for section 2"}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"children":[{"type":"AccordionItem","title":"Section 1","value":"s1","children":[{"type":"Text","content":"Content for section 1"}]},{"type":"AccordionItem","title":"Section 2","value":"s2","children":[{"type":"Text","content":"Content for section 2"}]}]}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
@@ -116,6 +234,39 @@ with Accordion():
     with AccordionItem("Section 2", value="s2"):
         Text("Content for section 2")
 ```
+```json Wire Format
+{
+  "type": "Accordion",
+  "accordionType": "single",
+  "collapsible": true,
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "Section 1",
+      "value": "s1",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Content for section 1"
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Section 2",
+      "value": "s2",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Content for section 2"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 Set `accordion_type="multiple"` to allow more than one section open at a time.
 
@@ -123,8 +274,8 @@ Set `accordion_type="multiple"` to allow more than one section open at a time.
 
 Pages provides a multi-page layout where only the active page renders. Combined with `SetState`, it creates step-by-step navigation for wizards, onboarding flows, or any multi-stage display.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
 from prefab_ui.actions import SetState
@@ -140,13 +291,87 @@ with Column(gap=4):
         with Page("Complete", value="complete"):
             Text("All done!")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Pages",
+      "defaultValue": "setup",
+      "name": "step",
+      "children": [
+        {
+          "type": "Page",
+          "title": "Setup",
+          "value": "setup",
+          "children": [
+            {
+              "type": "Text",
+              "content": "Configure your settings"
+            },
+            {
+              "type": "Button",
+              "label": "Next",
+              "variant": "default",
+              "size": "default",
+              "disabled": false,
+              "onClick": {
+                "action": "setState",
+                "key": "step",
+                "value": "review"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Review",
+          "value": "review",
+          "children": [
+            {
+              "type": "Text",
+              "content": "Review your choices"
+            },
+            {
+              "type": "Button",
+              "label": "Next",
+              "variant": "default",
+              "size": "default",
+              "disabled": false,
+              "onClick": {
+                "action": "setState",
+                "key": "step",
+                "value": "complete"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Complete",
+          "value": "complete",
+          "children": [
+            {
+              "type": "Text",
+              "content": "All done!"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Progress Indicators
 
 Progress bars show completion or loading status. The `value` prop supports interpolation, so you can bind it to server-provided data that updates over time.
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Text","content":"Processing: {{ progress }}%"},{"type":"Progress","value":"{{ progress }}","max":100}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Text","content":"Processing: {{ progress }}%"},{"type":"Progress","value":"{{ progress }}","max":100}]}`}>
+<CodeGroup>
 ```python
 from prefab_ui.components import Column, Progress, Text
 
@@ -154,3 +379,22 @@ with Column(gap=2):
     Text("Processing: {{ progress }}%")
     Progress(value="{{ progress }}")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Text",
+      "content": "Processing: {{ progress }}%"
+    },
+    {
+      "type": "Progress",
+      "value": "{{ progress }}",
+      "max": 100
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>

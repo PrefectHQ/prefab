@@ -10,30 +10,54 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Switches provide a visual toggle for binary states, offering an alternative to checkboxes.
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Switch Example
 from prefab_ui.components import Switch
 
 Switch(label="Enable notifications")
 ```
+```json Wire Format
+{
+  "type": "Switch",
+  "label": "Enable notifications",
+  "checked": false,
+  "size": "default",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Checked State
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Checked Switch
 from prefab_ui.components import Switch
 
 Switch(label="Dark mode", checked=True)
 ```
+```json Wire Format
+{
+  "type": "Switch",
+  "label": "Dark mode",
+  "checked": true,
+  "size": "default",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Sizes
 
 Switches come in two sizes:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}`}>
+<CodeGroup>
 ```python Switch Sizes
 from prefab_ui.components import (
     Column,
@@ -44,11 +68,37 @@ with Column(gap=4):
     Switch(label="Default size", checked=True)
     Switch(label="Small size", size="sm", checked=True)
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Switch",
+      "label": "Default size",
+      "checked": true,
+      "size": "default",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Small size",
+      "checked": true,
+      "size": "sm",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`}>
+<CodeGroup>
 ```python Disabled Switch
 from prefab_ui.components import (
     Column,
@@ -60,6 +110,40 @@ with Column(gap=3):
     Switch(label="Disabled off", disabled=True)
     Switch(label="Disabled on", checked=True, disabled=True)
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Switch",
+      "label": "Enabled switch",
+      "checked": false,
+      "size": "default",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Disabled off",
+      "checked": false,
+      "size": "default",
+      "disabled": true,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Disabled on",
+      "checked": true,
+      "size": "default",
+      "disabled": true,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

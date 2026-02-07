@@ -8,20 +8,29 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The Calendar component renders a month view for selecting dates. It supports single date, multiple date, and date range selection. Selected dates are stored in client state as ISO strings.
 
-<ComponentPreview auto json={`{"type":"Calendar","mode":"single","name":"selectedDate"}`} />
-
+<ComponentPreview auto json={`{"type":"Calendar","mode":"single","name":"selectedDate"}`}>
+<CodeGroup>
 ```python Calendar Example
 from prefab_ui.components import Calendar
 
 Calendar(name="selectedDate")
 ```
+```json Wire Format
+{
+  "type": "Calendar",
+  "mode": "single",
+  "name": "selectedDate"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Range Selection
 
 Set `mode="range"` to let users select a start and end date. The selected range is stored as a JSON object with `from` and `to` ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"range","name":"dateRange"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`} />
-
+<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"range","name":"dateRange"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`}>
+<CodeGroup>
 ```python Calendar Range
 import json
 from prefab_ui.components import Calendar
@@ -35,13 +44,27 @@ set_initial_state(
 
 Calendar(mode="range", name="dateRange")
 ```
+```json Wire Format
+{
+  "_tree": {
+    "type": "Calendar",
+    "mode": "range",
+    "name": "dateRange"
+  },
+  "_state": {
+    "dateRange": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Multiple Selection
 
 Select multiple individual dates with `mode="multiple"`. Selected dates are stored as a JSON array of ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`} />
-
+<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`}>
+<CodeGroup>
 ```python Calendar Multiple
 import json
 from prefab_ui.components import Calendar
@@ -56,13 +79,27 @@ set_initial_state(
 
 Calendar(mode="multiple", name="selectedDates")
 ```
+```json Wire Format
+{
+  "_tree": {
+    "type": "Calendar",
+    "mode": "multiple",
+    "name": "selectedDates"
+  },
+  "_state": {
+    "selectedDates": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Displaying the Selection
 
 Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
 
-<ComponentPreview auto json={`{"_tree":{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`} />
-
+<ComponentPreview auto json={`{"_tree":{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`}>
+<CodeGroup>
 ```python Calendar with Label
 from prefab_ui.components import (
     Calendar,
@@ -81,6 +118,45 @@ with Row(gap=6):
         Text("{{ selectedDate | date:long }}", bold=True)
         Muted("Raw: {{ selectedDate }}")
 ```
+```json Wire Format
+{
+  "_tree": {
+    "type": "Row",
+    "gap": 6,
+    "children": [
+      {
+        "type": "Calendar",
+        "mode": "single",
+        "name": "selectedDate"
+      },
+      {
+        "type": "Column",
+        "gap": 2,
+        "children": [
+          {
+            "type": "Text",
+            "content": "Selected date:"
+          },
+          {
+            "type": "Text",
+            "content": "{{ selectedDate | date:long }}",
+            "bold": true
+          },
+          {
+            "content": "Raw: {{ selectedDate }}",
+            "type": "Muted"
+          }
+        ]
+      }
+    ]
+  },
+  "_state": {
+    "selectedDate": "2025-06-15T12:00:00.000Z"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 The label updates instantly when the user clicks a date. The `date:long` format turns an ISO string like `"2025-01-15"` into `"January 15, 2025"`.
 

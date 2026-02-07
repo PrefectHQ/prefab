@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Tabs organize content into panels that users switch between by clicking triggers. Each `Tab` child defines a trigger label and the content shown when that tab is active.
 
-<ComponentPreview auto json={`{"type":"Tabs","defaultValue":"account","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"accountName","disabled":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Current Password"},{"type":"Input","inputType":"password","name":"currentPw","disabled":false,"required":false},{"type":"Label","text":"New Password"},{"type":"Input","inputType":"password","name":"newPw","disabled":false,"required":false}]}]}]}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Tabs","defaultValue":"account","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"accountName","disabled":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Current Password"},{"type":"Input","inputType":"password","name":"currentPw","disabled":false,"required":false},{"type":"Label","text":"New Password"},{"type":"Input","inputType":"password","name":"newPw","disabled":false,"required":false}]}]}]}]}]}`}>
+<CodeGroup>
 ```python Tabs Example
 from prefab_ui.components import (
     Card,
@@ -46,6 +46,124 @@ with Tabs(default_value="account"):
                     Label("New Password")
                     Input(input_type="password", name="newPw")
 ```
+```json Wire Format
+{
+  "type": "Tabs",
+  "defaultValue": "account",
+  "children": [
+    {
+      "type": "Tab",
+      "title": "Account",
+      "value": "account",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "Account"
+                },
+                {
+                  "type": "CardDescription",
+                  "content": "Make changes to your account here."
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Column",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Label",
+                      "text": "Name"
+                    },
+                    {
+                      "type": "Input",
+                      "inputType": "text",
+                      "placeholder": "Your name",
+                      "name": "accountName",
+                      "disabled": false,
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Tab",
+      "title": "Password",
+      "value": "password",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "Password"
+                },
+                {
+                  "type": "CardDescription",
+                  "content": "Change your password here."
+                }
+              ]
+            },
+            {
+              "type": "CardContent",
+              "children": [
+                {
+                  "type": "Column",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "Label",
+                      "text": "Current Password"
+                    },
+                    {
+                      "type": "Input",
+                      "inputType": "password",
+                      "name": "currentPw",
+                      "disabled": false,
+                      "required": false
+                    },
+                    {
+                      "type": "Label",
+                      "text": "New Password"
+                    },
+                    {
+                      "type": "Input",
+                      "inputType": "password",
+                      "name": "newPw",
+                      "disabled": false,
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## State Tracking
 

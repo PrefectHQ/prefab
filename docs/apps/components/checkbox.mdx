@@ -10,28 +10,52 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Checkboxes let users select one or more options from a set.
 
-<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Checkbox Example
 from prefab_ui.components import Checkbox
 
 Checkbox(label="Accept terms and conditions", css_class="w-fit mx-auto")
 ```
+```json Wire Format
+{
+  "cssClass": "w-fit mx-auto",
+  "type": "Checkbox",
+  "label": "Accept terms and conditions",
+  "checked": false,
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Checked State
 
-<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Checked Checkbox
 from prefab_ui.components import Checkbox
 
 Checkbox(label="Subscribe to newsletter", checked=True, css_class="w-fit mx-auto")
 ```
+```json Wire Format
+{
+  "cssClass": "w-fit mx-auto",
+  "type": "Checkbox",
+  "label": "Subscribe to newsletter",
+  "checked": true,
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Multiple Checkboxes
 
-<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Column","gap":3,"children":[{"type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Column","gap":3,"children":[{"type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]}`}>
+<CodeGroup>
 ```python Multiple Checkboxes
 from prefab_ui.components import (
     Checkbox,
@@ -43,11 +67,43 @@ with Column(gap=3, css_class="w-fit mx-auto"):
     Checkbox(label="SMS notifications")
     Checkbox(label="Push notifications", checked=True)
 ```
+```json Wire Format
+{
+  "cssClass": "w-fit mx-auto",
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Checkbox",
+      "label": "Email notifications",
+      "checked": true,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Checkbox",
+      "label": "SMS notifications",
+      "checked": false,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Checkbox",
+      "label": "Push notifications",
+      "checked": true,
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Disabled State
 
-<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Column","gap":3,"children":[{"type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Column","gap":3,"children":[{"type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]}`}>
+<CodeGroup>
 ```python Disabled Checkboxes
 from prefab_ui.components import (
     Checkbox,
@@ -59,6 +115,38 @@ with Column(gap=3, css_class="w-fit mx-auto"):
     Checkbox(label="Disabled option", disabled=True)
     Checkbox(label="Disabled & checked", checked=True, disabled=True)
 ```
+```json Wire Format
+{
+  "cssClass": "w-fit mx-auto",
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Checkbox",
+      "label": "Enabled option",
+      "checked": false,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Checkbox",
+      "label": "Disabled option",
+      "checked": false,
+      "disabled": true,
+      "required": false
+    },
+    {
+      "type": "Checkbox",
+      "label": "Disabled & checked",
+      "checked": true,
+      "disabled": true,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

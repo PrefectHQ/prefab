@@ -10,18 +10,28 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Textareas provide multi-line text input for comments, descriptions, and other longer content.
 
-<ComponentPreview auto json={`{"type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Textarea Example
 from prefab_ui.components import Textarea
 
 Textarea(placeholder="Enter your message...")
 ```
+```json Wire Format
+{
+  "type": "Textarea",
+  "placeholder": "Enter your message...",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Labels
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}`}>
+<CodeGroup>
 ```python Textarea with Label
 from prefab_ui.components import (
     Column,
@@ -36,11 +46,32 @@ with Column(gap=2):
         rows=5,
     )
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Feedback"
+    },
+    {
+      "type": "Textarea",
+      "placeholder": "Tell us what you think...",
+      "rows": 5,
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Initial Value
 
-<ComponentPreview auto json={`{"type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Textarea with Value
 from prefab_ui.components import Textarea
 
@@ -49,16 +80,37 @@ Textarea(
     rows=4,
 )
 ```
+```json Wire Format
+{
+  "type": "Textarea",
+  "value": "This is some initial content that can be edited.",
+  "rows": 4,
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}`}>
+<CodeGroup>
 ```python Disabled Textarea
 from prefab_ui.components import Textarea
 
 Textarea(placeholder="This textarea is disabled", disabled=True)
 ```
+```json Wire Format
+{
+  "type": "Textarea",
+  "placeholder": "This textarea is disabled",
+  "disabled": true,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

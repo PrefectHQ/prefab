@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Alerts draw attention to important information. They pair a title with a description and use color variants to signal intent.
 
-<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]}`} />
-
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]}`}>
+<CodeGroup>
 ```python Alert Example
 from prefab_ui.components import (
     Alert,
@@ -21,13 +21,31 @@ with Alert():
     AlertTitle("Heads up!")
     AlertDescription("You can add components to your app using the CLI.")
 ```
+```json Wire Format
+{
+  "type": "Alert",
+  "variant": "default",
+  "children": [
+    {
+      "type": "AlertTitle",
+      "content": "Heads up!"
+    },
+    {
+      "type": "AlertDescription",
+      "content": "You can add components to your app using the CLI."
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Variants
 
 Five variants cover different semantic intents — from neutral information to success confirmations and error states.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Default"},{"type":"AlertDescription","content":"A neutral informational message."}]},{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]},{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Warning"},{"type":"AlertDescription","content":"Your trial expires in 3 days."}]},{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Info"},{"type":"AlertDescription","content":"A new version is available for download."}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Default"},{"type":"AlertDescription","content":"A neutral informational message."}]},{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]},{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Warning"},{"type":"AlertDescription","content":"Your trial expires in 3 days."}]},{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Info"},{"type":"AlertDescription","content":"A new version is available for download."}]}]}`}>
+<CodeGroup>
 ```python Alert Variants
 from prefab_ui.components import (
     Alert,
@@ -57,13 +75,93 @@ with Column(gap=4):
         AlertTitle("Info")
         AlertDescription("A new version is available for download.")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Alert",
+      "variant": "default",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Default"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "A neutral informational message."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "destructive",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Error"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your session has expired. Please log in again."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "success",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Success"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your changes have been saved successfully."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "warning",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Warning"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your trial expires in 3 days."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "info",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Info"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "A new version is available for download."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Without Title
 
 For simple messages, you can use just a description:
 
-<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Your changes have been saved."}]}`} />
-
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Your changes have been saved."}]}`}>
+<CodeGroup>
 ```python Alert No Title
 from prefab_ui.components import (
     Alert,
@@ -73,13 +171,27 @@ from prefab_ui.components import (
 with Alert():
     AlertDescription("Your changes have been saved.")
 ```
+```json Wire Format
+{
+  "type": "Alert",
+  "variant": "default",
+  "children": [
+    {
+      "type": "AlertDescription",
+      "content": "Your changes have been saved."
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## In Context
 
 Alerts work well inside cards or at the top of a page to communicate status:
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deployment"}]},{"type":"CardContent","children":[{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Maintenance Window"},{"type":"AlertDescription","content":"Deployments are paused from 2:00\\u20134:00 AM UTC."}]},{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Latest Deploy"},{"type":"AlertDescription","content":"v2.1.0 deployed successfully 3 hours ago."}]}]}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deployment"}]},{"type":"CardContent","children":[{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Maintenance Window"},{"type":"AlertDescription","content":"Deployments are paused from 2:00\\u20134:00 AM UTC."}]},{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Latest Deploy"},{"type":"AlertDescription","content":"v2.1.0 deployed successfully 3 hours ago."}]}]}]}]}`}>
+<CodeGroup>
 ```python Alert in Card
 from prefab_ui.components import (
     Card,
@@ -104,6 +216,63 @@ with Card():
                 AlertTitle("Latest Deploy")
                 AlertDescription("v2.1.0 deployed successfully 3 hours ago.")
 ```
+```json Wire Format
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "content": "Deployment"
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "type": "Column",
+          "gap": 4,
+          "children": [
+            {
+              "type": "Alert",
+              "variant": "default",
+              "children": [
+                {
+                  "type": "AlertTitle",
+                  "content": "Maintenance Window"
+                },
+                {
+                  "type": "AlertDescription",
+                  "content": "Deployments are paused from 2:00\u20134:00 AM UTC."
+                }
+              ]
+            },
+            {
+              "type": "Alert",
+              "variant": "default",
+              "children": [
+                {
+                  "type": "AlertTitle",
+                  "content": "Latest Deploy"
+                },
+                {
+                  "type": "AlertDescription",
+                  "content": "v2.1.0 deployed successfully 3 hours ago."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 

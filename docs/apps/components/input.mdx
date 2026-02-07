@@ -10,20 +10,31 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Inputs collect text, email, passwords, and other single-line data from users.
 
-<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false}`}>
+<CodeGroup>
 ```python Input Example
 from prefab_ui.components import Input
 
 Input(placeholder="Enter your email...")
 ```
+```json Wire Format
+{
+  "type": "Input",
+  "inputType": "text",
+  "placeholder": "Enter your email...",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Input Types
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`}>
+<CodeGroup>
 ```python Input Types
 from prefab_ui.components import (
     Input,
@@ -36,13 +47,51 @@ with Column(gap=4):
     Input(input_type="number", placeholder="Age")
     Input(input_type="tel", placeholder="Phone")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Input",
+      "inputType": "email",
+      "placeholder": "Email",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "password",
+      "placeholder": "Password",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "number",
+      "placeholder": "Age",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "tel",
+      "placeholder": "Phone",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Labels
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`}>
+<CodeGroup>
 ```python Input with Label
 from prefab_ui.components import (
     Column,
@@ -54,13 +103,34 @@ with Column(gap=2):
     Label("Email address")
     Input(input_type="email", placeholder="you@example.com", required=True)
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Email address"
+    },
+    {
+      "type": "Input",
+      "inputType": "email",
+      "placeholder": "you@example.com",
+      "disabled": false,
+      "required": true
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Date & Time Inputs
 
 Native date and time pickers use the browser's built-in UI:
 
-<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`}>
+<CodeGroup>
 ```python Date and Time Inputs
 from prefab_ui.components import (
     Column,
@@ -80,16 +150,91 @@ with Row(gap=4):
         Label("Date & Time")
         Input(input_type="datetime-local", name="datetime")
 ```
+```json Wire Format
+{
+  "type": "Row",
+  "gap": 4,
+  "children": [
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Date"
+        },
+        {
+          "type": "Input",
+          "inputType": "date",
+          "name": "date",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Time"
+        },
+        {
+          "type": "Input",
+          "inputType": "time",
+          "name": "time",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Date & Time"
+        },
+        {
+          "type": "Input",
+          "inputType": "datetime-local",
+          "name": "datetime",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"required":false}`} />
-
+<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"required":false}`}>
+<CodeGroup>
 ```python Disabled Input
 from prefab_ui.components import Input
 
 Input(placeholder="Disabled input", disabled=True)
 ```
+```json Wire Format
+{
+  "type": "Input",
+  "inputType": "text",
+  "placeholder": "Disabled input",
+  "disabled": true,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

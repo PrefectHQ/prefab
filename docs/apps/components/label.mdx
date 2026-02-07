@@ -10,20 +10,28 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Labels provide accessible text descriptions for form fields. They can contain text directly or wrap other components.
 
-<ComponentPreview auto json={`{"type":"Label","text":"Email address"}`} />
-
+<ComponentPreview auto json={`{"type":"Label","text":"Email address"}`}>
+<CodeGroup>
 ```python Label Example
 from prefab_ui.components import Label
 
 Label("Email address")
 ```
+```json Wire Format
+{
+  "type": "Label",
+  "text": "Email address"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Form Fields
 
 Labels are typically paired with inputs and other form controls:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}`}>
+<CodeGroup>
 ```python Label with Input
 from prefab_ui.components import (
     Column,
@@ -35,6 +43,29 @@ with Column(gap=2):
     Label("Username", for_id="username")
     Input(placeholder="Enter username", name="username")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Username",
+      "forId": "username"
+    },
+    {
+      "type": "Input",
+      "inputType": "text",
+      "placeholder": "Enter username",
+      "name": "username",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

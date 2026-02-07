@@ -8,13 +8,23 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `Image` renders an `<img>` element with support for `{{ field }}` interpolation on both `src` and `alt`, making it easy to display user avatars, product images, or any dynamic media.
 
-<ComponentPreview auto json={`{"type":"Image","src":"https://picsum.photos/400/300","alt":"Example image","width":"400px"}`} />
-
+<ComponentPreview auto json={`{"type":"Image","src":"https://picsum.photos/400/300","alt":"Example image","width":"400px"}`}>
+<CodeGroup>
 ```python Image
 from prefab_ui.components import Image
 
 Image(src="https://picsum.photos/400/300", alt="Example image", width="400px")
 ```
+```json Wire Format
+{
+  "type": "Image",
+  "src": "https://picsum.photos/400/300",
+  "alt": "Example image",
+  "width": "400px"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 Both `width` and `height` are CSS values (with units), applied as inline styles. The `src` and `alt` attributes support `{{ field }}` interpolation for dynamic content.
 

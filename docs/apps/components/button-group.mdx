@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Button groups join related actions into a single visual unit. Borders between buttons merge, and only the outer corners stay rounded.
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
 ```python Button Group
 from prefab_ui.components import Button, ButtonGroup
 
@@ -17,13 +17,37 @@ with ButtonGroup():
     Button("Save")
     Button("Cancel", variant="outline")
 ```
+```json Wire Format
+{
+  "type": "ButtonGroup",
+  "orientation": "horizontal",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Save",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Cancel",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Orientation
 
 Horizontal (default) groups buttons side-by-side. Vertical stacks them:
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"vertical","children":[{"type":"Button","label":"Top","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Middle","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Bottom","variant":"outline","size":"default","disabled":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"vertical","children":[{"type":"Button","label":"Top","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Middle","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Bottom","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
 ```python Vertical Button Group
 from prefab_ui.components import Button, ButtonGroup
 
@@ -32,13 +56,44 @@ with ButtonGroup(orientation="vertical"):
     Button("Middle", variant="outline")
     Button("Bottom", variant="outline")
 ```
+```json Wire Format
+{
+  "type": "ButtonGroup",
+  "orientation": "vertical",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Top",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Middle",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Bottom",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Common Patterns
 
 Pagination controls, view toggles, and segmented controls all benefit from button groups:
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Previous","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"1","variant":"default","size":"default","disabled":false},{"type":"Button","label":"2","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"3","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Next","variant":"outline","size":"default","disabled":false}]}`} />
-
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Previous","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"1","variant":"default","size":"default","disabled":false},{"type":"Button","label":"2","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"3","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Next","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
 ```python Pagination Example
 from prefab_ui.components import Button, ButtonGroup
 
@@ -49,6 +104,51 @@ with ButtonGroup():
     Button("3", variant="outline")
     Button("Next", variant="outline")
 ```
+```json Wire Format
+{
+  "type": "ButtonGroup",
+  "orientation": "horizontal",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Previous",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "1",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "2",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "3",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Next",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

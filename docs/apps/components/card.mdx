@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Cards group related content into a bordered, shadowed container. They're composed from sub-components — `CardHeader`, `CardContent`, and `CardFooter` — that handle spacing and layout so you can focus on content.
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}`}>
+<CodeGroup>
 ```python Card Example
 from prefab_ui.components import (
     Card,
@@ -32,6 +32,56 @@ with Card():
         Button("Cancel", variant="outline")
         Button("Deploy")
 ```
+```json Wire Format
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "content": "Create project"
+        },
+        {
+          "type": "CardDescription",
+          "content": "Deploy your new project in one-click."
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "content": "Your project will be created with default settings.",
+          "type": "P"
+        }
+      ]
+    },
+    {
+      "type": "CardFooter",
+      "children": [
+        {
+          "type": "Button",
+          "label": "Cancel",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false
+        },
+        {
+          "type": "Button",
+          "label": "Deploy",
+          "variant": "default",
+          "size": "default",
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Structure
 
@@ -39,8 +89,8 @@ Cards follow a header → content → footer pattern. Each section is optional �
 
 `CardHeader` is a grid that pairs a `CardTitle` with an optional `CardDescription`. `CardContent` provides horizontal padding for your main content. `CardFooter` renders as a flex row, naturally aligning action buttons side by side.
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account Settings"},{"type":"CardDescription","content":"Manage your account preferences and security."}]},{"type":"CardContent","children":[{"content":"Update your display name, email, and notification preferences from this panel.","type":"P"},{"content":"Changes take effect immediately.","type":"Muted"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account Settings"},{"type":"CardDescription","content":"Manage your account preferences and security."}]},{"type":"CardContent","children":[{"content":"Update your display name, email, and notification preferences from this panel.","type":"P"},{"content":"Changes take effect immediately.","type":"Muted"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}`}>
+<CodeGroup>
 ```python Card Sections
 from prefab_ui.components import (
     Card,
@@ -64,13 +114,60 @@ with Card():
     with CardFooter():
         Button("Save changes")
 ```
+```json Wire Format
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "content": "Account Settings"
+        },
+        {
+          "type": "CardDescription",
+          "content": "Manage your account preferences and security."
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "content": "Update your display name, email, and notification preferences from this panel.",
+          "type": "P"
+        },
+        {
+          "content": "Changes take effect immediately.",
+          "type": "Muted"
+        }
+      ]
+    },
+    {
+      "type": "CardFooter",
+      "children": [
+        {
+          "type": "Button",
+          "label": "Save changes",
+          "variant": "default",
+          "size": "default",
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Simple Cards
 
 For lightweight use cases, you can skip the sub-components entirely and use `css_class` to add padding:
 
-<ComponentPreview auto json={`{"cssClass":"p-6","type":"Card","children":[{"content":"Quick Stats","type":"H3"},{"content":"42 active connections, 3 pending requests.","type":"P"}]}`} />
-
+<ComponentPreview auto json={`{"cssClass":"p-6","type":"Card","children":[{"content":"Quick Stats","type":"H3"},{"content":"42 active connections, 3 pending requests.","type":"P"}]}`}>
+<CodeGroup>
 ```python Simple Card
 from prefab_ui.components import (
     Card,
@@ -82,13 +179,31 @@ with Card(css_class="p-6"):
     H3("Quick Stats")
     P("42 active connections, 3 pending requests.")
 ```
+```json Wire Format
+{
+  "cssClass": "p-6",
+  "type": "Card",
+  "children": [
+    {
+      "content": "Quick Stats",
+      "type": "H3"
+    },
+    {
+      "content": "42 active connections, 3 pending requests.",
+      "type": "P"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Card Grid
 
 Cards work naturally with `Grid` for dashboard-style layouts:
 
-<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":4,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":4,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}`}>
+<CodeGroup>
 ```python Card Grid
 from prefab_ui.components import (
     Card,
@@ -109,6 +224,71 @@ with Grid(columns=3, gap=4):
                 CardDescription(title)
                 CardTitle(desc)
 ```
+```json Wire Format
+{
+  "type": "Grid",
+  "columns": 3,
+  "gap": 4,
+  "children": [
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardDescription",
+              "content": "Revenue"
+            },
+            {
+              "type": "CardTitle",
+              "content": "$12,450"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardDescription",
+              "content": "Users"
+            },
+            {
+              "type": "CardTitle",
+              "content": "1,234"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardDescription",
+              "content": "Uptime"
+            },
+            {
+              "type": "CardTitle",
+              "content": "99.9%"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 

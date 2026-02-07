@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The Markdown component renders full markdown content — headings, bold, italic, lists, links, code blocks, tables, and blockquotes. Use it for rich text blocks where the content is naturally markdown-shaped.
 
-<ComponentPreview auto json={`{"content":"\n# Release Notes\n\nVersion **2.5.0** brings several improvements:\n\n## New Features\n\n- **Dark mode** with automatic system detection\n- Keyboard shortcuts for *all* actions\n- Inline \`code\` formatting support\n\n## Migration Guide\n\n> Update your config file before upgrading.\n\n| Setting | Old | New |\n|---------|-----|-----|\n| theme | \`light\` | \`auto\` |\n| timeout | \`30s\` | \`60s\` |\n","type":"Markdown"}`} />
-
+<ComponentPreview auto json={`{"type":"Markdown","content":"\\n# Release Notes\\n\\nVersion **2.5.0** brings several improvements:\\n\\n## New Features\\n\\n- **Dark mode** with automatic system detection\\n- Keyboard shortcuts for *all* actions\\n- Inline \`code\` formatting support\\n\\n## Migration Guide\\n\\n> Update your config file before upgrading.\\n\\n| Setting | Old | New |\\n|---------|-----|-----|\\n| theme | \`light\` | \`auto\` |\\n| timeout | \`30s\` | \`60s\` |\\n"}`}>
+<CodeGroup>
 ```python Markdown Example
 from prefab_ui.components import Markdown
 
@@ -34,6 +34,14 @@ Version **2.5.0** brings several improvements:
 | timeout | `30s` | `60s` |
 """)
 ```
+```json Wire Format
+{
+  "type": "Markdown",
+  "content": "\n# Release Notes\n\nVersion **2.5.0** brings several improvements:\n\n## New Features\n\n- **Dark mode** with automatic system detection\n- Keyboard shortcuts for *all* actions\n- Inline `code` formatting support\n\n## Migration Guide\n\n> Update your config file before upgrading.\n\n| Setting | Old | New |\n|---------|-----|-----|\n| theme | `light` | `auto` |\n| timeout | `30s` | `60s` |\n"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 

@@ -10,28 +10,51 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Sliders let users select a numeric value from a range by dragging a handle.
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}`} />
-
+<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}`}>
+<CodeGroup>
 ```python Slider Example
 from prefab_ui.components import Slider
 
 Slider(min=0, max=100, value=50)
 ```
+```json Wire Format
+{
+  "type": "Slider",
+  "min": 0.0,
+  "max": 100.0,
+  "value": 50.0,
+  "disabled": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Step Increment
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}`} />
-
+<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}`}>
+<CodeGroup>
 ```python Slider with Step
 from prefab_ui.components import Slider
 
 Slider(min=0, max=10, step=0.5, value=5)
 ```
+```json Wire Format
+{
+  "type": "Slider",
+  "min": 0.0,
+  "max": 10.0,
+  "value": 5.0,
+  "step": 0.5,
+  "disabled": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Different Ranges
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`}>
+<CodeGroup>
 ```python Slider Ranges
 from prefab_ui.components import (
     Column,
@@ -48,13 +71,57 @@ with Column(gap=4):
         Label("Temperature (0-10)")
         Slider(min=0, max=10, value=7)
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Volume (0-100)"
+        },
+        {
+          "type": "Slider",
+          "min": 0.0,
+          "max": 100.0,
+          "value": 75.0,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Temperature (0-10)"
+        },
+        {
+          "type": "Slider",
+          "min": 0.0,
+          "max": 10.0,
+          "value": 7.0,
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Displaying the Value
 
 Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
 
-<ComponentPreview auto json={`{"_tree":{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"_state":{"volume":75}}`} />
-
+<ComponentPreview auto json={`{"_tree":{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"_state":{"volume":75}}`}>
+<CodeGroup>
 ```python Slider with Value Display
 from prefab_ui.components import (
     Column,
@@ -75,18 +142,78 @@ with Column(gap=4):
         Slider(name="volume", min=0, max=100, value=75)
     Progress(value="{{ volume }}", max=100)
 ```
+```json Wire Format
+{
+  "_tree": {
+    "type": "Column",
+    "gap": 4,
+    "children": [
+      {
+        "type": "Column",
+        "gap": 2,
+        "children": [
+          {
+            "cssClass": "justify-between",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Label",
+                "text": "Volume"
+              },
+              {
+                "type": "Text",
+                "content": "{{ volume | number }}%",
+                "bold": true
+              }
+            ]
+          },
+          {
+            "type": "Slider",
+            "min": 0.0,
+            "max": 100.0,
+            "value": 75.0,
+            "name": "volume",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ volume }}",
+        "max": 100.0
+      }
+    ]
+  },
+  "_state": {
+    "volume": 75
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 The slider, label, and progress bar all stay in sync — drag the slider and the displayed value and progress bar update instantly. This pattern works with any component that supports interpolation.
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}`} />
-
+<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}`}>
+<CodeGroup>
 ```python Disabled Slider
 from prefab_ui.components import Slider
 
 Slider(min=0, max=100, value=30, disabled=True)
 ```
+```json Wire Format
+{
+  "type": "Slider",
+  "min": 0.0,
+  "max": 100.0,
+  "value": 30.0,
+  "disabled": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

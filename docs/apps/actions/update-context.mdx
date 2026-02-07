@@ -8,8 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `UpdateContext` feeds information into the conversation without triggering a visible response. Where `SendMessage` creates a chat message the user sees, `UpdateContext` works behind the scenes — it updates what the model knows without interrupting the flow.
 
-<ComponentPreview auto json={`{"type":"Button","label":"Use Advanced Mode","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","content":"User has selected advanced mode. Provide detailed technical responses."}}`} />
-
+<ComponentPreview auto json={`{"type":"Button","label":"Use Advanced Mode","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","content":"User has selected advanced mode. Provide detailed technical responses."}}`}>
+<CodeGroup>
 ```python Update Context Hero
 from prefab_ui.components import Button
 from prefab_ui import UpdateContext
@@ -18,6 +18,21 @@ Button("Use Advanced Mode", on_click=UpdateContext(
     content="User has selected advanced mode. Provide detailed technical responses."
 ))
 ```
+```json Wire Format
+{
+  "type": "Button",
+  "label": "Use Advanced Mode",
+  "variant": "default",
+  "size": "default",
+  "disabled": false,
+  "onClick": {
+    "action": "updateContext",
+    "content": "User has selected advanced mode. Provide detailed technical responses."
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## When to Use It
 
@@ -31,8 +46,8 @@ Button("Use Advanced Mode", on_click=UpdateContext(
 
 For richer data, pass a dict instead of plain text:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}`}>
+<CodeGroup>
 ```python Structured Content
 from prefab_ui.components import Button, Select, SelectOption, Column
 from prefab_ui import UpdateContext
@@ -46,6 +61,62 @@ with Column(gap=3):
         structured_content={"preference": {"thinking": "{{ thinking }}"}},
     ))
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Select",
+      "placeholder": "Thinking level...",
+      "name": "thinking",
+      "size": "default",
+      "disabled": false,
+      "required": false,
+      "children": [
+        {
+          "type": "SelectOption",
+          "value": "low",
+          "label": "Low",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "type": "SelectOption",
+          "value": "medium",
+          "label": "Medium",
+          "selected": false,
+          "disabled": false
+        },
+        {
+          "type": "SelectOption",
+          "value": "high",
+          "label": "High",
+          "selected": false,
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "type": "Button",
+      "label": "Set Preference",
+      "variant": "default",
+      "size": "default",
+      "disabled": false,
+      "onClick": {
+        "action": "updateContext",
+        "structuredContent": {
+          "preference": {
+            "thinking": "{{ thinking }}"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 

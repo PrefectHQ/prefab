@@ -10,8 +10,8 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Separators create visual divisions between content areas.
 
-<ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Content below the separator","type":"P"}]}`} />
-
+<ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Content below the separator","type":"P"}]}`}>
+<CodeGroup>
 ```python Separator Example
 from prefab_ui.components import (
     Column,
@@ -24,11 +24,33 @@ with Column():
     Separator(css_class="my-4")
     P("Content below the separator")
 ```
+```json Wire Format
+{
+  "type": "Column",
+  "children": [
+    {
+      "content": "Content above the separator",
+      "type": "P"
+    },
+    {
+      "cssClass": "my-4",
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    {
+      "content": "Content below the separator",
+      "type": "P"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Vertical Orientation
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"Span","content":"Left"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Middle"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Right"}]}`} />
-
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"Span","content":"Left"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Middle"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Right"}]}`}>
+<CodeGroup>
 ```python Vertical Separator
 from prefab_ui.components import (
     Row,
@@ -43,11 +65,44 @@ with Row(gap=4, css_class="items-center"):
     Separator(orientation="vertical", css_class="h-4")
     Span("Right")
 ```
+```json Wire Format
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Span",
+      "content": "Left"
+    },
+    {
+      "cssClass": "h-4",
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    {
+      "type": "Span",
+      "content": "Middle"
+    },
+    {
+      "cssClass": "h-4",
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    {
+      "type": "Span",
+      "content": "Right"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## In Card Content
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Second section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Third section","type":"P"}]}]}`} />
-
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Second section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Third section","type":"P"}]}]}`}>
+<CodeGroup>
 ```python Separator in Card
 from prefab_ui.components import (
     Card,
@@ -64,6 +119,42 @@ with Card():
         Separator(css_class="my-4")
         P("Third section")
 ```
+```json Wire Format
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "content": "First section",
+          "type": "P"
+        },
+        {
+          "cssClass": "my-4",
+          "type": "Separator",
+          "orientation": "horizontal"
+        },
+        {
+          "content": "Second section",
+          "type": "P"
+        },
+        {
+          "cssClass": "my-4",
+          "type": "Separator",
+          "orientation": "horizontal"
+        },
+        {
+          "content": "Third section",
+          "type": "P"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
