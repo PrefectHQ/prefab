@@ -6,9 +6,9 @@ icon: circle-dot
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
-
 Radio buttons let users select exactly one option from a set of choices.
+
+## Basic Usage
 
 <ComponentPreview auto json={`{"type":"RadioGroup","name":"size","children":[{"type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}`}>
 <CodeGroup>
@@ -197,28 +197,27 @@ with RadioGroup(name="plan"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Radio Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json RadioGroup
+{
+  "type": "RadioGroup",
+  "name?": "string",
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [Radio]
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="RadioGroup" default="RadioGroup">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  Form field name for all radios
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) to execute when selection changes
-</ParamField>
-
-</Card>
+```json Radio
+{
+  "type": "Radio",
+  "value": "string (required)",
+  "label?": "string",
+  "checked?": false,
+  "name?": "string",
+  "disabled?": false,
+  "required?": false,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
