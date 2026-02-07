@@ -1,0 +1,140 @@
+---
+title: Reusable Components
+description: Define component templates once, use them anywhere with different data.
+icon: clone
+---
+
+When building complex UIs, the same component structure often appears in multiple places with different data. Without reuse, you'd duplicate the entire subtree each time — costing tokens for LLM-generated UIs and creating maintenance burden for human authors.
+
+`Define` and `Use` solve this: Define captures a component template, Use references it with scoped data.
+
+```python Define and Use
+from prefab_ui import Define, Use, UIResponse
+from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column
+
+with Define("user-card") as user_card:
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("{{ role }}")
+
+with Column(gap=3) as view:
+    Use("user-card", name="Alice", role="Engineer")
+    Use("user-card", name="Bob", role="Designer")
+    Use("user-card", name="Carol", role="PM")
+
+UIResponse(view=view, defs=[user_card])
+```
+
+This renders three cards with different names and roles, but the card structure is defined only once.
+
+## Define
+
+`Define` captures a component subtree as a named template. It uses the context manager like any container, but it does **not** attach itself to a parent — it lives outside the component tree.
+
+```python
+from prefab_ui import Define
+from prefab_ui.components import Card, CardHeader, CardTitle, Badge, Row
+
+with Define("status-badge") as status_badge:
+    with Row(gap=2, css_class="items-center"):
+        CardTitle("{{ label }}")
+        Badge("{{ status }}", variant="{{ variant }}")
+```
+
+Pass definitions to `UIResponse` via the `defs` parameter:
+
+```python
+UIResponse(view=layout, defs=[status_badge])
+```
+
+If a Define contains multiple children, they're automatically wrapped in a Column.
+
+## Use
+
+`Use` references a Define by name and provides scoped data through kwargs. Any kwargs that aren't base component fields (`css_class`, `visible_when`) become interpolation values scoped to the template.
+
+```python
+from prefab_ui import Use
+
+# Bare reference (no overrides)
+Use("status-badge")
+
+# With scoped data
+Use("status-badge", label="Build", status="passing", variant="default")
+
+# With base component fields
+Use("status-badge", label="Deploy", status="failed", visible_when="show_deploy")
+```
+
+## How It Works on the Wire
+
+Define and Use desugar completely before reaching the renderer — the renderer never sees "Define" or "Use" nodes.
+
+`Define` serializes to the template body itself. Its name becomes a key in the `_prefab_defs` envelope:
+
+```json
+{
+  "_prefab_defs": {
+    "user-card": {
+      "type": "Card",
+      "children": [...]
+    }
+  }
+}
+```
+
+`Use` serializes to a `$ref` node. Without overrides, it's simply:
+
+```json
+{"$ref": "user-card"}
+```
+
+With overrides, Use wraps the ref in a `State` node that scopes the interpolation values:
+
+```json
+{
+  "type": "State",
+  "state": {"name": "Alice", "role": "Engineer"},
+  "children": [{"$ref": "user-card"}]
+}
+```
+
+The renderer resolves `$ref` nodes by looking up the definition and rendering it with the current interpolation context. Circular references are detected and short-circuited.
+
+## With ForEach
+
+Define/Use pairs well with `ForEach` when you have a reusable template that also appears outside the loop:
+
+```python Define with ForEach
+from prefab_ui import Define, Use, UIResponse
+from prefab_ui.components import (
+    Card, CardHeader, CardTitle, CardDescription,
+    Column, ForEach, Heading,
+)
+
+with Define("project-card") as project_card:
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("{{ description }}")
+
+with Column(gap=4) as view:
+    Heading("Featured")
+    Use("project-card", name="Prefab", description="The agentic frontend framework")
+
+    Heading("All Projects")
+    with ForEach("projects"):
+        Use("project-card")
+
+UIResponse(
+    view=view,
+    defs=[project_card],
+    data={"projects": [
+        {"name": "Alpha", "description": "First project"},
+        {"name": "Beta", "description": "Second project"},
+    ]},
+)
+```
+
+Inside the ForEach, each item's fields become the interpolation context, so the Use doesn't need explicit overrides.
