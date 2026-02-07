@@ -3,7 +3,7 @@ name = "prefab-ui"
 dynamic = ["version"]
 description = "Build dynamic UIs in Python. A JSON DSL compiled to React."
 authors = [{ name = "Jeremiah Lowin" }]
-dependencies = ["pydantic>=2.10"]
+dependencies = ["pydantic>=2.10", "cyclopts>=4", "rich>=13"]
 requires-python = ">=3.10"
 license = "Apache-2.0"
 
@@ -26,6 +26,9 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
+
+[project.scripts]
+prefab = "prefab_ui.cli:app"
 
 [dependency-groups]
 dev = [
