@@ -27,7 +27,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -47,6 +47,8 @@ class Card(ContainerComponent):
             P("Content")
     """
 
+    type: Literal["Card"] = "Card"
+
 
 class CardHeader(ContainerComponent):
     """Card header section for title and description.
@@ -57,6 +59,8 @@ class CardHeader(ContainerComponent):
             CardTitle("Account")
             CardDescription("Manage your account settings.")
     """
+
+    type: Literal["CardHeader"] = "CardHeader"
 
 
 class CardTitle(ContainerComponent):
@@ -70,6 +74,7 @@ class CardTitle(ContainerComponent):
         CardTitle("{{ project_name }}")
     """
 
+    type: Literal["CardTitle"] = "CardTitle"
     content: str | None = Field(
         default=None,
         description="Title text (alternative to children)",
@@ -96,6 +101,7 @@ class CardDescription(ContainerComponent):
         CardDescription("Make changes to your account here.")
     """
 
+    type: Literal["CardDescription"] = "CardDescription"
     content: str | None = Field(
         default=None,
         description="Description text (alternative to children)",
@@ -123,6 +129,8 @@ class CardContent(ContainerComponent):
             P("Your content here.")
     """
 
+    type: Literal["CardContent"] = "CardContent"
+
 
 class CardFooter(ContainerComponent):
     """Card footer section, typically for actions.
@@ -133,3 +141,5 @@ class CardFooter(ContainerComponent):
             Button("Cancel", variant="outline")
             Button("Save")
     """
+
+    type: Literal["CardFooter"] = "CardFooter"

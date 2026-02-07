@@ -19,7 +19,7 @@ one Card per user.
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -43,6 +43,7 @@ class ForEach(ContainerComponent):
         # renders two Cards.
     """
 
+    type: Literal["ForEach"] = "ForEach"
     key: str = Field(description="Data field containing the list to iterate over")
 
     @overload

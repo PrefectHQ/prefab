@@ -14,6 +14,8 @@ Example::
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.actions import Action
@@ -34,6 +36,7 @@ class RadioGroup(ContainerComponent):
             Radio(value="dark", label="Dark")
     """
 
+    type: Literal["RadioGroup"] = "RadioGroup"
     name: str | None = Field(default=None, description="Form field name for all radios")
     on_change: Action | list[Action] | None = Field(
         default=None,
@@ -60,6 +63,7 @@ class Radio(Component):
         Radio(value="no", label="No", checked=True)
     """
 
+    type: Literal["Radio"] = "Radio"
     value: str = Field(description="Form value (supports {{ field }} interpolation)")
     label: str | None = Field(
         default=None, description="Label text (supports {{ field }} interpolation)"

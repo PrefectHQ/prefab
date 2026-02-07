@@ -13,7 +13,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -32,6 +32,7 @@ class Tab(ContainerComponent):
             Text("Content shown when this tab is active.")
     """
 
+    type: Literal["Tab"] = "Tab"
     title: str = Field(description="Tab trigger label")
     value: str | None = Field(
         default=None,
@@ -63,6 +64,7 @@ class Tabs(ContainerComponent):
                 Text("Advanced settings")
     """
 
+    type: Literal["Tabs"] = "Tabs"
     default_value: str | None = Field(
         default=None,
         alias="defaultValue",

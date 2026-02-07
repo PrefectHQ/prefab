@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -17,6 +17,7 @@ class Text(Component):
         Text("Hello, {{ name }}!")
     """
 
+    type: Literal["Text"] = "Text"
     content: str = Field(description="Text content with {{ field }} interpolation")
     bold: bool | None = Field(default=None, description="Render text in bold")
     italic: bool | None = Field(default=None, description="Render text in italic")

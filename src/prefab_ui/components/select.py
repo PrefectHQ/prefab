@@ -42,6 +42,7 @@ class Select(ContainerComponent):
             SelectOption(value="b", label="Option B")
     """
 
+    type: Literal["Select"] = "Select"
     placeholder: str | None = Field(
         default=None,
         description="Placeholder text (supports {{ field }} interpolation)",
@@ -73,6 +74,7 @@ class SelectOption(Component):
         SelectOption(value="no", label="No", selected=True)
     """
 
+    type: Literal["SelectOption"] = "SelectOption"
     value: str = Field(description="Option value (supports {{ field }} interpolation)")
     label: str = Field(description="Display text (supports {{ field }} interpolation)")
     selected: bool = Field(default=False, description="Whether option is selected")

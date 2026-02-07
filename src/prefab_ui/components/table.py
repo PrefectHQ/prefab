@@ -24,7 +24,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -38,21 +38,31 @@ class Table(ContainerComponent):
     structured table layouts.
     """
 
+    type: Literal["Table"] = "Table"
+
 
 class TableHeader(ContainerComponent):
     """Table header section containing header rows."""
+
+    type: Literal["TableHeader"] = "TableHeader"
 
 
 class TableBody(ContainerComponent):
     """Table body section containing data rows."""
 
+    type: Literal["TableBody"] = "TableBody"
+
 
 class TableFooter(ContainerComponent):
     """Table footer section."""
 
+    type: Literal["TableFooter"] = "TableFooter"
+
 
 class TableRow(ContainerComponent):
     """A single table row containing cells."""
+
+    type: Literal["TableRow"] = "TableRow"
 
 
 class TableHead(ContainerComponent):
@@ -63,6 +73,7 @@ class TableHead(ContainerComponent):
         TableHead("Name")
     """
 
+    type: Literal["TableHead"] = "TableHead"
     content: str | None = Field(
         default=None,
         description="Header text (alternative to children)",
@@ -93,6 +104,7 @@ class TableCell(ContainerComponent):
             Badge("Active", variant="success")
     """
 
+    type: Literal["TableCell"] = "TableCell"
     content: str | None = Field(
         default=None,
         description="Cell text (alternative to children)",
@@ -118,6 +130,7 @@ class TableCaption(Component):
         TableCaption("A list of recent invoices")
     """
 
+    type: Literal["TableCaption"] = "TableCaption"
     content: str = Field(description="Caption text")
 
     @overload

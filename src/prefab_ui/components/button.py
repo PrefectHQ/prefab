@@ -61,6 +61,7 @@ class Button(Component):
         Button("Cancel", variant="outline", size="sm")
     """
 
+    type: Literal["Button"] = "Button"
     label: str = Field(description="Button text with {{ field }} interpolation")
     variant: ButtonVariant = Field(
         default="default",

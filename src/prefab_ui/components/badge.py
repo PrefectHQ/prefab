@@ -52,6 +52,7 @@ class Badge(Component):
         Badge("Ghost", variant="ghost")
     """
 
+    type: Literal["Badge"] = "Badge"
     label: str = Field(description="Badge text with {{ field }} interpolation")
     variant: BadgeVariant = Field(
         default="default",

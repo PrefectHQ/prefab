@@ -9,6 +9,8 @@ Example::
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.actions import Action
@@ -25,6 +27,7 @@ class DatePicker(Component):
         DatePicker(placeholder="Pick a date", name="deadline")
     """
 
+    type: Literal["DatePicker"] = "DatePicker"
     placeholder: str = Field(
         default="Pick a date",
         description="Button text when no date is selected",

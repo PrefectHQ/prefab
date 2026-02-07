@@ -49,6 +49,7 @@ class Form(ContainerComponent):
             Button("Submit", on_click=ToolCall("save"))
     """
 
+    type: Literal["Form"] = "Form"
     gap: int = Field(default=4, description="Vertical gap between fields")
     on_submit: Action | list[Action] | None = Field(
         default=None,
@@ -287,7 +288,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         col.children = [
             Label(label_text),
             Input(
-                type="password",
+                input_type="password",
                 name=name,
                 placeholder=placeholder,
                 required=required,
@@ -302,7 +303,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         col = Column(gap=2)
         col.children = [
             Label(label_text),
-            Input(type="date", name=name, required=required),
+            Input(input_type="date", name=name, required=required),
         ]
         return col
 
@@ -310,7 +311,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         col = Column(gap=2)
         col.children = [
             Label(label_text),
-            Input(type="time", name=name, required=required),
+            Input(input_type="time", name=name, required=required),
         ]
         return col
 
@@ -318,7 +319,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         col = Column(gap=2)
         col.children = [
             Label(label_text),
-            Input(type="datetime-local", name=name, required=required),
+            Input(input_type="datetime-local", name=name, required=required),
         ]
         return col
 
@@ -329,7 +330,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         col.children = [
             Label(label_text),
             Input(
-                type="number",
+                input_type="number",
                 name=name,
                 placeholder=placeholder,
                 value=value,
@@ -364,7 +365,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     col.children = [
         Label(label_text),
         Input(
-            type=input_type,
+            input_type=input_type,
             name=name,
             placeholder=placeholder,
             value=value,

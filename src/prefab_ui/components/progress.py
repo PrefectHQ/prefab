@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.components.base import Component
@@ -17,6 +19,7 @@ class Progress(Component):
         Progress(value=80, indicator_class="bg-green-500")
     """
 
+    type: Literal["Progress"] = "Progress"
     value: float | str = Field(
         default=0,
         description="Current progress value (supports {{ field }} interpolation)",

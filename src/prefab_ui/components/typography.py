@@ -16,7 +16,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -59,6 +59,8 @@ class H1(_TextComponent):
         H1("{{ title }}")  # With interpolation
     """
 
+    type: Literal["H1"] = "H1"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -78,6 +80,8 @@ class H2(_TextComponent):
         H2("{{ section_name }}")
     """
 
+    type: Literal["H2"] = "H2"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -96,6 +100,8 @@ class H3(_TextComponent):
         H3("Account Details")
     """
 
+    type: Literal["H3"] = "H3"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -113,6 +119,8 @@ class H4(_TextComponent):
 
         H4("Additional Options")
     """
+
+    type: Literal["H4"] = "H4"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -133,6 +141,8 @@ class P(_TextComponent):
         P("Hello, {{ name }}!")
     """
 
+    type: Literal["P"] = "P"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -150,6 +160,8 @@ class Lead(_TextComponent):
 
         Lead("A comprehensive guide to building MCP applications.")
     """
+
+    type: Literal["Lead"] = "Lead"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -169,6 +181,8 @@ class Large(_TextComponent):
         Large("Important information")
     """
 
+    type: Literal["Large"] = "Large"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -186,6 +200,8 @@ class Small(_TextComponent):
 
         Small("Terms and conditions apply")
     """
+
+    type: Literal["Small"] = "Small"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -206,6 +222,8 @@ class Muted(_TextComponent):
         Muted("{{ subtitle }}")
     """
 
+    type: Literal["Muted"] = "Muted"
+
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
 
@@ -223,6 +241,8 @@ class BlockQuote(_TextComponent):
 
         BlockQuote("The best way to predict the future is to invent it.")
     """
+
+    type: Literal["BlockQuote"] = "BlockQuote"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -242,6 +262,8 @@ class InlineCode(_TextComponent):
         InlineCode("npm install")
         InlineCode("{{ command }}")
     """
+
+    type: Literal["InlineCode"] = "InlineCode"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

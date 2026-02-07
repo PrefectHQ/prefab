@@ -31,6 +31,7 @@ class AccordionItem(ContainerComponent):
             Text("Hidden content revealed on click.")
     """
 
+    type: Literal["AccordionItem"] = "AccordionItem"
     title: str = Field(description="Accordion trigger label")
     value: str | None = Field(
         default=None,
@@ -61,6 +62,7 @@ class Accordion(ContainerComponent):
                 Text("Content 2")
     """
 
+    type: Literal["Accordion"] = "Accordion"
     accordion_type: Literal["single", "multiple"] = Field(
         default="single",
         alias="accordionType",

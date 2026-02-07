@@ -7,8 +7,8 @@ Example::
     from prefab_ui.components import Input, Label
 
     Input(placeholder="Enter your name")
-    Input(type="email", placeholder="you@example.com")
-    Input(type="password", placeholder="••••••••")
+    Input(input_type="email", placeholder="you@example.com")
+    Input(input_type="password", placeholder="••••••••")
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ class Input(Component):
     """Text input field component.
 
     Args:
-        type: Input type (text, email, password, etc.)
+        input_type: Input type (text, email, password, etc.)
         placeholder: Placeholder text
         value: Initial value
         name: Form field name
@@ -50,11 +50,12 @@ class Input(Component):
     Example::
 
         Input(placeholder="Search...")
-        Input(type="email", placeholder="Email", required=True)
-        Input(type="password", value="{{ user_password }}")
+        Input(input_type="email", placeholder="Email", required=True)
+        Input(input_type="password", value="{{ user_password }}")
     """
 
-    type: InputType = Field(
+    type: Literal["Input"] = "Input"
+    input_type: InputType = Field(
         default="text",
         alias="inputType",
         description="Input type (text, email, password, etc.)",

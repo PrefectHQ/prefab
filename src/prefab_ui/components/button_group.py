@@ -41,6 +41,7 @@ class ButtonGroup(ContainerComponent):
             Button("Bottom")
     """
 
+    type: Literal["ButtonGroup"] = "ButtonGroup"
     orientation: Literal["horizontal", "vertical"] = Field(
         default="horizontal",
         description="Layout direction: horizontal or vertical",

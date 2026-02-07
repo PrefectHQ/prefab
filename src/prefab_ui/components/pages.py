@@ -18,7 +18,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -34,6 +34,7 @@ class Page(ContainerComponent):
             Text("Settings content.")
     """
 
+    type: Literal["Page"] = "Page"
     title: str = Field(description="Page identifier / label")
     value: str | None = Field(
         default=None,
@@ -66,6 +67,7 @@ class Pages(ContainerComponent):
                 Text("Settings content")
     """
 
+    type: Literal["Pages"] = "Pages"
     default_value: str | None = Field(
         default=None,
         alias="defaultValue",

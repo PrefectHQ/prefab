@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.components.base import Component
@@ -15,6 +17,7 @@ class Image(Component):
         Image(src="{{ avatar_url }}", alt="{{ name }}")
     """
 
+    type: Literal["Image"] = "Image"
     src: str = Field(description="Image URL with {{ field }} interpolation")
     alt: str = Field(default="", description="Alt text")
     width: str | None = Field(default=None, description="CSS width")

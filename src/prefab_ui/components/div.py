@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -23,6 +23,8 @@ class Div(ContainerComponent):
             P("Deployed v2.4.1")
     """
 
+    type: Literal["Div"] = "Div"
+
 
 class Span(Component):
     """An inline text element with no default styling.
@@ -32,6 +34,7 @@ class Span(Component):
         Span("14m ago", css_class="text-sm text-muted-foreground")
     """
 
+    type: Literal["Span"] = "Span"
     content: str = Field(description="Text content with {{ field }} interpolation")
 
     @overload

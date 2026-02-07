@@ -12,7 +12,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -35,9 +35,10 @@ class Label(ContainerComponent):
         # With children
         with Label():
             Text("Password")
-            Input(type="password")
+            Input(input_type="password")
     """
 
+    type: Literal["Label"] = "Label"
     text: str | None = Field(
         default=None, description="Label text (supports {{ field }} interpolation)"
     )

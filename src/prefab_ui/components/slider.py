@@ -12,6 +12,8 @@ Example::
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.actions import Action
@@ -36,6 +38,7 @@ class Slider(Component):
         Slider(min=0, max=1, step=0.1, value=0.5)
     """
 
+    type: Literal["Slider"] = "Slider"
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")
     value: float | None = Field(

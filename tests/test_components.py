@@ -196,7 +196,7 @@ class TestContextManagerNesting:
 
 class TestFormComponentSerialization:
     def test_input_serializes(self):
-        j = Input(type="email", placeholder="you@example.com", name="email").to_json()
+        j = Input(input_type="email", placeholder="you@example.com", name="email").to_json()
         assert j["type"] == "Input"
         assert j["inputType"] == "email"
         assert j["placeholder"] == "you@example.com"
@@ -636,7 +636,7 @@ class TestInputConstraintProps:
         assert j["maxLength"] == 100
 
     def test_input_number_constraints(self):
-        j = Input(type="number", name="age", min=0, max=150, step=1).to_json()
+        j = Input(input_type="number", name="age", min=0, max=150, step=1).to_json()
         assert j["min"] == 0
         assert j["max"] == 150
         assert j["step"] == 1
