@@ -161,6 +161,9 @@ def _generate_card(
             else:
                 attrs += f' default="{default}"'
 
+        # Escape {{ ... }} templates so MDX doesn't evaluate them as JSX
+        desc = re.sub(r"\{\{([^}]*)\}\}", r"`{{\1}}`", desc)
+
         if not desc and field_name == "type":
             desc = "Component discriminator."
 
