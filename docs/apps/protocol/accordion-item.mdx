@@ -1,0 +1,57 @@
+---
+title: AccordionItem
+description: JSON Schema for the AccordionItem component.
+---
+
+A single collapsible section within an Accordion.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "AccordionItem",
+      "default": "AccordionItem",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "description": "Accordion trigger label",
+      "type": "string"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Unique value (defaults to title)"
+    }
+  },
+  "required": [
+    "type",
+    "title"
+  ]
+}
+```

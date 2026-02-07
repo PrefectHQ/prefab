@@ -1,0 +1,39 @@
+---
+title: UpdateContext
+description: JSON Schema for the UpdateContext action.
+---
+
+Update model context without triggering a response.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "updateContext",
+      "default": "updateContext",
+      "type": "string"
+    },
+    "content": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Text content to add"
+    },
+    "structuredContent": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Structured content to add"
+    }
+  },
+  "required": [
+    "action"
+  ]
+}
+```

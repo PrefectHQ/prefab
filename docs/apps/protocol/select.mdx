@@ -1,0 +1,84 @@
+---
+title: Select
+description: JSON Schema for the Select component.
+---
+
+Select dropdown container.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Select",
+      "default": "Select",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "placeholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text (supports {{ field }} interpolation)"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "size": {
+      "default": "default",
+      "description": "Select size (sm, default)",
+      "enum": [
+        "sm",
+        "default"
+      ],
+      "type": "string"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether select is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether select is required",
+      "type": "boolean"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when selection changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

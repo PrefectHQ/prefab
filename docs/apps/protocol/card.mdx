@@ -1,0 +1,44 @@
+---
+title: Card
+description: JSON Schema for the Card component.
+---
+
+A card container with border and shadow.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Card",
+      "default": "Card",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

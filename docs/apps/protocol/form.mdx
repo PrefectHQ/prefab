@@ -1,0 +1,54 @@
+---
+title: Form
+description: JSON Schema for the Form component.
+---
+
+Form container that groups labeled inputs.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Form",
+      "default": "Form",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "gap": {
+      "default": 4,
+      "description": "Vertical gap between fields",
+      "type": "integer"
+    },
+    "onSubmit": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when the form is submitted",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

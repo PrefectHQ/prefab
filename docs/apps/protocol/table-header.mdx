@@ -1,0 +1,44 @@
+---
+title: TableHeader
+description: JSON Schema for the TableHeader component.
+---
+
+Table header section containing header rows.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "TableHeader",
+      "default": "TableHeader",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

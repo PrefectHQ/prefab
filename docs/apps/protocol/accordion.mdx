@@ -1,0 +1,93 @@
+---
+title: Accordion
+description: JSON Schema for the Accordion component.
+---
+
+Accordion container — children must be `AccordionItem` components.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Accordion",
+      "default": "Accordion",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "multiple": {
+      "default": false,
+      "description": "Allow multiple items to be open simultaneously",
+      "type": "boolean"
+    },
+    "collapsible": {
+      "default": true,
+      "description": "Whether items can be fully collapsed (single mode)",
+      "type": "boolean"
+    },
+    "default_open_items": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "items": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Initially expanded item(s). Pass an int for index-based selection, or a str to match by value/title."
+    },
+    "defaultValues": {
+      "items": {
+        "type": "string"
+      },
+      "type": [
+        "array",
+        "null"
+      ],
+      "default": null,
+      "description": "Wire format for default_open_items (always an array)."
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

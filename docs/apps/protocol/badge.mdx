@@ -1,0 +1,58 @@
+---
+title: Badge
+description: JSON Schema for the Badge component.
+---
+
+A badge component for displaying status or labels.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Badge",
+      "default": "Badge",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "label": {
+      "description": "Badge text with {{ field }} interpolation",
+      "type": "string"
+    },
+    "variant": {
+      "default": "default",
+      "description": "Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info",
+      "enum": [
+        "default",
+        "secondary",
+        "destructive",
+        "success",
+        "warning",
+        "info",
+        "outline",
+        "ghost"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "label"
+  ]
+}
+```

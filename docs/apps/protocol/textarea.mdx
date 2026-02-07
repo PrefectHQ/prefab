@@ -1,0 +1,101 @@
+---
+title: Textarea
+description: JSON Schema for the Textarea component.
+---
+
+Multi-line text input component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Textarea",
+      "default": "Textarea",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "placeholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text (supports {{ field }} interpolation)"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Textarea value (supports {{ field }} interpolation)"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "rows": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Number of visible text rows"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether textarea is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether textarea is required",
+      "type": "boolean"
+    },
+    "minLength": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Minimum character length"
+    },
+    "maxLength": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum character length"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when value changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

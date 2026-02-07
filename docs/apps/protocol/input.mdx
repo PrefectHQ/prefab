@@ -1,0 +1,143 @@
+---
+title: Input
+description: JSON Schema for the Input component.
+---
+
+Text input field component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Input",
+      "default": "Input",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "inputType": {
+      "default": "text",
+      "description": "Input type (text, email, password, etc.)",
+      "enum": [
+        "text",
+        "email",
+        "password",
+        "number",
+        "tel",
+        "url",
+        "search",
+        "date",
+        "time",
+        "datetime-local",
+        "file"
+      ],
+      "type": "string"
+    },
+    "placeholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text (supports {{ field }} interpolation)"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Input value (supports {{ field }} interpolation)"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether input is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether input is required",
+      "type": "boolean"
+    },
+    "minLength": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Minimum character length"
+    },
+    "maxLength": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum character length"
+    },
+    "min": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Minimum value (for number inputs)"
+    },
+    "max": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum value (for number inputs)"
+    },
+    "step": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Step increment (for number inputs)"
+    },
+    "pattern": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Regex pattern for validation"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when value changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

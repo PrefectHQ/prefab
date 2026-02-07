@@ -1,0 +1,56 @@
+---
+title: Alert
+description: JSON Schema for the Alert component.
+---
+
+An alert container for important messages.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Alert",
+      "default": "Alert",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "variant": {
+      "default": "default",
+      "description": "Visual variant: default or destructive",
+      "enum": [
+        "default",
+        "destructive",
+        "success",
+        "warning",
+        "info"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

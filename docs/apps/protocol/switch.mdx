@@ -1,0 +1,83 @@
+---
+title: Switch
+description: JSON Schema for the Switch component.
+---
+
+Toggle switch component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Switch",
+      "default": "Switch",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Label text (supports {{ field }} interpolation)"
+    },
+    "checked": {
+      "default": false,
+      "description": "Whether switch is on",
+      "type": "boolean"
+    },
+    "size": {
+      "default": "default",
+      "description": "Switch size (sm, default)",
+      "enum": [
+        "sm",
+        "default"
+      ],
+      "type": "string"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether switch is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether switch is required",
+      "type": "boolean"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when toggled",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

@@ -1,0 +1,84 @@
+---
+title: Button
+description: JSON Schema for the Button component.
+---
+
+A button component with multiple variants and sizes.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Button",
+      "default": "Button",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "label": {
+      "description": "Button text with {{ field }} interpolation",
+      "type": "string"
+    },
+    "variant": {
+      "default": "default",
+      "description": "Visual variant: default, destructive, outline, secondary, ghost, link",
+      "enum": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+        "success",
+        "warning",
+        "info"
+      ],
+      "type": "string"
+    },
+    "size": {
+      "default": "default",
+      "description": "Size: default, sm, lg, icon",
+      "enum": [
+        "default",
+        "xs",
+        "sm",
+        "lg",
+        "icon",
+        "icon-xs",
+        "icon-sm",
+        "icon-lg"
+      ],
+      "type": "string"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether the button is disabled",
+      "type": "boolean"
+    },
+    "onClick": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when clicked",
+      "default": null
+    }
+  },
+  "required": [
+    "type",
+    "label"
+  ]
+}
+```

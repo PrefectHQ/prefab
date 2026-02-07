@@ -1,0 +1,27 @@
+---
+title: SendMessage
+description: JSON Schema for the SendMessage action.
+---
+
+Send a message to the chat via `app.sendMessage()`.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "sendMessage",
+      "default": "sendMessage",
+      "type": "string"
+    },
+    "content": {
+      "description": "Message text to send",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "content"
+  ]
+}
+```

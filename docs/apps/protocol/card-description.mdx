@@ -1,0 +1,52 @@
+---
+title: CardDescription
+description: JSON Schema for the CardDescription component.
+---
+
+Card description text, typically below the title.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "CardDescription",
+      "default": "CardDescription",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "content": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Description text (alternative to children)"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

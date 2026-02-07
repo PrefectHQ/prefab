@@ -1,0 +1,47 @@
+---
+title: Separator
+description: JSON Schema for the Separator component.
+---
+
+Visual divider component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Separator",
+      "default": "Separator",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "orientation": {
+      "default": "horizontal",
+      "description": "Separator orientation",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

@@ -1,0 +1,49 @@
+---
+title: State
+description: JSON Schema for the State component.
+---
+
+Provide scoped interpolation values to children.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "State",
+      "default": "State",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "state": {
+      "additionalProperties": true,
+      "description": "Local state values scoped to children",
+      "type": "object"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

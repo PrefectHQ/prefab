@@ -1,0 +1,57 @@
+---
+title: RadioGroup
+description: JSON Schema for the RadioGroup component.
+---
+
+Container for radio button options.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "RadioGroup",
+      "default": "RadioGroup",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name for all radios"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when selection changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```
