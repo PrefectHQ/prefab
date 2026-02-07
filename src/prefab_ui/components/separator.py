@@ -34,6 +34,7 @@ class Separator(Component):
         Separator(orientation="vertical")
     """
 
+    type: Literal["Separator"] = "Separator"
     orientation: SeparatorOrientation = Field(
         default="horizontal", description="Separator orientation"
     )

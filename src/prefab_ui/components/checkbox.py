@@ -12,6 +12,8 @@ Example::
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.actions import Action
@@ -37,6 +39,7 @@ class Checkbox(Component):
         Checkbox(label="Enable {{ feature_name }}", checked="{{ is_enabled }}")
     """
 
+    type: Literal["Checkbox"] = "Checkbox"
     label: str | None = Field(
         default=None, description="Label text (supports {{ field }} interpolation)"
     )

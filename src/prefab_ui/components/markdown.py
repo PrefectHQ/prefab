@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -17,6 +17,7 @@ class Markdown(Component):
         Markdown("**Name:** {{ name }}\\n\\n{{ bio }}")
     """
 
+    type: Literal["Markdown"] = "Markdown"
     content: str = Field(description="Markdown content with {{ field }} interpolation")
 
     @overload

@@ -10,7 +10,7 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Labels provide accessible text descriptions for form fields. They can contain text directly or wrap other components.
 
-<ComponentPreview auto json={`{"text":"Email address","type":"Label"}`} />
+<ComponentPreview auto json={`{"type":"Label","text":"Email address"}`} />
 
 ```python Label Example
 from prefab_ui.components import Label
@@ -22,7 +22,7 @@ Label("Email address")
 
 Labels are typically paired with inputs and other form controls:
 
-<ComponentPreview auto json={`{"gap":2,"type":"Column","children":[{"text":"Username","forId":"username","type":"Label"},{"inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false,"type":"Input"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}`} />
 
 ```python Label with Input
 from prefab_ui.components import (

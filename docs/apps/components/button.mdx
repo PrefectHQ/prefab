@@ -2,13 +2,14 @@
 title: Button
 description: Interactive button component with multiple variants and sizes.
 icon: computer-mouse-button-left
+
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Buttons trigger actions and communicate intent. The `variant` parameter signals what kind of action the button performs, while `size` controls its dimensions.
 
-<ComponentPreview auto json={`{"label":"Save Changes","variant":"default","size":"default","disabled":false,"type":"Button"}`} />
+<ComponentPreview auto json={`{"type":"Button","label":"Save Changes","variant":"default","size":"default","disabled":false}`} />
 
 ```python Button Example
 from prefab_ui.components import Button
@@ -22,7 +23,7 @@ The label can be passed as a positional argument or as a keyword (`label="Save C
 
 Each variant communicates a different intent to the user:
 
-<ComponentPreview auto json={`{"columns":3,"gap":3,"type":"Grid","children":[{"label":"Default","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Destructive","variant":"destructive","size":"default","disabled":false,"type":"Button"},{"label":"Outline","variant":"outline","size":"default","disabled":false,"type":"Button"},{"label":"Secondary","variant":"secondary","size":"default","disabled":false,"type":"Button"},{"label":"Ghost","variant":"ghost","size":"default","disabled":false,"type":"Button"},{"label":"Link","variant":"link","size":"default","disabled":false,"type":"Button"},{"label":"Success","variant":"success","size":"default","disabled":false,"type":"Button"},{"label":"Warning","variant":"warning","size":"default","disabled":false,"type":"Button"},{"label":"Info","variant":"info","size":"default","disabled":false,"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":8,"children":[{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Ghost","variant":"ghost","size":"default","disabled":false},{"type":"Button","label":"Link","variant":"link","size":"default","disabled":false},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false}]}`} />
 
 ```python Button Variants
 from prefab_ui.components import (
@@ -30,7 +31,7 @@ from prefab_ui.components import (
     Grid,
 )
 
-with Grid(columns=3, gap=3):
+with Grid(columns=3, gap=8):
     Button("Default", variant="default")
     Button("Destructive", variant="destructive")
     Button("Outline", variant="outline")
@@ -44,7 +45,7 @@ with Grid(columns=3, gap=3):
 
 ## Sizes
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","children":[{"label":"Tiny","variant":"default","size":"xs","disabled":false,"type":"Button"},{"label":"Small","variant":"default","size":"sm","disabled":false,"type":"Button"},{"label":"Default","variant":"default","size":"default","disabled":false,"type":"Button"},{"label":"Large","variant":"default","size":"lg","disabled":false,"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}`} />
 
 ```python Button Sizes
 from prefab_ui.components import (
@@ -52,7 +53,7 @@ from prefab_ui.components import (
     Row,
 )
 
-with Row(css_class="items-center"):
+with Row(gap=3, css_class="items-center"):
     Button("Tiny", size="xs")
     Button("Small", size="sm")
     Button("Default", size="default")
@@ -63,7 +64,7 @@ with Row(css_class="items-center"):
 
 Square buttons optimized for single icons or characters. The icon sizes match the heights of the corresponding text button sizes.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","children":[{"label":"\\u2022","variant":"default","size":"icon-xs","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon-sm","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon","disabled":false,"type":"Button"},{"label":"\\u2022","variant":"default","size":"icon-lg","disabled":false,"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"\\u2022","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-lg","disabled":false}]}`} />
 
 ```python Icon Button Sizes
 from prefab_ui.components import (
@@ -71,7 +72,7 @@ from prefab_ui.components import (
     Row,
 )
 
-with Row(css_class="items-center"):
+with Row(gap=3, css_class="items-center"):
     Button("•", size="icon-xs")
     Button("•", size="icon-sm")
     Button("•", size="icon")
@@ -80,7 +81,7 @@ with Row(css_class="items-center"):
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"label":"Unavailable","variant":"default","size":"default","disabled":true,"type":"Button"}`} />
+<ComponentPreview auto json={`{"type":"Button","label":"Unavailable","variant":"default","size":"default","disabled":true}`} />
 
 ```python Disabled Button
 from prefab_ui.components import Button
@@ -92,7 +93,7 @@ Button("Unavailable", disabled=True)
 
 Every component accepts `css_class` for additional Tailwind CSS classes. When your classes target the same CSS property as a built-in style (like `rounded-full` vs the default `rounded-md`), the built-in class is automatically removed so your override wins cleanly:
 
-<ComponentPreview auto json={`{"cssClass":"items-start w-full","gap":3,"type":"Column","children":[{"cssClass":"w-full","label":"Full Width","variant":"default","size":"default","disabled":false,"type":"Button"},{"cssClass":"rounded-full","label":"Pill Shape","variant":"default","size":"default","disabled":false,"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"cssClass":"items-start w-full","type":"Column","gap":3,"children":[{"cssClass":"w-full bg-emerald-500","type":"Button","label":"Full Width Emerald","variant":"default","size":"default","disabled":false},{"cssClass":"rounded-full bg-rose-500","type":"Button","label":"Pill Shape Rose","variant":"default","size":"default","disabled":false}]}`} />
 
 ```python Custom Classes
 from prefab_ui.components import (
@@ -101,8 +102,8 @@ from prefab_ui.components import (
 )
 
 with Column(gap=3, css_class="items-start w-full"):
-    Button("Full Width", css_class="w-full")
-    Button("Pill Shape", css_class="rounded-full")
+    Button("Full Width Emerald", css_class="w-full bg-emerald-500")
+    Button("Pill Shape Rose", css_class="rounded-full bg-rose-500")
 ```
 
 ## Data Interpolation

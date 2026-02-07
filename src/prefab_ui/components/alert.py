@@ -50,6 +50,7 @@ class Alert(ContainerComponent):
             AlertDescription("Something went wrong.")
     """
 
+    type: Literal["Alert"] = "Alert"
     variant: AlertVariant = Field(
         default="default",
         description="Visual variant: default or destructive",
@@ -65,6 +66,7 @@ class AlertTitle(Component):
         AlertTitle("{{ alert_type }}")
     """
 
+    type: Literal["AlertTitle"] = "AlertTitle"
     content: str = Field(description="Title text with {{ field }} interpolation")
 
     @overload
@@ -89,6 +91,7 @@ class AlertDescription(Component):
         AlertDescription("{{ message }}")
     """
 
+    type: Literal["AlertDescription"] = "AlertDescription"
     content: str = Field(description="Description text with {{ field }} interpolation")
 
     @overload

@@ -28,6 +28,7 @@ class Tooltip(ContainerComponent):
             Button("Save")
     """
 
+    type: Literal["Tooltip"] = "Tooltip"
     content: str = Field(description="Tooltip text")
     side: Literal["top", "right", "bottom", "left"] | None = Field(
         default=None, description="Which side to show the tooltip"

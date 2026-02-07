@@ -33,6 +33,9 @@ jobs:
         with:
           resolution: locked
 
+      - name: Install renderer dependencies
+        run: cd renderer && npm ci
+
       - name: Run prek
         uses: j178/prek-action@v1
         env:

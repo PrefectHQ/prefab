@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent, Gap
@@ -25,4 +27,5 @@ class Row(ContainerComponent):
             Button("B")
     """
 
+    type: Literal["Row"] = "Row"
     gap: Gap = Field(default=None, description="Gap between children: int or (x, y)")

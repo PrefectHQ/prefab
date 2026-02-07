@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 DatePicker combines a trigger button with a popover calendar. The button displays the selected date (or placeholder text when empty), and clicking it opens a calendar for selection. It's the most user-friendly way to collect a single date.
 
-<ComponentPreview auto json={`{"placeholder":"Select deadline","name":"deadline","type":"DatePicker"}`} />
+<ComponentPreview auto height="400px" json={`{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}`} />
 
 ```python DatePicker Example
 from prefab_ui.components import DatePicker
@@ -20,7 +20,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview auto json={`{"_tree":{"gap":3,"type":"Column","children":[{"cssClass":"items-center","gap":4,"type":"Row","children":[{"placeholder":"Select deadline","name":"deadline","type":"DatePicker"},{"content":"{{ deadline | date:long }}","bold":true,"type":"Text"}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`} />
+<ComponentPreview auto height="400px" json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`} />
 
 ```python DatePicker with Display
 from prefab_ui.components import (
@@ -42,7 +42,7 @@ with Column(gap=3):
 
 DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"New Event","type":"CardTitle"}]},{"type":"CardContent","children":[{"gap":3,"type":"Column","children":[{"text":"Event Name","type":"Label"},{"inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false,"type":"Input"},{"text":"Date","type":"Label"},{"placeholder":"Pick a date","name":"eventDate","type":"DatePicker"}]}]},{"type":"CardFooter","children":[{"label":"Create Event","variant":"default","size":"default","disabled":false,"type":"Button"}]}]}`} />
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`} />
 
 ```python DatePicker Form
 from prefab_ui.components import (

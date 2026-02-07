@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, overload
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -29,6 +29,7 @@ class Grid(ContainerComponent):
             Text("Right")
     """
 
+    type: Literal["Grid"] = "Grid"
     columns: int = Field(
         default=3,
         ge=1,

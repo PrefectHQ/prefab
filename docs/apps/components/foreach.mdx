@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `ForEach` is a control-flow component that iterates over a list in your data, rendering its children once per item. Each iteration receives the list item as the interpolation context, so `{{ field }}` placeholders resolve to that item's values.
 
-<ComponentPreview auto json={`{"_tree":{"key":"users","type":"ForEach","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","gap":2,"type":"Row","children":[{"content":"{{ name }}","type":"CardTitle"},{"label":"{{ role }}","variant":"secondary","type":"Badge"}]},{"content":"{{ email }}","type":"CardDescription"}]}]}]},"users":[{"name":"Alice","role":"Admin","email":"alice@example.com"},{"name":"Bob","role":"Editor","email":"bob@example.com"},{"name":"Carol","role":"Viewer","email":"carol@example.com"}]}`} />
+<ComponentPreview auto json={`{"_tree":{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]},"users":[{"name":"Alice","role":"Admin","email":"alice@example.com"},{"name":"Bob","role":"Editor","email":"bob@example.com"},{"name":"Carol","role":"Viewer","email":"carol@example.com"}]}`} />
 
 ```python ForEach
 from prefab_ui.components import (
@@ -42,7 +42,7 @@ When rendered with data like `{"users": [{"name": "Alice", ...}, ...]}`, this pr
 
 The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
 
-<ComponentPreview auto json={`{"_tree":{"gap":2,"type":"Row","children":[{"key":"tags","type":"ForEach","children":[{"label":"{{ _item }}","variant":"secondary","type":"Badge"}]}]},"tags":["python","mcp","prefab-ui","async"]}`} />
+<ComponentPreview auto json={`{"_tree":{"type":"Row","gap":2,"children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]},"tags":["python","mcp","prefab-ui","async"]}`} />
 
 ```python Scalar Items
 from prefab_ui.components import (

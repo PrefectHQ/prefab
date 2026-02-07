@@ -17,6 +17,7 @@ class Heading(Component):
         Heading("{{ name }}", level=2)
     """
 
+    type: Literal["Heading"] = "Heading"
     content: str = Field(description="Heading text with {{ field }} interpolation")
     level: Literal[1, 2, 3, 4] = Field(
         default=1, description="Heading level (1=h1, 4=h4)"

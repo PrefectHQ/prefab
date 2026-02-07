@@ -1,4 +1,4 @@
-"""Prefab — build dynamic UIs from Python.
+"""Prefab — build dynamic UIs in Python.
 
 A JSON DSL compiled to React. Transport-agnostic: works with MCP servers,
 REST APIs, or any backend that can return JSON.

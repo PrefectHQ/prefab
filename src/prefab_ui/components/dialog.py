@@ -17,6 +17,8 @@ Example::
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
@@ -36,6 +38,7 @@ class Dialog(ContainerComponent):
                 Button("Save", on_click=ToolCall("update_profile"))
     """
 
+    type: Literal["Dialog"] = "Dialog"
     title: str | None = Field(default=None, description="Dialog header title")
     description: str | None = Field(
         default=None, description="Dialog header description"

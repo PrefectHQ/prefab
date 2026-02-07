@@ -29,6 +29,7 @@ class Calendar(Component):
         Calendar(mode="range", name="dateRange")
     """
 
+    type: Literal["Calendar"] = "Calendar"
     mode: Literal["single", "multiple", "range"] = Field(
         default="single",
         description="Selection mode: single date, multiple dates, or date range",

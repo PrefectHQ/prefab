@@ -40,6 +40,7 @@ class Switch(Component):
         Switch(checked=True, label="Active", size="sm")
     """
 
+    type: Literal["Switch"] = "Switch"
     label: str | None = Field(
         default=None, description="Label text (supports {{ field }} interpolation)"
     )

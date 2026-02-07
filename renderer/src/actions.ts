@@ -50,12 +50,16 @@ const RESERVED_RE = /^_prefab_/;
  * error format). Falls back to a generic message.
  */
 function extractErrorText(result: Record<string, unknown>): string {
-  const content = result.content as Array<{ type: string; text: string }> | undefined;
+  const content = result.content as
+    | Array<{ type: string; text: string }>
+    | undefined;
   if (content?.length) {
-    return content
-      .filter((c) => c.type === "text" && c.text)
-      .map((c) => c.text)
-      .join("\n") || "Unknown error";
+    return (
+      content
+        .filter((c) => c.type === "text" && c.text)
+        .map((c) => c.text)
+        .join("\n") || "Unknown error"
+    );
   }
   return "Unknown error";
 }
@@ -67,9 +71,7 @@ function extractErrorText(result: Record<string, unknown>): string {
  * remains, unwraps to its value (so `result_key="users"` with a response
  * of `{users: [...], _prefab_view: ...}` writes the array directly).
  */
-function extractResultData(
-  structured: Record<string, unknown>,
-): unknown {
+function extractResultData(structured: Record<string, unknown>): unknown {
   const entries = Object.entries(structured).filter(
     ([k]) => !RESERVED_RE.test(k),
   );

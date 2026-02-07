@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Tooltips show brief helper text when users hover over a component. Wrap any single element to add a tooltip.
 
-<ComponentPreview auto height="140px" json={`{"type":"Div","cssClass":"min-h-[140px]","children":[{"gap":4,"type":"Row","children":[{"content":"Save your current work","type":"Tooltip","children":[{"label":"Save","variant":"default","size":"default","disabled":false,"type":"Button"}]},{"content":"Discard unsaved changes","side":"bottom","type":"Tooltip","children":[{"label":"Reset","variant":"outline","size":"default","disabled":false,"type":"Button"}]}]}]}`} />
+<ComponentPreview auto height="140px" json={`{"type":"Row","gap":4,"children":[{"type":"Tooltip","content":"Save your current work","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false}]},{"type":"Tooltip","content":"Discard unsaved changes","side":"bottom","children":[{"type":"Button","label":"Reset","variant":"outline","size":"default","disabled":false}]}]}`} />
 
 ```python Tooltip Example
 from prefab_ui.components import Button, Row, Tooltip
@@ -24,7 +24,7 @@ with Row(gap=4):
 
 Control which side the tooltip appears on with the `side` parameter.
 
-<ComponentPreview auto height="140px" json={`{"type":"Div","cssClass":"min-h-[140px]","children":[{"gap":4,"type":"Row","children":[{"content":"Top","side":"top","type":"Tooltip","children":[{"label":"Top","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Right","side":"right","type":"Tooltip","children":[{"label":"Right","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Bottom","side":"bottom","type":"Tooltip","children":[{"label":"Bottom","variant":"outline","size":"default","disabled":false,"type":"Button"}]},{"content":"Left","side":"left","type":"Tooltip","children":[{"label":"Left","variant":"outline","size":"default","disabled":false,"type":"Button"}]}]}]}`} />
+<ComponentPreview auto height="140px" json={`{"type":"Row","gap":4,"children":[{"type":"Tooltip","content":"Top","side":"top","children":[{"type":"Button","label":"Top","variant":"outline","size":"default","disabled":false}]},{"type":"Tooltip","content":"Right","side":"right","children":[{"type":"Button","label":"Right","variant":"outline","size":"default","disabled":false}]},{"type":"Tooltip","content":"Bottom","side":"bottom","children":[{"type":"Button","label":"Bottom","variant":"outline","size":"default","disabled":false}]},{"type":"Tooltip","content":"Left","side":"left","children":[{"type":"Button","label":"Left","variant":"outline","size":"default","disabled":false}]}]}`} />
 
 ```python Tooltip Sides
 from prefab_ui.components import Button, Row, Tooltip

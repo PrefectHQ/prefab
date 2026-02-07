@@ -69,9 +69,7 @@ class Simulator:
 
     # ── Server invocations ────────────────────────────────────────
 
-    async def invoke(
-        self, name: str, arguments: dict[str, Any] | None = None
-    ) -> None:
+    async def invoke(self, name: str, arguments: dict[str, Any] | None = None) -> None:
         """Invoke a named server function and update state + view from the result."""
         result = await self.handler(name, arguments or {})
         if result.is_error:

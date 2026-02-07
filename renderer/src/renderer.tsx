@@ -149,11 +149,7 @@ function mapProps(
   }
 
   // Table sub-components: content → children text
-  if (
-    type === "TableHead" ||
-    type === "TableCell" ||
-    type === "TableCaption"
-  ) {
+  if (type === "TableHead" || type === "TableCell" || type === "TableCaption") {
     if ("content" in mapped) {
       mapped._textContent = mapped.content;
       delete mapped.content;
@@ -439,7 +435,8 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Leaf components with no text content or children must render
   // without a children slot — void HTML elements (input, img, etc.)
   // throw if given any children at all.
-  const hasContent = textContent || (renderedChildren && renderedChildren.length > 0);
+  const hasContent =
+    textContent || (renderedChildren && renderedChildren.length > 0);
   if (!hasContent) {
     return <Component {...finalProps} />;
   }

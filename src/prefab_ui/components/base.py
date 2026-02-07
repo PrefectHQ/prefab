@@ -65,9 +65,7 @@ class Component(BaseModel):
         Produces ``{"type": "ClassName", ...props}`` with ``None`` values
         excluded. Children are serialized recursively.
         """
-        d = self.model_dump(by_alias=True, exclude_none=True)
-        d["type"] = type(self).__name__
-        return d
+        return self.model_dump(by_alias=True, exclude_none=True)
 
 
 class ContainerComponent(Component):

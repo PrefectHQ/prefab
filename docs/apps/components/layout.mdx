@@ -12,7 +12,7 @@ Layout containers control how child components are arranged. They use Python con
 
 Arranges children horizontally with flexbox. Use `gap` to control spacing between items.
 
-<ComponentPreview auto json={`{"gap":4,"type":"Row","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"}]}`} />
+<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"}]}`} />
 
 ```python Row Example
 from prefab_ui.components import (
@@ -28,7 +28,7 @@ with Row(gap=4):
 
 Larger gaps give more visual separation:
 
-<ComponentPreview auto json={`{"gap":8,"type":"Row","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"}]}`} />
+<ComponentPreview auto json={`{"type":"Row","gap":8,"children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-20","type":"Div"}]}`} />
 
 ```python Row with Larger Gap
 from prefab_ui.components import (
@@ -46,7 +46,7 @@ with Row(gap=8):
 
 Arranges children vertically. Use `gap` to control spacing between items.
 
-<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
 
 ```python Column Example
 from prefab_ui.components import (
@@ -62,7 +62,7 @@ with Column(gap=4):
 
 Larger gaps give more visual separation:
 
-<ComponentPreview auto json={`{"gap":8,"type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":8,"children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
 
 ```python Column with Larger Gap
 from prefab_ui.components import (
@@ -80,7 +80,7 @@ with Column(gap=8):
 
 CSS grid with a configurable number of columns (1-12). Children fill cells left-to-right, wrapping to new rows.
 
-<ComponentPreview auto json={`{"columns":3,"gap":4,"type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
+<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":4,"children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`} />
 
 ```python Grid Example
 from prefab_ui.components import (
@@ -95,7 +95,7 @@ with Grid(columns=3, gap=4):
 
 Columns can be passed as a positional argument. Grids nest naturally with other containers:
 
-<ComponentPreview auto json={`{"columns":2,"gap":6,"type":"Grid","children":[{"type":"Column","children":[{"content":"Left Panel","type":"H3"},{"content":"Primary content goes here.","type":"P"}]},{"type":"Column","children":[{"content":"Right Panel","type":"H3"},{"content":"Secondary content goes here.","type":"P"}]}]}`} />
+<ComponentPreview auto json={`{"type":"Grid","columns":2,"gap":6,"children":[{"type":"Column","children":[{"content":"Left Panel","type":"H3"},{"content":"Primary content goes here.","type":"P"}]},{"type":"Column","children":[{"content":"Right Panel","type":"H3"},{"content":"Secondary content goes here.","type":"P"}]}]}`} />
 
 ```python Grid Layout
 from prefab_ui.components import (
@@ -135,7 +135,7 @@ with Div(css_class="flex items-center gap-3 rounded-lg border p-4"):
 
 An inline text element with no default styling. Useful for inline annotations or colored text:
 
-<ComponentPreview auto json={`{"cssClass":"items-baseline","gap":2,"type":"Row","children":[{"content":"Status:","type":"P"},{"cssClass":"text-sm text-success font-medium","content":"Online","type":"Span"}]}`} />
+<ComponentPreview auto json={`{"cssClass":"items-baseline","type":"Row","gap":2,"children":[{"content":"Status:","type":"P"},{"cssClass":"text-sm text-success font-medium","type":"Span","content":"Online"}]}`} />
 
 ```python Span Example
 from prefab_ui.components import (

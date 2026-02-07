@@ -16,9 +16,7 @@ import json
 import re
 from pathlib import Path
 
-src_dir = (
-    Path(__file__).resolve().parents[2] / "src" / "prefab-ui" / "apps" / "components"
-)
+src_dir = Path(__file__).resolve().parents[2] / "src" / "prefab_ui" / "components"
 build_dir = Path(__file__).resolve().parent
 playground_js = build_dir.parent / "playground.js"
 preview_css = build_dir.parent / "css" / "preview.css"
@@ -26,14 +24,16 @@ preview_css = build_dir.parent / "css" / "preview.css"
 # Build the bundle: module path -> source code
 bundle: dict[str, str] = {
     "prefab_ui/__init__.py": "",
-    "prefab_ui/__init__.py": "",
 }
 
 for py_file in sorted(src_dir.glob("*.py")):
     module_path = f"prefab_ui/components/{py_file.name}"
     bundle[module_path] = py_file.read_text()
 
-# Read the existing playground.js
+# Read the existing playground.js (skip if it doesn't exist yet)
+if not playground_js.exists():
+    print("docs/playground.js not found — skipping playground bundle generation")
+    raise SystemExit(0)
 content = playground_js.read_text()
 
 # Replace the __PLAYGROUND_BUNDLE assignment (single line, ends with ;).

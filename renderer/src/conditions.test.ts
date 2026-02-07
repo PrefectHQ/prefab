@@ -138,10 +138,14 @@ describe("evaluateCondition", () => {
 
   it("&& binds tighter than ||", () => {
     // a || (b && c) = false || (true && false) = false
-    expect(evaluateCondition("a || b && c", { a: false, b: true, c: false })).toBe(false);
+    expect(
+      evaluateCondition("a || b && c", { a: false, b: true, c: false }),
+    ).toBe(false);
     // (a || b) && c would be true && false = false — same result, try another combo
     // a || (b && c) = true || (anything) = true
-    expect(evaluateCondition("a || b && c", { a: true, b: false, c: false })).toBe(true);
+    expect(
+      evaluateCondition("a || b && c", { a: true, b: false, c: false }),
+    ).toBe(true);
   });
 
   it("parentheses override precedence", () => {
@@ -168,12 +172,12 @@ describe("evaluateCondition", () => {
   });
 
   it("array length comparison", () => {
-    expect(
-      evaluateCondition("results.length > 0", { results: [1, 2] }),
-    ).toBe(true);
-    expect(
-      evaluateCondition("results.length > 0", { results: [] }),
-    ).toBe(false);
+    expect(evaluateCondition("results.length > 0", { results: [1, 2] })).toBe(
+      true,
+    );
+    expect(evaluateCondition("results.length > 0", { results: [] })).toBe(
+      false,
+    );
   });
 
   // ── Edge cases ────────────────────────────────────────────────

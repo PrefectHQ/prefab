@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `OpenLink` opens a URL through the host application's link handler. Use it for navigation buttons, "View docs" links, or any action that should take the user to an external resource.
 
-<ComponentPreview auto json={`{"label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"},"type":"Button"}`} />
+<ComponentPreview auto json={`{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}`} />
 
 ```python Open Link Hero
 from prefab_ui.components import Button
@@ -22,7 +22,7 @@ Button("View Documentation", variant="link",
 
 Pair `OpenLink` with the `link` button variant for a natural look:
 
-<ComponentPreview auto json={`{"gap":4,"type":"Row","children":[{"label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"},"type":"Button"},{"label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"},"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}`} />
 
 ```python Link Buttons
 from prefab_ui.components import Button, Row
@@ -39,7 +39,7 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false,"type":"Input"},{"label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"},"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}`} />
 
 ```python Dynamic URLs
 from prefab_ui.components import Input, Button, Column

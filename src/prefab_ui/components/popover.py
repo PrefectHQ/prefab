@@ -36,6 +36,7 @@ class Popover(ContainerComponent):
                 Input(name="value")
     """
 
+    type: Literal["Popover"] = "Popover"
     title: str | None = Field(default=None, description="Optional popover header title")
     description: str | None = Field(
         default=None, description="Optional popover description"

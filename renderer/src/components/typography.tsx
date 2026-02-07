@@ -20,8 +20,27 @@ interface TextProps extends TypographyProps {
 }
 
 /** Generic text — renders a span with the text content. */
-export function Text({ text, content, className, cssClass, bold, italic, children }: TextProps) {
-  return <span className={cn(bold && "font-bold", italic && "italic", className, cssClass)}>{children ?? text ?? content}</span>;
+export function Text({
+  text,
+  content,
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+}: TextProps) {
+  return (
+    <span
+      className={cn(
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
+      {children ?? text ?? content}
+    </span>
+  );
 }
 
 interface HeadingProps extends TypographyProps {
@@ -37,10 +56,27 @@ const headingStyles: Record<number, string> = {
   4: "text-lg font-semibold tracking-tight m-0",
 };
 
-export function Heading({ level = 1, text, content, className, cssClass, bold, italic, children }: HeadingProps) {
+export function Heading({
+  level = 1,
+  text,
+  content,
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+}: HeadingProps) {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4";
   return (
-    <Tag className={cn(headingStyles[level], bold && "font-bold", italic && "italic", className, cssClass)}>
+    <Tag
+      className={cn(
+        headingStyles[level],
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? text ?? content}
     </Tag>
   );
@@ -59,47 +95,129 @@ export function H4(props: Omit<HeadingProps, "level">) {
   return <Heading level={4} {...props} />;
 }
 
-export function P({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function P({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <p className={cn("leading-7 m-0", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <p
+      className={cn(
+        "leading-7 m-0",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </p>
   );
 }
 
-export function Lead({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function Lead({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <p className={cn("text-xl text-muted-foreground m-0", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <p
+      className={cn(
+        "text-xl text-muted-foreground m-0",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </p>
   );
 }
 
-export function Large({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function Large({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <div className={cn("text-lg font-semibold", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <div
+      className={cn(
+        "text-lg font-semibold",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </div>
   );
 }
 
-export function Small({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function Small({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <small className={cn("text-sm font-medium leading-none", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <small
+      className={cn(
+        "text-sm font-medium leading-none",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </small>
   );
 }
 
-export function Muted({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function Muted({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <p className={cn("text-sm text-muted-foreground m-0", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <p
+      className={cn(
+        "text-sm text-muted-foreground m-0",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </p>
   );
 }
 
-export function InlineCode({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function InlineCode({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
     <code
       className={cn(
@@ -115,9 +233,24 @@ export function InlineCode({ className, cssClass, bold, italic, children, ...pro
   );
 }
 
-export function BlockQuote({ className, cssClass, bold, italic, children, ...props }: TextProps) {
+export function BlockQuote({
+  className,
+  cssClass,
+  bold,
+  italic,
+  children,
+  ...props
+}: TextProps) {
   return (
-    <blockquote className={cn("border-l-2 pl-6 italic m-0", bold && "font-bold", italic && "italic", className, cssClass)}>
+    <blockquote
+      className={cn(
+        "border-l-2 pl-6 italic m-0",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+    >
       {children ?? props.text ?? props.content}
     </blockquote>
   );

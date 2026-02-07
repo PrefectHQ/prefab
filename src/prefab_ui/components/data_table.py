@@ -20,7 +20,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -55,6 +55,7 @@ class DataTable(Component):
         )
     """
 
+    type: Literal["DataTable"] = "DataTable"
     columns: list[DataTableColumn] = Field(description="Column definitions")
     rows: list[dict[str, Any]] | str = Field(
         default_factory=list,

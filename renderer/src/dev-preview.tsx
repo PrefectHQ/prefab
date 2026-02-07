@@ -18,7 +18,11 @@ const DEMO_TREE: ComponentNode = {
   gap: 6,
   children: [
     { type: "H1", content: "Prefab Kitchen Sink" },
-    { type: "Muted", content: "Every component type in the renderer. Use this page for visual debugging." },
+    {
+      type: "Muted",
+      content:
+        "Every component type in the renderer. Use this page for visual debugging.",
+    },
     { type: "Separator" },
 
     // ── Layout ──────────────────────────────────────────────────────
@@ -62,7 +66,11 @@ const DEMO_TREE: ComponentNode = {
       cssClass: "bg-muted p-4 rounded-lg",
       children: [
         { type: "P", content: "A Div with " },
-        { type: "Span", cssClass: "font-bold text-primary", children: [{ type: "Text", content: "inline Span" }] },
+        {
+          type: "Span",
+          cssClass: "font-bold text-primary",
+          children: [{ type: "Text", content: "inline Span" }],
+        },
         { type: "Text", content: " nested inside." },
       ],
     },
@@ -77,14 +85,25 @@ const DEMO_TREE: ComponentNode = {
     { type: "H4", content: "Heading 4 (H4)" },
     { type: "Heading", content: "Heading (level=2)", level: 2 },
     { type: "Lead", content: "Lead — larger, lighter text for introductions." },
-    { type: "P", content: "P — Regular paragraph text. This is the default body copy style." },
-    { type: "Text", content: "Text — General-purpose text component.", bold: true },
+    {
+      type: "P",
+      content:
+        "P — Regular paragraph text. This is the default body copy style.",
+    },
+    {
+      type: "Text",
+      content: "Text — General-purpose text component.",
+      bold: true,
+    },
     { type: "Text", content: "Text italic", italic: true },
     { type: "Large", content: "Large text for emphasis." },
     { type: "Small", content: "Small text for fine print and metadata." },
     { type: "Muted", content: "Muted text for secondary information." },
     { type: "InlineCode", content: "InlineCode: const x = 42" },
-    { type: "BlockQuote", content: "BlockQuote — Design is not just what it looks like." },
+    {
+      type: "BlockQuote",
+      content: "BlockQuote — Design is not just what it looks like.",
+    },
 
     { type: "Separator" },
 
@@ -122,7 +141,12 @@ const DEMO_TREE: ComponentNode = {
       gap: 2,
       children: [
         { type: "Button", label: "Disabled Default", disabled: true },
-        { type: "Button", label: "Disabled Outline", variant: "outline", disabled: true },
+        {
+          type: "Button",
+          label: "Disabled Outline",
+          variant: "outline",
+          disabled: true,
+        },
       ],
     },
     { type: "H3", content: "ButtonGroup" },
@@ -163,7 +187,10 @@ const DEMO_TREE: ComponentNode = {
           type: "Alert",
           children: [
             { type: "AlertTitle", content: "Default" },
-            { type: "AlertDescription", content: "A neutral informational message." },
+            {
+              type: "AlertDescription",
+              content: "A neutral informational message.",
+            },
           ],
         },
         {
@@ -171,7 +198,10 @@ const DEMO_TREE: ComponentNode = {
           variant: "destructive",
           children: [
             { type: "AlertTitle", content: "Error" },
-            { type: "AlertDescription", content: "Your session has expired. Please log in again." },
+            {
+              type: "AlertDescription",
+              content: "Your session has expired. Please log in again.",
+            },
           ],
         },
         {
@@ -179,7 +209,10 @@ const DEMO_TREE: ComponentNode = {
           variant: "success",
           children: [
             { type: "AlertTitle", content: "Success" },
-            { type: "AlertDescription", content: "Your changes have been saved successfully." },
+            {
+              type: "AlertDescription",
+              content: "Your changes have been saved successfully.",
+            },
           ],
         },
         {
@@ -187,7 +220,10 @@ const DEMO_TREE: ComponentNode = {
           variant: "warning",
           children: [
             { type: "AlertTitle", content: "Warning" },
-            { type: "AlertDescription", content: "Your trial expires in 3 days." },
+            {
+              type: "AlertDescription",
+              content: "Your trial expires in 3 days.",
+            },
           ],
         },
         {
@@ -195,7 +231,10 @@ const DEMO_TREE: ComponentNode = {
           variant: "info",
           children: [
             { type: "AlertTitle", content: "Info" },
-            { type: "AlertDescription", content: "A new version is available for download." },
+            {
+              type: "AlertDescription",
+              content: "A new version is available for download.",
+            },
           ],
         },
       ],
@@ -216,7 +255,10 @@ const DEMO_TREE: ComponentNode = {
               type: "CardHeader",
               children: [
                 { type: "CardTitle", content: "User Profile" },
-                { type: "CardDescription", content: "View and edit your information" },
+                {
+                  type: "CardDescription",
+                  content: "View and edit your information",
+                },
               ],
             },
             {
@@ -227,7 +269,11 @@ const DEMO_TREE: ComponentNode = {
                   gap: 3,
                   children: [
                     { type: "Label", text: "Name" },
-                    { type: "Input", placeholder: "Enter your name", name: "userName" },
+                    {
+                      type: "Input",
+                      placeholder: "Enter your name",
+                      name: "userName",
+                    },
                   ],
                 },
               ],
@@ -239,7 +285,15 @@ const DEMO_TREE: ComponentNode = {
                   type: "Row",
                   gap: 2,
                   children: [
-                    { type: "Button", label: "Save", onClick: { action: "showToast", message: "Saved!", variant: "success" } },
+                    {
+                      type: "Button",
+                      label: "Save",
+                      onClick: {
+                        action: "showToast",
+                        message: "Saved!",
+                        variant: "success",
+                      },
+                    },
                     { type: "Button", label: "Cancel", variant: "outline" },
                   ],
                 },
@@ -307,12 +361,20 @@ const DEMO_TREE: ComponentNode = {
             { type: "H3", content: "Input" },
             { type: "Input", placeholder: "Text input", name: "textInput" },
             { type: "Input", inputType: "email", placeholder: "Email input" },
-            { type: "Input", inputType: "password", placeholder: "Password input" },
+            {
+              type: "Input",
+              inputType: "password",
+              placeholder: "Password input",
+            },
             { type: "Input", inputType: "number", placeholder: "Number input" },
             { type: "Input", inputType: "date", placeholder: "Date input" },
 
             { type: "H3", content: "Textarea" },
-            { type: "Textarea", placeholder: "Write something...", name: "message" },
+            {
+              type: "Textarea",
+              placeholder: "Write something...",
+              name: "message",
+            },
 
             { type: "H3", content: "Select" },
             {
@@ -333,8 +395,17 @@ const DEMO_TREE: ComponentNode = {
           cssClass: "flex-1",
           children: [
             { type: "H3", content: "Checkbox" },
-            { type: "Checkbox", label: "Accept terms and conditions", name: "terms" },
-            { type: "Checkbox", label: "Subscribe to newsletter", name: "newsletter", checked: true },
+            {
+              type: "Checkbox",
+              label: "Accept terms and conditions",
+              name: "terms",
+            },
+            {
+              type: "Checkbox",
+              label: "Subscribe to newsletter",
+              name: "newsletter",
+              checked: true,
+            },
 
             { type: "H3", content: "Switch" },
             {
@@ -379,13 +450,15 @@ const DEMO_TREE: ComponentNode = {
     { type: "H3", content: "Code" },
     {
       type: "Code",
-      content: "from prefab import Prefab\n\nmcp = Prefab(\"demo\")\n\n@mcp.tool()\ndef greet(name: str) -> str:\n    return f\"Hello, {name}!\"",
+      content:
+        'from prefab import Prefab\n\nmcp = Prefab("demo")\n\n@mcp.tool()\ndef greet(name: str) -> str:\n    return f"Hello, {name}!"',
       language: "python",
     },
     { type: "H3", content: "Markdown" },
     {
       type: "Markdown",
-      content: "## Markdown Rendering\n\nSupports **bold**, *italic*, `inline code`, and:\n\n- Bullet lists\n- [Links](https://example.com)\n\n| Feature | Status |\n|---------|--------|\n| Tables  | ✅     |\n| Lists   | ✅     |",
+      content:
+        "## Markdown Rendering\n\nSupports **bold**, *italic*, `inline code`, and:\n\n- Bullet lists\n- [Links](https://example.com)\n\n| Feature | Status |\n|---------|--------|\n| Tables  | ✅     |\n| Lists   | ✅     |",
     },
     { type: "H3", content: "Image" },
     {
@@ -412,7 +485,11 @@ const DEMO_TREE: ComponentNode = {
                 { type: "TableHead", content: "Invoice" },
                 { type: "TableHead", content: "Status" },
                 { type: "TableHead", content: "Method" },
-                { type: "TableHead", content: "Amount", cssClass: "text-right" },
+                {
+                  type: "TableHead",
+                  content: "Amount",
+                  cssClass: "text-right",
+                },
               ],
             },
           ],
@@ -423,19 +500,35 @@ const DEMO_TREE: ComponentNode = {
             {
               type: "TableRow",
               children: [
-                { type: "TableCell", content: "INV-001", cssClass: "font-medium" },
+                {
+                  type: "TableCell",
+                  content: "INV-001",
+                  cssClass: "font-medium",
+                },
                 { type: "TableCell", content: "Paid" },
                 { type: "TableCell", content: "Credit Card" },
-                { type: "TableCell", content: "$250.00", cssClass: "text-right" },
+                {
+                  type: "TableCell",
+                  content: "$250.00",
+                  cssClass: "text-right",
+                },
               ],
             },
             {
               type: "TableRow",
               children: [
-                { type: "TableCell", content: "INV-002", cssClass: "font-medium" },
+                {
+                  type: "TableCell",
+                  content: "INV-002",
+                  cssClass: "font-medium",
+                },
                 { type: "TableCell", content: "Pending" },
                 { type: "TableCell", content: "PayPal" },
-                { type: "TableCell", content: "$150.00", cssClass: "text-right" },
+                {
+                  type: "TableCell",
+                  content: "$150.00",
+                  cssClass: "text-right",
+                },
               ],
             },
           ],
@@ -454,11 +547,36 @@ const DEMO_TREE: ComponentNode = {
         { key: "status", header: "Status" },
       ],
       rows: [
-        { name: "Alice Johnson", email: "alice@example.com", role: "Admin", status: "Active" },
-        { name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "Active" },
-        { name: "Carol White", email: "carol@example.com", role: "Viewer", status: "Inactive" },
-        { name: "David Brown", email: "david@example.com", role: "Editor", status: "Active" },
-        { name: "Eve Davis", email: "eve@example.com", role: "Admin", status: "Active" },
+        {
+          name: "Alice Johnson",
+          email: "alice@example.com",
+          role: "Admin",
+          status: "Active",
+        },
+        {
+          name: "Bob Smith",
+          email: "bob@example.com",
+          role: "Editor",
+          status: "Active",
+        },
+        {
+          name: "Carol White",
+          email: "carol@example.com",
+          role: "Viewer",
+          status: "Inactive",
+        },
+        {
+          name: "David Brown",
+          email: "david@example.com",
+          role: "Editor",
+          status: "Active",
+        },
+        {
+          name: "Eve Davis",
+          email: "eve@example.com",
+          role: "Admin",
+          status: "Active",
+        },
       ],
       searchable: true,
       paginated: true,
@@ -499,7 +617,11 @@ const DEMO_TREE: ComponentNode = {
                   cssClass: "items-center",
                   children: [
                     { type: "CardTitle", content: "{{ name }}" },
-                    { type: "Badge", label: "{{ role }}", variant: "secondary" },
+                    {
+                      type: "Badge",
+                      label: "{{ role }}",
+                      variant: "secondary",
+                    },
                   ],
                 },
                 { type: "CardDescription", content: "{{ email }}" },
@@ -530,7 +652,10 @@ const DEMO_TREE: ComponentNode = {
                   type: "CardHeader",
                   children: [
                     { type: "CardTitle", content: "Account" },
-                    { type: "CardDescription", content: "Make changes to your account here." },
+                    {
+                      type: "CardDescription",
+                      content: "Make changes to your account here.",
+                    },
                   ],
                 },
                 {
@@ -541,7 +666,11 @@ const DEMO_TREE: ComponentNode = {
                       gap: 3,
                       children: [
                         { type: "Label", text: "Name" },
-                        { type: "Input", name: "accountName", placeholder: "Your name" },
+                        {
+                          type: "Input",
+                          name: "accountName",
+                          placeholder: "Your name",
+                        },
                       ],
                     },
                   ],
@@ -562,7 +691,10 @@ const DEMO_TREE: ComponentNode = {
                   type: "CardHeader",
                   children: [
                     { type: "CardTitle", content: "Password" },
-                    { type: "CardDescription", content: "Change your password here." },
+                    {
+                      type: "CardDescription",
+                      content: "Change your password here.",
+                    },
                   ],
                 },
                 {
@@ -573,9 +705,17 @@ const DEMO_TREE: ComponentNode = {
                       gap: 3,
                       children: [
                         { type: "Label", text: "Current Password" },
-                        { type: "Input", inputType: "password", name: "currentPassword" },
+                        {
+                          type: "Input",
+                          inputType: "password",
+                          name: "currentPassword",
+                        },
                         { type: "Label", text: "New Password" },
-                        { type: "Input", inputType: "password", name: "newPassword" },
+                        {
+                          type: "Input",
+                          inputType: "password",
+                          name: "newPassword",
+                        },
                       ],
                     },
                   ],
@@ -607,7 +747,10 @@ const DEMO_TREE: ComponentNode = {
           title: "Is it accessible?",
           value: "item-1",
           children: [
-            { type: "Text", content: "Yes. It adheres to the WAI-ARIA design pattern." },
+            {
+              type: "Text",
+              content: "Yes. It adheres to the WAI-ARIA design pattern.",
+            },
           ],
         },
         {
@@ -615,7 +758,10 @@ const DEMO_TREE: ComponentNode = {
           title: "Is it styled?",
           value: "item-2",
           children: [
-            { type: "Text", content: "Yes. It comes with default styles from shadcn/ui." },
+            {
+              type: "Text",
+              content: "Yes. It comes with default styles from shadcn/ui.",
+            },
           ],
         },
         {
@@ -623,7 +769,10 @@ const DEMO_TREE: ComponentNode = {
           title: "Is it animated?",
           value: "item-3",
           children: [
-            { type: "Text", content: "Yes. It uses CSS animations for smooth transitions." },
+            {
+              type: "Text",
+              content: "Yes. It uses CSS animations for smooth transitions.",
+            },
           ],
         },
       ],
@@ -639,9 +788,35 @@ const DEMO_TREE: ComponentNode = {
           type: "Row",
           gap: 2,
           children: [
-            { type: "Button", label: "Home", onClick: { action: "setState", key: "currentPage", value: "home" } },
-            { type: "Button", label: "Profile", variant: "outline", onClick: { action: "setState", key: "currentPage", value: "profile" } },
-            { type: "Button", label: "Settings", variant: "outline", onClick: { action: "setState", key: "currentPage", value: "settings" } },
+            {
+              type: "Button",
+              label: "Home",
+              onClick: {
+                action: "setState",
+                key: "currentPage",
+                value: "home",
+              },
+            },
+            {
+              type: "Button",
+              label: "Profile",
+              variant: "outline",
+              onClick: {
+                action: "setState",
+                key: "currentPage",
+                value: "profile",
+              },
+            },
+            {
+              type: "Button",
+              label: "Settings",
+              variant: "outline",
+              onClick: {
+                action: "setState",
+                key: "currentPage",
+                value: "settings",
+              },
+            },
           ],
         },
         {
@@ -658,7 +833,11 @@ const DEMO_TREE: ComponentNode = {
                   type: "Alert",
                   children: [
                     { type: "AlertTitle", content: "Welcome Home" },
-                    { type: "AlertDescription", content: "This is the home page. Click the buttons above to navigate." },
+                    {
+                      type: "AlertDescription",
+                      content:
+                        "This is the home page. Click the buttons above to navigate.",
+                    },
                   ],
                 },
               ],
@@ -676,7 +855,10 @@ const DEMO_TREE: ComponentNode = {
               title: "Settings",
               value: "settings",
               children: [
-                { type: "Text", content: "Configuration options would go here." },
+                {
+                  type: "Text",
+                  content: "Configuration options would go here.",
+                },
               ],
             },
           ],
@@ -698,7 +880,10 @@ const DEMO_TREE: ComponentNode = {
           children: [
             { type: "Label", text: "Single" },
             { type: "Calendar", name: "selectedDate" },
-            { type: "Small", content: "Selected: {{selectedDate | date:long }}" },
+            {
+              type: "Small",
+              content: "Selected: {{selectedDate | date:long }}",
+            },
           ],
         },
         {
@@ -726,7 +911,11 @@ const DEMO_TREE: ComponentNode = {
       gap: 4,
       cssClass: "items-center",
       children: [
-        { type: "DatePicker", placeholder: "Pick a deadline", name: "deadline" },
+        {
+          type: "DatePicker",
+          placeholder: "Pick a deadline",
+          name: "deadline",
+        },
         { type: "Text", content: "Deadline: {{deadline | date:long }}" },
       ],
     },
@@ -789,7 +978,8 @@ const DEMO_TREE: ComponentNode = {
     {
       type: "Dialog",
       title: "Edit Profile",
-      description: "Make changes to your profile here. Click save when you're done.",
+      description:
+        "Make changes to your profile here. Click save when you're done.",
       children: [
         { type: "Button", label: "Open dialog", variant: "outline" },
         {
@@ -803,7 +993,11 @@ const DEMO_TREE: ComponentNode = {
         {
           type: "Button",
           label: "Save changes",
-          onClick: { action: "showToast", message: "Profile updated!", variant: "success" },
+          onClick: {
+            action: "showToast",
+            message: "Profile updated!",
+            variant: "success",
+          },
         },
       ],
     },
@@ -817,9 +1011,31 @@ const DEMO_TREE: ComponentNode = {
       type: "Row",
       gap: 2,
       children: [
-        { type: "Button", label: "Default Toast", onClick: { action: "showToast", message: "Hello from a toast!" } },
-        { type: "Button", label: "Success", variant: "outline", onClick: { action: "showToast", message: "Operation succeeded", variant: "success" } },
-        { type: "Button", label: "Error", variant: "destructive", onClick: { action: "showToast", message: "Something went wrong", variant: "error" } },
+        {
+          type: "Button",
+          label: "Default Toast",
+          onClick: { action: "showToast", message: "Hello from a toast!" },
+        },
+        {
+          type: "Button",
+          label: "Success",
+          variant: "outline",
+          onClick: {
+            action: "showToast",
+            message: "Operation succeeded",
+            variant: "success",
+          },
+        },
+        {
+          type: "Button",
+          label: "Error",
+          variant: "destructive",
+          onClick: {
+            action: "showToast",
+            message: "Something went wrong",
+            variant: "error",
+          },
+        },
       ],
     },
     { type: "H3", content: "Conditional Rendering (visibleWhen)" },
@@ -838,7 +1054,11 @@ const DEMO_TREE: ComponentNode = {
           visibleWhen: "showDetails",
           children: [
             { type: "AlertTitle", content: "Details" },
-            { type: "AlertDescription", content: "This alert is conditionally rendered based on client state." },
+            {
+              type: "AlertDescription",
+              content:
+                "This alert is conditionally rendered based on client state.",
+            },
           ],
         },
       ],
@@ -887,7 +1107,8 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   // Parse hash once — supports bare tree or wrapped {_tree, _state, ...data} format
   const { hashTree, hashState, hashData, hashError } = useMemo(() => {
     const jsonStart = hash.indexOf(":");
-    if (jsonStart === -1) return { hashTree: null, hashState: {}, hashData: {}, hashError: null };
+    if (jsonStart === -1)
+      return { hashTree: null, hashState: {}, hashData: {}, hashError: null };
     try {
       const raw = decodeURIComponent(hash.slice(jsonStart + 1));
       const obj = JSON.parse(raw);
@@ -904,15 +1125,28 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
           hashError: null,
         };
       }
-      return { hashTree: obj as ComponentNode, hashState: {} as Record<string, unknown>, hashData: {}, hashError: null };
+      return {
+        hashTree: obj as ComponentNode,
+        hashState: {} as Record<string, unknown>,
+        hashData: {},
+        hashError: null,
+      };
     } catch (e) {
-      return { hashTree: null, hashState: {}, hashData: {}, hashError: (e as Error).message };
+      return {
+        hashTree: null,
+        hashState: {},
+        hashData: {},
+        hashError: (e as Error).message,
+      };
     }
   }, []);
 
   const hasCustomTree = !!(injected?.tree ?? hashTree);
   const defaultData = hasCustomTree ? hashData : { ...DEMO_DATA, ...hashData };
-  const initialState = { ...(injected?.data ?? defaultData), ...(injected?.state ?? hashState) };
+  const initialState = {
+    ...(injected?.data ?? defaultData),
+    ...(injected?.state ?? hashState),
+  };
   const state = useStateStore(initialState);
   const [customTree, setCustomTree] = useState<ComponentNode | null>(
     injected?.tree ?? hashTree,
@@ -969,7 +1203,10 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   // Doc embed mode: minimal chrome, transparent-friendly, tight padding
   if (isDocEmbed) {
     return (
-      <div ref={contentRef} className="bg-transparent text-foreground py-12 px-16">
+      <div
+        ref={contentRef}
+        className="bg-transparent text-foreground py-12 px-16 flex flex-col items-center"
+      >
         {parseError && (
           <div className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
             JSON parse error: {parseError}

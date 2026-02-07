@@ -335,7 +335,9 @@ describe("executeAction", () => {
     it("passes error text to onError callbacks via $error", async () => {
       app.callServerTool.mockResolvedValueOnce({
         isError: true,
-        content: [{ type: "text", text: "Validation failed: name is required" }],
+        content: [
+          { type: "text", text: "Validation failed: name is required" },
+        ],
       });
       const state = createStateStore();
       const action: ActionSpec = {

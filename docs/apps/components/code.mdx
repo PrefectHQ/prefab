@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Code blocks display source code or configuration with automatic syntax highlighting. Set the `language` parameter to enable language-aware highlighting for Python, JavaScript, TypeScript, SQL, Bash, JSON, HTML, CSS, YAML, and Markdown.
 
-<ComponentPreview auto json={`{"content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python","type":"Code"}`} />
+<ComponentPreview auto json={`{"type":"Code","content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python"}`} />
 
 ```python Code Block
 from prefab_ui.components import Code
@@ -26,7 +26,7 @@ print(message)
 
 ## Multiple Languages
 
-<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"content":"pip install prefab-ui","language":"bash","type":"Code"},{"content":"SELECT * FROM users WHERE active = true;","language":"sql","type":"Code"},{"content":"{ \\"name\\": \\"prefab-ui\\", \\"version\\": \\"2.0\\" }","language":"json","type":"Code"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Code","content":"pip install prefab-ui","language":"bash"},{"type":"Code","content":"SELECT * FROM users WHERE active = true;","language":"sql"},{"type":"Code","content":"{ \\"name\\": \\"prefab-ui\\", \\"version\\": \\"2.0\\" }","language":"json"}]}`} />
 
 ```python Code Languages
 from prefab_ui.components import Code, Column
