@@ -6,9 +6,9 @@ icon: grip-lines
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
-
 Separators create visual divisions between content areas.
+
+## Basic Usage
 
 <ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Content below the separator","type":"P"}]}`}>
 <CodeGroup>
@@ -171,21 +171,11 @@ with Card():
 
 ## Protocol Reference
 
-<Card icon="braces" title="Separator Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Separator" default="Separator">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="orientation" type="string" default="horizontal">
-  Separator orientation. One of: `"horizontal"`, `"vertical"`
-</ParamField>
-
-</Card>
+```json Separator
+{
+  "type": "Separator",
+  "orientation?": "horizontal | vertical",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
