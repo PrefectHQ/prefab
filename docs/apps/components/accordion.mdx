@@ -8,6 +8,80 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Accordions let users expand and collapse sections to reveal content progressively. Each `AccordionItem` has a clickable title and hidden content that appears on expand.
 
+## Basic
+
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Accordion, AccordionItem, Text
+
+with Accordion():
+    with AccordionItem("What is the Answer?"):
+        Text(
+            "Forty-two. The Answer to the Ultimate "
+            "Question of Life, the Universe, and "
+            "Everything."
+        )
+    with AccordionItem("What is the Heart of Gold?"):
+        Text(
+            "A starship powered by the Infinite "
+            "Improbability Drive. It can pass through "
+            "every conceivable point in every "
+            "conceivable universe almost simultaneously."
+        )
+    with AccordionItem("What is Deep Thought?"):
+        Text(
+            "A supercomputer designed to find the "
+            "Answer to the Ultimate Question. It took "
+            "7.5 million years to compute: 42."
+        )
+```
+```json Protocol
+{
+  "type": "Accordion",
+  "accordionType": "single",
+  "collapsible": true,
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "What is the Answer?",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "What is the Heart of Gold?",
+      "children": [
+        {
+          "type": "Text",
+          "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "What is Deep Thought?",
+      "children": [
+        {
+          "type": "Text",
+          "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Open First Item
+
+Use `open_item=0` to expand the first accordion item by default.
+
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"What is the Answer?","children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}`}>
 <CodeGroup>
 ```python Python
