@@ -249,6 +249,30 @@ function filterInternalProps(
  * Render a single node from the JSON component tree.
  */
 export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
+  // $ref resolution: inline a defined template before any other processing
+  if ("$ref" in node && typeof node["$ref"] === "string") {
+    const defs = (scope._defs as Record<string, ComponentNode>) || {};
+    const refName = node["$ref"] as string;
+    const defNode = defs[refName];
+    if (!defNode) {
+      console.warn(`[Prefab] Unknown $ref: "${refName}"`);
+      return null;
+    }
+    // Circular ref guard
+    const resolving = (scope._resolving as Set<string>) || new Set<string>();
+    if (resolving.has(refName)) {
+      console.warn(`[Prefab] Circular $ref: "${refName}"`);
+      return null;
+    }
+    const newScope = {
+      ...scope,
+      _resolving: new Set([...resolving, refName]),
+    };
+    return (
+      <RenderNode node={defNode} scope={newScope} state={state} app={app} />
+    );
+  }
+
   const { type, children, visibleWhen, ...rawProps } = node;
 
   // Validate node against its Zod schema before any processing
@@ -435,6 +459,28 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     );
   }
 
+  // Handle State — merge state dict into interpolation scope (no DOM wrapper)
+  if (type === "State" && children) {
+    const stateOverrides = interpolateProps(
+      (rawProps.state ?? {}) as Record<string, unknown>,
+      ctx,
+    ) as Record<string, unknown>;
+    const newScope = { ...scope, ...stateOverrides };
+    return (
+      <>
+        {children.map((child, i) => (
+          <RenderNode
+            key={i}
+            node={child}
+            scope={newScope}
+            state={state}
+            app={app}
+          />
+        ))}
+      </>
+    );
+  }
+
   // Render children recursively
   const renderedChildren = children?.map((child, i) => (
     <RenderNode key={i} node={child} scope={scope} state={state} app={app} />
@@ -473,12 +519,15 @@ function resolve(path: string, data: Record<string, unknown>): unknown {
  */
 export function RenderTree({
   tree,
+  defs,
   state,
   app,
 }: {
   tree: ComponentNode;
+  defs?: Record<string, ComponentNode>;
   state: StateStore;
   app: App | null;
 }) {
-  return <RenderNode node={tree} scope={{}} state={state} app={app} />;
+  const scope: Record<string, unknown> = defs ? { _defs: defs } : {};
+  return <RenderNode node={tree} scope={scope} state={state} app={app} />;
 }

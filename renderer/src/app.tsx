@@ -64,6 +64,7 @@ function applyTheme(ctx: McpUiHostContext) {
 
 export function App() {
   const [tree, setTree] = useState<ComponentNode | null>(null);
+  const [defs, setDefs] = useState<Record<string, ComponentNode>>({});
   const state = useStateStore();
   const appRef = useRef<McpApp | null>(null);
 
@@ -84,12 +85,17 @@ export function App() {
         );
       }
 
-      // Extract component tree and state from structuredContent
+      // Extract component tree, defs, and state from structuredContent
       const view = structured._prefab_view as ComponentNode | undefined;
+      const extractedDefs = (structured._prefab_defs ?? {}) as Record<
+        string,
+        ComponentNode
+      >;
       const stateData = extractState(structured);
 
       // Full state reset — host is providing a fresh view + state
       state.reset(stateData);
+      setDefs(extractedDefs);
 
       if (view) {
         setTree(view);
@@ -148,7 +154,7 @@ export function App() {
   // Render component tree
   return (
     <>
-      <RenderTree tree={tree} state={state} app={appRef.current} />
+      <RenderTree tree={tree} defs={defs} state={state} app={appRef.current} />
       <Toaster />
     </>
   );
