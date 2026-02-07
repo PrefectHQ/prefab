@@ -8,9 +8,9 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Typography components give you semantic heading and body text styles that follow shadcn/ui conventions — proper font sizes, weights, tracking, and color that automatically adapts to dark mode. Every component accepts a content string as a positional argument and supports `{{ field }}` interpolation.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`} />
-
-```python Typography Overview
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     H1,
     H2,
@@ -26,14 +26,40 @@ with Column(gap=4):
     P("Everything you need to manage your MCP server, organized in one place.")
     Muted("Last updated 5 minutes ago")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "content": "Dashboard",
+      "type": "H1"
+    },
+    {
+      "content": "Monitor your application metrics and performance.",
+      "type": "Lead"
+    },
+    {
+      "content": "Everything you need to manage your MCP server, organized in one place.",
+      "type": "P"
+    },
+    {
+      "content": "Last updated 5 minutes ago",
+      "type": "Muted"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Headings
 
 Four heading levels with decreasing size and weight. H2 includes a subtle bottom border for section separation.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"H1 \\u2014 Page Title","type":"H1"},{"content":"H2 \\u2014 Section Heading","type":"H2"},{"content":"H3 \\u2014 Subsection","type":"H3"},{"content":"H4 \\u2014 Detail Heading","type":"H4"}]}`} />
-
-```python Heading Levels
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"H1 \\u2014 Page Title","type":"H1"},{"content":"H2 \\u2014 Section Heading","type":"H2"},{"content":"H3 \\u2014 Subsection","type":"H3"},{"content":"H4 \\u2014 Detail Heading","type":"H4"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     H1,
     H2,
@@ -48,14 +74,40 @@ with Column(gap=4):
     H3("H3 — Subsection")
     H4("H4 — Detail Heading")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "content": "H1 \u2014 Page Title",
+      "type": "H1"
+    },
+    {
+      "content": "H2 \u2014 Section Heading",
+      "type": "H2"
+    },
+    {
+      "content": "H3 \u2014 Subsection",
+      "type": "H3"
+    },
+    {
+      "content": "H4 \u2014 Detail Heading",
+      "type": "H4"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Body Text
 
 `P` gives you standard paragraph text with comfortable line height. `Lead` is larger and muted for introductory text, while `Large` emphasizes key information with bolder weight.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"A comprehensive guide to building MCP applications with FastMCP.","type":"Lead"},{"content":"FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.","type":"P"},{"content":"Key Takeaway: Components compose naturally.","type":"Large"}]}`} />
-
-```python Body Text
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"A comprehensive guide to building MCP applications with FastMCP.","type":"Lead"},{"content":"FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.","type":"P"},{"content":"Key Takeaway: Components compose naturally.","type":"Large"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     P,
     Lead,
@@ -68,14 +120,36 @@ with Column(gap=4):
     P("FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.")
     Large("Key Takeaway: Components compose naturally.")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "content": "A comprehensive guide to building MCP applications with FastMCP.",
+      "type": "Lead"
+    },
+    {
+      "content": "FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.",
+      "type": "P"
+    },
+    {
+      "content": "Key Takeaway: Components compose naturally.",
+      "type": "Large"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Small and Muted Text
 
 `Small` renders smaller text suited for metadata, while `Muted` uses the secondary foreground color for less prominent information. Both are useful for timestamps, disclaimers, and supplementary details.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"content":"Terms and conditions apply","type":"Small"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`} />
-
-```python Small and Muted
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"content":"Terms and conditions apply","type":"Small"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Small,
     Muted,
@@ -86,24 +160,50 @@ with Column(gap=3):
     Small("Terms and conditions apply")
     Muted("Last updated 5 minutes ago")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "content": "Terms and conditions apply",
+      "type": "Small"
+    },
+    {
+      "content": "Last updated 5 minutes ago",
+      "type": "Muted"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Block Quotes
 
-<ComponentPreview auto json={`{"content":"The best way to predict the future is to invent it.","type":"BlockQuote"}`} />
-
-```python Block Quote
+<ComponentPreview auto json={`{"content":"The best way to predict the future is to invent it.","type":"BlockQuote"}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import BlockQuote
 
 BlockQuote("The best way to predict the future is to invent it.")
 ```
+```json Protocol
+{
+  "content": "The best way to predict the future is to invent it.",
+  "type": "BlockQuote"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Inline Code
 
 Renders text with a monospace font and subtle background, ideal for referencing code within prose.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":2,"children":[{"content":"Run","type":"P"},{"content":"pip install prefab-ui","type":"InlineCode"},{"content":"to get started.","type":"P"}]}`} />
-
-```python Inline Code
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":2,"children":[{"content":"Run","type":"P"},{"content":"pip install prefab-ui","type":"InlineCode"},{"content":"to get started.","type":"P"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     InlineCode,
     P,
@@ -115,6 +215,29 @@ with Row(gap=2, css_class="items-center"):
     InlineCode("pip install prefab-ui")
     P("to get started.")
 ```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 2,
+  "children": [
+    {
+      "content": "Run",
+      "type": "P"
+    },
+    {
+      "content": "pip install prefab-ui",
+      "type": "InlineCode"
+    },
+    {
+      "content": "to get started.",
+      "type": "P"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Text and Markdown
 
@@ -138,9 +261,9 @@ These are handy for data-driven UIs where the styling comes from the container r
 
 All text components accept `bold` and `italic` props for quick emphasis without reaching for CSS classes:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"type":"Text","content":"Bold and italic combined.","bold":true,"italic":true}]}`} />
-
-```python Bold and Italic
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"type":"Text","content":"Bold and italic combined.","bold":true,"italic":true}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     P,
     Text,
@@ -153,6 +276,36 @@ with Column(gap=2):
     P("This is italic.", italic=True)
     Text("Bold and italic combined.", bold=True, italic=True)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "content": "Regular paragraph text.",
+      "type": "P"
+    },
+    {
+      "content": "This is bold.",
+      "bold": true,
+      "type": "P"
+    },
+    {
+      "content": "This is italic.",
+      "italic": true,
+      "type": "P"
+    },
+    {
+      "type": "Text",
+      "content": "Bold and italic combined.",
+      "bold": true,
+      "italic": true
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 
@@ -260,4 +413,75 @@ Available formats:
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Text Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Text" default="Text">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Text content with `{{ field }}` interpolation
+</ParamField>
+
+<ParamField body="bold" type="boolean | null">
+  Render text in bold
+</ParamField>
+
+<ParamField body="italic" type="boolean | null">
+  Render text in italic
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="Heading Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Heading" default="Heading">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Heading text with `{{ field }}` interpolation
+</ParamField>
+
+<ParamField body="level" type="number" default="1">
+  Heading level (1=h1, 4=h4). One of: `"1"`, `"2"`, `"3"`, `"4"`
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="Markdown Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Markdown" default="Markdown">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Markdown content with `{{ field }}` interpolation
+</ParamField>
+
 </Card>

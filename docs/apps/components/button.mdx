@@ -9,13 +9,24 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Buttons trigger actions and communicate intent. The `variant` parameter signals what kind of action the button performs, while `size` controls its dimensions.
 
-<ComponentPreview auto json={`{"type":"Button","label":"Save Changes","variant":"default","size":"default","disabled":false}`} />
-
-```python Button Example
+<ComponentPreview auto json={`{"type":"Button","label":"Save Changes","variant":"default","size":"default","disabled":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Button
 
 Button("Save Changes")
 ```
+```json Protocol
+{
+  "type": "Button",
+  "label": "Save Changes",
+  "variant": "default",
+  "size": "default",
+  "disabled": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 The label can be passed as a positional argument or as a keyword (`label="Save Changes"`).
 
@@ -23,9 +34,9 @@ The label can be passed as a positional argument or as a keyword (`label="Save C
 
 Each variant communicates a different intent to the user:
 
-<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":8,"children":[{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Ghost","variant":"ghost","size":"default","disabled":false},{"type":"Button","label":"Link","variant":"link","size":"default","disabled":false},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false}]}`} />
-
-```python Button Variants
+<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":8,"children":[{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Ghost","variant":"ghost","size":"default","disabled":false},{"type":"Button","label":"Link","variant":"link","size":"default","disabled":false},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Grid,
@@ -42,12 +53,86 @@ with Grid(columns=3, gap=8):
     Button("Warning", variant="warning")
     Button("Info", variant="info")
 ```
+```json Protocol
+{
+  "type": "Grid",
+  "columns": 3,
+  "gap": 8,
+  "children": [
+    {
+      "type": "Button",
+      "label": "Default",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Destructive",
+      "variant": "destructive",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Outline",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Secondary",
+      "variant": "secondary",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Ghost",
+      "variant": "ghost",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Link",
+      "variant": "link",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Success",
+      "variant": "success",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Warning",
+      "variant": "warning",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Info",
+      "variant": "info",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Sizes
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}`} />
-
-```python Button Sizes
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Row,
@@ -59,14 +144,53 @@ with Row(gap=3, css_class="items-center"):
     Button("Default", size="default")
     Button("Large", size="lg")
 ```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Button",
+      "label": "Tiny",
+      "variant": "default",
+      "size": "xs",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Small",
+      "variant": "default",
+      "size": "sm",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Default",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Large",
+      "variant": "default",
+      "size": "lg",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Icon Sizes
 
 Square buttons optimized for single icons or characters. The icon sizes match the heights of the corresponding text button sizes.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"\\u2022","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-lg","disabled":false}]}`} />
-
-```python Icon Button Sizes
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"\\u2022","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-lg","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Row,
@@ -78,24 +202,74 @@ with Row(gap=3, css_class="items-center"):
     Button("•", size="icon")
     Button("•", size="icon-lg")
 ```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Button",
+      "label": "\u2022",
+      "variant": "default",
+      "size": "icon-xs",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "\u2022",
+      "variant": "default",
+      "size": "icon-sm",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "\u2022",
+      "variant": "default",
+      "size": "icon",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "\u2022",
+      "variant": "default",
+      "size": "icon-lg",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Button","label":"Unavailable","variant":"default","size":"default","disabled":true}`} />
-
-```python Disabled Button
+<ComponentPreview auto json={`{"type":"Button","label":"Unavailable","variant":"default","size":"default","disabled":true}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Button
 
 Button("Unavailable", disabled=True)
 ```
+```json Protocol
+{
+  "type": "Button",
+  "label": "Unavailable",
+  "variant": "default",
+  "size": "default",
+  "disabled": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Custom Styling
 
 Every component accepts `css_class` for additional Tailwind CSS classes. When your classes target the same CSS property as a built-in style (like `rounded-full` vs the default `rounded-md`), the built-in class is automatically removed so your override wins cleanly:
 
-<ComponentPreview auto json={`{"cssClass":"items-start w-full","type":"Column","gap":3,"children":[{"cssClass":"w-full bg-emerald-500","type":"Button","label":"Full Width Emerald","variant":"default","size":"default","disabled":false},{"cssClass":"rounded-full bg-rose-500","type":"Button","label":"Pill Shape Rose","variant":"default","size":"default","disabled":false}]}`} />
-
-```python Custom Classes
+<ComponentPreview auto json={`{"cssClass":"items-start w-full","type":"Column","gap":3,"children":[{"cssClass":"w-full bg-emerald-500","type":"Button","label":"Full Width Emerald","variant":"default","size":"default","disabled":false},{"cssClass":"rounded-full bg-rose-500","type":"Button","label":"Pill Shape Rose","variant":"default","size":"default","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Column,
@@ -105,6 +279,33 @@ with Column(gap=3, css_class="items-start w-full"):
     Button("Full Width Emerald", css_class="w-full bg-emerald-500")
     Button("Pill Shape Rose", css_class="rounded-full bg-rose-500")
 ```
+```json Protocol
+{
+  "cssClass": "items-start w-full",
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "cssClass": "w-full bg-emerald-500",
+      "type": "Button",
+      "label": "Full Width Emerald",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "cssClass": "rounded-full bg-rose-500",
+      "type": "Button",
+      "label": "Pill Shape Rose",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 
@@ -138,4 +339,41 @@ Button("View {{ name }}'s profile")
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Button Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Button" default="Button">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="label" type="string" required>
+  Button text with `{{ field }}` interpolation
+</ParamField>
+
+<ParamField body="variant" type="string" default="default">
+  Visual variant: default, destructive, outline, secondary, ghost, link. One of: `"default"`, `"destructive"`, `"outline"`, `"secondary"`, `"ghost"`, `"link"`, `"success"`, `"warning"`, `"info"`
+</ParamField>
+
+<ParamField body="size" type="string" default="default">
+  Size: default, sm, lg, icon. One of: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether the button is disabled
+</ParamField>
+
+<ParamField body="onClick" type="Action | Action[] | null">
+  Action(s) to execute when clicked
+</ParamField>
+
 </Card>

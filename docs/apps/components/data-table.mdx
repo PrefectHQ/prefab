@@ -8,9 +8,9 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 DataTable takes flat `columns` and `rows` and renders a full-featured table with optional sorting, search filtering, and pagination. Use it when you have structured data and want interactive table features without building the markup yourself.
 
-<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10}`} />
-
-```python DataTable Example
+<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import DataTable, DataTableColumn
 
 DataTable(
@@ -27,14 +27,58 @@ DataTable(
     searchable=True,
 )
 ```
+```json Protocol
+{
+  "type": "DataTable",
+  "columns": [
+    {
+      "key": "name",
+      "header": "Name",
+      "sortable": true
+    },
+    {
+      "key": "email",
+      "header": "Email",
+      "sortable": false
+    },
+    {
+      "key": "role",
+      "header": "Role",
+      "sortable": true
+    }
+  ],
+  "rows": [
+    {
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "role": "Admin"
+    },
+    {
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "role": "Editor"
+    },
+    {
+      "name": "Carol White",
+      "email": "carol@example.com",
+      "role": "Viewer"
+    }
+  ],
+  "searchable": true,
+  "paginated": false,
+  "pageSize": 10
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Pagination
 
 Enable pagination to handle large datasets. The table shows page controls and displays `page_size` rows at a time.
 
-<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3,"caption":"Sprint tasks"}`} />
-
-```python DataTable Paginated
+<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3,"caption":"Sprint tasks"}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import DataTable, DataTableColumn
 
 DataTable(
@@ -55,6 +99,61 @@ DataTable(
     caption="Sprint tasks",
 )
 ```
+```json Protocol
+{
+  "type": "DataTable",
+  "columns": [
+    {
+      "key": "id",
+      "header": "ID",
+      "sortable": false
+    },
+    {
+      "key": "task",
+      "header": "Task",
+      "sortable": true
+    },
+    {
+      "key": "status",
+      "header": "Status",
+      "sortable": false
+    }
+  ],
+  "rows": [
+    {
+      "id": "T-001",
+      "task": "Design system",
+      "status": "Complete"
+    },
+    {
+      "id": "T-002",
+      "task": "API integration",
+      "status": "In Progress"
+    },
+    {
+      "id": "T-003",
+      "task": "Testing",
+      "status": "Pending"
+    },
+    {
+      "id": "T-004",
+      "task": "Documentation",
+      "status": "In Progress"
+    },
+    {
+      "id": "T-005",
+      "task": "Deployment",
+      "status": "Pending"
+    }
+  ],
+  "searchable": false,
+  "paginated": true,
+  "pageSize": 3,
+  "caption": "Sprint tasks"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 
@@ -118,4 +217,60 @@ DataTable(
 <ParamField body="sortable" type="bool" default="False">
   Enable click-to-sort on this column.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="DataTable Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="DataTable" default="DataTable">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="columns" type="array" required>
+  Column definitions
+</ParamField>
+
+<ParamField body="rows" type="Action[] | string">
+  Row data or `{{ interpolation }}` reference
+</ParamField>
+
+<ParamField body="searchable" type="boolean" default="false">
+  Show search/filter input
+</ParamField>
+
+<ParamField body="paginated" type="boolean" default="false">
+  Show pagination controls
+</ParamField>
+
+<ParamField body="pageSize" type="number" default="10">
+  Rows per page when paginated
+</ParamField>
+
+<ParamField body="caption" type="string | null">
+  Optional table caption
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="DataTableColumn Protocol">
+<ParamField body="key" type="string" required>
+  Data key to display in this column
+</ParamField>
+
+<ParamField body="header" type="string" required>
+  Column header text
+</ParamField>
+
+<ParamField body="sortable" type="boolean" default="false">
+  Enable sorting for this column
+</ParamField>
+
 </Card>

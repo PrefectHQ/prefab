@@ -8,23 +8,47 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Button groups join related actions into a single visual unit. Borders between buttons merge, and only the outer corners stay rounded.
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}`} />
-
-```python Button Group
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Button, ButtonGroup
 
 with ButtonGroup():
     Button("Save")
     Button("Cancel", variant="outline")
 ```
+```json Protocol
+{
+  "type": "ButtonGroup",
+  "orientation": "horizontal",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Save",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Cancel",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Orientation
 
 Horizontal (default) groups buttons side-by-side. Vertical stacks them:
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"vertical","children":[{"type":"Button","label":"Top","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Middle","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Bottom","variant":"outline","size":"default","disabled":false}]}`} />
-
-```python Vertical Button Group
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"vertical","children":[{"type":"Button","label":"Top","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Middle","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Bottom","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Button, ButtonGroup
 
 with ButtonGroup(orientation="vertical"):
@@ -32,14 +56,45 @@ with ButtonGroup(orientation="vertical"):
     Button("Middle", variant="outline")
     Button("Bottom", variant="outline")
 ```
+```json Protocol
+{
+  "type": "ButtonGroup",
+  "orientation": "vertical",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Top",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Middle",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Bottom",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Common Patterns
 
 Pagination controls, view toggles, and segmented controls all benefit from button groups:
 
-<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Previous","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"1","variant":"default","size":"default","disabled":false},{"type":"Button","label":"2","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"3","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Next","variant":"outline","size":"default","disabled":false}]}`} />
-
-```python Pagination Example
+<ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Previous","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"1","variant":"default","size":"default","disabled":false},{"type":"Button","label":"2","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"3","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Next","variant":"outline","size":"default","disabled":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Button, ButtonGroup
 
 with ButtonGroup():
@@ -49,6 +104,51 @@ with ButtonGroup():
     Button("3", variant="outline")
     Button("Next", variant="outline")
 ```
+```json Protocol
+{
+  "type": "ButtonGroup",
+  "orientation": "horizontal",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Previous",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "1",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "2",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "3",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Next",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -60,4 +160,28 @@ with ButtonGroup():
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="ButtonGroup Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="ButtonGroup" default="ButtonGroup">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="orientation" type="string" default="horizontal">
+  Layout direction: horizontal or vertical. One of: `"horizontal"`, `"vertical"`
+</ParamField>
+
 </Card>

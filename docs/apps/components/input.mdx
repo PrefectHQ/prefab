@@ -10,21 +10,32 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Inputs collect text, email, passwords, and other single-line data from users.
 
-<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false}`} />
-
-```python Input Example
+<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Input
 
 Input(placeholder="Enter your email...")
 ```
+```json Protocol
+{
+  "type": "Input",
+  "inputType": "text",
+  "placeholder": "Enter your email...",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Input Types
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`} />
-
-```python Input Types
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Input,
     Column,
@@ -36,14 +47,52 @@ with Column(gap=4):
     Input(input_type="number", placeholder="Age")
     Input(input_type="tel", placeholder="Phone")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Input",
+      "inputType": "email",
+      "placeholder": "Email",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "password",
+      "placeholder": "Password",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "number",
+      "placeholder": "Age",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Input",
+      "inputType": "tel",
+      "placeholder": "Phone",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Labels
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`} />
-
-```python Input with Label
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Input,
@@ -54,14 +103,35 @@ with Column(gap=2):
     Label("Email address")
     Input(input_type="email", placeholder="you@example.com", required=True)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Email address"
+    },
+    {
+      "type": "Input",
+      "inputType": "email",
+      "placeholder": "you@example.com",
+      "disabled": false,
+      "required": true
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Date & Time Inputs
 
 Native date and time pickers use the browser's built-in UI:
 
-<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`} />
-
-```python Date and Time Inputs
+<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Input,
@@ -80,16 +150,91 @@ with Row(gap=4):
         Label("Date & Time")
         Input(input_type="datetime-local", name="datetime")
 ```
+```json Protocol
+{
+  "type": "Row",
+  "gap": 4,
+  "children": [
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Date"
+        },
+        {
+          "type": "Input",
+          "inputType": "date",
+          "name": "date",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Time"
+        },
+        {
+          "type": "Input",
+          "inputType": "time",
+          "name": "time",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "cssClass": "flex-1",
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Date & Time"
+        },
+        {
+          "type": "Input",
+          "inputType": "datetime-local",
+          "name": "datetime",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"required":false}`} />
-
-```python Disabled Input
+<ComponentPreview auto json={`{"type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Input
 
 Input(placeholder="Disabled input", disabled=True)
 ```
+```json Protocol
+{
+  "type": "Input",
+  "inputType": "text",
+  "placeholder": "Disabled input",
+  "disabled": true,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -122,4 +267,73 @@ Input(placeholder="Disabled input", disabled=True)
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Input Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Input" default="Input">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="inputType" type="string" default="text">
+  Input type (text, email, password, etc.). One of: `"text"`, `"email"`, `"password"`, `"number"`, `"tel"`, `"url"`, `"search"`, `"date"`, `"time"`, `"datetime-local"`, `"file"`
+</ParamField>
+
+<ParamField body="placeholder" type="string | null">
+  Placeholder text (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="value" type="string | null">
+  Input value (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  Form field name
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether input is disabled
+</ParamField>
+
+<ParamField body="required" type="boolean" default="false">
+  Whether input is required
+</ParamField>
+
+<ParamField body="minLength" type="number | null">
+  Minimum character length
+</ParamField>
+
+<ParamField body="maxLength" type="number | null">
+  Maximum character length
+</ParamField>
+
+<ParamField body="min" type="number | null">
+  Minimum value (for number inputs)
+</ParamField>
+
+<ParamField body="max" type="number | null">
+  Maximum value (for number inputs)
+</ParamField>
+
+<ParamField body="step" type="number | null">
+  Step increment (for number inputs)
+</ParamField>
+
+<ParamField body="pattern" type="string | null">
+  Regex pattern for validation
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) to execute when value changes
+</ParamField>
+
 </Card>

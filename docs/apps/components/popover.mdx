@@ -8,9 +8,9 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Popovers display rich content in a floating panel when users click a trigger element. The first child becomes the trigger; all remaining children become the panel content.
 
-<ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Dimensions","description":"Set the dimensions for the layer.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Width"},{"type":"Input","inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false},{"type":"Label","text":"Height"},{"type":"Input","inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false}]}]}`} />
-
-```python Popover Example
+<ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Dimensions","description":"Set the dimensions for the layer.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Width"},{"type":"Input","inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false},{"type":"Label","text":"Height"},{"type":"Input","inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Column,
@@ -27,14 +27,62 @@ with Popover(title="Dimensions", description="Set the dimensions for the layer."
         Label("Height")
         Input(name="height", placeholder="25px")
 ```
+```json Protocol
+{
+  "type": "Popover",
+  "title": "Dimensions",
+  "description": "Set the dimensions for the layer.",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Open popover",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Column",
+      "gap": 3,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Width"
+        },
+        {
+          "type": "Input",
+          "inputType": "text",
+          "placeholder": "100%",
+          "name": "width",
+          "disabled": false,
+          "required": false
+        },
+        {
+          "type": "Label",
+          "text": "Height"
+        },
+        {
+          "type": "Input",
+          "inputType": "text",
+          "placeholder": "25px",
+          "name": "height",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Without Header
 
 Skip the `title` and `description` to render content directly in the panel.
 
-<ComponentPreview auto height="260px" json={`{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Volume"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false}]}]}`} />
-
-```python Popover No Header
+<ComponentPreview auto height="260px" json={`{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Volume"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Column,
@@ -49,6 +97,40 @@ with Popover():
         Label("Volume")
         Slider(min=0, max=100, value=50, name="volume")
 ```
+```json Protocol
+{
+  "type": "Popover",
+  "children": [
+    {
+      "type": "Button",
+      "label": "Settings",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Column",
+      "gap": 3,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Volume"
+        },
+        {
+          "type": "Slider",
+          "min": 0.0,
+          "max": 100.0,
+          "value": 50.0,
+          "name": "volume",
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -68,4 +150,36 @@ with Popover():
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Popover Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Popover" default="Popover">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="title" type="string | null">
+  Optional popover header title
+</ParamField>
+
+<ParamField body="description" type="string | null">
+  Optional popover description
+</ParamField>
+
+<ParamField body="side" type="string | null">
+  Which side to show the popover
+</ParamField>
+
 </Card>

@@ -10,9 +10,9 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Radio buttons let users select exactly one option from a set of choices.
 
-<ComponentPreview auto json={`{"type":"RadioGroup","name":"size","children":[{"type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}`} />
-
-```python Radio Group Example
+<ComponentPreview auto json={`{"type":"RadioGroup","name":"size","children":[{"type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Radio,
     RadioGroup,
@@ -23,14 +23,48 @@ with RadioGroup(name="size"):
     Radio(value="md", label="Medium", checked=True)
     Radio(value="lg", label="Large")
 ```
+```json Protocol
+{
+  "type": "RadioGroup",
+  "name": "size",
+  "children": [
+    {
+      "type": "Radio",
+      "value": "sm",
+      "label": "Small",
+      "checked": false,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Radio",
+      "value": "md",
+      "label": "Medium",
+      "checked": true,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Radio",
+      "value": "lg",
+      "label": "Large",
+      "checked": false,
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Without RadioGroup
 
 Individual radio buttons can be used independently:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Radio","value":"yes","label":"Yes","checked":false,"name":"answer","disabled":false,"required":false},{"type":"Radio","value":"no","label":"No","checked":true,"name":"answer","disabled":false,"required":false}]}`} />
-
-```python Individual Radios
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Radio","value":"yes","label":"Yes","checked":false,"name":"answer","disabled":false,"required":false},{"type":"Radio","value":"no","label":"No","checked":true,"name":"answer","disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Radio,
@@ -40,12 +74,40 @@ with Column(gap=3):
     Radio(value="yes", label="Yes", name="answer")
     Radio(value="no", label="No", name="answer", checked=True)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Radio",
+      "value": "yes",
+      "label": "Yes",
+      "checked": false,
+      "name": "answer",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Radio",
+      "value": "no",
+      "label": "No",
+      "checked": true,
+      "name": "answer",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"RadioGroup","name":"plan","children":[{"type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}`} />
-
-```python Disabled Radio
+<ComponentPreview auto json={`{"type":"RadioGroup","name":"plan","children":[{"type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Radio,
     RadioGroup,
@@ -56,6 +118,40 @@ with RadioGroup(name="plan"):
     Radio(value="pro", label="Pro")
     Radio(value="enterprise", label="Enterprise", disabled=True)
 ```
+```json Protocol
+{
+  "type": "RadioGroup",
+  "name": "plan",
+  "children": [
+    {
+      "type": "Radio",
+      "value": "free",
+      "label": "Free",
+      "checked": true,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Radio",
+      "value": "pro",
+      "label": "Pro",
+      "checked": false,
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Radio",
+      "value": "enterprise",
+      "label": "Enterprise",
+      "checked": false,
+      "disabled": true,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -97,4 +193,32 @@ with RadioGroup(name="plan"):
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Radio Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="RadioGroup" default="RadioGroup">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  Form field name for all radios
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) to execute when selection changes
+</ParamField>
+
 </Card>

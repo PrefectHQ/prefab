@@ -10,9 +10,9 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Separators create visual divisions between content areas.
 
-<ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Content below the separator","type":"P"}]}`} />
-
-```python Separator Example
+<ComponentPreview auto json={`{"type":"Column","children":[{"content":"Content above the separator","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Content below the separator","type":"P"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     P,
@@ -24,12 +24,34 @@ with Column():
     Separator(css_class="my-4")
     P("Content below the separator")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "children": [
+    {
+      "content": "Content above the separator",
+      "type": "P"
+    },
+    {
+      "cssClass": "my-4",
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    {
+      "content": "Content below the separator",
+      "type": "P"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Vertical Orientation
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"Span","content":"Left"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Middle"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Right"}]}`} />
-
-```python Vertical Separator
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"Span","content":"Left"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Middle"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"type":"Span","content":"Right"}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Row,
     Separator,
@@ -43,12 +65,45 @@ with Row(gap=4, css_class="items-center"):
     Separator(orientation="vertical", css_class="h-4")
     Span("Right")
 ```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Span",
+      "content": "Left"
+    },
+    {
+      "cssClass": "h-4",
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    {
+      "type": "Span",
+      "content": "Middle"
+    },
+    {
+      "cssClass": "h-4",
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    {
+      "type": "Span",
+      "content": "Right"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## In Card Content
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Second section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Third section","type":"P"}]}]}`} />
-
-```python Separator in Card
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Second section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Third section","type":"P"}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Card,
     CardContent,
@@ -64,6 +119,42 @@ with Card():
         Separator(css_class="my-4")
         P("Third section")
 ```
+```json Protocol
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "content": "First section",
+          "type": "P"
+        },
+        {
+          "cssClass": "my-4",
+          "type": "Separator",
+          "orientation": "horizontal"
+        },
+        {
+          "content": "Second section",
+          "type": "P"
+        },
+        {
+          "cssClass": "my-4",
+          "type": "Separator",
+          "orientation": "horizontal"
+        },
+        {
+          "content": "Third section",
+          "type": "P"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -76,4 +167,25 @@ with Card():
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply. Useful for controlling height/width and spacing.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Separator Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Separator" default="Separator">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="orientation" type="string" default="horizontal">
+  Separator orientation. One of: `"horizontal"`, `"vertical"`
+</ParamField>
+
 </Card>
