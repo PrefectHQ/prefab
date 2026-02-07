@@ -8,56 +8,66 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Accordions let users expand and collapse sections to reveal content progressively. Each `AccordionItem` has a clickable title and hidden content that appears on expand.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"item-1","children":[{"type":"AccordionItem","title":"Is it accessible?","value":"item-1","children":[{"type":"Text","content":"Yes. It adheres to the WAI-ARIA design pattern."}]},{"type":"AccordionItem","title":"Is it styled?","value":"item-2","children":[{"type":"Text","content":"Yes. It comes with default styles from shadcn/ui."}]},{"type":"AccordionItem","title":"Is it animated?","value":"item-3","children":[{"type":"Text","content":"Yes. It uses CSS animations for smooth transitions."}]}]}`}>
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"What is the Answer?","children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
-with Accordion(default_value="item-1"):
-    with AccordionItem("Is it accessible?", value="item-1"):
-        Text("Yes. It adheres to the WAI-ARIA design pattern.")
-    with AccordionItem("Is it styled?", value="item-2"):
-        Text("Yes. It comes with default styles from shadcn/ui.")
-    with AccordionItem("Is it animated?", value="item-3"):
-        Text("Yes. It uses CSS animations for smooth transitions.")
+with Accordion(open_item=0):
+    with AccordionItem("What is the Answer?"):
+        Text(
+            "Forty-two. The Answer to the Ultimate "
+            "Question of Life, the Universe, and "
+            "Everything."
+        )
+    with AccordionItem("What is the Heart of Gold?"):
+        Text(
+            "A starship powered by the Infinite "
+            "Improbability Drive. It can pass through "
+            "every conceivable point in every "
+            "conceivable universe almost simultaneously."
+        )
+    with AccordionItem("What is Deep Thought?"):
+        Text(
+            "A supercomputer designed to find the "
+            "Answer to the Ultimate Question. It took "
+            "7.5 million years to compute: 42."
+        )
 ```
 ```json Protocol
 {
   "type": "Accordion",
   "accordionType": "single",
   "collapsible": true,
-  "defaultValue": "item-1",
+  "defaultValue": "What is the Answer?",
   "children": [
     {
       "type": "AccordionItem",
-      "title": "Is it accessible?",
-      "value": "item-1",
+      "title": "What is the Answer?",
       "children": [
         {
           "type": "Text",
-          "content": "Yes. It adheres to the WAI-ARIA design pattern."
+          "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."
         }
       ]
     },
     {
       "type": "AccordionItem",
-      "title": "Is it styled?",
-      "value": "item-2",
+      "title": "What is the Heart of Gold?",
       "children": [
         {
           "type": "Text",
-          "content": "Yes. It comes with default styles from shadcn/ui."
+          "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."
         }
       ]
     },
     {
       "type": "AccordionItem",
-      "title": "Is it animated?",
-      "value": "item-3",
+      "title": "What is Deep Thought?",
       "children": [
         {
           "type": "Text",
-          "content": "Yes. It uses CSS animations for smooth transitions."
+          "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."
         }
       ]
     }
@@ -71,18 +81,35 @@ with Accordion(default_value="item-1"):
 
 Set `accordion_type="multiple"` to allow more than one section open at a time.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"children":[{"type":"AccordionItem","title":"Section One","value":"s1","children":[{"type":"Text","content":"First section content."}]},{"type":"AccordionItem","title":"Section Two","value":"s2","children":[{"type":"Text","content":"Second section content."}]},{"type":"AccordionItem","title":"Section Three","value":"s3","children":[{"type":"Text","content":"Third section content."}]}]}`}>
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["Who is Arthur Dent?","Who is Ford Prefect?"],"children":[{"type":"AccordionItem","title":"Who is Arthur Dent?","children":[{"type":"Text","content":"An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."}]},{"type":"AccordionItem","title":"Who is Ford Prefect?","children":[{"type":"Text","content":"A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."}]},{"type":"AccordionItem","title":"What is the Guide?","children":[{"type":"Text","content":"A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
-with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
-    with AccordionItem("Section One", value="s1"):
-        Text("First section content.")
-    with AccordionItem("Section Two", value="s2"):
-        Text("Second section content.")
-    with AccordionItem("Section Three", value="s3"):
-        Text("Third section content.")
+with Accordion(
+    accordion_type="multiple",
+    open_item=[0, 1],
+):
+    with AccordionItem("Who is Arthur Dent?"):
+        Text(
+            "An ordinary human from Earth, unexpectedly "
+            "swept into the cosmos when his planet is "
+            "demolished to make way for a hyperspace "
+            "bypass."
+        )
+    with AccordionItem("Who is Ford Prefect?"):
+        Text(
+            "A researcher for the Hitchhiker's Guide "
+            "to the Galaxy, and Arthur's best friend. "
+            "He's from a small planet somewhere in the "
+            "vicinity of Betelgeuse."
+        )
+    with AccordionItem("What is the Guide?"):
+        Text(
+            "A digital reference with the words "
+            "'Don't Panic' written in large, friendly "
+            "letters on the cover."
+        )
 ```
 ```json Protocol
 {
@@ -90,40 +117,37 @@ with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
   "accordionType": "multiple",
   "collapsible": true,
   "defaultValue": [
-    "s1",
-    "s2"
+    "Who is Arthur Dent?",
+    "Who is Ford Prefect?"
   ],
   "children": [
     {
       "type": "AccordionItem",
-      "title": "Section One",
-      "value": "s1",
+      "title": "Who is Arthur Dent?",
       "children": [
         {
           "type": "Text",
-          "content": "First section content."
+          "content": "An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."
         }
       ]
     },
     {
       "type": "AccordionItem",
-      "title": "Section Two",
-      "value": "s2",
+      "title": "Who is Ford Prefect?",
       "children": [
         {
           "type": "Text",
-          "content": "Second section content."
+          "content": "A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."
         }
       ]
     },
     {
       "type": "AccordionItem",
-      "title": "Section Three",
-      "value": "s3",
+      "title": "What is the Guide?",
       "children": [
         {
           "type": "Text",
-          "content": "Third section content."
+          "content": "A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."
         }
       ]
     }
@@ -136,16 +160,16 @@ with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
 ## API Reference
 
 <Card icon="code" title="Accordion Parameters">
+<ParamField body="open_item" type="int | str | list[int | str] | None" default="None">
+  Initially expanded item(s). Pass an index to select by position, or a string to match by title. Use a list for `accordion_type="multiple"`.
+</ParamField>
+
 <ParamField body="accordion_type" type="str" default="single">
   `"single"` allows one item open at a time; `"multiple"` allows several.
 </ParamField>
 
 <ParamField body="collapsible" type="bool" default="True">
   Whether the open item can be collapsed (single mode only).
-</ParamField>
-
-<ParamField body="default_value" type="str | list[str] | None" default="None">
-  Initially expanded item(s). Pass a string for single mode, a list for multiple.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

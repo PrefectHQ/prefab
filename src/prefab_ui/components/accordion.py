@@ -4,7 +4,7 @@ Example::
 
     from prefab_ui.components import Accordion, AccordionItem, Text
 
-    with Accordion():
+    with Accordion(open_item=0):
         with AccordionItem("Getting Started"):
             Text("Install with pip install fastmcp")
         with AccordionItem("Configuration"):
@@ -55,7 +55,7 @@ class Accordion(ContainerComponent):
 
     Example::
 
-        with Accordion(accordion_type="multiple"):
+        with Accordion(open_item=0):
             with AccordionItem("Section 1"):
                 Text("Content 1")
             with AccordionItem("Section 2"):
@@ -72,8 +72,35 @@ class Accordion(ContainerComponent):
         default=True,
         description="Whether items can be fully collapsed (single mode)",
     )
+    open_item: int | str | list[int | str] | None = Field(
+        default=None,
+        exclude=True,
+        description=(
+            "Initially expanded item(s). Pass an int for index-based "
+            "selection, or a str to match by value/title."
+        ),
+    )
     default_value: str | list[str] | None = Field(
         default=None,
         alias="defaultValue",
-        description="Initially expanded item(s)",
+        description="Initially expanded item(s) by value. Prefer open_item.",
     )
+
+    def _resolve_item(self, item: int | str) -> str:
+        if isinstance(item, int):
+            child = self.children[item]
+            if not isinstance(child, AccordionItem):
+                raise TypeError(
+                    f"Child at index {item} is {type(child).__name__}, "
+                    f"not AccordionItem"
+                )
+            return child.value or child.title
+        return item
+
+    def to_json(self) -> dict[str, Any]:
+        if self.open_item is not None and self.default_value is None:
+            if isinstance(self.open_item, list):
+                self.default_value = [self._resolve_item(i) for i in self.open_item]
+            else:
+                self.default_value = self._resolve_item(self.open_item)
+        return super().to_json()
