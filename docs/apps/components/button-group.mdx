@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Button groups join related actions into a single visual unit. Borders between buttons merge, and only the outer corners stay rounded.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"ButtonGroup","orientation":"horizontal","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
@@ -164,24 +166,12 @@ with ButtonGroup():
 
 ## Protocol Reference
 
-<Card icon="braces" title="ButtonGroup Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="ButtonGroup" default="ButtonGroup">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="orientation" type="string" default="horizontal">
-  Layout direction: horizontal or vertical. One of: `"horizontal"`, `"vertical"`
-</ParamField>
-
-</Card>
+```json ButtonGroup
+{
+  "type": "ButtonGroup",
+  "orientation?": "horizontal | vertical",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [Button]
+}
+```
