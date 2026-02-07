@@ -43,6 +43,10 @@ playground:
     uv run docs/_preview-build/generate_playground_bundle.py
     uv run docs/_preview-build/extract_examples.py
 
+# Generate per-component protocol reference pages from Pydantic models
+generate-protocol-ref:
+    uv run docs/_preview-build/generate_protocol_pages.py
+
 # Check for broken links in documentation
 docs-broken-links:
     cd docs && npx --yes mint@latest broken-links
