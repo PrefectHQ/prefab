@@ -17,6 +17,8 @@ Usage::
 
 from __future__ import annotations
 
+import importlib.metadata
+
 from prefab_ui.actions import (
     Action,
     ActionBase,
@@ -40,6 +42,11 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.response import UIResponse
+
+try:
+    __version__ = importlib.metadata.version("prefab-ui")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "0.0.0-dev"
 
 __all__ = [
     "Action",

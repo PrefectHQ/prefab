@@ -1,17 +1,49 @@
 ---
-title: Component Playground
+title: Playground
 sidebarTitle: Playground
-description: Build and preview components interactively in your browser.
+description: Build and preview Prefab components interactively in your browser.
 icon: play
 mode: wide
 ---
 
-Write Python (or raw JSON) on the left and see the rendered result on the right. The playground runs Python directly in your browser via [Pyodide](https://pyodide.org) — no backend required.
-
-Use the **example selector** in the toolbar to load any example from the docs and start experimenting.
+The playground is a split-pane editor where you write Python on the left and see the rendered result on the right. Python executes directly in your browser via [Pyodide](https://pyodide.org) — no backend required.
 
 <iframe
   src="http://localhost:3333/playground.html"
   style={{ width: "100%", height: "700px", border: "1px solid var(--border-color, #e5e7eb)", borderRadius: "8px" }}
   sandbox="allow-scripts allow-same-origin"
 />
+
+## Features
+
+**Example selector** — Click the "Examples..." button in the toolbar to browse categorized examples from the docs. Type to filter by name or category.
+
+**JSON mode** — Click the `{ }` icon in the toolbar to switch to JSON editing. The editor seeds itself with the compiled JSON from your Python code, letting you tweak the wire format directly. Switching back to Python discards JSON edits (with a confirmation if you've made changes).
+
+**Shareable URLs** — The playground encodes your Python code in the URL hash. Copy the URL to share a snippet with someone, or bookmark it to return later.
+
+**Dark / light mode** — Toggle with the sun/moon icon. The editor uses `snazzy-light` and `dark-plus` themes to match the docs.
+
+## Running Locally
+
+The playground is bundled with the Prefab CLI:
+
+```bash
+pip install prefab-ui
+prefab playground
+```
+
+This serves the playground at `http://localhost:5174/playground.html` and opens your browser. Use `--port` to pick a different port:
+
+```bash
+prefab playground --port 8080
+```
+
+## CLI Reference
+
+```bash
+prefab playground          # launch the playground
+prefab playground -p 8080  # custom port
+prefab version             # print the installed version
+prefab --help              # show all commands
+```
