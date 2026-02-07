@@ -8,7 +8,9 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Labels provide accessible text descriptions for form fields.
 
-## Basic Usage They can contain text directly or wrap other components.
+## Basic Usage
+
+Labels can contain text directly or wrap other components.
 
 <ComponentPreview auto json={`{"type":"Label","text":"Email address"}`}>
 <CodeGroup>
@@ -71,16 +73,16 @@ with Column(gap=2):
 
 <Card icon="code" title="Label Parameters">
 
-<ParamField path="text" type="str | None">
-  Label text content. Supports `{{ field }}` interpolation.
+<ParamField body="text" type="str | None" default="None">
+  Label text content. Can be passed as a positional argument.
 </ParamField>
 
-<ParamField path="for_id" type="str | None">
+<ParamField body="for_id" type="str | None" default="None">
   ID of the associated form field element.
 </ParamField>
 
-<ParamField path="css_class" type="str | None">
-  Additional CSS classes to apply.
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
 </Card>
 

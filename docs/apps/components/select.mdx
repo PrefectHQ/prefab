@@ -252,50 +252,50 @@ with Column(gap=2):
 ## API Reference
 
 <Card icon="code" title="Select Parameters">
-
-<ParamField path="placeholder" type="str | None">
-  Placeholder text when no option is selected. Supports `{{ field }}` interpolation.
+<ParamField body="placeholder" type="str | None" default="None">
+  Placeholder text shown when no option is selected.
 </ParamField>
 
-<ParamField path="name" type="str | None">
+<ParamField body="name" type="str | None" default="None">
   Form field name for submission.
 </ParamField>
 
-<ParamField path="size" type="'sm' | 'default'" default="'default'">
-  Select size.
+<ParamField body="size" type="str" default="default">
+  Select size: `"default"`, `"sm"`.
 </ParamField>
 
-<ParamField path="disabled" type="bool" default="False">
-  Whether the select is disabled.
+<ParamField body="disabled" type="bool" default="False">
+  Whether the select is non-interactive.
 </ParamField>
 
-<ParamField path="required" type="bool" default="False">
-  Whether a selection is required.
+<ParamField body="required" type="bool" default="False">
+  Whether a selection is required for form submission.
 </ParamField>
 
-<ParamField path="css_class" type="str | None">
-  Additional CSS classes to apply.
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectOption Parameters">
+<ParamField body="value" type="str" required>
+  Option value for form submission.
 </ParamField>
 
-
-<ParamField path="value" type="str">
-  Option value for form submission. Supports `{{ field }}` interpolation.
+<ParamField body="label" type="str" required>
+  Display text shown to the user.
 </ParamField>
 
-<ParamField path="label" type="str">
-  Display text for the option. Supports `{{ field }}` interpolation.
-</ParamField>
-
-<ParamField path="selected" type="bool" default="False">
+<ParamField body="selected" type="bool" default="False">
   Whether this option is initially selected.
 </ParamField>
 
-<ParamField path="disabled" type="bool" default="False">
-  Whether this option is disabled.
+<ParamField body="disabled" type="bool" default="False">
+  Whether this option is non-interactive.
 </ParamField>
 
-<ParamField path="css_class" type="str | None">
-  Additional CSS classes to apply.
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
 </ParamField>
 </Card>
 

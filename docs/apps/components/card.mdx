@@ -292,24 +292,6 @@ with Grid(columns=3, gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-## Data Interpolation
-
-Card sub-components that accept text (`CardTitle`, `CardDescription`) support `{{ field }}` placeholders:
-
-```python Card Interpolation
-from prefab_ui.components import (
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-)
-
-with Card():
-    with CardHeader():
-        CardTitle("{{ project_name }}")
-        CardDescription("Created by {{ author }}")
-```
-
 ## API Reference
 
 <Card icon="code" title="Card Parameters">
@@ -326,7 +308,7 @@ with Card():
 
 <Card icon="code" title="CardTitle Parameters">
 <ParamField body="content" type="str | None" default="None">
-  Title text. Can be passed as a positional argument. Supports `{{ field }}` interpolation. Alternatively, use child components instead of a string.
+  Title text. Can be passed as a positional argument. Alternatively, use child components instead of a string.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -336,7 +318,7 @@ with Card():
 
 <Card icon="code" title="CardDescription Parameters">
 <ParamField body="content" type="str | None" default="None">
-  Description text. Can be passed as a positional argument. Supports `{{ field }}` interpolation. Alternatively, use child components.
+  Description text. Can be passed as a positional argument. Alternatively, use child components.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

@@ -281,29 +281,6 @@ with Table():
 </CodeGroup>
 </ComponentPreview>
 
-## Data Interpolation
-
-Cell content supports `{{ field }}` placeholders for rendering server data:
-
-```python Table Interpolation
-from prefab_ui.components import (
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-)
-
-with Table():
-    with TableBody():
-        with TableRow():
-            TableCell("{{ name }}")
-            TableCell("{{ email }}")
-```
-
-<Tip>
-For large datasets with sorting, filtering, and pagination, use [DataTable](/apps/components/data-table) instead.
-</Tip>
-
 ## API Reference
 
 <Card icon="code" title="Table Parameters">
@@ -314,7 +291,7 @@ For large datasets with sorting, filtering, and pagination, use [DataTable](/app
 
 <Card icon="code" title="TableHead / TableCell Parameters">
 <ParamField body="content" type="str | None">
-  Text content. Can be passed as a positional argument. Supports `{{ field }}` interpolation. Alternatively, use child components for rich content.
+  Text content. Can be passed as a positional argument. Alternatively, use child components for rich content.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
