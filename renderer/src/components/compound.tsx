@@ -129,31 +129,25 @@ export function PrefabTabs({
 // ── Accordion ──────────────────────────────────────────────────────────
 
 interface PrefabAccordionProps {
-  accordionType?: "single" | "multiple";
+  multiple?: boolean;
   collapsible?: boolean;
-  defaultValue?: string | string[];
+  defaultValues?: string[];
   className?: string;
   _panels: ChildPanel[];
 }
 
 export function PrefabAccordion({
-  accordionType = "single",
+  multiple = false,
   collapsible = true,
-  defaultValue,
+  defaultValues,
   className,
   _panels,
 }: PrefabAccordionProps) {
-  if (accordionType === "multiple") {
+  if (multiple) {
     return (
       <ShadcnAccordion
         type="multiple"
-        defaultValue={
-          Array.isArray(defaultValue)
-            ? defaultValue
-            : defaultValue
-              ? [defaultValue]
-              : undefined
-        }
+        defaultValue={defaultValues}
         className={className}
       >
         {_panels.map((panel) => (
@@ -170,9 +164,7 @@ export function PrefabAccordion({
     <ShadcnAccordion
       type="single"
       collapsible={collapsible}
-      defaultValue={
-        typeof defaultValue === "string" ? defaultValue : defaultValue?.[0]
-      }
+      defaultValue={defaultValues?.[0]}
       className={className}
     >
       {_panels.map((panel) => (

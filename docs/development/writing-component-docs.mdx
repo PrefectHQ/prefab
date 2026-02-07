@@ -1,0 +1,108 @@
+---
+title: Writing Component Docs
+description: Guide for authoring and maintaining component documentation pages.
+icon: pen-to-square
+---
+
+Guide for authoring and maintaining component documentation pages.
+
+## Page Structure
+
+Every component doc page should follow this structure, with h2 headers for
+each section so they appear in the table of contents:
+
+1. **Frontmatter** — title, description, icon
+2. **Intro paragraph** — one sentence explaining what the component does
+3. **## Basic Usage** — simplest working example, no extra options
+4. **## [Feature sections]** — one h2 per notable feature/variant
+5. **## API Reference** — Python parameters (Card/ParamField format)
+6. **## Protocol Reference** — wire format as inline JSON schema
+
+The page title does not appear in the TOC, so the first h2 is the user's
+entry point. Always start with "Basic Usage" rather than dropping straight
+into a preview.
+
+## Component Previews
+
+Previews are generated from the Python code block — never edit the JSON
+or CodeGroup wrapper by hand.
+
+**Workflow:**
+1. Write or edit the Python code inside `<ComponentPreview auto>`
+2. Run `uv run docs/_preview-build/render_previews.py`
+3. The script executes the Python, serializes the component tree, and
+   rebuilds the JSON prop and Protocol tab automatically
+
+**Python code style:**
+- Target ~80 character line width
+- Use implicit string concatenation for long text:
+  ```python
+  Text(
+      "A long sentence that would exceed "
+      "the line width limit."
+  )
+  ```
+- Wrap function arguments when they don't fit on one line
+
+## API Reference
+
+Use Card + ParamField for the Python API. Lead with the most important
+parameters:
+
+```mdx
+<Card icon="code" title="ComponentName Parameters">
+<ParamField body="param_name" type="str" default="value">
+  Description of the parameter.
+</ParamField>
+</Card>
+```
+
+## Protocol Reference
+
+Use inline JSON schema blocks rather than Card/ParamField. This is more
+compact and reads like the actual wire format:
+
+```mdx
+## Protocol Reference
+
+\`\`\`json ComponentName
+{
+  "type": "ComponentName",
+  "requiredProp": "string (required)",
+  "optionalProp?": "string",
+  "boolProp?": false,
+  "arrayProp?": ["string"],
+  "children": [ChildType]
+}
+\`\`\`
+```
+
+Conventions:
+- Append `?` to optional property names
+- Show default values inline for bools and enums
+- Use `["string"]` for typed arrays
+- Use `[ChildType]` to reference other component schemas
+- Required props get `(required)` after the type
+
+## Example Content
+
+Use Hitchhiker's Guide to the Galaxy references for placeholder content
+across all component examples. Avoid generic "Lorem ipsum" or marketing
+copy about the component itself (e.g. "Yes. It adheres to WAI-ARIA.").
+
+## Keeping Docs in Sync
+
+Component docs must be updated whenever the Python API or wire protocol
+changes. The key files to keep aligned:
+
+- `src/prefab_ui/components/<name>.py` — Python model (source of truth)
+- `renderer/src/schemas/<name>.ts` — Zod schema (wire format)
+- `renderer/src/components/compound.tsx` — renderer (reads wire props)
+- `docs/apps/components/<name>.mdx` — documentation
+- `schemas/fixtures/components/<Name>.json` — test fixtures
+
+After any protocol change, run:
+```bash
+uv run docs/_preview-build/render_previews.py
+uv run pytest tests/ -x
+```

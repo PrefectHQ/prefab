@@ -4,7 +4,7 @@ Example::
 
     from prefab_ui.components import Accordion, AccordionItem, Text
 
-    with Accordion():
+    with Accordion(default_open_items=0):
         with AccordionItem("Getting Started"):
             Text("Install with pip install fastmcp")
         with AccordionItem("Configuration"):
@@ -55,7 +55,7 @@ class Accordion(ContainerComponent):
 
     Example::
 
-        with Accordion(accordion_type="multiple"):
+        with Accordion(multiple=True, default_open_items=[0, 1]):
             with AccordionItem("Section 1"):
                 Text("Content 1")
             with AccordionItem("Section 2"):
@@ -63,17 +63,45 @@ class Accordion(ContainerComponent):
     """
 
     type: Literal["Accordion"] = "Accordion"
-    accordion_type: Literal["single", "multiple"] = Field(
-        default="single",
-        alias="accordionType",
-        description="Whether one or multiple items can be open simultaneously",
+    multiple: bool = Field(
+        default=False,
+        description="Allow multiple items to be open simultaneously",
     )
     collapsible: bool = Field(
         default=True,
         description="Whether items can be fully collapsed (single mode)",
     )
-    default_value: str | list[str] | None = Field(
+    default_open_items: int | str | list[int | str] | None = Field(
         default=None,
-        alias="defaultValue",
-        description="Initially expanded item(s)",
+        exclude=True,
+        description=(
+            "Initially expanded item(s). Pass an int for index-based "
+            "selection, or a str to match by value/title."
+        ),
     )
+    default_values: list[str] | None = Field(
+        default=None,
+        alias="defaultValues",
+        description="Wire format for default_open_items (always an array).",
+    )
+
+    def _resolve_item(self, item: int | str) -> str:
+        if isinstance(item, int):
+            child = self.children[item]
+            if not isinstance(child, AccordionItem):
+                raise TypeError(
+                    f"Child at index {item} is {type(child).__name__}, "
+                    f"not AccordionItem"
+                )
+            return child.value or child.title
+        return item
+
+    def to_json(self) -> dict[str, Any]:
+        if self.default_open_items is not None and self.default_values is None:
+            items = (
+                self.default_open_items
+                if isinstance(self.default_open_items, list)
+                else [self.default_open_items]
+            )
+            self.default_values = [self._resolve_item(i) for i in items]
+        return super().to_json()
