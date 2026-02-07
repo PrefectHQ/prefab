@@ -18,9 +18,12 @@ export default defineConfig({
   build: {
     outDir: "dist",
     rollupOptions: {
-      input: path.resolve(__dirname, "renderer.html"),
+      input: {
+        renderer: path.resolve(__dirname, "renderer.html"),
+        playground: path.resolve(__dirname, "playground.html"),
+      },
       output: {
-        entryFileNames: "assets/renderer.js",
+        entryFileNames: "assets/[name].js",
         assetFileNames: "assets/[name][extname]",
       },
     },
