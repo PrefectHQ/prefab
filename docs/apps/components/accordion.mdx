@@ -84,7 +84,7 @@ Use `default_open_items` to expand items when the accordion first renders. Pass 
 
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"What is the Answer?","children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python {3}
 from prefab_ui.components import Accordion, AccordionItem, Text
 
 with Accordion(default_open_items=0):
@@ -151,16 +151,29 @@ with Accordion(default_open_items=0):
 </CodeGroup>
 </ComponentPreview>
 
+You can also assign a stable `value` to items and reference them by name, which is useful when item order might change:
+
+```python
+with Accordion(default_open_items="faq"):
+    with AccordionItem("FAQ", value="faq"):
+        Text("Frequently asked questions...")
+    with AccordionItem("Contact"):
+        Text("Get in touch...")
+```
+
 ## Multiple Open
 
 Set `multiple=True` to allow more than one section open at a time.
 
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["Who is Arthur Dent?","Who is Ford Prefect?"],"children":[{"type":"AccordionItem","title":"Who is Arthur Dent?","children":[{"type":"Text","content":"An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."}]},{"type":"AccordionItem","title":"Who is Ford Prefect?","children":[{"type":"Text","content":"A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."}]},{"type":"AccordionItem","title":"What is the Guide?","children":[{"type":"Text","content":"A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python {4}
 from prefab_ui.components import Accordion, AccordionItem, Text
 
-with Accordion(multiple=True, default_open_items=[0, 1]):
+with Accordion(
+    multiple=True,
+    default_open_items=[0, 1]
+):
     with AccordionItem("Who is Arthur Dent?"):
         Text(
             "An ordinary human from Earth, unexpectedly "
