@@ -6,9 +6,9 @@ icon: toggle-on
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
-
 Switches provide a visual toggle for binary states, offering an alternative to checkboxes.
+
+## Basic Usage
 
 <ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`}>
 <CodeGroup>
@@ -180,45 +180,17 @@ with Column(gap=3):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Switch Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Switch" default="Switch">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="label" type="string | null">
-  Label text (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="checked" type="boolean" default="false">
-  Whether switch is on
-</ParamField>
-
-<ParamField body="size" type="string" default="default">
-  Switch size (sm, default). One of: `"sm"`, `"default"`
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  Form field name
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether switch is disabled
-</ParamField>
-
-<ParamField body="required" type="boolean" default="false">
-  Whether switch is required
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) to execute when toggled
-</ParamField>
-
-</Card>
+```json Switch
+{
+  "type": "Switch",
+  "label?": "string",
+  "checked?": false,
+  "size?": "default | sm",
+  "name?": "string",
+  "disabled?": false,
+  "required?": false,
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
