@@ -142,12 +142,14 @@ class TestUse:
     def test_css_class_on_wrapper(self) -> None:
         result = Use("card", css_class="mt-4").to_json()
         assert result["type"] == "State"
+        assert result["state"] == {}
         assert result["cssClass"] == "mt-4"
         assert result["children"] == [{"$ref": "card"}]
 
     def test_visible_when_on_wrapper(self) -> None:
         result = Use("card", visible_when="show").to_json()
         assert result["type"] == "State"
+        assert result["state"] == {}
         assert result["visibleWhen"] == "show"
 
     def test_overrides_with_base_fields(self) -> None:

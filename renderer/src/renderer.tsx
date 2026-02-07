@@ -251,7 +251,7 @@ function filterInternalProps(
 export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // $ref resolution: inline a defined template before any other processing
   if ("$ref" in node && typeof node["$ref"] === "string") {
-    const defs = (scope._defs as Record<string, ComponentNode>) || {};
+    const defs = (scope.$defs as Record<string, ComponentNode>) || {};
     const refName = node["$ref"] as string;
     const defNode = defs[refName];
     if (!defNode) {
@@ -259,14 +259,14 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       return null;
     }
     // Circular ref guard
-    const resolving = (scope._resolving as Set<string>) || new Set<string>();
+    const resolving = (scope.$resolving as Set<string>) || new Set<string>();
     if (resolving.has(refName)) {
       console.warn(`[Prefab] Circular $ref: "${refName}"`);
       return null;
     }
     const newScope = {
       ...scope,
-      _resolving: new Set([...resolving, refName]),
+      $resolving: new Set([...resolving, refName]),
     };
     return (
       <RenderNode node={defNode} scope={newScope} state={state} app={app} />
@@ -528,6 +528,6 @@ export function RenderTree({
   state: StateStore;
   app: App | null;
 }) {
-  const scope: Record<string, unknown> = defs ? { _defs: defs } : {};
+  const scope: Record<string, unknown> = defs ? { $defs: defs } : {};
   return <RenderNode node={tree} scope={scope} state={state} app={app} />;
 }

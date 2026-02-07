@@ -69,9 +69,11 @@ class Use(Component):
         if not needs_wrapper:
             return ref
 
-        wrapper: dict[str, Any] = {"type": "State", "children": [ref]}
-        if self.overrides:
-            wrapper["state"] = self.overrides
+        wrapper: dict[str, Any] = {
+            "type": "State",
+            "state": self.overrides or {},
+            "children": [ref],
+        }
         if self.css_class:
             wrapper["cssClass"] = self.css_class
         if self.visible_when:
