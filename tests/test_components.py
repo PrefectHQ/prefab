@@ -196,7 +196,9 @@ class TestContextManagerNesting:
 
 class TestFormComponentSerialization:
     def test_input_serializes(self):
-        j = Input(input_type="email", placeholder="you@example.com", name="email").to_json()
+        j = Input(
+            input_type="email", placeholder="you@example.com", name="email"
+        ).to_json()
         assert j["type"] == "Input"
         assert j["inputType"] == "email"
         assert j["placeholder"] == "you@example.com"

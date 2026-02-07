@@ -16,16 +16,13 @@ import json
 import re
 from pathlib import Path
 
-src_dir = (
-    Path(__file__).resolve().parents[2] / "src" / "prefab_ui" / "components"
-)
+src_dir = Path(__file__).resolve().parents[2] / "src" / "prefab_ui" / "components"
 build_dir = Path(__file__).resolve().parent
 playground_js = build_dir.parent / "playground.js"
 preview_css = build_dir.parent / "css" / "preview.css"
 
 # Build the bundle: module path -> source code
 bundle: dict[str, str] = {
-    "prefab_ui/__init__.py": "",
     "prefab_ui/__init__.py": "",
 }
 

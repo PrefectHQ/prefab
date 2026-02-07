@@ -30,9 +30,7 @@ USERS_DB = [
 
 def _search_users_response(q: str = "") -> dict[str, Any]:
     """Build a UIResponse.to_json() dict for the search_users tool."""
-    results = (
-        [u for u in USERS_DB if q.lower() in u["name"].lower()] if q else USERS_DB
-    )
+    results = [u for u in USERS_DB if q.lower() in u["name"].lower()] if q else USERS_DB
     with Column() as view:
         Input(name="query", placeholder="Search...")
         Button(
@@ -82,15 +80,11 @@ class TestSimulatorBasic:
         async def handler(name: str, arguments: dict[str, Any]) -> ActionResult:
             if name == "tool_a":
                 return ActionResult(
-                    content=UIResponse(
-                        state={"from": "a"}, view=Text("A")
-                    ).to_json()
+                    content=UIResponse(state={"from": "a"}, view=Text("A")).to_json()
                 )
             if name == "tool_b":
                 return ActionResult(
-                    content=UIResponse(
-                        state={"from": "b"}, view=Text("B")
-                    ).to_json()
+                    content=UIResponse(state={"from": "b"}, view=Text("B")).to_json()
                 )
             return ActionResult(is_error=True, error_text="unknown")
 
@@ -143,9 +137,7 @@ class TestSimulatorFind:
                 Button(label="A")
                 Button(label="B")
                 Button(label="C")
-            return ActionResult(
-                content=UIResponse(view=view).to_json()
-            )
+            return ActionResult(content=UIResponse(view=view).to_json())
 
         sim = Simulator(handler)
         await sim.invoke("show_buttons")
@@ -192,9 +184,7 @@ class TestSimulatorActions:
             with Column() as view:
                 Button(label="Show", on_click=SetState("visible", True))
             return ActionResult(
-                content=UIResponse(
-                    view=view, state={"visible": False}
-                ).to_json()
+                content=UIResponse(view=view, state={"visible": False}).to_json()
             )
 
         sim = Simulator(handler)
@@ -210,9 +200,7 @@ class TestSimulatorActions:
             with Column() as view:
                 Button(label="Toggle", on_click=ToggleState("show"))
             return ActionResult(
-                content=UIResponse(
-                    view=view, state={"show": False}
-                ).to_json()
+                content=UIResponse(view=view, state={"show": False}).to_json()
             )
 
         sim = Simulator(handler)
@@ -277,9 +265,7 @@ class TestSimulatorActions:
         async def handler(name: str, arguments: dict[str, Any]) -> ActionResult:
             if name == "save_item":
                 return ActionResult(
-                    content=UIResponse(
-                        state={"saved": True}, view=Text("ok")
-                    ).to_json()
+                    content=UIResponse(state={"saved": True}, view=Text("ok")).to_json()
                 )
             if name == "show_save":
                 return ActionResult(
@@ -311,9 +297,7 @@ class TestSimulatorActions:
             with Form(on_submit=ShowToast("Submitted!")) as form:
                 Input(name="name", placeholder="Name")
                 Button("Submit")
-            return ActionResult(
-                content=UIResponse(view=form).to_json()
-            )
+            return ActionResult(content=UIResponse(view=form).to_json())
 
         sim = Simulator(handler)
         await sim.invoke("contact_form")
@@ -375,9 +359,7 @@ class TestSimulatorError:
     async def test_error_in_on_error_callback(self):
         async def handler(name: str, arguments: dict[str, Any]) -> ActionResult:
             if name == "failing_tool":
-                return ActionResult(
-                    is_error=True, error_text="Something went wrong"
-                )
+                return ActionResult(is_error=True, error_text="Something went wrong")
             if name == "show_button":
                 return ActionResult(
                     content=UIResponse(
@@ -430,9 +412,7 @@ class TestSimulatorError:
     async def test_error_not_set_on_success(self):
         async def handler(name: str, arguments: dict[str, Any]) -> ActionResult:
             if name == "ok_tool":
-                return ActionResult(
-                    content=UIResponse(state={"ok": True}).to_json()
-                )
+                return ActionResult(content=UIResponse(state={"ok": True}).to_json())
             if name == "show_ui":
                 return ActionResult(
                     content=UIResponse(
