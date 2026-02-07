@@ -32,6 +32,9 @@ import { useStateStore } from "./state";
 /** Reserved key prefix in structuredContent (renderer internals). */
 const RESERVED_PREFIX = "_prefab_";
 
+/** Protocol versions this renderer understands. */
+const SUPPORTED_VERSIONS = new Set(["0.1"]);
+
 /** Extract state from structuredContent (everything except reserved keys). */
 function extractState(
   structured: Record<string, unknown> | undefined,
@@ -68,6 +71,18 @@ export function App() {
     (result: { structuredContent?: Record<string, unknown> }) => {
       const structured = result.structuredContent;
       if (!structured) return;
+
+      // Check protocol version (warn but don't block rendering)
+      const version = structured._prefab_version as string | undefined;
+      if (!version) {
+        console.warn("[Prefab] Missing _prefab_version in structuredContent");
+      } else if (!SUPPORTED_VERSIONS.has(version)) {
+        console.warn(
+          `[Prefab] Unrecognized protocol version "${version}" (supported: ${[
+            ...SUPPORTED_VERSIONS,
+          ].join(", ")})`,
+        );
+      }
 
       // Extract component tree and state from structuredContent
       const view = structured._prefab_view as ComponentNode | undefined;
