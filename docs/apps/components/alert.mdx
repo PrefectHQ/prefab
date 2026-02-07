@@ -8,9 +8,9 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Alerts draw attention to important information. They pair a title with a description and use color variants to signal intent.
 
-<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]}`} />
-
-```python Alert Example
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Alert,
     AlertTitle,
@@ -21,14 +21,32 @@ with Alert():
     AlertTitle("Heads up!")
     AlertDescription("You can add components to your app using the CLI.")
 ```
+```json Protocol
+{
+  "type": "Alert",
+  "variant": "default",
+  "children": [
+    {
+      "type": "AlertTitle",
+      "content": "Heads up!"
+    },
+    {
+      "type": "AlertDescription",
+      "content": "You can add components to your app using the CLI."
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Variants
 
 Five variants cover different semantic intents — from neutral information to success confirmations and error states.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Default"},{"type":"AlertDescription","content":"A neutral informational message."}]},{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]},{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Warning"},{"type":"AlertDescription","content":"Your trial expires in 3 days."}]},{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Info"},{"type":"AlertDescription","content":"A new version is available for download."}]}]}`} />
-
-```python Alert Variants
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Default"},{"type":"AlertDescription","content":"A neutral informational message."}]},{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]},{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Warning"},{"type":"AlertDescription","content":"Your trial expires in 3 days."}]},{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Info"},{"type":"AlertDescription","content":"A new version is available for download."}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Alert,
     AlertDescription,
@@ -57,14 +75,94 @@ with Column(gap=4):
         AlertTitle("Info")
         AlertDescription("A new version is available for download.")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Alert",
+      "variant": "default",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Default"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "A neutral informational message."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "destructive",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Error"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your session has expired. Please log in again."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "success",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Success"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your changes have been saved successfully."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "warning",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Warning"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your trial expires in 3 days."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "info",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Info"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "A new version is available for download."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Without Title
 
 For simple messages, you can use just a description:
 
-<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Your changes have been saved."}]}`} />
-
-```python Alert No Title
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Your changes have been saved."}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Alert,
     AlertDescription,
@@ -73,14 +171,28 @@ from prefab_ui.components import (
 with Alert():
     AlertDescription("Your changes have been saved.")
 ```
+```json Protocol
+{
+  "type": "Alert",
+  "variant": "default",
+  "children": [
+    {
+      "type": "AlertDescription",
+      "content": "Your changes have been saved."
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## In Context
 
 Alerts work well inside cards or at the top of a page to communicate status:
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deployment"}]},{"type":"CardContent","children":[{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Maintenance Window"},{"type":"AlertDescription","content":"Deployments are paused from 2:00\\u20134:00 AM UTC."}]},{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Latest Deploy"},{"type":"AlertDescription","content":"v2.1.0 deployed successfully 3 hours ago."}]}]}]}]}`} />
-
-```python Alert in Card
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deployment"}]},{"type":"CardContent","children":[{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Maintenance Window"},{"type":"AlertDescription","content":"Deployments are paused from 2:00\\u20134:00 AM UTC."}]},{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Latest Deploy"},{"type":"AlertDescription","content":"v2.1.0 deployed successfully 3 hours ago."}]}]}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -104,6 +216,63 @@ with Card():
                 AlertTitle("Latest Deploy")
                 AlertDescription("v2.1.0 deployed successfully 3 hours ago.")
 ```
+```json Protocol
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "content": "Deployment"
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "type": "Column",
+          "gap": 4,
+          "children": [
+            {
+              "type": "Alert",
+              "variant": "default",
+              "children": [
+                {
+                  "type": "AlertTitle",
+                  "content": "Maintenance Window"
+                },
+                {
+                  "type": "AlertDescription",
+                  "content": "Deployments are paused from 2:00\u20134:00 AM UTC."
+                }
+              ]
+            },
+            {
+              "type": "Alert",
+              "variant": "default",
+              "children": [
+                {
+                  "type": "AlertTitle",
+                  "content": "Latest Deploy"
+                },
+                {
+                  "type": "AlertDescription",
+                  "content": "v2.1.0 deployed successfully 3 hours ago."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 
@@ -151,4 +320,66 @@ with Alert(variant="{{ severity }}"):
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Alert Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Alert" default="Alert">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="variant" type="string" default="default">
+  Visual variant: default or destructive. One of: `"default"`, `"destructive"`, `"success"`, `"warning"`, `"info"`
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="AlertTitle Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="AlertTitle" default="AlertTitle">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Title text with `{{ field }}` interpolation
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="AlertDescription Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="AlertDescription" default="AlertDescription">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Description text with `{{ field }}` interpolation
+</ParamField>
+
 </Card>

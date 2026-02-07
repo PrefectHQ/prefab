@@ -38,7 +38,7 @@ const DEFAULT_PYTHON = `from prefab_ui.components import (
 with Card():
     with CardHeader():
         CardTitle("Welcome to Prefab")
-        CardDescription("Build UIs in Python, rendered in React.")
+        CardDescription("The agentic frontend framework that even humans can use.")
     with CardContent():
         with Column(gap=3):
             Input(name="name", placeholder="Your name...")

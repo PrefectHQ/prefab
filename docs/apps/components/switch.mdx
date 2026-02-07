@@ -10,31 +10,55 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Switches provide a visual toggle for binary states, offering an alternative to checkboxes.
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`} />
-
-```python Switch Example
+<ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Switch
 
 Switch(label="Enable notifications")
 ```
+```json Protocol
+{
+  "type": "Switch",
+  "label": "Enable notifications",
+  "checked": false,
+  "size": "default",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Checked State
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}`} />
-
-```python Checked Switch
+<ComponentPreview auto json={`{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Switch
 
 Switch(label="Dark mode", checked=True)
 ```
+```json Protocol
+{
+  "type": "Switch",
+  "label": "Dark mode",
+  "checked": true,
+  "size": "default",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Sizes
 
 Switches come in two sizes:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}`} />
-
-```python Switch Sizes
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Switch,
@@ -44,12 +68,38 @@ with Column(gap=4):
     Switch(label="Default size", checked=True)
     Switch(label="Small size", size="sm", checked=True)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Switch",
+      "label": "Default size",
+      "checked": true,
+      "size": "default",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Small size",
+      "checked": true,
+      "size": "sm",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`} />
-
-```python Disabled Switch
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Switch,
@@ -60,6 +110,40 @@ with Column(gap=3):
     Switch(label="Disabled off", disabled=True)
     Switch(label="Disabled on", checked=True, disabled=True)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Switch",
+      "label": "Enabled switch",
+      "checked": false,
+      "size": "default",
+      "disabled": false,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Disabled off",
+      "checked": false,
+      "size": "default",
+      "disabled": true,
+      "required": false
+    },
+    {
+      "type": "Switch",
+      "label": "Disabled on",
+      "checked": true,
+      "size": "default",
+      "disabled": true,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -92,4 +176,49 @@ with Column(gap=3):
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Switch Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Switch" default="Switch">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="label" type="string | null">
+  Label text (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="checked" type="boolean" default="false">
+  Whether switch is on
+</ParamField>
+
+<ParamField body="size" type="string" default="default">
+  Switch size (sm, default). One of: `"sm"`, `"default"`
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  Form field name
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether switch is disabled
+</ParamField>
+
+<ParamField body="required" type="boolean" default="false">
+  Whether switch is required
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) to execute when toggled
+</ParamField>
+
 </Card>

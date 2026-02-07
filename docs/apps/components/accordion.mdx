@@ -8,9 +8,9 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Accordions let users expand and collapse sections to reveal content progressively. Each `AccordionItem` has a clickable title and hidden content that appears on expand.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"item-1","children":[{"type":"AccordionItem","title":"Is it accessible?","value":"item-1","children":[{"type":"Text","content":"Yes. It adheres to the WAI-ARIA design pattern."}]},{"type":"AccordionItem","title":"Is it styled?","value":"item-2","children":[{"type":"Text","content":"Yes. It comes with default styles from shadcn/ui."}]},{"type":"AccordionItem","title":"Is it animated?","value":"item-3","children":[{"type":"Text","content":"Yes. It uses CSS animations for smooth transitions."}]}]}`} />
-
-```python Accordion Example
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"item-1","children":[{"type":"AccordionItem","title":"Is it accessible?","value":"item-1","children":[{"type":"Text","content":"Yes. It adheres to the WAI-ARIA design pattern."}]},{"type":"AccordionItem","title":"Is it styled?","value":"item-2","children":[{"type":"Text","content":"Yes. It comes with default styles from shadcn/ui."}]},{"type":"AccordionItem","title":"Is it animated?","value":"item-3","children":[{"type":"Text","content":"Yes. It uses CSS animations for smooth transitions."}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
 with Accordion(default_value="item-1"):
@@ -21,14 +21,59 @@ with Accordion(default_value="item-1"):
     with AccordionItem("Is it animated?", value="item-3"):
         Text("Yes. It uses CSS animations for smooth transitions.")
 ```
+```json Protocol
+{
+  "type": "Accordion",
+  "accordionType": "single",
+  "collapsible": true,
+  "defaultValue": "item-1",
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "Is it accessible?",
+      "value": "item-1",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It adheres to the WAI-ARIA design pattern."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Is it styled?",
+      "value": "item-2",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It comes with default styles from shadcn/ui."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Is it animated?",
+      "value": "item-3",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Yes. It uses CSS animations for smooth transitions."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Multiple Open
 
 Set `accordion_type="multiple"` to allow more than one section open at a time.
 
-<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"children":[{"type":"AccordionItem","title":"Section One","value":"s1","children":[{"type":"Text","content":"First section content."}]},{"type":"AccordionItem","title":"Section Two","value":"s2","children":[{"type":"Text","content":"Second section content."}]},{"type":"AccordionItem","title":"Section Three","value":"s3","children":[{"type":"Text","content":"Third section content."}]}]}`} />
-
-```python Accordion Multiple
+<ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["s1","s2"],"children":[{"type":"AccordionItem","title":"Section One","value":"s1","children":[{"type":"Text","content":"First section content."}]},{"type":"AccordionItem","title":"Section Two","value":"s2","children":[{"type":"Text","content":"Second section content."}]},{"type":"AccordionItem","title":"Section Three","value":"s3","children":[{"type":"Text","content":"Third section content."}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
 with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
@@ -39,6 +84,54 @@ with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
     with AccordionItem("Section Three", value="s3"):
         Text("Third section content.")
 ```
+```json Protocol
+{
+  "type": "Accordion",
+  "accordionType": "multiple",
+  "collapsible": true,
+  "defaultValue": [
+    "s1",
+    "s2"
+  ],
+  "children": [
+    {
+      "type": "AccordionItem",
+      "title": "Section One",
+      "value": "s1",
+      "children": [
+        {
+          "type": "Text",
+          "content": "First section content."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Section Two",
+      "value": "s2",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Second section content."
+        }
+      ]
+    },
+    {
+      "type": "AccordionItem",
+      "title": "Section Three",
+      "value": "s3",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Third section content."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -68,4 +161,62 @@ with Accordion(accordion_type="multiple", default_value=["s1", "s2"]):
 <ParamField body="value" type="str | None" default="None">
   Unique value identifying this item. Defaults to the title.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Accordion Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Accordion" default="Accordion">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="accordionType" type="string" default="single">
+  Whether one or multiple items can be open simultaneously. One of: `"single"`, `"multiple"`
+</ParamField>
+
+<ParamField body="collapsible" type="boolean" default="true">
+  Whether items can be fully collapsed (single mode)
+</ParamField>
+
+<ParamField body="defaultValue" type="string | Action[] | null">
+  Initially expanded item(s)
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="AccordionItem Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="AccordionItem" default="AccordionItem">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Accordion trigger label
+</ParamField>
+
+<ParamField body="value" type="string | null">
+  Unique value (defaults to title)
+</ParamField>
+
 </Card>

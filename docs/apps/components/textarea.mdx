@@ -10,19 +10,29 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Textareas provide multi-line text input for comments, descriptions, and other longer content.
 
-<ComponentPreview auto json={`{"type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}`} />
-
-```python Textarea Example
+<ComponentPreview auto json={`{"type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Textarea
 
 Textarea(placeholder="Enter your message...")
 ```
+```json Protocol
+{
+  "type": "Textarea",
+  "placeholder": "Enter your message...",
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Labels
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}`} />
-
-```python Textarea with Label
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Label,
@@ -36,12 +46,33 @@ with Column(gap=2):
         rows=5,
     )
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Feedback"
+    },
+    {
+      "type": "Textarea",
+      "placeholder": "Tell us what you think...",
+      "rows": 5,
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Initial Value
 
-<ComponentPreview auto json={`{"type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false}`} />
-
-```python Textarea with Value
+<ComponentPreview auto json={`{"type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Textarea
 
 Textarea(
@@ -49,16 +80,37 @@ Textarea(
     rows=4,
 )
 ```
+```json Protocol
+{
+  "type": "Textarea",
+  "value": "This is some initial content that can be edited.",
+  "rows": 4,
+  "disabled": false,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}`} />
-
-```python Disabled Textarea
+<ComponentPreview auto json={`{"type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Textarea
 
 Textarea(placeholder="This textarea is disabled", disabled=True)
 ```
+```json Protocol
+{
+  "type": "Textarea",
+  "placeholder": "This textarea is disabled",
+  "disabled": true,
+  "required": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -91,4 +143,57 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Textarea Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Textarea" default="Textarea">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="placeholder" type="string | null">
+  Placeholder text (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="value" type="string | null">
+  Textarea value (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  Form field name
+</ParamField>
+
+<ParamField body="rows" type="number | null">
+  Number of visible text rows
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether textarea is disabled
+</ParamField>
+
+<ParamField body="required" type="boolean" default="false">
+  Whether textarea is required
+</ParamField>
+
+<ParamField body="minLength" type="number | null">
+  Minimum character length
+</ParamField>
+
+<ParamField body="maxLength" type="number | null">
+  Maximum character length
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) to execute when value changes
+</ParamField>
+
 </Card>

@@ -8,21 +8,30 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 DatePicker combines a trigger button with a popover calendar. The button displays the selected date (or placeholder text when empty), and clicking it opens a calendar for selection. It's the most user-friendly way to collect a single date.
 
-<ComponentPreview auto height="400px" json={`{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}`} />
-
-```python DatePicker Example
+<ComponentPreview auto height="400px" json={`{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import DatePicker
 
 DatePicker(placeholder="Select deadline", name="deadline")
 ```
+```json Protocol
+{
+  "type": "DatePicker",
+  "placeholder": "Select deadline",
+  "name": "deadline"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Displaying the Selection
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview auto height="400px" json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`} />
-
-```python DatePicker with Display
+<ComponentPreview auto height="400px" json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     DatePicker,
@@ -37,14 +46,46 @@ with Column(gap=3):
         DatePicker(placeholder="Select deadline", name="deadline")
         Text("{{ deadline | date:long }}", bold=True)
 ```
+```json Protocol
+{
+  "_tree": {
+    "type": "Column",
+    "gap": 3,
+    "children": [
+      {
+        "cssClass": "items-center",
+        "type": "Row",
+        "gap": 4,
+        "children": [
+          {
+            "type": "DatePicker",
+            "placeholder": "Select deadline",
+            "name": "deadline"
+          },
+          {
+            "type": "Text",
+            "content": "{{ deadline | date:long }}",
+            "bold": true
+          }
+        ]
+      }
+    ]
+  },
+  "_state": {
+    "deadline": "2025-06-15T12:00:00.000Z"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## In a Form
 
 DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`} />
-
-```python DatePicker Form
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
     Card,
@@ -70,6 +111,68 @@ with Card():
     with CardFooter():
         Button("Create Event")
 ```
+```json Protocol
+{
+  "type": "Card",
+  "children": [
+    {
+      "type": "CardHeader",
+      "children": [
+        {
+          "type": "CardTitle",
+          "content": "New Event"
+        }
+      ]
+    },
+    {
+      "type": "CardContent",
+      "children": [
+        {
+          "type": "Column",
+          "gap": 3,
+          "children": [
+            {
+              "type": "Label",
+              "text": "Event Name"
+            },
+            {
+              "type": "Input",
+              "inputType": "text",
+              "placeholder": "Team standup",
+              "name": "eventName",
+              "disabled": false,
+              "required": false
+            },
+            {
+              "type": "Label",
+              "text": "Date"
+            },
+            {
+              "type": "DatePicker",
+              "placeholder": "Pick a date",
+              "name": "eventDate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "CardFooter",
+      "children": [
+        {
+          "type": "Button",
+          "label": "Create Event",
+          "variant": "default",
+          "size": "default",
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -89,4 +192,33 @@ with Card():
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="DatePicker Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="DatePicker" default="DatePicker">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="placeholder" type="string" default="Pick a date">
+  Button text when no date is selected
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  State key for the selected date (ISO string)
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) when date changes
+</ParamField>
+
 </Card>

@@ -10,21 +10,29 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Labels provide accessible text descriptions for form fields. They can contain text directly or wrap other components.
 
-<ComponentPreview auto json={`{"type":"Label","text":"Email address"}`} />
-
-```python Label Example
+<ComponentPreview auto json={`{"type":"Label","text":"Email address"}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Label
 
 Label("Email address")
 ```
+```json Protocol
+{
+  "type": "Label",
+  "text": "Email address"
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## With Form Fields
 
 Labels are typically paired with inputs and other form controls:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}`} />
-
-```python Label with Input
+<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Input,
@@ -35,6 +43,29 @@ with Column(gap=2):
     Label("Username", for_id="username")
     Input(placeholder="Enter username", name="username")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 2,
+  "children": [
+    {
+      "type": "Label",
+      "text": "Username",
+      "forId": "username"
+    },
+    {
+      "type": "Input",
+      "inputType": "text",
+      "placeholder": "Enter username",
+      "name": "username",
+      "disabled": false,
+      "required": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -51,4 +82,32 @@ with Column(gap=2):
 <ParamField path="css_class" type="str | None">
   Additional CSS classes to apply.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Label Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Label" default="Label">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="text" type="string | null">
+  Label text (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="forId" type="string | null">
+  ID of the associated form field
+</ParamField>
+
 </Card>

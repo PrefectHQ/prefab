@@ -8,21 +8,30 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Progress bars show how far along a process is. They fill from left to right as `value` approaches `max`.
 
-<ComponentPreview auto json={`{"type":"Progress","value":60.0,"max":100}`} />
-
-```python Progress Example
+<ComponentPreview auto json={`{"type":"Progress","value":60.0,"max":100}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Progress
 
 Progress(value=60)
 ```
+```json Protocol
+{
+  "type": "Progress",
+  "value": 60.0,
+  "max": 100
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Custom Max
 
 By default `max` is 100, but you can set it to any positive number. The renderer normalizes the value to a percentage automatically.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}`} />
-
-```python Progress Custom Max
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Column, Label, Progress
 
 with Column(gap=4):
@@ -33,14 +42,54 @@ with Column(gap=4):
         Label("75%")
         Progress(value=75)
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "3 of 5 steps"
+        },
+        {
+          "type": "Progress",
+          "value": 3.0,
+          "max": 5.0
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "75%"
+        },
+        {
+          "type": "Progress",
+          "value": 75.0,
+          "max": 100
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Custom Colors
 
 Use `indicator_class` to change the progress bar color:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}`} />
-
-```python Progress Colors
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import Column, Label, Progress
 
 with Column(gap=4):
@@ -54,14 +103,72 @@ with Column(gap=4):
         Label("Tasks Complete")
         Progress(value=100, indicator_class="bg-green-500")
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Storage Used"
+        },
+        {
+          "type": "Progress",
+          "value": 85.0,
+          "max": 100,
+          "indicatorClass": "bg-red-500"
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Upload Progress"
+        },
+        {
+          "type": "Progress",
+          "value": 45.0,
+          "max": 100,
+          "indicatorClass": "bg-blue-500"
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Label",
+          "text": "Tasks Complete"
+        },
+        {
+          "type": "Progress",
+          "value": 100.0,
+          "max": 100,
+          "indicatorClass": "bg-green-500"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Dynamic Progress with Labels
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"_state":{"progress":0.65}}`} />
-
-```python Dynamic Progress
+<ComponentPreview auto json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"_state":{"progress":0.65}}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Column,
     Progress,
@@ -79,6 +186,50 @@ with Column(gap=3):
     Progress(value="{{ progress }}", max=1)
     Slider(name="progress", min=0, max=1, step=0.01, value=0.65)
 ```
+```json Protocol
+{
+  "_tree": {
+    "type": "Column",
+    "gap": 3,
+    "children": [
+      {
+        "cssClass": "justify-between items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Text",
+            "content": "Upload progress"
+          },
+          {
+            "type": "Text",
+            "content": "{{ progress | percent }}",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ progress }}",
+        "max": 1.0
+      },
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 1.0,
+        "value": 0.65,
+        "step": 0.01,
+        "name": "progress",
+        "disabled": false
+      }
+    ]
+  },
+  "_state": {
+    "progress": 0.65
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Data Interpolation
 
@@ -108,4 +259,33 @@ Progress(value="{{ completion_pct }}")
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Progress Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Progress" default="Progress">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="value" type="number | string" default="0">
+  Current progress value (supports `{{ field }}` interpolation)
+</ParamField>
+
+<ParamField body="max" type="number" default="100">
+  Maximum value (progress is value/max)
+</ParamField>
+
+<ParamField body="indicatorClass" type="string | null">
+  Tailwind classes for the indicator bar (e.g. 'bg-green-500')
+</ParamField>
+
 </Card>
