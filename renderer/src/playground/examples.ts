@@ -136,7 +136,7 @@ with Grid(columns=3, gap=4):
 
 with Accordion():
     with AccordionItem(title="What is Prefab?"):
-        Text("A Python DSL for building UIs that compile to React.")
+        Text("A JSON component format that renders to real interactive frontends.")
     with AccordionItem(title="How does it work?"):
         Text("Write Python, serialize to JSON, render with React.")
     with AccordionItem(title="Is it open source?"):
