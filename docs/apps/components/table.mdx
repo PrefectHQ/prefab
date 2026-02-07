@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Tables display structured data using HTML table semantics. They're composed from sub-components — `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, and `TableCaption` — that map directly to their HTML counterparts.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Table","children":[{"type":"TableCaption","content":"Recent invoices"},{"type":"TableHeader","children":[{"type":"TableRow","children":[{"type":"TableHead","content":"Invoice"},{"type":"TableHead","content":"Status"},{"type":"TableHead","content":"Method"},{"cssClass":"text-right","type":"TableHead","content":"Amount"}]}]},{"type":"TableBody","children":[{"type":"TableRow","children":[{"cssClass":"font-medium","type":"TableCell","content":"INV-001"},{"type":"TableCell","content":"Paid"},{"type":"TableCell","content":"Credit Card"},{"cssClass":"text-right","type":"TableCell","content":"$250.00"}]},{"type":"TableRow","children":[{"cssClass":"font-medium","type":"TableCell","content":"INV-002"},{"type":"TableCell","content":"Pending"},{"type":"TableCell","content":"PayPal"},{"cssClass":"text-right","type":"TableCell","content":"$150.00"}]},{"type":"TableRow","children":[{"cssClass":"font-medium","type":"TableCell","content":"INV-003"},{"type":"TableCell","content":"Paid"},{"type":"TableCell","content":"Bank Transfer"},{"cssClass":"text-right","type":"TableCell","content":"$350.00"}]}]}]}`}>
 <CodeGroup>
 ```python Python
@@ -328,61 +330,30 @@ For large datasets with sorting, filtering, and pagination, use [DataTable](/app
 
 ## Protocol Reference
 
-<Card icon="braces" title="Table Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Table
+{
+  "type": "Table",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [TableCaption | TableHeader | TableBody]
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
+```json TableHead / TableCell
+{
+  "type": "TableHead | TableCell",
+  "content?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children?": []
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Table" default="Table">
-  Component discriminator.
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="TableHead / TableCell Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="TableCell" default="TableCell">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string | null">
-  Cell text (alternative to children)
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="TableCaption Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="TableCaption" default="TableCaption">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Caption text
-</ParamField>
-
-</Card>
+```json TableCaption
+{
+  "type": "TableCaption",
+  "content": "string (required)",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
