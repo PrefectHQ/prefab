@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Progress bars show how far along a process is. They fill from left to right as `value` approaches `max`.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Progress","value":60.0,"max":100}`}>
 <CodeGroup>
 ```python Python
@@ -263,29 +265,13 @@ Progress(value="{{ completion_pct }}")
 
 ## Protocol Reference
 
-<Card icon="braces" title="Progress Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Progress" default="Progress">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="value" type="number | string" default="0">
-  Current progress value (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="max" type="number" default="100">
-  Maximum value (progress is value/max)
-</ParamField>
-
-<ParamField body="indicatorClass" type="string | null">
-  Tailwind classes for the indicator bar (e.g. 'bg-green-500')
-</ParamField>
-
-</Card>
+```json Progress
+{
+  "type": "Progress",
+  "value?": "number | string",
+  "max?": 100,
+  "indicatorClass?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

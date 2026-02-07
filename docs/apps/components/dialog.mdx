@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Dialogs display content in a modal overlay that focuses user attention. Like Popover, the first child becomes the trigger and the remaining children form the dialog body. An optional `title` and `description` render in the dialog header.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Dialog","title":"Edit Profile","description":"Make changes to your profile here. Click save when you're done.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"dialogName","disabled":false,"required":false},{"type":"Label","text":"Username"},{"type":"Input","inputType":"text","placeholder":"@username","name":"dialogUsername","disabled":false,"required":false}]},{"cssClass":"justify-end","type":"Row","gap":2,"children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
 ```python Python
@@ -137,28 +139,13 @@ with Dialog(
 
 ## Protocol Reference
 
-<Card icon="braces" title="Dialog Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Dialog" default="Dialog">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string | null">
-  Dialog header title
-</ParamField>
-
-<ParamField body="description" type="string | null">
-  Dialog header description
-</ParamField>
-
-</Card>
+```json Dialog
+{
+  "type": "Dialog",
+  "title?": "string",
+  "description?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

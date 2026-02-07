@@ -6,9 +6,9 @@ icon: square-caret-down
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
-
 Select dropdowns let users pick one option from a list.
+
+## Basic Usage
 
 <ComponentPreview auto json={`{"type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}`}>
 <CodeGroup>
@@ -301,44 +301,28 @@ with Column(gap=2):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Select Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Select
+{
+  "type": "Select",
+  "placeholder?": "string",
+  "name?": "string",
+  "size?": "default | sm",
+  "disabled?": false,
+  "required?": false,
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [SelectOption]
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Select" default="Select">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="placeholder" type="string | null">
-  Placeholder text (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  Form field name
-</ParamField>
-
-<ParamField body="size" type="string" default="default">
-  Select size (sm, default). One of: `"sm"`, `"default"`
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether select is disabled
-</ParamField>
-
-<ParamField body="required" type="boolean" default="false">
-  Whether select is required
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) to execute when selection changes
-</ParamField>
-
-</Card>
+```json SelectOption
+{
+  "type": "SelectOption",
+  "value": "string (required)",
+  "label": "string (required)",
+  "selected?": false,
+  "disabled?": false,
+  "cssClass?": "string"
+}
+```

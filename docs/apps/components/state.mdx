@@ -93,23 +93,12 @@ with State(variant="secondary"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="State Protocol">
-<ParamField body="type" type="State" default="State">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="state" type="object" required>
-  Dictionary of interpolation values scoped to children.
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-</Card>
+```json State
+{
+  "type": "State",
+  "state": "object (required)",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

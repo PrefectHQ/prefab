@@ -243,6 +243,20 @@ with Accordion(
 </CodeGroup>
 </ComponentPreview>
 
+## Data Interpolation
+
+Accordion item titles and content support `{{ field }}` placeholders for dynamic content:
+
+```python Interpolation Example
+from prefab_ui.components import Accordion, AccordionItem, Text
+
+with Accordion():
+    with AccordionItem("{{ user.status }}"):
+        Text("Last updated: {{ last_updated }}")
+    with AccordionItem("FAQ"):
+        Text("{{ faq_content }}")
+```
+
 ## API Reference
 
 <Card icon="code" title="Accordion Parameters">

@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Typography components give you semantic heading and body text styles that follow shadcn/ui conventions — proper font sizes, weights, tracking, and color that automatically adapts to dark mode. Every component accepts a content string as a positional argument and supports `{{ field }}` interpolation.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}`}>
 <CodeGroup>
 ```python Python
@@ -417,71 +419,32 @@ Available formats:
 
 ## Protocol Reference
 
-<Card icon="braces" title="Text Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Text / H1 / H2 / H3 / H4 / P / Lead / Large / Small / Muted / BlockQuote / InlineCode
+{
+  "type": "Text | H1 | H2 | H3 | H4 | P | Lead | Large | Small | Muted | BlockQuote | InlineCode",
+  "content": "string (required)",
+  "bold?": "boolean",
+  "italic?": "boolean",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
+```json Heading
+{
+  "type": "Heading",
+  "content": "string (required)",
+  "level?": "1 | 2 | 3 | 4",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
 
-<ParamField body="type" type="Text" default="Text">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Text content with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="bold" type="boolean | null">
-  Render text in bold
-</ParamField>
-
-<ParamField body="italic" type="boolean | null">
-  Render text in italic
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="Heading Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Heading" default="Heading">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Heading text with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="level" type="number" default="1">
-  Heading level (1=h1, 4=h4). One of: `"1"`, `"2"`, `"3"`, `"4"`
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="Markdown Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Markdown" default="Markdown">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Markdown content with `{{ field }}` interpolation
-</ParamField>
-
-</Card>
+```json Markdown
+{
+  "type": "Markdown",
+  "content": "string (required)",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

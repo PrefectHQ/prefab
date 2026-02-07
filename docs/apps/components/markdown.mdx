@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The Markdown component renders full markdown content — headings, bold, italic, lists, links, code blocks, tables, and blockquotes. Use it for rich text blocks where the content is naturally markdown-shaped.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Markdown","content":"\\n# Release Notes\\n\\nVersion **2.5.0** brings several improvements:\\n\\n## New Features\\n\\n- **Dark mode** with automatic system detection\\n- Keyboard shortcuts for *all* actions\\n- Inline \`code\` formatting support\\n\\n## Migration Guide\\n\\n> Update your config file before upgrading.\\n\\n| Setting | Old | New |\\n|---------|-----|-----|\\n| theme | \`light\` | \`auto\` |\\n| timeout | \`30s\` | \`60s\` |\\n"}`}>
 <CodeGroup>
 ```python Python
@@ -73,21 +75,11 @@ Markdown("""
 
 ## Protocol Reference
 
-<Card icon="braces" title="Markdown Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Markdown" default="Markdown">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Markdown content with `{{ field }}` interpolation
-</ParamField>
-
-</Card>
+```json Markdown
+{
+  "type": "Markdown",
+  "content": "string (required)",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

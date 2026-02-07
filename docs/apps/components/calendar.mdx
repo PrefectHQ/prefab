@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The Calendar component renders a month view for selecting dates. It supports single date, multiple date, and date range selection. Selected dates are stored in client state as ISO strings.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Calendar","mode":"single","name":"selectedDate"}`}>
 <CodeGroup>
 ```python Python
@@ -182,29 +184,13 @@ The label updates instantly when the user clicks a date. The `date:long` format 
 
 ## Protocol Reference
 
-<Card icon="braces" title="Calendar Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Calendar" default="Calendar">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="mode" type="string" default="single">
-  Selection mode: single date, multiple dates, or date range. One of: `"single"`, `"multiple"`, `"range"`
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  State key for storing the selected date (ISO string)
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) when selection changes
-</ParamField>
-
-</Card>
+```json Calendar
+{
+  "type": "Calendar",
+  "mode?": "single | multiple | range",
+  "name?": "string",
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

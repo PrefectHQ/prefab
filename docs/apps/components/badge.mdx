@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Badges are small, pill-shaped labels for status indicators, counts, and categories. They're inline elements that sit naturally alongside text or within cards.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Badge","label":"New Feature","variant":"default"}`}>
 <CodeGroup>
 ```python Python
@@ -138,25 +140,12 @@ Badge("{{ count }} items", variant="secondary")
 
 ## Protocol Reference
 
-<Card icon="braces" title="Badge Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Badge" default="Badge">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="label" type="string" required>
-  Badge text with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="variant" type="string" default="default">
-  Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info. One of: `"default"`, `"secondary"`, `"destructive"`, `"success"`, `"warning"`, `"info"`, `"outline"`, `"ghost"`
-</ParamField>
-
-</Card>
+```json Badge
+{
+  "type": "Badge",
+  "label": "string (required)",
+  "variant?": "default | secondary | destructive | outline | ghost | success | warning | info",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

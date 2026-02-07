@@ -9,6 +9,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Buttons trigger actions and communicate intent. The `variant` parameter signals what kind of action the button performs, while `size` controls its dimensions.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Button","label":"Save Changes","variant":"default","size":"default","disabled":false}`}>
 <CodeGroup>
 ```python Python
@@ -343,37 +345,15 @@ Button("View {{ name }}'s profile")
 
 ## Protocol Reference
 
-<Card icon="braces" title="Button Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Button" default="Button">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="label" type="string" required>
-  Button text with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="variant" type="string" default="default">
-  Visual variant: default, destructive, outline, secondary, ghost, link. One of: `"default"`, `"destructive"`, `"outline"`, `"secondary"`, `"ghost"`, `"link"`, `"success"`, `"warning"`, `"info"`
-</ParamField>
-
-<ParamField body="size" type="string" default="default">
-  Size: default, sm, lg, icon. One of: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether the button is disabled
-</ParamField>
-
-<ParamField body="onClick" type="Action | Action[] | null">
-  Action(s) to execute when clicked
-</ParamField>
-
-</Card>
+```json Button
+{
+  "type": "Button",
+  "label": "string (required)",
+  "variant?": "default | destructive | outline | secondary | ghost | link | success | warning | info",
+  "size?": "default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg",
+  "disabled?": false,
+  "onClick?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

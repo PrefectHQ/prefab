@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Code blocks display source code or configuration with automatic syntax highlighting. Set the `language` parameter to enable language-aware highlighting for Python, JavaScript, TypeScript, SQL, Bash, JSON, HTML, CSS, YAML, and Markdown.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Code","content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python"}`}>
 <CodeGroup>
 ```python Python
@@ -99,25 +101,12 @@ Code("{{ source }}", language="{{ language }}")
 
 ## Protocol Reference
 
-<Card icon="braces" title="Code Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Code" default="Code">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Code content with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="language" type="string | null">
-  Syntax highlighting language
-</ParamField>
-
-</Card>
+```json Code
+{
+  "type": "Code",
+  "content": "string (required)",
+  "language?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

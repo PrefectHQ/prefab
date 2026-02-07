@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `ForEach` is a control-flow component that iterates over a list in your data, rendering its children once per item. Each iteration receives the list item as the interpolation context, so `{{ field }}` placeholders resolve to that item's values.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"_tree":{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]},"users":[{"name":"Alice","role":"Admin","email":"alice@example.com"},{"name":"Bob","role":"Editor","email":"bob@example.com"},{"name":"Carol","role":"Viewer","email":"carol@example.com"}]}`}>
 <CodeGroup>
 ```python Python
@@ -182,24 +184,12 @@ with ForEach("projects"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="ForEach Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="ForEach" default="ForEach">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="key" type="string" required>
-  Data field containing the list to iterate over
-</ParamField>
-
-</Card>
+```json ForEach
+{
+  "type": "ForEach",
+  "key": "string (required)",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

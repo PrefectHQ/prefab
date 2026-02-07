@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Popovers display rich content in a floating panel when users click a trigger element. The first child becomes the trigger; all remaining children become the panel content.
 
+## Basic Usage
+
 <ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Dimensions","description":"Set the dimensions for the layer.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Width"},{"type":"Input","inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false},{"type":"Label","text":"Height"},{"type":"Input","inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false}]}]}`}>
 <CodeGroup>
 ```python Python
@@ -154,32 +156,14 @@ with Popover():
 
 ## Protocol Reference
 
-<Card icon="braces" title="Popover Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Popover" default="Popover">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string | null">
-  Optional popover header title
-</ParamField>
-
-<ParamField body="description" type="string | null">
-  Optional popover description
-</ParamField>
-
-<ParamField body="side" type="string | null">
-  Which side to show the popover
-</ParamField>
-
-</Card>
+```json Popover
+{
+  "type": "Popover",
+  "title?": "string",
+  "description?": "string",
+  "side?": "top | right | bottom | left",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

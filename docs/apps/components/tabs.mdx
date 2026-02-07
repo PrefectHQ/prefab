@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Tabs organize content into panels that users switch between by clicking triggers. Each `Tab` child defines a trigger label and the content shown when that tab is active.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Tabs","defaultValue":"account","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"accountName","disabled":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Current Password"},{"type":"Input","inputType":"password","name":"currentPw","disabled":false,"required":false},{"type":"Label","text":"New Password"},{"type":"Input","inputType":"password","name":"newPw","disabled":false,"required":false}]}]}]}]}]}`}>
 <CodeGroup>
 ```python Python
@@ -221,62 +223,26 @@ with Column(gap=4):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Tabs Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Tabs
+{
+  "type": "Tabs",
+  "defaultValue?": "string",
+  "name?": "string",
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [Tab]
+}
+```
 
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Tabs" default="Tabs">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="defaultValue" type="string | null">
-  Value of the initially active tab
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  State key for tracking the active tab
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) when the active tab changes
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="Tab Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Tab" default="Tab">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string" required>
-  Tab trigger label
-</ParamField>
-
-<ParamField body="value" type="string | null">
-  Unique value for this tab (defaults to title)
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Disable this tab
-</ParamField>
-
-</Card>
+```json Tab
+{
+  "type": "Tab",
+  "title": "string (required)",
+  "value?": "string",
+  "disabled?": false,
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```
