@@ -413,3 +413,29 @@ async def settings() -> AppResult:
   State variable name to toggle. Can be passed as a positional argument.
 </ParamField>
 </Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="SetState Protocol">
+<ParamField body="action" type="setState" default="setState">
+</ParamField>
+
+<ParamField body="key" type="string" required>
+  State key to set
+</ParamField>
+
+<ParamField body="value" type="any" default="{{ $event }}">
+  Value to set. Use '{{ $event }}' for the event value.
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="ToggleState Protocol">
+<ParamField body="action" type="toggleState" default="toggleState">
+</ParamField>
+
+<ParamField body="key" type="string" required>
+  State key to toggle
+</ParamField>
+
+</Card>

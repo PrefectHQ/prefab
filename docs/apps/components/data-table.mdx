@@ -218,3 +218,59 @@ DataTable(
   Enable click-to-sort on this column.
 </ParamField>
 </Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="DataTable Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="DataTable" default="DataTable">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="columns" type="array" required>
+  Column definitions
+</ParamField>
+
+<ParamField body="rows" type="Action[] | string">
+  Row data or {{ interpolation }} reference
+</ParamField>
+
+<ParamField body="searchable" type="boolean" default="false">
+  Show search/filter input
+</ParamField>
+
+<ParamField body="paginated" type="boolean" default="false">
+  Show pagination controls
+</ParamField>
+
+<ParamField body="pageSize" type="number" default="10">
+  Rows per page when paginated
+</ParamField>
+
+<ParamField body="caption" type="string | null">
+  Optional table caption
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="DataTableColumn Protocol">
+<ParamField body="key" type="string" required>
+  Data key to display in this column
+</ParamField>
+
+<ParamField body="header" type="string" required>
+  Column header text
+</ParamField>
+
+<ParamField body="sortable" type="boolean" default="false">
+  Enable sorting for this column
+</ParamField>
+
+</Card>

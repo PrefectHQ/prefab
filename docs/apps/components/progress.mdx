@@ -260,3 +260,32 @@ Progress(value="{{ completion_pct }}")
   Additional Tailwind CSS classes.
 </ParamField>
 </Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Progress Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="Progress" default="Progress">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="value" type="number | string" default="0">
+  Current progress value (supports {{ field }} interpolation)
+</ParamField>
+
+<ParamField body="max" type="number" default="100">
+  Maximum value (progress is value/max)
+</ParamField>
+
+<ParamField body="indicatorClass" type="string | null">
+  Tailwind classes for the indicator bar (e.g. 'bg-green-500')
+</ParamField>
+
+</Card>

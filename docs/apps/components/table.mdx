@@ -325,3 +325,64 @@ For large datasets with sorting, filtering, and pagination, use [DataTable](/app
   Caption text. Can be passed as a positional argument.
 </ParamField>
 </Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="Table Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Table" default="Table">
+  Component discriminator.
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="TableHead / TableCell Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="TableCell" default="TableCell">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string | null">
+  Cell text (alternative to children)
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="TableCaption Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+
+<ParamField body="type" type="TableCaption" default="TableCaption">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Caption text
+</ParamField>
+
+</Card>

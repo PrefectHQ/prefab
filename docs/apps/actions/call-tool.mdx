@@ -114,3 +114,23 @@ The `SetState` executes first (instant), then `ToolCall` fires the server reques
   Arguments to pass to the tool. Values support `{{ key }}` interpolation to reference client-side state at call time.
 </ParamField>
 </Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="ToolCall Protocol">
+<ParamField body="action" type="toolCall" default="toolCall">
+</ParamField>
+
+<ParamField body="tool" type="string" required>
+  Name of the server tool to call
+</ParamField>
+
+<ParamField body="arguments" type="object">
+  Arguments to pass. Supports {{ key }} interpolation.
+</ParamField>
+
+<ParamField body="resultKey" type="string | null">
+  State key to store the tool result under
+</ParamField>
+
+</Card>
