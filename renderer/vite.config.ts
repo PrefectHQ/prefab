@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3333,
+    port: parseInt(process.env.RENDERER_PORT || "3333", 10),
     strictPort: true,
     cors: true,
   },

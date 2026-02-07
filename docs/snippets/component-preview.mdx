@@ -42,7 +42,7 @@ export const ComponentPreview = ({ json, height, children }) => {
       <iframe
         ref={iframeRef}
         data-docpreview
-        src={"http://localhost:3333/renderer.html#docpreview:" + encodeURIComponent(json)}
+        src={"http://localhost:" + (typeof window !== "undefined" && window.__PREFAB_RENDERER_PORT__ || 3333) + "/renderer.html#docpreview:" + encodeURIComponent(json)}
         style={{ width: "100%", height: frameHeight + "px", border: "none", display: "block" }}
       />
       <div style={{ marginBottom: "-2rem" }}>{children}</div>
