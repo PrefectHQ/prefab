@@ -1,7 +1,8 @@
-"""Prefab — build dynamic UIs in Python.
+"""Prefab — the agentic frontend framework that even humans can use.
 
-A JSON DSL compiled to React. Transport-agnostic: works with MCP servers,
-REST APIs, or any backend that can return JSON.
+A JSON component format that renders to real interactive frontends.
+Transport-agnostic: works with MCP servers, REST APIs, or any backend
+that can return JSON.
 
 Usage::
 
