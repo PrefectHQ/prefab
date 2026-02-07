@@ -130,7 +130,7 @@ add(Span("x"))
 # Form components
 add(Label("Label"))
 add(Input(placeholder="Input"))
-add(Input(type="email"))
+add(Input(input_type="email"))
 add(Input(disabled=True))
 add(Textarea(placeholder="Textarea"))
 add(Checkbox(label="Checkbox"))

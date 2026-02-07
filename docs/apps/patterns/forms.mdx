@@ -12,7 +12,7 @@ Forms are how Prefab collect structured data from users. You can build forms by 
 
 Combine `Input`, `Label`, and `Button` components to create a form with full control over layout and behavior. Named inputs automatically sync their values to client state, so `{{ name }}` interpolation references the current value of the input with `name="name"`.
 
-<ComponentPreview auto json={`{"gap":3,"type":"Column","children":[{"text":"Name","type":"Label"},{"inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false,"type":"Input"},{"text":"Email","type":"Label"},{"inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false,"type":"Input"},{"label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"callTool","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}}}]}`} />
 
 ```python Manual Form
 from prefab_ui.components import Button, Column, Input, Label
@@ -22,7 +22,7 @@ with Column(gap=3):
     Label("Name")
     Input(name="name", placeholder="Your name")
     Label("Email")
-    Input(name="email", type="email", placeholder="you@example.com")
+    Input(name="email", input_type="email", placeholder="you@example.com")
     Button("Submit", on_click=ToolCall(
         "create_user",
         arguments={"name": "{{ name }}", "email": "{{ email }}"},
@@ -35,7 +35,7 @@ This approach gives you complete control, but it requires wiring up every label,
 
 `Form.from_model()` introspects a Pydantic model and generates a complete form -- labels, inputs, validation constraints, and submit button -- from the model's field definitions.
 
-<ComponentPreview auto json={`{"gap":4,"onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"type":"Form","children":[{"gap":2,"type":"Column","children":[{"text":"Full Name","type":"Label"},{"inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1,"type":"Input"}]},{"gap":2,"type":"Column","children":[{"text":"Email","type":"Label"},{"inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true,"type":"Input"}]},{"gap":2,"type":"Column","children":[{"text":"Message","type":"Label"},{"placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true,"type":"Textarea"}]},{"label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"callTool","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"type":"Button"}]}`} />
+<ComponentPreview auto json={`{"type":"Form","gap":4,"onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}`} />
 
 ```python Form from Model
 from pydantic import BaseModel, Field

@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Popovers display rich content in a floating panel when users click a trigger element. The first child becomes the trigger; all remaining children become the panel content.
 
-<ComponentPreview auto height="340px" json={`{"type":"Div","cssClass":"min-h-[340px]","children":[{"title":"Dimensions","description":"Set the dimensions for the layer.","type":"Popover","children":[{"label":"Open popover","variant":"outline","size":"default","disabled":false,"type":"Button"},{"gap":3,"type":"Column","children":[{"text":"Width","type":"Label"},{"inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false,"type":"Input"},{"text":"Height","type":"Label"},{"inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false,"type":"Input"}]}]}]}`} />
+<ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Dimensions","description":"Set the dimensions for the layer.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Width"},{"type":"Input","inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false},{"type":"Label","text":"Height"},{"type":"Input","inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false}]}]}`} />
 
 ```python Popover Example
 from prefab_ui.components import (
@@ -32,7 +32,7 @@ with Popover(title="Dimensions", description="Set the dimensions for the layer."
 
 Skip the `title` and `description` to render content directly in the panel.
 
-<ComponentPreview auto height="260px" json={`{"type":"Div","cssClass":"min-h-[260px]","children":[{"type":"Popover","children":[{"label":"Settings","variant":"outline","size":"default","disabled":false,"type":"Button"},{"gap":3,"type":"Column","children":[{"text":"Volume","type":"Label"},{"min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false,"type":"Slider"}]}]}]}`} />
+<ComponentPreview auto height="260px" json={`{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Volume"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false}]}]}`} />
 
 ```python Popover No Header
 from prefab_ui.components import (

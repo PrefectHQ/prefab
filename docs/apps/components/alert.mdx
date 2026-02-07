@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Alerts draw attention to important information. They pair a title with a description and use color variants to signal intent.
 
-<ComponentPreview auto json={`{"variant":"default","type":"Alert","children":[{"content":"Heads up!","type":"AlertTitle"},{"content":"You can add components to your app using the CLI.","type":"AlertDescription"}]}`} />
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]}`} />
 
 ```python Alert Example
 from prefab_ui.components import (
@@ -26,7 +26,7 @@ with Alert():
 
 Five variants cover different semantic intents — from neutral information to success confirmations and error states.
 
-<ComponentPreview auto json={`{"gap":4,"type":"Column","children":[{"variant":"default","type":"Alert","children":[{"content":"Default","type":"AlertTitle"},{"content":"A neutral informational message.","type":"AlertDescription"}]},{"variant":"destructive","type":"Alert","children":[{"content":"Error","type":"AlertTitle"},{"content":"Your session has expired. Please log in again.","type":"AlertDescription"}]},{"variant":"success","type":"Alert","children":[{"content":"Success","type":"AlertTitle"},{"content":"Your changes have been saved successfully.","type":"AlertDescription"}]},{"variant":"warning","type":"Alert","children":[{"content":"Warning","type":"AlertTitle"},{"content":"Your trial expires in 3 days.","type":"AlertDescription"}]},{"variant":"info","type":"Alert","children":[{"content":"Info","type":"AlertTitle"},{"content":"A new version is available for download.","type":"AlertDescription"}]}]}`} />
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Default"},{"type":"AlertDescription","content":"A neutral informational message."}]},{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]},{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Warning"},{"type":"AlertDescription","content":"Your trial expires in 3 days."}]},{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Info"},{"type":"AlertDescription","content":"A new version is available for download."}]}]}`} />
 
 ```python Alert Variants
 from prefab_ui.components import (
@@ -62,7 +62,7 @@ with Column(gap=4):
 
 For simple messages, you can use just a description:
 
-<ComponentPreview auto json={`{"variant":"default","type":"Alert","children":[{"content":"Your changes have been saved.","type":"AlertDescription"}]}`} />
+<ComponentPreview auto json={`{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Your changes have been saved."}]}`} />
 
 ```python Alert No Title
 from prefab_ui.components import (
@@ -78,7 +78,7 @@ with Alert():
 
 Alerts work well inside cards or at the top of a page to communicate status:
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"content":"Deployment","type":"CardTitle"}]},{"type":"CardContent","children":[{"gap":4,"type":"Column","children":[{"variant":"default","type":"Alert","children":[{"content":"Maintenance Window","type":"AlertTitle"},{"content":"Deployments are paused from 2:00\\u20134:00 AM UTC.","type":"AlertDescription"}]},{"variant":"default","type":"Alert","children":[{"content":"Latest Deploy","type":"AlertTitle"},{"content":"v2.1.0 deployed successfully 3 hours ago.","type":"AlertDescription"}]}]}]}]}`} />
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deployment"}]},{"type":"CardContent","children":[{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Maintenance Window"},{"type":"AlertDescription","content":"Deployments are paused from 2:00\\u20134:00 AM UTC."}]},{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Latest Deploy"},{"type":"AlertDescription","content":"v2.1.0 deployed successfully 3 hours ago."}]}]}]}]}`} />
 
 ```python Alert in Card
 from prefab_ui.components import (

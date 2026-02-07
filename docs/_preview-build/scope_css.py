@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Read canonical design tokens from theme.css
 _theme_css_path = (
-    Path(__file__).resolve().parents[2] / "src" / "prefab-ui" / "apps" / "theme.css"
+    Path(__file__).resolve().parents[2] / "renderer" / "src" / "theme.css"
 )
 _THEME_CSS = _theme_css_path.read_text()
 

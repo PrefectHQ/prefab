@@ -33,13 +33,8 @@ _CODE_BLOCK_RE = re.compile(
 )
 
 
-def _execute_and_serialize(source: str, min_height: str | None = None) -> str:
-    """Execute a Python snippet and return JSON (tree or {_tree, _state} wrapper).
-
-    If *min_height* is given (e.g. ``"420px"``), the tree is wrapped in a
-    ``Div`` with that ``min-h-[…]`` class so the iframe content is tall enough
-    for overlay components (dialogs, popovers, etc.) to render without clipping.
-    """
+def _execute_and_serialize(source: str) -> str:
+    """Execute a Python snippet and return JSON (tree or {_tree, _state} wrapper)."""
     from typing import Any
 
     from prefab_ui.components.base import (
@@ -95,10 +90,6 @@ def _execute_and_serialize(source: str, min_height: str | None = None) -> str:
 
     tree = roots[0].to_json()
 
-    # Wrap in a min-height container so overlay previews have room to render
-    if min_height:
-        tree = {"type": "Div", "cssClass": f"min-h-[{min_height}]", "children": [tree]}
-
     # Wrap with state/data if any helpers were called
     if initial_state or sample_data:
         wrapper: dict[str, Any] = {"_tree": tree}
@@ -111,25 +102,15 @@ def _execute_and_serialize(source: str, min_height: str | None = None) -> str:
 
 def _render_tag(source: str, height: str | None = None) -> str:
     """Build a new <ComponentPreview auto ... /> tag, preserving height if set."""
-    from html_renderer import render_json as render_html
-
-    json_str = _execute_and_serialize(source, min_height=height)
-
-    # Generate static HTML from the JSON tree
-    tree = json.loads(json_str)
-    # If wrapped with _tree/_state, render just the tree portion
-    html_tree = tree.get("_tree", tree)
-    html_str = render_html(html_tree)
+    json_str = _execute_and_serialize(source)
 
     # Escape for template literal embedding: backslashes first, then backticks.
     # This matters when JSON contains escaped quotes (e.g. nested JSON strings
     # like range calendar state: '{"from":"...","to":"..."}').
     json_str = json_str.replace("\\", "\\\\")
     json_str = json_str.replace("`", "\\`")
-    html_str = html_str.replace("\\", "\\\\")
-    html_str = html_str.replace("`", "\\`")
     height_attr = f' height="{height}"' if height else ""
-    return f"<ComponentPreview auto{height_attr} json={{`{json_str}`}} html={{`{html_str}`}} />"
+    return f"<ComponentPreview auto{height_attr} json={{`{json_str}`}} />"
 
 
 def process_file(path: Path) -> bool:

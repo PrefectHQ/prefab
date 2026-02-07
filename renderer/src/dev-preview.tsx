@@ -969,7 +969,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   // Doc embed mode: minimal chrome, transparent-friendly, tight padding
   if (isDocEmbed) {
     return (
-      <div ref={contentRef} className="bg-transparent text-foreground py-12 px-16">
+      <div ref={contentRef} className="bg-transparent text-foreground py-12 px-16 flex flex-col items-center">
         {parseError && (
           <div className="mb-4 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
             JSON parse error: {parseError}
