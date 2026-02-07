@@ -8,6 +8,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `Image` renders an `<img>` element with support for `{{ field }}` interpolation on both `src` and `alt`, making it easy to display user avatars, product images, or any dynamic media.
 
+## Basic Usage
+
 <ComponentPreview auto json={`{"type":"Image","src":"https://picsum.photos/400/300","alt":"Example image","width":"400px"}`}>
 <CodeGroup>
 ```python Python
@@ -76,33 +78,14 @@ with Card():
 
 ## Protocol Reference
 
-<Card icon="braces" title="Image Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Image" default="Image">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="src" type="string" required>
-  Image URL with `{{ field }}` interpolation
-</ParamField>
-
-<ParamField body="alt" type="string" default="">
-  Alt text
-</ParamField>
-
-<ParamField body="width" type="string | null">
-  CSS width
-</ParamField>
-
-<ParamField body="height" type="string | null">
-  CSS height
-</ParamField>
-
-</Card>
+```json Image
+{
+  "type": "Image",
+  "src": "string (required)",
+  "alt?": "string",
+  "width?": "string",
+  "height?": "string",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
