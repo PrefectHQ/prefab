@@ -78,16 +78,16 @@ with Accordion():
 </CodeGroup>
 </ComponentPreview>
 
-## Open First Item
+## Default Open
 
-Use `open_item=0` to expand the first accordion item by default.
+Use `default_open_items` to expand items when the accordion first renders. Pass an index or title.
 
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"single","collapsible":true,"defaultValue":"What is the Answer?","children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
-with Accordion(open_item=0):
+with Accordion(default_open_items=0):
     with AccordionItem("What is the Answer?"):
         Text(
             "Forty-two. The Answer to the Ultimate "
@@ -153,17 +153,14 @@ with Accordion(open_item=0):
 
 ## Multiple Open
 
-Set `accordion_type="multiple"` to allow more than one section open at a time.
+Set `multiple=True` to allow more than one section open at a time.
 
 <ComponentPreview auto json={`{"type":"Accordion","accordionType":"multiple","collapsible":true,"defaultValue":["Who is Arthur Dent?","Who is Ford Prefect?"],"children":[{"type":"AccordionItem","title":"Who is Arthur Dent?","children":[{"type":"Text","content":"An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."}]},{"type":"AccordionItem","title":"Who is Ford Prefect?","children":[{"type":"Text","content":"A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."}]},{"type":"AccordionItem","title":"What is the Guide?","children":[{"type":"Text","content":"A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Accordion, AccordionItem, Text
 
-with Accordion(
-    accordion_type="multiple",
-    open_item=[0, 1],
-):
+with Accordion(multiple=True, default_open_items=[0, 1]):
     with AccordionItem("Who is Arthur Dent?"):
         Text(
             "An ordinary human from Earth, unexpectedly "
@@ -234,16 +231,16 @@ with Accordion(
 ## API Reference
 
 <Card icon="code" title="Accordion Parameters">
-<ParamField body="open_item" type="int | str | list[int | str] | None" default="None">
-  Initially expanded item(s). Pass an index to select by position, or a string to match by title. Use a list for `accordion_type="multiple"`.
+<ParamField body="default_open_items" type="int | str | list[int | str] | None" default="None">
+  Initially expanded item(s). Pass an index to select by position, or a string to match by title.
 </ParamField>
 
-<ParamField body="accordion_type" type="str" default="single">
-  `"single"` allows one item open at a time; `"multiple"` allows several.
+<ParamField body="multiple" type="bool" default="False">
+  Allow multiple items to be open simultaneously.
 </ParamField>
 
 <ParamField body="collapsible" type="bool" default="True">
-  Whether the open item can be collapsed (single mode only).
+  Whether the open item can be collapsed.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

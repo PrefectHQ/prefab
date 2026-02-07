@@ -4,7 +4,7 @@ Example::
 
     from prefab_ui.components import Accordion, AccordionItem, Text
 
-    with Accordion(open_item=0):
+    with Accordion(default_open_items=0):
         with AccordionItem("Getting Started"):
             Text("Install with pip install fastmcp")
         with AccordionItem("Configuration"):
@@ -55,7 +55,7 @@ class Accordion(ContainerComponent):
 
     Example::
 
-        with Accordion(open_item=0):
+        with Accordion(multiple=True, default_open_items=[0, 1]):
             with AccordionItem("Section 1"):
                 Text("Content 1")
             with AccordionItem("Section 2"):
@@ -63,16 +63,21 @@ class Accordion(ContainerComponent):
     """
 
     type: Literal["Accordion"] = "Accordion"
+    multiple: bool = Field(
+        default=False,
+        exclude=True,
+        description="Allow multiple items to be open simultaneously",
+    )
     accordion_type: Literal["single", "multiple"] = Field(
         default="single",
         alias="accordionType",
-        description="Whether one or multiple items can be open simultaneously",
+        description="Wire format for multiple. Prefer the `multiple` flag.",
     )
     collapsible: bool = Field(
         default=True,
         description="Whether items can be fully collapsed (single mode)",
     )
-    open_item: int | str | list[int | str] | None = Field(
+    default_open_items: int | str | list[int | str] | None = Field(
         default=None,
         exclude=True,
         description=(
@@ -83,7 +88,7 @@ class Accordion(ContainerComponent):
     default_value: str | list[str] | None = Field(
         default=None,
         alias="defaultValue",
-        description="Initially expanded item(s) by value. Prefer open_item.",
+        description="Wire format for default_open_items.",
     )
 
     def _resolve_item(self, item: int | str) -> str:
@@ -98,9 +103,13 @@ class Accordion(ContainerComponent):
         return item
 
     def to_json(self) -> dict[str, Any]:
-        if self.open_item is not None and self.default_value is None:
-            if isinstance(self.open_item, list):
-                self.default_value = [self._resolve_item(i) for i in self.open_item]
+        if self.multiple:
+            self.accordion_type = "multiple"
+        if self.default_open_items is not None and self.default_value is None:
+            if isinstance(self.default_open_items, list):
+                self.default_value = [
+                    self._resolve_item(i) for i in self.default_open_items
+                ]
             else:
-                self.default_value = self._resolve_item(self.open_item)
+                self.default_value = self._resolve_item(self.default_open_items)
         return super().to_json()
