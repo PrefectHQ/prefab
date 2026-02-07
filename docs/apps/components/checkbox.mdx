@@ -6,9 +6,9 @@ icon: square-check
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-## Usage
-
 Checkboxes let users select one or more options from a set.
+
+## Basic Usage
 
 <ComponentPreview auto json={`{"cssClass":"w-fit mx-auto","type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false}`}>
 <CodeGroup>
@@ -183,45 +183,17 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Checkbox Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="visibleWhen" type="string | null">
-  State key — component renders only when this state value is truthy
-</ParamField>
-
-<ParamField body="type" type="Checkbox" default="Checkbox">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="label" type="string | null">
-  Label text (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="checked" type="boolean" default="false">
-  Whether checkbox is checked
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  Form field name
-</ParamField>
-
-<ParamField body="value" type="string | null">
-  Form value (supports `{{ field }}` interpolation)
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether checkbox is disabled
-</ParamField>
-
-<ParamField body="required" type="boolean" default="false">
-  Whether checkbox is required
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) to execute when checked state changes
-</ParamField>
-
-</Card>
+```json Checkbox
+{
+  "type": "Checkbox",
+  "label?": "string",
+  "checked?": false,
+  "name?": "string",
+  "value?": "string",
+  "disabled?": false,
+  "required?": false,
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
