@@ -7,3 +7,5 @@ export const popoverSchema = containerBase.extend({
   description: z.string().optional(),
   side: z.enum(["top", "right", "bottom", "left"]).optional(),
 });
+
+export type PopoverWire = z.infer<typeof popoverSchema>;

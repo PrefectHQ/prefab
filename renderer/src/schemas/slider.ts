@@ -12,3 +12,5 @@ export const sliderSchema = componentBase.extend({
   disabled: z.boolean().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type SliderWire = z.infer<typeof sliderSchema>;

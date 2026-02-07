@@ -12,3 +12,5 @@ export const switchSchema = componentBase.extend({
   required: z.boolean().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type SwitchWire = z.infer<typeof switchSchema>;

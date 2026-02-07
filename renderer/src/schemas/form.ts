@@ -7,3 +7,5 @@ export const formSchema = containerBase.extend({
   gap: z.number().int().optional(),
   onSubmit: actionOrList.optional(),
 });
+
+export type FormWire = z.infer<typeof formSchema>;

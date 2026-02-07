@@ -14,3 +14,5 @@ export const textareaSchema = componentBase.extend({
   maxLength: z.number().int().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type TextareaWire = z.infer<typeof textareaSchema>;

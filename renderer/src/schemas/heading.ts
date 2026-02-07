@@ -10,3 +10,5 @@ export const headingSchema = componentBase.extend({
   bold: z.boolean().optional(),
   italic: z.boolean().optional(),
 });
+
+export type HeadingWire = z.infer<typeof headingSchema>;

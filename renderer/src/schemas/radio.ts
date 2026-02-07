@@ -17,3 +17,6 @@ export const radioSchema = componentBase.extend({
   disabled: z.boolean().optional(),
   required: z.boolean().optional(),
 });
+
+export type RadioGroupWire = z.infer<typeof radioGroupSchema>;
+export type RadioWire = z.infer<typeof radioSchema>;

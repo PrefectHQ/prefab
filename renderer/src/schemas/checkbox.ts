@@ -12,3 +12,5 @@ export const checkboxSchema = componentBase.extend({
   required: z.boolean().optional(),
   onChange: actionOrList.optional(),
 });
+
+export type CheckboxWire = z.infer<typeof checkboxSchema>;

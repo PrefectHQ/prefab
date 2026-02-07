@@ -6,3 +6,5 @@ export const labelSchema = containerBase.extend({
   text: z.string().optional(),
   forId: z.string().optional(),
 });
+
+export type LabelWire = z.infer<typeof labelSchema>;

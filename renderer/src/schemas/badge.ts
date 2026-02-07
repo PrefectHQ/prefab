@@ -17,3 +17,5 @@ export const badgeSchema = componentBase.extend({
     ])
     .optional(),
 });
+
+export type BadgeWire = z.infer<typeof badgeSchema>;

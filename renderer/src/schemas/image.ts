@@ -8,3 +8,5 @@ export const imageSchema = componentBase.extend({
   width: z.string().optional(),
   height: z.string().optional(),
 });
+
+export type ImageWire = z.infer<typeof imageSchema>;

@@ -39,3 +39,15 @@ export const blockQuoteSchema = typographyBase.extend({
 export const inlineCodeSchema = typographyBase.extend({
   type: z.literal("InlineCode"),
 });
+
+export type H1Wire = z.infer<typeof h1Schema>;
+export type H2Wire = z.infer<typeof h2Schema>;
+export type H3Wire = z.infer<typeof h3Schema>;
+export type H4Wire = z.infer<typeof h4Schema>;
+export type PWire = z.infer<typeof pSchema>;
+export type LeadWire = z.infer<typeof leadSchema>;
+export type LargeWire = z.infer<typeof largeSchema>;
+export type SmallWire = z.infer<typeof smallSchema>;
+export type MutedWire = z.infer<typeof mutedSchema>;
+export type BlockQuoteWire = z.infer<typeof blockQuoteSchema>;
+export type InlineCodeWire = z.infer<typeof inlineCodeSchema>;

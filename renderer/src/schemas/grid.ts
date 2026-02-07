@@ -6,3 +6,5 @@ export const gridSchema = containerBase.extend({
   columns: z.number().int().optional(),
   gap: gapSchema.optional(),
 });
+
+export type GridWire = z.infer<typeof gridSchema>;

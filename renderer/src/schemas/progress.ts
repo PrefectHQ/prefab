@@ -7,3 +7,5 @@ export const progressSchema = componentBase.extend({
   max: z.number().optional(),
   indicatorClass: z.string().optional(),
 });
+
+export type ProgressWire = z.infer<typeof progressSchema>;

@@ -21,3 +21,7 @@ export const alertDescriptionSchema = componentBase.extend({
   type: z.literal("AlertDescription"),
   content: z.string(),
 });
+
+export type AlertWire = z.infer<typeof alertSchema>;
+export type AlertTitleWire = z.infer<typeof alertTitleSchema>;
+export type AlertDescriptionWire = z.infer<typeof alertDescriptionSchema>;
