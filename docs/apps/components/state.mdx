@@ -1,0 +1,115 @@
+---
+title: State
+description: Provide scoped interpolation values to children.
+icon: database
+---
+
+`State` is a control-flow component that provides local `{{ }}` interpolation values to its children. Children resolve template expressions against the State's values first, falling through to parent scopes and then global state.
+
+This is useful when you want to inject data into a subtree without polluting global state or duplicating values across multiple props.
+
+```python Basic Usage
+from prefab_ui.components import State, Card, CardHeader, CardTitle, CardDescription
+
+with State(name="Alice", role="Engineer"):
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("{{ role }}")
+```
+
+## How It Works
+
+Any kwargs that aren't base component fields (`css_class`, `visible_when`, etc.) are collected into the state dict. You can also pass a dict positionally:
+
+```python Equivalent Forms
+from prefab_ui.components import State, Text
+
+# Kwargs style
+with State(name="Alice", role="Engineer"):
+    Text("{{ name }} is a {{ role }}")
+
+# Dict style
+with State({"name": "Alice", "role": "Engineer"}):
+    Text("{{ name }} is a {{ role }}")
+```
+
+State values are resolved against the current interpolation context, so you can compose values from outer scopes:
+
+```python Composing Values
+from prefab_ui.components import State, Text, Column
+
+set_data(first="Alice", last="Smith")
+
+with Column():
+    with State(full_name="{{ first }} {{ last }}"):
+        Text("Hello, {{ full_name }}!")
+```
+
+## Nested State
+
+State components can nest. Inner values shadow outer ones for the same key, and children see the merged context:
+
+```python Nested State
+from prefab_ui.components import State, Text, Column
+
+with Column():
+    with State(greeting="Hello", name="Alice"):
+        Text("{{ greeting }}, {{ name }}")  # Hello, Alice
+        with State(name="Bob"):
+            Text("{{ greeting }}, {{ name }}")  # Hello, Bob
+```
+
+## With ForEach
+
+State works well alongside `ForEach` for providing extra context to iterated templates:
+
+```python State with ForEach
+from prefab_ui.components import State, ForEach, Badge, Row
+
+set_data(languages=["Python", "TypeScript", "Rust"])
+
+with State(variant="secondary"):
+    with Row(gap=2):
+        with ForEach("languages"):
+            Badge("{{ _item }}", variant="{{ variant }}")
+```
+
+## API Reference
+
+<Card icon="code" title="State Parameters">
+<ParamField body="state" type="dict[str, Any]" default="{}">
+  Dictionary of local state values. Can be passed as a positional dict or via kwargs.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes for the wrapper element.
+</ParamField>
+
+<ParamField body="visible_when" type="str | None" default="None">
+  Conditional visibility expression.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+<Card icon="braces" title="State Protocol">
+<ParamField body="type" type="State" default="State">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="state" type="object" required>
+  Dictionary of interpolation values scoped to children.
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="visibleWhen" type="string | null">
+  State key — component renders only when this state value is truthy
+</ParamField>
+</Card>

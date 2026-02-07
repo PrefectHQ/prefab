@@ -69,7 +69,7 @@ import {
   BlockQuote,
 } from "./typography";
 import { Code, Image, Markdown } from "./content";
-import { ForEach } from "./control-flow";
+import { ForEach, PrefabState } from "./control-flow";
 import { PrefabDataTable } from "./data-display";
 import {
   PrefabTabs,
@@ -155,6 +155,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // Control flow
   ForEach,
+  State: PrefabState,
 
   // Compound containers (wrapper components decompose children into parts)
   Tabs: PrefabTabs,

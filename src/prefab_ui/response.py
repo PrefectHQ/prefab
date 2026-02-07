@@ -41,6 +41,10 @@ class UIResponse(BaseModel):
         default=None,
         description="Client-side state — keys become top-level response fields",
     )
+    defs: list[Any] | None = Field(
+        default=None,
+        description="Reusable component definitions (Define instances)",
+    )
     text: str | None = Field(default=None, description="Text fallback for non-UI hosts")
 
     model_config = {"arbitrary_types_allowed": True}
@@ -71,6 +75,9 @@ class UIResponse(BaseModel):
                 result.update(state_json)
 
         result["_prefab_version"] = PROTOCOL_VERSION
+
+        if self.defs:
+            result["_prefab_defs"] = {d.name: d.to_json() for d in self.defs}
 
         if self.view is not None:
             result["_prefab_view"] = self.view.to_json()

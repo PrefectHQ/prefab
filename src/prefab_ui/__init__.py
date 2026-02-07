@@ -39,9 +39,12 @@ from prefab_ui.components import (
     Image,
     Markdown,
     Row,
+    State,
     Text,
 )
+from prefab_ui.define import Define
 from prefab_ui.response import UIResponse
+from prefab_ui.use import Use
 
 try:
     __version__ = importlib.metadata.version("prefab-ui")
@@ -55,6 +58,7 @@ __all__ = [
     "Column",
     "Component",
     "ContainerComponent",
+    "Define",
     "Heading",
     "Image",
     "Markdown",
@@ -63,9 +67,11 @@ __all__ = [
     "SendMessage",
     "SetState",
     "ShowToast",
+    "State",
     "Text",
     "ToggleState",
     "ToolCall",
     "UIResponse",
     "UpdateContext",
+    "Use",
 ]
