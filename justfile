@@ -38,6 +38,11 @@ docs:
     echo "Starting Mintlify docs server..."
     cd docs && npx --yes mint@latest dev
 
+# Regenerate playground bundle.json and examples.json
+playground:
+    uv run docs/_preview-build/generate_playground_bundle.py
+    uv run docs/_preview-build/extract_examples.py
+
 # Check for broken links in documentation
 docs-broken-links:
     cd docs && npx --yes mint@latest broken-links
