@@ -95,57 +95,6 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-## Choice Cards
-
-When you provide `title` and `description`, the switch renders as a bordered card — useful for settings pages where each toggle needs explanation.
-
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Switch","title":"Marketing emails","description":"Receive emails about new products and features.","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","title":"Security emails","description":"Receive emails about your account activity.","checked":true,"size":"default","disabled":false,"required":false}]}`}>
-<CodeGroup>
-```python Python
-from prefab_ui.components import Column, Switch
-
-with Column(gap=4):
-    Switch(
-        title="Marketing emails",
-        description="Receive emails about new products "
-        "and features.",
-    )
-    Switch(
-        title="Security emails",
-        description="Receive emails about your account "
-        "activity.",
-        checked=True,
-    )
-```
-```json Protocol
-{
-  "type": "Column",
-  "gap": 4,
-  "children": [
-    {
-      "type": "Switch",
-      "title": "Marketing emails",
-      "description": "Receive emails about new products and features.",
-      "checked": false,
-      "size": "default",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Switch",
-      "title": "Security emails",
-      "description": "Receive emails about your account activity.",
-      "checked": true,
-      "size": "default",
-      "disabled": false,
-      "required": false
-    }
-  ]
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
 ## Disabled State
 
 <ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`}>
@@ -204,14 +153,6 @@ with Column(gap=3):
   Label text displayed next to the switch.
 </ParamField>
 
-<ParamField body="title" type="str | None" default="None">
-  Card title. When provided with `description`, renders the switch as a choice card.
-</ParamField>
-
-<ParamField body="description" type="str | None" default="None">
-  Card description text shown below the title.
-</ParamField>
-
 <ParamField body="checked" type="bool" default="False">
   Whether the switch is on.
 </ParamField>
@@ -243,8 +184,6 @@ with Column(gap=3):
 {
   "type": "Switch",
   "label?": "string",
-  "title?": "string",
-  "description?": "string",
   "checked?": false,
   "size?": "default | sm",
   "name?": "string",

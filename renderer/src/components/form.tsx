@@ -247,8 +247,6 @@ export function PrefabCheckbox({
 
 interface PrefabSwitchProps {
   label?: string;
-  title?: string;
-  description?: string;
   checked?: boolean;
   size?: "sm" | "default";
   name?: string;
@@ -260,8 +258,6 @@ interface PrefabSwitchProps {
 
 export function PrefabSwitch({
   label,
-  title,
-  description,
   checked,
   size,
   name,
@@ -285,29 +281,6 @@ export function PrefabSwitch({
       size={size}
     />
   );
-
-  // Choice card layout when title/description are present.
-  // Uses cn-field-* classes from shadcn v4 Field pattern — the label
-  // highlights border/bg when the switch is checked.
-  if (title || description) {
-    return (
-      <label className={cn("cn-field-label", className)} htmlFor={id}>
-        <div
-          data-slot="field"
-          data-disabled={disabled || undefined}
-          className="cn-field group/field flex items-center justify-between"
-        >
-          <div className="cn-field-content grid">
-            {title && <span className="cn-field-title">{title}</span>}
-            {description && (
-              <span className="cn-field-description">{description}</span>
-            )}
-          </div>
-          {switchEl}
-        </div>
-      </label>
-    );
-  }
 
   if (label) {
     return (

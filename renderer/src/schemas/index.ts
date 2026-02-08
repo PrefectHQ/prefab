@@ -55,6 +55,7 @@ import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
 import { divSchema, spanSchema } from "./div.ts";
+import { fieldSchema } from "./field.ts";
 import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
@@ -135,6 +136,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   DatePicker: datePickerSchema,
   Dialog: dialogSchema,
   Div: divSchema,
+  Field: fieldSchema,
   ForEach: forEachSchema,
   Form: formSchema,
   Grid: gridSchema,
