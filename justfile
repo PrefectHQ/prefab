@@ -18,7 +18,7 @@ lint:
 generate-preview-css:
     uv run docs/_preview-build/render_previews.py
     uv run docs/_preview-build/generate_content.py
-    npx --yes @tailwindcss/cli@4 -i docs/_preview-build/input.css -o /tmp/prefab-preview-raw.css --minify
+    NODE_PATH=renderer/node_modules npx --yes @tailwindcss/cli@4 -i docs/_preview-build/input.css -o /tmp/prefab-preview-raw.css --minify
     uv run docs/_preview-build/scope_css.py
     uv run docs/_preview-build/generate_playground_bundle.py
 
