@@ -5,6 +5,7 @@ import { actionOrList } from "./actions.ts";
 export const buttonSchema = componentBase.extend({
   type: z.literal("Button"),
   label: z.string(),
+  icon: z.string().nullable().optional(),
   variant: z
     .enum([
       "default",

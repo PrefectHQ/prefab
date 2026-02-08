@@ -13,7 +13,7 @@
 import type { ComponentType } from "react";
 
 // shadcn components (used directly when APIs match)
-import { Button } from "@/ui/button";
+import { PrefabButton } from "./button-wrapper";
 import { Badge } from "@/ui/badge";
 import {
   Card,
@@ -89,7 +89,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const REGISTRY: Record<string, ComponentType<any>> = {
   // shadcn (direct — APIs match)
-  Button,
+  Button: PrefabButton,
   Badge,
   Card,
   CardHeader,
