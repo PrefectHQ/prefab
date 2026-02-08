@@ -11,37 +11,20 @@ import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 
-// Vite processes this through @tailwindcss/vite and returns the complete CSS
-// as a string instead of injecting it into the document.
+// Vite processes this through @tailwindcss/vite and the tailwindShadowDom
+// plugin, which strips @property declarations and emits initial values as
+// regular custom properties. The CSS arrives ready for shadow DOM use.
 import rawCss from "./index.css?inline";
-
-// --- @property → :host fallback ---
-// `@property` declarations don't work inside shadow DOM <style> elements
-// (they're document-level constructs). Tailwind v4 relies on @property to set
-// initial values for internal variables like --tw-border-style. Extract them
-// and emit explicit :host assignments so they resolve inside the shadow root.
-function extractPropertyDefaults(css: string): string {
-  const defaults: string[] = [];
-  const re = /@property\s+(--[\w-]+)\s*\{[^}]*initial-value:\s*([^;\n}]+)/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(css)) !== null) {
-    const value = m[2].trim();
-    if (value) defaults.push(`  ${m[1]}: ${value};`);
-  }
-  return defaults.length ? `:host {\n${defaults.join("\n")}\n}\n` : "";
-}
 
 // --- Shared shadow CSS base ---
 // Both the preview and portal shadow roots reuse the same rewritten Tailwind
 // CSS. `:root` → `:host` for theme variables, `.dark` → `:host(.dark)` for
 // dark mode.
-const rewrittenCss =
-  extractPropertyDefaults(rawCss) +
-  rawCss
-    .replace(/:root/g, ":host")
-    .replace(/\.dark\s*\{/g, ":host(.dark) {")
-    .replace(/\.dark\s+\./g, ":host(.dark) .")
-    .replace(/\.dark\s+:/g, ":host(.dark) :");
+const rewrittenCss = rawCss
+  .replace(/:root/g, ":host")
+  .replace(/\.dark\s*\{/g, ":host(.dark) {")
+  .replace(/\.dark\s+\./g, ":host(.dark) .")
+  .replace(/\.dark\s+:/g, ":host(.dark) :");
 
 const fontStack = `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
