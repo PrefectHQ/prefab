@@ -55,6 +55,10 @@ class Alert(ContainerComponent):
         default="default",
         description="Visual variant: default or destructive",
     )
+    icon: str | None = Field(
+        default=None,
+        description="Lucide icon name (kebab-case, e.g. 'circle-alert')",
+    )
 
 
 class AlertTitle(Component):

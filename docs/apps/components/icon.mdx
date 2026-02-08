@@ -1,0 +1,181 @@
+---
+title: Icon
+description: Render any lucide icon by name.
+icon: shapes
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Icons render any [lucide icon](https://lucide.dev/icons) by name. Pass the icon name in kebab-case and it resolves at render time.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"type":"Icon","name":"rocket","size":"default"}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Icon
+
+Icon("rocket")
+```
+```json Protocol
+{
+  "type": "Icon",
+  "name": "rocket",
+  "size": "default"
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Sizes
+
+Three size variants control the icon dimensions.
+
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"Icon","name":"heart","size":"sm"},{"type":"Icon","name":"heart","size":"default"},{"type":"Icon","name":"heart","size":"lg"}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Icon, Row
+
+with Row(gap=4, css_class="items-center"):
+    Icon("heart", size="sm")
+    Icon("heart", size="default")
+    Icon("heart", size="lg")
+```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Icon",
+      "name": "heart",
+      "size": "sm"
+    },
+    {
+      "type": "Icon",
+      "name": "heart",
+      "size": "default"
+    },
+    {
+      "type": "Icon",
+      "name": "heart",
+      "size": "lg"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## In Context
+
+Icons work inline alongside text and other components.
+
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"Icon","name":"check","size":"sm"},{"type":"Text","content":"Task completed"}]},{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"Icon","name":"clock","size":"sm"},{"type":"Text","content":"Waiting for approval"}]},{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"Icon","name":"circle-x","size":"sm"},{"type":"Text","content":"Build failed"}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Column,
+    Icon,
+    Row,
+    Text,
+)
+
+with Column(gap=3):
+    with Row(gap=2, css_class="items-center"):
+        Icon("check", size="sm")
+        Text("Task completed")
+    with Row(gap=2, css_class="items-center"):
+        Icon("clock", size="sm")
+        Text("Waiting for approval")
+    with Row(gap=2, css_class="items-center"):
+        Icon("circle-x", size="sm")
+        Text("Build failed")
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "cssClass": "items-center",
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Icon",
+          "name": "check",
+          "size": "sm"
+        },
+        {
+          "type": "Text",
+          "content": "Task completed"
+        }
+      ]
+    },
+    {
+      "cssClass": "items-center",
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Icon",
+          "name": "clock",
+          "size": "sm"
+        },
+        {
+          "type": "Text",
+          "content": "Waiting for approval"
+        }
+      ]
+    },
+    {
+      "cssClass": "items-center",
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Icon",
+          "name": "circle-x",
+          "size": "sm"
+        },
+        {
+          "type": "Text",
+          "content": "Build failed"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Icon Parameters">
+<ParamField body="name" type="str" required>
+  Lucide icon name in kebab-case (e.g., `"arrow-right"`, `"circle-alert"`). Can be passed as a positional argument. Browse icons at [lucide.dev/icons](https://lucide.dev/icons).
+</ParamField>
+
+<ParamField body="size" type="str" default="default">
+  Icon size: `"sm"`, `"default"`, `"lg"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Icon
+{
+  "type": "Icon",
+  "name": "string (required)",
+  "size?": "sm | default | lg",
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

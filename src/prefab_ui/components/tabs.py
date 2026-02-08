@@ -20,6 +20,8 @@ from pydantic import Field
 from prefab_ui.actions import Action
 from prefab_ui.components.base import ContainerComponent
 
+TabsVariant = Literal["default", "line"]
+
 
 class Tab(ContainerComponent):
     """A single tab panel within a Tabs container.
@@ -65,6 +67,10 @@ class Tabs(ContainerComponent):
     """
 
     type: Literal["Tabs"] = "Tabs"
+    variant: TabsVariant = Field(
+        default="default",
+        description="Visual style — 'default' (pill) or 'line' (underline)",
+    )
     default_value: str | None = Field(
         default=None,
         alias="defaultValue",

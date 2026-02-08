@@ -12,6 +12,7 @@
 
 import React, { type ReactNode, useState, useEffect, useMemo } from "react";
 import { format, parseISO } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tabs as ShadcnTabs,
@@ -84,6 +85,7 @@ const TriggerSlot = React.forwardRef<
 interface PrefabTabsProps {
   defaultValue?: string;
   value?: string;
+  variant?: "default" | "line";
   onValueChange?: (value: string) => void;
   className?: string;
   _panels: ChildPanel[];
@@ -92,6 +94,7 @@ interface PrefabTabsProps {
 export function PrefabTabs({
   defaultValue,
   value,
+  variant,
   onValueChange,
   className,
   _panels,
@@ -106,7 +109,7 @@ export function PrefabTabs({
       onValueChange={onValueChange}
       className={className}
     >
-      <TabsList>
+      <TabsList data-variant={variant}>
         {_panels.map((panel) => (
           <TabsTrigger
             key={panel.value}
@@ -376,6 +379,7 @@ export function PrefabCalendar({
     return (
       <ShadcnCalendar
         mode="range"
+        numberOfMonths={2}
         defaultMonth={defaultMonth}
         selected={selected as DateRange}
         onSelect={(range: DateRange | undefined, triggerDate: Date) => {
@@ -466,10 +470,13 @@ export function PrefabDatePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={`w-[240px] justify-start text-left font-normal ${
-            !selectedDate ? "text-muted-foreground" : ""
-          } ${className ?? ""}`}
+          className={cn(
+            "w-[240px] justify-start text-left font-normal",
+            !selectedDate && "text-muted-foreground",
+            className,
+          )}
         >
+          <CalendarIcon className="size-4" />
           {selectedDate ? format(selectedDate, "PPP") : placeholder}
         </Button>
       </PopoverTrigger>

@@ -49,6 +49,7 @@ import {
 } from "./card.ts";
 import { checkboxSchema } from "./checkbox.ts";
 import { codeSchema } from "./code.ts";
+import { comboboxSchema, comboboxOptionSchema } from "./combobox.ts";
 import { columnSchema } from "./column.ts";
 import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
@@ -58,6 +59,7 @@ import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
 import { headingSchema } from "./heading.ts";
+import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
@@ -70,6 +72,7 @@ import { rowSchema } from "./row.ts";
 import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
 import { sliderSchema } from "./slider.ts";
+import { spinnerSchema } from "./spinner.ts";
 import { stateSchema } from "./state.ts";
 import { switchSchema } from "./switch.ts";
 import {
@@ -125,6 +128,8 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   CardFooter: cardFooterSchema,
   Checkbox: checkboxSchema,
   Code: codeSchema,
+  Combobox: comboboxSchema,
+  ComboboxOption: comboboxOptionSchema,
   Column: columnSchema,
   DataTable: dataTableSchema,
   DatePicker: datePickerSchema,
@@ -138,6 +143,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   H3: h3Schema,
   H4: h4Schema,
   Heading: headingSchema,
+  Icon: iconSchema,
   Image: imageSchema,
   InlineCode: inlineCodeSchema,
   Input: inputSchema,
@@ -159,6 +165,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Separator: separatorSchema,
   Slider: sliderSchema,
   Small: smallSchema,
+  Spinner: spinnerSchema,
   Span: spanSchema,
   State: stateSchema,
   Switch: switchSchema,

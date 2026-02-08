@@ -47,6 +47,7 @@ const ACTION_PROPS = new Set(["onClick", "onChange", "onSubmit"]);
 const ITEM_CHILD_TYPES: Record<string, string[]> = {
   Select: ["value", "label", "selected", "disabled"],
   RadioGroup: ["value", "label", "checked", "disabled"],
+  Combobox: ["value", "label", "disabled"],
 };
 
 /**

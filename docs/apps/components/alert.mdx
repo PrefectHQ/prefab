@@ -42,6 +42,98 @@ with Alert():
 </CodeGroup>
 </ComponentPreview>
 
+## With Icons
+
+Pass an `icon` prop to render a lucide icon alongside the alert content. The icon automatically aligns with the title and description.
+
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Alert","variant":"default","icon":"circle-alert","children":[{"type":"AlertTitle","content":"Heads up!"},{"type":"AlertDescription","content":"You can add components to your app using the CLI."}]},{"type":"Alert","variant":"destructive","icon":"circle-x","children":[{"type":"AlertTitle","content":"Error"},{"type":"AlertDescription","content":"Your session has expired. Please log in again."}]},{"type":"Alert","variant":"success","icon":"circle-check","children":[{"type":"AlertTitle","content":"Success"},{"type":"AlertDescription","content":"Your changes have been saved successfully."}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    Column,
+)
+
+with Column(gap=4):
+    with Alert(icon="circle-alert"):
+        AlertTitle("Heads up!")
+        AlertDescription(
+            "You can add components to your app "
+            "using the CLI."
+        )
+
+    with Alert(variant="destructive", icon="circle-x"):
+        AlertTitle("Error")
+        AlertDescription(
+            "Your session has expired. Please log "
+            "in again."
+        )
+
+    with Alert(variant="success", icon="circle-check"):
+        AlertTitle("Success")
+        AlertDescription(
+            "Your changes have been saved "
+            "successfully."
+        )
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Alert",
+      "variant": "default",
+      "icon": "circle-alert",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Heads up!"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "You can add components to your app using the CLI."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "destructive",
+      "icon": "circle-x",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Error"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your session has expired. Please log in again."
+        }
+      ]
+    },
+    {
+      "type": "Alert",
+      "variant": "success",
+      "icon": "circle-check",
+      "children": [
+        {
+          "type": "AlertTitle",
+          "content": "Success"
+        },
+        {
+          "type": "AlertDescription",
+          "content": "Your changes have been saved successfully."
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Variants
 
 Five variants cover different semantic intents — from neutral information to success confirmations and error states.
@@ -283,6 +375,10 @@ with Card():
   Visual style: `"default"`, `"destructive"`, `"success"`, `"warning"`, `"info"`.
 </ParamField>
 
+<ParamField body="icon" type="str | None" default="None">
+  Lucide icon name in kebab-case (e.g., `"circle-alert"`, `"circle-check"`). Browse icons at [lucide.dev/icons](https://lucide.dev/icons).
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
@@ -314,6 +410,7 @@ with Card():
 {
   "type": "Alert",
   "variant?": "default | destructive | success | warning | info",
+  "icon?": "string (lucide icon name)",
   "cssClass?": "string",
   "visibleWhen?": "string",
   "children": [AlertTitle | AlertDescription]

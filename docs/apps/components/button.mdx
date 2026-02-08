@@ -186,23 +186,19 @@ with Row(gap=3, css_class="items-center"):
 </CodeGroup>
 </ComponentPreview>
 
-## Icon Sizes
+## With Icons
 
-Square buttons optimized for single icons or characters. The icon sizes match the heights of the corresponding text button sizes.
+Buttons accept an `icon` prop (any [lucide icon name](https://lucide.dev/icons) in kebab-case). The icon renders before the label text.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"\\u2022","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"\\u2022","variant":"default","size":"icon-lg","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Download","icon":"download","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Settings","icon":"settings","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Delete","icon":"trash-2","variant":"destructive","size":"default","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
-from prefab_ui.components import (
-    Button,
-    Row,
-)
+from prefab_ui.components import Button, Row
 
 with Row(gap=3, css_class="items-center"):
-    Button("•", size="icon-xs")
-    Button("•", size="icon-sm")
-    Button("•", size="icon")
-    Button("•", size="icon-lg")
+    Button("Download", icon="download")
+    Button("Settings", icon="settings", variant="outline")
+    Button("Delete", icon="trash-2", variant="destructive")
 ```
 ```json Protocol
 {
@@ -212,28 +208,83 @@ with Row(gap=3, css_class="items-center"):
   "children": [
     {
       "type": "Button",
-      "label": "\u2022",
+      "label": "Download",
+      "icon": "download",
+      "variant": "default",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Settings",
+      "icon": "settings",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false
+    },
+    {
+      "type": "Button",
+      "label": "Delete",
+      "icon": "trash-2",
+      "variant": "destructive",
+      "size": "default",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Icon Sizes
+
+Square buttons optimized for single icons. Use `icon` with an icon-size variant for icon-only buttons.
+
+<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-lg","disabled":false}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Button, Row
+
+with Row(gap=3, css_class="items-center"):
+    Button("", icon="plus", size="icon-xs")
+    Button("", icon="plus", size="icon-sm")
+    Button("", icon="plus", size="icon")
+    Button("", icon="plus", size="icon-lg")
+```
+```json Protocol
+{
+  "cssClass": "items-center",
+  "type": "Row",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Button",
+      "label": "",
+      "icon": "plus",
       "variant": "default",
       "size": "icon-xs",
       "disabled": false
     },
     {
       "type": "Button",
-      "label": "\u2022",
+      "label": "",
+      "icon": "plus",
       "variant": "default",
       "size": "icon-sm",
       "disabled": false
     },
     {
       "type": "Button",
-      "label": "\u2022",
+      "label": "",
+      "icon": "plus",
       "variant": "default",
       "size": "icon",
       "disabled": false
     },
     {
       "type": "Button",
-      "label": "\u2022",
+      "label": "",
+      "icon": "plus",
       "variant": "default",
       "size": "icon-lg",
       "disabled": false
@@ -316,6 +367,10 @@ with Column(gap=3, css_class="items-start w-full"):
   Button text. Can be passed as a positional argument.
 </ParamField>
 
+<ParamField body="icon" type="str | None" default="None">
+  Lucide icon name in kebab-case (e.g., `"arrow-right"`, `"trash-2"`). Browse icons at [lucide.dev/icons](https://lucide.dev/icons).
+</ParamField>
+
 <ParamField body="variant" type="str" default="default">
   Visual style: `"default"`, `"destructive"`, `"outline"`, `"secondary"`, `"ghost"`, `"link"`, `"success"`, `"warning"`, `"info"`.
 </ParamField>
@@ -339,6 +394,7 @@ with Column(gap=3, css_class="items-start w-full"):
 {
   "type": "Button",
   "label": "string (required)",
+  "icon?": "string (lucide icon name)",
   "variant?": "default | destructive | outline | secondary | ghost | link | success | warning | info",
   "size?": "default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg",
   "disabled?": false,

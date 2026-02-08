@@ -50,10 +50,10 @@ interface HeadingProps extends TypographyProps {
 }
 
 const headingStyles: Record<number, string> = {
-  1: "text-3xl font-semibold tracking-tight m-0",
-  2: "text-2xl font-semibold tracking-tight m-0",
-  3: "text-xl font-semibold tracking-tight m-0",
-  4: "text-lg font-semibold tracking-tight m-0",
+  1: "scroll-m-20 text-4xl font-extrabold tracking-tight m-0",
+  2: "scroll-m-20 text-3xl font-semibold tracking-tight m-0",
+  3: "scroll-m-20 text-2xl font-semibold tracking-tight m-0",
+  4: "scroll-m-20 text-xl font-semibold tracking-tight m-0",
 };
 
 export function Heading({

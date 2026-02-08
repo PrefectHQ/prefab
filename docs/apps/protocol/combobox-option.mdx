@@ -1,0 +1,53 @@
+---
+title: ComboboxOption
+description: JSON Schema for the ComboboxOption component.
+---
+
+A single option within a Combobox.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "ComboboxOption",
+      "default": "ComboboxOption",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "value": {
+      "description": "Option value",
+      "type": "string"
+    },
+    "label": {
+      "description": "Display label",
+      "type": "string"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether option is disabled",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "value",
+    "label"
+  ]
+}
+```

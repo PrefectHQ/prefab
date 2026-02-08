@@ -21,6 +21,7 @@ from prefab_ui.components.card import (
     CardTitle,
 )
 from prefab_ui.components.checkbox import Checkbox
+from prefab_ui.components.combobox import Combobox, ComboboxOption
 from prefab_ui.components.code import Code
 from prefab_ui.components.column import Column
 from prefab_ui.components.data_table import DataTable, DataTableColumn
@@ -32,6 +33,7 @@ from prefab_ui.components.foreach import ForEach
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
 from prefab_ui.components.heading import Heading
+from prefab_ui.components.icon import Icon
 from prefab_ui.components.image import Image
 from prefab_ui.components.input import Input
 from prefab_ui.components.label import Label
@@ -44,6 +46,7 @@ from prefab_ui.components.row import Row
 from prefab_ui.components.select import Select, SelectOption
 from prefab_ui.components.separator import Separator
 from prefab_ui.components.slider import Slider
+from prefab_ui.components.spinner import Spinner
 from prefab_ui.components.state import State
 from prefab_ui.components.switch import Switch
 from prefab_ui.components.tabs import Tab, Tabs
@@ -98,6 +101,8 @@ __all__ = [
     "Checkbox",
     "Code",
     "Column",
+    "Combobox",
+    "ComboboxOption",
     "Component",
     "ContainerComponent",
     "DataTable",
@@ -109,6 +114,7 @@ __all__ = [
     "Form",
     "Grid",
     "Heading",
+    "Icon",
     "Image",
     "InlineCode",
     "Input",
@@ -131,6 +137,7 @@ __all__ = [
     "Slider",
     "Small",
     "Span",
+    "Spinner",
     "State",
     "Switch",
     "Tab",

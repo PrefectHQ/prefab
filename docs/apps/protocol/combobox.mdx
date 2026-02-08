@@ -1,0 +1,78 @@
+---
+title: Combobox
+description: JSON Schema for the Combobox component.
+---
+
+Searchable select dropdown.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Combobox",
+      "default": "Combobox",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "placeholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text shown when no value is selected"
+    },
+    "searchPlaceholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text in the search input"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for the selected value"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether combobox is disabled",
+      "type": "boolean"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) when the selected value changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

@@ -63,6 +63,10 @@ class Button(Component):
 
     type: Literal["Button"] = "Button"
     label: str = Field(description="Button text")
+    icon: str | None = Field(
+        default=None,
+        description="Lucide icon name (kebab-case, e.g. 'arrow-right')",
+    )
     variant: ButtonVariant = Field(
         default="default",
         description="Visual variant: default, destructive, outline, secondary, ghost, link",

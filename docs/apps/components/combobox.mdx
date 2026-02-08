@@ -1,0 +1,318 @@
+---
+title: Combobox
+description: Searchable dropdown for selecting from a list of options.
+icon: magnifying-glass
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Combobox is a searchable select — a dropdown that lets users type to filter through options. Useful when the list of choices is large enough that scrolling alone would be tedious.
+
+## Basic Usage
+
+Options are defined as `ComboboxOption` children. Each option needs a `label` (displayed) and `value` (stored in state). When you pass just a string, the value is auto-generated from the label.
+
+<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Select a framework...","name":"framework","disabled":false,"children":[{"type":"ComboboxOption","value":"nextjs","label":"Next.js","disabled":false},{"type":"ComboboxOption","value":"remix","label":"Remix","disabled":false},{"type":"ComboboxOption","value":"astro","label":"Astro","disabled":false},{"type":"ComboboxOption","value":"sveltekit","label":"SvelteKit","disabled":false},{"type":"ComboboxOption","value":"nuxt","label":"Nuxt","disabled":false}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Combobox, ComboboxOption
+
+with Combobox(
+    placeholder="Select a framework...",
+    name="framework",
+):
+    ComboboxOption("Next.js", value="nextjs")
+    ComboboxOption("Remix", value="remix")
+    ComboboxOption("Astro", value="astro")
+    ComboboxOption("SvelteKit", value="sveltekit")
+    ComboboxOption("Nuxt", value="nuxt")
+```
+```json Protocol
+{
+  "type": "Combobox",
+  "placeholder": "Select a framework...",
+  "name": "framework",
+  "disabled": false,
+  "children": [
+    {
+      "type": "ComboboxOption",
+      "value": "nextjs",
+      "label": "Next.js",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "remix",
+      "label": "Remix",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "astro",
+      "label": "Astro",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "sveltekit",
+      "label": "SvelteKit",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "nuxt",
+      "label": "Nuxt",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Reading the Selection
+
+The `name` prop creates a state key that holds the selected option's `value`. Use `{{ key }}` interpolation to display it anywhere, or reference it in actions and visibility conditions.
+
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"type":"Text","content":"Selected: {{ planet }}"}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Column,
+    Combobox,
+    ComboboxOption,
+    Text,
+)
+
+with Column(gap=3):
+    with Combobox(
+        placeholder="Select a planet...",
+        name="planet",
+    ):
+        ComboboxOption("Magrathea", value="magrathea")
+        ComboboxOption("Betelgeuse", value="betelgeuse")
+        ComboboxOption("Vogsphere", value="vogsphere")
+
+    Text("Selected: {{ planet }}")
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Combobox",
+      "placeholder": "Select a planet...",
+      "name": "planet",
+      "disabled": false,
+      "children": [
+        {
+          "type": "ComboboxOption",
+          "value": "magrathea",
+          "label": "Magrathea",
+          "disabled": false
+        },
+        {
+          "type": "ComboboxOption",
+          "value": "betelgeuse",
+          "label": "Betelgeuse",
+          "disabled": false
+        },
+        {
+          "type": "ComboboxOption",
+          "value": "vogsphere",
+          "label": "Vogsphere",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "type": "Text",
+      "content": "Selected: {{ planet }}"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## With Search Placeholder
+
+Customize the placeholder text shown in the search input.
+
+<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Pick a language...","searchPlaceholder":"Filter languages...","name":"language","disabled":false,"children":[{"type":"ComboboxOption","value":"python","label":"Python","disabled":false},{"type":"ComboboxOption","value":"typescript","label":"TypeScript","disabled":false},{"type":"ComboboxOption","value":"rust","label":"Rust","disabled":false},{"type":"ComboboxOption","value":"go","label":"Go","disabled":false}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Combobox, ComboboxOption
+
+with Combobox(
+    placeholder="Pick a language...",
+    search_placeholder="Filter languages...",
+    name="language",
+):
+    ComboboxOption("Python", value="python")
+    ComboboxOption("TypeScript", value="typescript")
+    ComboboxOption("Rust", value="rust")
+    ComboboxOption("Go", value="go")
+```
+```json Protocol
+{
+  "type": "Combobox",
+  "placeholder": "Pick a language...",
+  "searchPlaceholder": "Filter languages...",
+  "name": "language",
+  "disabled": false,
+  "children": [
+    {
+      "type": "ComboboxOption",
+      "value": "python",
+      "label": "Python",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "typescript",
+      "label": "TypeScript",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "rust",
+      "label": "Rust",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "go",
+      "label": "Go",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Disabled Options
+
+Individual options can be disabled.
+
+<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":true},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Combobox, ComboboxOption
+
+with Combobox(
+    placeholder="Select a planet...",
+    name="planet",
+):
+    ComboboxOption("Magrathea", value="magrathea")
+    ComboboxOption(
+        "Earth",
+        value="earth",
+        disabled=True,
+    )
+    ComboboxOption("Betelgeuse", value="betelgeuse")
+    ComboboxOption("Vogsphere", value="vogsphere")
+```
+```json Protocol
+{
+  "type": "Combobox",
+  "placeholder": "Select a planet...",
+  "name": "planet",
+  "disabled": false,
+  "children": [
+    {
+      "type": "ComboboxOption",
+      "value": "magrathea",
+      "label": "Magrathea",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "earth",
+      "label": "Earth",
+      "disabled": true
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "betelgeuse",
+      "label": "Betelgeuse",
+      "disabled": false
+    },
+    {
+      "type": "ComboboxOption",
+      "value": "vogsphere",
+      "label": "Vogsphere",
+      "disabled": false
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Combobox Parameters">
+<ParamField body="placeholder" type="str | None" default="None">
+  Text shown when no value is selected.
+</ParamField>
+
+<ParamField body="search_placeholder" type="str | None" default="None">
+  Placeholder text in the search input.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for the selected value.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether the combobox is non-interactive.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="ComboboxOption Parameters">
+<ParamField body="label" type="str" required>
+  Display text. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="str" required>
+  Value stored in state when selected. Defaults to a kebab-case version of the label.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether this option is non-selectable.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Combobox
+{
+  "type": "Combobox",
+  "placeholder?": "string",
+  "searchPlaceholder?": "string",
+  "name?": "string",
+  "disabled?": false,
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": [ComboboxOption]
+}
+```
+
+```json ComboboxOption
+{
+  "type": "ComboboxOption",
+  "label": "string (required)",
+  "value": "string (required)",
+  "disabled?": false,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

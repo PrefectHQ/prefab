@@ -13,7 +13,7 @@
 import type { ComponentType } from "react";
 
 // shadcn components (used directly when APIs match)
-import { Button } from "@/ui/button";
+import { PrefabButton } from "./button-wrapper";
 import { Badge } from "@/ui/badge";
 import {
   Card,
@@ -23,11 +23,15 @@ import {
   CardContent,
   CardFooter,
 } from "@/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "@/ui/alert";
+import { AlertTitle, AlertDescription } from "@/ui/alert";
+import { PrefabAlert } from "./alert-wrapper";
+import { PrefabCombobox } from "./combobox-wrapper";
+import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
 import { Label } from "@/ui/label";
 import { Separator } from "@/ui/separator";
+import { Spinner } from "@/ui/spinner";
 import { Slider } from "@/ui/slider";
 import { Progress } from "@/ui/progress";
 import {
@@ -85,7 +89,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const REGISTRY: Record<string, ComponentType<any>> = {
   // shadcn (direct — APIs match)
-  Button,
+  Button: PrefabButton,
   Badge,
   Card,
   CardHeader,
@@ -93,7 +97,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   CardDescription,
   CardContent,
   CardFooter,
-  Alert,
+  Alert: PrefabAlert,
   AlertTitle,
   AlertDescription,
   Input,
@@ -101,9 +105,12 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Label,
   Separator,
   Slider,
+  Spinner,
   Progress,
 
   // Form wrappers (Python API → shadcn multi-part)
+  Combobox: PrefabCombobox,
+  ComboboxOption: () => null, // consumed by parent Combobox via _items
   Select: PrefabSelect,
   SelectOption: () => null, // consumed by parent Select via _items
   RadioGroup: PrefabRadioGroup,
@@ -152,6 +159,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Code,
   Image,
   Markdown,
+  Icon: PrefabIcon,
 
   // Control flow
   ForEach,

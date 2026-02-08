@@ -56,4 +56,8 @@ function AlertDescription({
   )
 }
 
+export type AlertVariant = NonNullable<
+  VariantProps<typeof alertVariants>["variant"]
+>
+
 export { Alert, AlertTitle, AlertDescription }
