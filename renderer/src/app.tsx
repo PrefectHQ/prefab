@@ -8,10 +8,10 @@
  * 4. Handle actions (server tool calls, client state mutations)
  * 5. Re-render on new tool results or state changes
  *
- * State model: structuredContent keys (minus reserved `_prefab_*` keys)
- * become client-side state. The model sees initial state via structuredContent;
- * all subsequent mutations (SetState, form inputs, CallTool result_key) are
- * renderer-private and never propagate back.
+ * State model: the `state` key in structuredContent holds client-side state.
+ * The model sees initial state via structuredContent; all subsequent mutations
+ * (SetState, form inputs, CallTool result_key) are renderer-private and never
+ * propagate back.
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
@@ -29,25 +29,8 @@ import type {
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 
-/** Reserved key prefix in structuredContent (renderer internals). */
-const RESERVED_PREFIX = "_prefab_";
-
 /** Protocol versions this renderer understands. */
-const SUPPORTED_VERSIONS = new Set(["0.1"]);
-
-/** Extract state from structuredContent (everything except reserved keys). */
-function extractState(
-  structured: Record<string, unknown> | undefined,
-): Record<string, unknown> {
-  if (!structured) return {};
-  const state: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(structured)) {
-    if (!key.startsWith(RESERVED_PREFIX)) {
-      state[key] = value;
-    }
-  }
-  return state;
-}
+const SUPPORTED_VERSIONS = new Set(["0.2"]);
 
 /** Apply host theme context (dark mode, CSS variables, fonts). */
 function applyTheme(ctx: McpUiHostContext) {
@@ -74,9 +57,9 @@ export function App() {
       if (!structured) return;
 
       // Check protocol version (warn but don't block rendering)
-      const version = structured._prefab_version as string | undefined;
+      const version = structured.version as string | undefined;
       if (!version) {
-        console.warn("[Prefab] Missing _prefab_version in structuredContent");
+        console.warn("[Prefab] Missing version in structuredContent");
       } else if (!SUPPORTED_VERSIONS.has(version)) {
         console.warn(
           `[Prefab] Unrecognized protocol version "${version}" (supported: ${[
@@ -86,12 +69,12 @@ export function App() {
       }
 
       // Extract component tree, defs, and state from structuredContent
-      const view = structured._prefab_view as ComponentNode | undefined;
-      const extractedDefs = (structured._prefab_defs ?? {}) as Record<
+      const view = structured.view as ComponentNode | undefined;
+      const extractedDefs = (structured.defs ?? {}) as Record<
         string,
         ComponentNode
       >;
-      const stateData = extractState(structured);
+      const stateData = (structured.state ?? {}) as Record<string, unknown>;
 
       // Full state reset — host is providing a fresh view + state
       state.reset(stateData);

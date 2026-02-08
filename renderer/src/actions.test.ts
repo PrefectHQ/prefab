@@ -165,8 +165,9 @@ describe("executeAction", () => {
     it("writes result to state via resultKey", async () => {
       app.callServerTool.mockResolvedValueOnce({
         structuredContent: {
-          _prefab_view: { type: "Text" },
-          users: [{ name: "Alice" }],
+          version: "0.2",
+          view: { type: "Text" },
+          state: { users: [{ name: "Alice" }] },
         },
       });
       const state = createStateStore();
@@ -178,16 +179,16 @@ describe("executeAction", () => {
 
       await executeAction(action, appAsApp, state);
 
-      // Single non-reserved key gets unwrapped
+      // Single state key gets unwrapped
       expect(state.get("users")).toEqual([{ name: "Alice" }]);
     });
 
-    it("strips _prefab_ keys from result data", async () => {
+    it("extracts state from envelope, ignoring protocol keys", async () => {
       app.callServerTool.mockResolvedValueOnce({
         structuredContent: {
-          _prefab_view: { type: "Column" },
-          items: [1, 2],
-          total: 2,
+          version: "0.2",
+          view: { type: "Column" },
+          state: { items: [1, 2], total: 2 },
         },
       });
       const state = createStateStore();
@@ -199,10 +200,9 @@ describe("executeAction", () => {
 
       await executeAction(action, appAsApp, state);
 
-      // Multiple non-reserved keys → object with both
+      // Multiple state keys → object with both
       const data = state.get("data") as Record<string, unknown>;
       expect(data).toEqual({ items: [1, 2], total: 2 });
-      expect(data).not.toHaveProperty("_prefab_view");
     });
 
     it("interpolates arguments from state", async () => {

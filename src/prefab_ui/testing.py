@@ -30,7 +30,6 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
 TEMPLATE_RE = re.compile(r"\{\{\s*([\w.$]+)\s*\}\}")
-RESERVED_PREFIX = "_prefab_"
 MAX_ACTION_DEPTH = 10
 
 
@@ -181,7 +180,7 @@ class Simulator:
                     self.state[result_key] = data
 
                 if result.content:
-                    view = result.content.get("_prefab_view")
+                    view = result.content.get("view")
                     if view:
                         self.view = view
 
@@ -271,25 +270,21 @@ class Simulator:
 
     def _handle_structured_content(self, structured: dict[str, Any]) -> None:
         """Extract state and view from structured content."""
-        view = structured.get("_prefab_view")
-        state = {
-            k: v for k, v in structured.items() if not k.startswith(RESERVED_PREFIX)
-        }
+        view = structured.get("view")
+        state = structured.get("state", {})
         self.state = state
         if view:
             self.view = view
 
     @staticmethod
     def _extract_result_data(structured: dict[str, Any]) -> Any:
-        """Strip reserved keys and unwrap single-value results."""
-        entries = {
-            k: v for k, v in structured.items() if not k.startswith(RESERVED_PREFIX)
-        }
-        if not entries:
-            return structured
-        if len(entries) == 1:
-            return next(iter(entries.values()))
-        return entries
+        """Read state from envelope and unwrap single-value results."""
+        state = structured.get("state", {})
+        if not state:
+            return None
+        if len(state) == 1:
+            return next(iter(state.values()))
+        return state
 
     def _find_recursive(
         self,

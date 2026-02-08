@@ -41,9 +41,6 @@ export interface ActionSpec {
 /** Maximum callback nesting depth to prevent runaway recursion. */
 const MAX_DEPTH = 10;
 
-/** Reserved key prefix — filtered out when extracting result data. */
-const RESERVED_RE = /^_prefab_/;
-
 /**
  * Extract a human-readable error message from a failed action result.
  *
@@ -68,17 +65,16 @@ function extractErrorText(result: Record<string, unknown>): string {
 /**
  * Extract user-facing data from a tool result's structuredContent.
  *
- * Strips reserved `_prefab_*` keys. If exactly one non-reserved key
- * remains, unwraps to its value (so `result_key="users"` with a response
- * of `{users: [...], _prefab_view: ...}` writes the array directly).
+ * Reads from the `state` envelope key. If exactly one state key exists,
+ * unwraps to its value (so `result_key="users"` with a response
+ * of `{state: {users: [...]}}` writes the array directly).
  */
 function extractResultData(structured: Record<string, unknown>): unknown {
-  const entries = Object.entries(structured).filter(
-    ([k]) => !RESERVED_RE.test(k),
-  );
-  if (entries.length === 0) return structured;
+  const state = structured.state as Record<string, unknown> | undefined;
+  if (!state) return undefined;
+  const entries = Object.entries(state);
   if (entries.length === 1) return entries[0][1];
-  return Object.fromEntries(entries);
+  return state;
 }
 
 /**
