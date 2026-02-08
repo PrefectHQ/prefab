@@ -117,7 +117,7 @@ export function PrefabDataTable({
         </div>
       )}
 
-      <Table>
+      <Table className="table-fixed">
         {caption && <TableCaption>{caption}</TableCaption>}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -137,15 +137,30 @@ export function PrefabDataTable({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+            <>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+              {/* Pad short pages with empty rows so auto-resize stays stable */}
+              {paginated &&
+                table.getRowModel().rows.length < pageSize &&
+                Array.from({
+                  length: pageSize - table.getRowModel().rows.length,
+                }).map((_, i) => (
+                  <TableRow key={`pad-${i}`} className="border-transparent">
+                    <TableCell colSpan={columns.length}>&nbsp;</TableCell>
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))
+            </>
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">

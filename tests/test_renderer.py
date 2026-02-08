@@ -15,12 +15,12 @@ class TestGetRendererUrl:
         assert "@prefecthq/prefab-ui" in url
 
     def test_env_var_override(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:3333")
-        assert get_renderer_url() == "http://localhost:3333"
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:4173")
+        assert get_renderer_url() == "http://localhost:4173"
 
     def test_strips_trailing_slash(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:3333/")
-        assert get_renderer_url() == "http://localhost:3333"
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:4173/")
+        assert get_renderer_url() == "http://localhost:4173"
 
     def test_cdn_url_includes_version(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.delenv("PREFAB_RENDERER_URL", raising=False)
@@ -30,43 +30,47 @@ class TestGetRendererUrl:
 
 
 class TestGetRendererHtml:
-    def test_dev_stub_for_localhost(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:3333")
+    def test_always_uses_built_assets(self, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:4173")
         html = get_renderer_html()
-        assert "localhost:3333" in html
-        assert "@vite/client" in html
-        assert "main.tsx" in html
-
-    def test_dev_stub_for_127(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://127.0.0.1:3333")
-        html = get_renderer_html()
-        assert "@vite/client" in html
-
-    def test_prod_stub_for_cdn(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "https://cdn.example.com/prefab")
-        html = get_renderer_html()
-        assert "cdn.example.com/prefab" in html
+        assert "localhost:4173" in html
         assert "renderer.js" in html
         assert "renderer.css" in html
         assert "@vite/client" not in html
+        assert "main.tsx" not in html
+
+    def test_custom_url(self, monkeypatch: pytest.MonkeyPatch):
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "https://assets.example.com/prefab")
+        html = get_renderer_html()
+        assert "assets.example.com/prefab" in html
+        assert "renderer.js" in html
+        assert "renderer.css" in html
 
     def test_defaults_to_cdn_stub(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.delenv("PREFAB_RENDERER_URL", raising=False)
         html = get_renderer_html()
         assert "cdn.jsdelivr.net" in html
         assert "renderer.js" in html
-        assert "@vite/client" not in html
 
 
 class TestGetRendererCsp:
     def test_cdn_domains(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.delenv("PREFAB_RENDERER_URL", raising=False)
-        assert get_renderer_csp() == ["https://cdn.jsdelivr.net"]
+        csp = get_renderer_csp()
+        assert csp == {"resource_domains": ["https://cdn.jsdelivr.net"]}
 
     def test_localhost_domain(self, monkeypatch: pytest.MonkeyPatch):
-        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:3333")
-        assert get_renderer_csp() == ["http://localhost:3333"]
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:4173")
+        csp = get_renderer_csp()
+        assert csp == {"resource_domains": ["http://localhost:4173"]}
 
-    def test_custom_prod_domain(self, monkeypatch: pytest.MonkeyPatch):
+    def test_custom_domain(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("PREFAB_RENDERER_URL", "https://assets.example.com/prefab")
-        assert get_renderer_csp() == ["https://cdn.jsdelivr.net"]
+        csp = get_renderer_csp()
+        assert csp == {"resource_domains": ["https://assets.example.com"]}
+
+    def test_no_connect_domains(self, monkeypatch: pytest.MonkeyPatch):
+        """connect_domains is never needed — no HMR over the MCP host path."""
+        monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:4173")
+        csp = get_renderer_csp()
+        assert "connect_domains" not in csp
