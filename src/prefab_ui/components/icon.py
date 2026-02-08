@@ -29,7 +29,7 @@ class Icon(Component):
     """Renders a lucide icon by name.
 
     Args:
-        name: Lucide icon name in kebab-case (e.g., "circle-alert", "download")
+        name: Lucide icon name in kebab-case (e.g., "arrow-right", "circle-alert")
         size: Icon size — "sm" (16px), "default" (16px with standard spacing),
             or "lg" (24px)
 

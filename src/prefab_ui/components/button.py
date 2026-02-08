@@ -65,7 +65,7 @@ class Button(Component):
     label: str = Field(description="Button text")
     icon: str | None = Field(
         default=None,
-        description="Lucide icon name (kebab-case, e.g. 'download')",
+        description="Lucide icon name (kebab-case, e.g. 'arrow-right')",
     )
     variant: ButtonVariant = Field(
         default="default",
