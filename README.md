@@ -57,7 +57,7 @@ Every frontend framework assumes a human wrote the code and a server is running.
 
 The renderer compiles that JSON to real React — not a toy dashboard, not a Streamlit approximation, but production UI components with state management, forms, data tables, and declarative interactivity. And it runs as a self-contained static bundle, no backend required at runtime.
 
-Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system and has been extracted as a standalone library so it can serve any backend. It ships as two packages: `prefab-ui` (Python, on PyPI) for building component trees, and `@prefect/prefab-ui` (TypeScript, on npm) for rendering them.
+Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system and has been extracted as a standalone library so it can serve any backend. It ships as two packages: `prefab-ui` (Python, on PyPI) for building component trees, and `@prefecthq/prefab-ui` (TypeScript, on npm) for rendering them.
 
 ## Installation
 

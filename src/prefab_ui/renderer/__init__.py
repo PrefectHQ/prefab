@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 from importlib.metadata import version as _pkg_version
 
-_NPM_PACKAGE = "@prefect/prefab-ui"
+_NPM_PACKAGE = "@prefecthq/prefab-ui"
 _CDN_TEMPLATE = "https://cdn.jsdelivr.net/npm/{package}@{version}/dist"
 
 _RENDERER_STUB = """\

@@ -12,7 +12,7 @@ class TestGetRendererUrl:
         monkeypatch.delenv("PREFAB_RENDERER_URL", raising=False)
         url = get_renderer_url()
         assert "cdn.jsdelivr.net" in url
-        assert "@prefect/prefab-ui" in url
+        assert "@prefecthq/prefab-ui" in url
 
     def test_env_var_override(self, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("PREFAB_RENDERER_URL", "http://localhost:3333")
@@ -26,7 +26,7 @@ class TestGetRendererUrl:
         monkeypatch.delenv("PREFAB_RENDERER_URL", raising=False)
         url = get_renderer_url()
         # Version is dynamic, but should contain a @ after the package name
-        assert "@prefect/prefab-ui@" in url
+        assert "@prefecthq/prefab-ui@" in url
 
 
 class TestGetRendererHtml:
