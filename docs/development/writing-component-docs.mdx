@@ -108,8 +108,13 @@ changes. The key files to keep aligned:
 - `docs/apps/components/<name>.mdx` — documentation
 - `schemas/fixtures/components/<Name>.json` — test fixtures
 
-After any protocol change, run:
+After any protocol change, rebuild all doc assets:
 ```bash
-uv run docs/_preview-build/render_previews.py
+prefab dev build-docs
+```
+
+This regenerates component previews, Tailwind CSS, playground bundles, and
+protocol reference pages in one shot. Then run the test suite:
+```bash
 uv run pytest tests/ -x
 ```

@@ -134,6 +134,85 @@ dev_app = cyclopts.App(
 app.command(dev_app)
 
 
+@dev_app.command(name="build-docs")
+def build_docs() -> None:
+    """Regenerate all doc assets: previews, CSS, playground, and protocol ref.
+
+    Runs the full build pipeline so Mintlify docs are up to date.
+
+    Example:
+        prefab dev build-docs
+    """
+    repo_root = _find_repo_root()
+    build_dir = repo_root / "docs" / "_preview-build"
+
+    if not shutil.which("npx"):
+        console.print(
+            "[bold red]Error:[/bold red] [cyan]npx[/cyan] not found. "
+            "Install Node.js to use this command."
+        )
+        raise SystemExit(1)
+
+    tailwind_env = {
+        **os.environ,
+        "NODE_PATH": str(repo_root / "renderer" / "node_modules"),
+    }
+
+    steps: list[tuple[str, list[str], dict[str, str] | None]] = [
+        (
+            "Rendering component previews",
+            ["uv", "run", str(build_dir / "render_previews.py")],
+            None,
+        ),
+        (
+            "Generating Tailwind content",
+            ["uv", "run", str(build_dir / "generate_content.py")],
+            None,
+        ),
+        (
+            "Building Tailwind CSS",
+            [
+                "npx",
+                "--yes",
+                "@tailwindcss/cli@4",
+                "-i",
+                str(build_dir / "input.css"),
+                "-o",
+                "/tmp/prefab-preview-raw.css",
+                "--minify",
+            ],
+            tailwind_env,
+        ),
+        ("Scoping CSS", ["uv", "run", str(build_dir / "scope_css.py")], None),
+        (
+            "Bundling playground source",
+            ["uv", "run", str(build_dir / "generate_playground_bundle.py")],
+            None,
+        ),
+        (
+            "Extracting playground examples",
+            ["uv", "run", str(build_dir / "extract_examples.py")],
+            None,
+        ),
+        (
+            "Generating protocol reference",
+            ["uv", "run", str(build_dir / "generate_protocol_pages.py")],
+            None,
+        ),
+    ]
+
+    for description, cmd, env in steps:
+        console.print(f"  [dim]→[/dim] {description}...")
+        result = subprocess.run(cmd, cwd=repo_root, env=env)
+        if result.returncode != 0:
+            console.print(
+                f"[bold red]Error:[/bold red] {description} failed (exit {result.returncode})"
+            )
+            raise SystemExit(result.returncode)
+
+    console.print("[bold green]✓[/bold green] All doc assets rebuilt")
+
+
 @dev_app.command
 def docs(
     *,
