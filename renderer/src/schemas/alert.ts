@@ -10,6 +10,7 @@ export const alertSchema = containerBase.extend({
   variant: z
     .enum(["default", "destructive", "success", "warning", "info"])
     .optional(),
+  icon: z.string().nullable().optional(),
 });
 
 export const alertTitleSchema = componentBase.extend({

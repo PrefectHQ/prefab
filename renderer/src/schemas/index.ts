@@ -58,6 +58,7 @@ import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
 import { headingSchema } from "./heading.ts";
+import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
@@ -138,6 +139,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   H3: h3Schema,
   H4: h4Schema,
   Heading: headingSchema,
+  Icon: iconSchema,
   Image: imageSchema,
   InlineCode: inlineCodeSchema,
   Input: inputSchema,

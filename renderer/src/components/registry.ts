@@ -23,7 +23,9 @@ import {
   CardContent,
   CardFooter,
 } from "@/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "@/ui/alert";
+import { AlertTitle, AlertDescription } from "@/ui/alert";
+import { PrefabAlert } from "./alert-wrapper";
+import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
 import { Label } from "@/ui/label";
@@ -93,7 +95,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   CardDescription,
   CardContent,
   CardFooter,
-  Alert,
+  Alert: PrefabAlert,
   AlertTitle,
   AlertDescription,
   Input,
@@ -152,6 +154,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Code,
   Image,
   Markdown,
+  Icon: PrefabIcon,
 
   // Control flow
   ForEach,
