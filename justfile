@@ -27,16 +27,8 @@ renderer:
     cd renderer && npm run dev
 
 # Serve documentation locally (starts renderer dev server automatically)
-docs:
-    #!/usr/bin/env bash
-    set -e
-    cleanup() { kill 0 2>/dev/null; }
-    trap cleanup EXIT INT TERM
-    echo "Starting renderer dev server (localhost:3333)..."
-    (cd renderer && npm run dev) &
-    sleep 2
-    echo "Starting Mintlify docs server..."
-    cd docs && npx --yes mint@latest dev
+docs renderer-port="3333" docs-port="3000":
+    uv run prefab dev docs --renderer-port {{renderer-port}} --docs-port {{docs-port}}
 
 # Regenerate playground bundle.json and examples.json
 playground:
