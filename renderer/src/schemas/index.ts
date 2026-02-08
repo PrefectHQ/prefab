@@ -49,6 +49,7 @@ import {
 } from "./card.ts";
 import { checkboxSchema } from "./checkbox.ts";
 import { codeSchema } from "./code.ts";
+import { comboboxSchema, comboboxOptionSchema } from "./combobox.ts";
 import { columnSchema } from "./column.ts";
 import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
@@ -127,6 +128,8 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   CardFooter: cardFooterSchema,
   Checkbox: checkboxSchema,
   Code: codeSchema,
+  Combobox: comboboxSchema,
+  ComboboxOption: comboboxOptionSchema,
   Column: columnSchema,
   DataTable: dataTableSchema,
   DatePicker: datePickerSchema,

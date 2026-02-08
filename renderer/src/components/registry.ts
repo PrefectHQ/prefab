@@ -25,6 +25,7 @@ import {
 } from "@/ui/card";
 import { AlertTitle, AlertDescription } from "@/ui/alert";
 import { PrefabAlert } from "./alert-wrapper";
+import { PrefabCombobox } from "./combobox-wrapper";
 import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
@@ -108,6 +109,8 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Progress,
 
   // Form wrappers (Python API → shadcn multi-part)
+  Combobox: PrefabCombobox,
+  ComboboxOption: () => null, // consumed by parent Combobox via _items
   Select: PrefabSelect,
   SelectOption: () => null, // consumed by parent Select via _items
   RadioGroup: PrefabRadioGroup,
