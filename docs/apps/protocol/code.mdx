@@ -1,0 +1,51 @@
+---
+title: Code
+description: JSON Schema for the Code component.
+---
+
+Code block with optional syntax highlighting.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Code",
+      "default": "Code",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "content": {
+      "description": "Code content with {{ field }} interpolation",
+      "type": "string"
+    },
+    "language": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Syntax highlighting language"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

@@ -1,0 +1,58 @@
+---
+title: SelectOption
+description: JSON Schema for the SelectOption component.
+---
+
+Select dropdown option.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "SelectOption",
+      "default": "SelectOption",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "value": {
+      "description": "Option value (supports {{ field }} interpolation)",
+      "type": "string"
+    },
+    "label": {
+      "description": "Display text (supports {{ field }} interpolation)",
+      "type": "string"
+    },
+    "selected": {
+      "default": false,
+      "description": "Whether option is selected",
+      "type": "boolean"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether option is disabled",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "value",
+    "label"
+  ]
+}
+```

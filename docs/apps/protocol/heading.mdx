@@ -1,0 +1,54 @@
+---
+title: Heading
+description: JSON Schema for the Heading component.
+---
+
+Section heading (h1-h4) with `{{ field }}` interpolation.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Heading",
+      "default": "Heading",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "content": {
+      "description": "Heading text with {{ field }} interpolation",
+      "type": "string"
+    },
+    "level": {
+      "default": 1,
+      "description": "Heading level (1=h1, 4=h4)",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "type": "integer"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

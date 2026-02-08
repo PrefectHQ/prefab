@@ -1,0 +1,74 @@
+---
+title: Radio
+description: JSON Schema for the Radio component.
+---
+
+Radio button input component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Radio",
+      "default": "Radio",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "value": {
+      "description": "Form value (supports {{ field }} interpolation)",
+      "type": "string"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Label text (supports {{ field }} interpolation)"
+    },
+    "checked": {
+      "default": false,
+      "description": "Whether radio is selected",
+      "type": "boolean"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether radio is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether radio is required",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "value"
+  ]
+}
+```

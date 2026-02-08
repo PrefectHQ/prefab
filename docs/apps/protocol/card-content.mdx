@@ -1,0 +1,44 @@
+---
+title: CardContent
+description: JSON Schema for the CardContent component.
+---
+
+Card content section for the main body.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "CardContent",
+      "default": "CardContent",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

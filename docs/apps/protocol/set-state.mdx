@@ -1,0 +1,31 @@
+---
+title: SetState
+description: JSON Schema for the SetState action.
+---
+
+Set a client-side state variable. No server round-trip.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "setState",
+      "default": "setState",
+      "type": "string"
+    },
+    "key": {
+      "description": "State key to set",
+      "type": "string"
+    },
+    "value": {
+      "default": "{{ $event }}",
+      "description": "Value to set. Use '{{ $event }}' for the event value."
+    }
+  },
+  "required": [
+    "action",
+    "key"
+  ]
+}
+```

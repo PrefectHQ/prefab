@@ -1,0 +1,60 @@
+---
+title: Pages
+description: JSON Schema for the Pages component.
+---
+
+Multi-page layout — only the active Page renders.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Pages",
+      "default": "Pages",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "defaultValue": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Initially active page value"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for tracking the active page"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

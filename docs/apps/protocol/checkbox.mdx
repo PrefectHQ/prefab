@@ -1,0 +1,82 @@
+---
+title: Checkbox
+description: JSON Schema for the Checkbox component.
+---
+
+Checkbox input component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Checkbox",
+      "default": "Checkbox",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Label text (supports {{ field }} interpolation)"
+    },
+    "checked": {
+      "default": false,
+      "description": "Whether checkbox is checked",
+      "type": "boolean"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form value (supports {{ field }} interpolation)"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether checkbox is disabled",
+      "type": "boolean"
+    },
+    "required": {
+      "default": false,
+      "description": "Whether checkbox is required",
+      "type": "boolean"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when checked state changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

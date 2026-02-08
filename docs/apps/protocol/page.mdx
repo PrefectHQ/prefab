@@ -1,0 +1,57 @@
+---
+title: Page
+description: JSON Schema for the Page component.
+---
+
+A single page within a Pages container.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Page",
+      "default": "Page",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "description": "Page identifier / label",
+      "type": "string"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Unique value for this page (defaults to title)"
+    }
+  },
+  "required": [
+    "type",
+    "title"
+  ]
+}
+```

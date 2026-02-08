@@ -1,0 +1,53 @@
+---
+title: ButtonGroup
+description: JSON Schema for the ButtonGroup component.
+---
+
+A container that groups buttons with merged borders.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "ButtonGroup",
+      "default": "ButtonGroup",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "orientation": {
+      "default": "horizontal",
+      "description": "Layout direction: horizontal or vertical",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

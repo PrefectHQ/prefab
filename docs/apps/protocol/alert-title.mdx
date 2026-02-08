@@ -1,0 +1,43 @@
+---
+title: AlertTitle
+description: JSON Schema for the AlertTitle component.
+---
+
+Alert title text.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "AlertTitle",
+      "default": "AlertTitle",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "content": {
+      "description": "Title text with {{ field }} interpolation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

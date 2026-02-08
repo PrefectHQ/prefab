@@ -1,0 +1,61 @@
+---
+title: Calendar
+description: JSON Schema for the Calendar component.
+---
+
+Date picker calendar.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Calendar",
+      "default": "Calendar",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "mode": {
+      "default": "single",
+      "description": "Selection mode: single date, multiple dates, or date range",
+      "enum": [
+        "single",
+        "multiple",
+        "range"
+      ],
+      "type": "string"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for storing the selected date (ISO string)"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) when selection changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

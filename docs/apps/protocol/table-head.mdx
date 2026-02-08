@@ -1,0 +1,52 @@
+---
+title: TableHead
+description: JSON Schema for the TableHead component.
+---
+
+A header cell within a TableRow.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "TableHead",
+      "default": "TableHead",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "content": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Header text (alternative to children)"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

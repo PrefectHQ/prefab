@@ -1,0 +1,27 @@
+---
+title: ToggleState
+description: JSON Schema for the ToggleState action.
+---
+
+Flip a boolean state variable. No server round-trip.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "toggleState",
+      "default": "toggleState",
+      "type": "string"
+    },
+    "key": {
+      "description": "State key to toggle",
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "key"
+  ]
+}
+```
