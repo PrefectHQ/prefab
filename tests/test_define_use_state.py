@@ -176,16 +176,16 @@ class TestUIResponseDefs:
         with Define("card") as d:
             Text("hello")
         result = UIResponse(defs=[d]).to_json()
-        assert "_prefab_defs" in result
-        assert result["_prefab_defs"] == {"card": {"type": "Text", "content": "hello"}}
+        assert "defs" in result
+        assert result["defs"] == {"card": {"type": "Text", "content": "hello"}}
 
     def test_no_defs_omits_key(self) -> None:
         result = UIResponse().to_json()
-        assert "_prefab_defs" not in result
+        assert "defs" not in result
 
     def test_empty_defs_omits_key(self) -> None:
         result = UIResponse(defs=[]).to_json()
-        assert "_prefab_defs" not in result
+        assert "defs" not in result
 
     def test_multiple_defs(self) -> None:
         with Define("a") as da:
@@ -193,7 +193,7 @@ class TestUIResponseDefs:
         with Define("b") as db:
             Text("B")
         result = UIResponse(defs=[da, db]).to_json()
-        assert set(result["_prefab_defs"]) == {"a", "b"}
+        assert set(result["defs"]) == {"a", "b"}
 
 
 # ---------------------------------------------------------------------------
@@ -215,8 +215,8 @@ def test_full_wire_format() -> None:
     result = UIResponse(view=layout, defs=[user_card]).to_json()
 
     expected: dict[str, Any] = {
-        "_prefab_version": PROTOCOL_VERSION,
-        "_prefab_defs": {
+        "version": PROTOCOL_VERSION,
+        "defs": {
             "user-card": {
                 "type": "Card",
                 "children": [
@@ -225,7 +225,7 @@ def test_full_wire_format() -> None:
                 ],
             },
         },
-        "_prefab_view": {
+        "view": {
             "type": "Column",
             "children": [
                 {
