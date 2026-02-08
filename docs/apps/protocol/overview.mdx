@@ -7,26 +7,28 @@ The Prefab protocol defines the JSON wire format exchanged between a server (Pyt
 
 ## Envelope
 
-Every response is a flat JSON object. Reserved keys start with `_prefab`; everything else is client-side state.
+Every response is a JSON object with clean top-level keys:
 
 ```json
 {
-  "_prefab_version": "0.1",
-  "_prefab_view": { ... },
-  "_prefab_defs": { ... },
-  "count": 42,
-  "name": "Alice"
+  "version": "0.2",
+  "view": { ... },
+  "defs": { ... },
+  "state": {
+    "count": 42,
+    "name": "Alice"
+  }
 }
 ```
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `_prefab_version` | `string` | Protocol version (currently `"0.1"`) |
-| `_prefab_view` | `Component` | The root component tree to render |
-| `_prefab_defs` | `object` | Optional map of template name to component subtree (see Define/Use below) |
-| `*` | `any` | All other keys are client-side state, accessible via `{{ key }}` interpolation |
+| `version` | `string` | Protocol version (currently `"0.2"`) |
+| `view` | `Component` | The root component tree to render |
+| `defs` | `object` | Optional map of template name to component subtree (see Define/Use below) |
+| `state` | `object` | Optional client-side state, accessible via `{{ key }}` interpolation |
 
-State keys must not start with `_prefab` or `$`.
+State keys must not start with `$` (reserved for interpolation builtins like `$event` and `$error`).
 
 ## Components
 
@@ -101,11 +103,11 @@ All string properties support `{{ key }}` placeholders that resolve against clie
 
 Templates let you define a component subtree once and reference it multiple times with different data.
 
-**Defining a template** — entries in `_prefab_defs` map a name to a component subtree:
+**Defining a template** — entries in `defs` map a name to a component subtree:
 
 ```json
 {
-  "_prefab_defs": {
+  "defs": {
     "user-card": {
       "type": "Card",
       "children": [

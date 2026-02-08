@@ -40,7 +40,7 @@ Two developer experiences, both wired up through FastMCP:
 **Mini-app (shorthand).** A tool returns a `UIResponse` containing a Prefab
 component tree. FastMCP automatically registers a renderer resource, sets
 `_meta.ui` on the tool, and packs the view into `structuredContent` under a
-`_prefab_view` key. The renderer reads the view description from the tool
+`view` key. The renderer reads the view description from the tool
 result and renders it dynamically.
 
 ```python
@@ -146,7 +146,7 @@ adapter is selected at renderer initialization based on the embedding context.
 - **Layout-embedded**: Static JSON layout baked into the bundle at compile
   time (for class-based apps)
 - **Dynamic**: View description arrives with each tool result in
-  `structuredContent._prefab_view` (for mini-apps)
+  `structuredContent.view` (for mini-apps)
 
 ## Transport Abstraction
 
@@ -227,8 +227,8 @@ complexity. Not blocking for v1.
 |---------|--------|
 | `AppResult` | `UIResponse` |
 | `CallTool` | `ToolCall` |
-| `_fastmcp_view` | `_prefab_view` |
-| `_fastmcp` reserved prefix | `_prefab` |
+| `_fastmcp_view` | `view` |
+| `_fastmcp` reserved prefix | (none — clean keys) |
 | `FASTMCP_RENDERER_URL` | `PREFAB_RENDERER_URL` |
 
 ## What's Built
