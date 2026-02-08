@@ -84,6 +84,7 @@ const TriggerSlot = React.forwardRef<
 interface PrefabTabsProps {
   defaultValue?: string;
   value?: string;
+  variant?: "default" | "line";
   onValueChange?: (value: string) => void;
   className?: string;
   _panels: ChildPanel[];
@@ -92,6 +93,7 @@ interface PrefabTabsProps {
 export function PrefabTabs({
   defaultValue,
   value,
+  variant,
   onValueChange,
   className,
   _panels,
@@ -106,7 +108,7 @@ export function PrefabTabs({
       onValueChange={onValueChange}
       className={className}
     >
-      <TabsList>
+      <TabsList data-variant={variant}>
         {_panels.map((panel) => (
           <TabsTrigger
             key={panel.value}
