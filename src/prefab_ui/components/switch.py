@@ -41,9 +41,7 @@ class Switch(Component):
     """
 
     type: Literal["Switch"] = "Switch"
-    label: str | None = Field(
-        default=None, description="Label text (supports {{ field }} interpolation)"
-    )
+    label: str | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether switch is on")
     size: SwitchSize = Field(default="default", description="Switch size (sm, default)")
     name: str | None = Field(default=None, description="Form field name")

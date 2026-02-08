@@ -10,25 +10,22 @@ Code blocks display source code or configuration with automatic syntax highlight
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Code","content":"def greet(name: str) -> str:\\n    \\"\\"\\"Return a greeting message.\\"\\"\\"\\n    return f\\"Hello, {name}!\\"\\n\\n# Call the function\\nmessage = greet(\\"World\\")\\nprint(message)","language":"python"}`}>
+<ComponentPreview auto json={`{"type":"Code","content":"def answer() -> int:\\n    \\"\\"\\"Return the Answer to the Ultimate Question\\n    of Life, the Universe, and Everything.\\"\\"\\"\\n    return 42","language":"python"}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Code
 
 Code("""
-def greet(name: str) -> str:
-    \"\"\"Return a greeting message.\"\"\"
-    return f"Hello, {name}!"
-
-# Call the function
-message = greet("World")
-print(message)
+def answer() -> int:
+    \"\"\"Return the Answer to the Ultimate Question
+    of Life, the Universe, and Everything.\"\"\"
+    return 42
 """.strip(), language="python")
 ```
 ```json Protocol
 {
   "type": "Code",
-  "content": "def greet(name: str) -> str:\n    \"\"\"Return a greeting message.\"\"\"\n    return f\"Hello, {name}!\"\n\n# Call the function\nmessage = greet(\"World\")\nprint(message)",
+  "content": "def answer() -> int:\n    \"\"\"Return the Answer to the Ultimate Question\n    of Life, the Universe, and Everything.\"\"\"\n    return 42",
   "language": "python"
 }
 ```
@@ -37,15 +34,20 @@ print(message)
 
 ## Multiple Languages
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Code","content":"pip install prefab-ui","language":"bash"},{"type":"Code","content":"SELECT * FROM users WHERE active = true;","language":"sql"},{"type":"Code","content":"{ \\"name\\": \\"prefab-ui\\", \\"version\\": \\"2.0\\" }","language":"json"}]}`}>
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Code","content":"pip install prefab-ui","language":"bash"},{"type":"Code","content":"SELECT name, designation\\nFROM crew\\nWHERE ship = 'Heart of Gold';","language":"sql"},{"type":"Code","content":"{ \\"ship\\": \\"Heart of Gold\\", \\"drive\\": \\"Infinite Improbability\\" }","language":"json"}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Code, Column
 
 with Column(gap=3):
     Code("pip install prefab-ui", language="bash")
-    Code("SELECT * FROM users WHERE active = true;", language="sql")
-    Code('{ "name": "prefab-ui", "version": "2.0" }', language="json")
+    Code(
+        "SELECT name, designation\n"
+        "FROM crew\n"
+        "WHERE ship = 'Heart of Gold';",
+        language="sql",
+    )
+    Code('{ "ship": "Heart of Gold", "drive": "Infinite Improbability" }', language="json")
 ```
 ```json Protocol
 {
@@ -59,12 +61,12 @@ with Column(gap=3):
     },
     {
       "type": "Code",
-      "content": "SELECT * FROM users WHERE active = true;",
+      "content": "SELECT name, designation\nFROM crew\nWHERE ship = 'Heart of Gold';",
       "language": "sql"
     },
     {
       "type": "Code",
-      "content": "{ \"name\": \"prefab-ui\", \"version\": \"2.0\" }",
+      "content": "{ \"ship\": \"Heart of Gold\", \"drive\": \"Infinite Improbability\" }",
       "language": "json"
     }
   ]
@@ -72,6 +74,16 @@ with Column(gap=3):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Dynamic Content
+
+Code content supports [interpolation](/apps/patterns/interpolation), so you can display server-generated output:
+
+```python
+from prefab_ui.components import Code
+
+Code("{{ query_result }}", language="sql")
+```
 
 ## API Reference
 

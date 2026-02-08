@@ -10,17 +10,17 @@ Badges are small, pill-shaped labels for status indicators, counts, and categori
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Badge","label":"New Feature","variant":"default"}`}>
+<ComponentPreview auto json={`{"type":"Badge","label":"Mostly Harmless","variant":"default"}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge
 
-Badge("New Feature")
+Badge("Mostly Harmless")
 ```
 ```json Protocol
 {
   "type": "Badge",
-  "label": "New Feature",
+  "label": "Mostly Harmless",
   "variant": "default"
 }
 ```
@@ -102,6 +102,108 @@ with Column(gap=3):
           "type": "Badge",
           "label": "Info",
           "variant": "info"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## In Context
+
+Badges pair well with cards and other layout components as inline status indicators:
+
+<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"Badge","label":"Online","variant":"success"}]},{"type":"CardDescription","content":"Infinite Improbability Drive engaged"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"Vogon Fleet"},{"type":"Badge","label":"Approaching","variant":"warning"}]},{"type":"CardDescription","content":"Demolition order filed with local planning authority"}]}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Badge,
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Column,
+    Row,
+)
+
+with Column(gap=3):
+    with Card():
+        with CardHeader():
+            with Row(gap=2, css_class="items-center"):
+                CardTitle("Heart of Gold")
+                Badge("Online", variant="success")
+            CardDescription("Infinite Improbability Drive engaged")
+    with Card():
+        with CardHeader():
+            with Row(gap=2, css_class="items-center"):
+                CardTitle("Vogon Fleet")
+                Badge("Approaching", variant="warning")
+            CardDescription("Demolition order filed with local planning authority")
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "cssClass": "items-center",
+              "type": "Row",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "Heart of Gold"
+                },
+                {
+                  "type": "Badge",
+                  "label": "Online",
+                  "variant": "success"
+                }
+              ]
+            },
+            {
+              "type": "CardDescription",
+              "content": "Infinite Improbability Drive engaged"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "cssClass": "items-center",
+              "type": "Row",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "Vogon Fleet"
+                },
+                {
+                  "type": "Badge",
+                  "label": "Approaching",
+                  "variant": "warning"
+                }
+              ]
+            },
+            {
+              "type": "CardDescription",
+              "content": "Demolition order filed with local planning authority"
+            }
+          ]
         }
       ]
     }

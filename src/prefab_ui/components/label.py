@@ -39,9 +39,7 @@ class Label(ContainerComponent):
     """
 
     type: Literal["Label"] = "Label"
-    text: str | None = Field(
-        default=None, description="Label text (supports {{ field }} interpolation)"
-    )
+    text: str | None = Field(default=None, description="Label text")
     for_id: str | None = Field(
         default=None,
         alias="forId",

@@ -37,7 +37,7 @@ class Badge(Component):
     """A badge component for displaying status or labels.
 
     Args:
-        label: Badge text (supports ``{{ field }}`` interpolation)
+        label: Badge text
         variant: Visual style - "default", "secondary", "destructive", "outline",
             "ghost", "success", "warning", "info"
         css_class: Additional CSS classes to apply
@@ -53,7 +53,7 @@ class Badge(Component):
     """
 
     type: Literal["Badge"] = "Badge"
-    label: str = Field(description="Badge text with {{ field }} interpolation")
+    label: str = Field(description="Badge text")
     variant: BadgeVariant = Field(
         default="default",
         description="Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info",

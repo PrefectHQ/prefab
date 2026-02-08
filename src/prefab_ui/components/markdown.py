@@ -10,7 +10,7 @@ from prefab_ui.components.base import Component
 
 
 class Markdown(Component):
-    """Rendered markdown with ``{{ field }}`` interpolation.
+    """Rendered markdown component.
 
     Example::
 
@@ -18,7 +18,7 @@ class Markdown(Component):
     """
 
     type: Literal["Markdown"] = "Markdown"
-    content: str = Field(description="Markdown content with {{ field }} interpolation")
+    content: str = Field(description="Markdown content")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

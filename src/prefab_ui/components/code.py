@@ -18,7 +18,7 @@ class Code(Component):
     """
 
     type: Literal["Code"] = "Code"
-    content: str = Field(description="Code content with {{ field }} interpolation")
+    content: str = Field(description="Code content")
     language: str | None = Field(
         default=None, description="Syntax highlighting language"
     )

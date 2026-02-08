@@ -41,9 +41,7 @@ class Slider(Component):
     type: Literal["Slider"] = "Slider"
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")
-    value: float | None = Field(
-        default=None, description="Initial value (supports {{ field }} interpolation)"
-    )
+    value: float | None = Field(default=None, description="Initial value")
     step: float | None = Field(default=None, description="Step increment")
     name: str | None = Field(default=None, description="Form field name")
     disabled: bool = Field(default=False, description="Whether slider is disabled")

@@ -10,7 +10,7 @@ from prefab_ui.components.base import Component
 
 
 class Image(Component):
-    """Image element with ``{{ field }}`` interpolation on src/alt.
+    """Image element.
 
     Example::
 
@@ -18,7 +18,7 @@ class Image(Component):
     """
 
     type: Literal["Image"] = "Image"
-    src: str = Field(description="Image URL with {{ field }} interpolation")
+    src: str = Field(description="Image URL")
     alt: str = Field(default="", description="Alt text")
     width: str | None = Field(default=None, description="CSS width")
     height: str | None = Field(default=None, description="CSS height")

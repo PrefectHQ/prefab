@@ -10,37 +10,303 @@ Pages provide a multi-page layout where only the active page renders. Navigate b
 
 ## Basic Usage
 
-```python Pages Example
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Row","gap":2,"children":[{"type":"Button","label":"Earth","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"earth"}},{"type":"Button","label":"Magrathea","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"magrathea"}},{"type":"Button","label":"Milliways","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"milliways"}}]},{"type":"Pages","defaultValue":"earth","name":"entry","children":[{"type":"Page","title":"Earth","value":"earth","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Earth"},{"type":"CardDescription","content":"Mostly harmless."}]}]}]},{"type":"Page","title":"Magrathea","value":"magrathea","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Magrathea"},{"type":"CardDescription","content":"Ancient planet-building civilization. Custom-built luxury planets for the ultra-rich."}]}]}]},{"type":"Page","title":"Milliways","value":"milliways","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Milliways"},{"type":"CardDescription","content":"The Restaurant at the End of the Universe. Reservations recommended."}]}]}]}]}]}`}>
+<CodeGroup>
+```python Python
 from prefab_ui.components import (
     Button,
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle,
     Column,
-    H2,
     Page,
     Pages,
     Row,
-    Text,
 )
 from prefab_ui.actions import SetState
 
 with Column(gap=4):
     with Row(gap=2):
-        Button("Home", on_click=SetState("page", "home"))
-        Button("Settings", variant="outline", on_click=SetState("page", "settings"))
-        Button("Profile", variant="outline", on_click=SetState("page", "profile"))
+        Button("Earth", on_click=SetState("entry", "earth"))
+        Button("Magrathea", variant="outline", on_click=SetState("entry", "magrathea"))
+        Button("Milliways", variant="outline", on_click=SetState("entry", "milliways"))
 
-    with Pages(name="page", default_value="home"):
-        with Page("Home", value="home"):
-            H2("Welcome Home")
-            Text("This is the main content area.")
-        with Page("Settings", value="settings"):
-            H2("Settings")
-            Text("Configuration options go here.")
-        with Page("Profile", value="profile"):
-            H2("Your Profile")
-            Text("Profile details go here.")
+    with Pages(name="entry", default_value="earth"):
+        with Page("Earth", value="earth"):
+            with Card():
+                with CardHeader():
+                    CardTitle("Earth")
+                    CardDescription("Mostly harmless.")
+        with Page("Magrathea", value="magrathea"):
+            with Card():
+                with CardHeader():
+                    CardTitle("Magrathea")
+                    CardDescription(
+                        "Ancient planet-building civilization. "
+                        "Custom-built luxury planets for the ultra-rich."
+                    )
+        with Page("Milliways", value="milliways"):
+            with Card():
+                with CardHeader():
+                    CardTitle("Milliways")
+                    CardDescription(
+                        "The Restaurant at the End of the Universe. "
+                        "Reservations recommended."
+                    )
 ```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Button",
+          "label": "Earth",
+          "variant": "default",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "entry",
+            "value": "earth"
+          }
+        },
+        {
+          "type": "Button",
+          "label": "Magrathea",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "entry",
+            "value": "magrathea"
+          }
+        },
+        {
+          "type": "Button",
+          "label": "Milliways",
+          "variant": "outline",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "entry",
+            "value": "milliways"
+          }
+        }
+      ]
+    },
+    {
+      "type": "Pages",
+      "defaultValue": "earth",
+      "name": "entry",
+      "children": [
+        {
+          "type": "Page",
+          "title": "Earth",
+          "value": "earth",
+          "children": [
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "content": "Earth"
+                    },
+                    {
+                      "type": "CardDescription",
+                      "content": "Mostly harmless."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Magrathea",
+          "value": "magrathea",
+          "children": [
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "content": "Magrathea"
+                    },
+                    {
+                      "type": "CardDescription",
+                      "content": "Ancient planet-building civilization. Custom-built luxury planets for the ultra-rich."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Milliways",
+          "value": "milliways",
+          "children": [
+            {
+              "type": "Card",
+              "children": [
+                {
+                  "type": "CardHeader",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "content": "Milliways"
+                    },
+                    {
+                      "type": "CardDescription",
+                      "content": "The Restaurant at the End of the Universe. Reservations recommended."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
-The `name` prop connects the Pages component to client state. When `page` changes (via `SetState`), the corresponding page renders. This makes Pages ideal for wizard flows, multi-step forms, or any layout where you want to swap entire sections without a server round-trip.
+The `name` prop connects the Pages component to client state. When the `entry` key changes (via `SetState`), the corresponding page renders. This makes Pages ideal for wizard flows, multi-step forms, or any layout where you want to swap entire sections without a server round-trip.
+
+## Step-by-Step Navigation
+
+Pages pair naturally with `SetState` to build wizard flows. Each page's button advances to the next step:
+
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings."},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices."},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Button, Column, Page, Pages, Row, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with Pages(name="step", default_value="setup"):
+        with Page("Setup", value="setup"):
+            Text("Configure your settings.")
+            Button("Next", on_click=SetState("step", "review"))
+        with Page("Review", value="review"):
+            Text("Review your choices.")
+            with Row(css_class="gap-2"):
+                Button("Back", variant="outline", on_click=SetState("step", "setup"))
+                Button("Next", on_click=SetState("step", "complete"))
+        with Page("Complete", value="complete"):
+            Text("All done!")
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Pages",
+      "defaultValue": "setup",
+      "name": "step",
+      "children": [
+        {
+          "type": "Page",
+          "title": "Setup",
+          "value": "setup",
+          "children": [
+            {
+              "type": "Text",
+              "content": "Configure your settings."
+            },
+            {
+              "type": "Button",
+              "label": "Next",
+              "variant": "default",
+              "size": "default",
+              "disabled": false,
+              "onClick": {
+                "action": "setState",
+                "key": "step",
+                "value": "review"
+              }
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Review",
+          "value": "review",
+          "children": [
+            {
+              "type": "Text",
+              "content": "Review your choices."
+            },
+            {
+              "cssClass": "gap-2",
+              "type": "Row",
+              "children": [
+                {
+                  "type": "Button",
+                  "label": "Back",
+                  "variant": "outline",
+                  "size": "default",
+                  "disabled": false,
+                  "onClick": {
+                    "action": "setState",
+                    "key": "step",
+                    "value": "setup"
+                  }
+                },
+                {
+                  "type": "Button",
+                  "label": "Next",
+                  "variant": "default",
+                  "size": "default",
+                  "disabled": false,
+                  "onClick": {
+                    "action": "setState",
+                    "key": "step",
+                    "value": "complete"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Page",
+          "title": "Complete",
+          "value": "complete",
+          "children": [
+            {
+              "type": "Text",
+              "content": "All done!"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
@@ -50,7 +316,7 @@ The `name` prop connects the Pages component to client state. When `page` change
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  State key for tracking the active page. Other components can read `$state[name]` or write with `SetState`.
+  State key for tracking the active page. Other components can write to this key with `SetState`.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

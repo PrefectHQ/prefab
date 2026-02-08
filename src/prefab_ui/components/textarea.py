@@ -41,11 +41,9 @@ class Textarea(Component):
     type: Literal["Textarea"] = "Textarea"
     placeholder: str | None = Field(
         default=None,
-        description="Placeholder text (supports {{ field }} interpolation)",
+        description="Placeholder text",
     )
-    value: str | None = Field(
-        default=None, description="Textarea value (supports {{ field }} interpolation)"
-    )
+    value: str | None = Field(default=None, description="Textarea value")
     name: str | None = Field(default=None, description="Form field name")
     rows: int | None = Field(default=None, description="Number of visible text rows")
     disabled: bool = Field(default=False, description="Whether textarea is disabled")
