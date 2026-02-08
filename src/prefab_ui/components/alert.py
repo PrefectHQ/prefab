@@ -67,7 +67,7 @@ class AlertTitle(Component):
     """
 
     type: Literal["AlertTitle"] = "AlertTitle"
-    content: str = Field(description="Title text with {{ field }} interpolation")
+    content: str = Field(description="Title text")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -92,7 +92,7 @@ class AlertDescription(Component):
     """
 
     type: Literal["AlertDescription"] = "AlertDescription"
-    content: str = Field(description="Description text with {{ field }} interpolation")
+    content: str = Field(description="Description text")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

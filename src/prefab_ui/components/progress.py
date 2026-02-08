@@ -22,7 +22,7 @@ class Progress(Component):
     type: Literal["Progress"] = "Progress"
     value: float | str = Field(
         default=0,
-        description="Current progress value (supports {{ field }} interpolation)",
+        description="Current progress value",
     )
     max: float = Field(default=100, description="Maximum value (progress is value/max)")
     indicator_class: str | None = Field(

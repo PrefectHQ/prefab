@@ -35,7 +35,7 @@ class Span(Component):
     """
 
     type: Literal["Span"] = "Span"
-    content: str = Field(description="Text content with {{ field }} interpolation")
+    content: str = Field(description="Text content")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

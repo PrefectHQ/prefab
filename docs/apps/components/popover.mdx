@@ -10,7 +10,7 @@ Popovers display rich content in a floating panel when users click a trigger ele
 
 ## Basic Usage
 
-<ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Dimensions","description":"Set the dimensions for the layer.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Width"},{"type":"Input","inputType":"text","placeholder":"100%","name":"width","disabled":false,"required":false},{"type":"Label","text":"Height"},{"type":"Input","inputType":"text","placeholder":"25px","name":"height","disabled":false,"required":false}]}]}`}>
+<ComponentPreview auto height="340px" json={`{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Source Language"},{"type":"Input","inputType":"text","placeholder":"Vogon","name":"sourceLang","disabled":false,"required":false},{"type":"Label","text":"Target Language"},{"type":"Input","inputType":"text","placeholder":"Galactic Standard","name":"targetLang","disabled":false,"required":false}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -21,19 +21,19 @@ from prefab_ui.components import (
     Popover,
 )
 
-with Popover(title="Dimensions", description="Set the dimensions for the layer."):
+with Popover(title="Babel Fish Settings", description="Configure your universal translator."):
     Button("Open popover", variant="outline")
     with Column(gap=3):
-        Label("Width")
-        Input(name="width", placeholder="100%")
-        Label("Height")
-        Input(name="height", placeholder="25px")
+        Label("Source Language")
+        Input(name="sourceLang", placeholder="Vogon")
+        Label("Target Language")
+        Input(name="targetLang", placeholder="Galactic Standard")
 ```
 ```json Protocol
 {
   "type": "Popover",
-  "title": "Dimensions",
-  "description": "Set the dimensions for the layer.",
+  "title": "Babel Fish Settings",
+  "description": "Configure your universal translator.",
   "children": [
     {
       "type": "Button",
@@ -48,25 +48,25 @@ with Popover(title="Dimensions", description="Set the dimensions for the layer."
       "children": [
         {
           "type": "Label",
-          "text": "Width"
+          "text": "Source Language"
         },
         {
           "type": "Input",
           "inputType": "text",
-          "placeholder": "100%",
-          "name": "width",
+          "placeholder": "Vogon",
+          "name": "sourceLang",
           "disabled": false,
           "required": false
         },
         {
           "type": "Label",
-          "text": "Height"
+          "text": "Target Language"
         },
         {
           "type": "Input",
           "inputType": "text",
-          "placeholder": "25px",
-          "name": "height",
+          "placeholder": "Galactic Standard",
+          "name": "targetLang",
           "disabled": false,
           "required": false
         }
@@ -82,7 +82,7 @@ with Popover(title="Dimensions", description="Set the dimensions for the layer."
 
 Skip the `title` and `description` to render content directly in the panel.
 
-<ComponentPreview auto height="260px" json={`{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Volume"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"volume","disabled":false}]}]}`}>
+<ComponentPreview auto height="260px" json={`{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"type":"Column","gap":3,"children":[{"type":"Label","text":"Improbability Factor"},{"type":"Slider","min":0.0,"max":100.0,"value":42.0,"name":"improbability","disabled":false}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -96,8 +96,8 @@ from prefab_ui.components import (
 with Popover():
     Button("Settings", variant="outline")
     with Column(gap=3):
-        Label("Volume")
-        Slider(min=0, max=100, value=50, name="volume")
+        Label("Improbability Factor")
+        Slider(min=0, max=100, value=42, name="improbability")
 ```
 ```json Protocol
 {
@@ -116,14 +116,14 @@ with Popover():
       "children": [
         {
           "type": "Label",
-          "text": "Volume"
+          "text": "Improbability Factor"
         },
         {
           "type": "Slider",
           "min": 0.0,
           "max": 100.0,
-          "value": 50.0,
-          "name": "volume",
+          "value": 42.0,
+          "name": "improbability",
           "disabled": false
         }
       ]
@@ -133,6 +133,20 @@ with Popover():
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Positioning
+
+Control which side the panel appears on with the `side` prop:
+
+```python
+from prefab_ui.components import Button, Popover, Text
+
+with Popover(title="Guide Entry", side="right"):
+    Button("Hover for info", variant="outline")
+    Text("A towel is about the most massively useful thing an interstellar hitchhiker can have.")
+```
+
+The renderer auto-adjusts if the popover would overflow the viewport, so the `side` is a preference rather than a hard constraint.
 
 ## API Reference
 
@@ -146,7 +160,7 @@ with Popover():
 </ParamField>
 
 <ParamField body="side" type="str | None" default="None">
-  Which side to show the popover: `"top"`, `"right"`, `"bottom"`, `"left"`.
+  Preferred side to show the popover: `"top"`, `"right"`, `"bottom"`, `"left"`.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

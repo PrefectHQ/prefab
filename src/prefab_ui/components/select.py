@@ -45,7 +45,7 @@ class Select(ContainerComponent):
     type: Literal["Select"] = "Select"
     placeholder: str | None = Field(
         default=None,
-        description="Placeholder text (supports {{ field }} interpolation)",
+        description="Placeholder text",
     )
     name: str | None = Field(default=None, description="Form field name")
     size: SelectSize = Field(default="default", description="Select size (sm, default)")
@@ -75,7 +75,7 @@ class SelectOption(Component):
     """
 
     type: Literal["SelectOption"] = "SelectOption"
-    value: str = Field(description="Option value (supports {{ field }} interpolation)")
-    label: str = Field(description="Display text (supports {{ field }} interpolation)")
+    value: str = Field(description="Option value")
+    label: str = Field(description="Display text")
     selected: bool = Field(default=False, description="Whether option is selected")
     disabled: bool = Field(default=False, description="Whether option is disabled")

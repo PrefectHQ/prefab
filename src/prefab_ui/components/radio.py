@@ -64,10 +64,8 @@ class Radio(Component):
     """
 
     type: Literal["Radio"] = "Radio"
-    value: str = Field(description="Form value (supports {{ field }} interpolation)")
-    label: str | None = Field(
-        default=None, description="Label text (supports {{ field }} interpolation)"
-    )
+    value: str = Field(description="Form value")
+    label: str | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether radio is selected")
     name: str | None = Field(default=None, description="Form field name")
     disabled: bool = Field(default=False, description="Whether radio is disabled")

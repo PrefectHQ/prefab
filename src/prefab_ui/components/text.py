@@ -10,7 +10,7 @@ from prefab_ui.components.base import Component
 
 
 class Text(Component):
-    """Body text with ``{{ field }}`` interpolation support.
+    """Body text component.
 
     Example::
 
@@ -18,7 +18,7 @@ class Text(Component):
     """
 
     type: Literal["Text"] = "Text"
-    content: str = Field(description="Text content with {{ field }} interpolation")
+    content: str = Field(description="Text content")
     bold: bool | None = Field(default=None, description="Render text in bold")
     italic: bool | None = Field(default=None, description="Render text in italic")
 

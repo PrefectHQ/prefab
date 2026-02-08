@@ -1,8 +1,6 @@
 """Typography components following shadcn/ui conventions.
 
 These components provide semantic text styling with automatic dark mode support.
-All text content supports ``{{ field }}`` interpolation.
-
 Example::
 
     from prefab_ui.components import H1, H2, P, Muted, Lead
@@ -26,7 +24,7 @@ from prefab_ui.components.base import Component
 class _TextComponent(Component):
     """Base class for text components that accept positional content."""
 
-    content: str = Field(description="Text content with {{ field }} interpolation")
+    content: str = Field(description="Text content")
     bold: bool | None = Field(default=None, description="Render text in bold")
     italic: bool | None = Field(default=None, description="Render text in italic")
 

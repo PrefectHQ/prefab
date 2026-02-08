@@ -10,7 +10,7 @@ from prefab_ui.components.base import Component
 
 
 class Heading(Component):
-    """Section heading (h1-h4) with ``{{ field }}`` interpolation.
+    """Section heading (h1-h4).
 
     Example::
 
@@ -18,7 +18,7 @@ class Heading(Component):
     """
 
     type: Literal["Heading"] = "Heading"
-    content: str = Field(description="Heading text with {{ field }} interpolation")
+    content: str = Field(description="Heading text")
     level: Literal[1, 2, 3, 4] = Field(
         default=1, description="Heading level (1=h1, 4=h4)"
     )

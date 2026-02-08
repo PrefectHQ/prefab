@@ -48,7 +48,7 @@ class Button(Component):
     """A button component with multiple variants and sizes.
 
     Args:
-        label: Button text (supports ``{{ field }}`` interpolation)
+        label: Button text
         variant: Visual style - "default", "destructive", "outline", "secondary", "ghost", "link"
         size: Button size - "default", "sm", "lg", "icon"
         disabled: Whether the button is disabled
@@ -62,7 +62,7 @@ class Button(Component):
     """
 
     type: Literal["Button"] = "Button"
-    label: str = Field(description="Button text with {{ field }} interpolation")
+    label: str = Field(description="Button text")
     variant: ButtonVariant = Field(
         default="default",
         description="Visual variant: default, destructive, outline, secondary, ghost, link",

@@ -40,14 +40,10 @@ class Checkbox(Component):
     """
 
     type: Literal["Checkbox"] = "Checkbox"
-    label: str | None = Field(
-        default=None, description="Label text (supports {{ field }} interpolation)"
-    )
+    label: str | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether checkbox is checked")
     name: str | None = Field(default=None, description="Form field name")
-    value: str | None = Field(
-        default=None, description="Form value (supports {{ field }} interpolation)"
-    )
+    value: str | None = Field(default=None, description="Form value")
     disabled: bool = Field(default=False, description="Whether checkbox is disabled")
     required: bool = Field(default=False, description="Whether checkbox is required")
     on_change: Action | list[Action] | None = Field(

@@ -62,11 +62,9 @@ class Input(Component):
     )
     placeholder: str | None = Field(
         default=None,
-        description="Placeholder text (supports {{ field }} interpolation)",
+        description="Placeholder text",
     )
-    value: str | None = Field(
-        default=None, description="Input value (supports {{ field }} interpolation)"
-    )
+    value: str | None = Field(default=None, description="Input value")
     name: str | None = Field(default=None, description="Form field name")
     disabled: bool = Field(default=False, description="Whether input is disabled")
     required: bool = Field(default=False, description="Whether input is required")
