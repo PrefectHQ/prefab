@@ -1,17 +1,17 @@
 ---
-title: Tabs
-description: JSON Schema for the Tabs component.
+title: Combobox
+description: JSON Schema for the Combobox component.
 ---
 
-Tab container — children must be `Tab` components.
+Searchable select dropdown.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Tabs",
-      "default": "Tabs",
+      "const": "Combobox",
+      "default": "Combobox",
       "type": "string"
     },
     "cssClass": {
@@ -36,22 +36,21 @@ Tab container — children must be `Tab` components.
         "$ref": "Component"
       }
     },
-    "variant": {
-      "default": "default",
-      "description": "Visual style \u2014 'default' (pill) or 'line' (underline)",
-      "enum": [
-        "default",
-        "line"
-      ],
-      "type": "string"
-    },
-    "defaultValue": {
+    "placeholder": {
       "type": [
         "string",
         "null"
       ],
       "default": null,
-      "description": "Value of the initially active tab"
+      "description": "Placeholder text shown when no value is selected"
+    },
+    "searchPlaceholder": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Placeholder text in the search input"
     },
     "name": {
       "type": [
@@ -59,11 +58,16 @@ Tab container — children must be `Tab` components.
         "null"
       ],
       "default": null,
-      "description": "State key for tracking the active tab"
+      "description": "State key for the selected value"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether combobox is disabled",
+      "type": "boolean"
     },
     "onChange": {
       "$ref": "Action",
-      "description": "Action(s) when the active tab changes",
+      "description": "Action(s) when the selected value changes",
       "default": null
     }
   },

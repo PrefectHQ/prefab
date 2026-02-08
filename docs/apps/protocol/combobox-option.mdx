@@ -1,17 +1,17 @@
 ---
-title: Muted
-description: JSON Schema for the Muted component.
+title: ComboboxOption
+description: JSON Schema for the ComboboxOption component.
 ---
 
-Muted/secondary text for less prominent information.
+A single option within a Combobox.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Muted",
-      "default": "Muted",
+      "const": "ComboboxOption",
+      "default": "ComboboxOption",
       "type": "string"
     },
     "cssClass": {
@@ -30,30 +30,24 @@ Muted/secondary text for less prominent information.
       "default": null,
       "description": "State key \u2014 component renders only when this state value is truthy"
     },
-    "content": {
-      "description": "Text content",
+    "value": {
+      "description": "Option value",
       "type": "string"
     },
-    "bold": {
-      "type": [
-        "boolean",
-        "null"
-      ],
-      "default": null,
-      "description": "Render text in bold"
+    "label": {
+      "description": "Display label",
+      "type": "string"
     },
-    "italic": {
-      "type": [
-        "boolean",
-        "null"
-      ],
-      "default": null,
-      "description": "Render text in italic"
+    "disabled": {
+      "default": false,
+      "description": "Whether option is disabled",
+      "type": "boolean"
     }
   },
   "required": [
     "type",
-    "content"
+    "value",
+    "label"
   ]
 }
 ```

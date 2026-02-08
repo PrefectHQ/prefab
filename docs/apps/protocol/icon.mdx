@@ -1,17 +1,17 @@
 ---
-title: Muted
-description: JSON Schema for the Muted component.
+title: Icon
+description: JSON Schema for the Icon component.
 ---
 
-Muted/secondary text for less prominent information.
+Renders a lucide icon by name.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Muted",
-      "default": "Muted",
+      "const": "Icon",
+      "default": "Icon",
       "type": "string"
     },
     "cssClass": {
@@ -30,30 +30,24 @@ Muted/secondary text for less prominent information.
       "default": null,
       "description": "State key \u2014 component renders only when this state value is truthy"
     },
-    "content": {
-      "description": "Text content",
+    "name": {
+      "description": "Lucide icon name in kebab-case",
       "type": "string"
     },
-    "bold": {
-      "type": [
-        "boolean",
-        "null"
+    "size": {
+      "default": "default",
+      "description": "Icon size variant",
+      "enum": [
+        "sm",
+        "default",
+        "lg"
       ],
-      "default": null,
-      "description": "Render text in bold"
-    },
-    "italic": {
-      "type": [
-        "boolean",
-        "null"
-      ],
-      "default": null,
-      "description": "Render text in italic"
+      "type": "string"
     }
   },
   "required": [
     "type",
-    "content"
+    "name"
   ]
 }
 ```

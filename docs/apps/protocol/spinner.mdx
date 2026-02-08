@@ -1,17 +1,17 @@
 ---
-title: AlertDescription
-description: JSON Schema for the AlertDescription component.
+title: Spinner
+description: JSON Schema for the Spinner component.
 ---
 
-Alert description text.
+Animated loading spinner.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "AlertDescription",
-      "default": "AlertDescription",
+      "const": "Spinner",
+      "default": "Spinner",
       "type": "string"
     },
     "cssClass": {
@@ -30,14 +30,19 @@ Alert description text.
       "default": null,
       "description": "State key \u2014 component renders only when this state value is truthy"
     },
-    "content": {
-      "description": "Description text",
+    "size": {
+      "default": "default",
+      "description": "Spinner size variant",
+      "enum": [
+        "sm",
+        "default",
+        "lg"
+      ],
       "type": "string"
     }
   },
   "required": [
-    "type",
-    "content"
+    "type"
   ]
 }
 ```
