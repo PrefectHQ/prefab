@@ -1,0 +1,62 @@
+---
+title: Tab
+description: JSON Schema for the Tab component.
+---
+
+A single tab panel within a Tabs container.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Tab",
+      "default": "Tab",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "description": "Tab trigger label",
+      "type": "string"
+    },
+    "value": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Unique value for this tab (defaults to title)"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Disable this tab",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "title"
+  ]
+}
+```

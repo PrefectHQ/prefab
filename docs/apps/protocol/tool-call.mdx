@@ -1,0 +1,40 @@
+---
+title: ToolCall
+description: JSON Schema for the ToolCall action.
+---
+
+Call a server tool. The renderer proxies via `app.callServerTool()`.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "toolCall",
+      "default": "toolCall",
+      "type": "string"
+    },
+    "tool": {
+      "description": "Name of the server tool to call",
+      "type": "string"
+    },
+    "arguments": {
+      "additionalProperties": true,
+      "description": "Arguments to pass. Supports {{ key }} interpolation.",
+      "type": "object"
+    },
+    "resultKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key to store the tool result under"
+    }
+  },
+  "required": [
+    "action",
+    "tool"
+  ]
+}
+```

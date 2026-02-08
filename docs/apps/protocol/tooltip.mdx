@@ -1,0 +1,63 @@
+---
+title: Tooltip
+description: JSON Schema for the Tooltip component.
+---
+
+Tooltip that appears on hover over its child.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Tooltip",
+      "default": "Tooltip",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "content": {
+      "description": "Tooltip text",
+      "type": "string"
+    },
+    "side": {
+      "enum": [
+        "top",
+        "right",
+        "bottom",
+        "left"
+      ],
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Which side to show the tooltip"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

@@ -1,0 +1,59 @@
+---
+title: Large
+description: JSON Schema for the Large component.
+---
+
+Large text for emphasis.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Large",
+      "default": "Large",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "content": {
+      "description": "Text content with {{ field }} interpolation",
+      "type": "string"
+    },
+    "bold": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null,
+      "description": "Render text in bold"
+    },
+    "italic": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": null,
+      "description": "Render text in italic"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

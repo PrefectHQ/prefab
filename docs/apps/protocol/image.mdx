@@ -1,0 +1,64 @@
+---
+title: Image
+description: JSON Schema for the Image component.
+---
+
+Image element with `{{ field }}` interpolation on src/alt.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Image",
+      "default": "Image",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "src": {
+      "description": "Image URL with {{ field }} interpolation",
+      "type": "string"
+    },
+    "alt": {
+      "default": "",
+      "description": "Alt text",
+      "type": "string"
+    },
+    "width": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS width"
+    },
+    "height": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS height"
+    }
+  },
+  "required": [
+    "type",
+    "src"
+  ]
+}
+```

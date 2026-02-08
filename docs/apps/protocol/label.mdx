@@ -1,0 +1,60 @@
+---
+title: Label
+description: JSON Schema for the Label component.
+---
+
+Label element for form fields.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Label",
+      "default": "Label",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "text": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Label text (supports {{ field }} interpolation)"
+    },
+    "forId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "ID of the associated form field"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

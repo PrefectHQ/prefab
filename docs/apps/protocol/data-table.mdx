@@ -1,0 +1,84 @@
+---
+title: DataTable
+description: JSON Schema for the DataTable component.
+---
+
+High-level data table with sorting, filtering, and pagination.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "DataTable",
+      "default": "DataTable",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "columns": {
+      "description": "Column definitions",
+      "items": {
+        "$ref": "DataTableColumn"
+      },
+      "type": "array"
+    },
+    "rows": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Row data or {{ interpolation }} reference"
+    },
+    "searchable": {
+      "default": false,
+      "description": "Show search/filter input",
+      "type": "boolean"
+    },
+    "paginated": {
+      "default": false,
+      "description": "Show pagination controls",
+      "type": "boolean"
+    },
+    "pageSize": {
+      "default": 10,
+      "description": "Rows per page when paginated",
+      "type": "integer"
+    },
+    "caption": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Optional table caption"
+    }
+  },
+  "required": [
+    "type",
+    "columns"
+  ]
+}
+```

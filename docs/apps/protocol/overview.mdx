@@ -1,0 +1,136 @@
+---
+title: Overview
+description: Wire format for the Prefab UI protocol.
+---
+
+The Prefab protocol defines the JSON wire format exchanged between a server (Python SDK) and a client (renderer). A server returns a `UIResponse` that serializes to the envelope below. The renderer parses it, resolves templates, interpolates state, and renders the component tree.
+
+## Envelope
+
+Every response is a flat JSON object. Reserved keys start with `_prefab`; everything else is client-side state.
+
+```json
+{
+  "_prefab_version": "0.1",
+  "_prefab_view": { ... },
+  "_prefab_defs": { ... },
+  "count": 42,
+  "name": "Alice"
+}
+```
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `_prefab_version` | `string` | Protocol version (currently `"0.1"`) |
+| `_prefab_view` | `Component` | The root component tree to render |
+| `_prefab_defs` | `object` | Optional map of template name to component subtree (see Define/Use below) |
+| `*` | `any` | All other keys are client-side state, accessible via `{{ key }}` interpolation |
+
+State keys must not start with `_prefab` or `$`.
+
+## Components
+
+Every component is a JSON object with a `type` discriminator:
+
+```json
+{
+  "type": "Badge",
+  "label": "Active",
+  "variant": "success"
+}
+```
+
+All components share two optional base fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `cssClass` | `string` | Additional Tailwind CSS classes |
+| `visibleWhen` | `string` | State key — component renders only when this value is truthy |
+
+Container components (Row, Column, Card, etc.) also have a `children` array of nested components.
+
+## Actions
+
+Actions define what happens on user interaction. They appear in event handler fields like `onClick`, `onChange`, and `onSubmit`. An action uses an `action` discriminator instead of `type`:
+
+```json
+{
+  "action": "toolCall",
+  "tool": "get_weather",
+  "arguments": { "city": "{{ city }}" }
+}
+```
+
+Action fields accept a single action, an array of actions (executed sequentially), or `null`:
+
+```json
+{
+  "type": "Button",
+  "label": "Submit",
+  "onClick": [
+    { "action": "setState", "key": "loading", "value": true },
+    { "action": "toolCall", "tool": "process" }
+  ]
+}
+```
+
+Available action types:
+
+| Action | Discriminator | Description |
+|--------|--------------|-------------|
+| [SetState](/apps/protocol/set-state) | `setState` | Set a client-side state variable |
+| [ToggleState](/apps/protocol/toggle-state) | `toggleState` | Flip a boolean state variable |
+| [ToolCall](/apps/protocol/tool-call) | `toolCall` | Call a server-side tool |
+| [SendMessage](/apps/protocol/send-message) | `sendMessage` | Send a message to the chat |
+| [UpdateContext](/apps/protocol/update-context) | `updateContext` | Silently update model context |
+| [OpenLink](/apps/protocol/open-link) | `openLink` | Open a URL |
+| [ShowToast](/apps/protocol/show-toast) | `showToast` | Display a toast notification |
+
+## Interpolation
+
+All string properties support `{{ key }}` placeholders that resolve against client-side state at render time. The special value `{{ $event }}` captures the triggering interaction's value (slider position, input text, checkbox state, etc.).
+
+```json
+{
+  "type": "P",
+  "content": "Hello, {{ name }}! You have {{ count }} items."
+}
+```
+
+## Define / Use (Templates)
+
+Templates let you define a component subtree once and reference it multiple times with different data.
+
+**Defining a template** — entries in `_prefab_defs` map a name to a component subtree:
+
+```json
+{
+  "_prefab_defs": {
+    "user-card": {
+      "type": "Card",
+      "children": [
+        { "type": "CardTitle", "content": "{{ name }}" },
+        { "type": "CardDescription", "content": "{{ role }}" }
+      ]
+    }
+  }
+}
+```
+
+**Using a template** — a `$ref` node references a definition by name:
+
+```json
+{ "$ref": "user-card" }
+```
+
+**With scoped data** — wrap the `$ref` in a `State` node to provide interpolation values:
+
+```json
+{
+  "type": "State",
+  "state": { "name": "Alice", "role": "Engineer" },
+  "children": [{ "$ref": "user-card" }]
+}
+```
+
+The renderer resolves `$ref` nodes by looking up the definition and rendering it with the current interpolation context. Circular references are detected and short-circuited.

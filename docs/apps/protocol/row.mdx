@@ -1,0 +1,83 @@
+---
+title: Row
+description: JSON Schema for the Row component.
+---
+
+Horizontal flex container.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Row",
+      "default": "Row",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "gap": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Gap between children: int or (x, y)"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

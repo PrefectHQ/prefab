@@ -1,0 +1,49 @@
+---
+title: ForEach
+description: JSON Schema for the ForEach component.
+---
+
+Repeat children for each item in a data list.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "ForEach",
+      "default": "ForEach",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "key": {
+      "description": "Data field containing the list to iterate over",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "key"
+  ]
+}
+```

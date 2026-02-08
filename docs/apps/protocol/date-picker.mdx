@@ -1,0 +1,56 @@
+---
+title: DatePicker
+description: JSON Schema for the DatePicker component.
+---
+
+Date picker with a popover calendar.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "DatePicker",
+      "default": "DatePicker",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "placeholder": {
+      "default": "Pick a date",
+      "description": "Button text when no date is selected",
+      "type": "string"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for the selected date (ISO string)"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) when date changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

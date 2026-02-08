@@ -1,0 +1,43 @@
+---
+title: Markdown
+description: JSON Schema for the Markdown component.
+---
+
+Rendered markdown with `{{ field }}` interpolation.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Markdown",
+      "default": "Markdown",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "content": {
+      "description": "Markdown content with {{ field }} interpolation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

@@ -1,0 +1,58 @@
+---
+title: ShowToast
+description: JSON Schema for the ShowToast action.
+---
+
+Display a toast notification. Client-side only, no server trip.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "showToast",
+      "default": "showToast",
+      "type": "string"
+    },
+    "message": {
+      "description": "Toast message text",
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Optional secondary text"
+    },
+    "variant": {
+      "enum": [
+        "default",
+        "success",
+        "error",
+        "warning",
+        "info"
+      ],
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Toast style variant"
+    },
+    "duration": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Auto-dismiss duration in milliseconds"
+    }
+  },
+  "required": [
+    "action",
+    "message"
+  ]
+}
+```

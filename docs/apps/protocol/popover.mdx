@@ -1,0 +1,74 @@
+---
+title: Popover
+description: JSON Schema for the Popover component.
+---
+
+Popover floating panel.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Popover",
+      "default": "Popover",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Optional popover header title"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Optional popover description"
+    },
+    "side": {
+      "enum": [
+        "top",
+        "right",
+        "bottom",
+        "left"
+      ],
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Which side to show the popover"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

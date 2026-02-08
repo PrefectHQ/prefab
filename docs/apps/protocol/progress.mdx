@@ -1,0 +1,63 @@
+---
+title: Progress
+description: JSON Schema for the Progress component.
+---
+
+A progress bar showing completion status.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Progress",
+      "default": "Progress",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": 0,
+      "description": "Current progress value (supports {{ field }} interpolation)"
+    },
+    "max": {
+      "default": 100,
+      "description": "Maximum value (progress is value/max)",
+      "type": "number"
+    },
+    "indicatorClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Tailwind classes for the indicator bar (e.g. 'bg-green-500')"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

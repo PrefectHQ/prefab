@@ -1,0 +1,60 @@
+---
+title: Dialog
+description: JSON Schema for the Dialog component.
+---
+
+Modal dialog overlay.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Dialog",
+      "default": "Dialog",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Dialog header title"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Dialog header description"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

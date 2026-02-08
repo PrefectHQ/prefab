@@ -1,0 +1,82 @@
+---
+title: Slider
+description: JSON Schema for the Slider component.
+---
+
+Range slider input component.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Slider",
+      "default": "Slider",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "min": {
+      "default": 0,
+      "description": "Minimum value",
+      "type": "number"
+    },
+    "max": {
+      "default": 100,
+      "description": "Maximum value",
+      "type": "number"
+    },
+    "value": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Initial value (supports {{ field }} interpolation)"
+    },
+    "step": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Step increment"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Form field name"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether slider is disabled",
+      "type": "boolean"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when value changes",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```
