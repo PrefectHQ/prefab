@@ -168,6 +168,101 @@ with Tabs(default_value="account"):
 </CodeGroup>
 </ComponentPreview>
 
+## Variants
+
+The `variant` prop controls the visual style of the tab triggers. The default uses a pill-style background, while `"line"` uses an underline indicator.
+
+<ComponentPreview auto json={`{"type":"Column","gap":6,"children":[{"type":"Tabs","variant":"default","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]},{"type":"Tabs","variant":"line","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Column, Tab, Tabs, Text
+
+with Column(gap=6):
+    with Tabs(default_value="one"):
+        with Tab("Mostly", value="one"):
+            Text("Don't panic.")
+        with Tab("Harmless", value="two"):
+            Text("It's a wholly remarkable book.")
+
+    with Tabs(variant="line", default_value="one"):
+        with Tab("Mostly", value="one"):
+            Text("Don't panic.")
+        with Tab("Harmless", value="two"):
+            Text("It's a wholly remarkable book.")
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 6,
+  "children": [
+    {
+      "type": "Tabs",
+      "variant": "default",
+      "defaultValue": "one",
+      "children": [
+        {
+          "type": "Tab",
+          "title": "Mostly",
+          "value": "one",
+          "disabled": false,
+          "children": [
+            {
+              "type": "Text",
+              "content": "Don't panic."
+            }
+          ]
+        },
+        {
+          "type": "Tab",
+          "title": "Harmless",
+          "value": "two",
+          "disabled": false,
+          "children": [
+            {
+              "type": "Text",
+              "content": "It's a wholly remarkable book."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Tabs",
+      "variant": "line",
+      "defaultValue": "one",
+      "children": [
+        {
+          "type": "Tab",
+          "title": "Mostly",
+          "value": "one",
+          "disabled": false,
+          "children": [
+            {
+              "type": "Text",
+              "content": "Don't panic."
+            }
+          ]
+        },
+        {
+          "type": "Tab",
+          "title": "Harmless",
+          "value": "two",
+          "disabled": false,
+          "children": [
+            {
+              "type": "Text",
+              "content": "It's a wholly remarkable book."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## State Tracking
 
 Give Tabs a `name` to sync the active tab with client state. Other components can then read or change which tab is active — useful for building wizard flows or linking navigation between different parts of the UI.
@@ -191,6 +286,10 @@ with Column(gap=4):
 ## API Reference
 
 <Card icon="code" title="Tabs Parameters">
+<ParamField body="variant" type="str" default="default">
+  Visual style: `"default"` (pill background) or `"line"` (underline indicator).
+</ParamField>
+
 <ParamField body="default_value" type="str | None" default="None">
   Value of the initially active tab. If omitted, the first tab is active.
 </ParamField>
@@ -227,6 +326,7 @@ with Column(gap=4):
 ```json Tabs
 {
   "type": "Tabs",
+  "variant?": "default | line",
   "defaultValue?": "string",
   "name?": "string",
   "onChange?": "Action | Action[]",
