@@ -1,10 +1,10 @@
 """UIResponse — package a component tree with state for the renderer.
 
-Returns a component view with optional client-side state.
-State keys become top-level fields in the response alongside the reserved
-``_prefab_view`` key — the model sees initial state as useful domain
-context, while all subsequent client-side mutations (SetState, form inputs,
-ToolCall result_key) are renderer-private.
+Returns a component view with optional client-side state.  The envelope
+uses clean top-level keys (``version``, ``view``, ``defs``, ``state``).
+The model sees initial state as useful domain context, while all subsequent
+client-side mutations (SetState, form inputs, ToolCall result_key) are
+renderer-private.
 """
 
 from __future__ import annotations
@@ -14,16 +14,16 @@ from typing import Any
 import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
-PROTOCOL_VERSION = "0.1"
+PROTOCOL_VERSION = "0.2"
 
 
 class UIResponse(BaseModel):
     """Return type for server functions that render interactive UIs.
 
     Packages an optional component view, client-side state, and a text
-    fallback. State keys are spread as top-level fields (the model
-    sees them). The component tree goes under the reserved ``_prefab_view``
-    key. Templates use bare names to reference state: ``{{ users }}``.
+    fallback.  The envelope uses ``version``, ``view``, ``defs``, and
+    ``state`` as top-level keys.  Templates use bare names to reference
+    state: ``{{ users }}``.
 
     Usage::
 
@@ -39,7 +39,7 @@ class UIResponse(BaseModel):
     view: Any | None = Field(default=None, description="Component tree to render")
     state: dict[str, Any] | None = Field(
         default=None,
-        description="Client-side state — keys become top-level response fields",
+        description="Client-side state — nested under the 'state' envelope key",
     )
     defs: list[Any] | None = Field(
         default=None,
@@ -53,10 +53,6 @@ class UIResponse(BaseModel):
     def _validate_state_keys(self) -> UIResponse:
         if self.state is not None:
             for key in self.state:
-                if key.startswith("_prefab"):
-                    raise ValueError(
-                        f"State key {key!r} uses reserved prefix '_prefab'"
-                    )
                 if key.startswith("$"):
                     raise ValueError(f"State key {key!r} uses reserved prefix '$'")
         return self
@@ -64,23 +60,19 @@ class UIResponse(BaseModel):
     def to_json(self) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        State keys become top-level dict entries. The component tree is
-        nested under ``_prefab_view``.
+        Returns a dict with ``version``, ``view``, ``defs``, and ``state``
+        as top-level keys.
         """
-        result: dict[str, Any] = {}
-
-        if self.state is not None:
-            state_json = pydantic_core.to_jsonable_python(self.state)
-            if isinstance(state_json, dict):
-                result.update(state_json)
-
-        result["_prefab_version"] = PROTOCOL_VERSION
-
-        if self.defs:
-            result["_prefab_defs"] = {d.name: d.to_json() for d in self.defs}
+        result: dict[str, Any] = {"version": PROTOCOL_VERSION}
 
         if self.view is not None:
-            result["_prefab_view"] = self.view.to_json()
+            result["view"] = self.view.to_json()
+
+        if self.defs:
+            result["defs"] = {d.name: d.to_json() for d in self.defs}
+
+        if self.state is not None:
+            result["state"] = pydantic_core.to_jsonable_python(self.state)
 
         return result
 
