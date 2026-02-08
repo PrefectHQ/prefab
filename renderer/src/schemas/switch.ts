@@ -4,7 +4,9 @@ import { actionOrList } from "./actions.ts";
 
 export const switchSchema = componentBase.extend({
   type: z.literal("Switch"),
-  label: z.string().optional(),
+  label: z.string().nullable().optional(),
+  title: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
   checked: z.boolean().optional(),
   size: z.enum(["sm", "default"]).optional(),
   name: z.string().optional(),

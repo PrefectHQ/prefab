@@ -42,6 +42,14 @@ class Switch(Component):
 
     type: Literal["Switch"] = "Switch"
     label: str | None = Field(default=None, description="Label text")
+    title: str | None = Field(
+        default=None,
+        description="Card title — renders switch in a choice-card layout",
+    )
+    description: str | None = Field(
+        default=None,
+        description="Card description text (shown below title)",
+    )
     checked: bool = Field(default=False, description="Whether switch is on")
     size: SwitchSize = Field(default="default", description="Switch size (sm, default)")
     name: str | None = Field(default=None, description="Form field name")

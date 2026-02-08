@@ -247,6 +247,8 @@ export function PrefabCheckbox({
 
 interface PrefabSwitchProps {
   label?: string;
+  title?: string;
+  description?: string;
   checked?: boolean;
   name?: string;
   disabled?: boolean;
@@ -257,6 +259,8 @@ interface PrefabSwitchProps {
 
 export function PrefabSwitch({
   label,
+  title,
+  description,
   checked,
   name,
   disabled,
@@ -276,13 +280,36 @@ export function PrefabSwitch({
       onCheckedChange={onCheckedChange}
       disabled={disabled}
       name={name}
-      className={className}
     />
   );
 
+  // Choice card layout when title/description are present
+  if (title || description) {
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-between gap-4 rounded-lg border p-4",
+          className,
+        )}
+      >
+        <div className="space-y-0.5">
+          {title && (
+            <Label htmlFor={id} className="cursor-pointer text-base">
+              {title}
+            </Label>
+          )}
+          {description && (
+            <p className="text-sm text-muted-foreground">{description}</p>
+          )}
+        </div>
+        {switchEl}
+      </div>
+    );
+  }
+
   if (label) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className={cn("flex items-center space-x-2", className)}>
         {switchEl}
         <Label htmlFor={id} className="cursor-pointer">
           {label}
