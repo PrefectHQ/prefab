@@ -45,6 +45,7 @@ from prefab_ui.components.row import Row
 from prefab_ui.components.select import Select, SelectOption
 from prefab_ui.components.separator import Separator
 from prefab_ui.components.slider import Slider
+from prefab_ui.components.spinner import Spinner
 from prefab_ui.components.state import State
 from prefab_ui.components.switch import Switch
 from prefab_ui.components.tabs import Tab, Tabs
@@ -133,6 +134,7 @@ __all__ = [
     "Slider",
     "Small",
     "Span",
+    "Spinner",
     "State",
     "Switch",
     "Tab",

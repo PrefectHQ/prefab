@@ -30,6 +30,7 @@ import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
 import { Label } from "@/ui/label";
 import { Separator } from "@/ui/separator";
+import { Spinner } from "@/ui/spinner";
 import { Slider } from "@/ui/slider";
 import { Progress } from "@/ui/progress";
 import {
@@ -103,6 +104,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Label,
   Separator,
   Slider,
+  Spinner,
   Progress,
 
   // Form wrappers (Python API → shadcn multi-part)
