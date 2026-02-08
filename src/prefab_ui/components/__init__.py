@@ -29,6 +29,7 @@ from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
 from prefab_ui.components.div import Div, Span
 from prefab_ui.components.accordion import Accordion, AccordionItem
+from prefab_ui.components.field import Field
 from prefab_ui.components.foreach import ForEach
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
@@ -110,6 +111,7 @@ __all__ = [
     "DatePicker",
     "Dialog",
     "Div",
+    "Field",
     "ForEach",
     "Form",
     "Grid",

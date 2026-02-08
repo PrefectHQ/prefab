@@ -297,6 +297,11 @@
   {
     "title": "Python",
     "category": "Components",
+    "code": "from prefab_ui.components import (\n    Column,\n    Combobox,\n    ComboboxOption,\n    Text,\n)\n\nwith Column(gap=3):\n    with Combobox(\n        placeholder=\"Select a planet...\",\n        name=\"planet\",\n    ):\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Betelgeuse\", value=\"betelgeuse\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n\n    Text(\"Selected: {{ planet }}\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
     "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Pick a language...\",\n    search_placeholder=\"Filter languages...\",\n    name=\"language\",\n):\n    ComboboxOption(\"Python\", value=\"python\")\n    ComboboxOption(\"TypeScript\", value=\"typescript\")\n    ComboboxOption(\"Rust\", value=\"rust\")\n    ComboboxOption(\"Go\", value=\"go\")"
   },
   {
@@ -338,6 +343,21 @@
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import Button, Dialog, Row, Text\n\nwith Dialog(\n    title=\"Activate Improbability Drive\",\n    description=\"This action cannot be undone.\",\n):\n    Button(\"Engage Drive\", variant=\"destructive\")\n    Text(\n        \"Are you sure? The last time this was engaged, \"\n        \"a sperm whale and a bowl of petunias materialized in mid-air.\"\n    )\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\"Engage\", variant=\"destructive\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Field, Switch\n\nwith Column(gap=4):\n    with Field(\n        title=\"Marketing emails\",\n        description=\"Receive emails about new products \"\n        \"and features.\",\n    ):\n        Switch()\n\n    with Field(\n        title=\"Security emails\",\n        description=\"Receive emails about your account \"\n        \"activity.\",\n    ):\n        Switch(checked=True)"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import Checkbox, Column, Field\n\nwith Column(gap=4):\n    with Field(\n        title=\"Accept terms\",\n        description=\"You agree to our Terms of Service \"\n        \"and Privacy Policy.\",\n    ):\n        Checkbox()\n\n    with Field(\n        title=\"Subscribe to newsletter\",\n        description=\"Get weekly updates on new features.\",\n    ):\n        Checkbox(checked=True)"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Field, Switch\n\nwith Column(gap=4):\n    with Field(\n        title=\"Enabled option\",\n        description=\"You can toggle this.\",\n    ):\n        Switch(checked=True)\n\n    with Field(\n        title=\"Disabled option\",\n        description=\"This cannot be changed.\",\n        disabled=True,\n    ):\n        Switch(disabled=True)"
   },
   {
     "title": "Python",
@@ -633,11 +653,6 @@
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=4):\n    Switch(label=\"Default size\", checked=True)\n    Switch(label=\"Small size\", size=\"sm\", checked=True)"
-  },
-  {
-    "title": "Python",
-    "category": "Components",
-    "code": "from prefab_ui.components import Column, Switch\n\nwith Column(gap=4):\n    Switch(\n        title=\"Marketing emails\",\n        description=\"Receive emails about new products \"\n        \"and features.\",\n    )\n    Switch(\n        title=\"Security emails\",\n        description=\"Receive emails about your account \"\n        \"activity.\",\n        checked=True,\n    )"
   },
   {
     "title": "Python",

@@ -1,0 +1,234 @@
+---
+title: Field
+description: Choice card container for form controls.
+icon: rectangle-list
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Field wraps a form control in a bordered card with a title and optional description. The entire card is clickable — clicking anywhere activates the wrapped control. When the control is checked, the card highlights with a subtle border and background tint.
+
+## Basic Usage
+
+Wrap any toggle-like control (Switch, Checkbox) inside a Field to get the choice card layout.
+
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Field","title":"Marketing emails","description":"Receive emails about new products and features.","disabled":false,"children":[{"type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Security emails","description":"Receive emails about your account activity.","disabled":false,"children":[{"type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Column, Field, Switch
+
+with Column(gap=4):
+    with Field(
+        title="Marketing emails",
+        description="Receive emails about new products "
+        "and features.",
+    ):
+        Switch()
+
+    with Field(
+        title="Security emails",
+        description="Receive emails about your account "
+        "activity.",
+    ):
+        Switch(checked=True)
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Field",
+      "title": "Marketing emails",
+      "description": "Receive emails about new products and features.",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Switch",
+          "checked": false,
+          "size": "default",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "Field",
+      "title": "Security emails",
+      "description": "Receive emails about your account activity.",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Switch",
+          "checked": true,
+          "size": "default",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## With Checkbox
+
+Field works with any toggle control.
+
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Field","title":"Accept terms","description":"You agree to our Terms of Service and Privacy Policy.","disabled":false,"children":[{"type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"Field","title":"Subscribe to newsletter","description":"Get weekly updates on new features.","disabled":false,"children":[{"type":"Checkbox","checked":true,"disabled":false,"required":false}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Checkbox, Column, Field
+
+with Column(gap=4):
+    with Field(
+        title="Accept terms",
+        description="You agree to our Terms of Service "
+        "and Privacy Policy.",
+    ):
+        Checkbox()
+
+    with Field(
+        title="Subscribe to newsletter",
+        description="Get weekly updates on new features.",
+    ):
+        Checkbox(checked=True)
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Field",
+      "title": "Accept terms",
+      "description": "You agree to our Terms of Service and Privacy Policy.",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Checkbox",
+          "checked": false,
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "Field",
+      "title": "Subscribe to newsletter",
+      "description": "Get weekly updates on new features.",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Checkbox",
+          "checked": true,
+          "disabled": false,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Disabled
+
+A disabled Field dims the card and prevents interaction.
+
+<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Field","title":"Enabled option","description":"You can toggle this.","disabled":false,"children":[{"type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Disabled option","description":"This cannot be changed.","disabled":true,"children":[{"type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import Column, Field, Switch
+
+with Column(gap=4):
+    with Field(
+        title="Enabled option",
+        description="You can toggle this.",
+    ):
+        Switch(checked=True)
+
+    with Field(
+        title="Disabled option",
+        description="This cannot be changed.",
+        disabled=True,
+    ):
+        Switch(disabled=True)
+```
+```json Protocol
+{
+  "type": "Column",
+  "gap": 4,
+  "children": [
+    {
+      "type": "Field",
+      "title": "Enabled option",
+      "description": "You can toggle this.",
+      "disabled": false,
+      "children": [
+        {
+          "type": "Switch",
+          "checked": true,
+          "size": "default",
+          "disabled": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "Field",
+      "title": "Disabled option",
+      "description": "This cannot be changed.",
+      "disabled": true,
+      "children": [
+        {
+          "type": "Switch",
+          "checked": false,
+          "size": "default",
+          "disabled": true,
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Field Parameters">
+<ParamField body="title" type="str" required>
+  Card heading text.
+</ParamField>
+
+<ParamField body="description" type="str | None" default="None">
+  Secondary text below the title.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether the field is dimmed and non-interactive.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Field
+{
+  "type": "Field",
+  "title": "string (required)",
+  "description?": "string",
+  "disabled?": false,
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

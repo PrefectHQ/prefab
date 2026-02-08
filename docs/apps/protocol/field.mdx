@@ -1,0 +1,62 @@
+---
+title: Field
+description: JSON Schema for the Field component.
+---
+
+Choice card container for form controls.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Field",
+      "default": "Field",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "title": {
+      "description": "Card heading text",
+      "type": "string"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Secondary text below the title"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether the field is dimmed and non-interactive",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "title"
+  ]
+}
+```

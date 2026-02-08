@@ -26,6 +26,7 @@ import {
 import { AlertTitle, AlertDescription } from "@/ui/alert";
 import { PrefabAlert } from "./alert-wrapper";
 import { PrefabCombobox } from "./combobox-wrapper";
+import { PrefabField } from "./field-wrapper";
 import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
@@ -131,6 +132,9 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
+
+  // Field (choice card wrapper)
+  Field: PrefabField,
 
   // Layout
   Row,
