@@ -40,6 +40,14 @@ import { buttonSchema } from "./button.ts";
 import { buttonGroupSchema } from "./button_group.ts";
 import { calendarSchema } from "./calendar.ts";
 import {
+  barChartSchema,
+  lineChartSchema,
+  areaChartSchema,
+  pieChartSchema,
+  radarChartSchema,
+  radialChartSchema,
+} from "./chart.ts";
+import {
   cardSchema,
   cardHeaderSchema,
   cardTitleSchema,
@@ -116,7 +124,9 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Alert: alertSchema,
   AlertTitle: alertTitleSchema,
   AlertDescription: alertDescriptionSchema,
+  AreaChart: areaChartSchema,
   Badge: badgeSchema,
+  BarChart: barChartSchema,
   BlockQuote: blockQuoteSchema,
   Button: buttonSchema,
   ButtonGroup: buttonGroupSchema,
@@ -152,11 +162,15 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Label: labelSchema,
   Large: largeSchema,
   Lead: leadSchema,
+  LineChart: lineChartSchema,
   Markdown: markdownSchema,
   Muted: mutedSchema,
   P: pSchema,
   Page: pageSchema,
   Pages: pagesSchema,
+  PieChart: pieChartSchema,
+  RadarChart: radarChartSchema,
+  RadialChart: radialChartSchema,
   Popover: popoverSchema,
   Progress: progressSchema,
   Radio: radioSchema,

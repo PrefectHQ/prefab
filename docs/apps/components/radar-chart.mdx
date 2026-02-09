@@ -1,0 +1,157 @@
+---
+title: RadarChart
+description: Compare multivariate data on radial axes.
+icon: chart-radar
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+RadarChart plots data across multiple axes radiating from a center point, forming a spider-web shape. Each `ChartSeries` becomes a filled polygon, making it easy to compare profiles across categories.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"type":"RadarChart","data":[{"subject":"Math","alice":120,"bob":98},{"subject":"English","alice":98,"bob":130},{"subject":"Science","alice":86,"bob":110},{"subject":"History","alice":99,"bob":95},{"subject":"Art","alice":85,"bob":90}],"series":[{"dataKey":"alice","label":"Alice"},{"dataKey":"bob","label":"Bob"}],"axisKey":"subject","height":300,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import RadarChart, ChartSeries
+
+RadarChart(
+    data=[
+        {"subject": "Math", "alice": 120, "bob": 98},
+        {"subject": "English", "alice": 98, "bob": 130},
+        {"subject": "Science", "alice": 86, "bob": 110},
+        {"subject": "History", "alice": 99, "bob": 95},
+        {"subject": "Art", "alice": 85, "bob": 90},
+    ],
+    series=[
+        ChartSeries(data_key="alice", label="Alice"),
+        ChartSeries(data_key="bob", label="Bob"),
+    ],
+    axis_key="subject",
+    show_legend=True,
+)
+```
+```json Protocol
+{
+  "type": "RadarChart",
+  "data": [
+    {"subject": "Math", "alice": 120, "bob": 98},
+    {"subject": "English", "alice": 98, "bob": 130},
+    {"subject": "Science", "alice": 86, "bob": 110},
+    {"subject": "History", "alice": 99, "bob": 95},
+    {"subject": "Art", "alice": 85, "bob": 90}
+  ],
+  "series": [
+    {"dataKey": "alice", "label": "Alice"},
+    {"dataKey": "bob", "label": "Bob"}
+  ],
+  "axisKey": "subject",
+  "height": 300,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Minimal
+
+Hide the polar grid for a cleaner look.
+
+<ComponentPreview auto json={`{"type":"RadarChart","data":[{"subject":"Math","score":120},{"subject":"English","score":98},{"subject":"Science","score":86},{"subject":"History","score":99},{"subject":"Art","score":85}],"series":[{"dataKey":"score","label":"Score"}],"axisKey":"subject","height":300,"showGrid":false}`}>
+<CodeGroup>
+```python Python {5}
+RadarChart(
+    data=data,
+    series=[ChartSeries(data_key="score", label="Score")],
+    axis_key="subject",
+    show_grid=False,
+)
+```
+```json Protocol {6}
+{
+  "type": "RadarChart",
+  "data": "...",
+  "series": [{"dataKey": "score", "label": "Score"}],
+  "axisKey": "subject",
+  "showGrid": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="RadarChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="series" type="list[ChartSeries]" required>
+  Series definitions — each becomes a filled polygon on the chart.
+</ParamField>
+
+<ParamField body="axis_key" type="str | None" default="None">
+  Data key for angular axis labels.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="show_grid" type="bool" default="True">
+  Show polar grid lines.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="ChartSeries Parameters">
+<ParamField body="data_key" type="str" required>
+  Data field to plot — must match a key in the data dicts.
+</ParamField>
+
+<ParamField body="label" type="str | None" default="None">
+  Display label for legends and tooltips. Defaults to the `data_key` value.
+</ParamField>
+
+<ParamField body="color" type="str | None" default="None">
+  CSS color override. By default, colors cycle through the theme's chart palette (`--chart-1` through `--chart-5`).
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json RadarChart
+{
+  "type": "RadarChart",
+  "data": "object[] | string (required)",
+  "series": [ChartSeries],
+  "axisKey?": "string",
+  "height?": 300,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "showGrid?": true,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
+
+```json ChartSeries
+{
+  "dataKey": "string (required)",
+  "label?": "string",
+  "color?": "string"
+}
+```

@@ -1,0 +1,90 @@
+---
+title: RadarChart
+description: JSON Schema for the RadarChart component.
+---
+
+Radar (spider) chart with one or more series plotted on radial axes.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "RadarChart",
+      "default": "RadarChart",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Row data or {{ interpolation }} reference"
+    },
+    "series": {
+      "description": "Series to render as radar areas",
+      "items": {
+        "$ref": "ChartSeries"
+      },
+      "type": "array"
+    },
+    "axisKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Data key for angular axis labels"
+    },
+    "height": {
+      "default": 300,
+      "description": "Chart height in pixels",
+      "type": "integer"
+    },
+    "showLegend": {
+      "default": false,
+      "description": "Show legend",
+      "type": "boolean"
+    },
+    "showTooltip": {
+      "default": true,
+      "description": "Show tooltip on hover",
+      "type": "boolean"
+    },
+    "showGrid": {
+      "default": true,
+      "description": "Show polar grid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "data",
+    "series"
+  ]
+}
+```

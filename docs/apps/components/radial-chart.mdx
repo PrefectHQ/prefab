@@ -1,0 +1,143 @@
+---
+title: RadialChart
+description: Visualize categorical data as concentric rings.
+icon: circle-notch
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+RadialChart renders each data item as a concentric ring, with length proportional to its value. Like PieChart, it uses `data_key` for numeric values and `name_key` for labels. Adjust `inner_radius` to control how tight the rings are.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"type":"RadialChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":30,"showLegend":true,"showTooltip":true}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import RadialChart
+
+RadialChart(
+    data=[
+        {"browser": "Chrome", "visitors": 275},
+        {"browser": "Safari", "visitors": 200},
+        {"browser": "Firefox", "visitors": 187},
+        {"browser": "Edge", "visitors": 173},
+        {"browser": "Other", "visitors": 90},
+    ],
+    data_key="visitors",
+    name_key="browser",
+    show_legend=True,
+)
+```
+```json Protocol
+{
+  "type": "RadialChart",
+  "data": [
+    {"browser": "Chrome", "visitors": 275},
+    {"browser": "Safari", "visitors": 200},
+    {"browser": "Firefox", "visitors": 187},
+    {"browser": "Edge", "visitors": 173},
+    {"browser": "Other", "visitors": 90}
+  ],
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "height": 300,
+  "innerRadius": 30,
+  "showLegend": true,
+  "showTooltip": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Tight Rings
+
+Increase `inner_radius` to push rings outward, creating a tighter radial layout.
+
+<ComponentPreview auto json={`{"type":"RadialChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":80,"showLegend":true}`}>
+<CodeGroup>
+```python Python {9}
+RadialChart(
+    data=[
+        {"browser": "Chrome", "visitors": 275},
+        {"browser": "Safari", "visitors": 200},
+        {"browser": "Firefox", "visitors": 187},
+        {"browser": "Edge", "visitors": 173},
+        {"browser": "Other", "visitors": 90},
+    ],
+    inner_radius=80,
+    data_key="visitors",
+    name_key="browser",
+    show_legend=True,
+)
+```
+```json Protocol {10}
+{
+  "type": "RadialChart",
+  "data": [
+    {"browser": "Chrome", "visitors": 275},
+    {"browser": "Safari", "visitors": 200},
+    {"browser": "Firefox", "visitors": 187},
+    {"browser": "Edge", "visitors": 173},
+    {"browser": "Other", "visitors": 90}
+  ],
+  "innerRadius": 80,
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="RadialChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="data_key" type="str" required>
+  The data field containing numeric values to plot as ring lengths.
+</ParamField>
+
+<ParamField body="name_key" type="str" required>
+  The data field containing labels for each ring.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="inner_radius" type="int" default="30">
+  Inner radius in pixels. Increase to push rings outward.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json RadialChart
+{
+  "type": "RadialChart",
+  "data": "object[] | string (required)",
+  "dataKey": "string (required)",
+  "nameKey": "string (required)",
+  "height?": 300,
+  "innerRadius?": 30,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

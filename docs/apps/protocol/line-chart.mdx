@@ -1,0 +1,90 @@
+---
+title: LineChart
+description: JSON Schema for the LineChart component.
+---
+
+Line chart with one or more series.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "LineChart",
+      "default": "LineChart",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Row data or {{ interpolation }} reference"
+    },
+    "series": {
+      "description": "Series to render as lines",
+      "items": {
+        "$ref": "ChartSeries"
+      },
+      "type": "array"
+    },
+    "xAxis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Data key for x-axis labels"
+    },
+    "height": {
+      "default": 300,
+      "description": "Chart height in pixels",
+      "type": "integer"
+    },
+    "showLegend": {
+      "default": false,
+      "description": "Show legend",
+      "type": "boolean"
+    },
+    "showTooltip": {
+      "default": true,
+      "description": "Show tooltip on hover",
+      "type": "boolean"
+    },
+    "showGrid": {
+      "default": true,
+      "description": "Show cartesian grid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "data",
+    "series"
+  ]
+}
+```

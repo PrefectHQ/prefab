@@ -1,0 +1,84 @@
+---
+title: RadialChart
+description: JSON Schema for the RadialChart component.
+---
+
+Radial bar chart — categorical data as concentric rings.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "RadialChart",
+      "default": "RadialChart",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling"
+    },
+    "visibleWhen": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key \u2014 component renders only when this state value is truthy"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Row data or {{ interpolation }} reference"
+    },
+    "dataKey": {
+      "description": "Numeric value field",
+      "type": "string"
+    },
+    "nameKey": {
+      "description": "Label field",
+      "type": "string"
+    },
+    "height": {
+      "default": 300,
+      "description": "Chart height in pixels",
+      "type": "integer"
+    },
+    "innerRadius": {
+      "default": 30,
+      "description": "Inner radius in pixels",
+      "type": "integer"
+    },
+    "showLegend": {
+      "default": false,
+      "description": "Show legend",
+      "type": "boolean"
+    },
+    "showTooltip": {
+      "default": true,
+      "description": "Show tooltip on hover",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "data",
+    "dataKey",
+    "nameKey"
+  ]
+}
+```

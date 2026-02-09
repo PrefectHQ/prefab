@@ -11,6 +11,15 @@ from prefab_ui.components.badge import Badge
 from prefab_ui.components.base import Component, ContainerComponent
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
+from prefab_ui.components.chart import (
+    AreaChart,
+    BarChart,
+    ChartSeries,
+    LineChart,
+    PieChart,
+    RadarChart,
+    RadialChart,
+)
 from prefab_ui.components.button_group import ButtonGroup
 from prefab_ui.components.card import (
     Card,
@@ -88,7 +97,9 @@ __all__ = [
     "Alert",
     "AlertDescription",
     "AlertTitle",
+    "AreaChart",
     "Badge",
+    "BarChart",
     "BlockQuote",
     "Button",
     "ButtonGroup",
@@ -99,6 +110,7 @@ __all__ = [
     "CardFooter",
     "CardHeader",
     "CardTitle",
+    "ChartSeries",
     "Checkbox",
     "Code",
     "Column",
@@ -123,13 +135,17 @@ __all__ = [
     "Label",
     "Large",
     "Lead",
+    "LineChart",
     "Markdown",
     "Muted",
     "P",
     "Page",
     "Pages",
+    "PieChart",
     "Popover",
     "Progress",
+    "RadarChart",
+    "RadialChart",
     "Radio",
     "RadioGroup",
     "Row",

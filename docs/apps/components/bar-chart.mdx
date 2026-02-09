@@ -1,0 +1,229 @@
+---
+title: BarChart
+description: Visualize categorical data with vertical bars.
+icon: chart-bar
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+BarChart renders one or more data series as vertical bars. Each `ChartSeries` maps a key from your data to a set of bars, and `x_axis` controls the category labels along the bottom. Colors are automatically assigned from the theme's chart palette.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import BarChart, ChartSeries
+
+BarChart(
+    data=[
+        {"month": "Jan", "desktop": 186, "mobile": 80},
+        {"month": "Feb", "desktop": 305, "mobile": 200},
+        {"month": "Mar", "desktop": 237, "mobile": 120},
+        {"month": "Apr", "desktop": 73, "mobile": 190},
+        {"month": "May", "desktop": 209, "mobile": 130},
+        {"month": "Jun", "desktop": 214, "mobile": 140},
+    ],
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    show_legend=True,
+)
+```
+```json Protocol
+{
+  "type": "BarChart",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
+  "series": [
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
+  ],
+  "xAxis": "month",
+  "height": 300,
+  "stacked": false,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Stacked
+
+Set `stacked=True` to stack series on top of each other instead of placing them side by side. This is useful when you want to show both individual values and the total.
+
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":true,"showLegend":true}`}>
+<CodeGroup>
+```python Python {8}
+BarChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    stacked=True,
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "BarChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "stacked": true,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Minimal
+
+Turn off the grid for a cleaner look.
+
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","revenue":4000},{"month":"Feb","revenue":3000},{"month":"Mar","revenue":5000},{"month":"Apr","revenue":4500},{"month":"May","revenue":6000},{"month":"Jun","revenue":5500}],"series":[{"dataKey":"revenue","label":"Revenue"}],"xAxis":"month","height":300,"showGrid":false}`}>
+<CodeGroup>
+```python Python {5}
+BarChart(
+    data=data,
+    series=[ChartSeries(data_key="revenue", label="Revenue")],
+    x_axis="month",
+    show_grid=False,
+)
+```
+```json Protocol {6}
+{
+  "type": "BarChart",
+  "data": "...",
+  "series": [{"dataKey": "revenue", "label": "Revenue"}],
+  "xAxis": "month",
+  "showGrid": false
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="BarChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="series" type="list[ChartSeries]" required>
+  Series definitions — each becomes a group of bars on the chart.
+</ParamField>
+
+<ParamField body="x_axis" type="str | None" default="None">
+  Data key for x-axis category labels.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="stacked" type="bool" default="False">
+  Stack series on top of each other.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="show_grid" type="bool" default="True">
+  Show horizontal grid lines.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="ChartSeries Parameters">
+<ParamField body="data_key" type="str" required>
+  Data field to plot — must match a key in the data dicts.
+</ParamField>
+
+<ParamField body="label" type="str | None" default="None">
+  Display label for legends and tooltips. Defaults to the `data_key` value.
+</ParamField>
+
+<ParamField body="color" type="str | None" default="None">
+  CSS color override. By default, colors cycle through the theme's chart palette (`--chart-1` through `--chart-5`).
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json BarChart
+{
+  "type": "BarChart",
+  "data": "object[] | string (required)",
+  "series": [ChartSeries],
+  "xAxis?": "string",
+  "height?": 300,
+  "stacked?": false,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "showGrid?": true,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```
+
+```json ChartSeries
+{
+  "dataKey": "string (required)",
+  "label?": "string",
+  "color?": "string"
+}
+```
