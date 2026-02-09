@@ -31,12 +31,12 @@ Badge("Mostly Harmless")
 
 Eight variants cover the most common use cases — five base styles from shadcn plus three semantic colors for status indicators.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"}]},{"type":"Row","gap":2,"children":[{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"place-items-center","type":"Grid","columns":4,"gap":8,"children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"},{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge, Grid
 
-with Grid(gap=8, columns=4):
+with Grid(gap=8, columns=4, css_class="place-items-center"):
     Badge("Default")
     Badge("Secondary", variant="secondary")
     Badge("Destructive", variant="destructive")
@@ -48,60 +48,50 @@ with Grid(gap=8, columns=4):
 ```
 ```json Protocol
 {
-  "type": "Column",
-  "gap": 3,
+  "cssClass": "place-items-center",
+  "type": "Grid",
+  "columns": 4,
+  "gap": 8,
   "children": [
     {
-      "type": "Row",
-      "gap": 2,
-      "children": [
-        {
-          "type": "Badge",
-          "label": "Default",
-          "variant": "default"
-        },
-        {
-          "type": "Badge",
-          "label": "Secondary",
-          "variant": "secondary"
-        },
-        {
-          "type": "Badge",
-          "label": "Destructive",
-          "variant": "destructive"
-        },
-        {
-          "type": "Badge",
-          "label": "Outline",
-          "variant": "outline"
-        }
-      ]
+      "type": "Badge",
+      "label": "Default",
+      "variant": "default"
     },
     {
-      "type": "Row",
-      "gap": 2,
-      "children": [
-        {
-          "type": "Badge",
-          "label": "Ghost",
-          "variant": "ghost"
-        },
-        {
-          "type": "Badge",
-          "label": "Success",
-          "variant": "success"
-        },
-        {
-          "type": "Badge",
-          "label": "Warning",
-          "variant": "warning"
-        },
-        {
-          "type": "Badge",
-          "label": "Info",
-          "variant": "info"
-        }
-      ]
+      "type": "Badge",
+      "label": "Secondary",
+      "variant": "secondary"
+    },
+    {
+      "type": "Badge",
+      "label": "Destructive",
+      "variant": "destructive"
+    },
+    {
+      "type": "Badge",
+      "label": "Outline",
+      "variant": "outline"
+    },
+    {
+      "type": "Badge",
+      "label": "Ghost",
+      "variant": "ghost"
+    },
+    {
+      "type": "Badge",
+      "label": "Success",
+      "variant": "success"
+    },
+    {
+      "type": "Badge",
+      "label": "Warning",
+      "variant": "warning"
+    },
+    {
+      "type": "Badge",
+      "label": "Info",
+      "variant": "info"
     }
   ]
 }
