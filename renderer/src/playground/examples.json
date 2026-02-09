@@ -152,6 +152,21 @@
   {
     "title": "Python",
     "category": "Components",
+    "code": "from prefab_ui.components import AreaChart, ChartSeries\n\nAreaChart(\n    data=[\n        {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n        {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n        {\"month\": \"Mar\", \"desktop\": 237, \"mobile\": 120},\n        {\"month\": \"Apr\", \"desktop\": 73, \"mobile\": 190},\n        {\"month\": \"May\", \"desktop\": 209, \"mobile\": 130},\n        {\"month\": \"Jun\", \"desktop\": 214, \"mobile\": 140},\n    ],\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {8}",
+    "category": "Components",
+    "code": "AreaChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    stacked=True,\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {5}",
+    "category": "Components",
+    "code": "AreaChart(\n    data=data,\n    series=[ChartSeries(data_key=\"value\", label=\"Requests\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
     "code": "from prefab_ui.components import Badge\n\nBadge(\"Mostly Harmless\")"
   },
   {
@@ -163,6 +178,21 @@
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Row,\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            with Row(gap=2, css_class=\"items-center\"):\n                CardTitle(\"Heart of Gold\")\n                Badge(\"Online\", variant=\"success\")\n            CardDescription(\"Infinite Improbability Drive engaged\")\n    with Card():\n        with CardHeader():\n            with Row(gap=2, css_class=\"items-center\"):\n                CardTitle(\"Vogon Fleet\")\n                Badge(\"Approaching\", variant=\"warning\")\n            CardDescription(\"Demolition order filed with local planning authority\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import BarChart, ChartSeries\n\nBarChart(\n    data=[\n        {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n        {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n        {\"month\": \"Mar\", \"desktop\": 237, \"mobile\": 120},\n        {\"month\": \"Apr\", \"desktop\": 73, \"mobile\": 190},\n        {\"month\": \"May\", \"desktop\": 209, \"mobile\": 130},\n        {\"month\": \"Jun\", \"desktop\": 214, \"mobile\": 140},\n    ],\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {8}",
+    "category": "Components",
+    "code": "BarChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    stacked=True,\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {5}",
+    "category": "Components",
+    "code": "BarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"revenue\", label=\"Revenue\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
   },
   {
     "title": "Python",
@@ -335,6 +365,26 @@
     "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    DatePicker,\n    Input,\n    Label,\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"New Event\")\n    with CardContent():\n        with Column(gap=3):\n            Label(\"Event Name\")\n            Input(name=\"eventName\", placeholder=\"Team standup\")\n            Label(\"Date\")\n            DatePicker(placeholder=\"Pick a date\", name=\"eventDate\")\n    with CardFooter():\n        Button(\"Create Event\")"
   },
   {
+    "title": "from prefab_ui import Define, Use, UIResponse",
+    "category": "Components",
+    "code": "from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
+  },
+  {
+    "title": "from prefab_ui import Define",
+    "category": "Components",
+    "code": "from prefab_ui.components import Badge, CardTitle, Row\n\nwith Define(\"status-row\") as status_row:\n    with Row(gap=2, css_class=\"items-center\"):\n        CardTitle(\"{{ label }}\")\n        Badge(\"{{ status }}\", variant=\"{{ variant }}\")"
+  },
+  {
+    "title": "from prefab_ui import Use",
+    "category": "Components",
+    "code": "# Bare reference (data comes from surrounding scope)\nUse(\"status-row\")\n\n# With scoped data\nUse(\"status-row\", label=\"Build\", status=\"passing\", variant=\"default\")\n\n# With base component fields\nUse(\"status-row\", label=\"Deploy\", status=\"failed\", visible_when=\"show_deploy\")"
+  },
+  {
+    "title": "from prefab_ui import Define, Use, UIResponse",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+  },
+  {
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Dialog,\n    Input,\n    Label,\n    Row,\n)\n\nwith Dialog(\n    title=\"Crew Profile\",\n    description=\"Update your details for the Heart of Gold crew manifest.\",\n):\n    Button(\"Edit Profile\", variant=\"outline\")\n    with Column(gap=3):\n        Label(\"Name\")\n        Input(name=\"crewName\", placeholder=\"Arthur Dent\")\n        Label(\"Designation\")\n        Input(name=\"crewDesignation\", placeholder=\"Sandwich Maker\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Save changes\")"
@@ -482,6 +532,16 @@
   {
     "title": "Python",
     "category": "Components",
+    "code": "from prefab_ui.components import LineChart, ChartSeries\n\nLineChart(\n    data=[\n        {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n        {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n        {\"month\": \"Mar\", \"desktop\": 237, \"mobile\": 120},\n        {\"month\": \"Apr\", \"desktop\": 73, \"mobile\": 190},\n        {\"month\": \"May\", \"desktop\": 209, \"mobile\": 130},\n        {\"month\": \"Jun\", \"desktop\": 214, \"mobile\": 140},\n    ],\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {5}",
+    "category": "Components",
+    "code": "LineChart(\n    data=data,\n    series=[ChartSeries(data_key=\"value\", label=\"Requests\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
     "code": "from prefab_ui.components import Markdown\n\nMarkdown(\"\"\"\n# Release Notes\n\nVersion **2.5.0** brings several improvements:\n\n## New Features\n\n- **Dark mode** with automatic system detection\n- Keyboard shortcuts for *all* actions\n- Inline `code` formatting support\n\n## Migration Guide\n\n> Update your config file before upgrading.\n\n| Setting | Old | New |\n|---------|-----|-----|\n| theme | `light` | `auto` |\n| timeout | `30s` | `60s` |\n\"\"\")"
   },
   {
@@ -493,6 +553,16 @@
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(name=\"step\", default_value=\"setup\"):\n        with Page(\"Setup\", value=\"setup\"):\n            Text(\"Configure your settings.\")\n            Button(\"Next\", on_click=SetState(\"step\", \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            Text(\"Review your choices.\")\n            with Row(css_class=\"gap-2\"):\n                Button(\"Back\", variant=\"outline\", on_click=SetState(\"step\", \"setup\"))\n                Button(\"Next\", on_click=SetState(\"step\", \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import PieChart\n\nPieChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    show_legend=True,\n)"
+  },
+  {
+    "title": "Python {11}",
+    "category": "Components",
+    "code": "PieChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    inner_radius=60,\n    show_legend=True,\n)"
   },
   {
     "title": "Python",

@@ -1,0 +1,158 @@
+---
+title: PieChart
+description: Visualize proportions with slices of a circle.
+icon: chart-pie
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+PieChart shows how parts relate to a whole. Unlike the other chart types, it doesn't use series — instead you specify which data field holds the numeric values (`data_key`) and which holds the labels (`name_key`). Set `inner_radius` to turn it into a donut chart.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"showLegend":true,"showTooltip":true}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import PieChart
+
+PieChart(
+    data=[
+        {"browser": "Chrome", "visitors": 275},
+        {"browser": "Safari", "visitors": 200},
+        {"browser": "Firefox", "visitors": 187},
+        {"browser": "Edge", "visitors": 173},
+        {"browser": "Other", "visitors": 90},
+    ],
+    data_key="visitors",
+    name_key="browser",
+    show_legend=True,
+)
+```
+```json Protocol
+{
+  "type": "PieChart",
+  "data": [
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
+  ],
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "height": 300,
+  "innerRadius": 0,
+  "showLegend": true,
+  "showTooltip": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Donut Chart
+
+Set `inner_radius` to a value greater than 0 to hollow out the center. This creates a donut chart, which can feel cleaner and leaves room for a central label or statistic.
+
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"showLegend":true}`}>
+<CodeGroup>
+```python Python {11}
+PieChart(
+    data=[
+        {"browser": "Chrome", "visitors": 275},
+        {"browser": "Safari", "visitors": 200},
+        {"browser": "Firefox", "visitors": 187},
+        {"browser": "Edge", "visitors": 173},
+        {"browser": "Other", "visitors": 90},
+    ],
+    data_key="visitors",
+    name_key="browser",
+    inner_radius=60,
+    show_legend=True,
+)
+```
+```json Protocol {12}
+{
+  "type": "PieChart",
+  "data": [
+    {"browser": "Chrome", "visitors": 275},
+    {"browser": "Safari", "visitors": 200},
+    {"browser": "Firefox", "visitors": 187},
+    {"browser": "Edge", "visitors": 173},
+    {"browser": "Other", "visitors": 90}
+  ],
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "innerRadius": 60,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="PieChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="data_key" type="str" required>
+  The data field containing numeric values to plot as slice sizes.
+</ParamField>
+
+<ParamField body="name_key" type="str" required>
+  The data field containing labels for each slice.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="inner_radius" type="int" default="0">
+  Inner radius in pixels. Set greater than 0 for a donut chart.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json PieChart
+{
+  "type": "PieChart",
+  "data": "object[] | string (required)",
+  "dataKey": "string (required)",
+  "nameKey": "string (required)",
+  "height?": 300,
+  "innerRadius?": 0,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "cssClass?": "string",
+  "visibleWhen?": "string"
+}
+```

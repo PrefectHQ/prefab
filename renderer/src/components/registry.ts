@@ -75,6 +75,14 @@ import {
 } from "./typography";
 import { Code, Image, Markdown } from "./content";
 import { ForEach, PrefabState } from "./control-flow";
+import {
+  PrefabBarChart,
+  PrefabLineChart,
+  PrefabAreaChart,
+  PrefabPieChart,
+  PrefabRadarChart,
+  PrefabRadialChart,
+} from "./charts";
 import { PrefabDataTable } from "./data-display";
 import {
   PrefabTabs,
@@ -129,6 +137,14 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   TableHead,
   TableCell,
   TableCaption,
+
+  // Charts (wrappers around Recharts + shadcn ChartContainer)
+  BarChart: PrefabBarChart,
+  LineChart: PrefabLineChart,
+  AreaChart: PrefabAreaChart,
+  PieChart: PrefabPieChart,
+  RadarChart: PrefabRadarChart,
+  RadialChart: PrefabRadialChart,
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
