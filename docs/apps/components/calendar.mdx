@@ -31,7 +31,7 @@ Calendar(name="selectedDate")
 
 Set `mode="range"` to let users select a start and end date. The selected range is stored as a JSON object with `from` and `to` ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"range","name":"dateRange"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`}>
+<ComponentPreview auto json={`{"type":"Calendar","mode":"range","name":"dateRange"}`}>
 <CodeGroup>
 ```python Python
 import json
@@ -48,14 +48,9 @@ Calendar(mode="range", name="dateRange")
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "Calendar",
-    "mode": "range",
-    "name": "dateRange"
-  },
-  "_state": {
-    "dateRange": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
-  }
+  "type": "Calendar",
+  "mode": "range",
+  "name": "dateRange"
 }
 ```
 </CodeGroup>
@@ -65,7 +60,7 @@ Calendar(mode="range", name="dateRange")
 
 Select multiple individual dates with `mode="multiple"`. Selected dates are stored as a JSON array of ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`}>
+<ComponentPreview auto json={`{"type":"Calendar","mode":"multiple","name":"selectedDates"}`}>
 <CodeGroup>
 ```python Python
 import json
@@ -83,14 +78,9 @@ Calendar(mode="multiple", name="selectedDates")
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "Calendar",
-    "mode": "multiple",
-    "name": "selectedDates"
-  },
-  "_state": {
-    "selectedDates": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
-  }
+  "type": "Calendar",
+  "mode": "multiple",
+  "name": "selectedDates"
 }
 ```
 </CodeGroup>
@@ -100,7 +90,7 @@ Calendar(mode="multiple", name="selectedDates")
 
 Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
 
-<ComponentPreview auto json={`{"_tree":{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`}>
+<ComponentPreview auto json={`{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -122,39 +112,34 @@ with Row(gap=6):
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "Row",
-    "gap": 6,
-    "children": [
-      {
-        "type": "Calendar",
-        "mode": "single",
-        "name": "selectedDate"
-      },
-      {
-        "type": "Column",
-        "gap": 2,
-        "children": [
-          {
-            "type": "Text",
-            "content": "Selected date:"
-          },
-          {
-            "type": "Text",
-            "content": "{{ selectedDate | date:long }}",
-            "bold": true
-          },
-          {
-            "content": "Raw: {{ selectedDate }}",
-            "type": "Muted"
-          }
-        ]
-      }
-    ]
-  },
-  "_state": {
-    "selectedDate": "2025-06-15T12:00:00.000Z"
-  }
+  "type": "Row",
+  "gap": 6,
+  "children": [
+    {
+      "type": "Calendar",
+      "mode": "single",
+      "name": "selectedDate"
+    },
+    {
+      "type": "Column",
+      "gap": 2,
+      "children": [
+        {
+          "type": "Text",
+          "content": "Selected date:"
+        },
+        {
+          "type": "Text",
+          "content": "{{ selectedDate | date:long }}",
+          "bold": true
+        },
+        {
+          "content": "Raw: {{ selectedDate }}",
+          "type": "Muted"
+        }
+      ]
+    }
+  ]
 }
 ```
 </CodeGroup>

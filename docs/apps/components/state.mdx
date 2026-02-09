@@ -136,7 +136,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/apps/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<ComponentPreview auto json={`{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -153,36 +153,29 @@ with State(prefix="Speaks"):
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "State",
-    "state": {
-      "prefix": "Speaks"
-    },
-    "children": [
-      {
-        "cssClass": "items-center",
-        "type": "Row",
-        "gap": 2,
-        "children": [
-          {
-            "type": "ForEach",
-            "key": "languages",
-            "children": [
-              {
-                "type": "Badge",
-                "label": "{{ prefix }}: {{ _item }}",
-                "variant": "secondary"
-              }
-            ]
-          }
-        ]
-      }
-    ]
+  "type": "State",
+  "state": {
+    "prefix": "Speaks"
   },
-  "languages": [
-    "Python",
-    "TypeScript",
-    "Rust"
+  "children": [
+    {
+      "cssClass": "items-center",
+      "type": "Row",
+      "gap": 2,
+      "children": [
+        {
+          "type": "ForEach",
+          "key": "languages",
+          "children": [
+            {
+              "type": "Badge",
+              "label": "{{ prefix }}: {{ _item }}",
+              "variant": "secondary"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
 ```
