@@ -23,12 +23,16 @@ export function Row({ className, cssClass, children }: LayoutProps) {
 
 export function Column({ className, cssClass, children }: LayoutProps) {
   return (
-    <div className={cn("flex flex-col", className, cssClass)}>{children}</div>
+    <div className={cn("flex w-full flex-col", className, cssClass)}>
+      {children}
+    </div>
   );
 }
 
 export function Grid({ className, cssClass, children }: LayoutProps) {
-  return <div className={cn("grid", className, cssClass)}>{children}</div>;
+  return (
+    <div className={cn("grid w-full", className, cssClass)}>{children}</div>
+  );
 }
 
 interface DivProps {
