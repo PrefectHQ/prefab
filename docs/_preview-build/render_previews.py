@@ -211,11 +211,11 @@ def process_file(path: Path) -> bool:
 
 
 def main() -> None:
-    docs_dir = Path(__file__).resolve().parents[1] / "apps"
+    docs_dir = Path(__file__).resolve().parents[1]
     mdx_files = sorted(docs_dir.rglob("*.mdx"))
 
     if not mdx_files:
-        print("No MDX files found in docs/apps/")
+        print("No MDX files found in docs/")
         return
 
     modified = 0

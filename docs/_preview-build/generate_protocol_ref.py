@@ -258,7 +258,7 @@ def process_file(path: Path) -> bool:
 
 
 def main() -> None:
-    docs_dir = Path(__file__).resolve().parents[1] / "apps"
+    docs_dir = Path(__file__).resolve().parents[1]
     mdx_files = sorted(docs_dir.rglob("*.mdx"))
 
     modified = 0

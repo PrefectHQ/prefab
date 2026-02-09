@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
-docs_dir = root / "docs" / "apps"
+docs_dir = root / "docs"
 output = root / "renderer" / "src" / "playground" / "examples.json"
 
 # Match ```python Optional Title\n...code...\n```

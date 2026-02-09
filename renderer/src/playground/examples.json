@@ -570,7 +570,7 @@
     "code": "from prefab_ui.components import PieChart\n\nPieChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    show_legend=True,\n)"
   },
   {
-    "title": "Python {11}",
+    "title": "Python",
     "category": "Components",
     "code": "PieChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    inner_radius=60,\n    show_legend=True,\n)"
   },
@@ -640,7 +640,7 @@
     "code": "from prefab_ui.components import RadialChart\n\nRadialChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    show_legend=True,\n)"
   },
   {
-    "title": "Python {9}",
+    "title": "Python",
     "category": "Components",
     "code": "RadialChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    inner_radius=80,\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    show_legend=True,\n)"
   },
@@ -875,6 +875,11 @@
     "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
   },
   {
+    "title": "Text(",
+    "category": "Development",
+    "code": "\"A long sentence that would exceed \"\n      \"the line width limit.\"\n  )"
+  },
+  {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
     "code": "from prefab_ui.components import Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def hello(name: str) -> Text:\n    return Text(f\"Hello, {name}!\")"
@@ -1068,5 +1073,10 @@
     "title": "Define with ForEach",
     "category": "Patterns",
     "code": "from prefab_ui import Define, Use, UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+  },
+  {
+    "title": "from prefab_ui import UIResponse, Column, Heading, Text",
+    "category": "General",
+    "code": "from prefab_ui.components import Card, CardContent, Input, Button, Row\nfrom prefab_ui.actions import ToolCall\n\ndef search_dashboard(query: str = \"\") -> UIResponse:\n    with Column() as view:\n        Heading(\"Search\")\n        with Row():\n            Input(name=\"query\", placeholder=\"Search...\")\n            Button(\n                \"Go\",\n                on_click=ToolCall(\n                    name=\"search\",\n                    arguments={\"q\": \"{{ query }}\"},\n                    result_key=\"results\",\n                ),\n            )\n        with Card():\n            with CardContent():\n                Text(\"{{ results.length }} results found\")\n\n    return UIResponse(\n        state={\"query\": query, \"results\": []},\n        view=view,\n    )"
   }
 ]
