@@ -70,9 +70,9 @@ RadialChart(
 
 Increase `inner_radius` to push rings outward, creating a tighter radial layout.
 
-<ComponentPreview auto json={`{"type":"RadialChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":80,"showLegend":true}`}>
+<ComponentPreview auto json={`{"type":"RadialChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":80,"startAngle":180,"endAngle":0,"showLegend":true,"showTooltip":true}`}>
 <CodeGroup>
-```python Python {9}
+```python Python
 RadialChart(
     data=[
         {"browser": "Chrome", "visitors": 275},
@@ -87,20 +87,39 @@ RadialChart(
     show_legend=True,
 )
 ```
-```json Protocol {10}
+```json Protocol
 {
   "type": "RadialChart",
   "data": [
-    {"browser": "Chrome", "visitors": 275},
-    {"browser": "Safari", "visitors": 200},
-    {"browser": "Firefox", "visitors": 187},
-    {"browser": "Edge", "visitors": 173},
-    {"browser": "Other", "visitors": 90}
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
   ],
-  "innerRadius": 80,
   "dataKey": "visitors",
   "nameKey": "browser",
-  "showLegend": true
+  "height": 300,
+  "innerRadius": 80,
+  "startAngle": 180,
+  "endAngle": 0,
+  "showLegend": true,
+  "showTooltip": true
 }
 ```
 </CodeGroup>

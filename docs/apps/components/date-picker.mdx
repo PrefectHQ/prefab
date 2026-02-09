@@ -31,7 +31,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview auto height="400px" json={`{"_tree":{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`}>
+<ComponentPreview auto height="400px" json={`{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -50,32 +50,27 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "Column",
-    "gap": 3,
-    "children": [
-      {
-        "cssClass": "items-center",
-        "type": "Row",
-        "gap": 4,
-        "children": [
-          {
-            "type": "DatePicker",
-            "placeholder": "Select deadline",
-            "name": "deadline"
-          },
-          {
-            "type": "Text",
-            "content": "{{ deadline | date:long }}",
-            "bold": true
-          }
-        ]
-      }
-    ]
-  },
-  "_state": {
-    "deadline": "2025-06-15T12:00:00.000Z"
-  }
+  "type": "Column",
+  "gap": 3,
+  "children": [
+    {
+      "cssClass": "items-center",
+      "type": "Row",
+      "gap": 4,
+      "children": [
+        {
+          "type": "DatePicker",
+          "placeholder": "Select deadline",
+          "name": "deadline"
+        },
+        {
+          "type": "Text",
+          "content": "{{ deadline | date:long }}",
+          "bold": true
+        }
+      ]
+    }
+  ]
 }
 ```
 </CodeGroup>

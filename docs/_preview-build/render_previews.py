@@ -38,11 +38,19 @@ _PYTHON_BLOCK_RE = re.compile(
 )
 
 
-def _execute_and_serialize(source: str) -> tuple[str, str]:
+def _execute_and_serialize(
+    source: str,
+    *,
+    shared_ns: dict[str, object] | None = None,
+) -> tuple[str, str]:
     """Execute a Python snippet and return (compact_json, pretty_json).
 
     compact_json is for the iframe preview prop (no whitespace).
     pretty_json is for the JSON tab in CodeGroup (human-readable).
+
+    If *shared_ns* is provided, names defined by the snippet (imports,
+    variables) are written back into it so later snippets in the same
+    file can reference them without repeating imports.
     """
     from typing import Any
 
@@ -76,7 +84,14 @@ def _execute_and_serialize(source: str) -> tuple[str, str]:
             "set_initial_state": set_initial_state,
             "set_data": set_data,
         }
+        if shared_ns:
+            ns.update(shared_ns)
         exec(source, ns)  # noqa: S102
+        # Propagate user-defined names back for subsequent snippets.
+        if shared_ns is not None:
+            for k, v in ns.items():
+                if not k.startswith("_"):
+                    shared_ns[k] = v
     finally:
         Component.model_post_init = original  # type: ignore[assignment]
 
@@ -120,6 +135,8 @@ def _rebuild_block(
     opening_tag: str,
     interior: str,
     closing_tag: str,
+    *,
+    shared_ns: dict[str, object] | None = None,
 ) -> str:
     """Rebuild a ComponentPreview block from its opening tag and interior."""
     # Extract attributes from the opening tag
@@ -138,7 +155,9 @@ def _rebuild_block(
     python_block = "```python Python\n" + python_source + python_fence_close
 
     # Execute the Python and get JSON
-    compact_json, pretty_json = _execute_and_serialize(python_source)
+    compact_json, pretty_json = _execute_and_serialize(
+        python_source, shared_ns=shared_ns
+    )
 
     # Build the opening tag with json prop (and preserved height)
     escaped_json = _escape_template_literal(compact_json)
@@ -164,17 +183,26 @@ def process_file(path: Path) -> bool:
     if not matches:
         return False
 
-    for match in reversed(matches):
+    # Process in forward order to accumulate namespace, then apply
+    # replacements in reverse order so offsets stay valid.
+    replacements: list[tuple[re.Match[str], str]] = []
+    shared_ns: dict[str, object] = {}
+    for match in matches:
         opening_tag = match.group(1)
         interior = match.group(2)
         closing_tag = match.group(3)
 
         try:
-            replacement = _rebuild_block(opening_tag, interior, closing_tag)
-            content = content[: match.start()] + replacement + content[match.end() :]
+            replacement = _rebuild_block(
+                opening_tag, interior, closing_tag, shared_ns=shared_ns
+            )
+            replacements.append((match, replacement))
         except Exception as e:
             print(f"  ERROR: {e}")
             continue
+
+    for match, replacement in reversed(replacements):
+        content = content[: match.start()] + replacement + content[match.end() :]
 
     if content != original:
         path.write_text(content)

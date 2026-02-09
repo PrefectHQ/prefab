@@ -70,9 +70,9 @@ PieChart(
 
 Set `inner_radius` to a value greater than 0 to hollow out the center. This creates a donut chart, which can feel cleaner and leaves room for a central label or statistic.
 
-<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"showLegend":true}`}>
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"showLabel":false,"paddingAngle":0,"showLegend":true,"showTooltip":true}`}>
 <CodeGroup>
-```python Python {11}
+```python Python
 PieChart(
     data=[
         {"browser": "Chrome", "visitors": 275},
@@ -87,20 +87,39 @@ PieChart(
     show_legend=True,
 )
 ```
-```json Protocol {12}
+```json Protocol
 {
   "type": "PieChart",
   "data": [
-    {"browser": "Chrome", "visitors": 275},
-    {"browser": "Safari", "visitors": 200},
-    {"browser": "Firefox", "visitors": 187},
-    {"browser": "Edge", "visitors": 173},
-    {"browser": "Other", "visitors": 90}
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
   ],
   "dataKey": "visitors",
   "nameKey": "browser",
+  "height": 300,
   "innerRadius": 60,
-  "showLegend": true
+  "showLabel": false,
+  "paddingAngle": 0,
+  "showLegend": true,
+  "showTooltip": true
 }
 ```
 </CodeGroup>

@@ -103,7 +103,7 @@ When rendered with the data above, this produces one card per crew member.
 
 The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Row","gap":2,"children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]},"tags":["earth","magrathea","vogon poetry","42"]}`}>
+<ComponentPreview auto json={`{"type":"Row","gap":2,"children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -120,28 +120,20 @@ with Row(gap=2):
 ```
 ```json Protocol
 {
-  "_tree": {
-    "type": "Row",
-    "gap": 2,
-    "children": [
-      {
-        "type": "ForEach",
-        "key": "tags",
-        "children": [
-          {
-            "type": "Badge",
-            "label": "{{ _item }}",
-            "variant": "secondary"
-          }
-        ]
-      }
-    ]
-  },
-  "tags": [
-    "earth",
-    "magrathea",
-    "vogon poetry",
-    "42"
+  "type": "Row",
+  "gap": 2,
+  "children": [
+    {
+      "type": "ForEach",
+      "key": "tags",
+      "children": [
+        {
+          "type": "Badge",
+          "label": "{{ _item }}",
+          "variant": "secondary"
+        }
+      ]
+    }
   ]
 }
 ```
