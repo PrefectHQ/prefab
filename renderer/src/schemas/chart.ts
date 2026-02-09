@@ -22,15 +22,21 @@ const cartesianBase = componentBase.extend({
 export const barChartSchema = cartesianBase.extend({
   type: z.literal("BarChart"),
   stacked: z.boolean().optional(),
+  horizontal: z.boolean().optional(),
+  barRadius: z.number().int().optional(),
 });
 
 export const lineChartSchema = cartesianBase.extend({
   type: z.literal("LineChart"),
+  curve: z.enum(["linear", "smooth", "step"]).optional(),
+  showDots: z.boolean().optional(),
 });
 
 export const areaChartSchema = cartesianBase.extend({
   type: z.literal("AreaChart"),
   stacked: z.boolean().optional(),
+  curve: z.enum(["linear", "smooth", "step"]).optional(),
+  showDots: z.boolean().optional(),
 });
 
 export const pieChartSchema = componentBase.extend({
@@ -42,6 +48,8 @@ export const pieChartSchema = componentBase.extend({
   nameKey: z.string(),
   height: z.number().int().optional(),
   innerRadius: z.number().int().optional(),
+  showLabel: z.boolean().optional(),
+  paddingAngle: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
 });
@@ -54,6 +62,8 @@ export const radarChartSchema = componentBase.extend({
   series: z.array(chartSeriesSchema),
   axisKey: z.string().optional(),
   height: z.number().int().optional(),
+  filled: z.boolean().optional(),
+  showDots: z.boolean().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   showGrid: z.boolean().optional(),
@@ -68,6 +78,8 @@ export const radialChartSchema = componentBase.extend({
   nameKey: z.string(),
   height: z.number().int().optional(),
   innerRadius: z.number().int().optional(),
+  startAngle: z.number().int().optional(),
+  endAngle: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
 });

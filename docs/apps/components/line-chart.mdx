@@ -6,7 +6,7 @@ icon: chart-line
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-LineChart connects data points with smooth curves, making it ideal for showing trends over time. Each `ChartSeries` becomes a separate line, and `x_axis` labels the horizontal axis.
+LineChart connects data points with lines, making it ideal for showing trends over time. Each `ChartSeries` becomes a separate line, and `x_axis` labels the horizontal axis.
 
 ## Basic Usage
 
@@ -113,6 +113,108 @@ LineChart(
 </CodeGroup>
 </ComponentPreview>
 
+## Smooth
+
+Set `curve="smooth"` for gently curved lines between data points.
+
+<ComponentPreview auto json={`{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"smooth","showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python {8}
+LineChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    curve="smooth",
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "LineChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "curve": "smooth",
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Step
+
+Set `curve="step"` to connect points with step-shaped lines. This is useful for data that changes in discrete jumps.
+
+<ComponentPreview auto json={`{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"step","showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python {8}
+LineChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    curve="step",
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "LineChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "curve": "step",
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## With Dots
+
+Set `show_dots=True` to render a dot at each data point along the lines.
+
+<ComponentPreview auto json={`{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"showDots":true,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python {8}
+LineChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    show_dots=True,
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "LineChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "showDots": true,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="LineChart Parameters">
@@ -130,6 +232,14 @@ LineChart(
 
 <ParamField body="height" type="int" default="300">
   Chart height in pixels.
+</ParamField>
+
+<ParamField body="curve" type='Literal["linear", "smooth", "step"]' default='"linear"'>
+  Interpolation curve between data points.
+</ParamField>
+
+<ParamField body="show_dots" type="bool" default="False">
+  Show a dot at each data point.
 </ParamField>
 
 <ParamField body="show_legend" type="bool" default="False">
@@ -172,6 +282,8 @@ LineChart(
   "series": [ChartSeries],
   "xAxis?": "string",
   "height?": 300,
+  "curve?": "linear",
+  "showDots?": false,
   "showLegend?": false,
   "showTooltip?": true,
   "showGrid?": true,
