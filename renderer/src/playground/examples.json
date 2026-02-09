@@ -380,6 +380,26 @@
     "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    DatePicker,\n    Input,\n    Label,\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"New Event\")\n    with CardContent():\n        with Column(gap=3):\n            Label(\"Event Name\")\n            Input(name=\"eventName\", placeholder=\"Team standup\")\n            Label(\"Date\")\n            DatePicker(placeholder=\"Pick a date\", name=\"eventDate\")\n    with CardFooter():\n        Button(\"Create Event\")"
   },
   {
+    "title": "from prefab_ui import Define, Use, UIResponse",
+    "category": "Components",
+    "code": "from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
+  },
+  {
+    "title": "from prefab_ui import Define",
+    "category": "Components",
+    "code": "from prefab_ui.components import Badge, CardTitle, Row\n\nwith Define(\"status-row\") as status_row:\n    with Row(gap=2, css_class=\"items-center\"):\n        CardTitle(\"{{ label }}\")\n        Badge(\"{{ status }}\", variant=\"{{ variant }}\")"
+  },
+  {
+    "title": "from prefab_ui import Use",
+    "category": "Components",
+    "code": "# Bare reference (data comes from surrounding scope)\nUse(\"status-row\")\n\n# With scoped data\nUse(\"status-row\", label=\"Build\", status=\"passing\", variant=\"default\")\n\n# With base component fields\nUse(\"status-row\", label=\"Deploy\", status=\"failed\", visible_when=\"show_deploy\")"
+  },
+  {
+    "title": "from prefab_ui import Define, Use, UIResponse",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+  },
+  {
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Dialog,\n    Input,\n    Label,\n    Row,\n)\n\nwith Dialog(\n    title=\"Crew Profile\",\n    description=\"Update your details for the Heart of Gold crew manifest.\",\n):\n    Button(\"Edit Profile\", variant=\"outline\")\n    with Column(gap=3):\n        Label(\"Name\")\n        Input(name=\"crewName\", placeholder=\"Arthur Dent\")\n        Label(\"Designation\")\n        Input(name=\"crewDesignation\", placeholder=\"Sandwich Maker\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Save changes\")"
@@ -492,6 +512,16 @@
   {
     "title": "Python",
     "category": "Components",
+    "code": "from prefab_ui.components import (\n    Div,\n    Row,\n)\n\nwith Row(gap=4, align=\"center\"):\n    Div(css_class=\"bg-emerald-500 rounded-md h-8 w-20\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-16 w-20\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-20\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Div,\n    Row,\n)\n\nwith Row(justify=\"between\"):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-20\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-20\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-20\")"
+  },
+  {
+    "title": "Python",
+    "category": "Components",
     "code": "from prefab_ui.components import (\n    Column,\n    Div,\n)\n\nwith Column(gap=4):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")"
   },
   {
@@ -517,7 +547,7 @@
   {
     "title": "Python",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    P,\n    Row,\n    Span,\n)\n\nwith Row(gap=2, css_class=\"items-baseline\"):\n    P(\"Status:\")\n    Span(\"Online\", css_class=\"text-sm text-success font-medium\")"
+    "code": "from prefab_ui.components import (\n    P,\n    Row,\n    Span,\n)\n\nwith Row(gap=2, align=\"baseline\"):\n    P(\"Status:\")\n    Span(\"Online\", css_class=\"text-sm text-success font-medium\")"
   },
   {
     "title": "Nested Layout",
@@ -873,11 +903,6 @@
     "title": "Python",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
-  },
-  {
-    "title": "Text(",
-    "category": "Development",
-    "code": "\"A long sentence that would exceed \"\n      \"the line width limit.\"\n  )"
   },
   {
     "title": "from prefab_ui import FastMCP",

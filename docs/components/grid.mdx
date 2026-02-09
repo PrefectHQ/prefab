@@ -1,0 +1,154 @@
+---
+title: Grid
+description: CSS grid container with configurable columns for equal-width layouts.
+icon: grid-2x2
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Grid is a CSS grid with a configurable number of columns (1-12). Children fill cells left-to-right, wrapping to new rows.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Div,
+    Grid,
+)
+
+with Grid(columns=3, gap=4):
+    for _ in range(6):
+        Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol
+{
+  "cssClass": "gap-4 grid-cols-3",
+  "type": "Grid",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Nested Content
+
+Columns can be passed as a positional argument. Grids nest naturally with other containers:
+
+<ComponentPreview auto json={`{"cssClass":"gap-6 grid-cols-2","type":"Grid","children":[{"type":"Column","children":[{"content":"Left Panel","type":"H3"},{"content":"Primary content goes here.","type":"P"}]},{"type":"Column","children":[{"content":"Right Panel","type":"H3"},{"content":"Secondary content goes here.","type":"P"}]}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Column,
+    Grid,
+    H3,
+    P,
+)
+
+with Grid(2, gap=6):
+    with Column():
+        H3("Left Panel")
+        P("Primary content goes here.")
+    with Column():
+        H3("Right Panel")
+        P("Secondary content goes here.")
+```
+```json Protocol
+{
+  "cssClass": "gap-6 grid-cols-2",
+  "type": "Grid",
+  "children": [
+    {
+      "type": "Column",
+      "children": [
+        {
+          "content": "Left Panel",
+          "type": "H3"
+        },
+        {
+          "content": "Primary content goes here.",
+          "type": "P"
+        }
+      ]
+    },
+    {
+      "type": "Column",
+      "children": [
+        {
+          "content": "Right Panel",
+          "type": "H3"
+        },
+        {
+          "content": "Secondary content goes here.",
+          "type": "P"
+        }
+      ]
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Grid Parameters">
+<ParamField body="columns" type="int" default="3">
+  Number of grid columns (1-12). Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="gap" type="int | tuple | None" default="None">
+  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis.
+</ParamField>
+
+<ParamField body="align" type="str | None" default="None">
+  Cross-axis alignment: `"start"`, `"center"`, `"end"`, `"stretch"`, `"baseline"`.
+</ParamField>
+
+<ParamField body="justify" type="str | None" default="None">
+  Main-axis distribution: `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`, `"stretch"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+For the complete protocol schema, see the [Grid protocol definition](/protocol/grid).
+
+```json Grid
+{
+  "type": "Grid",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```
