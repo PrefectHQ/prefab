@@ -148,6 +148,40 @@ AreaChart(
 </CodeGroup>
 </ComponentPreview>
 
+## Step
+
+Set `curve="step"` to connect points with step-shaped lines instead of smooth curves. The filled area follows the stepped edges.
+
+<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"step","stacked":false,"showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python {8}
+AreaChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    curve="step",
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "AreaChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "curve": "step",
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="AreaChart Parameters">
@@ -169,6 +203,14 @@ AreaChart(
 
 <ParamField body="stacked" type="bool" default="False">
   Stack areas on top of each other.
+</ParamField>
+
+<ParamField body="curve" type='Literal["natural", "linear", "step", "monotone"]' default='"natural"'>
+  Interpolation curve between data points.
+</ParamField>
+
+<ParamField body="show_dots" type="bool" default="False">
+  Show a dot at each data point.
 </ParamField>
 
 <ParamField body="show_legend" type="bool" default="False">
@@ -212,6 +254,8 @@ AreaChart(
   "xAxis?": "string",
   "height?": 300,
   "stacked?": false,
+  "curve?": "natural",
+  "showDots?": false,
   "showLegend?": false,
   "showTooltip?": true,
   "showGrid?": true,

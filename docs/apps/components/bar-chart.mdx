@@ -148,6 +148,40 @@ BarChart(
 </CodeGroup>
 </ComponentPreview>
 
+## Horizontal
+
+Set `horizontal=True` to render bars horizontally. Categories appear along the y-axis and values extend to the right.
+
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"horizontal":true,"barRadius":4,"stacked":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<CodeGroup>
+```python Python {8}
+BarChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+    horizontal=True,
+    show_legend=True,
+)
+```
+```json Protocol {9}
+{
+  "type": "BarChart",
+  "data": "...",
+  "series": [
+    {"dataKey": "desktop", "label": "Desktop"},
+    {"dataKey": "mobile", "label": "Mobile"}
+  ],
+  "xAxis": "month",
+  "horizontal": true,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="BarChart Parameters">
@@ -169,6 +203,14 @@ BarChart(
 
 <ParamField body="stacked" type="bool" default="False">
   Stack series on top of each other.
+</ParamField>
+
+<ParamField body="horizontal" type="bool" default="False">
+  Render bars horizontally instead of vertically.
+</ParamField>
+
+<ParamField body="bar_radius" type="int" default="4">
+  Corner radius of each bar in pixels.
 </ParamField>
 
 <ParamField body="show_legend" type="bool" default="False">
@@ -212,6 +254,8 @@ BarChart(
   "xAxis?": "string",
   "height?": 300,
   "stacked?": false,
+  "horizontal?": false,
+  "barRadius?": 4,
   "showLegend?": false,
   "showTooltip?": true,
   "showGrid?": true,

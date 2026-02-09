@@ -17,6 +17,7 @@ import {
   RadialBar,
   RadialBarChart,
   XAxis,
+  YAxis,
   CartesianGrid,
   PolarGrid,
   PolarAngleAxis,
@@ -88,6 +89,8 @@ export function PrefabBarChart({
   xAxis,
   height = 300,
   stacked = false,
+  horizontal = false,
+  barRadius = 4,
   showLegend = false,
   showTooltip = true,
   showGrid = true,
@@ -98,15 +101,32 @@ export function PrefabBarChart({
 
   return (
     <ChartContainer config={config} className={className} style={{ height }}>
-      <BarChart data={data}>
-        {showGrid && <CartesianGrid vertical={false} />}
-        {xAxis && (
-          <XAxis
-            dataKey={xAxis}
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
+      <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"}>
+        {showGrid && (
+          <CartesianGrid vertical={horizontal} horizontal={!horizontal} />
+        )}
+        {horizontal ? (
+          <>
+            {xAxis && (
+              <YAxis
+                dataKey={xAxis}
+                type="category"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+            )}
+            <XAxis type="number" hide />
+          </>
+        ) : (
+          xAxis && (
+            <XAxis
+              dataKey={xAxis}
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+            />
+          )
         )}
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
@@ -115,7 +135,7 @@ export function PrefabBarChart({
             key={s.dataKey}
             dataKey={s.dataKey}
             fill={`var(--color-${s.dataKey})`}
-            radius={4}
+            radius={barRadius}
             stackId={stacked ? "stack" : undefined}
           />
         ))}
@@ -131,6 +151,8 @@ export function PrefabLineChart({
   series,
   xAxis,
   height = 300,
+  curve = "natural",
+  showDots = false,
   showLegend = false,
   showTooltip = true,
   showGrid = true,
@@ -157,10 +179,10 @@ export function PrefabLineChart({
           <Line
             key={s.dataKey}
             dataKey={s.dataKey}
-            type="natural"
+            type={curve}
             stroke={`var(--color-${s.dataKey})`}
             strokeWidth={2}
-            dot={false}
+            dot={showDots}
           />
         ))}
       </LineChart>
@@ -176,6 +198,8 @@ export function PrefabAreaChart({
   xAxis,
   height = 300,
   stacked = false,
+  curve = "natural",
+  showDots = false,
   showLegend = false,
   showTooltip = true,
   showGrid = true,
@@ -202,10 +226,11 @@ export function PrefabAreaChart({
           <Area
             key={s.dataKey}
             dataKey={s.dataKey}
-            type="natural"
+            type={curve}
             fill={`var(--color-${s.dataKey})`}
             stroke={`var(--color-${s.dataKey})`}
             fillOpacity={0.4}
+            dot={showDots}
             stackId={stacked ? "stack" : undefined}
           />
         ))}
@@ -222,6 +247,8 @@ export function PrefabPieChart({
   nameKey,
   height = 300,
   innerRadius = 0,
+  showLabel = false,
+  paddingAngle = 0,
   showLegend = false,
   showTooltip = true,
   className,
@@ -249,6 +276,8 @@ export function PrefabPieChart({
           dataKey={dataKey}
           nameKey={nameKey}
           innerRadius={innerRadius}
+          label={showLabel}
+          paddingAngle={paddingAngle}
         />
       </PieChart>
     </ChartContainer>
@@ -262,6 +291,8 @@ export function PrefabRadarChart({
   series,
   axisKey,
   height = 300,
+  filled = true,
+  showDots = false,
   showLegend = false,
   showTooltip = true,
   showGrid = true,
@@ -282,9 +313,10 @@ export function PrefabRadarChart({
             key={s.dataKey}
             dataKey={s.dataKey}
             fill={`var(--color-${s.dataKey})`}
-            fillOpacity={0.3}
+            fillOpacity={filled ? 0.3 : 0}
             stroke={`var(--color-${s.dataKey})`}
             strokeWidth={2}
+            dot={showDots}
           />
         ))}
       </RadarChart>
@@ -300,6 +332,8 @@ export function PrefabRadialChart({
   nameKey,
   height = 300,
   innerRadius = 30,
+  startAngle = 180,
+  endAngle = 0,
   showLegend = false,
   showTooltip = true,
   className,
@@ -314,7 +348,12 @@ export function PrefabRadialChart({
 
   return (
     <ChartContainer config={config} className={className} style={{ height }}>
-      <RadialBarChart data={coloredData} innerRadius={innerRadius}>
+      <RadialBarChart
+        data={coloredData}
+        innerRadius={innerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+      >
         {showTooltip && (
           <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
         )}
