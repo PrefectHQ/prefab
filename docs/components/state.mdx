@@ -6,7 +6,7 @@ icon: database
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`State` provides local [interpolation](/apps/patterns/interpolation) values to its children. Children resolve `{{ }}` template expressions against the State's values first, falling through to parent scopes and then global state.
+`State` provides local [interpolation](/patterns/interpolation) values to its children. Children resolve `{{ }}` template expressions against the State's values first, falling through to parent scopes and then global state.
 
 This is useful when you want to inject data into a subtree without polluting global state or duplicating values across multiple props.
 
@@ -134,7 +134,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 ## With ForEach
 
-State works well alongside [ForEach](/apps/components/foreach) for providing extra context to iterated templates:
+State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
 <ComponentPreview auto json={`{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]}`}>
 <CodeGroup>

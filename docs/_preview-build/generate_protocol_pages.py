@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 import prefab_ui.actions as actions_mod
 import prefab_ui.components as components_mod
 
-PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "apps" / "protocol"
+PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "protocol"
 
 # ---------------------------------------------------------------------------
 # Component / Action class registry

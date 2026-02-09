@@ -4,7 +4,7 @@ description: Dynamic values in component props using {{ }} templates.
 icon: wand-magic-sparkles
 ---
 
-Every string prop on every component supports `{{ }}` template interpolation. When the renderer encounters `{{ key }}` in a string value, it replaces it with the current value of `key` from [state](/apps/components/state). No opt-in required — it works everywhere.
+Every string prop on every component supports `{{ }}` template interpolation. When the renderer encounters `{{ key }}` in a string value, it replaces it with the current value of `key` from [state](/components/state). No opt-in required — it works everywhere.
 
 ```python
 from prefab_ui.components import Text
@@ -18,8 +18,8 @@ If `name` is `"Trillian"` in state, this renders as "Hello, Trillian!".
 
 Interpolation resolves values from three sources, in priority order:
 
-1. **Local scope** — values provided by [State](/apps/components/state) or [ForEach](/apps/components/foreach) components
-2. **Global state** — values from `AppResult(state={...})`, named form controls, or [SetState](/apps/actions/set-state) actions
+1. **Local scope** — values provided by [State](/components/state) or [ForEach](/components/foreach) components
+2. **Global state** — values from `AppResult(state={...})`, named form controls, or [SetState](/actions/set-state) actions
 3. **Action context** — `$event` (the triggering value) and `$error` (error messages), available only inside action specs
 
 Named form controls sync to global state automatically. When a user types into `Input(name="city")`, the key `city` updates on every keystroke and any `{{ city }}` reference re-renders instantly.
@@ -85,7 +85,7 @@ Image(src="{{ avatar_url }}", alt="{{ name }}")
 
 ## Scoping with State
 
-The [State](/apps/components/state) component provides local interpolation values to a subtree. Inner values shadow outer ones, and children see the merged context:
+The [State](/components/state) component provides local interpolation values to a subtree. Inner values shadow outer ones, and children see the merged context:
 
 ```python
 from prefab_ui.components import State, Text, Column
@@ -99,4 +99,4 @@ with Column():
 
 The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `State` shadows `name` but inherits `greeting`.
 
-See the [State](/apps/components/state) and [ForEach](/apps/components/foreach) docs for more on scoping and iteration.
+See the [State](/components/state) and [ForEach](/components/foreach) docs for more on scoping and iteration.
