@@ -53,7 +53,7 @@ Slider(min=0, max=10, step=0.5, value=5)
 
 ## Different Ranges
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"type":"Column","gap":2,"children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -73,12 +73,12 @@ with Column(gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4",
   "type": "Column",
-  "gap": 4,
   "children": [
     {
+      "cssClass": "gap-2",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Label",
@@ -94,8 +94,8 @@ with Column(gap=4):
       ]
     },
     {
+      "cssClass": "gap-2",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Label",
@@ -120,7 +120,7 @@ with Column(gap=4):
 
 Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Column","gap":2,"children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -144,12 +144,12 @@ with Column(gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4",
   "type": "Column",
-  "gap": 4,
   "children": [
     {
+      "cssClass": "gap-2",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "cssClass": "justify-between",

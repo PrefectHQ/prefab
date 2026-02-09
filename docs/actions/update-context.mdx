@@ -46,7 +46,7 @@ Button("Use Advanced Mode", on_click=UpdateContext(
 
 For richer data, pass a dict instead of plain text:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Select, SelectOption, Column
@@ -63,8 +63,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Select",

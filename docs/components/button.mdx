@@ -36,7 +36,7 @@ The label can be passed as a positional argument or as a keyword (`label="Save C
 
 Each variant communicates a different intent to the user:
 
-<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":8,"children":[{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Ghost","variant":"ghost","size":"default","disabled":false},{"type":"Button","label":"Link","variant":"link","size":"default","disabled":false},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-8 grid-cols-3","type":"Grid","children":[{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Ghost","variant":"ghost","size":"default","disabled":false},{"type":"Button","label":"Link","variant":"link","size":"default","disabled":false},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -57,9 +57,8 @@ with Grid(columns=3, gap=8):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-8 grid-cols-3",
   "type": "Grid",
-  "columns": 3,
-  "gap": 8,
   "children": [
     {
       "type": "Button",
@@ -132,7 +131,7 @@ with Grid(columns=3, gap=8):
 
 ## Sizes
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -148,9 +147,8 @@ with Row(gap=3, css_class="items-center"):
 ```
 ```json Protocol
 {
-  "cssClass": "items-center",
+  "cssClass": "gap-3 items-center",
   "type": "Row",
-  "gap": 3,
   "children": [
     {
       "type": "Button",
@@ -190,7 +188,7 @@ with Row(gap=3, css_class="items-center"):
 
 Buttons accept an `icon` prop (any [lucide icon name](https://lucide.dev/icons) in kebab-case). The icon renders before the label text.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"Download","icon":"download","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Settings","icon":"settings","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Delete","icon":"trash-2","variant":"destructive","size":"default","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"Download","icon":"download","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Settings","icon":"settings","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Delete","icon":"trash-2","variant":"destructive","size":"default","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Row
@@ -202,9 +200,8 @@ with Row(gap=3, css_class="items-center"):
 ```
 ```json Protocol
 {
-  "cssClass": "items-center",
+  "cssClass": "gap-3 items-center",
   "type": "Row",
-  "gap": 3,
   "children": [
     {
       "type": "Button",
@@ -240,7 +237,7 @@ with Row(gap=3, css_class="items-center"):
 
 Square buttons optimized for single icons. Use `icon` with an icon-size variant for icon-only buttons.
 
-<ComponentPreview auto json={`{"cssClass":"items-center","type":"Row","gap":3,"children":[{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-lg","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-xs","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-sm","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon","disabled":false},{"type":"Button","label":"","icon":"plus","variant":"default","size":"icon-lg","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Row
@@ -253,9 +250,8 @@ with Row(gap=3, css_class="items-center"):
 ```
 ```json Protocol
 {
-  "cssClass": "items-center",
+  "cssClass": "gap-3 items-center",
   "type": "Row",
-  "gap": 3,
   "children": [
     {
       "type": "Button",
@@ -320,7 +316,7 @@ Button("Unavailable", disabled=True)
 
 Every component accepts `css_class` for additional Tailwind CSS classes. When your classes target the same CSS property as a built-in style (like `rounded-full` vs the default `rounded-md`), the built-in class is automatically removed so your override wins cleanly:
 
-<ComponentPreview auto json={`{"cssClass":"items-start w-full","type":"Column","gap":3,"children":[{"cssClass":"w-full bg-emerald-500","type":"Button","label":"Full Width Emerald","variant":"default","size":"default","disabled":false},{"cssClass":"rounded-full bg-rose-500","type":"Button","label":"Pill Shape Rose","variant":"default","size":"default","disabled":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3 items-start w-full","type":"Column","children":[{"cssClass":"w-full bg-emerald-500","type":"Button","label":"Full Width Emerald","variant":"default","size":"default","disabled":false},{"cssClass":"rounded-full bg-rose-500","type":"Button","label":"Pill Shape Rose","variant":"default","size":"default","disabled":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -334,9 +330,8 @@ with Column(gap=3, css_class="items-start w-full"):
 ```
 ```json Protocol
 {
-  "cssClass": "items-start w-full",
+  "cssClass": "gap-3 items-start w-full",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "cssClass": "w-full bg-emerald-500",

@@ -39,7 +39,7 @@ The renderer proxies the call through the Prefab SDK, so the tool executes serve
 
 Use `{{ key }}` interpolation in the `arguments` dict to pass client state to the tool. Form controls with a `name` automatically sync to state — `Input(name="city")` updates `city` on every keystroke, no `SetState` needed.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Input, Button, Column
@@ -54,8 +54,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Input",

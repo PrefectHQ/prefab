@@ -26,14 +26,5 @@ export const containerBase = componentBase.extend({
   children: z.array(anyComponentSchema).optional(),
 });
 
-/**
- * Gap can be a single int or an [x, y] tuple with optional null entries.
- * Python normalises (int,) → int and (None, 4) → [null, 4].
- */
-export const gapSchema = z.union([
-  z.number().int(),
-  z.tuple([z.number().int().nullable(), z.number().int().nullable()]),
-]);
-
 export type ComponentBaseWire = z.infer<typeof componentBase>;
 export type ContainerBaseWire = z.infer<typeof containerBase>;

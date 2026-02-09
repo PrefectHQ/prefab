@@ -38,7 +38,7 @@ The message appears in the chat attributed to the user, which means the AI assis
 
 Build a row of follow-up actions that save the user from typing:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"content":"Quick Actions","type":"H3"},{"type":"Row","gap":2,"children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Row, H3, Column
@@ -56,16 +56,16 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "content": "Quick Actions",
       "type": "H3"
     },
     {
+      "cssClass": "gap-2",
       "type": "Row",
-      "gap": 2,
       "children": [
         {
           "type": "Button",
@@ -112,7 +112,7 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Input, Button, Column
@@ -124,8 +124,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Input",

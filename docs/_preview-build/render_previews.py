@@ -149,10 +149,10 @@ def _rebuild_block(
     if not python_m:
         return opening_tag + interior + closing_tag
 
+    python_fence_open = python_m.group(1)  # ```python {3} Python\n etc.
     python_source = python_m.group(2)  # the code
     python_fence_close = python_m.group(3)  # ```
-    # Normalize the tab title to "Python"
-    python_block = "```python Python\n" + python_source + python_fence_close
+    python_block = python_fence_open + python_source + python_fence_close
 
     # Execute the Python and get JSON
     compact_json, pretty_json = _execute_and_serialize(

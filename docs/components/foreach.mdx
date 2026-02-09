@@ -10,7 +10,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"_tree":{"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]},"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}`}>
+<ComponentPreview auto json={`{"_tree":{"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]},"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -50,9 +50,8 @@ with ForEach("crew"):
             "type": "CardHeader",
             "children": [
               {
-                "cssClass": "items-center",
+                "cssClass": "gap-2 items-center",
                 "type": "Row",
-                "gap": 2,
                 "children": [
                   {
                     "type": "CardTitle",
@@ -103,7 +102,7 @@ When rendered with the data above, this produces one card per crew member.
 
 The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
 
-<ComponentPreview auto json={`{"type":"Row","gap":2,"children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -120,8 +119,8 @@ with Row(gap=2):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-2",
   "type": "Row",
-  "gap": 2,
   "children": [
     {
       "type": "ForEach",

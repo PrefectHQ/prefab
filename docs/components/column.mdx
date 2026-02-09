@@ -1,0 +1,296 @@
+---
+title: Column
+description: Vertical flex container for stacking children top-to-bottom.
+icon: table-columns
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Column arranges children vertically. Use `gap` to control spacing between items.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<CodeGroup>
+```python Python
+from prefab_ui.components import (
+    Column,
+    Div,
+)
+
+with Column(gap=4):
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol
+{
+  "cssClass": "gap-4",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Gap
+
+<Tabs>
+<Tab title="gap=4">
+<ComponentPreview auto json={`{"cssClass":"gap-4 p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=4, css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol
+{
+  "cssClass": "gap-4 p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title="gap=8">
+<ComponentPreview auto json={`{"cssClass":"gap-8 p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=8, css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol
+{
+  "cssClass": "gap-8 p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title="gap=12">
+<ComponentPreview auto json={`{"cssClass":"gap-12 p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=12, css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol
+{
+  "cssClass": "gap-12 p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+</Tabs>
+
+## Alignment
+
+In a Column, `align` controls horizontal alignment. The difference is visible when children have different widths.
+
+<Tabs>
+<Tab title='align="start"'>
+<ComponentPreview auto json={`{"cssClass":"gap-4 items-start p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-full","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-3/4","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-1/2","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=4, align="start", css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-full")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-3/4")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-1/2")
+```
+```json Protocol
+{
+  "cssClass": "gap-4 items-start p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-full",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-3/4",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-1/2",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title='align="center"'>
+<ComponentPreview auto json={`{"cssClass":"gap-4 items-center p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-full","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-3/4","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-1/2","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=4, align="center", css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-full")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-3/4")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-1/2")
+```
+```json Protocol
+{
+  "cssClass": "gap-4 items-center p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-full",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-3/4",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-1/2",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title='align="end"'>
+<ComponentPreview auto json={`{"cssClass":"gap-4 items-end p-3 border-3 border-dashed","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-full","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-3/4","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-1/2","type":"Div"}]}`}>
+<CodeGroup>
+```python Python highlight={3}
+from prefab_ui.components import Column, Div
+
+with Column(gap=4, align="end", css_class="p-3 border-3 border-dashed"):
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-full")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-3/4")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-1/2")
+```
+```json Protocol
+{
+  "cssClass": "gap-4 items-end p-3 border-3 border-dashed",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-full",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-3/4",
+      "type": "Div"
+    },
+    {
+      "cssClass": "bg-emerald-500 rounded-md h-10 w-1/2",
+      "type": "Div"
+    }
+  ]
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+</Tabs>
+
+## API Reference
+
+<Card icon="code" title="Column Parameters">
+<ParamField body="gap" type="int | tuple | None" default="None">
+  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis.
+</ParamField>
+
+<ParamField body="align" type="str | None" default="None">
+  Cross-axis alignment: `"start"`, `"center"`, `"end"`, `"stretch"`, `"baseline"`.
+</ParamField>
+
+<ParamField body="justify" type="str | None" default="None">
+  Main-axis distribution: `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`, `"stretch"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+For the complete protocol schema, see the [Column protocol definition](/protocol/column).
+
+```json Column
+{
+  "type": "Column",
+  "cssClass?": "string",
+  "visibleWhen?": "string",
+  "children": []
+}
+```

@@ -1,9 +1,8 @@
 import { z } from "zod";
-import { containerBase, gapSchema } from "./base.ts";
+import { containerBase } from "./base.ts";
 
 export const rowSchema = containerBase.extend({
   type: z.literal("Row"),
-  gap: gapSchema.optional(),
 });
 
 export type RowWire = z.infer<typeof rowSchema>;

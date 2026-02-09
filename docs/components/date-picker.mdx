@@ -31,7 +31,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview auto height="400px" json={`{"type":"Column","gap":3,"children":[{"cssClass":"items-center","type":"Row","gap":4,"children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]}`}>
+<ComponentPreview auto height="400px" json={`{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -50,13 +50,12 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
-      "cssClass": "items-center",
+      "cssClass": "gap-4 items-center",
       "type": "Row",
-      "gap": 4,
       "children": [
         {
           "type": "DatePicker",
@@ -80,7 +79,7 @@ with Column(gap=3):
 
 DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
 
-<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"type":"Column","gap":3,"children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`}>
+<ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -125,8 +124,8 @@ with Card():
       "type": "CardContent",
       "children": [
         {
+          "cssClass": "gap-3",
           "type": "Column",
-          "gap": 3,
           "children": [
             {
               "type": "Label",

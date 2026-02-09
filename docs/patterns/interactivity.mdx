@@ -10,7 +10,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Every named form control automatically syncs its value to client state, and `{{ key }}` interpolation makes that state available to any component. There is no manual event wiring — name a control, reference the key, and the UI stays in sync.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Type your name...","name":"name","disabled":false,"required":false},{"type":"Text","content":"Hello, {{ name }}!"}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Type your name...","name":"name","disabled":false,"required":false},{"type":"Text","content":"Hello, {{ name }}!"}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Column, Input, Text
@@ -21,8 +21,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Input",
@@ -48,7 +48,7 @@ Type in the input, and the text updates instantly. The `name="name"` prop create
 
 Every component has a `visible_when` prop that controls whether it renders based on a boolean state variable. Pair it with `ToggleState` to show and hide content on demand.
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Alert, AlertTitle, Button, Column
@@ -61,8 +61,8 @@ with Column(gap=2):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-2",
   "type": "Column",
-  "gap": 2,
   "children": [
     {
       "type": "Button",
@@ -98,7 +98,7 @@ Clicking the button flips `showDetails` between `True` and `False`. When `False`
 
 `ToolCall` with `result_key` fetches data from the server and writes the return value into client state. Other components read that data through interpolation, so the UI updates as soon as the response arrives.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Search users...","name":"search","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"find_users","arguments":{"query":"{{ search }}"},"resultKey":"results"}},{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false}],"rows":"{{ results }}","searchable":true,"paginated":false,"pageSize":10}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Search users...","name":"search","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"find_users","arguments":{"query":"{{ search }}"},"resultKey":"results"}},{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false}],"rows":"{{ results }}","searchable":true,"paginated":false,"pageSize":10}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input
@@ -122,8 +122,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Input",
@@ -179,7 +179,7 @@ The user types a query, clicks Search, and the `find_users` tool runs server-sid
 
 The same pattern works with `ForEach` for custom result layouts. Each item in the returned list becomes the interpolation context for its iteration.
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Input","inputType":"text","placeholder":"Search products...","name":"q","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"search_products","arguments":{"query":"{{ q }}"},"resultKey":"products"}},{"type":"ForEach","key":"products","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ description }}"}]}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Search products...","name":"q","disabled":false,"required":false},{"type":"Button","label":"Search","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"search_products","arguments":{"query":"{{ q }}"},"resultKey":"products"}},{"type":"ForEach","key":"products","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ description }}"}]}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -209,8 +209,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Input",

@@ -25,7 +25,7 @@ export type {
   ActionWire,
   ActionOrListWire,
 } from "./actions.ts";
-export { componentBase, containerBase, gapSchema } from "./base.ts";
+export { componentBase, containerBase } from "./base.ts";
 export type { ComponentBaseWire, ContainerBaseWire } from "./base.ts";
 
 // One import per Python module — mirrors src/prefab_ui/components/*.py
