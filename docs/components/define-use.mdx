@@ -1,0 +1,158 @@
+---
+title: Define / Use
+description: Create reusable component templates and reference them by name.
+icon: clone
+---
+
+`Define` captures a component subtree as a named template. `Use` references it by name, optionally injecting scoped data. The template is defined once and can appear any number of times in the tree with different data.
+
+## Basic Usage
+
+```python
+from prefab_ui import Define, Use, UIResponse
+from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column
+
+with Define("user-card") as user_card:
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("{{ role }}")
+
+with Column(gap=3) as view:
+    Use("user-card", name="Alice", role="Engineer")
+    Use("user-card", name="Bob", role="Designer")
+    Use("user-card", name="Carol", role="PM")
+
+UIResponse(view=view, defs=[user_card])
+```
+
+Three cards with different data, but the card structure is defined once. The kwargs passed to `Use` become [interpolation](/patterns/interpolation) values scoped to that instance of the template.
+
+## Define
+
+`Define` uses the context manager like any container, but it does **not** attach itself to a parent — it lives outside the component tree. Pass it to `UIResponse` via the `defs` parameter.
+
+```python
+from prefab_ui import Define
+from prefab_ui.components import Badge, CardTitle, Row
+
+with Define("status-row") as status_row:
+    with Row(gap=2, css_class="items-center"):
+        CardTitle("{{ label }}")
+        Badge("{{ status }}", variant="{{ variant }}")
+```
+
+```python
+UIResponse(view=layout, defs=[status_row])
+```
+
+If a Define contains multiple children, they're automatically wrapped in a Column.
+
+## Use
+
+`Use` references a Define by name. Any kwargs that aren't base component fields (`css_class`, `visible_when`) become scoped interpolation values for the template.
+
+```python
+from prefab_ui import Use
+
+# Bare reference (data comes from surrounding scope)
+Use("status-row")
+
+# With scoped data
+Use("status-row", label="Build", status="passing", variant="default")
+
+# With base component fields
+Use("status-row", label="Deploy", status="failed", visible_when="show_deploy")
+```
+
+## With ForEach
+
+Inside a [ForEach](/components/foreach), each item's fields become the interpolation context automatically — so `Use` doesn't need explicit overrides:
+
+```python
+from prefab_ui import Define, Use, UIResponse
+from prefab_ui.components import (
+    Card, CardHeader, CardTitle, CardDescription,
+    Column, ForEach, Heading,
+)
+
+with Define("project-card") as project_card:
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+            CardDescription("{{ description }}")
+
+with Column(gap=4) as view:
+    Heading("Featured")
+    Use("project-card", name="Prefab", description="The agentic frontend framework")
+
+    Heading("All Projects")
+    with ForEach("projects"):
+        Use("project-card")
+
+UIResponse(
+    view=view,
+    defs=[project_card],
+    data={"projects": [
+        {"name": "Alpha", "description": "First project"},
+        {"name": "Beta", "description": "Second project"},
+    ]},
+)
+```
+
+## API Reference
+
+<Card icon="code" title="Define Parameters">
+<ParamField body="name" type="str" required>
+  Template name, referenced by `Use`. Can be passed as a positional argument.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Use Parameters">
+<ParamField body="name" type="str" required>
+  The template name to reference (must match a `Define` name). Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="**kwargs" type="Any">
+  Scoped interpolation values. Any kwarg that isn't `css_class` or `visible_when` becomes a scoped state override for the template.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+
+<ParamField body="visible_when" type="str | None" default="None">
+  Conditional rendering expression.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+`Define` serializes to the template body in the `defs` envelope:
+
+```json defs
+{
+  "defs": {
+    "user-card": {
+      "type": "Card",
+      "children": [...]
+    }
+  }
+}
+```
+
+`Use` without overrides serializes to a `$ref` node:
+
+```json Use (bare)
+{"$ref": "user-card"}
+```
+
+With overrides, `Use` wraps the ref in a `State` node:
+
+```json Use (with overrides)
+{
+  "type": "State",
+  "state": {"name": "Alice", "role": "Engineer"},
+  "children": [{"$ref": "user-card"}]
+}
+```
