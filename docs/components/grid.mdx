@@ -63,18 +63,18 @@ The same set of children reflows as the column count changes.
 
 <Tabs>
 <Tab title="columns=2">
-<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-2","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-2 p-3 border-3 border-dashed","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
 <CodeGroup>
-```python {3} Python
+```python Python highlight={3}
 from prefab_ui.components import Div, Grid
 
-with Grid(columns=2, gap=4):
+with Grid(columns=2, gap=4, css_class="p-3 border-3 border-dashed"):
     for _ in range(6):
         Div(css_class="bg-emerald-500 rounded-md h-10")
 ```
 ```json Protocol
 {
-  "cssClass": "gap-4 grid-cols-2",
+  "cssClass": "gap-4 grid-cols-2 p-3 border-3 border-dashed",
   "type": "Grid",
   "children": [
     {
@@ -108,18 +108,18 @@ with Grid(columns=2, gap=4):
 </ComponentPreview>
 </Tab>
 <Tab title="columns=3">
-<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-3 p-3 border-3 border-dashed","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
 <CodeGroup>
-```python {3} Python
+```python Python highlight={3}
 from prefab_ui.components import Div, Grid
 
-with Grid(columns=3, gap=4):
+with Grid(columns=3, gap=4, css_class="p-3 border-3 border-dashed"):
     for _ in range(6):
         Div(css_class="bg-emerald-500 rounded-md h-10")
 ```
 ```json Protocol
 {
-  "cssClass": "gap-4 grid-cols-3",
+  "cssClass": "gap-4 grid-cols-3 p-3 border-3 border-dashed",
   "type": "Grid",
   "children": [
     {
@@ -153,18 +153,18 @@ with Grid(columns=3, gap=4):
 </ComponentPreview>
 </Tab>
 <Tab title="columns=4">
-<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-4","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-4 p-3 border-3 border-dashed","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}`}>
 <CodeGroup>
-```python {3} Python
+```python Python highlight={3}
 from prefab_ui.components import Div, Grid
 
-with Grid(columns=4, gap=4):
+with Grid(columns=4, gap=4, css_class="p-3 border-3 border-dashed"):
     for _ in range(6):
         Div(css_class="bg-emerald-500 rounded-md h-10")
 ```
 ```json Protocol
 {
-  "cssClass": "gap-4 grid-cols-4",
+  "cssClass": "gap-4 grid-cols-4 p-3 border-3 border-dashed",
   "type": "Grid",
   "children": [
     {
@@ -203,7 +203,7 @@ with Grid(columns=4, gap=4):
 
 Grids nest naturally with other containers:
 
-<ComponentPreview auto json={`{"cssClass":"gap-6 grid-cols-2","type":"Grid","children":[{"type":"Column","children":[{"content":"Left Panel","type":"H3"},{"content":"Primary content goes here.","type":"P"}]},{"type":"Column","children":[{"content":"Right Panel","type":"H3"},{"content":"Secondary content goes here.","type":"P"}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-6 grid-cols-2 p-3 border-3 border-dashed","type":"Grid","children":[{"cssClass":"p-3 border-3 border-dashed","type":"Column","children":[{"content":"Left Panel","type":"H3"},{"content":"Primary content goes here.","type":"P"}]},{"cssClass":"p-3 border-3 border-dashed","type":"Column","children":[{"content":"Right Panel","type":"H3"},{"content":"Secondary content goes here.","type":"P"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -213,20 +213,21 @@ from prefab_ui.components import (
     P,
 )
 
-with Grid(columns=2, gap=6):
-    with Column():
+with Grid(columns=2, gap=6, css_class="p-3 border-3 border-dashed"):
+    with Column(css_class="p-3 border-3 border-dashed"):
         H3("Left Panel")
         P("Primary content goes here.")
-    with Column():
+    with Column(css_class="p-3 border-3 border-dashed"):
         H3("Right Panel")
         P("Secondary content goes here.")
 ```
 ```json Protocol
 {
-  "cssClass": "gap-6 grid-cols-2",
+  "cssClass": "gap-6 grid-cols-2 p-3 border-3 border-dashed",
   "type": "Grid",
   "children": [
     {
+      "cssClass": "p-3 border-3 border-dashed",
       "type": "Column",
       "children": [
         {
@@ -240,6 +241,7 @@ with Grid(columns=2, gap=6):
       ]
     },
     {
+      "cssClass": "p-3 border-3 border-dashed",
       "type": "Column",
       "children": [
         {
