@@ -63,6 +63,12 @@ class BarChart(Component):
     )
     height: int = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack bars")
+    horizontal: bool = Field(
+        default=False, description="Render as horizontal bar chart"
+    )
+    bar_radius: int = Field(
+        default=4, alias="barRadius", description="Corner radius on bars"
+    )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"
     )
@@ -95,6 +101,12 @@ class LineChart(Component):
         default=None, alias="xAxis", description="Data key for x-axis labels"
     )
     height: int = Field(default=300, description="Chart height in pixels")
+    curve: Literal["linear", "smooth", "step"] = Field(
+        default="linear", description="Line interpolation style"
+    )
+    show_dots: bool = Field(
+        default=False, alias="showDots", description="Show dots at data points"
+    )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"
     )
@@ -129,6 +141,12 @@ class AreaChart(Component):
     )
     height: int = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack areas")
+    curve: Literal["linear", "smooth", "step"] = Field(
+        default="linear", description="Line interpolation style"
+    )
+    show_dots: bool = Field(
+        default=False, alias="showDots", description="Show dots at data points"
+    )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"
     )
@@ -166,6 +184,12 @@ class PieChart(Component):
     inner_radius: int = Field(
         default=0, alias="innerRadius", description="Inner radius (>0 for donut)"
     )
+    show_label: bool = Field(
+        default=False, alias="showLabel", description="Show labels on slices"
+    )
+    padding_angle: int = Field(
+        default=0, alias="paddingAngle", description="Gap between slices in degrees"
+    )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"
     )
@@ -198,6 +222,12 @@ class RadarChart(Component):
         default=None, alias="axisKey", description="Data key for angular axis labels"
     )
     height: int = Field(default=300, description="Chart height in pixels")
+    filled: bool = Field(
+        default=True, description="Fill radar polygons (False for lines only)"
+    )
+    show_dots: bool = Field(
+        default=False, alias="showDots", description="Show dots at vertices"
+    )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"
     )
@@ -233,6 +263,12 @@ class RadialChart(Component):
     height: int = Field(default=300, description="Chart height in pixels")
     inner_radius: int = Field(
         default=30, alias="innerRadius", description="Inner radius in pixels"
+    )
+    start_angle: int = Field(
+        default=180, alias="startAngle", description="Arc start angle in degrees"
+    )
+    end_angle: int = Field(
+        default=0, alias="endAngle", description="Arc end angle in degrees"
     )
     show_legend: bool = Field(
         default=False, alias="showLegend", description="Show legend"

@@ -10,7 +10,7 @@ PieChart shows how parts relate to a whole. Unlike the other chart types, it doe
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"showLegend":true,"showTooltip":true}`}>
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"showLabel":false,"paddingAngle":0,"showLegend":true,"showTooltip":true}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import PieChart
@@ -57,6 +57,8 @@ PieChart(
   "nameKey": "browser",
   "height": 300,
   "innerRadius": 0,
+  "showLabel": false,
+  "paddingAngle": 0,
   "showLegend": true,
   "showTooltip": true
 }
@@ -104,6 +106,64 @@ PieChart(
 </CodeGroup>
 </ComponentPreview>
 
+## Labels
+
+Set `show_label=True` to display a label on each slice, making values readable without tooltips.
+
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"paddingAngle":0,"showLabel":true,"showLegend":true,"showTooltip":true}`}>
+<CodeGroup>
+```python Python {5}
+PieChart(
+    data=data,
+    data_key="visitors",
+    name_key="browser",
+    show_label=True,
+    show_legend=True,
+)
+```
+```json Protocol {6}
+{
+  "type": "PieChart",
+  "data": "...",
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "showLabel": true,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Spaced Slices
+
+Set `padding_angle` to add space between slices, visually separating each segment.
+
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"paddingAngle":5,"showLabel":false,"showLegend":true,"showTooltip":true}`}>
+<CodeGroup>
+```python Python {6}
+PieChart(
+    data=data,
+    data_key="visitors",
+    name_key="browser",
+    inner_radius=60,
+    padding_angle=5,
+    show_legend=True,
+)
+```
+```json Protocol {7}
+{
+  "type": "PieChart",
+  "data": "...",
+  "dataKey": "visitors",
+  "nameKey": "browser",
+  "innerRadius": 60,
+  "paddingAngle": 5,
+  "showLegend": true
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="PieChart Parameters">
@@ -125,6 +185,14 @@ PieChart(
 
 <ParamField body="inner_radius" type="int" default="0">
   Inner radius in pixels. Set greater than 0 for a donut chart.
+</ParamField>
+
+<ParamField body="show_label" type="bool" default="False">
+  Show a label on each slice.
+</ParamField>
+
+<ParamField body="padding_angle" type="int" default="0">
+  Angle in degrees between slices.
 </ParamField>
 
 <ParamField body="show_legend" type="bool" default="False">
@@ -150,6 +218,8 @@ PieChart(
   "nameKey": "string (required)",
   "height?": 300,
   "innerRadius?": 0,
+  "showLabel?": false,
+  "paddingAngle?": 0,
   "showLegend?": false,
   "showTooltip?": true,
   "cssClass?": "string",
