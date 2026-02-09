@@ -204,7 +204,7 @@ with Card(css_class="p-6"):
 
 Cards work naturally with `Grid` for dashboard-style layouts:
 
-<ComponentPreview auto json={`{"type":"Grid","columns":3,"gap":4,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -228,9 +228,8 @@ with Grid(columns=3, gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4 grid-cols-3",
   "type": "Grid",
-  "columns": 3,
-  "gap": 4,
   "children": [
     {
       "type": "Card",

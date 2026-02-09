@@ -6,7 +6,14 @@ from typing import Any, Literal, overload
 
 from pydantic import Field
 
-from prefab_ui.components.base import ContainerComponent, Gap
+from prefab_ui.components.base import (
+    Align,
+    ContainerComponent,
+    Gap,
+    Justify,
+    _compile_layout_classes,
+    _merge_css_classes,
+)
 
 
 class Grid(ContainerComponent):
@@ -34,9 +41,11 @@ class Grid(ContainerComponent):
         default=3,
         ge=1,
         le=12,
-        description="Number of grid columns (1-12)",
+        exclude=True,
     )
-    gap: Gap = Field(default=None, description="Gap between children: int or (x, y)")
+    gap: Gap = Field(default=None, exclude=True)
+    align: Align = Field(default=None, exclude=True)
+    justify: Justify = Field(default=None, exclude=True)
 
     @overload
     def __init__(self, columns: int, /, **kwargs: Any) -> None: ...
@@ -51,3 +60,13 @@ class Grid(ContainerComponent):
         if columns is not None:
             kwargs["columns"] = columns
         super().__init__(**kwargs)
+
+    def model_post_init(self, __context: Any) -> None:
+        layout = _compile_layout_classes(
+            gap=self.gap,
+            columns=self.columns,
+            align=self.align,
+            justify=self.justify,
+        )
+        self.css_class = _merge_css_classes(layout, self.css_class)
+        super().model_post_init(__context)

@@ -90,7 +90,7 @@ Calendar(mode="multiple", name="selectedDates")
 
 Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
 
-<ComponentPreview auto json={`{"type":"Row","gap":6,"children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"type":"Column","gap":2,"children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -112,8 +112,8 @@ with Row(gap=6):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-6",
   "type": "Row",
-  "gap": 6,
   "children": [
     {
       "type": "Calendar",
@@ -121,8 +121,8 @@ with Row(gap=6):
       "name": "selectedDate"
     },
     {
+      "cssClass": "gap-2",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Text",

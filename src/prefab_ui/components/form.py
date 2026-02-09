@@ -32,7 +32,11 @@ from pydantic_core import PydanticUndefined
 from prefab_ui.actions import Action
 from prefab_ui.actions.mcp import ToolCall
 from prefab_ui.actions.ui import ShowToast
-from prefab_ui.components.base import ContainerComponent
+from prefab_ui.components.base import (
+    ContainerComponent,
+    _compile_layout_classes,
+    _merge_css_classes,
+)
 
 
 class Form(ContainerComponent):
@@ -50,12 +54,17 @@ class Form(ContainerComponent):
     """
 
     type: Literal["Form"] = "Form"
-    gap: int = Field(default=4, description="Vertical gap between fields")
+    gap: int = Field(default=4, exclude=True)
     on_submit: Action | list[Action] | None = Field(
         default=None,
         alias="onSubmit",
         description="Action(s) to execute when the form is submitted",
     )
+
+    def model_post_init(self, __context: Any) -> None:
+        layout = _compile_layout_classes(gap=self.gap)
+        self.css_class = _merge_css_classes(layout, self.css_class)
+        super().model_post_init(__context)
 
     @classmethod
     def from_model(

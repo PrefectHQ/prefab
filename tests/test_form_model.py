@@ -30,7 +30,7 @@ class TestFormComponent:
             Input(name="name")
         j = f.to_json()
         assert j["type"] == "Form"
-        assert j["gap"] == 4
+        assert j["cssClass"] == "gap-4"
         assert len(j["children"]) == 2
 
     def test_from_model_basic_fields(self):

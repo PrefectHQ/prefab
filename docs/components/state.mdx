@@ -83,7 +83,7 @@ Both forms produce the same wire format — a `State` node with a `state` object
 
 State components can nest. Inner values shadow outer ones for the same key, and children see the merged context:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Column, State, Text
@@ -96,8 +96,8 @@ with Column(gap=2):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-2",
   "type": "Column",
-  "gap": 2,
   "children": [
     {
       "type": "State",
@@ -136,7 +136,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]}`}>
+<ComponentPreview auto json={`{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -159,9 +159,8 @@ with State(prefix="Speaks"):
   },
   "children": [
     {
-      "cssClass": "items-center",
+      "cssClass": "gap-2 items-center",
       "type": "Row",
-      "gap": 2,
       "children": [
         {
           "type": "ForEach",

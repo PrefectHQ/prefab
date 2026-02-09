@@ -31,7 +31,7 @@ Badge("Mostly Harmless")
 
 Eight variants cover the most common use cases — five base styles from shadcn plus three semantic colors for status indicators.
 
-<ComponentPreview auto json={`{"cssClass":"place-items-center","type":"Grid","columns":4,"gap":8,"children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"},{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-8 grid-cols-4 place-items-center","type":"Grid","children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Secondary","variant":"secondary"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Outline","variant":"outline"},{"type":"Badge","label":"Ghost","variant":"ghost"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Info","variant":"info"}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge, Grid
@@ -48,10 +48,8 @@ with Grid(gap=8, columns=4, css_class="place-items-center"):
 ```
 ```json Protocol
 {
-  "cssClass": "place-items-center",
+  "cssClass": "gap-8 grid-cols-4 place-items-center",
   "type": "Grid",
-  "columns": 4,
-  "gap": 8,
   "children": [
     {
       "type": "Badge",
@@ -103,7 +101,7 @@ with Grid(gap=8, columns=4, css_class="place-items-center"):
 
 Badges pair well with cards and other layout components as inline status indicators:
 
-<ComponentPreview auto json={`{"type":"Column","gap":3,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"Badge","label":"Online","variant":"success"}]},{"type":"CardDescription","content":"Infinite Improbability Drive engaged"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"Vogon Fleet"},{"type":"Badge","label":"Approaching","variant":"warning"}]},{"type":"CardDescription","content":"Demolition order filed with local planning authority"}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"Badge","label":"Online","variant":"success"}]},{"type":"CardDescription","content":"Infinite Improbability Drive engaged"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Vogon Fleet"},{"type":"Badge","label":"Approaching","variant":"warning"}]},{"type":"CardDescription","content":"Demolition order filed with local planning authority"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -132,8 +130,8 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-3",
   "type": "Column",
-  "gap": 3,
   "children": [
     {
       "type": "Card",
@@ -142,9 +140,8 @@ with Column(gap=3):
           "type": "CardHeader",
           "children": [
             {
-              "cssClass": "items-center",
+              "cssClass": "gap-2 items-center",
               "type": "Row",
-              "gap": 2,
               "children": [
                 {
                   "type": "CardTitle",
@@ -172,9 +169,8 @@ with Column(gap=3):
           "type": "CardHeader",
           "children": [
             {
-              "cssClass": "items-center",
+              "cssClass": "gap-2 items-center",
               "type": "Row",
-              "gap": 2,
               "children": [
                 {
                   "type": "CardTitle",

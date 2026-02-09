@@ -1,10 +1,8 @@
 import { z } from "zod";
-import { containerBase, gapSchema } from "./base.ts";
+import { containerBase } from "./base.ts";
 
 export const gridSchema = containerBase.extend({
   type: z.literal("Grid"),
-  columns: z.number().int().optional(),
-  gap: gapSchema.optional(),
 });
 
 export type GridWire = z.infer<typeof gridSchema>;

@@ -33,7 +33,7 @@ Input(placeholder="Enter your email...")
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -49,8 +49,8 @@ with Column(gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4",
   "type": "Column",
-  "gap": 4,
   "children": [
     {
       "type": "Input",
@@ -90,7 +90,7 @@ with Column(gap=4):
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -105,8 +105,8 @@ with Column(gap=2):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-2",
   "type": "Column",
-  "gap": 2,
   "children": [
     {
       "type": "Label",
@@ -129,7 +129,7 @@ with Column(gap=2):
 
 Native date and time pickers use the browser's built-in UI:
 
-<ComponentPreview auto json={`{"type":"Row","gap":4,"children":[{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"flex-1","type":"Column","gap":2,"children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Row","children":[{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -152,13 +152,12 @@ with Row(gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4",
   "type": "Row",
-  "gap": 4,
   "children": [
     {
-      "cssClass": "flex-1",
+      "cssClass": "gap-2 flex-1",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Label",
@@ -174,9 +173,8 @@ with Row(gap=4):
       ]
     },
     {
-      "cssClass": "flex-1",
+      "cssClass": "gap-2 flex-1",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Label",
@@ -192,9 +190,8 @@ with Row(gap=4):
       ]
     },
     {
-      "cssClass": "flex-1",
+      "cssClass": "gap-2 flex-1",
       "type": "Column",
-      "gap": 2,
       "children": [
         {
           "type": "Label",

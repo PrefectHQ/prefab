@@ -97,7 +97,7 @@ DataTable(
 
 ForEach renders its children once per item in a data list. Each item's fields become the interpolation context for that iteration, so `{{ field }}` placeholders resolve to the current item's values.
 
-<ComponentPreview auto json={`{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center","type":"Row","gap":2,"children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}`}>
+<ComponentPreview auto json={`{"type":"ForEach","key":"users","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -130,9 +130,8 @@ with ForEach("users"):
           "type": "CardHeader",
           "children": [
             {
-              "cssClass": "items-center",
+              "cssClass": "gap-2 items-center",
               "type": "Row",
-              "gap": 2,
               "children": [
                 {
                   "type": "CardTitle",
@@ -275,7 +274,7 @@ Set `accordion_type="multiple"` to allow more than one section open at a time.
 
 Pages provides a multi-page layout where only the active page renders. Combined with `SetState`, it creates step-by-step navigation for wizards, onboarding flows, or any multi-stage display.
 
-<ComponentPreview auto json={`{"type":"Column","gap":4,"children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices"},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
@@ -294,8 +293,8 @@ with Column(gap=4):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-4",
   "type": "Column",
-  "gap": 4,
   "children": [
     {
       "type": "Pages",
@@ -371,7 +370,7 @@ with Column(gap=4):
 
 Progress bars show completion or loading status. The `value` prop supports interpolation, so you can bind it to server-provided data that updates over time.
 
-<ComponentPreview auto json={`{"type":"Column","gap":2,"children":[{"type":"Text","content":"Processing: {{ progress }}%"},{"type":"Progress","value":"{{ progress }}","max":100}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Processing: {{ progress }}%"},{"type":"Progress","value":"{{ progress }}","max":100}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Column, Progress, Text
@@ -382,8 +381,8 @@ with Column(gap=2):
 ```
 ```json Protocol
 {
+  "cssClass": "gap-2",
   "type": "Column",
-  "gap": 2,
   "children": [
     {
       "type": "Text",

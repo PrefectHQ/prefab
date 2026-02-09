@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from contextvars import ContextVar
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, BeforeValidator, Field
 from typing_extensions import Self
@@ -31,6 +31,45 @@ def _coerce_gap(v: Any) -> int | tuple[int | None, int | None] | None:
 Gap = Annotated[
     int | tuple[int | None, int | None] | None, BeforeValidator(_coerce_gap)
 ]
+
+Align = Literal["start", "center", "end", "stretch", "baseline"] | None
+
+Justify = (
+    Literal["start", "center", "end", "between", "around", "evenly", "stretch"] | None
+)
+
+
+def _compile_layout_classes(
+    *,
+    gap: int | tuple[int | None, int | None] | None = None,
+    columns: int | None = None,
+    align: str | None = None,
+    justify: str | None = None,
+) -> str | None:
+    """Compile layout kwargs to a Tailwind class string."""
+    parts: list[str] = []
+    if gap is not None:
+        if isinstance(gap, tuple):
+            x, y = gap
+            if x is not None:
+                parts.append(f"gap-x-{x}")
+            if y is not None:
+                parts.append(f"gap-y-{y}")
+        else:
+            parts.append(f"gap-{gap}")
+    if columns is not None:
+        parts.append(f"grid-cols-{columns}")
+    if align is not None:
+        parts.append(f"items-{align}")
+    if justify is not None:
+        parts.append(f"justify-{justify}")
+    return " ".join(parts) if parts else None
+
+
+def _merge_css_classes(*classes: str | None) -> str | None:
+    """Merge multiple class strings, returning None if empty."""
+    merged = " ".join(c for c in classes if c)
+    return merged or None
 
 
 class Component(BaseModel):
