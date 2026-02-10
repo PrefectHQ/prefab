@@ -3,16 +3,11 @@ export const ComponentPreview = ({ json, height, children }) => {
   const handleRef = React.useRef(null);
 
   React.useEffect(() => {
-    let cancelled = false;
     const host = hostRef.current;
-    if (!host) return;
+    if (!host || !window.__prefab) return;
 
-    var loadModule = new Function("u", "return import(u)");
-    loadModule("/embed.js").then(({ mountPreview }) => {
-      if (cancelled) return;
-      var dark = document.documentElement.classList.contains("dark");
-      handleRef.current = mountPreview(host, json, { dark: dark });
-    });
+    var dark = document.documentElement.classList.contains("dark");
+    handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
 
     var observer = new MutationObserver(() => {
       var dark = document.documentElement.classList.contains("dark");
@@ -24,7 +19,6 @@ export const ComponentPreview = ({ json, height, children }) => {
     });
 
     return () => {
-      cancelled = true;
       observer.disconnect();
       if (handleRef.current) {
         handleRef.current.unmount();

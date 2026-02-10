@@ -14,9 +14,10 @@ description: >
 `docs/_preview-build/` and execute in this order:
 
 1. **build:embed** (`npm run build:embed` in `renderer/`) — builds
-   `renderer/src/embed.tsx` as a self-contained ES module via Vite library
-   mode. Output: `docs/embed.js`. This is what `ComponentPreview` loads at
-   runtime to render component trees in shadow DOM. The build inlines all
+   `renderer/src/embed.tsx` as a self-contained IIFE via Vite library mode.
+   Output: `docs/embed.js`. Mintlify auto-injects `.js` files from the docs
+   directory as `<script>` tags on every page, so the IIFE executes and
+   registers `window.__prefab = { mountPreview }`. The build inlines all
    dependencies (React, Radix, Recharts, Tailwind CSS) into a single file.
    Config: `renderer/vite.config.embed.ts`.
 2. **render_previews.py** — finds `<ComponentPreview auto>` blocks in MDX
@@ -86,22 +87,23 @@ in the compiled CSS.
 
 ## Embed Module Architecture
 
-`docs/embed.js` is a self-contained ES module built from
+`docs/embed.js` is a self-contained IIFE built from
 `renderer/src/embed.tsx` via Vite library mode
-(`renderer/vite.config.embed.ts`). It exports a single function
-`mountPreview(host, json, options)` that creates a shadow DOM, injects
-Tailwind CSS, and renders a component tree with React.
+(`renderer/vite.config.embed.ts`). It registers
+`window.__prefab = { mountPreview }` when executed.
+
+Mintlify auto-injects any `.js` file in the docs directory as a `<script>`
+tag on every page. This means the IIFE runs before React components mount,
+so `window.__prefab.mountPreview` is available synchronously when
+`ComponentPreview` needs it. Mintlify does NOT serve `.js` files as
+fetchable static assets (dynamic `import()` fails), which is why the IIFE
++ auto-injection approach is used instead of ES module format.
 
 All dependencies (React, Radix, Recharts, Tailwind CSS) are bundled
 inline — no external imports. The CSS is inlined as a string via Vite's
 `?inline` import and processed through the `tailwindShadowDom` plugin
 (shared in `renderer/vite-plugins.ts`) to strip `@property` declarations
 that don't work in shadow DOM.
-
-`docs/snippets/component-preview.mdx` loads this module via dynamic
-`import("/embed.js")` at runtime. The `new Function("u", "return
-import(u)")` wrapper prevents Mintlify's bundler from trying to resolve
-the import at build time.
 
 The same library-mode build mechanism could serve air-gapped MCP app
 distribution: ship the built bundle alongside an MCP server so the client
