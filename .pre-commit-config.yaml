@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: prettier
         types_or: [yaml, json5, javascript, tsx, ts, css]
-        exclude: ^renderer/src/ui/ # generated shadcn components
+        exclude: ^(renderer/src/ui/|docs/embed\.js)
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.0
@@ -56,5 +56,6 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
+        exclude: ^docs/embed\.js$
         additional_dependencies:
           - tomli

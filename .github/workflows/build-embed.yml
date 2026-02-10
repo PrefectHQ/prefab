@@ -1,0 +1,42 @@
+name: Build Mintlify embed
+
+on:
+  pull_request:
+    paths:
+      - "renderer/**"
+      - ".github/workflows/build-embed.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: "Build docs/embed.js for Mintlify"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: renderer/package-lock.json
+
+      - run: npm ci
+        working-directory: renderer
+
+      - run: npm run build:embed
+        working-directory: renderer
+
+      - name: Commit updated embed.js
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/embed.js
+          git diff --cached --quiet && echo "No changes" || git commit -m "Rebuild docs/embed.js" && git push

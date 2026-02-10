@@ -3,32 +3,11 @@ export const ComponentPreview = ({ json, height, children }) => {
   const handleRef = React.useRef(null);
 
   React.useEffect(() => {
-    let cancelled = false;
     const host = hostRef.current;
-    if (!host) return;
+    if (!host || !window.__prefab) return;
 
-    const port =
-      (typeof window !== "undefined" && window.__PREFAB_RENDERER_PORT__) ||
-      3333;
-
-    var loadModule = new Function("u", "return import(u)");
-    var preamble = window.__vite_plugin_react_preamble_installed__
-      ? Promise.resolve()
-      : loadModule("http://localhost:" + port + "/@react-refresh").then(
-          function (RefreshRuntime) {
-            RefreshRuntime.default.injectIntoGlobalHook(window);
-            window.$RefreshReg$ = function () {};
-            window.$RefreshSig$ = function () { return function (type) { return type; }; };
-            window.__vite_plugin_react_preamble_installed__ = true;
-          }
-        );
-    preamble.then(function () {
-      return loadModule("http://localhost:" + port + "/src/embed.tsx");
-    }).then(({ mountPreview }) => {
-      if (cancelled) return;
-      var dark = document.documentElement.classList.contains("dark");
-      handleRef.current = mountPreview(host, json, { dark: dark });
-    });
+    var dark = document.documentElement.classList.contains("dark");
+    handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
 
     var observer = new MutationObserver(() => {
       var dark = document.documentElement.classList.contains("dark");
@@ -40,7 +19,6 @@ export const ComponentPreview = ({ json, height, children }) => {
     });
 
     return () => {
-      cancelled = true;
       observer.disconnect();
       if (handleRef.current) {
         handleRef.current.unmount();
