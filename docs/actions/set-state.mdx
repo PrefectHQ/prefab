@@ -23,31 +23,26 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 100.0,
-        "name": "brightness",
-        "disabled": false,
-        "onChange": {
-          "action": "setState",
-          "key": "brightness",
-          "value": "{{ $event }}"
-        }
-      },
-      {
-        "content": "Brightness: {{ brightness }}%",
-        "type": "Muted"
+  "cssClass": "gap-3",
+  "type": "Column",
+  "children": [
+    {
+      "type": "Slider",
+      "min": 0.0,
+      "max": 100.0,
+      "name": "brightness",
+      "disabled": false,
+      "onChange": {
+        "action": "setState",
+        "key": "brightness",
+        "value": "{{ $event }}"
       }
-    ]
-  },
-  "state": {
-    "brightness": 50
-  }
+    },
+    {
+      "content": "Brightness: {{ brightness }}%",
+      "type": "Muted"
+    }
+  ]
 }
 ```
 </CodeGroup>
@@ -96,77 +91,72 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "cssClass": "gap-2",
-        "type": "Row",
-        "children": [
-          {
-            "cssClass": "bg-blue-500 text-white",
-            "type": "Button",
-            "label": "Blue",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-blue-500"
-            }
-          },
-          {
-            "cssClass": "bg-emerald-500 text-white",
-            "type": "Button",
-            "label": "Emerald",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-emerald-500"
-            }
-          },
-          {
-            "cssClass": "bg-rose-500 text-white",
-            "type": "Button",
-            "label": "Rose",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-rose-500"
-            }
-          },
-          {
-            "cssClass": "bg-amber-500 text-white",
-            "type": "Button",
-            "label": "Amber",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-amber-500"
-            }
+  "cssClass": "gap-3",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "gap-2",
+      "type": "Row",
+      "children": [
+        {
+          "cssClass": "bg-blue-500 text-white",
+          "type": "Button",
+          "label": "Blue",
+          "variant": "default",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "color",
+            "value": "bg-blue-500"
           }
-        ]
-      },
-      {
-        "cssClass": "{{ color }} h-10 rounded-md",
-        "type": "Div"
-      }
-    ]
-  },
-  "state": {
-    "color": "bg-blue-500"
-  }
+        },
+        {
+          "cssClass": "bg-emerald-500 text-white",
+          "type": "Button",
+          "label": "Emerald",
+          "variant": "default",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "color",
+            "value": "bg-emerald-500"
+          }
+        },
+        {
+          "cssClass": "bg-rose-500 text-white",
+          "type": "Button",
+          "label": "Rose",
+          "variant": "default",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "color",
+            "value": "bg-rose-500"
+          }
+        },
+        {
+          "cssClass": "bg-amber-500 text-white",
+          "type": "Button",
+          "label": "Amber",
+          "variant": "default",
+          "size": "default",
+          "disabled": false,
+          "onClick": {
+            "action": "setState",
+            "key": "color",
+            "value": "bg-amber-500"
+          }
+        }
+      ]
+    },
+    {
+      "cssClass": "{{ color }} h-10 rounded-md",
+      "type": "Div"
+    }
+  ]
 }
 ```
 </CodeGroup>
@@ -195,43 +185,38 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 100.0,
-        "name": "volume",
-        "disabled": false,
-        "onChange": {
-          "action": "setState",
-          "key": "volume",
-          "value": "{{ $event }}"
-        }
-      },
-      {
-        "content": "Volume: {{ volume }}",
-        "type": "Muted"
-      },
-      {
-        "type": "Button",
-        "label": "Reset to 50",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {
-          "action": "setState",
-          "key": "volume",
-          "value": 50
-        }
+  "cssClass": "gap-3",
+  "type": "Column",
+  "children": [
+    {
+      "type": "Slider",
+      "min": 0.0,
+      "max": 100.0,
+      "name": "volume",
+      "disabled": false,
+      "onChange": {
+        "action": "setState",
+        "key": "volume",
+        "value": "{{ $event }}"
       }
-    ]
-  },
-  "state": {
-    "volume": 75
-  }
+    },
+    {
+      "content": "Volume: {{ volume }}",
+      "type": "Muted"
+    },
+    {
+      "type": "Button",
+      "label": "Reset to 50",
+      "variant": "outline",
+      "size": "default",
+      "disabled": false,
+      "onClick": {
+        "action": "setState",
+        "key": "volume",
+        "value": 50
+      }
+    }
+  ]
 }
 ```
 </CodeGroup>

@@ -41,62 +41,43 @@ with Column(gap=2):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
-    "children": [
-      {
-        "type": "ForEach",
-        "key": "crew",
-        "children": [
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [
-                  {
-                    "cssClass": "gap-2 items-center",
-                    "type": "Row",
-                    "children": [
-                      {
-                        "type": "CardTitle",
-                        "content": "{{ name }}"
-                      },
-                      {
-                        "type": "Badge",
-                        "label": "{{ designation }}",
-                        "variant": "secondary"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "{{ email }}"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "crew": [
+  "cssClass": "gap-2",
+  "type": "Column",
+  "children": [
     {
-      "name": "Arthur Dent",
-      "designation": "Sandwich Maker",
-      "email": "arthur@heart-of-gold.ship"
-    },
-    {
-      "name": "Ford Prefect",
-      "designation": "Researcher",
-      "email": "ford@megadodo.pub"
-    },
-    {
-      "name": "Trillian",
-      "designation": "Astrophysicist",
-      "email": "trillian@heart-of-gold.ship"
+      "type": "ForEach",
+      "key": "crew",
+      "children": [
+        {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "cssClass": "gap-2 items-center",
+                  "type": "Row",
+                  "children": [
+                    {
+                      "type": "CardTitle",
+                      "content": "{{ name }}"
+                    },
+                    {
+                      "type": "Badge",
+                      "label": "{{ designation }}",
+                      "variant": "secondary"
+                    }
+                  ]
+                },
+                {
+                  "type": "CardDescription",
+                  "content": "{{ email }}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
@@ -127,28 +108,20 @@ with Row(gap=2):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-2",
-    "type": "Row",
-    "children": [
-      {
-        "type": "ForEach",
-        "key": "tags",
-        "children": [
-          {
-            "type": "Badge",
-            "label": "{{ _item }}",
-            "variant": "secondary"
-          }
-        ]
-      }
-    ]
-  },
-  "tags": [
-    "earth",
-    "magrathea",
-    "vogon poetry",
-    "42"
+  "cssClass": "gap-2",
+  "type": "Row",
+  "children": [
+    {
+      "type": "ForEach",
+      "key": "tags",
+      "children": [
+        {
+          "type": "Badge",
+          "label": "{{ _item }}",
+          "variant": "secondary"
+        }
+      ]
+    }
   ]
 }
 ```
@@ -187,48 +160,32 @@ with Column(gap=2):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
-    "children": [
-      {
-        "type": "ForEach",
-        "key": "projects",
-        "children": [
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [
-                  {
-                    "type": "CardTitle",
-                    "content": "{{ name }}"
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "Owner: {{ owner.name }}"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "projects": [
+  "cssClass": "gap-2",
+  "type": "Column",
+  "children": [
     {
-      "name": "Heart of Gold",
-      "owner": {
-        "name": "Zaphod Beeblebrox"
-      }
-    },
-    {
-      "name": "Hitchhiker's Guide",
-      "owner": {
-        "name": "Ford Prefect"
-      }
+      "type": "ForEach",
+      "key": "projects",
+      "children": [
+        {
+          "type": "Card",
+          "children": [
+            {
+              "type": "CardHeader",
+              "children": [
+                {
+                  "type": "CardTitle",
+                  "content": "{{ name }}"
+                },
+                {
+                  "type": "CardDescription",
+                  "content": "Owner: {{ owner.name }}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

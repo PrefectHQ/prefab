@@ -144,49 +144,44 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "cssClass": "gap-2",
-        "type": "Column",
-        "children": [
-          {
-            "cssClass": "justify-between",
-            "type": "Row",
-            "children": [
-              {
-                "type": "Label",
-                "text": "Volume"
-              },
-              {
-                "type": "Text",
-                "content": "{{ volume | number }}%",
-                "bold": true
-              }
-            ]
-          },
-          {
-            "type": "Slider",
-            "min": 0.0,
-            "max": 100.0,
-            "value": 75.0,
-            "name": "volume",
-            "disabled": false
-          }
-        ]
-      },
-      {
-        "type": "Progress",
-        "value": "{{ volume }}",
-        "max": 100.0
-      }
-    ]
-  },
-  "state": {
-    "volume": 75
-  }
+  "cssClass": "gap-4",
+  "type": "Column",
+  "children": [
+    {
+      "cssClass": "gap-2",
+      "type": "Column",
+      "children": [
+        {
+          "cssClass": "justify-between",
+          "type": "Row",
+          "children": [
+            {
+              "type": "Label",
+              "text": "Volume"
+            },
+            {
+              "type": "Text",
+              "content": "{{ volume | number }}%",
+              "bold": true
+            }
+          ]
+        },
+        {
+          "type": "Slider",
+          "min": 0.0,
+          "max": 100.0,
+          "value": 75.0,
+          "name": "volume",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "type": "Progress",
+      "value": "{{ volume }}",
+      "max": 100.0
+    }
+  ]
 }
 ```
 </CodeGroup>

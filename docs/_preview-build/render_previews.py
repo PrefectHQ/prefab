@@ -112,16 +112,19 @@ def _execute_and_serialize(
 
     tree = roots[0].to_json()
 
+    # The pretty JSON (Protocol tab) always shows just the component tree.
+    # The compact JSON (preview attribute) wraps in an envelope when the
+    # preview needs initial state or sample data for the renderer.
+    pretty = json.dumps(tree, indent=2)
+
     if initial_state or sample_data:
         wrapper: dict[str, Any] = {"view": tree}
         if initial_state:
             wrapper["state"] = initial_state
         wrapper.update(sample_data)
         compact = json.dumps(wrapper, separators=(",", ":"))
-        pretty = json.dumps(wrapper, indent=2)
     else:
         compact = json.dumps(tree, separators=(",", ":"))
-        pretty = json.dumps(tree, indent=2)
 
     return compact, pretty
 

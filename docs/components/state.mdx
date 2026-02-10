@@ -153,35 +153,28 @@ with State(prefix="Speaks"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "type": "State",
-    "state": {
-      "prefix": "Speaks"
-    },
-    "children": [
-      {
-        "cssClass": "gap-2 items-center",
-        "type": "Row",
-        "children": [
-          {
-            "type": "ForEach",
-            "key": "languages",
-            "children": [
-              {
-                "type": "Badge",
-                "label": "{{ prefix }}: {{ _item }}",
-                "variant": "secondary"
-              }
-            ]
-          }
-        ]
-      }
-    ]
+  "type": "State",
+  "state": {
+    "prefix": "Speaks"
   },
-  "languages": [
-    "Python",
-    "TypeScript",
-    "Rust"
+  "children": [
+    {
+      "cssClass": "gap-2 items-center",
+      "type": "Row",
+      "children": [
+        {
+          "type": "ForEach",
+          "key": "languages",
+          "children": [
+            {
+              "type": "Badge",
+              "label": "{{ prefix }}: {{ _item }}",
+              "variant": "secondary"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
 ```
