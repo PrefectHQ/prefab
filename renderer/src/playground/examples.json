@@ -472,7 +472,7 @@
   {
     "title": "Python",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Badge,\n    Row,\n)\n\nset_data(crew=[\n    {\"name\": \"Arthur Dent\", \"designation\": \"Sandwich Maker\", \"email\": \"arthur@heart-of-gold.ship\"},\n    {\"name\": \"Ford Prefect\", \"designation\": \"Researcher\", \"email\": \"ford@megadodo.pub\"},\n    {\"name\": \"Trillian\", \"designation\": \"Astrophysicist\", \"email\": \"trillian@heart-of-gold.ship\"},\n])\n\nwith ForEach(\"crew\"):\n    with Card():\n        with CardHeader():\n            with Row(gap=2, css_class=\"items-center\"):\n                CardTitle(\"{{ name }}\")\n                Badge(\"{{ designation }}\", variant=\"secondary\")\n            CardDescription(\"{{ email }}\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Badge,\n    Column,\n    Row,\n)\n\nset_data(crew=[\n    {\"name\": \"Arthur Dent\", \"designation\": \"Sandwich Maker\", \"email\": \"arthur@heart-of-gold.ship\"},\n    {\"name\": \"Ford Prefect\", \"designation\": \"Researcher\", \"email\": \"ford@megadodo.pub\"},\n    {\"name\": \"Trillian\", \"designation\": \"Astrophysicist\", \"email\": \"trillian@heart-of-gold.ship\"},\n])\n\nwith Column(gap=2):\n    with ForEach(\"crew\"):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    CardTitle(\"{{ name }}\")\n                    Badge(\"{{ designation }}\", variant=\"secondary\")\n                CardDescription(\"{{ email }}\")"
   },
   {
     "title": "Python",
@@ -480,9 +480,9 @@
     "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_data(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ _item }}\", variant=\"secondary\")"
   },
   {
-    "title": "Nested Fields",
+    "title": "Python",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n)\n\nwith ForEach(\"projects\"):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"Owner: {{ owner.name }}\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Column,\n)\n\nset_data(projects=[\n    {\"name\": \"Heart of Gold\", \"owner\": {\"name\": \"Zaphod Beeblebrox\"}},\n    {\"name\": \"Hitchhiker's Guide\", \"owner\": {\"name\": \"Ford Prefect\"}},\n])\n\nwith Column(gap=2):\n    with ForEach(\"projects\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"Owner: {{ owner.name }}\")"
   },
   {
     "title": "Python",
@@ -607,7 +607,7 @@
   {
     "title": "Python",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(name=\"step\", default_value=\"setup\"):\n        with Page(\"Setup\", value=\"setup\"):\n            Text(\"Configure your settings.\")\n            Button(\"Next\", on_click=SetState(\"step\", \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            Text(\"Review your choices.\")\n            with Row(css_class=\"gap-2\"):\n                Button(\"Back\", variant=\"outline\", on_click=SetState(\"step\", \"setup\"))\n                Button(\"Next\", on_click=SetState(\"step\", \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")"
+    "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(name=\"step\", default_value=\"setup\"):\n        with Page(\"Setup\", value=\"setup\"):\n            with Column(gap=4):\n                Text(\"Configure your settings.\")\n                with Row():\n                    Button(\"Next\", on_click=SetState(\"step\", \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            with Column(gap=4):\n                Text(\"Review your choices.\")\n                with Row(gap=2):\n                    Button(\"Back\", variant=\"outline\", on_click=SetState(\"step\", \"setup\"))\n                    Button(\"Next\", on_click=SetState(\"step\", \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")"
   },
   {
     "title": "Python",
@@ -872,7 +872,7 @@
   {
     "title": "Python",
     "category": "Components",
-    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_data(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, css_class=\"items-center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ _item }}\",\n                variant=\"secondary\",\n            )"
+    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_data(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ _item }}\",\n                variant=\"secondary\",\n            )"
   },
   {
     "title": "Python",

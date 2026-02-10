@@ -196,7 +196,7 @@ The `name` prop connects the Pages component to client state. When the `entry` k
 
 Pages pair naturally with `SetState` to build wizard flows. Each page's button advances to the next step:
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"type":"Text","content":"Configure your settings."},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]},{"type":"Page","title":"Review","value":"review","children":[{"type":"Text","content":"Review your choices."},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
+<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Configure your settings."},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Review your choices."},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
@@ -205,13 +205,16 @@ from prefab_ui.actions import SetState
 with Column(gap=4):
     with Pages(name="step", default_value="setup"):
         with Page("Setup", value="setup"):
-            Text("Configure your settings.")
-            Button("Next", on_click=SetState("step", "review"))
+            with Column(gap=4):
+                Text("Configure your settings.")
+                with Row():
+                    Button("Next", on_click=SetState("step", "review"))
         with Page("Review", value="review"):
-            Text("Review your choices.")
-            with Row(css_class="gap-2"):
-                Button("Back", variant="outline", on_click=SetState("step", "setup"))
-                Button("Next", on_click=SetState("step", "complete"))
+            with Column(gap=4):
+                Text("Review your choices.")
+                with Row(gap=2):
+                    Button("Back", variant="outline", on_click=SetState("step", "setup"))
+                    Button("Next", on_click=SetState("step", "complete"))
         with Page("Complete", value="complete"):
             Text("All done!")
 ```
@@ -231,20 +234,31 @@ with Column(gap=4):
           "value": "setup",
           "children": [
             {
-              "type": "Text",
-              "content": "Configure your settings."
-            },
-            {
-              "type": "Button",
-              "label": "Next",
-              "variant": "default",
-              "size": "default",
-              "disabled": false,
-              "onClick": {
-                "action": "setState",
-                "key": "step",
-                "value": "review"
-              }
+              "cssClass": "gap-4",
+              "type": "Column",
+              "children": [
+                {
+                  "type": "Text",
+                  "content": "Configure your settings."
+                },
+                {
+                  "type": "Row",
+                  "children": [
+                    {
+                      "type": "Button",
+                      "label": "Next",
+                      "variant": "default",
+                      "size": "default",
+                      "disabled": false,
+                      "onClick": {
+                        "action": "setState",
+                        "key": "step",
+                        "value": "review"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -254,36 +268,42 @@ with Column(gap=4):
           "value": "review",
           "children": [
             {
-              "type": "Text",
-              "content": "Review your choices."
-            },
-            {
-              "cssClass": "gap-2",
-              "type": "Row",
+              "cssClass": "gap-4",
+              "type": "Column",
               "children": [
                 {
-                  "type": "Button",
-                  "label": "Back",
-                  "variant": "outline",
-                  "size": "default",
-                  "disabled": false,
-                  "onClick": {
-                    "action": "setState",
-                    "key": "step",
-                    "value": "setup"
-                  }
+                  "type": "Text",
+                  "content": "Review your choices."
                 },
                 {
-                  "type": "Button",
-                  "label": "Next",
-                  "variant": "default",
-                  "size": "default",
-                  "disabled": false,
-                  "onClick": {
-                    "action": "setState",
-                    "key": "step",
-                    "value": "complete"
-                  }
+                  "cssClass": "gap-2",
+                  "type": "Row",
+                  "children": [
+                    {
+                      "type": "Button",
+                      "label": "Back",
+                      "variant": "outline",
+                      "size": "default",
+                      "disabled": false,
+                      "onClick": {
+                        "action": "setState",
+                        "key": "step",
+                        "value": "setup"
+                      }
+                    },
+                    {
+                      "type": "Button",
+                      "label": "Next",
+                      "variant": "default",
+                      "size": "default",
+                      "disabled": false,
+                      "onClick": {
+                        "action": "setState",
+                        "key": "step",
+                        "value": "complete"
+                      }
+                    }
+                  ]
                 }
               ]
             }

@@ -136,7 +136,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]}`}>
+<ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -144,7 +144,7 @@ from prefab_ui.components import Badge, ForEach, Row, State
 set_data(languages=["Python", "TypeScript", "Rust"])
 
 with State(prefix="Speaks"):
-    with Row(gap=2, css_class="items-center"):
+    with Row(gap=2, align="center"):
         with ForEach("languages"):
             Badge(
                 "{{ prefix }}: {{ _item }}",
@@ -153,28 +153,35 @@ with State(prefix="Speaks"):
 ```
 ```json Protocol
 {
-  "type": "State",
-  "state": {
-    "prefix": "Speaks"
+  "_tree": {
+    "type": "State",
+    "state": {
+      "prefix": "Speaks"
+    },
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "ForEach",
+            "key": "languages",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "{{ prefix }}: {{ _item }}",
+                "variant": "secondary"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
-  "children": [
-    {
-      "cssClass": "gap-2 items-center",
-      "type": "Row",
-      "children": [
-        {
-          "type": "ForEach",
-          "key": "languages",
-          "children": [
-            {
-              "type": "Badge",
-              "label": "{{ prefix }}: {{ _item }}",
-              "variant": "secondary"
-            }
-          ]
-        }
-      ]
-    }
+  "languages": [
+    "Python",
+    "TypeScript",
+    "Rust"
   ]
 }
 ```
