@@ -12,7 +12,7 @@ Tabs organize content into panels that users switch between by clicking triggers
 
 <ComponentPreview auto json={`{"type":"Tabs","variant":"default","defaultValue":"account","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"accountName","disabled":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Current Password"},{"type":"Input","inputType":"password","name":"currentPw","disabled":false,"required":false},{"type":"Label","text":"New Password"},{"type":"Input","inputType":"password","name":"newPw","disabled":false,"required":false}]}]}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     CardContent,
@@ -48,7 +48,7 @@ with Tabs(default_value="account"):
                     Label("New Password")
                     Input(input_type="password", name="newPw")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Tabs",
   "variant": "default",
@@ -174,7 +174,7 @@ The `variant` prop controls the visual style of the tab triggers. The default us
 
 <ComponentPreview auto json={`{"cssClass":"gap-6","type":"Column","children":[{"type":"Tabs","variant":"default","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]},{"type":"Tabs","variant":"line","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Column, Tab, Tabs, Text
 
 with Column(gap=6):
@@ -190,7 +190,7 @@ with Column(gap=6):
         with Tab("Harmless", value="two"):
             Text("It's a wholly remarkable book.")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-6",
   "type": "Column",

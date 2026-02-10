@@ -10,14 +10,14 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 <ComponentPreview auto json={`{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button
 from prefab_ui import OpenLink
 
 Button("View Documentation", variant="link",
        on_click=OpenLink("https://prefab-ui.dev"))
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Button",
   "label": "View Documentation",
@@ -39,7 +39,7 @@ Pair `OpenLink` with the `link` button variant for a natural look:
 
 <ComponentPreview auto json={`{"cssClass":"gap-4","type":"Row","children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button, Row
 from prefab_ui import OpenLink
 
@@ -49,7 +49,7 @@ with Row(gap=4):
     Button("PyPI", variant="link",
            on_click=OpenLink("https://pypi.org/project/prefab-ui"))
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-4",
   "type": "Row",
@@ -88,7 +88,7 @@ Build URLs from client state using interpolation:
 
 <ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
 from prefab_ui import OpenLink
 
@@ -98,7 +98,7 @@ with Column(gap=3):
         "https://github.com/{{ repo }}"
     ))
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-3",
   "type": "Column",

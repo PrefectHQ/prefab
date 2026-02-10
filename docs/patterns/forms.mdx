@@ -14,7 +14,7 @@ Combine `Input`, `Label`, and `Button` components to create a form with full con
 
 <ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}}}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button, Column, Input, Label
 from prefab_ui import ToolCall
 
@@ -28,7 +28,7 @@ with Column(gap=3):
         arguments={"name": "{{ name }}", "email": "{{ email }}"},
     ))
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-3",
   "type": "Column",
@@ -86,7 +86,7 @@ This approach gives you complete control, but it requires wiring up every label,
 
 <ComponentPreview auto json={`{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
 from prefab_ui import ToolCall
@@ -101,7 +101,7 @@ class ContactInfo(BaseModel):
 
 Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-4",
   "type": "Form",
