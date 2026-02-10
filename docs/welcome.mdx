@@ -5,6 +5,8 @@ description: The agentic frontend framework that even humans can use.
 icon: hand-wave
 ---
 
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
 <img
   src="/assets/banner.png"
   alt="Prefab"
@@ -14,35 +16,84 @@ icon: hand-wave
 
 **Prefab is a JSON component format that renders to real interactive frontends.** Describe a UI — from an MCP server, a ChatGPT app, an AI agent, or a Python script — and Prefab renders it as a live React application with forms, tables, state management, and real-time interactivity.
 
-For human authors, there's a Python DSL:
+<ComponentPreview auto json={`{"_tree":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false},{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"{{ name }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"secondary"}]}]}]}]},"_state":{"name":"world"}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Card, CardContent, Column, H3, Muted, Input, Badge, Row
 
-```python
-from prefab_ui import UIResponse, Column, Heading, Text
-from prefab_ui.components import Card, CardContent, Input, Button, Row
-from prefab_ui.actions import ToolCall
+set_initial_state(name="world")
 
-def search_dashboard(query: str = "") -> UIResponse:
-    with Column() as view:
-        Heading("Search")
-        with Row():
-            Input(name="query", placeholder="Search...")
-            Button(
-                "Go",
-                on_click=ToolCall(
-                    name="search",
-                    arguments={"q": "{{ query }}"},
-                    result_key="results",
-                ),
-            )
-        with Card():
-            with CardContent():
-                Text("{{ results.length }} results found")
-
-    return UIResponse(
-        state={"query": query, "results": []},
-        view=view,
-    )
+with Card():
+    with CardContent():
+        with Column(gap=3):
+            H3("Hello, {{ name }}!")
+            Muted("Type below and watch this update in real time.")
+            Input(name="name", placeholder="Your name...")
+            with Row(gap=2):
+                Badge("{{ name }}", variant="default")
+                Badge("Prefab", variant="secondary")
 ```
+```json Protocol icon="brackets-curly"
+{
+  "_tree": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {
+                "content": "Hello, {{ name }}!",
+                "type": "H3"
+              },
+              {
+                "content": "Type below and watch this update in real time.",
+                "type": "Muted"
+              },
+              {
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "Your name...",
+                "name": "name",
+                "disabled": false,
+                "required": false
+              },
+              {
+                "cssClass": "gap-2",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Badge",
+                    "label": "{{ name }}",
+                    "variant": "default"
+                  },
+                  {
+                    "type": "Badge",
+                    "label": "Prefab",
+                    "variant": "secondary"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "_state": {
+    "name": "world"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+<Tip>
+Every example in the Prefab docs — including this one! — is rendered with Prefab from the Python code.
+</Tip>
 
 Prefab is made with 💙 by [Prefect](https://www.prefect.io/).
 
@@ -63,10 +114,6 @@ The core idea is a pipeline: **JSON → React**. For Python authors, it's **Pyth
 3. A React renderer (shipped as `@prefecthq/prefab-ui` on npm) compiles the JSON into a live interface
 
 State flows through templates. When you write `{{ query }}`, the renderer interpolates the current value of `query` from client-side state. Actions like `ToolCall` and `SetState` update that state, keeping the UI reactive.
-
-<Tip>
-Every component example in these docs is written in Python and rendered by Prefab itself — the same pipeline your own code uses.
-</Tip>
 
 ## Installation
 

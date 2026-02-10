@@ -15,14 +15,16 @@ RadarChart plots data across multiple axes radiating from a center point, formin
 ```python Python
 from prefab_ui.components import RadarChart, ChartSeries
 
+data = [
+    {"subject": "Math", "alice": 120, "bob": 98},
+    {"subject": "English", "alice": 98, "bob": 130},
+    {"subject": "Science", "alice": 86, "bob": 110},
+    {"subject": "History", "alice": 99, "bob": 95},
+    {"subject": "Art", "alice": 85, "bob": 90},
+]
+
 RadarChart(
-    data=[
-        {"subject": "Math", "alice": 120, "bob": 98},
-        {"subject": "English", "alice": 98, "bob": 130},
-        {"subject": "Science", "alice": 86, "bob": 110},
-        {"subject": "History", "alice": 99, "bob": 95},
-        {"subject": "Art", "alice": 85, "bob": 90},
-    ],
+    data=data,
     series=[
         ChartSeries(data_key="alice", label="Alice"),
         ChartSeries(data_key="bob", label="Bob"),
@@ -87,7 +89,7 @@ RadarChart(
 
 Hide the polar grid for a cleaner look.
 
-<ComponentPreview auto json={`{"type":"RadarChart","data":[{"subject":"Math","score":120},{"subject":"English","score":98},{"subject":"Science","score":86},{"subject":"History","score":99},{"subject":"Art","score":85}],"series":[{"dataKey":"score","label":"Score"}],"axisKey":"subject","height":300,"showGrid":false}`}>
+<ComponentPreview auto json={`{"type":"RadarChart","data":[{"subject":"Math","alice":120,"bob":98},{"subject":"English","alice":98,"bob":130},{"subject":"Science","alice":86,"bob":110},{"subject":"History","alice":99,"bob":95},{"subject":"Art","alice":85,"bob":90}],"series":[{"dataKey":"score","label":"Score"}],"axisKey":"subject","height":300,"filled":true,"showDots":false,"showLegend":false,"showTooltip":true,"showGrid":false}`}>
 <CodeGroup>
 ```python Python {5}
 RadarChart(
@@ -97,12 +99,48 @@ RadarChart(
     show_grid=False,
 )
 ```
-```json Protocol {6}
+```json Protocol
 {
   "type": "RadarChart",
-  "data": "...",
-  "series": [{"dataKey": "score", "label": "Score"}],
+  "data": [
+    {
+      "subject": "Math",
+      "alice": 120,
+      "bob": 98
+    },
+    {
+      "subject": "English",
+      "alice": 98,
+      "bob": 130
+    },
+    {
+      "subject": "Science",
+      "alice": 86,
+      "bob": 110
+    },
+    {
+      "subject": "History",
+      "alice": 99,
+      "bob": 95
+    },
+    {
+      "subject": "Art",
+      "alice": 85,
+      "bob": 90
+    }
+  ],
+  "series": [
+    {
+      "dataKey": "score",
+      "label": "Score"
+    }
+  ],
   "axisKey": "subject",
+  "height": 300,
+  "filled": true,
+  "showDots": false,
+  "showLegend": false,
+  "showTooltip": true,
   "showGrid": false
 }
 ```
@@ -127,17 +165,53 @@ RadarChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "RadarChart",
-  "data": "...",
+  "data": [
+    {
+      "subject": "Math",
+      "alice": 120,
+      "bob": 98
+    },
+    {
+      "subject": "English",
+      "alice": 98,
+      "bob": 130
+    },
+    {
+      "subject": "Science",
+      "alice": 86,
+      "bob": 110
+    },
+    {
+      "subject": "History",
+      "alice": 99,
+      "bob": 95
+    },
+    {
+      "subject": "Art",
+      "alice": 85,
+      "bob": 90
+    }
+  ],
   "series": [
-    {"dataKey": "alice", "label": "Alice"},
-    {"dataKey": "bob", "label": "Bob"}
+    {
+      "dataKey": "alice",
+      "label": "Alice"
+    },
+    {
+      "dataKey": "bob",
+      "label": "Bob"
+    }
   ],
   "axisKey": "subject",
+  "height": 300,
   "filled": false,
-  "showLegend": true
+  "showDots": false,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>
