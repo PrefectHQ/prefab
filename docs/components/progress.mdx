@@ -168,7 +168,7 @@ with Column(gap=4):
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]}`}>
+<ComponentPreview auto json={`{"_tree":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"_state":{"progress":0.65}}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -190,39 +190,44 @@ with Column(gap=3):
 ```
 ```json Protocol
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "justify-between items-center",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Text",
-          "content": "Upload progress"
-        },
-        {
-          "type": "Text",
-          "content": "{{ progress | percent }}",
-          "bold": true
-        }
-      ]
-    },
-    {
-      "type": "Progress",
-      "value": "{{ progress }}",
-      "max": 1.0
-    },
-    {
-      "type": "Slider",
-      "min": 0.0,
-      "max": 1.0,
-      "value": 0.65,
-      "step": 0.01,
-      "name": "progress",
-      "disabled": false
-    }
-  ]
+  "_tree": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "justify-between items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Text",
+            "content": "Upload progress"
+          },
+          {
+            "type": "Text",
+            "content": "{{ progress | percent }}",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ progress }}",
+        "max": 1.0
+      },
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 1.0,
+        "value": 0.65,
+        "step": 0.01,
+        "name": "progress",
+        "disabled": false
+      }
+    ]
+  },
+  "_state": {
+    "progress": 0.65
+  }
 }
 ```
 </CodeGroup>

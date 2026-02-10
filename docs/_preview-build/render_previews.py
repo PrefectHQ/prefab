@@ -80,12 +80,14 @@ def _execute_and_serialize(
 
     Component.model_post_init = _tracking_post_init  # type: ignore[assignment]
     try:
-        ns: dict[str, object] = {
-            "set_initial_state": set_initial_state,
-            "set_data": set_data,
-        }
+        ns: dict[str, object] = {}
         if shared_ns:
             ns.update(shared_ns)
+        # Fresh closures must come AFTER shared_ns update so they always
+        # write to this invocation's dicts, not a stale copy from a
+        # previous snippet in the same file.
+        ns["set_initial_state"] = set_initial_state
+        ns["set_data"] = set_data
         exec(source, ns)  # noqa: S102
         # Propagate user-defined names back for subsequent snippets.
         if shared_ns is not None:

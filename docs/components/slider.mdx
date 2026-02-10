@@ -120,7 +120,7 @@ with Column(gap=4):
 
 Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]}`}>
+<ComponentPreview auto json={`{"_tree":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"_state":{"volume":75}}`}>
 <CodeGroup>
 ```python Python
 from prefab_ui.components import (
@@ -144,44 +144,49 @@ with Column(gap=4):
 ```
 ```json Protocol
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "cssClass": "justify-between",
-          "type": "Row",
-          "children": [
-            {
-              "type": "Label",
-              "text": "Volume"
-            },
-            {
-              "type": "Text",
-              "content": "{{ volume | number }}%",
-              "bold": true
-            }
-          ]
-        },
-        {
-          "type": "Slider",
-          "min": 0.0,
-          "max": 100.0,
-          "value": 75.0,
-          "name": "volume",
-          "disabled": false
-        }
-      ]
-    },
-    {
-      "type": "Progress",
-      "value": "{{ volume }}",
-      "max": 100.0
-    }
-  ]
+  "_tree": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "cssClass": "justify-between",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Label",
+                "text": "Volume"
+              },
+              {
+                "type": "Text",
+                "content": "{{ volume | number }}%",
+                "bold": true
+              }
+            ]
+          },
+          {
+            "type": "Slider",
+            "min": 0.0,
+            "max": 100.0,
+            "value": 75.0,
+            "name": "volume",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ volume }}",
+        "max": 100.0
+      }
+    ]
+  },
+  "_state": {
+    "volume": 75
+  }
 }
 ```
 </CodeGroup>

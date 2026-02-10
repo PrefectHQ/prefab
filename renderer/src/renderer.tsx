@@ -433,14 +433,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     return <Component {...finalProps} />;
   }
 
-  // Handle ForEach specially — iterate over data array
+  // Handle ForEach specially — iterate over data array.
+  // Uses display:contents by default so children participate in the
+  // parent's layout (e.g., Row gap applies between iterated items).
   if (type === "ForEach" && children) {
     const key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
     const items = key ? (resolve(key, ctx) as unknown[]) : [];
     if (!Array.isArray(items)) return null;
 
+    const cssClass = rawProps.cssClass as string | undefined;
+    const wrapperClass = cssClass ? `w-full ${cssClass}` : "contents";
     return (
-      <>
+      <div className={wrapperClass}>
         {items.map((item, idx) => {
           const itemScope =
             typeof item === "object" && item !== null
@@ -456,19 +460,22 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             />
           ));
         })}
-      </>
+      </div>
     );
   }
 
-  // Handle State — merge state dict into interpolation scope (no DOM wrapper)
+  // Handle State — merge state dict into interpolation scope.
+  // State keeps a real w-full box (unlike ForEach) because it's commonly the
+  // root node and needs to provide width to its children.
   if (type === "State" && children) {
     const stateOverrides = interpolateProps(
       (rawProps.state ?? {}) as Record<string, unknown>,
       ctx,
     ) as Record<string, unknown>;
     const newScope = { ...scope, ...stateOverrides };
+    const cssClass = rawProps.cssClass as string | undefined;
     return (
-      <>
+      <div className={["w-full", cssClass].filter(Boolean).join(" ")}>
         {children.map((child, i) => (
           <RenderNode
             key={i}
@@ -478,7 +485,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             app={app}
           />
         ))}
-      </>
+      </div>
     );
   }
 
