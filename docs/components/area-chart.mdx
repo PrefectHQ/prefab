@@ -15,15 +15,17 @@ AreaChart fills the region between a line and the axis, emphasizing the magnitud
 ```python Python
 from prefab_ui.components import AreaChart, ChartSeries
 
+data = [
+    {"month": "Jan", "desktop": 186, "mobile": 80},
+    {"month": "Feb", "desktop": 305, "mobile": 200},
+    {"month": "Mar", "desktop": 237, "mobile": 120},
+    {"month": "Apr", "desktop": 73, "mobile": 190},
+    {"month": "May", "desktop": 209, "mobile": 130},
+    {"month": "Jun", "desktop": 214, "mobile": 140},
+]
+
 AreaChart(
-    data=[
-        {"month": "Jan", "desktop": 186, "mobile": 80},
-        {"month": "Feb", "desktop": 305, "mobile": 200},
-        {"month": "Mar", "desktop": 237, "mobile": 120},
-        {"month": "Apr", "desktop": 73, "mobile": 190},
-        {"month": "May", "desktop": 209, "mobile": 130},
-        {"month": "Jun", "desktop": 214, "mobile": 140},
-    ],
+    data=data,
     series=[
         ChartSeries(data_key="desktop", label="Desktop"),
         ChartSeries(data_key="mobile", label="Mobile"),
@@ -94,7 +96,7 @@ AreaChart(
 
 Stacking shows how each series contributes to the total. The topmost line represents the combined value.
 
-<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":true,"showLegend":true}`}>
+<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":true,"curve":"linear","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
 <CodeGroup>
 ```python Python {8}
 AreaChart(
@@ -108,17 +110,59 @@ AreaChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "AreaChart",
-  "data": "...",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
   "series": [
-    {"dataKey": "desktop", "label": "Desktop"},
-    {"dataKey": "mobile", "label": "Mobile"}
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
   ],
   "xAxis": "month",
+  "height": 300,
   "stacked": true,
-  "showLegend": true
+  "curve": "linear",
+  "showDots": false,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>
@@ -128,7 +172,7 @@ AreaChart(
 
 Turn off the grid for a cleaner look.
 
-<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","value":186},{"month":"Feb","value":305},{"month":"Mar","value":237},{"month":"Apr","value":273},{"month":"May","value":209},{"month":"Jun","value":314}],"series":[{"dataKey":"value","label":"Requests"}],"xAxis":"month","height":300,"showGrid":false}`}>
+<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"value","label":"Requests"}],"xAxis":"month","height":300,"stacked":false,"curve":"linear","showDots":false,"showLegend":false,"showTooltip":true,"showGrid":false}`}>
 <CodeGroup>
 ```python Python {5}
 AreaChart(
@@ -138,12 +182,54 @@ AreaChart(
     show_grid=False,
 )
 ```
-```json Protocol {6}
+```json Protocol
 {
   "type": "AreaChart",
-  "data": "...",
-  "series": [{"dataKey": "value", "label": "Requests"}],
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
+  "series": [
+    {
+      "dataKey": "value",
+      "label": "Requests"
+    }
+  ],
   "xAxis": "month",
+  "height": 300,
+  "stacked": false,
+  "curve": "linear",
+  "showDots": false,
+  "showLegend": false,
+  "showTooltip": true,
   "showGrid": false
 }
 ```
@@ -154,7 +240,7 @@ AreaChart(
 
 Set `curve="smooth"` for gently curved lines between data points. The filled area follows the curve.
 
-<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"smooth","showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":false,"curve":"smooth","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
 <CodeGroup>
 ```python Python {8}
 AreaChart(
@@ -168,17 +254,59 @@ AreaChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "AreaChart",
-  "data": "...",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
   "series": [
-    {"dataKey": "desktop", "label": "Desktop"},
-    {"dataKey": "mobile", "label": "Mobile"}
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
   ],
   "xAxis": "month",
+  "height": 300,
+  "stacked": false,
   "curve": "smooth",
-  "showLegend": true
+  "showDots": false,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>
@@ -188,7 +316,7 @@ AreaChart(
 
 Set `curve="step"` to connect points with step-shaped lines. The filled area follows the stepped edges.
 
-<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"step","showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<ComponentPreview auto json={`{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":false,"curve":"step","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
 <CodeGroup>
 ```python Python {8}
 AreaChart(
@@ -202,17 +330,59 @@ AreaChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "AreaChart",
-  "data": "...",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
   "series": [
-    {"dataKey": "desktop", "label": "Desktop"},
-    {"dataKey": "mobile", "label": "Mobile"}
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
   ],
   "xAxis": "month",
+  "height": 300,
+  "stacked": false,
   "curve": "step",
-  "showLegend": true
+  "showDots": false,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>

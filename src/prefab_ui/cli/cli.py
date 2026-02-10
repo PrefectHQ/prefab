@@ -133,6 +133,17 @@ dev_app = cyclopts.App(
 app.command(dev_app)
 
 
+def _should_install_node_deps(renderer_dir: Path) -> bool:
+    """Check whether ``npm install`` needs to run for the renderer."""
+    node_modules = renderer_dir / "node_modules"
+    if not node_modules.exists():
+        return True
+    lock_file = renderer_dir / "package-lock.json"
+    if lock_file.exists():
+        return lock_file.stat().st_mtime > node_modules.stat().st_mtime
+    return False
+
+
 def _should_rebuild_embed(repo_root: Path) -> bool:
     """Check whether any renderer source file is newer than docs/embed.js."""
     embed_js = repo_root / "docs" / "embed.js"
@@ -182,6 +193,15 @@ def build_docs() -> None:
         raise SystemExit(1)
 
     steps: list[tuple[str, list[str], dict[str, str] | None]] = []
+
+    if _should_install_node_deps(renderer_dir):
+        steps.append(
+            (
+                "Installing renderer dependencies",
+                ["npm", "install", "--prefix", str(renderer_dir)],
+                None,
+            )
+        )
 
     if _should_rebuild_embed(repo_root):
         steps.append(
