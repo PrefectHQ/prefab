@@ -29,6 +29,11 @@ them by hand.
 
 After editing previews, run `prefab dev build-docs` to regenerate.
 
+**Code block titles:** Always give the Python block a title (e.g.,
+`` ```python Python ``). A block without a title produces a zero-width tab in
+the CodeGroup that users can't click. The title goes before other directives:
+`` ```python Python {5} ``.
+
 **Python code style inside previews:**
 - Target ~80 character line width
 - Use implicit string concatenation for long text

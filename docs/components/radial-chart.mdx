@@ -15,14 +15,16 @@ RadialChart renders each data item as a concentric ring, with length proportiona
 ```python Python
 from prefab_ui.components import RadialChart
 
+data = [
+    {"browser": "Chrome", "visitors": 275},
+    {"browser": "Safari", "visitors": 200},
+    {"browser": "Firefox", "visitors": 187},
+    {"browser": "Edge", "visitors": 173},
+    {"browser": "Other", "visitors": 90},
+]
+
 RadialChart(
-    data=[
-        {"browser": "Chrome", "visitors": 275},
-        {"browser": "Safari", "visitors": 200},
-        {"browser": "Firefox", "visitors": 187},
-        {"browser": "Edge", "visitors": 173},
-        {"browser": "Other", "visitors": 90},
-    ],
+    data=data,
     data_key="visitors",
     name_key="browser",
     show_legend=True,
@@ -141,15 +143,39 @@ RadialChart(
     show_legend=True,
 )
 ```
-```json Protocol {6-7}
+```json Protocol
 {
   "type": "RadialChart",
-  "data": "...",
+  "data": [
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
+  ],
   "dataKey": "visitors",
   "nameKey": "browser",
+  "height": 300,
+  "innerRadius": 30,
   "startAngle": 90,
   "endAngle": -270,
-  "showLegend": true
+  "showLegend": true,
+  "showTooltip": true
 }
 ```
 </CodeGroup>

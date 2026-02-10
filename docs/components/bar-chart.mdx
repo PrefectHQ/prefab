@@ -15,15 +15,17 @@ BarChart renders one or more data series as vertical bars. Each `ChartSeries` ma
 ```python Python
 from prefab_ui.components import BarChart, ChartSeries
 
+data = [
+    {"month": "Jan", "desktop": 186, "mobile": 80},
+    {"month": "Feb", "desktop": 305, "mobile": 200},
+    {"month": "Mar", "desktop": 237, "mobile": 120},
+    {"month": "Apr", "desktop": 73, "mobile": 190},
+    {"month": "May", "desktop": 209, "mobile": 130},
+    {"month": "Jun", "desktop": 214, "mobile": 140},
+]
+
 BarChart(
-    data=[
-        {"month": "Jan", "desktop": 186, "mobile": 80},
-        {"month": "Feb", "desktop": 305, "mobile": 200},
-        {"month": "Mar", "desktop": 237, "mobile": 120},
-        {"month": "Apr", "desktop": 73, "mobile": 190},
-        {"month": "May", "desktop": 209, "mobile": 130},
-        {"month": "Jun", "desktop": 214, "mobile": 140},
-    ],
+    data=data,
     series=[
         ChartSeries(data_key="desktop", label="Desktop"),
         ChartSeries(data_key="mobile", label="Mobile"),
@@ -94,7 +96,7 @@ BarChart(
 
 Set `stacked=True` to stack series on top of each other instead of placing them side by side. This is useful when you want to show both individual values and the total.
 
-<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":true,"showLegend":true}`}>
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":true,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
 <CodeGroup>
 ```python Python {8}
 BarChart(
@@ -108,17 +110,59 @@ BarChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "BarChart",
-  "data": "...",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
   "series": [
-    {"dataKey": "desktop", "label": "Desktop"},
-    {"dataKey": "mobile", "label": "Mobile"}
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
   ],
   "xAxis": "month",
+  "height": 300,
   "stacked": true,
-  "showLegend": true
+  "horizontal": false,
+  "barRadius": 4,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>
@@ -128,7 +172,7 @@ BarChart(
 
 Turn off the grid for a cleaner look.
 
-<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","revenue":4000},{"month":"Feb","revenue":3000},{"month":"Mar","revenue":5000},{"month":"Apr","revenue":4500},{"month":"May","revenue":6000},{"month":"Jun","revenue":5500}],"series":[{"dataKey":"revenue","label":"Revenue"}],"xAxis":"month","height":300,"showGrid":false}`}>
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"revenue","label":"Revenue"}],"xAxis":"month","height":300,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":false,"showTooltip":true,"showGrid":false}`}>
 <CodeGroup>
 ```python Python {5}
 BarChart(
@@ -138,12 +182,54 @@ BarChart(
     show_grid=False,
 )
 ```
-```json Protocol {6}
+```json Protocol
 {
   "type": "BarChart",
-  "data": "...",
-  "series": [{"dataKey": "revenue", "label": "Revenue"}],
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
+  "series": [
+    {
+      "dataKey": "revenue",
+      "label": "Revenue"
+    }
+  ],
   "xAxis": "month",
+  "height": 300,
+  "stacked": false,
+  "horizontal": false,
+  "barRadius": 4,
+  "showLegend": false,
+  "showTooltip": true,
   "showGrid": false
 }
 ```
@@ -154,7 +240,7 @@ BarChart(
 
 Set `horizontal=True` to render bars horizontally. Categories appear along the y-axis and values extend to the right.
 
-<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"horizontal":true,"barRadius":4,"stacked":false,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
+<ComponentPreview auto json={`{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":false,"horizontal":true,"barRadius":4,"showLegend":true,"showTooltip":true,"showGrid":true}`}>
 <CodeGroup>
 ```python Python {8}
 BarChart(
@@ -168,17 +254,59 @@ BarChart(
     show_legend=True,
 )
 ```
-```json Protocol {9}
+```json Protocol
 {
   "type": "BarChart",
-  "data": "...",
+  "data": [
+    {
+      "month": "Jan",
+      "desktop": 186,
+      "mobile": 80
+    },
+    {
+      "month": "Feb",
+      "desktop": 305,
+      "mobile": 200
+    },
+    {
+      "month": "Mar",
+      "desktop": 237,
+      "mobile": 120
+    },
+    {
+      "month": "Apr",
+      "desktop": 73,
+      "mobile": 190
+    },
+    {
+      "month": "May",
+      "desktop": 209,
+      "mobile": 130
+    },
+    {
+      "month": "Jun",
+      "desktop": 214,
+      "mobile": 140
+    }
+  ],
   "series": [
-    {"dataKey": "desktop", "label": "Desktop"},
-    {"dataKey": "mobile", "label": "Mobile"}
+    {
+      "dataKey": "desktop",
+      "label": "Desktop"
+    },
+    {
+      "dataKey": "mobile",
+      "label": "Mobile"
+    }
   ],
   "xAxis": "month",
+  "height": 300,
+  "stacked": false,
   "horizontal": true,
-  "showLegend": true
+  "barRadius": 4,
+  "showLegend": true,
+  "showTooltip": true,
+  "showGrid": true
 }
 ```
 </CodeGroup>

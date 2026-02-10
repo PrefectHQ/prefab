@@ -15,14 +15,16 @@ PieChart shows how parts relate to a whole. Unlike the other chart types, it doe
 ```python Python
 from prefab_ui.components import PieChart
 
+data = [
+    {"browser": "Chrome", "visitors": 275},
+    {"browser": "Safari", "visitors": 200},
+    {"browser": "Firefox", "visitors": 187},
+    {"browser": "Edge", "visitors": 173},
+    {"browser": "Other", "visitors": 90},
+]
+
 PieChart(
-    data=[
-        {"browser": "Chrome", "visitors": 275},
-        {"browser": "Safari", "visitors": 200},
-        {"browser": "Firefox", "visitors": 187},
-        {"browser": "Edge", "visitors": 173},
-        {"browser": "Other", "visitors": 90},
-    ],
+    data=data,
     data_key="visitors",
     name_key="browser",
     show_legend=True,
@@ -129,7 +131,7 @@ PieChart(
 
 Set `show_label=True` to display a label on each slice, making values readable without tooltips.
 
-<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"paddingAngle":0,"showLabel":true,"showLegend":true,"showTooltip":true}`}>
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":0,"showLabel":true,"paddingAngle":0,"showLegend":true,"showTooltip":true}`}>
 <CodeGroup>
 ```python Python {5}
 PieChart(
@@ -140,14 +142,39 @@ PieChart(
     show_legend=True,
 )
 ```
-```json Protocol {6}
+```json Protocol
 {
   "type": "PieChart",
-  "data": "...",
+  "data": [
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
+  ],
   "dataKey": "visitors",
   "nameKey": "browser",
+  "height": 300,
+  "innerRadius": 0,
   "showLabel": true,
-  "showLegend": true
+  "paddingAngle": 0,
+  "showLegend": true,
+  "showTooltip": true
 }
 ```
 </CodeGroup>
@@ -157,7 +184,7 @@ PieChart(
 
 Set `padding_angle` to add space between slices, visually separating each segment.
 
-<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"paddingAngle":5,"showLabel":false,"showLegend":true,"showTooltip":true}`}>
+<ComponentPreview auto json={`{"type":"PieChart","data":[{"browser":"Chrome","visitors":275},{"browser":"Safari","visitors":200},{"browser":"Firefox","visitors":187},{"browser":"Edge","visitors":173},{"browser":"Other","visitors":90}],"dataKey":"visitors","nameKey":"browser","height":300,"innerRadius":60,"showLabel":false,"paddingAngle":5,"showLegend":true,"showTooltip":true}`}>
 <CodeGroup>
 ```python Python {6}
 PieChart(
@@ -169,15 +196,39 @@ PieChart(
     show_legend=True,
 )
 ```
-```json Protocol {7}
+```json Protocol
 {
   "type": "PieChart",
-  "data": "...",
+  "data": [
+    {
+      "browser": "Chrome",
+      "visitors": 275
+    },
+    {
+      "browser": "Safari",
+      "visitors": 200
+    },
+    {
+      "browser": "Firefox",
+      "visitors": 187
+    },
+    {
+      "browser": "Edge",
+      "visitors": 173
+    },
+    {
+      "browser": "Other",
+      "visitors": 90
+    }
+  ],
   "dataKey": "visitors",
   "nameKey": "browser",
+  "height": 300,
   "innerRadius": 60,
+  "showLabel": false,
   "paddingAngle": 5,
-  "showLegend": true
+  "showLegend": true,
+  "showTooltip": true
 }
 ```
 </CodeGroup>
