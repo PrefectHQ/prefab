@@ -81,5 +81,8 @@ final = f"{_THEME_CSS}\n{_INFRASTRUCTURE_CSS}\n/* ── Scoped Tailwind v4 util
 build_dir = Path(__file__).parent
 out = build_dir.parent / "css" / "preview.css"
 out.parent.mkdir(parents=True, exist_ok=True)
-out.write_text(final)
-print(f"Wrote {len(final)} bytes to {out}")
+if out.exists() and out.read_text() == final:
+    print(f"CSS unchanged ({len(final)} bytes)")
+else:
+    out.write_text(final)
+    print(f"Wrote {len(final)} bytes to {out}")
