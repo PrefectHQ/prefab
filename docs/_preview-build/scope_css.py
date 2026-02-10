@@ -14,7 +14,12 @@ from pathlib import Path
 
 # Read canonical design tokens from theme.css
 _theme_css_path = Path(__file__).resolve().parents[2] / "renderer" / "src" / "theme.css"
-_THEME_CSS = _theme_css_path.read_text()
+_THEME_CSS_RAW = _theme_css_path.read_text()
+# Scope theme tokens to .prefab-preview so they don't overwrite the host page's
+# own custom properties (e.g. Mintlify's --primary which uses space-separated RGB).
+_THEME_CSS = _THEME_CSS_RAW.replace(":root {", ".prefab-preview {").replace(
+    ".dark {", ".dark .prefab-preview {"
+)
 
 # Container styling applied to the .prefab-preview wrapper itself, plus
 # resets and Tailwind v4 property initializations that must be explicit
