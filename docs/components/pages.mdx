@@ -12,7 +12,7 @@ Pages provide a multi-page layout where only the active page renders. Navigate b
 
 <ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Earth","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"earth"}},{"type":"Button","label":"Magrathea","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"magrathea"}},{"type":"Button","label":"Milliways","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"milliways"}}]},{"type":"Pages","defaultValue":"earth","name":"entry","children":[{"type":"Page","title":"Earth","value":"earth","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Earth"},{"type":"CardDescription","content":"Mostly harmless."}]}]}]},{"type":"Page","title":"Magrathea","value":"magrathea","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Magrathea"},{"type":"CardDescription","content":"Ancient planet-building civilization. Custom-built luxury planets for the ultra-rich."}]}]}]},{"type":"Page","title":"Milliways","value":"milliways","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Milliways"},{"type":"CardDescription","content":"The Restaurant at the End of the Universe. Reservations recommended."}]}]}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Button,
     Card,
@@ -55,7 +55,7 @@ with Column(gap=4):
                         "Reservations recommended."
                     )
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-4",
   "type": "Column",
@@ -198,7 +198,7 @@ Pages pair naturally with `SetState` to build wizard flows. Each page's button a
 
 <ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Configure your settings."},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Review your choices."},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
 from prefab_ui.actions import SetState
 
@@ -218,7 +218,7 @@ with Column(gap=4):
         with Page("Complete", value="complete"):
             Text("All done!")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-4",
   "type": "Column",

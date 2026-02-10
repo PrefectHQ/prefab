@@ -1,9 +1,15 @@
 export const ComponentPreview = ({ json, height, children }) => {
   const hostRef = React.useRef(null);
   const handleRef = React.useRef(null);
+  const cardRef = React.useRef(null);
 
   React.useEffect(() => {
-    const host = hostRef.current;
+    if (cardRef.current) {
+      var card = cardRef.current.closest(".group");
+      if (card) card.classList.remove("group");
+    }
+
+    var host = hostRef.current;
     if (!host || !window.__prefab) return;
 
     var dark = document.documentElement.classList.contains("dark");
@@ -29,6 +35,7 @@ export const ComponentPreview = ({ json, height, children }) => {
 
   return (
     <Card>
+      <div ref={cardRef} />
       <div ref={hostRef} />
       <div style={{ marginBottom: "-2rem" }}>{children}</div>
     </Card>

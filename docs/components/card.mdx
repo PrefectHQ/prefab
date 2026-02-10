@@ -12,7 +12,7 @@ Cards group related content into a bordered, shadowed container. They're compose
 
 <ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -34,7 +34,7 @@ with Card():
         Button("Cancel", variant="outline")
         Button("Deploy")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Card",
   "children": [
@@ -93,7 +93,7 @@ Cards follow a header → content → footer pattern. Each section is optional �
 
 <ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account Settings"},{"type":"CardDescription","content":"Manage your account preferences and security."}]},{"type":"CardContent","children":[{"content":"Update your display name, email, and notification preferences from this panel.","type":"P"},{"content":"Changes take effect immediately.","type":"Muted"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -116,7 +116,7 @@ with Card():
     with CardFooter():
         Button("Save changes")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Card",
   "children": [
@@ -170,7 +170,7 @@ For lightweight use cases, you can skip the sub-components entirely and use `css
 
 <ComponentPreview auto json={`{"cssClass":"p-6","type":"Card","children":[{"content":"Quick Stats","type":"H3"},{"content":"42 active connections, 3 pending requests.","type":"P"}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     H3,
@@ -181,7 +181,7 @@ with Card(css_class="p-6"):
     H3("Quick Stats")
     P("42 active connections, 3 pending requests.")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "p-6",
   "type": "Card",
@@ -206,7 +206,7 @@ Cards work naturally with `Grid` for dashboard-style layouts:
 
 <ComponentPreview auto json={`{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -226,7 +226,7 @@ with Grid(columns=3, gap=4):
                 CardDescription(title)
                 CardTitle(desc)
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-4 grid-cols-3",
   "type": "Grid",

@@ -14,7 +14,7 @@ Wrap a destructive trigger in a Dialog so users must confirm before the action f
 
 <ComponentPreview auto height="420px" json={`{"type":"Dialog","title":"Delete Item","description":"This action cannot be undone.","children":[{"type":"Button","label":"Delete","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure you want to permanently delete this item?"},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Confirm Delete","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"delete_item","arguments":{"id":"{{ item_id }}"}}}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
 from prefab_ui import ToolCall
 
@@ -29,7 +29,7 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
             on_click=ToolCall("delete_item", arguments={"id": "{{ item_id }}"}),
         )
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Dialog",
   "title": "Delete Item",
@@ -124,7 +124,7 @@ The `on_success` and `on_error` callbacks on `ToolCall` fire after the server to
 
 <ComponentPreview auto json={`{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item","arguments":{"data":"{{ item }}"}}}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button
 from prefab_ui import ToolCall, ShowToast
 
@@ -138,7 +138,7 @@ Button(
     ),
 )
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Button",
   "label": "Save",
@@ -175,7 +175,7 @@ For lighter-weight confirmations that do not need a full modal overlay, use a Po
 
 <ComponentPreview auto json={`{"type":"Popover","children":[{"type":"Button","label":"Archive","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Archive this item?"},{"type":"Button","label":"Confirm","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"archive_item","arguments":{"id":"{{ item_id }}"}}}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Button, Column, Popover, Text
 from prefab_ui import ToolCall
 
@@ -188,7 +188,7 @@ with Popover():
             on_click=ToolCall("archive_item", arguments={"id": "{{ item_id }}"}),
         )
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Popover",
   "children": [

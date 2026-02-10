@@ -154,6 +154,9 @@ def _rebuild_block(
     python_fence_open = python_m.group(1)  # ```python {3} Python\n etc.
     python_source = python_m.group(2)  # the code
     python_fence_close = python_m.group(3)  # ```
+    # Ensure the Python fence line has the icon attribute
+    if "icon=" not in python_fence_open:
+        python_fence_open = python_fence_open.rstrip("\n") + ' icon="python"\n'
     python_block = python_fence_open + python_source + python_fence_close
 
     # Execute the Python and get JSON
@@ -170,7 +173,7 @@ def _rebuild_block(
     if hide_json:
         new_interior = f"\n{python_block}\n"
     else:
-        json_block = f"```json Protocol\n{pretty_json}\n```"
+        json_block = f'```json Protocol icon="brackets-curly"\n{pretty_json}\n```'
         new_interior = f"\n<CodeGroup>\n{python_block}\n{json_block}\n</CodeGroup>\n"
 
     return new_opening + new_interior + closing_tag

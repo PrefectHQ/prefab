@@ -12,12 +12,12 @@ DatePicker combines a trigger button with a popover calendar. The button display
 
 <ComponentPreview auto height="400px" json={`{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import DatePicker
 
 DatePicker(placeholder="Select deadline", name="deadline")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "DatePicker",
   "placeholder": "Select deadline",
@@ -33,7 +33,7 @@ Give the DatePicker a `name` to store the selected date in state, then reference
 
 <ComponentPreview auto height="400px" json={`{"_tree":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"_state":{"deadline":"2025-06-15T12:00:00.000Z"}}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Column,
     DatePicker,
@@ -48,7 +48,7 @@ with Column(gap=3):
         DatePicker(placeholder="Select deadline", name="deadline")
         Text("{{ deadline | date:long }}", bold=True)
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "_tree": {
     "cssClass": "gap-3",
@@ -86,7 +86,7 @@ DatePicker works naturally alongside other form controls, syncing its value to s
 
 <ComponentPreview auto json={`{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Button,
     Card,
@@ -112,7 +112,7 @@ with Card():
     with CardFooter():
         Button("Create Event")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "Card",
   "children": [

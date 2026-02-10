@@ -14,7 +14,7 @@ This is useful when you want to inject data into a subtree without polluting glo
 
 <ComponentPreview auto json={`{"type":"State","state":{"name":"Arthur Dent","role":"Reluctant Adventurer"},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ role }}"}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import (
     Card,
     CardDescription,
@@ -29,7 +29,7 @@ with State(name="Arthur Dent", role="Reluctant Adventurer"):
             CardTitle("{{ name }}")
             CardDescription("{{ role }}")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "type": "State",
   "state": {
@@ -85,7 +85,7 @@ State components can nest. Inner values shadow outer ones for the same key, and 
 
 <ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Column, State, Text
 
 with Column(gap=2):
@@ -94,7 +94,7 @@ with Column(gap=2):
         with State(name="Ford"):
             Text("{{ greeting }}, {{ name }}")
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "cssClass": "gap-2",
   "type": "Column",
@@ -138,7 +138,7 @@ State works well alongside [ForEach](/components/foreach) for providing extra co
 
 <ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
 <CodeGroup>
-```python Python
+```python Python icon="python"
 from prefab_ui.components import Badge, ForEach, Row, State
 
 set_data(languages=["Python", "TypeScript", "Rust"])
@@ -151,7 +151,7 @@ with State(prefix="Speaks"):
                 variant="secondary",
             )
 ```
-```json Protocol
+```json Protocol icon="brackets-curly"
 {
   "_tree": {
     "type": "State",
