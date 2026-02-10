@@ -9,7 +9,6 @@ import shutil
 import socket
 import subprocess
 import threading
-import time
 import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -158,7 +157,20 @@ def build_docs() -> None:
         "NODE_PATH": str(repo_root / "renderer" / "node_modules"),
     }
 
+    renderer_dir = repo_root / "renderer"
+    if not shutil.which("npm"):
+        console.print(
+            "[bold red]Error:[/bold red] [cyan]npm[/cyan] not found. "
+            "Install Node.js to use this command."
+        )
+        raise SystemExit(1)
+
     steps: list[tuple[str, list[str], dict[str, str] | None]] = [
+        (
+            "Building embed module",
+            ["npm", "run", "--prefix", str(renderer_dir), "build:embed"],
+            None,
+        ),
         (
             "Rendering component previews",
             ["uv", "run", str(build_dir / "render_previews.py")],
@@ -216,13 +228,6 @@ def build_docs() -> None:
 @dev_app.command
 def docs(
     *,
-    renderer_port: Annotated[
-        int,
-        cyclopts.Parameter(
-            name="--renderer-port",
-            help="Port for the renderer dev server",
-        ),
-    ] = 3333,
     docs_port: Annotated[
         int,
         cyclopts.Parameter(
@@ -230,41 +235,36 @@ def docs(
             help="Port for the Mintlify docs server",
         ),
     ] = 3000,
+    skip_build: Annotated[
+        bool,
+        cyclopts.Parameter(
+            name="--skip-build",
+            help="Skip rebuilding doc assets before serving",
+        ),
+    ] = False,
 ) -> None:
-    """Serve documentation locally with live component previews.
+    """Serve documentation locally with component previews.
 
-    Starts the Vite renderer dev server and the Mintlify docs server.
-    Automatically finds free ports if the requested ones are in use.
+    Rebuilds all doc assets (embed module, previews, CSS, protocol ref)
+    then starts the Mintlify dev server.
 
     Example:
         prefab dev docs
-        prefab dev docs --renderer-port 4000 --docs-port 3001
+        prefab dev docs --docs-port 3001
+        prefab dev docs --skip-build
     """
     repo_root = _find_repo_root()
-    renderer_dir = repo_root / "renderer"
     docs_dir = repo_root / "docs"
 
-    if not (renderer_dir / "package.json").is_file():
+    if not shutil.which("npx"):
         console.print(
-            "[bold red]Error:[/bold red] renderer/ directory not found.\n"
-            "  Run this command from the repo root."
+            "[bold red]Error:[/bold red] [cyan]npx[/cyan] not found. "
+            "Install Node.js to use this command."
         )
         raise SystemExit(1)
 
-    for cmd in ("npm", "npx"):
-        if not shutil.which(cmd):
-            console.print(
-                f"[bold red]Error:[/bold red] [cyan]{cmd}[/cyan] not found. "
-                "Install Node.js to use this command."
-            )
-            raise SystemExit(1)
-
-    actual_renderer_port = _find_free_port(renderer_port)
-    if actual_renderer_port != renderer_port:
-        console.print(
-            f"[yellow]Renderer port {renderer_port} in use, "
-            f"using {actual_renderer_port}[/yellow]"
-        )
+    if not skip_build:
+        build_docs()
 
     actual_docs_port = _find_free_port(docs_port)
     if actual_docs_port != docs_port:
@@ -272,59 +272,25 @@ def docs(
             f"[yellow]Docs port {docs_port} in use, using {actual_docs_port}[/yellow]"
         )
 
-    config_path = docs_dir / "renderer-config.js"
-    procs: list[subprocess.Popen[bytes]] = []
+    console.print(
+        f"Starting Mintlify docs server ([cyan]localhost:{actual_docs_port}[/cyan])..."
+    )
+    docs_env = {**os.environ, "PORT": str(actual_docs_port)}
+    proc = subprocess.Popen(
+        ["npx", "--yes", "mint@latest", "dev"],
+        cwd=docs_dir,
+        env=docs_env,
+    )
 
     try:
-        config_path.write_text(
-            f"window.__PREFAB_RENDERER_PORT__ = {actual_renderer_port};\n"
-        )
-
-        console.print(
-            f"Starting renderer dev server "
-            f"([cyan]localhost:{actual_renderer_port}[/cyan])..."
-        )
-        renderer_env = {
-            **os.environ,
-            "RENDERER_PORT": str(actual_renderer_port),
-        }
-        procs.append(
-            subprocess.Popen(
-                ["npm", "run", "dev"],
-                cwd=renderer_dir,
-                env=renderer_env,
-            )
-        )
-
-        time.sleep(2)
-
-        console.print(
-            f"Starting Mintlify docs server "
-            f"([cyan]localhost:{actual_docs_port}[/cyan])..."
-        )
-        docs_env = {**os.environ, "PORT": str(actual_docs_port)}
-        procs.append(
-            subprocess.Popen(
-                ["npx", "--yes", "mint@latest", "dev"],
-                cwd=docs_dir,
-                env=docs_env,
-            )
-        )
-
-        while all(p.poll() is None for p in procs):
-            time.sleep(0.5)
-
+        proc.wait()
     except KeyboardInterrupt:
-        console.print("\n[yellow]Docs servers stopped[/yellow]")
-    finally:
-        config_path.unlink(missing_ok=True)
-        for proc in procs:
-            proc.terminate()
-        for proc in procs:
-            try:
-                proc.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                proc.kill()
+        console.print("\n[yellow]Docs server stopped[/yellow]")
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
 
 
 class _SilentHandler(SimpleHTTPRequestHandler):
