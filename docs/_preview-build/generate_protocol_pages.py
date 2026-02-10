@@ -342,14 +342,17 @@ def main() -> None:
     PROTOCOL_DIR.mkdir(parents=True, exist_ok=True)
 
     generated = 0
+    written = 0
 
     # Generate component pages
     for wire_name, cls in sorted(COMPONENT_CLASSES.items()):
         filename = _class_to_filename(wire_name) + ".mdx"
         content = generate_component_page(wire_name, cls)
         path = PROTOCOL_DIR / filename
-        path.write_text(content)
-        print(f"  {path.relative_to(PROTOCOL_DIR.parents[2])}")
+        if not path.exists() or path.read_text() != content:
+            path.write_text(content)
+            print(f"  {path.relative_to(PROTOCOL_DIR.parents[2])}")
+            written += 1
         generated += 1
 
     # Generate action pages
@@ -357,13 +360,13 @@ def main() -> None:
         filename = _class_to_filename(name) + ".mdx"
         content = generate_component_page(name, cls)
         path = PROTOCOL_DIR / filename
-        path.write_text(content)
-        print(f"  {path.relative_to(PROTOCOL_DIR.parents[2])}")
+        if not path.exists() or path.read_text() != content:
+            path.write_text(content)
+            print(f"  {path.relative_to(PROTOCOL_DIR.parents[2])}")
+            written += 1
         generated += 1
 
-    print(
-        f"\nGenerated {generated} protocol reference pages in {PROTOCOL_DIR.relative_to(PROTOCOL_DIR.parents[2])}"
-    )
+    print(f"\nGenerated {generated} protocol reference pages, {written} updated")
 
 
 if __name__ == "__main__":
