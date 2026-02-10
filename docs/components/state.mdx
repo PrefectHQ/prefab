@@ -136,7 +136,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -153,7 +153,7 @@ with State(prefix="Speaks"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "view": {
     "type": "State",
     "state": {
       "prefix": "Speaks"

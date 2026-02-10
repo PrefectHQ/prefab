@@ -31,7 +31,7 @@ Calendar(name="selectedDate")
 
 Set `mode="range"` to let users select a start and end date. The selected range is stored as a JSON object with `from` and `to` ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"range","name":"dateRange"},"_state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Calendar","mode":"range","name":"dateRange"},"state":{"dateRange":"{\\"from\\": \\"2025-06-10T12:00:00.000Z\\", \\"to\\": \\"2025-06-20T12:00:00.000Z\\"}"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 import json
@@ -48,12 +48,12 @@ Calendar(mode="range", name="dateRange")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "view": {
     "type": "Calendar",
     "mode": "range",
     "name": "dateRange"
   },
-  "_state": {
+  "state": {
     "dateRange": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
   }
 }
@@ -65,7 +65,7 @@ Calendar(mode="range", name="dateRange")
 
 Select multiple individual dates with `mode="multiple"`. Selected dates are stored as a JSON array of ISO strings.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"_state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"state":{"selectedDates":"[\\"2025-06-10T12:00:00.000Z\\", \\"2025-06-15T12:00:00.000Z\\", \\"2025-06-22T12:00:00.000Z\\"]"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 import json
@@ -83,12 +83,12 @@ Calendar(mode="multiple", name="selectedDates")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "view": {
     "type": "Calendar",
     "mode": "multiple",
     "name": "selectedDates"
   },
-  "_state": {
+  "state": {
     "selectedDates": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
   }
 }
@@ -100,7 +100,7 @@ Calendar(mode="multiple", name="selectedDates")
 
 Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
 
-<ComponentPreview auto json={`{"_tree":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"_state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -122,7 +122,7 @@ with Row(gap=6):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "view": {
     "cssClass": "gap-6",
     "type": "Row",
     "children": [
@@ -152,7 +152,7 @@ with Row(gap=6):
       }
     ]
   },
-  "_state": {
+  "state": {
     "selectedDate": "2025-06-15T12:00:00.000Z"
   }
 }

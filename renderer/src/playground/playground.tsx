@@ -239,10 +239,10 @@ export function Playground() {
     debounceRef.current = setTimeout(() => {
       try {
         const parsed = JSON.parse(jsonCode);
-        if (parsed._tree) {
-          const { _tree, _state, ...data } = parsed;
-          setTree(_tree as ComponentNode);
-          stateRef.current.reset({ ...data, ...(_state ?? {}) });
+        if (parsed.view) {
+          const { view, state, ...data } = parsed;
+          setTree(view as ComponentNode);
+          stateRef.current.reset({ ...data, ...(state ?? {}) });
         } else {
           setTree(parsed as ComponentNode);
         }

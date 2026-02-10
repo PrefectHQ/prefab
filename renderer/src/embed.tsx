@@ -146,12 +146,12 @@ export function mountPreview(
 
   // Parse JSON
   const parsed = JSON.parse(json);
-  const tree: ComponentNode = parsed._tree ?? parsed;
+  const tree: ComponentNode = parsed.view ?? parsed;
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
-    if (k !== "_tree" && k !== "_state") userData[k] = v;
+    if (k !== "view" && k !== "state") userData[k] = v;
   }
-  const initialState = { ...userData, ...(parsed._state ?? {}) };
+  const initialState = { ...userData, ...(parsed.state ?? {}) };
 
   // Mount React
   let root: Root | null = createRoot(mount);

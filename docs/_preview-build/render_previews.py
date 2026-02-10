@@ -113,9 +113,9 @@ def _execute_and_serialize(
     tree = roots[0].to_json()
 
     if initial_state or sample_data:
-        wrapper: dict[str, Any] = {"_tree": tree}
+        wrapper: dict[str, Any] = {"view": tree}
         if initial_state:
-            wrapper["_state"] = initial_state
+            wrapper["state"] = initial_state
         wrapper.update(sample_data)
         compact = json.dumps(wrapper, separators=(",", ":"))
         pretty = json.dumps(wrapper, indent=2)
