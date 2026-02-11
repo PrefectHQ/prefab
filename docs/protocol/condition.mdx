@@ -1,54 +1,47 @@
 ---
 title: Condition
-description: Wire format for conditional rendering.
+description: JSON Schema for the Condition component.
 ---
 
 Evaluates cases in order and renders the first match. Falls back to the `else` branch if no case matches. Produced by grouping consecutive `If`/`Elif`/`Else` siblings in the Python DSL.
 
 ```json
 {
-  "type": "Condition",
-  "cases": [
-    {
-      "when": "string (expression)",
-      "children": []
-    }
-  ],
-  "else": []
-}
-```
-
-## Properties
-
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `type` | `"Condition"` | Yes | Component discriminator |
-| `cases` | `array` | Yes | One or more case branches (min 1) |
-| `cases[].when` | `string` | Yes | Expression to evaluate |
-| `cases[].children` | `array` | No | Components to render when `when` is truthy |
-| `else` | `array` | No | Components to render when no case matches |
-
-## Example
-
-```json
-{
-  "type": "Condition",
-  "cases": [
-    {
-      "when": "inventory == 0",
-      "children": [
-        { "type": "Badge", "label": "Out of stock", "variant": "destructive" }
-      ]
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Condition",
+      "default": "Condition",
+      "type": "string"
     },
-    {
-      "when": "inventory < 10",
-      "children": [
-        { "type": "Badge", "label": "Low stock", "variant": "secondary" }
-      ]
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "when": {
+            "type": "string",
+            "description": "Expression to evaluate (raw expression, not a {{ }} template)"
+          },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "Component" }
+          }
+        },
+        "required": ["when"]
+      },
+      "minItems": 1,
+      "description": "Ordered branches — first truthy `when` wins"
+    },
+    "else": {
+      "type": "array",
+      "items": { "$ref": "Component" },
+      "description": "Components to render when no case matches"
     }
-  ],
-  "else": [
-    { "type": "Badge", "label": "In stock", "variant": "default" }
+  },
+  "required": [
+    "type",
+    "cases"
   ]
 }
 ```
