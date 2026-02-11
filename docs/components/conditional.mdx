@@ -10,31 +10,55 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 ## Basic Usage
 
-The simplest case: show something only when a condition is true.
+The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview auto json={`{"view":{"type":"State","state":{"inventory":0},"children":[{"type":"Condition","cases":[{"when":"inventory == 0","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"Out of stock"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"outOfStock"}},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Alert, AlertTitle, If, State
+from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
+from prefab_ui import ToggleState
 
-with State(inventory=0):
-    with If("inventory == 0"):
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Switch(name="outOfStock", on_change=ToggleState("outOfStock"))
+        Text("Out of stock")
+    with If("outOfStock"):
         with Alert(variant="destructive"):
-            AlertTitle("Out of stock")
+            AlertTitle("This item is unavailable")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "State",
-    "state": {
-      "inventory": 0
-    },
+    "cssClass": "gap-3",
+    "type": "Column",
     "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "name": "outOfStock",
+            "disabled": false,
+            "required": false,
+            "onChange": {
+              "action": "toggleState",
+              "key": "outOfStock"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "Out of stock"
+          }
+        ]
+      },
       {
         "type": "Condition",
         "cases": [
           {
-            "when": "inventory == 0",
+            "when": "outOfStock",
             "children": [
               {
                 "type": "Alert",
@@ -42,7 +66,7 @@ with State(inventory=0):
                 "children": [
                   {
                     "type": "AlertTitle",
-                    "content": "Out of stock"
+                    "content": "This item is unavailable"
                   }
                 ]
               }
@@ -61,9 +85,9 @@ A lone `If` renders its children when the condition is truthy, and renders nothi
 
 ## If / Else
 
-Add an `Else` branch to render fallback content when the condition is false.
+Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
 
-<ComponentPreview auto json={`{"view":{"type":"State","state":{"showDetails":true},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"showDetails"}},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"showDetails":true}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -75,72 +99,92 @@ from prefab_ui.components import (
     Column,
     Else,
     If,
-    State,
+    Row,
+    Switch,
     Text,
 )
+from prefab_ui import ToggleState
 
-with State(showDetails=True):
-    with Column(gap=2):
-        with If("showDetails"):
-            with Card():
-                with CardHeader():
-                    CardTitle("Project Details")
-                with CardContent():
-                    Text("Heart of Gold — Infinite Improbability Drive")
-        with Else():
-            Badge("Details hidden", variant="secondary")
+set_data(showDetails=True)
+
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Switch(name="showDetails", on_change=ToggleState("showDetails"))
+        Text("Show details")
+    with If("showDetails"):
+        with Card():
+            with CardHeader():
+                CardTitle("Project Details")
+            with CardContent():
+                Text("Heart of Gold — Infinite Improbability Drive")
+    with Else():
+        Badge("Details hidden", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "State",
-    "state": {
-      "showDetails": true
-    },
+    "cssClass": "gap-3",
+    "type": "Column",
     "children": [
       {
-        "cssClass": "gap-2",
-        "type": "Column",
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
         "children": [
           {
-            "type": "Condition",
-            "cases": [
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "name": "showDetails",
+            "disabled": false,
+            "required": false,
+            "onChange": {
+              "action": "toggleState",
+              "key": "showDetails"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "Show details"
+          }
+        ]
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showDetails",
+            "children": [
               {
-                "when": "showDetails",
+                "type": "Card",
                 "children": [
                   {
-                    "type": "Card",
+                    "type": "CardHeader",
                     "children": [
                       {
-                        "type": "CardHeader",
-                        "children": [
-                          {
-                            "type": "CardTitle",
-                            "content": "Project Details"
-                          }
-                        ]
-                      },
+                        "type": "CardTitle",
+                        "content": "Project Details"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "CardContent",
+                    "children": [
                       {
-                        "type": "CardContent",
-                        "children": [
-                          {
-                            "type": "Text",
-                            "content": "Heart of Gold \u2014 Infinite Improbability Drive"
-                          }
-                        ]
+                        "type": "Text",
+                        "content": "Heart of Gold \u2014 Infinite Improbability Drive"
                       }
                     ]
                   }
                 ]
               }
-            ],
-            "else": [
-              {
-                "type": "Badge",
-                "label": "Details hidden",
-                "variant": "secondary"
-              }
             ]
+          }
+        ],
+        "else": [
+          {
+            "type": "Badge",
+            "label": "Details hidden",
+            "variant": "secondary"
           }
         ]
       }
@@ -153,49 +197,110 @@ with State(showDetails=True):
 
 ## If / Elif / Else
 
-Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders.
+Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders. Use the select below to change the status and watch the right badge appear.
 
-<ComponentPreview auto json={`{"view":{"type":"State","state":{"inventory":5},"children":[{"type":"Condition","cases":[{"when":"inventory == 0","children":[{"type":"Badge","label":"Out of stock","variant":"destructive"}]},{"when":"inventory < 10","children":[{"type":"Badge","label":"Low stock \\u2014 {{ inventory }} left","variant":"secondary"}]}],"else":[{"type":"Badge","label":"In stock","variant":"default"}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","disabled":false,"required":false,"children":[{"type":"SelectOption","label":"Active","value":"active"},{"type":"SelectOption","label":"Warning","value":"warning"},{"type":"SelectOption","label":"Error","value":"error"},{"type":"SelectOption","label":"Something else","value":"other"}],"onChange":{"action":"setState","key":"status","value":"{{ $event }}"}},{"type":"Condition","cases":[{"when":"status == 'error'","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"status == 'warning'","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"status == 'active'","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"status":"active"}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Badge, Elif, Else, If, State
+from prefab_ui.components import (
+    Badge,
+    Column,
+    Elif,
+    Else,
+    If,
+    Select,
+    SelectOption,
+)
+from prefab_ui import SetState
 
-with State(inventory=5):
-    with If("inventory == 0"):
-        Badge("Out of stock", variant="destructive")
-    with Elif("inventory < 10"):
-        Badge("Low stock — {{ inventory }} left", variant="secondary")
+set_data(status="active")
+
+with Column(gap=3):
+    with Select(name="status", placeholder="Choose a status...",
+                on_change=SetState("status")):
+        SelectOption("Active", value="active")
+        SelectOption("Warning", value="warning")
+        SelectOption("Error", value="error")
+        SelectOption("Something else", value="other")
+    with If("status == 'error'"):
+        Badge("Error — system down", variant="destructive")
+    with Elif("status == 'warning'"):
+        Badge("Warning — degraded", variant="warning")
+    with Elif("status == 'active'"):
+        Badge("Active — all systems go", variant="success")
     with Else():
-        Badge("In stock")
+        Badge("Unknown status: {{ status }}", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "State",
-    "state": {
-      "inventory": 5
-    },
+    "cssClass": "gap-3",
+    "type": "Column",
     "children": [
+      {
+        "type": "Select",
+        "placeholder": "Choose a status...",
+        "name": "status",
+        "disabled": false,
+        "required": false,
+        "children": [
+          {
+            "type": "SelectOption",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Warning",
+            "value": "warning"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Error",
+            "value": "error"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Something else",
+            "value": "other"
+          }
+        ],
+        "onChange": {
+          "action": "setState",
+          "key": "status",
+          "value": "{{ $event }}"
+        }
+      },
       {
         "type": "Condition",
         "cases": [
           {
-            "when": "inventory == 0",
+            "when": "status == 'error'",
             "children": [
               {
                 "type": "Badge",
-                "label": "Out of stock",
+                "label": "Error \u2014 system down",
                 "variant": "destructive"
               }
             ]
           },
           {
-            "when": "inventory < 10",
+            "when": "status == 'warning'",
             "children": [
               {
                 "type": "Badge",
-                "label": "Low stock \u2014 {{ inventory }} left",
-                "variant": "secondary"
+                "label": "Warning \u2014 degraded",
+                "variant": "warning"
+              }
+            ]
+          },
+          {
+            "when": "status == 'active'",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "Active \u2014 all systems go",
+                "variant": "success"
               }
             ]
           }
@@ -203,19 +308,20 @@ with State(inventory=5):
         "else": [
           {
             "type": "Badge",
-            "label": "In stock",
-            "variant": "default"
+            "label": "Unknown status: {{ status }}",
+            "variant": "secondary"
           }
         ]
       }
     ]
-  }
+  },
+  "status": "active"
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-Try changing `inventory` to `0` or `50` to see the different branches render.
+Select "Error" or "Something else" to see different branches render. The `Else` catches anything that doesn't match the explicit conditions.
 
 ## Chain Rules
 
