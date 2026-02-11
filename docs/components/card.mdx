@@ -10,7 +10,7 @@ Cards group related content into a bordered, shadowed container. They're compose
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create project"},{"type":"CardDescription","content":"Deploy your new project in one-click."}]},{"type":"CardContent","children":[{"content":"Your project will be created with default settings.","type":"P"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -36,7 +36,6 @@ with Card():
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "type": "Card",
     "children": [
@@ -94,7 +93,7 @@ Cards follow a header → content → footer pattern. Each section is optional �
 
 `CardHeader` is a grid that pairs a `CardTitle` with an optional `CardDescription`. `CardContent` provides horizontal padding for your main content. `CardFooter` renders as a flex row, naturally aligning action buttons side by side.
 
-<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account Settings"},{"type":"CardDescription","content":"Manage your account preferences and security."}]},{"type":"CardContent","children":[{"content":"Update your display name, email, and notification preferences from this panel.","type":"P"},{"content":"Changes take effect immediately.","type":"Muted"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account Settings"},{"type":"CardDescription","content":"Manage your account preferences and security."}]},{"type":"CardContent","children":[{"content":"Update your display name, email, and notification preferences from this panel.","type":"P"},{"content":"Changes take effect immediately.","type":"Muted"}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -121,7 +120,6 @@ with Card():
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "type": "Card",
     "children": [
@@ -174,7 +172,7 @@ with Card():
 
 For lightweight use cases, you can skip the sub-components entirely and use `css_class` to add padding:
 
-<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"p-6","type":"Card","children":[{"content":"Quick Stats","type":"H3"},{"content":"42 active connections, 3 pending requests.","type":"P"}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"p-6","type":"Card","children":[{"content":"Quick Stats","type":"H3"},{"content":"42 active connections, 3 pending requests.","type":"P"}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -189,7 +187,6 @@ with Card(css_class="p-6"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "cssClass": "p-6",
     "type": "Card",
@@ -213,7 +210,7 @@ with Card(css_class="p-6"):
 
 Cards work naturally with `Grid` for dashboard-style layouts:
 
-<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Revenue"},{"type":"CardTitle","content":"$12,450"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Users"},{"type":"CardTitle","content":"1,234"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardDescription","content":"Uptime"},{"type":"CardTitle","content":"99.9%"}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -237,7 +234,6 @@ with Grid(columns=3, gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "cssClass": "gap-4 grid-cols-3",
     "type": "Grid",

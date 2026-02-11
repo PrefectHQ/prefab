@@ -10,7 +10,7 @@ DatePicker combines a trigger button with a popover calendar. The button display
 
 ## Basic Usage
 
-<ComponentPreview auto height="400px" json={`{"$protocol":"prefab","view":{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}}`}>
+<ComponentPreview auto height="400px" json={`{"view":{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DatePicker
@@ -19,7 +19,6 @@ DatePicker(placeholder="Select deadline", name="deadline")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "type": "DatePicker",
     "placeholder": "Select deadline",
@@ -34,7 +33,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview auto height="400px" json={`{"$protocol":"prefab","view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"state":{"deadline":"2025-06-15T12:00:00.000Z"}}`}>
+<ComponentPreview auto height="400px" json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"type":"Text","content":"{{ deadline | date:long }}","bold":true}]}]},"state":{"deadline":"2025-06-15T12:00:00.000Z"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -53,7 +52,6 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "cssClass": "gap-3",
     "type": "Column",
@@ -88,7 +86,7 @@ with Column(gap=3):
 
 DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
 
-<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -118,7 +116,6 @@ with Card():
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "$protocol": "prefab",
   "view": {
     "type": "Card",
     "children": [
