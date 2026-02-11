@@ -392,7 +392,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\", on_change=ToggleState(\"outOfStock\"))\n        Text(\"Out of stock\")\n    with If(\"outOfStock\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(\"outOfStock\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1062,7 +1062,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Column, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nset_initial_state(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\", on_change=ToggleState(\"active\"))\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
+    "code": "from prefab_ui.components import Column, Row, Switch, Text\n\nset_initial_state(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\")\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
   },
   {
     "title": "Python icon=\"python\"",

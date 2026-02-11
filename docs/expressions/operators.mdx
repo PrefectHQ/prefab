@@ -238,17 +238,16 @@ If `name` is undefined, empty, or any other falsy value, the result is `'Anonymo
 
 The ternary operator `condition ? ifTrue : ifFalse` selects between two values. It's useful for producing conditional text inline:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"active"}},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"state":{"active":true}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"state":{"active":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Row, Switch, Text
-from prefab_ui import ToggleState
 
 set_initial_state(active=True)
 
 with Column(gap=2):
     with Row(gap=3, align="center"):
-        Switch(name="active", on_change=ToggleState("active"))
+        Switch(name="active")
         Text("{{ active ? 'Online' : 'Offline' }}")
 ```
 ```json Protocol icon="brackets-curly"
@@ -267,11 +266,7 @@ with Column(gap=2):
             "size": "default",
             "name": "active",
             "disabled": false,
-            "required": false,
-            "onChange": {
-              "action": "toggleState",
-              "key": "active"
-            }
+            "required": false
           },
           {
             "type": "Text",

@@ -12,15 +12,14 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"outOfStock"}},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
-from prefab_ui import ToggleState
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
-        Switch(name="outOfStock", on_change=ToggleState("outOfStock"))
+        Switch(name="outOfStock")
         Text("Out of stock")
     with If("outOfStock"):
         with Alert(variant="destructive"):
@@ -42,11 +41,7 @@ with Column(gap=3):
             "size": "default",
             "name": "outOfStock",
             "disabled": false,
-            "required": false,
-            "onChange": {
-              "action": "toggleState",
-              "key": "outOfStock"
-            }
+            "required": false
           },
           {
             "type": "Text",
