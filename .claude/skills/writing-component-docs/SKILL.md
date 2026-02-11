@@ -92,5 +92,7 @@ When the Python API or wire protocol changes, update all of these:
 - `renderer/src/components/` — renderer
 - `docs/components/<name>.mdx` — documentation
 - `schemas/fixtures/components/<Name>.json` — test fixtures
+- `skills/generative-prefab-ui/` — distributable skill for wire protocol generation
+- `skills/writing-prefab-python/` — distributable skill for Python DSL usage
 
 After any change: `prefab dev build-docs` then `uv run pytest tests/ -x`.
