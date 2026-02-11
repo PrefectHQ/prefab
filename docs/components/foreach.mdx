@@ -91,9 +91,9 @@ When rendered with the data above, this produces one card per crew member.
 
 ## How It Works
 
-The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
+The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ $item }}`.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]},"tags":["earth","magrathea","vogon poetry","42"]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ $item }}","variant":"secondary"}]}]},"tags":["earth","magrathea","vogon poetry","42"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -106,7 +106,7 @@ set_data(tags=["earth", "magrathea", "vogon poetry", "42"])
 
 with Row(gap=2):
     with ForEach("tags"):
-        Badge("{{ _item }}", variant="secondary")
+        Badge("{{ $item }}", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -120,7 +120,7 @@ with Row(gap=2):
         "children": [
           {
             "type": "Badge",
-            "label": "{{ _item }}",
+            "label": "{{ $item }}",
             "variant": "secondary"
           }
         ]
@@ -138,7 +138,7 @@ With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one 
 
 Beyond the item's own fields, every iteration exposes two special variables: `$index` (zero-based position) and `$item` (the entire current item). Individual fields like `{{ name }}` are still available directly — `$item` is for when you need to pass the whole object somewhere, like an action argument.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ _item }}"}]}]},"steps":["Collect underpants","?","Profit"]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ $item }}"}]}]},"steps":["Collect underpants","?","Profit"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, ForEach, Text
@@ -147,7 +147,7 @@ set_data(steps=["Collect underpants", "?", "Profit"])
 
 with Column(gap=1):
     with ForEach("steps"):
-        Text("{{ $index + 1 }}. {{ _item }}")
+        Text("{{ $index + 1 }}. {{ $item }}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -161,7 +161,7 @@ with Column(gap=1):
         "children": [
           {
             "type": "Text",
-            "content": "{{ $index + 1 }}. {{ _item }}"
+            "content": "{{ $index + 1 }}. {{ $item }}"
           }
         ]
       }

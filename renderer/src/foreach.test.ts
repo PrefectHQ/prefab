@@ -1,5 +1,5 @@
 /**
- * Tests for ForEach scope injection: $index, $item, and _item.
+ * Tests for ForEach scope injection: $index and $item.
  *
  * The ForEach handler in renderer.tsx injects these variables into the
  * interpolation scope for each iteration. Since ForEach is a React component
@@ -102,20 +102,8 @@ describe("$item in templates", () => {
   });
 });
 
-describe("_item backwards compatibility", () => {
-  it("resolves _item for scalar values", () => {
-    expect(evaluate("_item", { _item: "earth" })).toBe("earth");
-    expect(evaluate("_item", { _item: 42 })).toBe(42);
-  });
-
-  it("interpolates _item in templates", () => {
-    expect(interpolateString("{{ _item }}", { _item: "earth" })).toBe("earth");
-  });
-});
-
 describe("$index coexists with item scope", () => {
   it("$index alongside destructured object fields", () => {
-    // Simulates what ForEach injects for object items
     const scope = {
       name: "Arthur",
       role: "Human",
@@ -128,10 +116,9 @@ describe("$index coexists with item scope", () => {
     expect(evaluate("$item.role", scope)).toBe("Human");
   });
 
-  it("$index alongside _item for scalars", () => {
-    // Simulates what ForEach injects for scalar items
-    const scope = { _item: "earth", $index: 2, $item: "earth" };
-    expect(interpolateString("{{ $index }}: {{ _item }}", scope)).toBe(
+  it("$index alongside $item for scalars", () => {
+    const scope = { $index: 2, $item: "earth" };
+    expect(interpolateString("{{ $index }}: {{ $item }}", scope)).toBe(
       "2: earth",
     );
     expect(evaluate("$item", scope)).toBe("earth");

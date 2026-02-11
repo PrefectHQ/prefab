@@ -447,7 +447,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
                   $index: idx,
                   $item: item,
                 }
-              : { ...scope, _item: item, $index: idx, $item: item };
+              : { ...scope, $index: idx, $item: item };
           return children.map((child, childIdx) => (
             <RenderNode
               key={`${idx}-${childIdx}`}

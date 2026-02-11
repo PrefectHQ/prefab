@@ -590,7 +590,7 @@ export const DEMO_TREE: ComponentNode = {
           type: "ForEach",
           key: "tags",
           children: [
-            { type: "Badge", label: "{{ _item }}", variant: "secondary" },
+            { type: "Badge", label: "{{ $item }}", variant: "secondary" },
           ],
         },
       ],

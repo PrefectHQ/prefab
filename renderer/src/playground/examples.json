@@ -502,12 +502,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_data(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ _item }}\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_data(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ $item }}\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, ForEach, Text\n\nset_data(steps=[\"Collect underpants\", \"?\", \"Profit\"])\n\nwith Column(gap=1):\n    with ForEach(\"steps\"):\n        Text(\"{{ $index + 1 }}. {{ _item }}\")"
+    "code": "from prefab_ui.components import Column, ForEach, Text\n\nset_data(steps=[\"Collect underpants\", \"?\", \"Profit\"])\n\nwith Column(gap=1):\n    with ForEach(\"steps\"):\n        Text(\"{{ $index + 1 }}. {{ $item }}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -902,7 +902,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_data(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ _item }}\",\n                variant=\"secondary\",\n            )"
+    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_data(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ $item }}\",\n                variant=\"secondary\",\n            )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1192,7 +1192,7 @@
   {
     "title": "from prefab_ui.components import Badge, ForEach, Row",
     "category": "Patterns",
-    "code": "with Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ _item }}\", variant=\"outline\")"
+    "code": "with Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ $item }}\", variant=\"outline\")"
   },
   {
     "title": "Python icon=\"python\"",

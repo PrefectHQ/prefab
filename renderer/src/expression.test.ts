@@ -82,7 +82,7 @@ describe("evaluate", () => {
     });
 
     it("identifier with _ prefix", () => {
-      expect(evaluate("_item", { _item: { name: "Ford" } })).toEqual({
+      expect(evaluate("_foo", { _foo: { name: "Ford" } })).toEqual({
         name: "Ford",
       });
     });
