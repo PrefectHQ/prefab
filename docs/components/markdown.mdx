@@ -61,13 +61,17 @@ Version **2.5.0** brings several improvements:
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Markdown protocol definition](/protocol/markdown).
+<Card icon="braces" title="Markdown Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Markdown
-{
-  "type": "Markdown",
-  "content": "string (required)",
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="Markdown" default="Markdown">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Markdown content
+</ParamField>
+
+</Card>

@@ -288,21 +288,49 @@ PieChart(
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [PieChart protocol definition](/protocol/pie-chart).
+<Card icon="braces" title="PieChart Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json PieChart
-{
-  "type": "PieChart",
-  "data": "object[] | string (required)",
-  "dataKey": "string (required)",
-  "nameKey": "string (required)",
-  "height?": 300,
-  "innerRadius?": 0,
-  "showLabel?": false,
-  "paddingAngle?": 0,
-  "showLegend?": false,
-  "showTooltip?": true,
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="PieChart" default="PieChart">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="data" type="Action[] | string" required>
+  Row data or `{{ interpolation }}` reference
+</ParamField>
+
+<ParamField body="dataKey" type="string" required>
+  Numeric value field
+</ParamField>
+
+<ParamField body="nameKey" type="string" required>
+  Label field
+</ParamField>
+
+<ParamField body="height" type="number" default="300">
+  Chart height in pixels
+</ParamField>
+
+<ParamField body="innerRadius" type="number" default="0">
+  Inner radius (>0 for donut)
+</ParamField>
+
+<ParamField body="showLabel" type="boolean" default="false">
+  Show labels on slices
+</ParamField>
+
+<ParamField body="paddingAngle" type="number" default="0">
+  Gap between slices in degrees
+</ParamField>
+
+<ParamField body="showLegend" type="boolean" default="false">
+  Show legend
+</ParamField>
+
+<ParamField body="showTooltip" type="boolean" default="true">
+  Show tooltip on hover
+</ParamField>
+
+</Card>

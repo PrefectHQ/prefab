@@ -300,29 +300,59 @@ with Combobox(
 
 ## Protocol Reference
 
-For the complete protocol schemas, see [Combobox](/protocol/combobox) and [ComboboxOption](/protocol/combobox-option).
+<Card icon="braces" title="Combobox Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Combobox
-{
-  "type": "Combobox",
-  "placeholder?": "string",
-  "searchPlaceholder?": "string",
-  "name?": "string",
-  "disabled?": false,
-  "onChange?": "Action | Action[]",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": [ComboboxOption]
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
 
-```json ComboboxOption
-{
-  "type": "ComboboxOption",
-  "label": "string (required)",
-  "value": "string (required)",
-  "disabled?": false,
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="Combobox" default="Combobox">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="placeholder" type="string | null">
+  Placeholder text shown when no value is selected
+</ParamField>
+
+<ParamField body="searchPlaceholder" type="string | null">
+  Placeholder text in the search input
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  State key for the selected value
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether combobox is disabled
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) when the selected value changes
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="ComboboxOption Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="type" type="ComboboxOption" default="ComboboxOption">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="value" type="string" required>
+  Option value
+</ParamField>
+
+<ParamField body="label" type="string" required>
+  Display label
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether option is disabled
+</ParamField>
+
+</Card>

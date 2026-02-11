@@ -65,7 +65,7 @@ with State(name="Arthur Dent", role="Reluctant Adventurer"):
 
 ## How It Works
 
-Any kwargs that aren't base component fields (`css_class`, `visible_when`, etc.) are collected into the state dict. You can also pass a dict positionally:
+Any kwargs that aren't base component fields (`css_class`, etc.) are collected into the state dict. You can also pass a dict positionally:
 
 ```python Equivalent Forms
 from prefab_ui.components import State, Text
@@ -198,21 +198,24 @@ with State(prefix="Speaks"):
   Additional Tailwind CSS classes for the wrapper element.
 </ParamField>
 
-<ParamField body="visible_when" type="str | None" default="None">
-  Conditional visibility expression.
-</ParamField>
 </Card>
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [State protocol definition](/protocol/state).
+<Card icon="braces" title="State Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json State
-{
-  "type": "State",
-  "state": "object (required)",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": []
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="State" default="State">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="state" type="object">
+  Local state values scoped to children
+</ParamField>
+
+</Card>

@@ -545,23 +545,6 @@ class TestDatePickerComponent:
 
 
 # ---------------------------------------------------------------------------
-# visible_when
-# ---------------------------------------------------------------------------
-
-
-class TestVisibleWhen:
-    def test_visible_when_serializes(self):
-        t = Text(content="Secret", visible_when="showSecret")
-        j = t.to_json()
-        assert j["visibleWhen"] == "showSecret"
-
-    def test_visible_when_excluded_when_none(self):
-        t = Text(content="Always visible")
-        j = t.to_json()
-        assert "visibleWhen" not in j
-
-
-# ---------------------------------------------------------------------------
 # Input/Textarea constraint props
 # ---------------------------------------------------------------------------
 

@@ -1,0 +1,398 @@
+---
+title: If / Elif / Else
+description: Conditionally render components based on expressions.
+icon: code-branch
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`If`, `Elif`, and `Else` let you conditionally render different components based on expression results. They mirror Python's own `if/elif/else` syntax and read the same way — no wrappers, no extra indentation.
+
+## Basic Usage
+
+The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"outOfStock"}},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
+from prefab_ui import ToggleState
+
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Switch(name="outOfStock", on_change=ToggleState("outOfStock"))
+        Text("Out of stock")
+    with If("outOfStock"):
+        with Alert(variant="destructive"):
+            AlertTitle("This item is unavailable")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "name": "outOfStock",
+            "disabled": false,
+            "required": false,
+            "onChange": {
+              "action": "toggleState",
+              "key": "outOfStock"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "Out of stock"
+          }
+        ]
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "outOfStock",
+            "children": [
+              {
+                "type": "Alert",
+                "variant": "destructive",
+                "children": [
+                  {
+                    "type": "AlertTitle",
+                    "content": "This item is unavailable"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+A lone `If` renders its children when the condition is truthy, and renders nothing when it's falsy.
+
+## If / Else
+
+Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"showDetails"}},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"showDetails":true}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Column,
+    Else,
+    If,
+    Row,
+    Switch,
+    Text,
+)
+from prefab_ui import ToggleState
+
+set_data(showDetails=True)
+
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Switch(name="showDetails", on_change=ToggleState("showDetails"))
+        Text("Show details")
+    with If("showDetails"):
+        with Card():
+            with CardHeader():
+                CardTitle("Project Details")
+            with CardContent():
+                Text("Heart of Gold — Infinite Improbability Drive")
+    with Else():
+        Badge("Details hidden", variant="secondary")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "name": "showDetails",
+            "disabled": false,
+            "required": false,
+            "onChange": {
+              "action": "toggleState",
+              "key": "showDetails"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "Show details"
+          }
+        ]
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showDetails",
+            "children": [
+              {
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardHeader",
+                    "children": [
+                      {
+                        "type": "CardTitle",
+                        "content": "Project Details"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "CardContent",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "content": "Heart of Gold \u2014 Infinite Improbability Drive"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "else": [
+          {
+            "type": "Badge",
+            "label": "Details hidden",
+            "variant": "secondary"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## If / Elif / Else
+
+Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders. Use the select below to change the status and watch the right badge appear.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","disabled":false,"required":false,"children":[{"type":"SelectOption","label":"Active","value":"active"},{"type":"SelectOption","label":"Warning","value":"warning"},{"type":"SelectOption","label":"Error","value":"error"},{"type":"SelectOption","label":"Something else","value":"other"}],"onChange":{"action":"setState","key":"status","value":"{{ $event }}"}},{"type":"Condition","cases":[{"when":"status == 'error'","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"status == 'warning'","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"status == 'active'","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"status":"active"}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Column,
+    Elif,
+    Else,
+    If,
+    Select,
+    SelectOption,
+)
+from prefab_ui import SetState
+
+set_data(status="active")
+
+with Column(gap=3):
+    with Select(name="status", placeholder="Choose a status...",
+                on_change=SetState("status")):
+        SelectOption("Active", value="active")
+        SelectOption("Warning", value="warning")
+        SelectOption("Error", value="error")
+        SelectOption("Something else", value="other")
+    with If("status == 'error'"):
+        Badge("Error — system down", variant="destructive")
+    with Elif("status == 'warning'"):
+        Badge("Warning — degraded", variant="warning")
+    with Elif("status == 'active'"):
+        Badge("Active — all systems go", variant="success")
+    with Else():
+        Badge("Unknown status: {{ status }}", variant="secondary")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Select",
+        "placeholder": "Choose a status...",
+        "name": "status",
+        "disabled": false,
+        "required": false,
+        "children": [
+          {
+            "type": "SelectOption",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Warning",
+            "value": "warning"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Error",
+            "value": "error"
+          },
+          {
+            "type": "SelectOption",
+            "label": "Something else",
+            "value": "other"
+          }
+        ],
+        "onChange": {
+          "action": "setState",
+          "key": "status",
+          "value": "{{ $event }}"
+        }
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "status == 'error'",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "Error \u2014 system down",
+                "variant": "destructive"
+              }
+            ]
+          },
+          {
+            "when": "status == 'warning'",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "Warning \u2014 degraded",
+                "variant": "warning"
+              }
+            ]
+          },
+          {
+            "when": "status == 'active'",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "Active \u2014 all systems go",
+                "variant": "success"
+              }
+            ]
+          }
+        ],
+        "else": [
+          {
+            "type": "Badge",
+            "label": "Unknown status: {{ status }}",
+            "variant": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  "status": "active"
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Select "Error" or "Something else" to see different branches render. The `Else` catches anything that doesn't match the explicit conditions.
+
+## Conditions Are Expressions
+
+The first argument to `If` and `Elif` is always a raw [expression](/expressions/overview), not a `{{ }}` template. Templates embed expressions inside larger strings (`Text("Hello, {{ name }}!")`), but a condition *is* the expression — there's nothing to embed it in.
+
+```python
+# Correct — raw expression
+with If("status == 'active'"):
+    ...
+
+# Wrong — unnecessary template delimiters
+with If("{{ status == 'active' }}"):
+    ...
+```
+
+## Chain Rules
+
+Consecutive `If/Elif/Else` siblings in the same parent form a single conditional chain:
+
+- A chain starts with `If` and extends through consecutive `Elif` and `Else` siblings
+- `Elif` and `Else` are optional — a lone `If` is valid
+- `Else` must be last in a chain
+- Any non-conditional sibling breaks the chain — including another `If`, which starts a new independent chain
+
+```python
+with Column():
+    # Chain 1: If / Elif / Else → one Condition node
+    with If("status == 'error'"):
+        Badge("Error", variant="destructive")
+    with Elif("status == 'warning'"):
+        Badge("Warning", variant="secondary")
+    with Else():
+        Badge("OK")
+
+    Text("---")  # breaks the chain
+
+    # Chain 2: standalone If → separate Condition node
+    with If("showDetails"):
+        Text("Details here...")
+
+    # Chain 3: another If starts a new chain (not an Elif!)
+    with If("showFooter"):
+        Text("Footer content")
+```
+
+This produces three independent `Condition` nodes with a `Text` between the first and second.
+
+## Wire Format
+
+In the Python DSL, you write natural `If/Elif/Else` siblings. During serialization, these are grouped into a single `Condition` node on the wire. The `If` and `Elif` components never appear in the JSON directly — they're purely authoring constructs.
+
+Each `Elif` becomes a `case` entry with a `when` expression. The `Else` branch becomes the `else` field. See the [Condition protocol reference](/protocol/condition) for the full schema.
+
+## API Reference
+
+<Card icon="code" title="If">
+<ParamField body="condition" type="str" required>
+  Expression to evaluate. Renders children when truthy. Can be passed as a positional argument.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Elif">
+<ParamField body="condition" type="str" required>
+  Expression to evaluate. Must follow an `If` or another `Elif`. Can be passed as a positional argument.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Else">
+  Renders children when no preceding `If` or `Elif` matched. Takes no condition argument.
+</Card>
+
+## Protocol Reference
+
+For the wire format schema, see the [Condition protocol definition](/protocol/condition).

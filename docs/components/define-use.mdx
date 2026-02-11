@@ -50,7 +50,7 @@ If a Define contains multiple children, they're automatically wrapped in a Colum
 
 ## Use
 
-`Use` references a Define by name. Any kwargs that aren't base component fields (`css_class`, `visible_when`) become scoped interpolation values for the template.
+`Use` references a Define by name. Any kwargs that aren't base component fields (`css_class`) become scoped interpolation values for the template.
 
 ```python
 from prefab_ui import Use
@@ -60,9 +60,6 @@ Use("status-row")
 
 # With scoped data
 Use("status-row", label="Build", status="passing", variant="default")
-
-# With base component fields
-Use("status-row", label="Deploy", status="failed", visible_when="show_deploy")
 ```
 
 ## With ForEach
@@ -114,15 +111,11 @@ UIResponse(
 </ParamField>
 
 <ParamField body="**kwargs" type="Any">
-  Scoped interpolation values. Any kwarg that isn't `css_class` or `visible_when` becomes a scoped state override for the template.
+  Scoped interpolation values. Any kwarg that isn't `css_class` becomes a scoped state override for the template.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
-</ParamField>
-
-<ParamField body="visible_when" type="str | None" default="None">
-  Conditional rendering expression.
 </ParamField>
 </Card>
 

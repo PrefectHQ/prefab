@@ -52,7 +52,7 @@ If a Define contains multiple children, they're automatically wrapped in a Colum
 
 ## Use
 
-`Use` references a Define by name and provides scoped data through kwargs. Any kwargs that aren't base component fields (`css_class`, `visible_when`) become interpolation values scoped to the template.
+`Use` references a Define by name and provides scoped data through kwargs. Any kwargs that aren't base component fields (`css_class`) become interpolation values scoped to the template.
 
 ```python
 from prefab_ui import Use
@@ -62,9 +62,6 @@ Use("status-badge")
 
 # With scoped data
 Use("status-badge", label="Build", status="passing", variant="default")
-
-# With base component fields
-Use("status-badge", label="Deploy", status="failed", visible_when="show_deploy")
 ```
 
 ## How It Works on the Wire

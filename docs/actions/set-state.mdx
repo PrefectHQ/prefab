@@ -241,17 +241,18 @@ with Column(gap=3):
 
 `ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. It's the shorthand for show/hide patterns, expand/collapse, and on/off toggles.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Alert, AlertTitle, Column
+from prefab_ui.components import Alert, AlertTitle, Button, Column, If
 from prefab_ui import ToggleState
 
 with Column(gap=2):
     Button("Toggle Details", variant="outline",
            on_click=ToggleState("showDetails"))
-    with Alert(visible_when="showDetails"):
-        AlertTitle("Here are the details!")
+    with If("showDetails"):
+        with Alert():
+            AlertTitle("Here are the details!")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -271,13 +272,22 @@ with Column(gap=2):
         }
       },
       {
-        "visibleWhen": "showDetails",
-        "type": "Alert",
-        "variant": "default",
-        "children": [
+        "type": "Condition",
+        "cases": [
           {
-            "type": "AlertTitle",
-            "content": "Here are the details!"
+            "when": "showDetails",
+            "children": [
+              {
+                "type": "Alert",
+                "variant": "default",
+                "children": [
+                  {
+                    "type": "AlertTitle",
+                    "content": "Here are the details!"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -288,16 +298,16 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-`ToggleState` pairs naturally with `visible_when` — a prop available on every component that controls whether it renders based on a state variable. Click the button above to see it in action.
+`ToggleState` pairs naturally with [If](/components/conditional) — toggle the state variable, and the conditional block shows or hides the content. Click the button above to see it in action.
 
 ### Multiple Independent Toggles
 
 Each `ToggleState` key is independent, so you can manage multiple visibility states:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"}},{"type":"Button","label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"}},{"type":"Button","label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"}}]},{"visibleWhen":"showA","content":"Content for section A","type":"P"},{"visibleWhen":"showB","content":"Content for section B","type":"P"},{"visibleWhen":"showC","content":"Content for section C","type":"P"}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"}},{"type":"Button","label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"}},{"type":"Button","label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"}}]},{"type":"Condition","cases":[{"when":"showA","children":[{"content":"Content for section A","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showB","children":[{"content":"Content for section B","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showC","children":[{"content":"Content for section C","type":"P"}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, P, Row, Column
+from prefab_ui.components import Button, If, P, Row, Column
 from prefab_ui import ToggleState
 
 with Column(gap=3):
@@ -308,9 +318,12 @@ with Column(gap=3):
                on_click=ToggleState("showB"))
         Button("Section C", variant="outline",
                on_click=ToggleState("showC"))
-    P("Content for section A", visible_when="showA")
-    P("Content for section B", visible_when="showB")
-    P("Content for section C", visible_when="showC")
+    with If("showA"):
+        P("Content for section A")
+    with If("showB"):
+        P("Content for section B")
+    with If("showC"):
+        P("Content for section C")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -358,19 +371,46 @@ with Column(gap=3):
         ]
       },
       {
-        "visibleWhen": "showA",
-        "content": "Content for section A",
-        "type": "P"
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showA",
+            "children": [
+              {
+                "content": "Content for section A",
+                "type": "P"
+              }
+            ]
+          }
+        ]
       },
       {
-        "visibleWhen": "showB",
-        "content": "Content for section B",
-        "type": "P"
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showB",
+            "children": [
+              {
+                "content": "Content for section B",
+                "type": "P"
+              }
+            ]
+          }
+        ]
       },
       {
-        "visibleWhen": "showC",
-        "content": "Content for section C",
-        "type": "P"
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showC",
+            "children": [
+              {
+                "content": "Content for section C",
+                "type": "P"
+              }
+            ]
+          }
+        ]
       }
     ]
   }
@@ -419,8 +459,6 @@ async def settings() -> AppResult:
 </Card>
 
 ## Protocol Reference
-
-For the complete protocol schemas, see [SetState](/protocol/set-state) and [ToggleState](/protocol/toggle-state).
 
 <Card icon="braces" title="SetState Protocol">
 <ParamField body="action" type="setState" default="setState">

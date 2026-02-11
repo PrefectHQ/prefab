@@ -74,7 +74,7 @@ import {
   BlockQuote,
 } from "./typography";
 import { Code, Image, Markdown } from "./content";
-import { ForEach, PrefabState } from "./control-flow";
+import { Condition, ForEach, PrefabState } from "./control-flow";
 import {
   PrefabBarChart,
   PrefabLineChart,
@@ -182,6 +182,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Icon: PrefabIcon,
 
   // Control flow
+  Condition,
   ForEach,
   State: PrefabState,
 

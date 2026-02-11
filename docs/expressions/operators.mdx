@@ -199,11 +199,13 @@ Six comparison operators, all returning booleans:
 {{ value == null }}
 ```
 
-Comparisons are commonly used in `visible_when` conditions to show or hide elements based on state:
+Comparisons are commonly used in [conditional rendering](/components/conditional) to show or hide elements based on state:
 
 ```python
-Alert("Out of stock", visible_when="inventory == 0")
-Alert("Low stock", visible_when="inventory > 0 && inventory < 10")
+with If("inventory == 0"):
+    Alert("Out of stock", variant="destructive")
+with Elif("inventory > 0 && inventory < 10"):
+    Alert("Low stock")
 ```
 
 ## Logical
@@ -226,7 +228,7 @@ If `name` is undefined, empty, or any other falsy value, the result is `'Anonymo
 
 ## Ternary
 
-The ternary operator `condition ? ifTrue : ifFalse` selects between two values. It's how you produce conditional text without `visible_when`:
+The ternary operator `condition ? ifTrue : ifFalse` selects between two values. It's useful for producing conditional text inline:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"active"}},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"active":true}`}>
 <CodeGroup>

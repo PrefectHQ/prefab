@@ -80,16 +80,29 @@ with Card():
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Image protocol definition](/protocol/image).
+<Card icon="braces" title="Image Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Image
-{
-  "type": "Image",
-  "src": "string (required)",
-  "alt?": "string",
-  "width?": "string",
-  "height?": "string",
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="Image" default="Image">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="src" type="string" required>
+  Image URL
+</ParamField>
+
+<ParamField body="alt" type="string" default="">
+  Alt text
+</ParamField>
+
+<ParamField body="width" type="string | null">
+  CSS width
+</ParamField>
+
+<ParamField body="height" type="string | null">
+  CSS height
+</ParamField>
+
+</Card>

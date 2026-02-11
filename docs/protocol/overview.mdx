@@ -42,14 +42,15 @@ Every component is a JSON object with a `type` discriminator:
 }
 ```
 
-All components share two optional base fields:
+All components share one optional base field:
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `cssClass` | `string` | Additional Tailwind CSS classes |
-| `visibleWhen` | `string` | State key — component renders only when this value is truthy |
 
 Container components (Row, Column, Card, etc.) also have a `children` array of nested components.
+
+For conditional rendering, use the [Condition](/protocol/condition) component with `cases` and an optional `else` branch.
 
 ## Actions
 

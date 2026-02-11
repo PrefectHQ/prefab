@@ -227,16 +227,28 @@ with Column(gap=4):
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Field protocol definition](/protocol/field).
+<Card icon="braces" title="Field Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Field
-{
-  "type": "Field",
-  "title": "string (required)",
-  "description?": "string",
-  "disabled?": false,
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": []
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Field" default="Field">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Card heading text
+</ParamField>
+
+<ParamField body="description" type="string | null">
+  Secondary text below the title
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Whether the field is dimmed and non-interactive
+</ParamField>
+
+</Card>

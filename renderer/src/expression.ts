@@ -1,5 +1,5 @@
 /**
- * Unified expression engine for templates ({{ }}) and conditions (visibleWhen).
+ * Unified expression engine for templates ({{ }}) and conditions.
  *
  * A recursive descent evaluator supporting arithmetic, comparisons, boolean
  * logic, ternaries, string concatenation, and pipe transforms. CSP-safe:

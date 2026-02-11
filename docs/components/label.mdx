@@ -92,15 +92,24 @@ with Column(gap=2):
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Label protocol definition](/protocol/label).
+<Card icon="braces" title="Label Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Label
-{
-  "type": "Label",
-  "text?": "string",
-  "forId?": "string",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children?": []
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Label" default="Label">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="text" type="string | null">
+  Label text
+</ParamField>
+
+<ParamField body="forId" type="string | null">
+  ID of the associated form field
+</ParamField>
+
+</Card>

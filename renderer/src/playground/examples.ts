@@ -162,16 +162,17 @@ with Column(gap=4):
   {
     title: "Toggle Visibility",
     category: "Patterns",
-    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription
+    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription, If
 from prefab_ui import ToggleState
 
 set_initial_state(show_alert=False)
 
 with Column(gap=3):
     Button("Toggle Alert", on_click=ToggleState("show_alert"))
-    with Alert(variant="info", visible_when="show_alert"):
-        AlertTitle("Surprise!")
-        AlertDescription("You toggled me into existence.")`,
+    with If("show_alert"):
+        with Alert(variant="info"):
+            AlertTitle("Surprise!")
+            AlertDescription("You toggled me into existence.")`,
   },
   {
     title: "Dialog",
