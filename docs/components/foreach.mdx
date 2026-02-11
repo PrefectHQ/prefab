@@ -134,9 +134,9 @@ with Row(gap=2):
 
 With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per item.
 
-## Item Index
+## Iteration Variables
 
-Every iteration has access to `$index` — the zero-based position of the current item. Use `$index + 1` for 1-based numbering:
+Beyond the item's own fields, every iteration exposes two special variables: `$index` (zero-based position) and `$item` (the entire current item). Individual fields like `{{ name }}` are still available directly — `$item` is for when you need to pass the whole object somewhere, like an action argument.
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ _item }}"}]}]},"steps":["Collect underpants","?","Profit"]}`}>
 <CodeGroup>
@@ -172,9 +172,7 @@ with Column(gap=1):
 </CodeGroup>
 </ComponentPreview>
 
-`$index` is especially useful for actions that need to target a specific list item — `SetState("items.{{ $index }}.done", true)` updates the `done` field at the current position.
-
-`$item` is also available as a reference to the entire current item object. For dict items, individual fields are already in scope (`{{ name }}`), but `$item` lets you pass the whole object to an action like `ToolCall("edit_user", arguments={"user": "{{ $item }}"})`.
+`$index` is especially useful for actions that target a specific list position — `SetState("items.{{ $index }}.done", true)` updates the `done` field of the current item. And `$item` lets you pass the whole object to actions like `ToolCall("edit_user", arguments={"user": "{{ $item }}"})`.
 
 ## Nested Data
 
