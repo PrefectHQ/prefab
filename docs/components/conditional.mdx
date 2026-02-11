@@ -12,15 +12,14 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"outOfStock"}},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
-from prefab_ui import ToggleState
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
-        Switch(name="outOfStock", on_change=ToggleState("outOfStock"))
+        Switch(name="outOfStock")
         Text("Out of stock")
     with If("outOfStock"):
         with Alert(variant="destructive"):
@@ -42,11 +41,7 @@ with Column(gap=3):
             "size": "default",
             "name": "outOfStock",
             "disabled": false,
-            "required": false,
-            "onChange": {
-              "action": "toggleState",
-              "key": "outOfStock"
-            }
+            "required": false
           },
           {
             "type": "Text",
@@ -87,7 +82,7 @@ A lone `If` renders its children when the condition is truthy, and renders nothi
 
 Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"showDetails"}},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"showDetails":true}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -103,13 +98,11 @@ from prefab_ui.components import (
     Switch,
     Text,
 )
-from prefab_ui import ToggleState
-
-set_data(showDetails=True)
+set_initial_state(showDetails=True)
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
-        Switch(name="showDetails", on_change=ToggleState("showDetails"))
+        Switch(name="showDetails")
         Text("Show details")
     with If("showDetails"):
         with Card():
@@ -136,11 +129,7 @@ with Column(gap=3):
             "size": "default",
             "name": "showDetails",
             "disabled": false,
-            "required": false,
-            "onChange": {
-              "action": "toggleState",
-              "key": "showDetails"
-            }
+            "required": false
           },
           {
             "type": "Text",
@@ -189,6 +178,9 @@ with Column(gap=3):
         ]
       }
     ]
+  },
+  "state": {
+    "showDetails": true
   }
 }
 ```
@@ -211,13 +203,10 @@ from prefab_ui.components import (
     Select,
     SelectOption,
 )
-from prefab_ui import SetState
-
-set_data(status="active")
+set_initial_state(status="active")
 
 with Column(gap=3):
-    with Select(name="status", placeholder="Choose a status...",
-                on_change=SetState("status")):
+    with Select(name="status", placeholder="Choose a status..."):
         SelectOption("Active", value="active")
         SelectOption("Warning", value="warning")
         SelectOption("Error", value="error")
@@ -328,11 +317,11 @@ Select "Error" or "Something else" to see different branches render. The `Else` 
 The first argument to `If` and `Elif` is always a raw [expression](/expressions/overview), not a `{{ }}` template. Templates embed expressions inside larger strings (`Text("Hello, {{ name }}!")`), but a condition *is* the expression — there's nothing to embed it in.
 
 ```python
-# Correct — raw expression
+# ✅ Correct — raw expression
 with If("status == 'active'"):
     ...
 
-# Wrong — unnecessary template delimiters
+# ❌ Wrong — unnecessary template delimiters
 with If("{{ status == 'active' }}"):
     ...
 ```

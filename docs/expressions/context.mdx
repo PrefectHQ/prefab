@@ -155,7 +155,7 @@ with ForEach("users"):
 
 [If/Elif/Else](/components/conditional) blocks use expressions to control which components render. The expression evaluates to a truthy or falsy value, and the first matching branch renders. This is one of the most practical uses of expression context — combining state from different sources to determine what the user sees:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false,"onChange":{"action":"setState","key":"inventory","value":"{{ $event }}"}},{"type":"Condition","cases":[{"when":"inventory == 0","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"inventory > 0 && inventory < 10","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"inventory":15}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"inventory == 0","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"inventory > 0 && inventory < 10","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -167,9 +167,7 @@ from prefab_ui.components import (
     Slider,
     Text,
 )
-from prefab_ui import SetState
-
-set_data(inventory=15)
+set_initial_state(inventory=15)
 
 with Column(gap=3):
     Text("Inventory: {{ inventory }}")
@@ -178,7 +176,6 @@ with Column(gap=3):
         min=0,
         max=30,
         step=1,
-        on_change=SetState("inventory"),
     )
     with If("inventory == 0"):
         with Alert(variant="destructive"):
@@ -203,12 +200,7 @@ with Column(gap=3):
         "max": 30.0,
         "step": 1.0,
         "name": "inventory",
-        "disabled": false,
-        "onChange": {
-          "action": "setState",
-          "key": "inventory",
-          "value": "{{ $event }}"
-        }
+        "disabled": false
       },
       {
         "type": "Condition",
@@ -246,6 +238,9 @@ with Column(gap=3):
         ]
       }
     ]
+  },
+  "state": {
+    "inventory": 15
   }
 }
 ```

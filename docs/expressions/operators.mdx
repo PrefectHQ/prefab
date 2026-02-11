@@ -21,7 +21,7 @@ The four basic operations work on numeric values:
 
 Arithmetic combined with [SetState](/actions/set-state) is how you build interactive counters and quantity selectors without a server call:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"Quantity:"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"type":"Text","content":"{{ quantity }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"type":"Text","content":"Total: {{ price * quantity | currency }}"}]},"price":42,"quantity":1}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"Quantity:"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"type":"Text","content":"{{ quantity }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"type":"Text","content":"Total: {{ price * quantity | currency }}"}]},"state":{"price":42,"quantity":1}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -33,7 +33,7 @@ from prefab_ui.components import (
 )
 from prefab_ui import SetState
 
-set_data(price=42, quantity=1)
+set_initial_state(price=42, quantity=1)
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
@@ -100,6 +100,10 @@ with Column(gap=3):
         "content": "Total: {{ price * quantity | currency }}"
       }
     ]
+  },
+  "state": {
+    "price": 42,
+    "quantity": 1
   }
 }
 ```
@@ -127,12 +131,12 @@ The `+` operator does double duty: if either side is a string, it concatenates. 
 
 This is how you build composed strings from multiple state values:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false}]},{"type":"Text","content":"Hello, {{ first + ' ' + last }}!"}]},"first":"Arthur","last":"Dent"}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false}]},{"type":"Text","content":"Hello, {{ first + ' ' + last }}!"}]},"state":{"first":"Arthur","last":"Dent"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Input, Row, Text
 
-set_data(first="Arthur", last="Dent")
+set_initial_state(first="Arthur", last="Dent")
 
 with Column(gap=3):
     with Row(gap=2):
@@ -173,6 +177,10 @@ with Column(gap=3):
         "content": "Hello, {{ first + ' ' + last }}!"
       }
     ]
+  },
+  "state": {
+    "first": "Arthur",
+    "last": "Dent"
   }
 }
 ```
@@ -230,17 +238,16 @@ If `name` is undefined, empty, or any other falsy value, the result is `'Anonymo
 
 The ternary operator `condition ? ifTrue : ifFalse` selects between two values. It's useful for producing conditional text inline:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"active"}},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"active":true}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"state":{"active":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Row, Switch, Text
-from prefab_ui import ToggleState
 
-set_data(active=True)
+set_initial_state(active=True)
 
 with Column(gap=2):
     with Row(gap=3, align="center"):
-        Switch(name="active", on_change=ToggleState("active"))
+        Switch(name="active")
         Text("{{ active ? 'Online' : 'Offline' }}")
 ```
 ```json Protocol icon="brackets-curly"
@@ -259,11 +266,7 @@ with Column(gap=2):
             "size": "default",
             "name": "active",
             "disabled": false,
-            "required": false,
-            "onChange": {
-              "action": "toggleState",
-              "key": "active"
-            }
+            "required": false
           },
           {
             "type": "Text",
@@ -272,6 +275,9 @@ with Column(gap=2):
         ]
       }
     ]
+  },
+  "state": {
+    "active": true
   }
 }
 ```

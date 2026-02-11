@@ -6,19 +6,19 @@ icon: pen-to-square
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`SetState` is the workhorse of client-side interactivity. It sets a state variable that other components can read through `{{ key }}` interpolation — no server communication, instant feedback.
+Named form controls automatically sync their value to state — the slider below updates `brightness` on every drag, and the `Muted` text responds through `{{ brightness }}` interpolation. No action needed.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false,"onChange":{"action":"setState","key":"brightness","value":"{{ $event }}"}},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}`}>
+`SetState` gives you explicit control when auto-binding isn't enough: setting literal values, computing new state from old, or wiring up non-form elements like buttons.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider, Muted, Column
-from prefab_ui import SetState
 
 set_initial_state(brightness=50)
 
 with Column(gap=3):
-    Slider(name="brightness", min=0, max=100,
-           on_change=SetState("brightness"))
+    Slider(name="brightness", min=0, max=100)
     Muted("Brightness: {{ brightness }}%")
 ```
 ```json Protocol icon="brackets-curly"
@@ -32,12 +32,7 @@ with Column(gap=3):
         "min": 0.0,
         "max": 100.0,
         "name": "brightness",
-        "disabled": false,
-        "onChange": {
-          "action": "setState",
-          "key": "brightness",
-          "value": "{{ $event }}"
-        }
+        "disabled": false
       },
       {
         "content": "Brightness: {{ brightness }}%",
@@ -53,7 +48,7 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-Drag the slider — the text updates instantly. `set_initial_state(brightness=50)` seeds the value so the UI starts in a meaningful state.
+Drag the slider — the text updates instantly. `set_initial_state(brightness=50)` seeds the starting value; the `name` prop handles the rest.
 
 ## Event Capture (the Default)
 
@@ -178,7 +173,7 @@ The div's `css_class` uses `{{ color }}` interpolation, so clicking a button swa
 
 Use explicit values to build reset buttons:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false,"onChange":{"action":"setState","key":"volume","value":"{{ $event }}"}},{"content":"Volume: {{ volume }}","type":"Muted"},{"type":"Button","label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50}}]},"state":{"volume":75}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}","type":"Muted"},{"type":"Button","label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50}}]},"state":{"volume":75}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Slider, Muted, Column
@@ -187,8 +182,7 @@ from prefab_ui import SetState
 set_initial_state(volume=75)
 
 with Column(gap=3):
-    Slider(name="volume", min=0, max=100,
-           on_change=SetState("volume"))
+    Slider(name="volume", min=0, max=100)
     Muted("Volume: {{ volume }}")
     Button("Reset to 50", variant="outline",
            on_click=SetState("volume", 50))
@@ -204,12 +198,7 @@ with Column(gap=3):
         "min": 0.0,
         "max": 100.0,
         "name": "volume",
-        "disabled": false,
-        "onChange": {
-          "action": "setState",
-          "key": "volume",
-          "value": "{{ $event }}"
-        }
+        "disabled": false
       },
       {
         "content": "Volume: {{ volume }}",
@@ -462,7 +451,7 @@ async def settings() -> AppResult:
 
 ```json SetState
 {
-  "action?": ""setState"",
+  "action": "setState",
   "key": "string (required)",
   "value?": "any"
 }
@@ -470,7 +459,7 @@ async def settings() -> AppResult:
 
 ```json ToggleState
 {
-  "action?": ""toggleState"",
+  "action": "toggleState",
   "key": "string (required)"
 }
 ```

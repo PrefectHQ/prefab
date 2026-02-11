@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Templates let you embed live values in any string prop on any component. Wrap an expression in `{{ }}` and the renderer evaluates it against the current state and substitutes the result.
 
-The key idea: **state keys become template variables.** When you set `name="Arthur Dent"` in your state (via `set_data`, a `State` component, or a form input with a `name` attribute), the key `name` is available inside any `{{ }}` expression in that component's subtree. Write `{{ name }}` and it resolves to `"Arthur Dent"`.
+The key idea: **state keys become template variables.** When you set `name="Arthur Dent"` in your state (via `set_initial_state`, a `State` component, or a form input with a `name` attribute), the key `name` is available inside any `{{ }}` expression in that component's subtree. Write `{{ name }}` and it resolves to `"Arthur Dent"`.
 
 ## Basic Usage
 
@@ -194,12 +194,12 @@ State keys and template variables are the same thing, which means form inputs ca
 
 Try typing in these inputs — the text below updates as you type:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false},{"type":"Text","content":"{{ first + ' ' + last }}"}]},"first":"Arthur","last":"Dent"}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false},{"type":"Text","content":"{{ first + ' ' + last }}"}]},"state":{"first":"Arthur","last":"Dent"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Input, Text
 
-set_data(first="Arthur", last="Dent")
+set_initial_state(first="Arthur", last="Dent")
 
 with Column(gap=3):
     Input(name="first", placeholder="First name")
@@ -233,6 +233,10 @@ with Column(gap=3):
         "content": "{{ first + ' ' + last }}"
       }
     ]
+  },
+  "state": {
+    "first": "Arthur",
+    "last": "Dent"
   }
 }
 ```
