@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `ToolCall` is the bridge between your UI and your server logic. When a user clicks a button or submits a form, `ToolCall` invokes a server tool with the arguments you specify — the same tools you define with `@mcp.tool()`.
 
-<ComponentPreview auto json={`{"type":"Button","label":"Refresh Data","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_latest_data","arguments":{}}}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Button","label":"Refresh Data","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_latest_data","arguments":{}}}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -18,15 +18,18 @@ Button("Refresh Data", on_click=ToolCall("get_latest_data"))
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Button",
-  "label": "Refresh Data",
-  "variant": "default",
-  "size": "default",
-  "disabled": false,
-  "onClick": {
-    "action": "toolCall",
-    "tool": "get_latest_data",
-    "arguments": {}
+  "$protocol": "prefab",
+  "view": {
+    "type": "Button",
+    "label": "Refresh Data",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "action": "toolCall",
+      "tool": "get_latest_data",
+      "arguments": {}
+    }
   }
 }
 ```
@@ -39,7 +42,7 @@ The renderer proxies the call through the Prefab SDK, so the tool executes serve
 
 Use `{{ key }}` interpolation in the `arguments` dict to pass client state to the tool. Form controls with a `name` automatically sync to state — `Input(name="city")` updates `city` on every keystroke, no `SetState` needed.
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -54,32 +57,35 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Input",
-      "inputType": "text",
-      "placeholder": "Enter a city...",
-      "name": "city",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Button",
-      "label": "Get Weather",
-      "variant": "default",
-      "size": "default",
-      "disabled": false,
-      "onClick": {
-        "action": "toolCall",
-        "tool": "get_weather",
-        "arguments": {
-          "location": "{{ city }}"
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Enter a city...",
+        "name": "city",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Button",
+        "label": "Get Weather",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "toolCall",
+          "tool": "get_weather",
+          "arguments": {
+            "location": "{{ city }}"
+          }
         }
       }
-    }
-  ]
+    ]
+  }
 }
 ```
 </CodeGroup>

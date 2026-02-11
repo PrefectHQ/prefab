@@ -16,7 +16,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 **Prefab is a JSON component format that renders to real interactive frontends.** Describe a UI — from an MCP server, a ChatGPT app, an AI agent, or a Python script — and Prefab renders it as a live React application with forms, tables, state management, and real-time interactivity.
 
-<ComponentPreview auto json={`{"_tree":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false},{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"{{ name }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"secondary"}]}]}]}]},"_state":{"name":"world"}}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false},{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"{{ name }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"secondary"}]}]}]}]},"state":{"name":"world"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Card, CardContent, Column, H3, Muted, Input, Badge, Row
@@ -35,7 +35,8 @@ with Card():
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "$protocol": "prefab",
+  "view": {
     "type": "Card",
     "children": [
       {
@@ -83,7 +84,7 @@ with Card():
       }
     ]
   },
-  "_state": {
+  "state": {
     "name": "world"
   }
 }

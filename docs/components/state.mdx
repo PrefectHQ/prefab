@@ -12,7 +12,7 @@ This is useful when you want to inject data into a subtree without polluting glo
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"State","state":{"name":"Arthur Dent","role":"Reluctant Adventurer"},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ role }}"}]}]}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"State","state":{"name":"Arthur Dent","role":"Reluctant Adventurer"},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"{{ role }}"}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -31,31 +31,34 @@ with State(name="Arthur Dent", role="Reluctant Adventurer"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "State",
-  "state": {
-    "name": "Arthur Dent",
-    "role": "Reluctant Adventurer"
-  },
-  "children": [
-    {
-      "type": "Card",
-      "children": [
-        {
-          "type": "CardHeader",
-          "children": [
-            {
-              "type": "CardTitle",
-              "content": "{{ name }}"
-            },
-            {
-              "type": "CardDescription",
-              "content": "{{ role }}"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "State",
+    "state": {
+      "name": "Arthur Dent",
+      "role": "Reluctant Adventurer"
+    },
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "{{ name }}"
+              },
+              {
+                "type": "CardDescription",
+                "content": "{{ role }}"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -83,7 +86,7 @@ Both forms produce the same wire format — a `State` node with a `state` object
 
 State components can nest. Inner values shadow outer ones for the same key, and children see the merged context:
 
-<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, State, Text
@@ -96,35 +99,38 @@ with Column(gap=2):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-2",
-  "type": "Column",
-  "children": [
-    {
-      "type": "State",
-      "state": {
-        "greeting": "Don't Panic",
-        "name": "Arthur"
-      },
-      "children": [
-        {
-          "type": "Text",
-          "content": "{{ greeting }}, {{ name }}"
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "type": "State",
+        "state": {
+          "greeting": "Don't Panic",
+          "name": "Arthur"
         },
-        {
-          "type": "State",
-          "state": {
-            "name": "Ford"
+        "children": [
+          {
+            "type": "Text",
+            "content": "{{ greeting }}, {{ name }}"
           },
-          "children": [
-            {
-              "type": "Text",
-              "content": "{{ greeting }}, {{ name }}"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+          {
+            "type": "State",
+            "state": {
+              "name": "Ford"
+            },
+            "children": [
+              {
+                "type": "Text",
+                "content": "{{ greeting }}, {{ name }}"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -136,7 +142,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"_tree":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -153,7 +159,8 @@ with State(prefix="Speaks"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "$protocol": "prefab",
+  "view": {
     "type": "State",
     "state": {
       "prefix": "Speaks"
@@ -177,12 +184,7 @@ with State(prefix="Speaks"):
         ]
       }
     ]
-  },
-  "languages": [
-    "Python",
-    "TypeScript",
-    "Rust"
-  ]
+  }
 }
 ```
 </CodeGroup>

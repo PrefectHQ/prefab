@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `OpenLink` opens a URL through the host application's link handler. Use it for navigation buttons, "View docs" links, or any action that should take the user to an external resource.
 
-<ComponentPreview auto json={`{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -19,14 +19,17 @@ Button("View Documentation", variant="link",
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Button",
-  "label": "View Documentation",
-  "variant": "link",
-  "size": "default",
-  "disabled": false,
-  "onClick": {
-    "action": "openLink",
-    "url": "https://prefab-ui.dev"
+  "$protocol": "prefab",
+  "view": {
+    "type": "Button",
+    "label": "View Documentation",
+    "variant": "link",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "action": "openLink",
+      "url": "https://prefab-ui.dev"
+    }
   }
 }
 ```
@@ -37,7 +40,7 @@ Button("View Documentation", variant="link",
 
 Pair `OpenLink` with the `link` button variant for a natural look:
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Row","children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4","type":"Row","children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
@@ -51,32 +54,35 @@ with Row(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Row",
-  "children": [
-    {
-      "type": "Button",
-      "label": "GitHub",
-      "variant": "link",
-      "size": "default",
-      "disabled": false,
-      "onClick": {
-        "action": "openLink",
-        "url": "https://github.com/prefecthq/prefab"
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "GitHub",
+        "variant": "link",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "openLink",
+          "url": "https://github.com/prefecthq/prefab"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "PyPI",
+        "variant": "link",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "openLink",
+          "url": "https://pypi.org/project/prefab-ui"
+        }
       }
-    },
-    {
-      "type": "Button",
-      "label": "PyPI",
-      "variant": "link",
-      "size": "default",
-      "disabled": false,
-      "onClick": {
-        "action": "openLink",
-        "url": "https://pypi.org/project/prefab-ui"
-      }
-    }
-  ]
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -86,7 +92,7 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -100,29 +106,32 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Input",
-      "inputType": "text",
-      "placeholder": "owner/repo",
-      "name": "repo",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Button",
-      "label": "Open on GitHub",
-      "variant": "default",
-      "size": "default",
-      "disabled": false,
-      "onClick": {
-        "action": "openLink",
-        "url": "https://github.com/{{ repo }}"
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "owner/repo",
+        "name": "repo",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Button",
+        "label": "Open on GitHub",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "openLink",
+          "url": "https://github.com/{{ repo }}"
+        }
       }
-    }
-  ]
+    ]
+  }
 }
 ```
 </CodeGroup>

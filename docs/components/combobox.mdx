@@ -12,7 +12,7 @@ Combobox is a searchable select — a dropdown that lets users type to filter th
 
 Options are defined as `ComboboxOption` children. Each option needs a `label` (displayed) and `value` (stored in state). When you pass just a string, the value is auto-generated from the label.
 
-<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Select a framework...","name":"framework","disabled":false,"children":[{"type":"ComboboxOption","value":"nextjs","label":"Next.js","disabled":false},{"type":"ComboboxOption","value":"remix","label":"Remix","disabled":false},{"type":"ComboboxOption","value":"astro","label":"Astro","disabled":false},{"type":"ComboboxOption","value":"sveltekit","label":"SvelteKit","disabled":false},{"type":"ComboboxOption","value":"nuxt","label":"Nuxt","disabled":false}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Combobox","placeholder":"Select a framework...","name":"framework","disabled":false,"children":[{"type":"ComboboxOption","value":"nextjs","label":"Next.js","disabled":false},{"type":"ComboboxOption","value":"remix","label":"Remix","disabled":false},{"type":"ComboboxOption","value":"astro","label":"Astro","disabled":false},{"type":"ComboboxOption","value":"sveltekit","label":"SvelteKit","disabled":false},{"type":"ComboboxOption","value":"nuxt","label":"Nuxt","disabled":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Combobox, ComboboxOption
@@ -29,42 +29,45 @@ with Combobox(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Combobox",
-  "placeholder": "Select a framework...",
-  "name": "framework",
-  "disabled": false,
-  "children": [
-    {
-      "type": "ComboboxOption",
-      "value": "nextjs",
-      "label": "Next.js",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "remix",
-      "label": "Remix",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "astro",
-      "label": "Astro",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "sveltekit",
-      "label": "SvelteKit",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "nuxt",
-      "label": "Nuxt",
-      "disabled": false
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "Combobox",
+    "placeholder": "Select a framework...",
+    "name": "framework",
+    "disabled": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "nextjs",
+        "label": "Next.js",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "remix",
+        "label": "Remix",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "astro",
+        "label": "Astro",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "sveltekit",
+        "label": "SvelteKit",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "nuxt",
+        "label": "Nuxt",
+        "disabled": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -74,7 +77,7 @@ with Combobox(
 
 The `name` prop creates a state key that holds the selected option's `value`. Use `{{ key }}` interpolation to display it anywhere, or reference it in actions and visibility conditions.
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"type":"Text","content":"Selected: {{ planet }}"}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"type":"Text","content":"Selected: {{ planet }}"}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -97,40 +100,43 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Combobox",
-      "placeholder": "Select a planet...",
-      "name": "planet",
-      "disabled": false,
-      "children": [
-        {
-          "type": "ComboboxOption",
-          "value": "magrathea",
-          "label": "Magrathea",
-          "disabled": false
-        },
-        {
-          "type": "ComboboxOption",
-          "value": "betelgeuse",
-          "label": "Betelgeuse",
-          "disabled": false
-        },
-        {
-          "type": "ComboboxOption",
-          "value": "vogsphere",
-          "label": "Vogsphere",
-          "disabled": false
-        }
-      ]
-    },
-    {
-      "type": "Text",
-      "content": "Selected: {{ planet }}"
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Combobox",
+        "placeholder": "Select a planet...",
+        "name": "planet",
+        "disabled": false,
+        "children": [
+          {
+            "type": "ComboboxOption",
+            "value": "magrathea",
+            "label": "Magrathea",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "betelgeuse",
+            "label": "Betelgeuse",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "vogsphere",
+            "label": "Vogsphere",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "Text",
+        "content": "Selected: {{ planet }}"
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -140,7 +146,7 @@ with Column(gap=3):
 
 Customize the placeholder text shown in the search input.
 
-<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Pick a language...","searchPlaceholder":"Filter languages...","name":"language","disabled":false,"children":[{"type":"ComboboxOption","value":"python","label":"Python","disabled":false},{"type":"ComboboxOption","value":"typescript","label":"TypeScript","disabled":false},{"type":"ComboboxOption","value":"rust","label":"Rust","disabled":false},{"type":"ComboboxOption","value":"go","label":"Go","disabled":false}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Combobox","placeholder":"Pick a language...","searchPlaceholder":"Filter languages...","name":"language","disabled":false,"children":[{"type":"ComboboxOption","value":"python","label":"Python","disabled":false},{"type":"ComboboxOption","value":"typescript","label":"TypeScript","disabled":false},{"type":"ComboboxOption","value":"rust","label":"Rust","disabled":false},{"type":"ComboboxOption","value":"go","label":"Go","disabled":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Combobox, ComboboxOption
@@ -157,37 +163,40 @@ with Combobox(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Combobox",
-  "placeholder": "Pick a language...",
-  "searchPlaceholder": "Filter languages...",
-  "name": "language",
-  "disabled": false,
-  "children": [
-    {
-      "type": "ComboboxOption",
-      "value": "python",
-      "label": "Python",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "typescript",
-      "label": "TypeScript",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "rust",
-      "label": "Rust",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "go",
-      "label": "Go",
-      "disabled": false
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "Combobox",
+    "placeholder": "Pick a language...",
+    "searchPlaceholder": "Filter languages...",
+    "name": "language",
+    "disabled": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "python",
+        "label": "Python",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "typescript",
+        "label": "TypeScript",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "rust",
+        "label": "Rust",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "go",
+        "label": "Go",
+        "disabled": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -197,7 +206,7 @@ with Combobox(
 
 Individual options can be disabled.
 
-<ComponentPreview auto json={`{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":true},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":true},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Combobox, ComboboxOption
@@ -217,36 +226,39 @@ with Combobox(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Combobox",
-  "placeholder": "Select a planet...",
-  "name": "planet",
-  "disabled": false,
-  "children": [
-    {
-      "type": "ComboboxOption",
-      "value": "magrathea",
-      "label": "Magrathea",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "earth",
-      "label": "Earth",
-      "disabled": true
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "betelgeuse",
-      "label": "Betelgeuse",
-      "disabled": false
-    },
-    {
-      "type": "ComboboxOption",
-      "value": "vogsphere",
-      "label": "Vogsphere",
-      "disabled": false
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "Combobox",
+    "placeholder": "Select a planet...",
+    "name": "planet",
+    "disabled": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "magrathea",
+        "label": "Magrathea",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "earth",
+        "label": "Earth",
+        "disabled": true
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "betelgeuse",
+        "label": "Betelgeuse",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "vogsphere",
+        "label": "Vogsphere",
+        "disabled": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>

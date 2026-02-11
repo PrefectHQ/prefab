@@ -10,7 +10,7 @@ Sliders let users select a numeric value from a range by dragging a handle.
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -19,11 +19,14 @@ Slider(min=0, max=100, value=50)
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Slider",
-  "min": 0.0,
-  "max": 100.0,
-  "value": 50.0,
-  "disabled": false
+  "$protocol": "prefab",
+  "view": {
+    "type": "Slider",
+    "min": 0.0,
+    "max": 100.0,
+    "value": 50.0,
+    "disabled": false
+  }
 }
 ```
 </CodeGroup>
@@ -31,7 +34,7 @@ Slider(min=0, max=100, value=50)
 
 ## With Step Increment
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -40,12 +43,15 @@ Slider(min=0, max=10, step=0.5, value=5)
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Slider",
-  "min": 0.0,
-  "max": 10.0,
-  "value": 5.0,
-  "step": 0.5,
-  "disabled": false
+  "$protocol": "prefab",
+  "view": {
+    "type": "Slider",
+    "min": 0.0,
+    "max": 10.0,
+    "value": 5.0,
+    "step": 0.5,
+    "disabled": false
+  }
 }
 ```
 </CodeGroup>
@@ -53,7 +59,7 @@ Slider(min=0, max=10, step=0.5, value=5)
 
 ## Different Ranges
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -73,44 +79,47 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Volume (0-100)"
-        },
-        {
-          "type": "Slider",
-          "min": 0.0,
-          "max": 100.0,
-          "value": 75.0,
-          "disabled": false
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Temperature (0-10)"
-        },
-        {
-          "type": "Slider",
-          "min": 0.0,
-          "max": 10.0,
-          "value": 7.0,
-          "disabled": false
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Volume (0-100)"
+          },
+          {
+            "type": "Slider",
+            "min": 0.0,
+            "max": 100.0,
+            "value": 75.0,
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Temperature (0-10)"
+          },
+          {
+            "type": "Slider",
+            "min": 0.0,
+            "max": 10.0,
+            "value": 7.0,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -120,7 +129,7 @@ with Column(gap=4):
 
 Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
 
-<ComponentPreview auto json={`{"_tree":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"_state":{"volume":75}}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"state":{"volume":75}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -144,7 +153,8 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "$protocol": "prefab",
+  "view": {
     "cssClass": "gap-4",
     "type": "Column",
     "children": [
@@ -184,7 +194,7 @@ with Column(gap=4):
       }
     ]
   },
-  "_state": {
+  "state": {
     "volume": 75
   }
 }
@@ -196,7 +206,7 @@ The slider, label, and progress bar all stay in sync — drag the slider and the
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -205,11 +215,14 @@ Slider(min=0, max=100, value=30, disabled=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Slider",
-  "min": 0.0,
-  "max": 100.0,
-  "value": 30.0,
-  "disabled": true
+  "$protocol": "prefab",
+  "view": {
+    "type": "Slider",
+    "min": 0.0,
+    "max": 100.0,
+    "value": 30.0,
+    "disabled": true
+  }
 }
 ```
 </CodeGroup>

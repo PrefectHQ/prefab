@@ -112,16 +112,20 @@ def _execute_and_serialize(
 
     tree = roots[0].to_json()
 
-    if initial_state or sample_data:
-        wrapper: dict[str, Any] = {"_tree": tree}
-        if initial_state:
-            wrapper["_state"] = initial_state
-        wrapper.update(sample_data)
-        compact = json.dumps(wrapper, separators=(",", ":"))
-        pretty = json.dumps(wrapper, indent=2)
-    else:
-        compact = json.dumps(tree, separators=(",", ":"))
-        pretty = json.dumps(tree, indent=2)
+    # Always wrap in the protocol envelope.  The compact form (for the
+    # preview attribute) carries sample_data as extra top-level keys so
+    # the renderer can seed them into state.  The pretty form (Protocol
+    # tab) shows the clean envelope: $protocol, view, and optionally state.
+    envelope: dict[str, Any] = {"$protocol": "prefab", "view": tree}
+    if initial_state:
+        envelope["state"] = initial_state
+
+    pretty = json.dumps(envelope, indent=2)
+
+    # Compact form includes sample_data as extra keys for the renderer
+    compact_envelope = dict(envelope)
+    compact_envelope.update(sample_data)
+    compact = json.dumps(compact_envelope, separators=(",", ":"))
 
     return compact, pretty
 

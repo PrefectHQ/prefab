@@ -24,7 +24,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   const hash = window.location.hash;
   const isDocEmbed = hash.startsWith("#docpreview:");
 
-  // Parse hash once — supports bare tree or wrapped {_tree, _state, ...data} format
+  // Parse hash once — supports envelope {$protocol, view, state} or bare tree
   const { hashTree, hashState, hashData, hashError } = useMemo(() => {
     const jsonStart = hash.indexOf(":");
     if (jsonStart === -1)
@@ -32,15 +32,22 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
     try {
       const raw = decodeURIComponent(hash.slice(jsonStart + 1));
       const obj = JSON.parse(raw);
-      if (obj._tree) {
-        // Extract user data: everything except _tree and _state
+      const view = obj.view ?? obj._tree;
+      if (view) {
+        const reserved = new Set([
+          "$protocol",
+          "view",
+          "state",
+          "_tree",
+          "_state",
+        ]);
         const userData: Record<string, unknown> = {};
         for (const [k, v] of Object.entries(obj)) {
-          if (k !== "_tree" && k !== "_state") userData[k] = v;
+          if (!reserved.has(k)) userData[k] = v;
         }
         return {
-          hashTree: obj._tree as ComponentNode,
-          hashState: (obj._state ?? {}) as Record<string, unknown>,
+          hashTree: view as ComponentNode,
+          hashState: (obj.state ?? obj._state ?? {}) as Record<string, unknown>,
           hashData: userData,
           hashError: null,
         };

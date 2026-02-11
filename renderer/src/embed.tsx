@@ -144,14 +144,18 @@ export function mountPreview(
   }`;
   const portalContainer = getOrCreatePortalHost(portalId, isDark);
 
-  // Parse JSON
+  // Parse JSON — envelope uses $protocol/view/state keys
   const parsed = JSON.parse(json);
-  const tree: ComponentNode = parsed._tree ?? parsed;
+  const tree: ComponentNode = parsed.view ?? parsed._tree ?? parsed;
+  const reserved = new Set(["$protocol", "view", "state", "_tree", "_state"]);
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
-    if (k !== "_tree" && k !== "_state") userData[k] = v;
+    if (!reserved.has(k)) userData[k] = v;
   }
-  const initialState = { ...userData, ...(parsed._state ?? {}) };
+  const initialState = {
+    ...userData,
+    ...(parsed.state ?? parsed._state ?? {}),
+  };
 
   // Mount React
   let root: Root | null = createRoot(mount);

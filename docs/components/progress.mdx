@@ -10,7 +10,7 @@ Progress bars show how far along a process is. They fill from left to right as `
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Progress","value":60.0,"max":100}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"Progress","value":60.0,"max":100}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Progress
@@ -19,9 +19,12 @@ Progress(value=60)
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Progress",
-  "value": 60.0,
-  "max": 100
+  "$protocol": "prefab",
+  "view": {
+    "type": "Progress",
+    "value": 60.0,
+    "max": 100
+  }
 }
 ```
 </CodeGroup>
@@ -31,7 +34,7 @@ Progress(value=60)
 
 By default `max` is 100, but you can set it to any positive number. The renderer normalizes the value to a percentage automatically.
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -46,40 +49,43 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "3 of 5 steps"
-        },
-        {
-          "type": "Progress",
-          "value": 3.0,
-          "max": 5.0
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "75%"
-        },
-        {
-          "type": "Progress",
-          "value": 75.0,
-          "max": 100
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "3 of 5 steps"
+          },
+          {
+            "type": "Progress",
+            "value": 3.0,
+            "max": 5.0
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "75%"
+          },
+          {
+            "type": "Progress",
+            "value": 75.0,
+            "max": 100
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -89,7 +95,7 @@ with Column(gap=4):
 
 Use `indicator_class` to change the progress bar color:
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -107,58 +113,61 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Storage Used"
-        },
-        {
-          "type": "Progress",
-          "value": 85.0,
-          "max": 100,
-          "indicatorClass": "bg-red-500"
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Upload Progress"
-        },
-        {
-          "type": "Progress",
-          "value": 45.0,
-          "max": 100,
-          "indicatorClass": "bg-blue-500"
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Tasks Complete"
-        },
-        {
-          "type": "Progress",
-          "value": 100.0,
-          "max": 100,
-          "indicatorClass": "bg-green-500"
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Storage Used"
+          },
+          {
+            "type": "Progress",
+            "value": 85.0,
+            "max": 100,
+            "indicatorClass": "bg-red-500"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Upload Progress"
+          },
+          {
+            "type": "Progress",
+            "value": 45.0,
+            "max": 100,
+            "indicatorClass": "bg-blue-500"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Tasks Complete"
+          },
+          {
+            "type": "Progress",
+            "value": 100.0,
+            "max": 100,
+            "indicatorClass": "bg-green-500"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -168,7 +177,7 @@ with Column(gap=4):
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview auto json={`{"_tree":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"_state":{"progress":0.65}}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"type":"Text","content":"Upload progress"},{"type":"Text","content":"{{ progress | percent }}","bold":true}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"state":{"progress":0.65}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -190,7 +199,8 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "_tree": {
+  "$protocol": "prefab",
+  "view": {
     "cssClass": "gap-3",
     "type": "Column",
     "children": [
@@ -225,7 +235,7 @@ with Column(gap=3):
       }
     ]
   },
-  "_state": {
+  "state": {
     "progress": 0.65
   }
 }

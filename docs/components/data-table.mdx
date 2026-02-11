@@ -10,7 +10,7 @@ DataTable takes flat `columns` and `rows` and renders a full-featured table with
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -31,44 +31,47 @@ DataTable(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "DataTable",
-  "columns": [
-    {
-      "key": "name",
-      "header": "Name",
-      "sortable": true
-    },
-    {
-      "key": "email",
-      "header": "Email",
-      "sortable": false
-    },
-    {
-      "key": "role",
-      "header": "Role",
-      "sortable": true
-    }
-  ],
-  "rows": [
-    {
-      "name": "Alice Johnson",
-      "email": "alice@example.com",
-      "role": "Admin"
-    },
-    {
-      "name": "Bob Smith",
-      "email": "bob@example.com",
-      "role": "Editor"
-    },
-    {
-      "name": "Carol White",
-      "email": "carol@example.com",
-      "role": "Viewer"
-    }
-  ],
-  "searchable": true,
-  "paginated": false,
-  "pageSize": 10
+  "$protocol": "prefab",
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {
+        "key": "name",
+        "header": "Name",
+        "sortable": true
+      },
+      {
+        "key": "email",
+        "header": "Email",
+        "sortable": false
+      },
+      {
+        "key": "role",
+        "header": "Role",
+        "sortable": true
+      }
+    ],
+    "rows": [
+      {
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "role": "Admin"
+      },
+      {
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "role": "Editor"
+      },
+      {
+        "name": "Carol White",
+        "email": "carol@example.com",
+        "role": "Viewer"
+      }
+    ],
+    "searchable": true,
+    "paginated": false,
+    "pageSize": 10
+  }
 }
 ```
 </CodeGroup>
@@ -78,7 +81,7 @@ DataTable(
 
 Enable pagination to handle large datasets. The table shows page controls and displays `page_size` rows at a time.
 
-<ComponentPreview auto json={`{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3,"caption":"Sprint tasks"}`}>
+<ComponentPreview auto json={`{"$protocol":"prefab","view":{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3,"caption":"Sprint tasks"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -103,55 +106,58 @@ DataTable(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "DataTable",
-  "columns": [
-    {
-      "key": "id",
-      "header": "ID",
-      "sortable": false
-    },
-    {
-      "key": "task",
-      "header": "Task",
-      "sortable": true
-    },
-    {
-      "key": "status",
-      "header": "Status",
-      "sortable": false
-    }
-  ],
-  "rows": [
-    {
-      "id": "T-001",
-      "task": "Design system",
-      "status": "Complete"
-    },
-    {
-      "id": "T-002",
-      "task": "API integration",
-      "status": "In Progress"
-    },
-    {
-      "id": "T-003",
-      "task": "Testing",
-      "status": "Pending"
-    },
-    {
-      "id": "T-004",
-      "task": "Documentation",
-      "status": "In Progress"
-    },
-    {
-      "id": "T-005",
-      "task": "Deployment",
-      "status": "Pending"
-    }
-  ],
-  "searchable": false,
-  "paginated": true,
-  "pageSize": 3,
-  "caption": "Sprint tasks"
+  "$protocol": "prefab",
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {
+        "key": "id",
+        "header": "ID",
+        "sortable": false
+      },
+      {
+        "key": "task",
+        "header": "Task",
+        "sortable": true
+      },
+      {
+        "key": "status",
+        "header": "Status",
+        "sortable": false
+      }
+    ],
+    "rows": [
+      {
+        "id": "T-001",
+        "task": "Design system",
+        "status": "Complete"
+      },
+      {
+        "id": "T-002",
+        "task": "API integration",
+        "status": "In Progress"
+      },
+      {
+        "id": "T-003",
+        "task": "Testing",
+        "status": "Pending"
+      },
+      {
+        "id": "T-004",
+        "task": "Documentation",
+        "status": "In Progress"
+      },
+      {
+        "id": "T-005",
+        "task": "Deployment",
+        "status": "Pending"
+      }
+    ],
+    "searchable": false,
+    "paginated": true,
+    "pageSize": 3,
+    "caption": "Sprint tasks"
+  }
 }
 ```
 </CodeGroup>

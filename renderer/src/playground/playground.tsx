@@ -239,10 +239,24 @@ export function Playground() {
     debounceRef.current = setTimeout(() => {
       try {
         const parsed = JSON.parse(jsonCode);
-        if (parsed._tree) {
-          const { _tree, _state, ...data } = parsed;
-          setTree(_tree as ComponentNode);
-          stateRef.current.reset({ ...data, ...(_state ?? {}) });
+        const view = parsed.view ?? parsed._tree;
+        if (view) {
+          const reserved = new Set([
+            "$protocol",
+            "view",
+            "state",
+            "_tree",
+            "_state",
+          ]);
+          const data: Record<string, unknown> = {};
+          for (const [k, v] of Object.entries(parsed)) {
+            if (!reserved.has(k)) data[k] = v;
+          }
+          setTree(view as ComponentNode);
+          stateRef.current.reset({
+            ...data,
+            ...(parsed.state ?? parsed._state ?? {}),
+          });
         } else {
           setTree(parsed as ComponentNode);
         }

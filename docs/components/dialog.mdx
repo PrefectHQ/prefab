@@ -10,7 +10,7 @@ Dialogs display content in a modal overlay that focuses user attention. Like Pop
 
 ## Basic Usage
 
-<ComponentPreview auto height="400px" json={`{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Arthur Dent","name":"crewName","disabled":false,"required":false},{"type":"Label","text":"Designation"},{"type":"Input","inputType":"text","placeholder":"Sandwich Maker","name":"crewDesignation","disabled":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}`}>
+<ComponentPreview auto height="400px" json={`{"$protocol":"prefab","view":{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Arthur Dent","name":"crewName","disabled":false,"required":false},{"type":"Label","text":"Designation"},{"type":"Input","inputType":"text","placeholder":"Sandwich Maker","name":"crewDesignation","disabled":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -37,61 +37,64 @@ with Dialog(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Dialog",
-  "title": "Crew Profile",
-  "description": "Update your details for the Heart of Gold crew manifest.",
-  "children": [
-    {
-      "type": "Button",
-      "label": "Edit Profile",
-      "variant": "outline",
-      "size": "default",
-      "disabled": false
-    },
-    {
-      "cssClass": "gap-3",
-      "type": "Column",
-      "children": [
-        {
-          "type": "Label",
-          "text": "Name"
-        },
-        {
-          "type": "Input",
-          "inputType": "text",
-          "placeholder": "Arthur Dent",
-          "name": "crewName",
-          "disabled": false,
-          "required": false
-        },
-        {
-          "type": "Label",
-          "text": "Designation"
-        },
-        {
-          "type": "Input",
-          "inputType": "text",
-          "placeholder": "Sandwich Maker",
-          "name": "crewDesignation",
-          "disabled": false,
-          "required": false
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2 justify-end",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Button",
-          "label": "Save changes",
-          "variant": "default",
-          "size": "default",
-          "disabled": false
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "Dialog",
+    "title": "Crew Profile",
+    "description": "Update your details for the Heart of Gold crew manifest.",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Edit Profile",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false
+      },
+      {
+        "cssClass": "gap-3",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Name"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Arthur Dent",
+            "name": "crewName",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "type": "Label",
+            "text": "Designation"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Sandwich Maker",
+            "name": "crewDesignation",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2 justify-end",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Button",
+            "label": "Save changes",
+            "variant": "default",
+            "size": "default",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -101,7 +104,7 @@ with Dialog(
 
 Dialogs work well for destructive actions that need explicit confirmation before proceeding.
 
-<ComponentPreview auto height="360px" json={`{"type":"Dialog","title":"Activate Improbability Drive","description":"This action cannot be undone.","children":[{"type":"Button","label":"Engage Drive","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Engage","variant":"destructive","size":"default","disabled":false}]}]}`}>
+<ComponentPreview auto height="360px" json={`{"$protocol":"prefab","view":{"type":"Dialog","title":"Activate Improbability Drive","description":"This action cannot be undone.","children":[{"type":"Button","label":"Engage Drive","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Engage","variant":"destructive","size":"default","disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
@@ -121,42 +124,45 @@ with Dialog(
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Dialog",
-  "title": "Activate Improbability Drive",
-  "description": "This action cannot be undone.",
-  "children": [
-    {
-      "type": "Button",
-      "label": "Engage Drive",
-      "variant": "destructive",
-      "size": "default",
-      "disabled": false
-    },
-    {
-      "type": "Text",
-      "content": "Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."
-    },
-    {
-      "cssClass": "gap-2 justify-end",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Button",
-          "label": "Cancel",
-          "variant": "outline",
-          "size": "default",
-          "disabled": false
-        },
-        {
-          "type": "Button",
-          "label": "Engage",
-          "variant": "destructive",
-          "size": "default",
-          "disabled": false
-        }
-      ]
-    }
-  ]
+  "$protocol": "prefab",
+  "view": {
+    "type": "Dialog",
+    "title": "Activate Improbability Drive",
+    "description": "This action cannot be undone.",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Engage Drive",
+        "variant": "destructive",
+        "size": "default",
+        "disabled": false
+      },
+      {
+        "type": "Text",
+        "content": "Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."
+      },
+      {
+        "cssClass": "gap-2 justify-end",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Button",
+            "label": "Cancel",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false
+          },
+          {
+            "type": "Button",
+            "label": "Engage",
+            "variant": "destructive",
+            "size": "default",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
