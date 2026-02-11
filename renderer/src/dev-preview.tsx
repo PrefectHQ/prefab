@@ -32,22 +32,15 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
     try {
       const raw = decodeURIComponent(hash.slice(jsonStart + 1));
       const obj = JSON.parse(raw);
-      const view = obj.view ?? obj._tree;
-      if (view) {
-        const reserved = new Set([
-          "$protocol",
-          "view",
-          "state",
-          "_tree",
-          "_state",
-        ]);
+      if (obj.view) {
+        const reserved = new Set(["view", "state"]);
         const userData: Record<string, unknown> = {};
         for (const [k, v] of Object.entries(obj)) {
           if (!reserved.has(k)) userData[k] = v;
         }
         return {
-          hashTree: view as ComponentNode,
-          hashState: (obj.state ?? obj._state ?? {}) as Record<string, unknown>,
+          hashTree: obj.view as ComponentNode,
+          hashState: (obj.state ?? {}) as Record<string, unknown>,
           hashData: userData,
           hashError: null,
         };

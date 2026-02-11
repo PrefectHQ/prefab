@@ -115,8 +115,8 @@ def _execute_and_serialize(
     # Always wrap in the protocol envelope.  The compact form (for the
     # preview attribute) carries sample_data as extra top-level keys so
     # the renderer can seed them into state.  The pretty form (Protocol
-    # tab) shows the clean envelope: $protocol, view, and optionally state.
-    envelope: dict[str, Any] = {"$protocol": "prefab", "view": tree}
+    # tab) shows the clean envelope: view, and optionally state.
+    envelope: dict[str, Any] = {"view": tree}
     if initial_state:
         envelope["state"] = initial_state
 
