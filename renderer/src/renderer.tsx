@@ -312,7 +312,8 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const mapped = mapProps(type, bound);
 
   // Extract text content (set by mapProps for Button, Text, etc.)
-  const textContent = mapped._textContent as string | undefined;
+  // Expressions can resolve to numbers/booleans via type preservation.
+  const textContent = mapped._textContent as string | number | undefined;
 
   // Filter internal props before passing to component
   const finalProps = filterInternalProps(mapped);
@@ -498,7 +499,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // without a children slot — void HTML elements (input, img, etc.)
   // throw if given any children at all.
   const hasContent =
-    textContent || (renderedChildren && renderedChildren.length > 0);
+    textContent != null || (renderedChildren && renderedChildren.length > 0);
   if (!hasContent) {
     return <Component {...finalProps} />;
   }

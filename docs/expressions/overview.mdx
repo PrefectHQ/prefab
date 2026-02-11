@@ -1,0 +1,147 @@
+---
+title: Overview
+description: How Prefab enables client-side interactivity without a server round-trip.
+icon: bolt
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Prefab UIs aren't static. When a user clicks a button, drags a slider, or types into an input, the interface can respond instantly — updating text, toggling visibility, reformatting values, computing totals — all without waiting for a server call.
+
+This client-side interactivity is powered by a small expression language that runs inside the renderer. Expressions evaluate against the current [state](/components/state), and the UI re-renders whenever that state changes. Combined with [actions](/actions) that modify state in response to user interaction, this covers the common cases for reactive UIs: counters, toggles, conditional displays, formatted output, and form-driven content.
+
+Try clicking the buttons in this counter — it works entirely in the browser, with no server involved:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"type":"Text","content":"{{ count }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"count":0}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Row, Text
+from prefab_ui import SetState
+
+set_data(count=0)
+
+with Row(gap=3, align="center"):
+    Button(
+        "-",
+        variant="outline",
+        on_click=SetState("count", "{{ count - 1 }}"),
+    )
+    Text("{{ count }}")
+    Button(
+        "+",
+        variant="outline",
+        on_click=SetState("count", "{{ count + 1 }}"),
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "-",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "setState",
+          "key": "count",
+          "value": "{{ count - 1 }}"
+        }
+      },
+      {
+        "type": "Text",
+        "content": "{{ count }}"
+      },
+      {
+        "type": "Button",
+        "label": "+",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "setState",
+          "key": "count",
+          "value": "{{ count + 1 }}"
+        }
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Clicking "+" triggers `SetState("count", "{{ count + 1 }}")`. The expression `count + 1` evaluates against the current state, updates the `count` key, and every `{{ count }}` reference in the UI re-renders with the new value.
+
+## What Expressions Can Do
+
+Expressions handle display-time computation — formatting values, computing derived text, and making rendering decisions:
+
+- **Arithmetic** — `{{ price * quantity }}`, `{{ count + 1 }}`
+- **Comparisons** — `{{ score > 90 }}`, `{{ status == 'active' }}`
+- **Conditional text** — `{{ active ? 'Online' : 'Offline' }}`
+- **String building** — `{{ first + ' ' + last }}`
+- **Formatting** — `{{ price | currency }}`, `{{ name | upper }}`
+- **Conditional rendering** — `visible_when="inventory > 0"`
+
+## What They Can't
+
+Expressions are deliberately restricted to evaluating scalar values — numbers, strings, booleans. They cannot construct objects, call functions, make network requests, or produce side effects.
+
+Prefab splits interactive behavior into three layers, each with a clear scope:
+
+| Layer | Scope | Examples |
+|------|---------|----------|
+| **Expressions** | Compute display values | Arithmetic, formatting, conditional text, comparisons |
+| **[Actions](/actions)** | Mutate client state | SetState, ToggleState, ShowToast |
+| **[ToolCall](/actions/call-tool)** | Run server logic | Data fetching, business logic, complex transformations |
+
+If you find yourself wanting to write application logic inside a `{{ }}` template, that computation belongs in a ToolCall instead.
+
+## Where Expressions Appear
+
+The same expression language is used in three places, each with a slightly different purpose:
+
+**[Templates](/expressions/templates)** embed expressions inside string props using `{{ }}` delimiters. The renderer evaluates the expression and substitutes the result. Every string prop on every component supports this — labels, placeholders, URLs, CSS classes, action arguments, anything.
+
+```python
+Text("{{ price * quantity | currency }}")
+Badge("{{ status | upper }}", variant="secondary")
+```
+
+**`visible_when`** controls whether a component renders at all. The expression evaluates to a truthy or falsy value, and the component only appears when the result is truthy.
+
+```python
+Alert("Low stock", visible_when="inventory > 0 && inventory < 10")
+```
+
+**ForEach `filter`** controls which items in a collection are shown. The expression evaluates once per item, with access to both the item's fields and the surrounding state.
+
+```python
+with ForEach("todos", filter="!done || !hideDone"):
+    Text("{{ text }}")
+```
+
+## Grammar
+
+The complete expression grammar, from lowest to highest precedence:
+
+```
+expr       -> pipe
+pipe       -> ternary ( '|' ( ident ( ':' arg )? | literal ) )*
+ternary    -> or ( '?' expr ':' expr )?
+or         -> and ( '||' and )*
+and        -> not ( '&&' not )*
+not        -> '!' not | comp
+comp       -> add ( ( '==' | '!=' | '>' | '<' | '>=' | '<=' ) add )?
+add        -> mul ( ( '+' | '-' ) mul )*
+mul        -> unary ( ( '*' | '/' ) unary )*
+unary      -> ( '-' | '+' ) unary | primary
+primary    -> '(' expr ')' | number | string | 'true' | 'false' | 'null' | ident
+ident      -> name ( '.' name )*
+```
+
+Strings use single quotes inside expressions: `{{ status == 'active' }}`. Numbers can be integers or floats. Identifiers resolve as dot-paths against the current context.

@@ -1,0 +1,307 @@
+---
+title: Operators
+description: Arithmetic, comparison, logical, and conditional operators.
+icon: calculator
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Expressions support the standard set of operators for arithmetic, comparison, boolean logic, and conditional selection. They follow conventional precedence rules — multiplication before addition, comparison before logic — and parentheses override everything.
+
+## Arithmetic
+
+The four basic operations work on numeric values:
+
+```
+{{ price * quantity }}
+{{ total - discount }}
+{{ count + 1 }}
+{{ amount / 2 }}
+```
+
+Arithmetic combined with [SetState](/actions/set-state) is how you build interactive counters and quantity selectors without a server call:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"Quantity:"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"type":"Text","content":"{{ quantity }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"type":"Text","content":"Total: {{ price * quantity | currency }}"}]},"price":42,"quantity":1}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Button,
+    Column,
+    Row,
+    Slider,
+    Text,
+)
+from prefab_ui import SetState
+
+set_data(price=42, quantity=1)
+
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Text("Quantity:")
+        Button(
+            "-",
+            variant="outline",
+            on_click=SetState("quantity", "{{ quantity - 1 }}"),
+        )
+        Text("{{ quantity }}")
+        Button(
+            "+",
+            variant="outline",
+            on_click=SetState("quantity", "{{ quantity + 1 }}"),
+        )
+    Text("Total: {{ price * quantity | currency }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Text",
+            "content": "Quantity:"
+          },
+          {
+            "type": "Button",
+            "label": "-",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "setState",
+              "key": "quantity",
+              "value": "{{ quantity - 1 }}"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "{{ quantity }}"
+          },
+          {
+            "type": "Button",
+            "label": "+",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "setState",
+              "key": "quantity",
+              "value": "{{ quantity + 1 }}"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Text",
+        "content": "Total: {{ price * quantity | currency }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Unary Operators
+
+Prefix `-` negates a value, prefix `+` coerces to number:
+
+```
+{{ -score }}
+{{ -(a + b) }}
+```
+
+## String Concatenation
+
+The `+` operator does double duty: if either side is a string, it concatenates. Otherwise it adds numerically.
+
+```
+{{ 2 + 3 }}                   → 5
+{{ 'hello' + ' ' + 'world' }} → "hello world"
+{{ 'count: ' + 42 }}          → "count: 42"
+```
+
+This is how you build composed strings from multiple state values:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false}]},{"type":"Text","content":"Hello, {{ first + ' ' + last }}!"}]},"first":"Arthur","last":"Dent"}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Row, Text
+
+set_data(first="Arthur", last="Dent")
+
+with Column(gap=3):
+    with Row(gap=2):
+        Input(name="first", placeholder="First name")
+        Input(name="last", placeholder="Last name")
+    Text("Hello, {{ first + ' ' + last }}!")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "First name",
+            "name": "first",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Last name",
+            "name": "last",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": "Text",
+        "content": "Hello, {{ first + ' ' + last }}!"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Comparison
+
+Six comparison operators, all returning booleans:
+
+| Operator | Meaning |
+|----------|---------|
+| `==` | Equal (loose) |
+| `!=` | Not equal |
+| `>` | Greater than |
+| `>=` | Greater than or equal |
+| `<` | Less than |
+| `<=` | Less than or equal |
+
+```
+{{ count > 0 }}
+{{ status == 'active' }}
+{{ items.length != 1 }}
+{{ value == null }}
+```
+
+Comparisons are commonly used in `visible_when` conditions to show or hide elements based on state:
+
+```python
+Alert("Out of stock", visible_when="inventory == 0")
+Alert("Low stock", visible_when="inventory > 0 && inventory < 10")
+```
+
+## Logical
+
+Boolean operators for combining conditions:
+
+| Operator | Meaning |
+|----------|---------|
+| `&&` | Logical AND |
+| `\|\|` | Logical OR |
+| `!` | Logical NOT |
+
+These use short-circuit evaluation, just like JavaScript: `&&` returns the first falsy value (or the last value if all truthy), `||` returns the first truthy value (or the last value if all falsy). This makes `||` useful as a default mechanism:
+
+```
+{{ name || 'Anonymous' }}
+```
+
+If `name` is undefined, empty, or any other falsy value, the result is `'Anonymous'`.
+
+## Ternary
+
+The ternary operator `condition ? ifTrue : ifFalse` selects between two values. It's how you produce conditional text without `visible_when`:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false,"onChange":{"action":"toggleState","key":"active"}},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"active":true}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Row, Switch, Text
+from prefab_ui import ToggleState
+
+set_data(active=True)
+
+with Column(gap=2):
+    with Row(gap=3, align="center"):
+        Switch(name="active", on_change=ToggleState("active"))
+        Text("{{ active ? 'Online' : 'Offline' }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-3 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "name": "active",
+            "disabled": false,
+            "required": false,
+            "onChange": {
+              "action": "toggleState",
+              "key": "active"
+            }
+          },
+          {
+            "type": "Text",
+            "content": "{{ active ? 'Online' : 'Offline' }}"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Ternaries nest for multi-way selection:
+
+```
+{{ score > 90 ? 'A' : score > 80 ? 'B' : score > 70 ? 'C' : 'F' }}
+```
+
+A common pattern is pluralization:
+
+```
+{{ count }} item{{ count != 1 ? 's' : '' }}
+```
+
+## Precedence
+
+From lowest (loosest binding) to highest (tightest binding):
+
+| Precedence | Operators |
+|-----------|-----------|
+| Pipe | `\|` |
+| Ternary | `? :` |
+| Logical OR | `\|\|` |
+| Logical AND | `&&` |
+| Logical NOT | `!` |
+| Comparison | `==` `!=` `>` `<` `>=` `<=` |
+| Addition | `+` `-` |
+| Multiplication | `*` `/` |
+| Unary | `-` `+` |
+
+This means `price * quantity | currency` evaluates as `(price * quantity) | currency` — the arithmetic happens first, then the pipe formats the result. Use parentheses to override: `(a + b) * c`.

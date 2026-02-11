@@ -215,4 +215,72 @@ describe("evaluateCondition", () => {
       true,
     );
   });
+
+  // ── Arithmetic in conditions ────────────────────────────────────
+
+  it("arithmetic comparison: count + 1 > 5", () => {
+    expect(evaluateCondition("count + 1 > 5", { count: 5 })).toBe(true);
+    expect(evaluateCondition("count + 1 > 5", { count: 4 })).toBe(false);
+  });
+
+  it("subtraction in condition", () => {
+    expect(
+      evaluateCondition("total - discount > 0", { total: 100, discount: 30 }),
+    ).toBe(true);
+  });
+
+  it("multiplication in condition", () => {
+    expect(
+      evaluateCondition("price * quantity > 100", { price: 25, quantity: 5 }),
+    ).toBe(true);
+  });
+
+  // ── Ternary in conditions ──────────────────────────────────────
+
+  it("ternary evaluates to truthy branch", () => {
+    expect(evaluateCondition("active ? true : false", { active: true })).toBe(
+      true,
+    );
+  });
+
+  it("ternary evaluates to falsy branch", () => {
+    expect(evaluateCondition("active ? true : false", { active: false })).toBe(
+      false,
+    );
+  });
+
+  // ── String concat in conditions ────────────────────────────────
+
+  it("concatenated string comparison", () => {
+    expect(
+      evaluateCondition("first + ' ' + last != ''", {
+        first: "Arthur",
+        last: "Dent",
+      }),
+    ).toBe(true);
+  });
+
+  // ── Unary minus in conditions ──────────────────────────────────
+
+  it("unary minus comparison", () => {
+    expect(evaluateCondition("-score < 0", { score: 5 })).toBe(true);
+    expect(evaluateCondition("-score < 0", { score: -5 })).toBe(false);
+  });
+
+  // ── Pipe in conditions ─────────────────────────────────────────
+
+  it("pipe result used in condition (truthy)", () => {
+    expect(evaluateCondition("items | length", { items: [1, 2, 3] })).toBe(
+      true,
+    );
+  });
+
+  it("pipe result used in condition (falsy)", () => {
+    expect(evaluateCondition("items | length", { items: [] })).toBe(false);
+  });
+
+  it("default value shorthand in condition", () => {
+    expect(evaluateCondition("name | 'fallback'", {})).toBe(true);
+    expect(evaluateCondition("name | ''", {})).toBe(false);
+  });
 });

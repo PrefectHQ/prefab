@@ -1,0 +1,240 @@
+---
+title: Templates
+description: Embed dynamic values in component props with {{ }} expressions.
+icon: brackets-curly
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Templates let you embed live values in any string prop on any component. Wrap an expression in `{{ }}` and the renderer evaluates it against the current state and substitutes the result.
+
+The key idea: **state keys become template variables.** When you set `name="Arthur Dent"` in your state (via `set_data`, a `State` component, or a form input with a `name` attribute), the key `name` is available inside any `{{ }}` expression in that component's subtree. Write `{{ name }}` and it resolves to `"Arthur Dent"`.
+
+## Basic Usage
+
+In this example, the `State` component defines three keys — `name`, `role`, and `answer`. Each `{{ }}` template resolves its corresponding key from that state:
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"name":"Arthur Dent","role":"Reluctant Adventurer","answer":42},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-1","type":"Column","children":[{"type":"Text","content":"Role: {{ role }}"},{"type":"Text","content":"The Answer to Everything: {{ answer }}"}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Column,
+    Text,
+    State,
+)
+
+with State(name="Arthur Dent", role="Reluctant Adventurer", answer=42):
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name }}")
+        with CardContent():
+            with Column(gap=1):
+                Text("Role: {{ role }}")
+                Text("The Answer to Everything: {{ answer }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "name": "Arthur Dent",
+      "role": "Reluctant Adventurer",
+      "answer": 42
+    },
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "{{ name }}"
+              }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-1",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "Text",
+                    "content": "Role: {{ role }}"
+                  },
+                  {
+                    "type": "Text",
+                    "content": "The Answer to Everything: {{ answer }}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Templates aren't limited to simple variable lookups. Any expression the language supports — arithmetic, comparisons, ternaries, string concatenation, [pipe transforms](/expressions/pipes) — works inside `{{ }}`:
+
+```python
+Text("{{ price * quantity | currency }}")
+Text("{{ items.length }} item{{ items.length != 1 ? 's' : '' }} in your cart")
+Text("{{ first + ' ' + last | upper }}")
+```
+
+## Type Preservation
+
+When a template is the *entire* string value, the resolved type is preserved. This matters for props that expect numbers or booleans:
+
+```python
+from prefab_ui.components import Progress
+
+# "{{ volume }}" resolves to the number 75, not the string "75"
+Progress(value="{{ volume }}", max=100)
+```
+
+Mixed templates — where the `{{ }}` is surrounded by other text — always produce strings. `"Volume: {{ volume }}%"` produces `"Volume: 75%"`.
+
+This distinction is important when passing values to props like `value`, `min`, `max`, or `disabled` that expect specific types. Use a sole template to preserve the type.
+
+## Where Templates Work
+
+Templates aren't restricted to `content` or `label` — they work in any string prop anywhere in the component tree. Placeholders, CSS classes, URLs, titles, descriptions, action arguments — if it's a string, you can put `{{ }}` in it.
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","disabled":false,"required":false}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Column,
+    Input,
+    State,
+    Text,
+)
+
+with State(
+    name="Zaphod Beeblebrox",
+    role="President of the Galaxy",
+):
+    with Column(gap=2):
+        Text("{{ name }}")
+        Badge("{{ role }}", variant="secondary")
+        Input(placeholder="Message {{ name }}...")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "name": "Zaphod Beeblebrox",
+      "role": "President of the Galaxy"
+    },
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Text",
+            "content": "{{ name }}"
+          },
+          {
+            "type": "Badge",
+            "label": "{{ role }}",
+            "variant": "secondary"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Message {{ name }}...",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Dot Paths
+
+Use dot notation to reach into nested objects:
+
+```python
+Text("{{ user.address.city }}")
+Text("{{ order.items.length }} items")
+```
+
+`.length` works on both arrays and strings, returning the count of elements or characters.
+
+## Undefined Values
+
+When a sole template references an undefined key, the original template string is returned unchanged — `{{ missing }}` stays as the literal text `{{ missing }}`. This prevents broken-looking output when data hasn't loaded yet.
+
+In mixed templates, undefined values resolve to empty strings: `"Hi {{ missing }}!"` produces `"Hi !"`.
+
+## Live Binding
+
+State keys and template variables are the same thing, which means form inputs can drive templates directly. When you give an `Input` a `name` attribute, the renderer writes the input's current value to that key in state on every keystroke. Any `{{ }}` template referencing that key re-renders instantly.
+
+Try typing in these inputs — the text below updates as you type:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false},{"type":"Text","content":"{{ first + ' ' + last }}"}]},"first":"Arthur","last":"Dent"}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Text
+
+set_data(first="Arthur", last="Dent")
+
+with Column(gap=3):
+    Input(name="first", placeholder="First name")
+    Input(name="last", placeholder="Last name")
+    Text("{{ first + ' ' + last }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "First name",
+        "name": "first",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Last name",
+        "name": "last",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Text",
+        "content": "{{ first + ' ' + last }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
