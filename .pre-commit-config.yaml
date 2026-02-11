@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: prettier
         types_or: [yaml, json5, javascript, tsx, ts, css]
-        exclude: ^(renderer/src/ui/|docs/embed\.js)
+        exclude: ^(renderer/src/ui/|docs/(embed|renderer)\.js)
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.0
@@ -56,6 +56,6 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        exclude: ^docs/embed\.js$
+        exclude: ^docs/(embed|renderer)\.js$
         additional_dependencies:
           - tomli

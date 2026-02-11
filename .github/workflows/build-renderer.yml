@@ -1,10 +1,10 @@
-name: Build Mintlify embed
+name: Build renderer
 
 on:
   pull_request:
     paths:
       - "renderer/**"
-      - ".github/workflows/build-embed.yml"
+      - ".github/workflows/build-renderer.yml"
 
   workflow_dispatch:
 
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: "Build docs/embed.js for Mintlify"
+    name: "Build docs/renderer.js for Mintlify"
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -31,12 +31,14 @@ jobs:
       - run: npm ci
         working-directory: renderer
 
-      - run: npm run build:embed
+      - run: npm run build:renderer
         working-directory: renderer
 
-      - name: Commit updated embed.js
+      - run: cp renderer/dist/renderer.js docs/renderer.js
+
+      - name: Commit updated renderer.js
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/embed.js
-          git diff --cached --quiet && echo "No changes" || git commit -m "Rebuild docs/embed.js" && git push
+          git add docs/renderer.js
+          git diff --cached --quiet && echo "No changes" || git commit -m "Rebuild docs/renderer.js" && git push

@@ -1,12 +1,29 @@
 {
   "name": "@prefecthq/prefab-ui",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.1",
+  "description": "Renderer and playground for Prefab, the agentic frontend framework.",
+  "homepage": "https://prefab.prefect.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrefectHQ/prefab.git",
+    "directory": "renderer"
+  },
+  "keywords": ["prefab", "prefect", "ui", "renderer", "agentic"],
+  "license": "Apache-2.0",
   "type": "module",
+  "files": [
+    "dist/renderer.js",
+    "dist/playground.html"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:embed": "vite build --config vite.config.embed.ts",
+    "build:renderer": "vite build --config vite.config.renderer.ts",
+    "build:playground": "vite build --config vite.config.playground.ts",
+    "build:publish": "npm run build:renderer && npm run build:playground",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -56,6 +73,7 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.3.0",
     "vitest": "^4.0.18"
   }
 }
