@@ -140,12 +140,12 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ $item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ $item }}","variant":"secondary"}]}]}]},"state":{"languages":["Python","TypeScript","Rust"]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, ForEach, Row, State
 
-set_data(languages=["Python", "TypeScript", "Rust"])
+set_initial_state(languages=["Python", "TypeScript", "Rust"])
 
 with State(prefix="Speaks"):
     with Row(gap=2, align="center"):
@@ -180,6 +180,13 @@ with State(prefix="Speaks"):
           }
         ]
       }
+    ]
+  },
+  "state": {
+    "languages": [
+      "Python",
+      "TypeScript",
+      "Rust"
     ]
   }
 }

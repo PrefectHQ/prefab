@@ -118,13 +118,9 @@ _component_stack.set(None)
 
 # State capture
 _pg_state = {}
-_pg_data = {}
 
 def set_initial_state(**kwargs):
     _pg_state.update(kwargs)
-
-def set_data(**kwargs):
-    _pg_data.update(kwargs)
 
 # Track all created components
 _pg_created = []
@@ -162,8 +158,6 @@ _pg_tree = _pg_roots[0].to_json() if len(_pg_roots) == 1 else {
 _pg_result = {"tree": _pg_tree}
 if _pg_state:
     _pg_result["state"] = _pg_state
-if _pg_data:
-    _pg_result["data"] = _pg_data
 
 _json.dumps(_pg_result)
 `;
@@ -173,7 +167,7 @@ _json.dumps(_pg_result)
     const result = JSON.parse(resultStr);
     return {
       tree: result.tree as ComponentNode,
-      state: { ...(result.data ?? {}), ...(result.state ?? {}) },
+      state: result.state ?? {},
     };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);

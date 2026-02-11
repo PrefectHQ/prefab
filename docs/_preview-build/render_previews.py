@@ -63,13 +63,9 @@ def _execute_and_serialize(
     _component_stack.set(None)
 
     initial_state: dict[str, Any] = {}
-    sample_data: dict[str, Any] = {}
 
     def set_initial_state(**kwargs: Any) -> None:
         initial_state.update(kwargs)
-
-    def set_data(**kwargs: Any) -> None:
-        sample_data.update(kwargs)
 
     created: list[Component] = []
     original = Component.model_post_init
@@ -87,7 +83,6 @@ def _execute_and_serialize(
         # write to this invocation's dicts, not a stale copy from a
         # previous snippet in the same file.
         ns["set_initial_state"] = set_initial_state
-        ns["set_data"] = set_data
         exec(source, ns)  # noqa: S102
         # Propagate user-defined names back for subsequent snippets.
         if shared_ns is not None:
@@ -112,20 +107,12 @@ def _execute_and_serialize(
 
     tree = roots[0].to_json()
 
-    # Always wrap in the protocol envelope.  The compact form (for the
-    # preview attribute) carries sample_data as extra top-level keys so
-    # the renderer can seed them into state.  The pretty form (Protocol
-    # tab) shows the clean envelope: view, and optionally state.
     envelope: dict[str, Any] = {"view": tree}
     if initial_state:
         envelope["state"] = initial_state
 
     pretty = json.dumps(envelope, indent=2)
-
-    # Compact form includes sample_data as extra keys for the renderer
-    compact_envelope = dict(envelope)
-    compact_envelope.update(sample_data)
-    compact = json.dumps(compact_envelope, separators=(",", ":"))
+    compact = json.dumps(envelope, separators=(",", ":"))
 
     return compact, pretty
 

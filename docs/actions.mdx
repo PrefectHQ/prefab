@@ -9,11 +9,11 @@ Actions define what happens when a user interacts with a component. Click a butt
 Every component that supports interaction accepts action props like `on_click`, `on_change`, or `on_submit`. You pass an action instance (or a list of them) to wire up the behavior.
 
 ```python
-from prefab_ui.components import Button, Slider
+from prefab_ui.components import Button
 from prefab_ui import ToolCall, SetState
 
 Button("Run Analysis", on_click=ToolCall("analyze"))
-Slider(name="threshold", on_change=SetState("threshold"))
+Button("Reset", on_click=SetState("count", 0))
 ```
 
 ## Client Actions

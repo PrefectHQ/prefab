@@ -47,7 +47,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Slider, Muted, Column\nfrom prefab_ui import SetState\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100,\n           on_change=SetState(\"brightness\"))\n    Muted(\"Brightness: {{ brightness }}%\")"
+    "code": "from prefab_ui.components import Slider, Muted, Column\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(\"Brightness: {{ brightness }}%\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -57,7 +57,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Slider, Muted, Column\nfrom prefab_ui import SetState\n\nset_initial_state(volume=75)\n\nwith Column(gap=3):\n    Slider(name=\"volume\", min=0, max=100,\n           on_change=SetState(\"volume\"))\n    Muted(\"Volume: {{ volume }}\")\n    Button(\"Reset to 50\", variant=\"outline\",\n           on_click=SetState(\"volume\", 50))"
+    "code": "from prefab_ui.components import Button, Slider, Muted, Column\nfrom prefab_ui import SetState\n\nset_initial_state(volume=75)\n\nwith Column(gap=3):\n    Slider(name=\"volume\", min=0, max=100)\n    Muted(\"Volume: {{ volume }}\")\n    Button(\"Reset to 50\", variant=\"outline\",\n           on_click=SetState(\"volume\", 50))"
   },
   {
     "title": "Python icon=\"python\"",
@@ -90,9 +90,9 @@
     "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\"Set Preference\", on_click=UpdateContext(\n        structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n    ))"
   },
   {
-    "title": "from prefab_ui.components import Button, Slider",
+    "title": "from prefab_ui.components import Button",
     "category": "General",
-    "code": "from prefab_ui import ToolCall, SetState\n\nButton(\"Run Analysis\", on_click=ToolCall(\"analyze\"))\nSlider(name=\"threshold\", on_change=SetState(\"threshold\"))"
+    "code": "from prefab_ui import ToolCall, SetState\n\nButton(\"Run Analysis\", on_click=ToolCall(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
   },
   {
     "title": "from prefab_ui.components import Input, Button, Column",
@@ -397,12 +397,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Else,\n    If,\n    Row,\n    Switch,\n    Text,\n)\nfrom prefab_ui import ToggleState\n\nset_data(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\", on_change=ToggleState(\"showDetails\"))\n        Text(\"Show details\")\n    with If(\"showDetails\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Else,\n    If,\n    Row,\n    Switch,\n    Text,\n)\nset_initial_state(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\")\n        Text(\"Show details\")\n    with If(\"showDetails\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nfrom prefab_ui import SetState\n\nset_data(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\",\n                on_change=SetState(\"status\")):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"status == 'error'\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"status == 'active'\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nset_initial_state(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"status == 'error'\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"status == 'active'\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
   },
   {
     "title": "# Correct — raw expression",
@@ -497,22 +497,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Badge,\n    Column,\n    Row,\n)\n\nset_data(crew=[\n    {\"name\": \"Arthur Dent\", \"designation\": \"Sandwich Maker\", \"email\": \"arthur@heart-of-gold.ship\"},\n    {\"name\": \"Ford Prefect\", \"designation\": \"Researcher\", \"email\": \"ford@megadodo.pub\"},\n    {\"name\": \"Trillian\", \"designation\": \"Astrophysicist\", \"email\": \"trillian@heart-of-gold.ship\"},\n])\n\nwith Column(gap=2):\n    with ForEach(\"crew\"):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    CardTitle(\"{{ name }}\")\n                    Badge(\"{{ designation }}\", variant=\"secondary\")\n                CardDescription(\"{{ email }}\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Badge,\n    Column,\n    Row,\n)\n\nset_initial_state(crew=[\n    {\"name\": \"Arthur Dent\", \"designation\": \"Sandwich Maker\", \"email\": \"arthur@heart-of-gold.ship\"},\n    {\"name\": \"Ford Prefect\", \"designation\": \"Researcher\", \"email\": \"ford@megadodo.pub\"},\n    {\"name\": \"Trillian\", \"designation\": \"Astrophysicist\", \"email\": \"trillian@heart-of-gold.ship\"},\n])\n\nwith Column(gap=2):\n    with ForEach(\"crew\"):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    CardTitle(\"{{ name }}\")\n                    Badge(\"{{ designation }}\", variant=\"secondary\")\n                CardDescription(\"{{ email }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_data(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ $item }}\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_initial_state(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ $item }}\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, ForEach, Text\n\nset_data(steps=[\"Collect underpants\", \"?\", \"Profit\"])\n\nwith Column(gap=1):\n    with ForEach(\"steps\"):\n        Text(\"{{ $index + 1 }}. {{ $item }}\")"
+    "code": "from prefab_ui.components import Column, ForEach, Text\n\nset_initial_state(steps=[\"Collect underpants\", \"?\", \"Profit\"])\n\nwith Column(gap=1):\n    with ForEach(\"steps\"):\n        Text(\"{{ $index + 1 }}. {{ $item }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Column,\n)\n\nset_data(projects=[\n    {\"name\": \"Heart of Gold\", \"owner\": {\"name\": \"Zaphod Beeblebrox\"}},\n    {\"name\": \"Hitchhiker's Guide\", \"owner\": {\"name\": \"Ford Prefect\"}},\n])\n\nwith Column(gap=2):\n    with ForEach(\"projects\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"Owner: {{ owner.name }}\")"
+    "code": "from prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Column,\n)\n\nset_initial_state(projects=[\n    {\"name\": \"Heart of Gold\", \"owner\": {\"name\": \"Zaphod Beeblebrox\"}},\n    {\"name\": \"Hitchhiker's Guide\", \"owner\": {\"name\": \"Ford Prefect\"}},\n])\n\nwith Column(gap=2):\n    with ForEach(\"projects\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"Owner: {{ owner.name }}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -902,7 +902,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_data(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ $item }}\",\n                variant=\"secondary\",\n            )"
+    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_initial_state(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ $item }}\",\n                variant=\"secondary\",\n            )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1042,17 +1042,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Elif,\n    If,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n        on_change=SetState(\"inventory\"),\n    )\n    with If(\"inventory == 0\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"inventory > 0 && inventory < 10\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
+    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Elif,\n    If,\n    Slider,\n    Text,\n)\nset_initial_state(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n    )\n    with If(\"inventory == 0\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"inventory > 0 && inventory < 10\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
+    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_initial_state(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Column, Input, Row, Text\n\nset_data(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
+    "code": "from prefab_ui.components import Column, Input, Row, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
   },
   {
     "title": "with If(\"inventory == 0\"):",
@@ -1062,12 +1062,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Column, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nset_data(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\", on_change=ToggleState(\"active\"))\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
+    "code": "from prefab_ui.components import Column, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nset_initial_state(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\", on_change=ToggleState(\"active\"))\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui import SetState\n\nset_data(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
+    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
   },
   {
     "title": "Text(\"{{ price * quantity | currency }}\")",
@@ -1127,7 +1127,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Column, Input, Text\n\nset_data(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    Input(name=\"first\", placeholder=\"First name\")\n    Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"{{ first + ' ' + last }}\")"
+    "code": "from prefab_ui.components import Column, Input, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    Input(name=\"first\", placeholder=\"First name\")\n    Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"{{ first + ' ' + last }}\")"
   },
   {
     "title": "from prefab_ui import FastMCP",
@@ -1293,6 +1293,36 @@
     "title": "Define with ForEach",
     "category": "Patterns",
     "code": "from prefab_ui import Define, Use, UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+  },
+  {
+    "title": "from prefab_ui.testing import Simulator, ActionResult",
+    "category": "General",
+    "code": "async def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"search_users\":\n        query = arguments.get(\"q\", \"\")\n        users = [{\"name\": \"Alice\", \"email\": \"alice@example.com\"}]\n        results = [u for u in users if query.lower() in u[\"name\"].lower()]\n        return ActionResult(content={\n            \"state\": {\"results\": results},\n            \"view\": {\"type\": \"Text\", \"content\": \"Found users\"},\n        })\n    return ActionResult(is_error=True, error_text=f\"Unknown tool: {name}\")\n\n\nsim = Simulator(handler)"
+  },
+  {
+    "title": "# Find the first match (raises ComponentNotFoundError if missing)",
+    "category": "General",
+    "code": "button = sim.find(\"Button\", label=\"Search\")\ninput_field = sim.find(\"Input\", name=\"query\")\n\n# Find all matches\ncards = sim.find_all(\"Card\")\nbuttons = sim.find_all(\"Button\", variant=\"destructive\")"
+  },
+  {
+    "title": "# Click a button — executes its onClick action chain",
+    "category": "General",
+    "code": "await sim.click(button)\n\n# Type into an input — sets the value, syncs named state, runs onChange\nawait sim.set_value(input_field, \"alice\")\n\n# Submit a form — executes its onSubmit action chain\nform = sim.find(\"Form\")\nawait sim.submit(form)"
+  },
+  {
+    "title": "# State was seeded by invoke",
+    "category": "General",
+    "code": "assert sim.state[\"query\"] == \"\"\n\n# set_value auto-synced the named input\nawait sim.set_value(input_field, \"alice\")\nassert sim.state[\"query\"] == \"alice\"\n\n# toolCall wrote results via resultKey\nawait sim.click(button)\nassert len(sim.state[\"results\"]) == 1\nassert sim.state[\"results\"][0][\"name\"] == \"Alice\""
+  },
+  {
+    "title": "assert len(sim.toasts) == 1",
+    "category": "General",
+    "code": "assert sim.toasts[0][\"message\"] == \"Found 1 user\"\nassert sim.toasts[0][\"variant\"] == \"success\""
+  },
+  {
+    "title": "import pytest",
+    "category": "General",
+    "code": "from prefab_ui import UIResponse, Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=ToolCall(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
   },
   {
     "title": "Python icon=\"python\"",

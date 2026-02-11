@@ -139,9 +139,9 @@ def _generate_pseudocode(
     for field_name, info in props.items():
         if field_name in _SKIP_FIELDS:
             continue
-        if field_name == "type":
+        if field_name in ("type", "action"):
             value = _format_value(info, defs)
-            type_lines.append(f'  "type": {value}')
+            type_lines.append(f'  "{field_name}": {value}')
         elif field_name in _BASE_FIELDS:
             base_lines.append(format_line(field_name, info))
         else:
