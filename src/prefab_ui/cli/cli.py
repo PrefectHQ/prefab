@@ -144,17 +144,16 @@ def _should_install_node_deps(renderer_dir: Path) -> bool:
     return False
 
 
-def _should_rebuild_embed(repo_root: Path) -> bool:
-    """Check whether any renderer source file is newer than docs/embed.js."""
-    embed_js = repo_root / "docs" / "embed.js"
-    if not embed_js.exists():
+def _should_rebuild_renderer(repo_root: Path) -> bool:
+    """Check whether the renderer bundle needs rebuilding."""
+    renderer_js = repo_root / "docs" / "renderer.js"
+    if not renderer_js.exists():
         return True
-    embed_mtime = embed_js.stat().st_mtime
+    renderer_mtime = renderer_js.stat().st_mtime
     renderer_src = repo_root / "renderer" / "src"
-    # Exclude playground/ — those are generated outputs from later build steps
     playground_dir = renderer_src / "playground"
     return any(
-        f.stat().st_mtime > embed_mtime
+        f.stat().st_mtime > renderer_mtime
         for f in renderer_src.rglob("*")
         if f.is_file() and not f.is_relative_to(playground_dir)
     )
@@ -203,16 +202,18 @@ def build_docs() -> None:
             )
         )
 
-    if _should_rebuild_embed(repo_root):
+    if _should_rebuild_renderer(repo_root):
         steps.append(
             (
-                "Building embed module",
-                ["npm", "run", "--prefix", str(renderer_dir), "build:embed"],
+                "Building renderer",
+                ["npm", "run", "--prefix", str(renderer_dir), "build:renderer"],
                 None,
             )
         )
+        copy_renderer = True
     else:
-        console.print("  [dim]→[/dim] Embed module up to date, skipping")
+        console.print("  [dim]→[/dim] Renderer up to date, skipping")
+        copy_renderer = False
 
     steps += [
         (
@@ -265,6 +266,12 @@ def build_docs() -> None:
                 f"[bold red]Error:[/bold red] {description} failed (exit {result.returncode})"
             )
             raise SystemExit(result.returncode)
+
+    if copy_renderer:
+        shutil.copy2(
+            renderer_dir / "dist" / "renderer.js",
+            repo_root / "docs" / "renderer.js",
+        )
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 

@@ -5,12 +5,11 @@ import path from "path";
 import { tailwindShadowDom } from "./vite-plugins";
 
 /**
- * IIFE build for the embed module.
+ * IIFE build for the renderer bundle.
  *
- * Produces a single self-contained script (docs/embed.js) that registers
- * `window.__prefab = { mountPreview }`. Mintlify auto-injects .js files from
- * the docs directory as <script> tags on every page, so the IIFE executes
- * before any ComponentPreview mounts.
+ * Produces a single self-contained script (dist/renderer.js) that registers
+ * `window.__prefab = { mountPreview }`. Published to npm as part of
+ * @prefecthq/prefab-ui; loaded from jsdelivr CDN in the Mintlify docs.
  */
 export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom()],
@@ -30,9 +29,9 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/embed.tsx"),
       formats: ["iife"],
       name: "__prefab",
-      fileName: () => "embed.js",
+      fileName: () => "renderer.js",
     },
-    outDir: path.resolve(__dirname, "../docs"),
+    outDir: "dist",
     emptyOutDir: false,
     rollupOptions: {
       output: {

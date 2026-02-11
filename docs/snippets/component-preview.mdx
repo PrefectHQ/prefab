@@ -10,10 +10,28 @@ export const ComponentPreview = ({ json, height, children }) => {
     }
 
     var host = hostRef.current;
-    if (!host || !window.__prefab) return;
+    if (!host) return;
 
-    var dark = document.documentElement.classList.contains("dark");
-    handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
+    function mount() {
+      if (!window.__prefab || !host) return;
+      var dark = document.documentElement.classList.contains("dark");
+      handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
+    }
+
+    if (window.__prefab) {
+      mount();
+    } else {
+      if (!window.__prefabLoading) {
+        window.__prefabLoading = new Promise(function (resolve, reject) {
+          var s = document.createElement("script");
+          s.src = "https://unpkg.com/@prefecthq/prefab-ui@latest/dist/renderer.js";
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+      window.__prefabLoading.then(mount);
+    }
 
     var observer = new MutationObserver(() => {
       var dark = document.documentElement.classList.contains("dark");
