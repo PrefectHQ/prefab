@@ -121,20 +121,13 @@ The `SetState` executes first (instant), then `ToolCall` fires the server reques
 
 ## Protocol Reference
 
-<Card icon="braces" title="ToolCall Protocol">
-<ParamField body="action" type="toolCall" default="toolCall">
-</ParamField>
+```json ToolCall
+{
+  "action?": ""toolCall"",
+  "tool": "string (required)",
+  "arguments?": "object",
+  "resultKey?": "string"
+}
+```
 
-<ParamField body="tool" type="string" required>
-  Name of the server tool to call
-</ParamField>
-
-<ParamField body="arguments" type="object">
-  Arguments to pass. Supports `{{ key }}` interpolation.
-</ParamField>
-
-<ParamField body="resultKey" type="string | null">
-  State key to store the tool result under
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [ToolCall](/protocol/tool-call).

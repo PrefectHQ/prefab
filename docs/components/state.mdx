@@ -202,20 +202,13 @@ with State(prefix="Speaks"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="State Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json State
+{
+  "type": "State",
+  "children?": "[Component]",
+  "state?": "object",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="State" default="State">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="state" type="object">
-  Local state values scoped to children
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [State](/protocol/state).

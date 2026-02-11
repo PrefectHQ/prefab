@@ -209,52 +209,25 @@ DataTable(
 
 ## Protocol Reference
 
-<Card icon="braces" title="DataTable Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json DataTable
+{
+  "type": "DataTable",
+  "columns": "[DataTableColumn] (required)",
+  "rows?": "Action[] | string",
+  "searchable?": false,
+  "paginated?": false,
+  "pageSize?": 10,
+  "caption?": "string",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="DataTable" default="DataTable">
-  Component discriminator.
-</ParamField>
+```json DataTableColumn
+{
+  "key": "string (required)",
+  "header": "string (required)",
+  "sortable?": false
+}
+```
 
-<ParamField body="columns" type="array" required>
-  Column definitions
-</ParamField>
-
-<ParamField body="rows" type="Action[] | string">
-  Row data or `{{ interpolation }}` reference
-</ParamField>
-
-<ParamField body="searchable" type="boolean" default="false">
-  Show search/filter input
-</ParamField>
-
-<ParamField body="paginated" type="boolean" default="false">
-  Show pagination controls
-</ParamField>
-
-<ParamField body="pageSize" type="number" default="10">
-  Rows per page when paginated
-</ParamField>
-
-<ParamField body="caption" type="string | null">
-  Optional table caption
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="DataTableColumn Protocol">
-<ParamField body="key" type="string" required>
-  Data key to display in this column
-</ParamField>
-
-<ParamField body="header" type="string" required>
-  Column header text
-</ParamField>
-
-<ParamField body="sortable" type="boolean" default="false">
-  Enable sorting for this column
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [DataTable](/protocol/data-table), [DataTableColumn](/protocol/data-table-column).

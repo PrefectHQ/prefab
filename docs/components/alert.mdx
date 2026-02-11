@@ -416,54 +416,30 @@ with Card():
 
 ## Protocol Reference
 
-<Card icon="braces" title="Alert Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Alert
+{
+  "type": "Alert",
+  "children?": "[Component]",
+  "variant?": "default | destructive | success | warning | info",
+  "icon?": "string",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
+```json AlertTitle
+{
+  "type": "AlertTitle",
+  "content": "string (required)",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="Alert" default="Alert">
-  Component discriminator.
-</ParamField>
+```json AlertDescription
+{
+  "type": "AlertDescription",
+  "content": "string (required)",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="variant" type="string" default="default">
-  Visual variant: default or destructive. One of: `"default"`, `"destructive"`, `"success"`, `"warning"`, `"info"`
-</ParamField>
-
-<ParamField body="icon" type="string | null">
-  Lucide icon name (kebab-case, e.g. 'circle-alert')
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="AlertTitle Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="type" type="AlertTitle" default="AlertTitle">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Title text
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="AlertDescription Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="type" type="AlertDescription" default="AlertDescription">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="content" type="string" required>
-  Description text
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Alert](/protocol/alert), [AlertTitle](/protocol/alert-title), [AlertDescription](/protocol/alert-description).

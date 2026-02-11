@@ -233,49 +233,20 @@ RadialChart(
 
 ## Protocol Reference
 
-<Card icon="braces" title="RadialChart Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json RadialChart
+{
+  "type": "RadialChart",
+  "data": "Action[] | string (required)",
+  "dataKey": "string (required)",
+  "nameKey": "string (required)",
+  "height?": "300",
+  "innerRadius?": 30,
+  "startAngle?": "180",
+  "endAngle?": 0,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="RadialChart" default="RadialChart">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="data" type="Action[] | string" required>
-  Row data or `{{ interpolation }}` reference
-</ParamField>
-
-<ParamField body="dataKey" type="string" required>
-  Numeric value field
-</ParamField>
-
-<ParamField body="nameKey" type="string" required>
-  Label field
-</ParamField>
-
-<ParamField body="height" type="number" default="300">
-  Chart height in pixels
-</ParamField>
-
-<ParamField body="innerRadius" type="number" default="30">
-  Inner radius in pixels
-</ParamField>
-
-<ParamField body="startAngle" type="number" default="180">
-  Arc start angle in degrees
-</ParamField>
-
-<ParamField body="endAngle" type="number" default="0">
-  Arc end angle in degrees
-</ParamField>
-
-<ParamField body="showLegend" type="boolean" default="false">
-  Show legend
-</ParamField>
-
-<ParamField body="showTooltip" type="boolean" default="true">
-  Show tooltip on hover
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [RadialChart](/protocol/radial-chart).

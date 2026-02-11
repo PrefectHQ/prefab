@@ -360,46 +360,24 @@ with Column(gap=4):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Pages Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Pages
+{
+  "type": "Pages",
+  "children?": "[Component]",
+  "defaultValue?": "string",
+  "name?": "string",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
+```json Page
+{
+  "type": "Page",
+  "children?": "[Component]",
+  "title": "string (required)",
+  "value?": "string",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="Pages" default="Pages">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="defaultValue" type="string | null">
-  Initially active page value
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  State key for tracking the active page
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="Page Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Page" default="Page">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string" required>
-  Page identifier / label
-</ParamField>
-
-<ParamField body="value" type="string | null">
-  Unique value for this page (defaults to title)
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Pages](/protocol/pages), [Page](/protocol/page).
