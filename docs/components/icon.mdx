@@ -10,7 +10,7 @@ Icons render any [lucide icon](https://lucide.dev/icons) by name. Pass the icon 
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Icon","name":"rocket","size":"default"}`}>
+<ComponentPreview auto json={`{"view":{"type":"Icon","name":"rocket","size":"default"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Icon
@@ -19,9 +19,11 @@ Icon("rocket")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Icon",
-  "name": "rocket",
-  "size": "default"
+  "view": {
+    "type": "Icon",
+    "name": "rocket",
+    "size": "default"
+  }
 }
 ```
 </CodeGroup>
@@ -31,7 +33,7 @@ Icon("rocket")
 
 Three size variants control the icon dimensions.
 
-<ComponentPreview auto json={`{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Icon","name":"heart","size":"sm"},{"type":"Icon","name":"heart","size":"default"},{"type":"Icon","name":"heart","size":"lg"}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Icon","name":"heart","size":"sm"},{"type":"Icon","name":"heart","size":"default"},{"type":"Icon","name":"heart","size":"lg"}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Icon, Row
@@ -43,25 +45,27 @@ with Row(gap=4, css_class="items-center"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4 items-center",
-  "type": "Row",
-  "children": [
-    {
-      "type": "Icon",
-      "name": "heart",
-      "size": "sm"
-    },
-    {
-      "type": "Icon",
-      "name": "heart",
-      "size": "default"
-    },
-    {
-      "type": "Icon",
-      "name": "heart",
-      "size": "lg"
-    }
-  ]
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Icon",
+        "name": "heart",
+        "size": "sm"
+      },
+      {
+        "type": "Icon",
+        "name": "heart",
+        "size": "default"
+      },
+      {
+        "type": "Icon",
+        "name": "heart",
+        "size": "lg"
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -71,7 +75,7 @@ with Row(gap=4, css_class="items-center"):
 
 Icons work inline alongside text and other components.
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"check","size":"sm"},{"type":"Text","content":"Task completed"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"clock","size":"sm"},{"type":"Text","content":"Waiting for approval"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"circle-x","size":"sm"},{"type":"Text","content":"Build failed"}]}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"check","size":"sm"},{"type":"Text","content":"Task completed"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"clock","size":"sm"},{"type":"Text","content":"Waiting for approval"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Icon","name":"circle-x","size":"sm"},{"type":"Text","content":"Build failed"}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -94,55 +98,57 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "cssClass": "gap-2 items-center",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Icon",
-          "name": "check",
-          "size": "sm"
-        },
-        {
-          "type": "Text",
-          "content": "Task completed"
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2 items-center",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Icon",
-          "name": "clock",
-          "size": "sm"
-        },
-        {
-          "type": "Text",
-          "content": "Waiting for approval"
-        }
-      ]
-    },
-    {
-      "cssClass": "gap-2 items-center",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Icon",
-          "name": "circle-x",
-          "size": "sm"
-        },
-        {
-          "type": "Text",
-          "content": "Build failed"
-        }
-      ]
-    }
-  ]
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Icon",
+            "name": "check",
+            "size": "sm"
+          },
+          {
+            "type": "Text",
+            "content": "Task completed"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Icon",
+            "name": "clock",
+            "size": "sm"
+          },
+          {
+            "type": "Text",
+            "content": "Waiting for approval"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Icon",
+            "name": "circle-x",
+            "size": "sm"
+          },
+          {
+            "type": "Text",
+            "content": "Build failed"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>

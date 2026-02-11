@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `SendMessage` puts words in the user's mouth — when triggered, it sends a message to the conversation as if the user typed it. This is useful for creating quick-action buttons that trigger follow-up questions or commands.
 
-<ComponentPreview auto json={`{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -18,14 +18,16 @@ Button("Summarize", on_click=SendMessage("Please summarize the data above."))
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Button",
-  "label": "Summarize",
-  "variant": "default",
-  "size": "default",
-  "disabled": false,
-  "onClick": {
-    "action": "sendMessage",
-    "content": "Please summarize the data above."
+  "view": {
+    "type": "Button",
+    "label": "Summarize",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "action": "sendMessage",
+      "content": "Please summarize the data above."
+    }
   }
 }
 ```
@@ -38,7 +40,7 @@ The message appears in the chat attributed to the user, which means the AI assis
 
 Build a row of follow-up actions that save the user from typing:
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row, H3, Column
@@ -56,53 +58,55 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "content": "Quick Actions",
-      "type": "H3"
-    },
-    {
-      "cssClass": "gap-2",
-      "type": "Row",
-      "children": [
-        {
-          "type": "Button",
-          "label": "Summarize",
-          "variant": "outline",
-          "size": "default",
-          "disabled": false,
-          "onClick": {
-            "action": "sendMessage",
-            "content": "Summarize these results."
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "content": "Quick Actions",
+        "type": "H3"
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Button",
+            "label": "Summarize",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "sendMessage",
+              "content": "Summarize these results."
+            }
+          },
+          {
+            "type": "Button",
+            "label": "Explain Further",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "sendMessage",
+              "content": "Explain these results in more detail."
+            }
+          },
+          {
+            "type": "Button",
+            "label": "Compare Options",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "sendMessage",
+              "content": "Compare the top options and recommend one."
+            }
           }
-        },
-        {
-          "type": "Button",
-          "label": "Explain Further",
-          "variant": "outline",
-          "size": "default",
-          "disabled": false,
-          "onClick": {
-            "action": "sendMessage",
-            "content": "Explain these results in more detail."
-          }
-        },
-        {
-          "type": "Button",
-          "label": "Compare Options",
-          "variant": "outline",
-          "size": "default",
-          "disabled": false,
-          "onClick": {
-            "action": "sendMessage",
-            "content": "Compare the top options and recommend one."
-          }
-        }
-      ]
-    }
-  ]
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -112,7 +116,7 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -124,29 +128,31 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Input",
-      "inputType": "text",
-      "placeholder": "Ask a follow-up question...",
-      "name": "question",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Button",
-      "label": "Ask",
-      "variant": "default",
-      "size": "default",
-      "disabled": false,
-      "onClick": {
-        "action": "sendMessage",
-        "content": "{{ question }}"
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Ask a follow-up question...",
+        "name": "question",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Button",
+        "label": "Ask",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "sendMessage",
+          "content": "{{ question }}"
+        }
       }
-    }
-  ]
+    ]
+  }
 }
 ```
 </CodeGroup>

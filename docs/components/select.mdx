@@ -10,7 +10,7 @@ Select dropdowns let users pick one option from a list.
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}`}>
+<ComponentPreview auto json={`{"view":{"type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -25,34 +25,36 @@ with Select(placeholder="Choose size..."):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Select",
-  "placeholder": "Choose size...",
-  "size": "default",
-  "disabled": false,
-  "required": false,
-  "children": [
-    {
-      "type": "SelectOption",
-      "value": "sm",
-      "label": "Small",
-      "selected": false,
-      "disabled": false
-    },
-    {
-      "type": "SelectOption",
-      "value": "md",
-      "label": "Medium",
-      "selected": false,
-      "disabled": false
-    },
-    {
-      "type": "SelectOption",
-      "value": "lg",
-      "label": "Large",
-      "selected": false,
-      "disabled": false
-    }
-  ]
+  "view": {
+    "type": "Select",
+    "placeholder": "Choose size...",
+    "size": "default",
+    "disabled": false,
+    "required": false,
+    "children": [
+      {
+        "type": "SelectOption",
+        "value": "sm",
+        "label": "Small",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "md",
+        "label": "Medium",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "lg",
+        "label": "Large",
+        "selected": false,
+        "disabled": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -60,7 +62,7 @@ with Select(placeholder="Choose size..."):
 
 ## With Selected Value
 
-<ComponentPreview auto json={`{"type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}`}>
+<ComponentPreview auto json={`{"view":{"type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -75,34 +77,36 @@ with Select(placeholder="Select country"):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Select",
-  "placeholder": "Select country",
-  "size": "default",
-  "disabled": false,
-  "required": false,
-  "children": [
-    {
-      "type": "SelectOption",
-      "value": "us",
-      "label": "United States",
-      "selected": false,
-      "disabled": false
-    },
-    {
-      "type": "SelectOption",
-      "value": "uk",
-      "label": "United Kingdom",
-      "selected": true,
-      "disabled": false
-    },
-    {
-      "type": "SelectOption",
-      "value": "ca",
-      "label": "Canada",
-      "selected": false,
-      "disabled": false
-    }
-  ]
+  "view": {
+    "type": "Select",
+    "placeholder": "Select country",
+    "size": "default",
+    "disabled": false,
+    "required": false,
+    "children": [
+      {
+        "type": "SelectOption",
+        "value": "us",
+        "label": "United States",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "uk",
+        "label": "United Kingdom",
+        "selected": true,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "ca",
+        "label": "Canada",
+        "selected": false,
+        "disabled": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -110,7 +114,7 @@ with Select(placeholder="Select country"):
 
 ## Sizes
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -130,56 +134,58 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Select",
-      "placeholder": "Default size",
-      "size": "default",
-      "disabled": false,
-      "required": false,
-      "children": [
-        {
-          "type": "SelectOption",
-          "value": "1",
-          "label": "Option 1",
-          "selected": false,
-          "disabled": false
-        },
-        {
-          "type": "SelectOption",
-          "value": "2",
-          "label": "Option 2",
-          "selected": false,
-          "disabled": false
-        }
-      ]
-    },
-    {
-      "type": "Select",
-      "placeholder": "Small size",
-      "size": "sm",
-      "disabled": false,
-      "required": false,
-      "children": [
-        {
-          "type": "SelectOption",
-          "value": "1",
-          "label": "Option 1",
-          "selected": false,
-          "disabled": false
-        },
-        {
-          "type": "SelectOption",
-          "value": "2",
-          "label": "Option 2",
-          "selected": false,
-          "disabled": false
-        }
-      ]
-    }
-  ]
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Select",
+        "placeholder": "Default size",
+        "size": "default",
+        "disabled": false,
+        "required": false,
+        "children": [
+          {
+            "type": "SelectOption",
+            "value": "1",
+            "label": "Option 1",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "2",
+            "label": "Option 2",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "Select",
+        "placeholder": "Small size",
+        "size": "sm",
+        "disabled": false,
+        "required": false,
+        "children": [
+          {
+            "type": "SelectOption",
+            "value": "1",
+            "label": "Option 1",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "2",
+            "label": "Option 2",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -187,7 +193,7 @@ with Column(gap=4):
 
 ## With Label
 
-<ComponentPreview auto json={`{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -206,44 +212,46 @@ with Column(gap=2):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-2",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Label",
-      "text": "Preferred language"
-    },
-    {
-      "type": "Select",
-      "placeholder": "Choose language",
-      "size": "default",
-      "disabled": false,
-      "required": false,
-      "children": [
-        {
-          "type": "SelectOption",
-          "value": "en",
-          "label": "English",
-          "selected": false,
-          "disabled": false
-        },
-        {
-          "type": "SelectOption",
-          "value": "es",
-          "label": "Spanish",
-          "selected": false,
-          "disabled": false
-        },
-        {
-          "type": "SelectOption",
-          "value": "fr",
-          "label": "French",
-          "selected": false,
-          "disabled": false
-        }
-      ]
-    }
-  ]
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Label",
+        "text": "Preferred language"
+      },
+      {
+        "type": "Select",
+        "placeholder": "Choose language",
+        "size": "default",
+        "disabled": false,
+        "required": false,
+        "children": [
+          {
+            "type": "SelectOption",
+            "value": "en",
+            "label": "English",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "es",
+            "label": "Spanish",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "fr",
+            "label": "French",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>

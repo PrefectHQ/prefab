@@ -10,7 +10,7 @@ Switches provide a visual toggle for binary states, offering an alternative to c
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}`}>
+<ComponentPreview auto json={`{"view":{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -19,12 +19,14 @@ Switch(label="Enable notifications")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Switch",
-  "label": "Enable notifications",
-  "checked": false,
-  "size": "default",
-  "disabled": false,
-  "required": false
+  "view": {
+    "type": "Switch",
+    "label": "Enable notifications",
+    "checked": false,
+    "size": "default",
+    "disabled": false,
+    "required": false
+  }
 }
 ```
 </CodeGroup>
@@ -32,7 +34,7 @@ Switch(label="Enable notifications")
 
 ## Checked State
 
-<ComponentPreview auto json={`{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}`}>
+<ComponentPreview auto json={`{"view":{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -41,12 +43,14 @@ Switch(label="Dark mode", checked=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "type": "Switch",
-  "label": "Dark mode",
-  "checked": true,
-  "size": "default",
-  "disabled": false,
-  "required": false
+  "view": {
+    "type": "Switch",
+    "label": "Dark mode",
+    "checked": true,
+    "size": "default",
+    "disabled": false,
+    "required": false
+  }
 }
 ```
 </CodeGroup>
@@ -56,7 +60,7 @@ Switch(label="Dark mode", checked=True)
 
 Switches come in two sizes:
 
-<ComponentPreview auto json={`{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -70,26 +74,28 @@ with Column(gap=4):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-4",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Switch",
-      "label": "Default size",
-      "checked": true,
-      "size": "default",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Switch",
-      "label": "Small size",
-      "checked": true,
-      "size": "sm",
-      "disabled": false,
-      "required": false
-    }
-  ]
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Switch",
+        "label": "Default size",
+        "checked": true,
+        "size": "default",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Switch",
+        "label": "Small size",
+        "checked": true,
+        "size": "sm",
+        "disabled": false,
+        "required": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
@@ -97,7 +103,7 @@ with Column(gap=4):
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"cssClass":"gap-3","type":"Column","children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -112,34 +118,36 @@ with Column(gap=3):
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "cssClass": "gap-3",
-  "type": "Column",
-  "children": [
-    {
-      "type": "Switch",
-      "label": "Enabled switch",
-      "checked": false,
-      "size": "default",
-      "disabled": false,
-      "required": false
-    },
-    {
-      "type": "Switch",
-      "label": "Disabled off",
-      "checked": false,
-      "size": "default",
-      "disabled": true,
-      "required": false
-    },
-    {
-      "type": "Switch",
-      "label": "Disabled on",
-      "checked": true,
-      "size": "default",
-      "disabled": true,
-      "required": false
-    }
-  ]
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Switch",
+        "label": "Enabled switch",
+        "checked": false,
+        "size": "default",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Switch",
+        "label": "Disabled off",
+        "checked": false,
+        "size": "default",
+        "disabled": true,
+        "required": false
+      },
+      {
+        "type": "Switch",
+        "label": "Disabled on",
+        "checked": true,
+        "size": "default",
+        "disabled": true,
+        "required": false
+      }
+    ]
+  }
 }
 ```
 </CodeGroup>
