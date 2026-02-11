@@ -1,0 +1,425 @@
+---
+title: Pipes
+description: Format and transform values for display.
+icon: filter
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Pipes transform expression results into display-ready values. The syntax is `expression | pipeName`, where the pipe receives the evaluated expression as input and produces a formatted output. Some pipes accept an argument after a colon — `| pipeName:arg`:
+
+```
+{{ price | currency }}            →  "$1,234.00"
+{{ score | percent:1 }}           →  "75.6%"     (1 decimal place)
+{{ price * quantity | currency }} →  "$150.00"
+{{ name | truncate:10 }}          →  "Arthur ..."  (max 10 chars)
+```
+
+Because pipe is the **lowest-precedence** operator, everything to the left evaluates first. `price * quantity | currency` means "multiply, then format" — not "format quantity, then multiply."
+
+## Number Formatting
+
+Numbers rarely belong in a UI raw. Prices need currency symbols and decimal alignment, ratios need percent signs, and KPIs need thousands separators. The number pipes handle locale-aware formatting so your expressions produce display-ready values:
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"revenue":2847500,"target":3000000,"growth":0.124},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ revenue / target | percent:1 }} of target"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Column,
+    Progress,
+    Row,
+    State,
+    Text,
+)
+
+with State(revenue=2847500, target=3000000, growth=0.124):
+    with Card():
+        with CardHeader():
+            CardTitle("Q4 Revenue")
+            CardDescription("{{ revenue | currency }}")
+        with CardContent():
+            with Column(gap=2):
+                Progress(value="{{ revenue / target * 100 }}", max=100)
+                with Row(gap=2, align="center"):
+                    Text("{{ revenue / target | percent:1 }} of target")
+                    Badge("{{ growth | percent:1 }} YoY", variant="secondary")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "revenue": 2847500,
+      "target": 3000000,
+      "growth": 0.124
+    },
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "Q4 Revenue"
+              },
+              {
+                "type": "CardDescription",
+                "content": "{{ revenue | currency }}"
+              }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "Progress",
+                    "value": "{{ revenue / target * 100 }}",
+                    "max": 100.0
+                  },
+                  {
+                    "cssClass": "gap-2 items-center",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "content": "{{ revenue / target | percent:1 }} of target"
+                      },
+                      {
+                        "type": "Badge",
+                        "label": "{{ growth | percent:1 }} YoY",
+                        "variant": "secondary"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+| Pipe | Argument | Example | Result |
+|------|----------|---------|--------|
+| `percent` | decimal places (default 0) | `{{ 0.756 \| percent:1 }}` | `75.6%` |
+| `number` | decimal places | `{{ 1234 \| number:2 }}` | `1,234.00` |
+| `currency` | currency code (default USD) | `{{ 1234 \| currency }}` | `$1,234.00` |
+| `abs` | | `{{ -42 \| abs }}` | `42` |
+
+`percent` multiplies by 100 before formatting. `number` and `currency` use locale-formatted output (en-US).
+
+## Date and Time
+
+Dates arrive from APIs as ISO strings — dense and machine-oriented. The date and time pipes transform them into human-friendly formats at varying levels of detail, from a terse `1/15/2025` to a full `January 15, 2025, 2:30 PM`:
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"starts":"2025-01-15T14:30:00Z"},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Team Standup"},{"type":"CardDescription","content":"{{ starts | date:long }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ starts | time }}","variant":"outline"},{"type":"Text","content":"{{ starts | datetime }}"}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Row,
+    State,
+    Text,
+)
+
+with State(starts="2025-01-15T14:30:00Z"):
+    with Card():
+        with CardHeader():
+            CardTitle("Team Standup")
+            CardDescription("{{ starts | date:long }}")
+        with CardContent():
+            with Row(gap=2, align="center"):
+                Badge("{{ starts | time }}", variant="outline")
+                Text("{{ starts | datetime }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "starts": "2025-01-15T14:30:00Z"
+    },
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "Team Standup"
+              },
+              {
+                "type": "CardDescription",
+                "content": "{{ starts | date:long }}"
+              }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Badge",
+                    "label": "{{ starts | time }}",
+                    "variant": "outline"
+                  },
+                  {
+                    "type": "Text",
+                    "content": "{{ starts | datetime }}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+| Pipe | Argument | Example Output |
+|------|----------|---------------|
+| `date` | `short` | `1/15/2025` |
+| `date` | (default: medium) | `Jan 15, 2025` |
+| `date` | `long` | `January 15, 2025` |
+| `time` | | `2:30 PM` |
+| `datetime` | | `Jan 15, 2025, 2:30 PM` |
+
+Pass an ISO date string as the input value. The `time` pipe also accepts time-only strings like `"14:30"`.
+
+## String Formatting
+
+String pipes adjust casing and length — `upper` and `lower` normalize text for headings or labels, while `truncate` clamps to a maximum character count and appends `...` when the string overflows:
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"name":"Arthur Dent","bio":"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."},"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name | upper }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"{{ name | lower }}","variant":"secondary"},{"type":"Text","content":"{{ bio | truncate:80 }}"}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Column,
+    State,
+    Text,
+)
+
+with State(
+    name="Arthur Dent",
+    bio="A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.",
+):
+    with Card():
+        with CardHeader():
+            CardTitle("{{ name | upper }}")
+        with CardContent():
+            with Column(gap=2):
+                Badge("{{ name | lower }}", variant="secondary")
+                Text("{{ bio | truncate:80 }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "name": "Arthur Dent",
+      "bio": "A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."
+    },
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "{{ name | upper }}"
+              }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "Badge",
+                    "label": "{{ name | lower }}",
+                    "variant": "secondary"
+                  },
+                  {
+                    "type": "Text",
+                    "content": "{{ bio | truncate:80 }}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+| Pipe | Argument | Description |
+|------|----------|-------------|
+| `upper` | | Uppercase the string |
+| `lower` | | Lowercase the string |
+| `truncate` | max length | Clamp to N characters, append `...` if truncated |
+
+## Array Operations
+
+When state contains a list, you often need to summarize it — count the items, pull out the first or last entry, or collapse everything into a single readable string. The array pipes handle these without arithmetic or concatenation:
+
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"skills":["Python","TypeScript","Rust","Go"]},"children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ skills | first }}","variant":"default"},{"type":"Badge","label":"{{ skills | last }}","variant":"outline"}]},{"type":"Text","content":"{{ skills | join }}"},{"type":"Text","content":"{{ skills | length }} skills listed"}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Column,
+    Row,
+    State,
+    Text,
+)
+
+with State(skills=["Python", "TypeScript", "Rust", "Go"]):
+    with Column(gap=2):
+        with Row(gap=2, align="center"):
+            Badge("{{ skills | first }}")
+            Badge("{{ skills | last }}", variant="outline")
+        Text("{{ skills | join }}")
+        Text("{{ skills | length }} skills listed")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "State",
+    "state": {
+      "skills": [
+        "Python",
+        "TypeScript",
+        "Rust",
+        "Go"
+      ]
+    },
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "cssClass": "gap-2 items-center",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "{{ skills | first }}",
+                "variant": "default"
+              },
+              {
+                "type": "Badge",
+                "label": "{{ skills | last }}",
+                "variant": "outline"
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "content": "{{ skills | join }}"
+          },
+          {
+            "type": "Text",
+            "content": "{{ skills | length }} skills listed"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+| Pipe | Argument | Description |
+|------|----------|-------------|
+| `length` | | Number of elements (also works on strings) |
+| `join` | separator (default `, `) | Join elements into a string |
+| `first` | | First element |
+| `last` | | Last element |
+
+## Pipe Arguments
+
+The argument after `:` is always a simple token — a number, a string, or an identifier. It can't be a sub-expression. A few more examples:
+
+```
+{{ tags | join: - }}           → join with " - "
+{{ price | currency:EUR }}     → format as euros
+{{ name | default:Anonymous }} → fallback value
+```
+
+## Chaining
+
+Pipes chain left to right. Each pipe receives the output of the previous one:
+
+```
+{{ name | lower | truncate:20 }}
+```
+
+This lowercases the name first, then truncates the result to 20 characters.
+
+## Default Value Shorthand
+
+A bare literal after `|` acts as a default value when the left side is null or undefined:
+
+```
+{{ name | 'Anonymous' }}   → "Anonymous" if name is undefined
+{{ count | 0 }}            → 0 if count is undefined
+```
+
+This is equivalent to the `default` pipe: `{{ name | default:Anonymous }}`. Both check specifically for null/undefined — an empty string `""` won't trigger the default.
+
+For broader falsy defaults (including empty strings, zero, and false), use the `||` operator instead:
+
+```
+{{ name || 'Anonymous' }}  → "Anonymous" if name is any falsy value
+```
+
+## Unknown Pipes
+
+If a pipe name isn't recognized, the value passes through unchanged. This prevents errors from typos or forward-compatible pipe names — the output just won't be formatted.

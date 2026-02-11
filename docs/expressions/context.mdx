@@ -1,0 +1,241 @@
+---
+title: Context & Variables
+description: What data expressions can access and where it comes from.
+icon: database
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Expressions resolve identifiers from a context object. What's in that context depends on where the expression runs — global state is always available, but components like [State](/components/state) and [ForEach](/components/foreach) can layer on additional scoped values.
+
+## Global State
+
+Global state is always accessible from any expression. Values enter global state from three sources:
+
+**`AppResult`** — the initial state set by your server code:
+```python
+from prefab_ui import AppResult
+
+AppResult(state={"count": 0, "name": "Arthur"}, view=...)
+```
+
+**Named form controls** — any component with a `name` prop syncs its current value to state automatically. `Input(name="city")` updates `{{ city }}` on every keystroke.
+
+**Actions** — [SetState](/actions/set-state) and [ToolCall](/actions/call-tool) (via `result_key`) write to global state when they fire.
+
+## Local Scope
+
+The [State](/components/state) component provides scoped values to its children. These shadow global state within the subtree — inner values win over outer ones for the same key.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, State, Text
+
+with Column(gap=2):
+    with State(greeting="Don't Panic", name="Arthur"):
+        Text("{{ greeting }}, {{ name }}")
+        with State(name="Ford"):
+            Text("{{ greeting }}, {{ name }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "type": "State",
+        "state": {
+          "greeting": "Don't Panic",
+          "name": "Arthur"
+        },
+        "children": [
+          {
+            "type": "Text",
+            "content": "{{ greeting }}, {{ name }}"
+          },
+          {
+            "type": "State",
+            "state": {
+              "name": "Ford"
+            },
+            "children": [
+              {
+                "type": "Text",
+                "content": "{{ greeting }}, {{ name }}"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `State` shadows `name` but inherits `greeting` from the outer scope.
+
+## Dot Paths
+
+Use dot notation to reach into nested objects:
+
+```
+{{ user.address.city }}
+{{ order.items.length }}
+```
+
+`.length` works on both arrays and strings. If any segment of the path is null or undefined, the entire expression resolves to undefined.
+
+## Special Variables
+
+Several variables are injected automatically by the framework in specific contexts.
+
+### `$event`
+
+Available inside action specs. Contains the value from the triggering interaction — what that means depends on the component:
+
+| Component | `$event` value |
+|-----------|---------------|
+| Input / Textarea | Current text (string) |
+| Slider | Current position (number) |
+| Checkbox / Switch | Checked state (boolean) |
+| Select | Selected value (string) |
+| RadioGroup | Selected value (string) |
+| Button | `undefined` |
+
+[SetState](/actions/set-state) defaults to `"{{ $event }}"` when no explicit value is provided, which is why `SetState("volume")` on a slider captures the slider position.
+
+### `$error`
+
+Available inside `on_error` callbacks. Contains the error message string from the failed action.
+
+```python
+from prefab_ui import ToolCall, ShowToast
+
+Button("Save", on_click=ToolCall(
+    "save_data",
+    on_error=ShowToast("Failed: {{ $error }}", variant="error"),
+))
+```
+
+### `$index`
+
+Available inside [ForEach](/components/foreach) iterations. The zero-based index of the current item.
+
+```python
+from prefab_ui.components import ForEach, Text
+
+with ForEach("items"):
+    Text("{{ $index + 1 }}. {{ name }}")
+    # Renders: "1. First", "2. Second", etc.
+```
+
+`$index` is how actions target specific list items from inside a loop — `SetState("todos.{{ $index }}.done")` updates the `done` field of the item at the current position.
+
+### `$item`
+
+Available inside [ForEach](/components/foreach) iterations. A reference to the entire current item object. Individual fields are also available directly (`{{ name }}` instead of `{{ $item.name }}`), but `$item` is useful when you need to pass the whole object to an action:
+
+```python
+from prefab_ui.components import ForEach, Button, Text
+from prefab_ui import ToolCall
+
+with ForEach("users"):
+    Text("{{ name }}")
+    Button("Edit", on_click=ToolCall(
+        "edit_user",
+        arguments={"user": "{{ $item }}"},
+    ))
+```
+
+## Visibility Conditions
+
+The `visible_when` prop uses expressions to control whether a component renders. The expression must evaluate to a truthy or falsy value. This is one of the most practical uses of expression context — combining state from different sources to determine what the user should see:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false,"onChange":{"action":"setState","key":"inventory","value":"{{ $event }}"}},{"visibleWhen":"inventory == 0","type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]},{"visibleWhen":"inventory > 0 && inventory < 10","type":"Alert","variant":"warning","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]},"inventory":15}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Alert,
+    AlertDescription,
+    Column,
+    Slider,
+    Text,
+)
+from prefab_ui import SetState
+
+set_data(inventory=15)
+
+with Column(gap=3):
+    Text("Inventory: {{ inventory }}")
+    Slider(
+        name="inventory",
+        min=0,
+        max=30,
+        step=1,
+        on_change=SetState("inventory"),
+    )
+    with Alert(variant="destructive", visible_when="inventory == 0"):
+        AlertDescription("Out of stock!")
+    with Alert(
+        variant="warning",
+        visible_when="inventory > 0 && inventory < 10",
+    ):
+        AlertDescription("Low stock warning")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Text",
+        "content": "Inventory: {{ inventory }}"
+      },
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 30.0,
+        "step": 1.0,
+        "name": "inventory",
+        "disabled": false,
+        "onChange": {
+          "action": "setState",
+          "key": "inventory",
+          "value": "{{ $event }}"
+        }
+      },
+      {
+        "visibleWhen": "inventory == 0",
+        "type": "Alert",
+        "variant": "destructive",
+        "children": [
+          {
+            "type": "AlertDescription",
+            "content": "Out of stock!"
+          }
+        ]
+      },
+      {
+        "visibleWhen": "inventory > 0 && inventory < 10",
+        "type": "Alert",
+        "variant": "warning",
+        "children": [
+          {
+            "type": "AlertDescription",
+            "content": "Low stock warning"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag the slider to zero to see the "Out of stock!" alert appear. Values between 1 and 9 show the "Low stock warning" instead.

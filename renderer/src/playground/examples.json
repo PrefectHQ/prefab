@@ -990,6 +990,116 @@
     "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
   },
   {
+    "title": "from prefab_ui import AppResult",
+    "category": "Expressions",
+    "code": "AppResult(state={\"count\": 0, \"name\": \"Arthur\"}, view=...)"
+  },
+  {
+    "title": "from prefab_ui import ToolCall, ShowToast",
+    "category": "Expressions",
+    "code": "Button(\"Save\", on_click=ToolCall(\n    \"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n))"
+  },
+  {
+    "title": "from prefab_ui.components import ForEach, Text",
+    "category": "Expressions",
+    "code": "with ForEach(\"items\"):\n    Text(\"{{ $index + 1 }}. {{ name }}\")\n    # Renders: \"1. First\", \"2. Second\", etc."
+  },
+  {
+    "title": "from prefab_ui.components import ForEach, Button, Text",
+    "category": "Expressions",
+    "code": "from prefab_ui import ToolCall\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=ToolCall(\n        \"edit_user\",\n        arguments={\"user\": \"{{ $item }}\"},\n    ))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n        on_change=SetState(\"inventory\"),\n    )\n    with Alert(variant=\"destructive\", visible_when=\"inventory == 0\"):\n        AlertDescription(\"Out of stock!\")\n    with Alert(\n        variant=\"warning\",\n        visible_when=\"inventory > 0 && inventory < 10\",\n    ):\n        AlertDescription(\"Low stock warning\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Column, Input, Row, Text\n\nset_data(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
+  },
+  {
+    "title": "Alert(\"Out of stock\", visible_when=\"inventory == 0\")",
+    "category": "Expressions",
+    "code": "Alert(\"Low stock\", visible_when=\"inventory > 0 && inventory < 10\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Column, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nset_data(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\", on_change=ToggleState(\"active\"))\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui import SetState\n\nset_data(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
+  },
+  {
+    "title": "Text(\"{{ price * quantity | currency }}\")",
+    "category": "Expressions",
+    "code": "Badge(\"{{ status | upper }}\", variant=\"secondary\")"
+  },
+  {
+    "title": "with ForEach(\"todos\", filter=\"!done || !hideDone\"):",
+    "category": "Expressions",
+    "code": "Text(\"{{ text }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Progress,\n    Row,\n    State,\n    Text,\n)\n\nwith State(revenue=2847500, target=3000000, growth=0.124):\n    with Card():\n        with CardHeader():\n            CardTitle(\"Q4 Revenue\")\n            CardDescription(\"{{ revenue | currency }}\")\n        with CardContent():\n            with Column(gap=2):\n                Progress(value=\"{{ revenue / target * 100 }}\", max=100)\n                with Row(gap=2, align=\"center\"):\n                    Text(\"{{ revenue / target | percent:1 }} of target\")\n                    Badge(\"{{ growth | percent:1 }} YoY\", variant=\"secondary\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Row,\n    State,\n    Text,\n)\n\nwith State(starts=\"2025-01-15T14:30:00Z\"):\n    with Card():\n        with CardHeader():\n            CardTitle(\"Team Standup\")\n            CardDescription(\"{{ starts | date:long }}\")\n        with CardContent():\n            with Row(gap=2, align=\"center\"):\n                Badge(\"{{ starts | time }}\", variant=\"outline\")\n                Text(\"{{ starts | datetime }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    State,\n    Text,\n)\n\nwith State(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.\",\n):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name | upper }}\")\n        with CardContent():\n            with Column(gap=2):\n                Badge(\"{{ name | lower }}\", variant=\"secondary\")\n                Text(\"{{ bio | truncate:80 }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Row,\n    State,\n    Text,\n)\n\nwith State(skills=[\"Python\", \"TypeScript\", \"Rust\", \"Go\"]):\n    with Column(gap=2):\n        with Row(gap=2, align=\"center\"):\n            Badge(\"{{ skills | first }}\")\n            Badge(\"{{ skills | last }}\", variant=\"outline\")\n        Text(\"{{ skills | join }}\")\n        Text(\"{{ skills | length }} skills listed\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n    State,\n)\n\nwith State(name=\"Arthur Dent\", role=\"Reluctant Adventurer\", answer=42):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n        with CardContent():\n            with Column(gap=1):\n                Text(\"Role: {{ role }}\")\n                Text(\"The Answer to Everything: {{ answer }}\")"
+  },
+  {
+    "title": "Text(\"{{ price * quantity | currency }}\")",
+    "category": "Expressions",
+    "code": "Text(\"{{ items.length }} item{{ items.length != 1 ? 's' : '' }} in your cart\")\nText(\"{{ first + ' ' + last | upper }}\")"
+  },
+  {
+    "title": "from prefab_ui.components import Progress",
+    "category": "Expressions",
+    "code": "# \"{{ volume }}\" resolves to the number 75, not the string \"75\"\nProgress(value=\"{{ volume }}\", max=100)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Input,\n    State,\n    Text,\n)\n\nwith State(\n    name=\"Zaphod Beeblebrox\",\n    role=\"President of the Galaxy\",\n):\n    with Column(gap=2):\n        Text(\"{{ name }}\")\n        Badge(\"{{ role }}\", variant=\"secondary\")\n        Input(placeholder=\"Message {{ name }}...\")"
+  },
+  {
+    "title": "Text(\"{{ user.address.city }}\")",
+    "category": "Expressions",
+    "code": "Text(\"{{ order.items.length }} items\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Column, Input, Text\n\nset_data(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    Input(name=\"first\", placeholder=\"First name\")\n    Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"{{ first + ' ' + last }}\")"
+  },
+  {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
     "code": "from prefab_ui.components import Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def hello(name: str) -> Text:\n    return Text(f\"Hello, {name}!\")"
@@ -1075,121 +1185,6 @@
     "code": "from prefab_ui.components import Column, Progress, Text\n\nwith Column(gap=2):\n    Text(\"Processing: {{ progress }}%\")\n    Progress(value=\"{{ progress }}\")"
   },
   {
-    "title": "from prefab_ui.components import Text",
-    "category": "Patterns",
-    "code": "Text(\"Hello, {{ name }}!\")\nText(\"Total: {{ price * quantity | currency }}\")\nText(\"{{ items.length }} item{{ items.length != 1 ? 's' : '' }} in your cart\")"
-  },
-  {
-    "title": "from prefab_ui.components import Text",
-    "category": "Patterns",
-    "code": "Text(\"{{ user.address.city }}\")\nText(\"{{ order.items.length }} items\")"
-  },
-  {
-    "title": "from prefab_ui.components import Column, Text",
-    "category": "Patterns",
-    "code": "with Column(gap=2):\n    Text(\"{{ score | percent }}\")         # 0.75 -> \"75%\"\n    Text(\"{{ score | percent:1 }}\")       # 0.756 -> \"75.6%\"\n    Text(\"{{ price | number:2 }}\")        # 1234 -> \"1,234.00\"\n    Text(\"{{ price | currency }}\")        # 1234 -> \"$1,234.00\"\n    Text(\"{{ price | currency:EUR }}\")    # 1234 -> \"EUR 1,234.00\"\n    Text(\"{{ date | date }}\")             # ISO string -> \"Jan 15, 2025\"\n    Text(\"{{ date | date:short }}\")       # -> \"1/15/2025\"\n    Text(\"{{ date | date:long }}\")        # -> \"January 15, 2025\"\n    Text(\"{{ date | time }}\")             # -> \"2:30 PM\"\n    Text(\"{{ date | datetime }}\")         # -> \"Jan 15, 2025, 2:30 PM\"\n    Text(\"{{ name | upper }}\")            # \"arthur\" -> \"ARTHUR\"\n    Text(\"{{ name | lower }}\")            # \"ARTHUR\" -> \"arthur\"\n    Text(\"{{ items | length }}\")          # [1,2,3] -> 3\n    Text(\"{{ tags | join:, }}\")           # [\"a\",\"b\"] -> \"a, b\"\n    Text(\"{{ bio | truncate:80 }}\")       # Clamp to 80 characters\n    Text(\"{{ name | default:Anonymous }}\") # Fallback if null/undefined\n    Text(\"{{ items | first }}\")           # First element of array\n    Text(\"{{ items | last }}\")            # Last element of array\n    Text(\"{{ delta | abs }}\")             # Absolute value"
-  },
-  {
-    "title": "Text(\"{{ price * quantity | currency }}\")",
-    "category": "Patterns",
-    "code": "Badge(\"{{ status | upper }}\", variant=\"{{ statusVariant }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import Alert, AlertTitle",
-    "category": "Patterns",
-    "code": "from prefab_ui import ToggleState\n\nAlert(\"Out of stock\", visible_when=\"inventory == 0\")\nAlert(\"Low stock warning\", visible_when=\"inventory > 0 && inventory < 10\")"
-  },
-  {
-    "title": "from prefab_ui.components import ForEach, Checkbox, Text, Column",
-    "category": "Patterns",
-    "code": "with Column(gap=3):\n    Checkbox(label=\"Hide completed\", name=\"hideDone\",\n             on_change=ToggleState(\"hideDone\"))\n    with ForEach(\"todos\", filter=\"!done || !hideDone\"):\n        Text(\"{{ text }}\")"
-  },
-  {
-    "title": "from prefab_ui import AppResult",
-    "category": "Patterns",
-    "code": "# These become available as {{ count }}, {{ name }}, etc.\nAppResult(state={\"count\": 0, \"name\": \"Arthur\"}, view=...)"
-  },
-  {
-    "title": "from prefab_ui.components import State, Text",
-    "category": "Patterns",
-    "code": "with State(greeting=\"Don't Panic\"):\n    Text(\"{{ greeting }}\")  # Resolves from local scope"
-  },
-  {
-    "title": "from prefab_ui import SetState",
-    "category": "Patterns",
-    "code": "Slider(name=\"volume\", on_change=SetState(\"volume\"))\n# SetState defaults to \"{{ $event }}\", capturing the slider position"
-  },
-  {
-    "title": "from prefab_ui import ToolCall, ShowToast",
-    "category": "Patterns",
-    "code": "Button(\"Save\", on_click=ToolCall(\n    \"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n))"
-  },
-  {
-    "title": "from prefab_ui.components import ForEach, Text",
-    "category": "Patterns",
-    "code": "with ForEach(\"items\"):\n    Text(\"{{ $index + 1 }}. {{ name }}\")\n    # Renders: \"1. First\", \"2. Second\", etc."
-  },
-  {
-    "title": "from prefab_ui.components import ForEach, Button",
-    "category": "Patterns",
-    "code": "from prefab_ui import ToolCall\n\nwith ForEach(\"users\"):\n    # Fields available directly\n    Text(\"{{ name }}\")\n\n    # $item useful for passing whole object to a tool\n    Button(\"Edit\", on_click=ToolCall(\n        \"edit_user\",\n        arguments={\"user\": \"{{ $item }}\"},\n    ))"
-  },
-  {
-    "title": "from prefab_ui.components import Button",
-    "category": "Patterns",
-    "code": "from prefab_ui import SetState, ToolCall, ShowToast\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"saving...\"),\n    ToolCall(\"save\", arguments={\"data\": \"{{ formData }}\"},\n        on_error=ShowToast(\"Save failed: {{ $error }}\", variant=\"error\")),\n    SetState(\"status\", \"saved\"),\n    ShowToast(\"Done!\", variant=\"success\"),\n])"
-  },
-  {
-    "title": "from prefab_ui import SetState",
-    "category": "Patterns",
-    "code": "SetState(\"theme\", \"dark\")          # Explicit value\nSetState(\"query\")                   # Captures $event (e.g., input text)\nSetState(\"count\", \"{{ count + 1 }}\") # Computed value"
-  },
-  {
-    "title": "from prefab_ui.components import ForEach, Checkbox",
-    "category": "Patterns",
-    "code": "from prefab_ui import SetState\n\nwith ForEach(\"todos\"):\n    Checkbox(\n        name=\"done\",\n        on_change=SetState(\"todos.{{ $index }}.done\"),\n    )"
-  },
-  {
-    "title": "from prefab_ui import ToggleState",
-    "category": "Patterns",
-    "code": "Button(\"Toggle sidebar\", on_click=ToggleState(\"sidebarOpen\"))"
-  },
-  {
-    "title": "from prefab_ui.components import Input, Button, Row",
-    "category": "Patterns",
-    "code": "from prefab_ui import AppendState, SetState\n\nwith Row(gap=2):\n    Input(name=\"newTodo\", placeholder=\"What needs to be done?\")\n    Button(\"Add\", on_click=[\n        AppendState(\"todos\", {\"text\": \"{{ newTodo }}\", \"done\": False}),\n        SetState(\"newTodo\", \"\"),\n    ])"
-  },
-  {
-    "title": "from prefab_ui.components import ForEach, Button, Row, Text",
-    "category": "Patterns",
-    "code": "from prefab_ui import RemoveState\n\nwith ForEach(\"todos\"):\n    with Row(gap=2, align=\"center\"):\n        Text(\"{{ text }}\")\n        Button(\"Delete\", variant=\"ghost\",\n               on_click=RemoveState(\"todos\", \"{{ $index }}\"))"
-  },
-  {
-    "title": "from prefab_ui import ShowToast",
-    "category": "Patterns",
-    "code": "ShowToast(\"Saved successfully!\", variant=\"success\")\nShowToast(\"{{ $error }}\", variant=\"error\")"
-  },
-  {
-    "title": "from prefab_ui import OpenLink",
-    "category": "Patterns",
-    "code": "Button(\"View docs\", on_click=OpenLink(\"https://prefab-ui.dev\"))\nButton(\"View profile\", on_click=OpenLink(\"https://example.com/{{ userId }}\"))"
-  },
-  {
-    "title": "from prefab_ui import ToolCall",
-    "category": "Patterns",
-    "code": "Button(\"Search\", on_click=ToolCall(\n    \"search\",\n    arguments={\"query\": \"{{ searchInput }}\"},\n    result_key=\"results\",\n))"
-  },
-  {
-    "title": "from prefab_ui import SendMessage",
-    "category": "Patterns",
-    "code": "Button(\"Summarize\", on_click=SendMessage(\"Summarize the data above.\"))\nButton(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
-  },
-  {
-    "title": "from prefab_ui import UpdateContext",
-    "category": "Patterns",
-    "code": "Button(\"Share context\", on_click=UpdateContext(\n    \"The user selected {{ selectedItem }}.\"\n))"
-  },
-  {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
     "code": "from prefab_ui.components import Button, Column, Input, Label\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Label(\"Name\")\n    Input(name=\"name\", placeholder=\"Your name\")\n    Label(\"Email\")\n    Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n    Button(\"Submit\", on_click=ToolCall(\n        \"create_user\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"},\n    ))"
@@ -1248,36 +1243,6 @@
     "title": "Python icon=\"python\"",
     "category": "Patterns",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, ShowToast\n\nButton(\"Delete\", variant=\"destructive\", on_click=ToolCall(\n    \"delete_item\",\n    arguments={\"id\": \"{{ item_id }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n))"
-  },
-  {
-    "title": "from prefab_ui.components import Text",
-    "category": "Patterns",
-    "code": "Text(\"Hello, {{ name }}!\")"
-  },
-  {
-    "title": "from prefab_ui.components import Text",
-    "category": "Patterns",
-    "code": "# If state contains { \"user\": { \"address\": { \"city\": \"Betelgeuse\" } } }\nText(\"Located in {{ user.address.city }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import Column, Text",
-    "category": "Patterns",
-    "code": "with Column(gap=2):\n    Text(\"{{ score | percent }}\")       # 0.75 → \"75%\"\n    Text(\"{{ score | percent:1 }}\")     # 0.756 → \"75.6%\"\n    Text(\"{{ price | number:2 }}\")      # 1234 → \"1,234.00\"\n    Text(\"{{ price | currency }}\")      # 1234 → \"$1,234.00\"\n    Text(\"{{ price | currency:EUR }}\")  # 1234 → \"€1,234.00\"\n    Text(\"{{ date | date }}\")           # ISO string → \"Jan 15, 2025\"\n    Text(\"{{ date | date:short }}\")     # → \"1/15/2025\"\n    Text(\"{{ date | date:long }}\")      # → \"January 15, 2025\"\n    Text(\"{{ date | time }}\")           # → \"2:30 PM\"\n    Text(\"{{ date | datetime }}\")       # → \"Jan 15, 2025, 2:30 PM\"\n    Text(\"{{ name | upper }}\")          # \"arthur\" → \"ARTHUR\"\n    Text(\"{{ name | lower }}\")          # \"ARTHUR\" → \"arthur\""
-  },
-  {
-    "title": "from prefab_ui.components import Progress",
-    "category": "Patterns",
-    "code": "# \"{{ volume }}\" resolves to the number 75, not the string \"75\"\nProgress(value=\"{{ volume }}\", max=100)"
-  },
-  {
-    "title": "from prefab_ui.components import Button, Badge, Input, Image",
-    "category": "Patterns",
-    "code": "Button(\"View {{ name }}'s profile\")\nBadge(\"{{ status }}\", variant=\"{{ badge_variant }}\")\nInput(placeholder=\"Search {{ category }}...\")\nImage(src=\"{{ avatar_url }}\", alt=\"{{ name }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import State, Text, Column",
-    "category": "Patterns",
-    "code": "with Column():\n    with State(greeting=\"Don't Panic\", name=\"Arthur\"):\n        Text(\"{{ greeting }}, {{ name }}\")\n        with State(name=\"Ford\"):\n            Text(\"{{ greeting }}, {{ name }}\")"
   },
   {
     "title": "Define and Use",
