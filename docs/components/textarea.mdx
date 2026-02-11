@@ -155,49 +155,20 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 
 ## Protocol Reference
 
-<Card icon="braces" title="Textarea Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Textarea
+{
+  "type": "Textarea",
+  "placeholder?": "string",
+  "value?": "string",
+  "name?": "string",
+  "rows?": "number",
+  "disabled?": false,
+  "required?": false,
+  "minLength?": "number",
+  "maxLength?": "number",
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="Textarea" default="Textarea">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="placeholder" type="string | null">
-  Placeholder text
-</ParamField>
-
-<ParamField body="value" type="string | null">
-  Textarea value
-</ParamField>
-
-<ParamField body="name" type="string | null">
-  Form field name
-</ParamField>
-
-<ParamField body="rows" type="number | null">
-  Number of visible text rows
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether textarea is disabled
-</ParamField>
-
-<ParamField body="required" type="boolean" default="false">
-  Whether textarea is required
-</ParamField>
-
-<ParamField body="minLength" type="number | null">
-  Minimum character length
-</ParamField>
-
-<ParamField body="maxLength" type="number | null">
-  Maximum character length
-</ParamField>
-
-<ParamField body="onChange" type="Action | Action[] | null">
-  Action(s) to execute when value changes
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Textarea](/protocol/textarea).

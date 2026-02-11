@@ -91,9 +91,9 @@ When rendered with the data above, this produces one card per crew member.
 
 ## How It Works
 
-The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ _item }}`.
+The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ $item }}`.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _item }}","variant":"secondary"}]}]},"tags":["earth","magrathea","vogon poetry","42"]}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ $item }}","variant":"secondary"}]}]},"tags":["earth","magrathea","vogon poetry","42"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -106,7 +106,7 @@ set_data(tags=["earth", "magrathea", "vogon poetry", "42"])
 
 with Row(gap=2):
     with ForEach("tags"):
-        Badge("{{ _item }}", variant="secondary")
+        Badge("{{ $item }}", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -120,7 +120,7 @@ with Row(gap=2):
         "children": [
           {
             "type": "Badge",
-            "label": "{{ _item }}",
+            "label": "{{ $item }}",
             "variant": "secondary"
           }
         ]
@@ -133,6 +133,46 @@ with Row(gap=2):
 </ComponentPreview>
 
 With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per item.
+
+## Iteration Variables
+
+Beyond the item's own fields, every iteration exposes two special variables: `$index` (zero-based position) and `$item` (the entire current item). Individual fields like `{{ name }}` are still available directly — `$item` is for when you need to pass the whole object somewhere, like an action argument.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ $item }}"}]}]},"steps":["Collect underpants","?","Profit"]}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, ForEach, Text
+
+set_data(steps=["Collect underpants", "?", "Profit"])
+
+with Column(gap=1):
+    with ForEach("steps"):
+        Text("{{ $index + 1 }}. {{ $item }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-1",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ForEach",
+        "key": "steps",
+        "children": [
+          {
+            "type": "Text",
+            "content": "{{ $index + 1 }}. {{ $item }}"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`$index` is especially useful for actions that target a specific list position — `SetState("items.{{ $index }}.done", true)` updates the `done` field of the current item. And `$item` lets you pass the whole object to actions like `ToolCall("edit_user", arguments={"user": "{{ $item }}"})`.
 
 ## Nested Data
 
@@ -213,20 +253,13 @@ with Column(gap=2):
 
 ## Protocol Reference
 
-<Card icon="braces" title="ForEach Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json ForEach
+{
+  "type": "ForEach",
+  "children?": "[Component]",
+  "key": "string (required)",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="ForEach" default="ForEach">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="key" type="string" required>
-  Data field containing the list to iterate over
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [ForEach](/protocol/for-each).

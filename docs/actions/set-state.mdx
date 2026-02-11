@@ -460,26 +460,19 @@ async def settings() -> AppResult:
 
 ## Protocol Reference
 
-<Card icon="braces" title="SetState Protocol">
-<ParamField body="action" type="setState" default="setState">
-</ParamField>
+```json SetState
+{
+  "action?": ""setState"",
+  "key": "string (required)",
+  "value?": "any"
+}
+```
 
-<ParamField body="key" type="string" required>
-  State key to set
-</ParamField>
+```json ToggleState
+{
+  "action?": ""toggleState"",
+  "key": "string (required)"
+}
+```
 
-<ParamField body="value" type="any" default="{{ $event }}">
-  Value to set. Use '`{{ $event }}`' for the event value.
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="ToggleState Protocol">
-<ParamField body="action" type="toggleState" default="toggleState">
-</ParamField>
-
-<ParamField body="key" type="string" required>
-  State key to toggle
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state).

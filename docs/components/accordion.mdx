@@ -281,54 +281,26 @@ with Accordion(
 
 ## Protocol Reference
 
-<Card icon="braces" title="Accordion Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Accordion
+{
+  "type": "Accordion",
+  "children?": "[Component]",
+  "multiple?": false,
+  "collapsible?": true,
+  "default_open_items?": "number | string | Action[]",
+  "defaultValues?": "Action[]",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
+```json AccordionItem
+{
+  "type": "AccordionItem",
+  "children?": "[Component]",
+  "title": "string (required)",
+  "value?": "string",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="Accordion" default="Accordion">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="multiple" type="boolean" default="false">
-  Allow multiple items to be open simultaneously
-</ParamField>
-
-<ParamField body="collapsible" type="boolean" default="true">
-  Whether items can be fully collapsed (single mode)
-</ParamField>
-
-<ParamField body="default_open_items" type="number | string | Action[] | null">
-  Initially expanded item(s). Pass an int for index-based selection, or a str to match by value/title.
-</ParamField>
-
-<ParamField body="defaultValues" type="Action[] | null">
-  Wire format for default_open_items (always an array).
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="AccordionItem Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
-
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="AccordionItem" default="AccordionItem">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string" required>
-  Accordion trigger label
-</ParamField>
-
-<ParamField body="value" type="string | null">
-  Unique value (defaults to title)
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Accordion](/protocol/accordion), [AccordionItem](/protocol/accordion-item).

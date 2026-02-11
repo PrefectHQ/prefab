@@ -576,25 +576,15 @@ with Row(gap=1, justify="evenly", css_class="w-full p-3 border-3 border-dashed")
 
 ## Protocol Reference
 
-<Card icon="braces" title="Row Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Row
+{
+  "type": "Row",
+  "children?": "[Component]",
+  "gap?": "number | Action[]",
+  "align?": "start | center | end | stretch | baseline",
+  "justify?": "start | center | end | between | around | evenly | stretch",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Row" default="Row">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="gap" type="number | Action[] | null">
-</ParamField>
-
-<ParamField body="align" type="string | null">
-</ParamField>
-
-<ParamField body="justify" type="string | null">
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Row](/protocol/row).

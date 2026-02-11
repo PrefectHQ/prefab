@@ -441,8 +441,13 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         {items.map((item, idx) => {
           const itemScope =
             typeof item === "object" && item !== null
-              ? { ...scope, ...(item as Record<string, unknown>) }
-              : { ...scope, _item: item };
+              ? {
+                  ...scope,
+                  ...(item as Record<string, unknown>),
+                  $index: idx,
+                  $item: item,
+                }
+              : { ...scope, $index: idx, $item: item };
           return children.map((child, childIdx) => (
             <RenderNode
               key={`${idx}-${childIdx}`}

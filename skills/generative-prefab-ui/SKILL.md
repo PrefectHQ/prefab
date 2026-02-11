@@ -38,8 +38,8 @@ instead of JSX.
 Every component is `{"type": "ComponentName", ...props}`. Container
 components (Column, Row, Card, Form, etc.) have a `children` array.
 
-All components support `cssClass` (Tailwind classes) and `visibleWhen`
-(expression — render only when truthy).
+All components support `cssClass` (Tailwind classes). For conditional
+rendering, use `Condition` (see Control Flow below).
 
 ```json
 {
@@ -47,7 +47,7 @@ All components support `cssClass` (Tailwind classes) and `visibleWhen`
   "children": [
     {"type": "Heading", "content": "Dashboard", "level": 1},
     {"type": "Text", "content": "Hello, {{ user.name }}!"},
-    {"type": "Spinner", "visibleWhen": "loading"}
+    {"type": "Condition", "cases": [{"when": "loading", "children": [{"type": "Spinner"}]}]}
   ]
 }
 ```
@@ -109,15 +109,35 @@ Value defaults to `"{{ $event }}"` (the triggering interaction's value).
 
 For all actions and chaining patterns, see [references/actions.md](references/actions.md).
 
-## Iteration and Templates
+## Control Flow
+
+**Condition** — conditional rendering. Each `case` has a `when` expression
+and `children` that render when truthy. An optional `else` array renders
+when no case matches:
+
+```json
+{
+  "type": "Condition",
+  "cases": [
+    {"when": "status == 'error'", "children": [{"type": "Badge", "label": "Error", "variant": "destructive"}]},
+    {"when": "status == 'warning'", "children": [{"type": "Badge", "label": "Warning", "variant": "warning"}]}
+  ],
+  "else": [{"type": "Badge", "label": "OK"}]
+}
+```
+
+A single-case Condition is fine for simple show/hide:
+```json
+{"type": "Condition", "cases": [{"when": "loading", "children": [{"type": "Spinner"}]}]}
+```
 
 **ForEach** repeats children per item in a state list. Templates inside
-resolve against each item:
+resolve against each item. `$index` and `$item` are available:
 
 ```json
 {
   "type": "ForEach", "key": "users",
-  "children": [{"type": "Text", "content": "{{ name }} — {{ email }}"}]
+  "children": [{"type": "Text", "content": "{{ $index + 1 }}. {{ name }} — {{ email }}"}]
 }
 ```
 
@@ -153,17 +173,19 @@ reference with `{"$ref": "name"}`:
           "onError": {"action": "showToast", "message": "{{ $error }}", "variant": "error"}
         }}
       ]},
-      {"type": "DataTable",
-        "columns": [
-          {"key": "name", "header": "Name", "sortable": true},
-          {"key": "email", "header": "Email"},
-          {"key": "role", "header": "Role", "sortable": true}
-        ],
-        "rows": "{{ results }}",
-        "searchable": true, "paginated": true, "pageSize": 20,
-        "visibleWhen": "results.length > 0"
-      },
-      {"type": "Muted", "content": "No results.", "visibleWhen": "query && results.length == 0"}
+      {"type": "Condition", "cases": [{"when": "results.length > 0", "children": [
+        {"type": "DataTable",
+          "columns": [
+            {"key": "name", "header": "Name", "sortable": true},
+            {"key": "email", "header": "Email"},
+            {"key": "role", "header": "Role", "sortable": true}
+          ],
+          "rows": "{{ results }}",
+          "searchable": true, "paginated": true, "pageSize": 20
+        }
+      ]}, {"when": "query && results.length == 0", "children": [
+        {"type": "Muted", "content": "No results."}
+      ]}]}
     ]
   }
 }

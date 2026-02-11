@@ -453,64 +453,28 @@ LineChart(
 
 ## Protocol Reference
 
-<Card icon="braces" title="LineChart Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json LineChart
+{
+  "type": "LineChart",
+  "data": "Action[] | string (required)",
+  "series": "[ChartSeries] (required)",
+  "xAxis?": "string",
+  "height?": "300",
+  "curve?": "linear | smooth | step",
+  "showDots?": false,
+  "showLegend?": false,
+  "showTooltip?": true,
+  "showGrid?": true,
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="LineChart" default="LineChart">
-  Component discriminator.
-</ParamField>
+```json ChartSeries
+{
+  "dataKey": "string (required)",
+  "label?": "string",
+  "color?": "string"
+}
+```
 
-<ParamField body="data" type="Action[] | string" required>
-  Row data or `{{ interpolation }}` reference
-</ParamField>
-
-<ParamField body="series" type="array" required>
-  Series to render as lines
-</ParamField>
-
-<ParamField body="xAxis" type="string | null">
-  Data key for x-axis labels
-</ParamField>
-
-<ParamField body="height" type="number" default="300">
-  Chart height in pixels
-</ParamField>
-
-<ParamField body="curve" type="string" default="linear">
-  Line interpolation style. One of: `"linear"`, `"smooth"`, `"step"`
-</ParamField>
-
-<ParamField body="showDots" type="boolean" default="false">
-  Show dots at data points
-</ParamField>
-
-<ParamField body="showLegend" type="boolean" default="false">
-  Show legend
-</ParamField>
-
-<ParamField body="showTooltip" type="boolean" default="true">
-  Show tooltip on hover
-</ParamField>
-
-<ParamField body="showGrid" type="boolean" default="true">
-  Show cartesian grid
-</ParamField>
-
-</Card>
-
-<Card icon="braces" title="ChartSeries Protocol">
-<ParamField body="dataKey" type="string" required>
-  Data field to plot
-</ParamField>
-
-<ParamField body="label" type="string | null">
-  Display label (defaults to dataKey)
-</ParamField>
-
-<ParamField body="color" type="string | null">
-  CSS color override
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [LineChart](/protocol/line-chart), [ChartSeries](/protocol/chart-series).

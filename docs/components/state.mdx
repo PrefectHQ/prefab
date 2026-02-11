@@ -140,7 +140,7 @@ The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic,
 
 State works well alongside [ForEach](/components/foreach) for providing extra context to iterated templates:
 
-<ComponentPreview auto json={`{"view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ _item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
+<ComponentPreview auto json={`{"view":{"type":"State","state":{"prefix":"Speaks"},"children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"ForEach","key":"languages","children":[{"type":"Badge","label":"{{ prefix }}: {{ $item }}","variant":"secondary"}]}]}]},"languages":["Python","TypeScript","Rust"]}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, ForEach, Row, State
@@ -151,7 +151,7 @@ with State(prefix="Speaks"):
     with Row(gap=2, align="center"):
         with ForEach("languages"):
             Badge(
-                "{{ prefix }}: {{ _item }}",
+                "{{ prefix }}: {{ $item }}",
                 variant="secondary",
             )
 ```
@@ -173,7 +173,7 @@ with State(prefix="Speaks"):
             "children": [
               {
                 "type": "Badge",
-                "label": "{{ prefix }}: {{ _item }}",
+                "label": "{{ prefix }}: {{ $item }}",
                 "variant": "secondary"
               }
             ]
@@ -202,20 +202,13 @@ with State(prefix="Speaks"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="State Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json State
+{
+  "type": "State",
+  "children?": "[Component]",
+  "state?": "object",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="State" default="State">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="state" type="object">
-  Local state values scoped to children
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [State](/protocol/state).

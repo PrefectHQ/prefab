@@ -399,37 +399,17 @@ with Column(gap=3, css_class="items-start w-full"):
 
 ## Protocol Reference
 
-<Card icon="braces" title="Button Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Button
+{
+  "type": "Button",
+  "label": "string (required)",
+  "icon?": "string",
+  "variant?": "default | destructive | outline | secondary | ghost | link | success | warning | info",
+  "size?": "default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg",
+  "disabled?": false,
+  "onClick?": "Action | Action[]",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="type" type="Button" default="Button">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="label" type="string" required>
-  Button text
-</ParamField>
-
-<ParamField body="icon" type="string | null">
-  Lucide icon name (kebab-case, e.g. 'arrow-right')
-</ParamField>
-
-<ParamField body="variant" type="string" default="default">
-  Visual variant: default, destructive, outline, secondary, ghost, link. One of: `"default"`, `"destructive"`, `"outline"`, `"secondary"`, `"ghost"`, `"link"`, `"success"`, `"warning"`, `"info"`
-</ParamField>
-
-<ParamField body="size" type="string" default="default">
-  Size: default, sm, lg, icon. One of: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`
-</ParamField>
-
-<ParamField body="disabled" type="boolean" default="false">
-  Whether the button is disabled
-</ParamField>
-
-<ParamField body="onClick" type="Action | Action[] | null">
-  Action(s) to execute when clicked
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Button](/protocol/button).

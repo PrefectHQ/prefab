@@ -174,28 +174,15 @@ The renderer auto-adjusts if the popover would overflow the viewport, so the `si
 
 ## Protocol Reference
 
-<Card icon="braces" title="Popover Protocol">
-<ParamField body="cssClass" type="string | null">
-  CSS/Tailwind classes for styling
-</ParamField>
+```json Popover
+{
+  "type": "Popover",
+  "children?": "[Component]",
+  "title?": "string",
+  "description?": "string",
+  "side?": "top | right | bottom | left",
+  "cssClass?": "string"
+}
+```
 
-<ParamField body="children" type="array">
-</ParamField>
-
-<ParamField body="type" type="Popover" default="Popover">
-  Component discriminator.
-</ParamField>
-
-<ParamField body="title" type="string | null">
-  Optional popover header title
-</ParamField>
-
-<ParamField body="description" type="string | null">
-  Optional popover description
-</ParamField>
-
-<ParamField body="side" type="string | null">
-  Which side to show the popover
-</ParamField>
-
-</Card>
+For the complete protocol schema, see [Popover](/protocol/popover).
