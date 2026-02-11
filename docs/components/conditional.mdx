@@ -317,11 +317,11 @@ Select "Error" or "Something else" to see different branches render. The `Else` 
 The first argument to `If` and `Elif` is always a raw [expression](/expressions/overview), not a `{{ }}` template. Templates embed expressions inside larger strings (`Text("Hello, {{ name }}!")`), but a condition *is* the expression — there's nothing to embed it in.
 
 ```python
-# Correct — raw expression
+# ✅ Correct — raw expression
 with If("status == 'active'"):
     ...
 
-# Wrong — unnecessary template delimiters
+# ❌ Wrong — unnecessary template delimiters
 with If("{{ status == 'active' }}"):
     ...
 ```
