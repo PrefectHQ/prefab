@@ -323,6 +323,20 @@ with Column(gap=3):
 
 Select "Error" or "Something else" to see different branches render. The `Else` catches anything that doesn't match the explicit conditions.
 
+## Conditions Are Expressions
+
+The first argument to `If` and `Elif` is always a raw [expression](/expressions/overview), not a `{{ }}` template. Templates embed expressions inside larger strings (`Text("Hello, {{ name }}!")`), but a condition *is* the expression — there's nothing to embed it in.
+
+```python
+# Correct — raw expression
+with If("status == 'active'"):
+    ...
+
+# Wrong — unnecessary template delimiters
+with If("{{ status == 'active' }}"):
+    ...
+```
+
 ## Chain Rules
 
 Consecutive `If/Elif/Else` siblings in the same parent form a single conditional chain:
@@ -330,11 +344,11 @@ Consecutive `If/Elif/Else` siblings in the same parent form a single conditional
 - A chain starts with `If` and extends through consecutive `Elif` and `Else` siblings
 - `Elif` and `Else` are optional — a lone `If` is valid
 - `Else` must be last in a chain
-- Any non-conditional sibling breaks the chain
+- Any non-conditional sibling breaks the chain — including another `If`, which starts a new independent chain
 
 ```python
 with Column():
-    # Chain 1: If / Elif / Else
+    # Chain 1: If / Elif / Else → one Condition node
     with If("status == 'error'"):
         Badge("Error", variant="destructive")
     with Elif("status == 'warning'"):
@@ -344,12 +358,16 @@ with Column():
 
     Text("---")  # breaks the chain
 
-    # Chain 2: independent If
+    # Chain 2: standalone If → separate Condition node
     with If("showDetails"):
         Text("Details here...")
+
+    # Chain 3: another If starts a new chain (not an Elif!)
+    with If("showFooter"):
+        Text("Footer content")
 ```
 
-This produces two independent `Condition` nodes with a `Text` between them.
+This produces three independent `Condition` nodes with a `Text` between the first and second.
 
 ## Wire Format
 
