@@ -27,7 +27,7 @@ or read the source in `src/prefab_ui/components/`.
 
 ```python
 from prefab_ui import UIResponse, Column, Heading, Text
-from prefab_ui.components import Button, Input, DataTable, DataTableColumn
+from prefab_ui.components import Button, Input, DataTable, DataTableColumn, If, Muted
 from prefab_ui.actions import ToolCall, ShowToast
 
 with Column(gap=4) as view:
@@ -42,15 +42,15 @@ with Column(gap=4) as view:
             on_error=ShowToast("{{ $error }}", variant="error"),
         ),
     )
-    DataTable(
-        columns=[
-            DataTableColumn(key="name", header="Name", sortable=True),
-            DataTableColumn(key="email", header="Email"),
-        ],
-        rows="{{ results }}",
-        paginated=True,
-        visible_when="results.length > 0",
-    )
+    with If("results.length > 0"):
+        DataTable(
+            columns=[
+                DataTableColumn(key="name", header="Name", sortable=True),
+                DataTableColumn(key="email", header="Email"),
+            ],
+            rows="{{ results }}",
+            paginated=True,
+        )
 
 return UIResponse(view=view, state={"query": "", "results": []})
 ```
@@ -84,7 +84,7 @@ from prefab_ui.components import (
     Button, ButtonGroup, Tabs, Tab, Accordion, AccordionItem,
     Dialog, Popover, Tooltip, Pages, Page,
     BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ChartSeries,
-    ForEach,
+    ForEach, If, Elif, Else,
 )
 
 # Actions
@@ -118,7 +118,7 @@ Only the root needs `as` (to pass to UIResponse).
 Python uses `snake_case`; wire protocol uses `camelCase`. The mapping is
 automatic: `on_click` → `onClick`, `css_class` → `cssClass`,
 `result_key` → `resultKey`, `input_type` → `inputType`,
-`visible_when` → `visibleWhen`, `page_size` → `pageSize`, etc.
+`page_size` → `pageSize`, etc.
 
 ## Positional Arguments
 
@@ -195,6 +195,33 @@ await sim.invoke("my_tool", {"page": "users"})
 button = sim.find("Button", label="Search")
 await sim.click(button)
 assert len(sim.state["results"]) > 0
+```
+
+## Conditional Rendering
+
+Use `If`, `Elif`, `Else` as context managers. Consecutive siblings form a
+chain that compiles to a single `Condition` node on the wire:
+
+```python
+with If("status == 'error'"):
+    Badge("Error", variant="destructive")
+with Elif("status == 'warning'"):
+    Badge("Warning", variant="warning")
+with Else():
+    Badge("OK")
+```
+
+The condition argument is a raw expression (no `{{ }}`). A lone `If` works
+for simple show/hide. Any non-conditional sibling breaks the chain.
+
+## ForEach Variables
+
+Inside a ForEach, `$index` (zero-based position) and `$item` (the full
+item) are available alongside destructured item fields:
+
+```python
+with ForEach("users"):
+    Text("{{ $index + 1 }}. {{ name }}")
 ```
 
 ## Define / Use

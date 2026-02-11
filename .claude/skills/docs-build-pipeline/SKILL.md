@@ -36,7 +36,7 @@ description: >
 8. **generate_protocol_pages.py** — introspects Pydantic models and writes
    one MDX page per component/action into `docs/protocol/`
 9. **generate_protocol_ref.py** — updates `## Protocol Reference` sections
-   in component MDX files with Card/ParamField markup from schemas
+   in component MDX files with compact pseudocode JSON blocks from Pydantic schemas
 
 ## Source Paths
 

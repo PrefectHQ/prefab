@@ -1,7 +1,7 @@
 # Component Reference
 
 All props optional unless **(required)**. Every component supports
-`cssClass` (string, Tailwind classes) and `visibleWhen` (expression).
+`cssClass` (string, Tailwind classes).
 Container components support `children` (array). Wire format uses camelCase.
 
 ---
@@ -88,7 +88,7 @@ Compose: **Card** > **CardHeader** > **CardTitle** (`content`) + **CardDescripti
 
 **Badge** — `label` **(req)**, `variant` ("default"|"secondary"|"destructive"|"outline").
 
-**Alert** [container] — `variant` ("default"|"destructive"|"warning"). Children: **AlertTitle** (`content`), **AlertDescription** (`content`).
+**Alert** [container] — `variant` ("default"|"destructive"|"success"|"warning"|"info"), `icon` (Lucide name). Children: **AlertTitle** (`content`), **AlertDescription** (`content`).
 
 **Progress** — `value` **(req)** (0-100).
 
@@ -124,6 +124,14 @@ Compose: **Card** > **CardHeader** > **CardTitle** (`content`) + **CardDescripti
 
 ## Control Flow
 
-**ForEach** [container] — `key` **(req)** (state key of array), `filter` (expression). Children repeat per item; templates resolve against item fields. `$index`, `$item` available.
+**Condition** — Conditional rendering. `cases` **(req)** (array of `{when, children}`), `else` (children array). Each `when` is an expression; first truthy case renders.
+
+```json
+{"type": "Condition", "cases": [
+  {"when": "status == 'error'", "children": [{"type": "Badge", "label": "Error", "variant": "destructive"}]}
+], "else": [{"type": "Badge", "label": "OK"}]}
+```
+
+**ForEach** [container] — `key` **(req)** (state key of array). Children repeat per item; templates resolve against item fields. `$index` (zero-based position), `$item` (full item) available.
 
 **State** [container] — `state` **(req)** (object). Scoped state for children; inner shadows outer.
