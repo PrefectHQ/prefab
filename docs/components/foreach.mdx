@@ -134,6 +134,48 @@ with Row(gap=2):
 
 With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per item.
 
+## Item Index
+
+Every iteration has access to `$index` — the zero-based position of the current item. Use `$index + 1` for 1-based numbering:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ _item }}"}]}]},"steps":["Collect underpants","?","Profit"]}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, ForEach, Text
+
+set_data(steps=["Collect underpants", "?", "Profit"])
+
+with Column(gap=1):
+    with ForEach("steps"):
+        Text("{{ $index + 1 }}. {{ _item }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-1",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ForEach",
+        "key": "steps",
+        "children": [
+          {
+            "type": "Text",
+            "content": "{{ $index + 1 }}. {{ _item }}"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`$index` is especially useful for actions that need to target a specific list item — `SetState("items.{{ $index }}.done", true)` updates the `done` field at the current position.
+
+`$item` is also available as a reference to the entire current item object. For dict items, individual fields are already in scope (`{{ name }}`), but `$item` lets you pass the whole object to an action like `ToolCall("edit_user", arguments={"user": "{{ $item }}"})`.
+
 ## Nested Data
 
 Since each item becomes the full interpolation context for that iteration, you can access nested fields with dot notation:

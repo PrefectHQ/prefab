@@ -62,12 +62,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Alert, AlertTitle, Column\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with Alert(visible_when=\"showDetails\"):\n        AlertTitle(\"Here are the details!\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"showDetails\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, P, Row, Column\nfrom prefab_ui import ToggleState\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Section A\", variant=\"outline\",\n               on_click=ToggleState(\"showA\"))\n        Button(\"Section B\", variant=\"outline\",\n               on_click=ToggleState(\"showB\"))\n        Button(\"Section C\", variant=\"outline\",\n               on_click=ToggleState(\"showC\"))\n    P(\"Content for section A\", visible_when=\"showA\")\n    P(\"Content for section B\", visible_when=\"showB\")\n    P(\"Content for section C\", visible_when=\"showC\")"
+    "code": "from prefab_ui.components import Button, If, P, Row, Column\nfrom prefab_ui import ToggleState\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Section A\", variant=\"outline\",\n               on_click=ToggleState(\"showA\"))\n        Button(\"Section B\", variant=\"outline\",\n               on_click=ToggleState(\"showB\"))\n        Button(\"Section C\", variant=\"outline\",\n               on_click=ToggleState(\"showC\"))\n    with If(\"showA\"):\n        P(\"Content for section A\")\n    with If(\"showB\"):\n        P(\"Content for section B\")\n    with If(\"showC\"):\n        P(\"Content for section C\")"
   },
   {
     "title": "Initial State",
@@ -392,6 +392,31 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text\nfrom prefab_ui import ToggleState\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\", on_change=ToggleState(\"outOfStock\"))\n        Text(\"Out of stock\")\n    with If(\"outOfStock\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Else,\n    If,\n    Row,\n    Switch,\n    Text,\n)\nfrom prefab_ui import ToggleState\n\nset_data(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\", on_change=ToggleState(\"showDetails\"))\n        Text(\"Show details\")\n    with If(\"showDetails\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nfrom prefab_ui import SetState\n\nset_data(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\",\n                on_change=SetState(\"status\")):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"status == 'error'\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"status == 'active'\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
+  },
+  {
+    "title": "# Correct — raw expression",
+    "category": "Components",
+    "code": "with If(\"status == 'active'\"):\n    ...\n\n# Wrong — unnecessary template delimiters\nwith If(\"{{ status == 'active' }}\"):\n    ..."
+  },
+  {
+    "title": "with Column():",
+    "category": "Components",
+    "code": "# Chain 1: If / Elif / Else → one Condition node\n    with If(\"status == 'error'\"):\n        Badge(\"Error\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning\", variant=\"secondary\")\n    with Else():\n        Badge(\"OK\")\n\n    Text(\"---\")  # breaks the chain\n\n    # Chain 2: standalone If → separate Condition node\n    with If(\"showDetails\"):\n        Text(\"Details here...\")\n\n    # Chain 3: another If starts a new chain (not an Elif!)\n    with If(\"showFooter\"):\n        Text(\"Footer content\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"email\", header=\"Email\"),\n        DataTableColumn(key=\"role\", header=\"Role\", sortable=True),\n    ],\n    rows=[\n        {\"name\": \"Alice Johnson\", \"email\": \"alice@example.com\", \"role\": \"Admin\"},\n        {\"name\": \"Bob Smith\", \"email\": \"bob@example.com\", \"role\": \"Editor\"},\n        {\"name\": \"Carol White\", \"email\": \"carol@example.com\", \"role\": \"Viewer\"},\n    ],\n    searchable=True,\n)"
   },
   {
@@ -427,7 +452,7 @@
   {
     "title": "from prefab_ui import Use",
     "category": "Components",
-    "code": "# Bare reference (data comes from surrounding scope)\nUse(\"status-row\")\n\n# With scoped data\nUse(\"status-row\", label=\"Build\", status=\"passing\", variant=\"default\")\n\n# With base component fields\nUse(\"status-row\", label=\"Deploy\", status=\"failed\", visible_when=\"show_deploy\")"
+    "code": "# Bare reference (data comes from surrounding scope)\nUse(\"status-row\")\n\n# With scoped data\nUse(\"status-row\", label=\"Build\", status=\"passing\", variant=\"default\")"
   },
   {
     "title": "from prefab_ui import Define, Use, UIResponse",
@@ -478,6 +503,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    ForEach,\n    Badge,\n    Row,\n)\n\nset_data(tags=[\"earth\", \"magrathea\", \"vogon poetry\", \"42\"])\n\nwith Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ _item }}\", variant=\"secondary\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, ForEach, Text\n\nset_data(steps=[\"Collect underpants\", \"?\", \"Profit\"])\n\nwith Column(gap=1):\n    with ForEach(\"steps\"):\n        Text(\"{{ $index + 1 }}. {{ _item }}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1012,7 +1042,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n        on_change=SetState(\"inventory\"),\n    )\n    with Alert(variant=\"destructive\", visible_when=\"inventory == 0\"):\n        AlertDescription(\"Out of stock!\")\n    with Alert(\n        variant=\"warning\",\n        visible_when=\"inventory > 0 && inventory < 10\",\n    ):\n        AlertDescription(\"Low stock warning\")"
+    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Elif,\n    If,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_data(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n        on_change=SetState(\"inventory\"),\n    )\n    with If(\"inventory == 0\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"inventory > 0 && inventory < 10\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1025,9 +1055,9 @@
     "code": "from prefab_ui.components import Column, Input, Row, Text\n\nset_data(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
   },
   {
-    "title": "Alert(\"Out of stock\", visible_when=\"inventory == 0\")",
+    "title": "with If(\"inventory == 0\"):",
     "category": "Expressions",
-    "code": "Alert(\"Low stock\", visible_when=\"inventory > 0 && inventory < 10\")"
+    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"inventory > 0 && inventory < 10\"):\n    Alert(\"Low stock\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1045,9 +1075,9 @@
     "code": "Badge(\"{{ status | upper }}\", variant=\"secondary\")"
   },
   {
-    "title": "with ForEach(\"todos\", filter=\"!done || !hideDone\"):",
+    "title": "with If(\"inventory == 0\"):",
     "category": "Expressions",
-    "code": "Text(\"{{ text }}\")"
+    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"inventory < 10\"):\n    Alert(\"Low stock\")\nwith Else():\n    Badge(\"In stock\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1222,7 +1252,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\", on_click=ToggleState(\"showDetails\"))\n    with Alert(visible_when=\"showDetails\"):\n        AlertTitle(\"Here are the hidden details!\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\", on_click=ToggleState(\"showDetails\"))\n    with If(\"showDetails\"):\n        with Alert():\n            AlertTitle(\"Here are the hidden details!\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1257,7 +1287,7 @@
   {
     "title": "from prefab_ui import Use",
     "category": "Patterns",
-    "code": "# Bare reference (no overrides)\nUse(\"status-badge\")\n\n# With scoped data\nUse(\"status-badge\", label=\"Build\", status=\"passing\", variant=\"default\")\n\n# With base component fields\nUse(\"status-badge\", label=\"Deploy\", status=\"failed\", visible_when=\"show_deploy\")"
+    "code": "# Bare reference (no overrides)\nUse(\"status-badge\")\n\n# With scoped data\nUse(\"status-badge\", label=\"Build\", status=\"passing\", variant=\"default\")"
   },
   {
     "title": "Define with ForEach",
