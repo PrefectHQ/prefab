@@ -107,14 +107,21 @@ Code("{{ query_result }}", language="sql")
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Code protocol definition](/protocol/code).
+<Card icon="braces" title="Code Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Code
-{
-  "type": "Code",
-  "content": "string (required)",
-  "language?": "string",
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="Code" default="Code">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Code content
+</ParamField>
+
+<ParamField body="language" type="string | null">
+  Syntax highlighting language
+</ParamField>
+
+</Card>

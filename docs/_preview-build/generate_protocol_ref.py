@@ -108,7 +108,7 @@ def _extract_enum(info: dict[str, Any]) -> list[str] | None:
 
 # Fields inherited from ComponentBase that appear on every component.
 # We'll show them in a condensed way or skip entirely.
-_BASE_FIELDS = {"cssClass", "visibleWhen"}
+_BASE_FIELDS = {"cssClass"}
 
 # Fields we always skip (internal or redundant)
 _SKIP_FIELDS = {"onSuccess", "onError"}

@@ -48,18 +48,19 @@ Type in the input, and the text updates instantly. The `name="name"` prop create
 
 ## Conditional Visibility
 
-Every component has a `visible_when` prop that controls whether it renders based on a boolean state variable. Pair it with `ToggleState` to show and hide content on demand.
+Use `If` / `Else` blocks to show or hide content based on state. Pair with `ToggleState` to toggle visibility on demand.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"visibleWhen":"showDetails","type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Alert, AlertTitle, Button, Column
+from prefab_ui.components import Alert, AlertTitle, Button, Column, If
 from prefab_ui import ToggleState
 
 with Column(gap=2):
     Button("Toggle Details", variant="outline", on_click=ToggleState("showDetails"))
-    with Alert(visible_when="showDetails"):
-        AlertTitle("Here are the hidden details!")
+    with If("showDetails"):
+        with Alert():
+            AlertTitle("Here are the hidden details!")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -79,13 +80,22 @@ with Column(gap=2):
         }
       },
       {
-        "visibleWhen": "showDetails",
-        "type": "Alert",
-        "variant": "default",
-        "children": [
+        "type": "Condition",
+        "cases": [
           {
-            "type": "AlertTitle",
-            "content": "Here are the hidden details!"
+            "when": "showDetails",
+            "children": [
+              {
+                "type": "Alert",
+                "variant": "default",
+                "children": [
+                  {
+                    "type": "AlertTitle",
+                    "content": "Here are the hidden details!"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

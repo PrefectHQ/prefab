@@ -296,13 +296,28 @@ with Grid(columns=2, gap=6, css_class="p-3 border-3 border-dashed"):
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Grid protocol definition](/protocol/grid).
+<Card icon="braces" title="Grid Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Grid
-{
-  "type": "Grid",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": []
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Grid" default="Grid">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="columns" type="number" default="3">
+</ParamField>
+
+<ParamField body="gap" type="number | Action[] | null">
+</ParamField>
+
+<ParamField body="align" type="string | null">
+</ParamField>
+
+<ParamField body="justify" type="string | null">
+</ParamField>
+
+</Card>

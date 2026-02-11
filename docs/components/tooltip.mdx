@@ -167,15 +167,24 @@ with Row(gap=4):
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [Tooltip protocol definition](/protocol/tooltip).
+<Card icon="braces" title="Tooltip Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Tooltip
-{
-  "type": "Tooltip",
-  "content": "string (required)",
-  "side?": "top | right | bottom | left",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": []
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Tooltip" default="Tooltip">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Tooltip text
+</ParamField>
+
+<ParamField body="side" type="string | null">
+  Which side to show the tooltip
+</ParamField>
+
+</Card>

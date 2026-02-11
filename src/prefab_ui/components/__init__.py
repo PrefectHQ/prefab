@@ -32,6 +32,7 @@ from prefab_ui.components.card import (
 from prefab_ui.components.checkbox import Checkbox
 from prefab_ui.components.combobox import Combobox, ComboboxOption
 from prefab_ui.components.code import Code
+from prefab_ui.components.conditional import Elif, Else, If
 from prefab_ui.components.column import Column
 from prefab_ui.components.data_table import DataTable, DataTableColumn
 from prefab_ui.components.date_picker import DatePicker
@@ -123,12 +124,15 @@ __all__ = [
     "DatePicker",
     "Dialog",
     "Div",
+    "Elif",
+    "Else",
     "Field",
     "ForEach",
     "Form",
     "Grid",
     "Heading",
     "Icon",
+    "If",
     "Image",
     "InlineCode",
     "Input",

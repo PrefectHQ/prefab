@@ -32,7 +32,7 @@ COMPONENT_CLASSES: dict[str, type] = {}
 
 # Subcomponents that share a doc page with their parent are excluded from
 # individual pages. They still appear in the parent component doc.
-_SKIP_COMPONENTS = {"Component", "ContainerComponent"}
+_SKIP_COMPONENTS = {"Component", "ContainerComponent", "If", "Elif", "Else"}
 
 for name in components_mod.__all__:
     cls = getattr(components_mod, name, None)

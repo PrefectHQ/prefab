@@ -311,32 +311,49 @@ with Table():
 
 ## Protocol Reference
 
-For the complete protocol schemas, see [Table](/protocol/table), [TableHead](/protocol/table-head), [TableCell](/protocol/table-cell), and [TableCaption](/protocol/table-caption).
+<Card icon="braces" title="Table Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Table
-{
-  "type": "Table",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": [TableCaption | TableHeader | TableBody]
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
 
-```json TableHead / TableCell
-{
-  "type": "TableHead | TableCell",
-  "content?": "string",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children?": []
-}
-```
+<ParamField body="type" type="Table" default="Table">
+  Component discriminator.
+</ParamField>
 
-```json TableCaption
-{
-  "type": "TableCaption",
-  "content": "string (required)",
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+</Card>
+
+<Card icon="braces" title="TableHead / TableCell Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="TableCell" default="TableCell">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string | null">
+  Cell text (alternative to children)
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="TableCaption Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="type" type="TableCaption" default="TableCaption">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="content" type="string" required>
+  Caption text
+</ParamField>
+
+</Card>

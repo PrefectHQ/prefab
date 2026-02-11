@@ -87,11 +87,6 @@ class Component(BaseModel):
         alias="cssClass",
         description="CSS/Tailwind classes for styling",
     )
-    visible_when: str | None = Field(
-        default=None,
-        alias="visibleWhen",
-        description="State key — component renders only when this state value is truthy",
-    )
 
     def model_post_init(self, __context: Any) -> None:
         stack = _component_stack.get() or []
@@ -134,5 +129,56 @@ class ContainerComponent(Component):
         # recursive serialization or remove the key when empty.
         d.pop("children", None)
         if self.children:
-            d["children"] = [c.to_json() for c in self.children]
+            d["children"] = _serialize_children(self.children)
         return d
+
+
+def _to_case(node: Component) -> dict[str, Any]:
+    """Convert an If or Elif node to a Condition case entry."""
+    case: dict[str, Any] = {"when": getattr(node, "condition", "")}
+    children = getattr(node, "children", [])
+    if children:
+        case["children"] = _serialize_children(children)
+    return case
+
+
+def _serialize_children(children: list[Component]) -> list[dict[str, Any]]:
+    """Serialize children, grouping If/Elif/Else chains into Condition nodes."""
+    result: list[dict[str, Any]] = []
+    i = 0
+    while i < len(children):
+        child = children[i]
+        child_type = getattr(child, "type", None)
+
+        if child_type == "If":
+            cases: list[dict[str, Any]] = [_to_case(child)]
+            else_children: list[dict[str, Any]] | None = None
+            i += 1
+            while i < len(children):
+                t = getattr(children[i], "type", None)
+                if t == "Elif":
+                    cases.append(_to_case(children[i]))
+                    i += 1
+                elif t == "Else":
+                    inner = getattr(children[i], "children", [])
+                    else_children = _serialize_children(inner)
+                    i += 1
+                    break
+                else:
+                    break
+            node: dict[str, Any] = {"type": "Condition", "cases": cases}
+            if else_children:
+                node["else"] = else_children
+            result.append(node)
+
+        elif child_type in ("Elif", "Else"):
+            raise ValueError(
+                f"{child_type} without preceding If — "
+                f"Elif and Else must immediately follow an If or Elif"
+            )
+
+        else:
+            result.append(child.to_json())
+            i += 1
+
+    return result

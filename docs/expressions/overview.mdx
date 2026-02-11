@@ -85,7 +85,7 @@ Expressions handle display-time computation — formatting values, computing der
 - **Conditional text** — `{{ active ? 'Online' : 'Offline' }}`
 - **String building** — `{{ first + ' ' + last }}`
 - **Formatting** — `{{ price | currency }}`, `{{ name | upper }}`
-- **Conditional rendering** — `visible_when="inventory > 0"`
+- **Conditional rendering** — `If("inventory > 0")` / `Elif` / `Else`
 
 ## What They Can't
 
@@ -112,17 +112,15 @@ Text("{{ price * quantity | currency }}")
 Badge("{{ status | upper }}", variant="secondary")
 ```
 
-**`visible_when`** controls whether a component renders at all. The expression evaluates to a truthy or falsy value, and the component only appears when the result is truthy.
+**[Conditional rendering](/components/conditional)** uses `If`, `Elif`, and `Else` blocks to show or hide components based on expression results. Each condition evaluates to a truthy or falsy value, and the first matching branch renders.
 
 ```python
-Alert("Low stock", visible_when="inventory > 0 && inventory < 10")
-```
-
-**ForEach `filter`** controls which items in a collection are shown. The expression evaluates once per item, with access to both the item's fields and the surrounding state.
-
-```python
-with ForEach("todos", filter="!done || !hideDone"):
-    Text("{{ text }}")
+with If("inventory == 0"):
+    Alert("Out of stock", variant="destructive")
+with Elif("inventory < 10"):
+    Alert("Low stock")
+with Else():
+    Badge("In stock")
 ```
 
 ## Grammar

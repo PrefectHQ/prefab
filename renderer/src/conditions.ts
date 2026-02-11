@@ -1,14 +1,14 @@
 /**
- * Evaluate `visibleWhen` conditions.
+ * Evaluate conditional expressions (Condition `when` clauses).
  *
  * Delegates to the unified expression engine. The result is coerced to
  * boolean. On parse error, falls back to simple `!!ctx[expr]` with a
- * console.warn (legacy behavior).
+ * console.warn.
  */
 
 import { evaluate } from "./expression";
 
-/** Evaluate a visibility expression against a context object. */
+/** Evaluate a condition expression against a context object. */
 export function evaluateCondition(
   expr: string,
   ctx: Record<string, unknown>,
@@ -20,7 +20,7 @@ export function evaluateCondition(
     return !!evaluate(trimmed, ctx);
   } catch {
     console.warn(
-      `[Prefab] Failed to parse visibleWhen expression: "${expr}". Falling back to key lookup.`,
+      `[Prefab] Failed to parse condition expression: "${expr}". Falling back to key lookup.`,
     );
     return !!ctx[trimmed];
   }

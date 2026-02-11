@@ -42,10 +42,10 @@ class TestState:
         assert s.state == {"name": "Alice"}
         assert s.css_class == "hidden"
 
-    def test_visible_when_not_in_state(self) -> None:
+    def test_unknown_kwargs_go_to_state(self) -> None:
         s = State(name="Alice", visible_when="show")
-        assert s.state == {"name": "Alice"}
-        assert s.visible_when == "show"
+        # visible_when is no longer a base field, so it lands in state
+        assert s.state == {"name": "Alice", "visible_when": "show"}
 
     def test_to_json_basic(self) -> None:
         s = State(name="Alice")
@@ -146,11 +146,11 @@ class TestUse:
         assert result["cssClass"] == "mt-4"
         assert result["children"] == [{"$ref": "card"}]
 
-    def test_visible_when_on_wrapper(self) -> None:
+    def test_unknown_kwargs_become_overrides(self) -> None:
+        # visible_when is no longer a base field, so it becomes a state override
         result = Use("card", visible_when="show").to_json()
         assert result["type"] == "State"
-        assert result["state"] == {}
-        assert result["visibleWhen"] == "show"
+        assert result["state"] == {"visible_when": "show"}
 
     def test_overrides_with_base_fields(self) -> None:
         result = Use("card", name="Alice", css_class="mt-4").to_json()

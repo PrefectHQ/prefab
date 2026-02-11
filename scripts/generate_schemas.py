@@ -34,6 +34,19 @@ FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
 COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"
 
+# Python-only authoring constructs that never appear on the wire.
+# Excluded from manifest/fixtures (no corresponding Zod schema needed).
+_AUTHORING_ONLY = {"If", "Elif", "Else"}
+
+# Wire-only types produced by serialization transforms.
+# Added to manifest with hand-crafted fixtures (no Python class).
+_WIRE_ONLY_FIXTURES: dict[str, dict[str, Any]] = {
+    "Condition": {
+        "type": "Condition",
+        "cases": [{"when": "true", "children": []}],
+    },
+}
+
 
 def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     """Produce a minimal valid value for a required Pydantic field."""
@@ -114,6 +127,8 @@ def discover_components() -> dict[str, type[Component]]:
 
     result: dict[str, type[Component]] = {}
     for name in component_names:
+        if name in _AUTHORING_ONLY:
+            continue
         cls = getattr(mod, name)
         if not isinstance(cls, type):
             continue
@@ -172,11 +187,16 @@ def generate_all() -> dict[str, Any]:
     COMPONENTS_DIR.mkdir(parents=True, exist_ok=True)
     ACTIONS_DIR.mkdir(parents=True, exist_ok=True)
 
-    component_names_list = sorted(components.keys())
+    component_names_list = sorted([*components.keys(), *_WIRE_ONLY_FIXTURES.keys()])
     action_names_list = sorted(actions.keys())
 
     for name, cls in components.items():
         fixture = generate_component_fixture(cls)
+        (COMPONENTS_DIR / f"{name}.json").write_text(
+            json.dumps(fixture, indent=2) + "\n"
+        )
+
+    for name, fixture in _WIRE_ONLY_FIXTURES.items():
         (COMPONENTS_DIR / f"{name}.json").write_text(
             json.dumps(fixture, indent=2) + "\n"
         )
@@ -208,7 +228,7 @@ def check_freshness() -> bool:
     components = discover_components()
     actions = discover_actions()
 
-    expected_components = sorted(components.keys())
+    expected_components = sorted([*components.keys(), *_WIRE_ONLY_FIXTURES.keys()])
     expected_actions = sorted(actions.keys())
 
     if existing_manifest.get("components") != expected_components:

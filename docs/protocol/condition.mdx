@@ -1,0 +1,54 @@
+---
+title: Condition
+description: Wire format for conditional rendering.
+---
+
+Evaluates cases in order and renders the first match. Falls back to the `else` branch if no case matches. Produced by grouping consecutive `If`/`Elif`/`Else` siblings in the Python DSL.
+
+```json
+{
+  "type": "Condition",
+  "cases": [
+    {
+      "when": "string (expression)",
+      "children": []
+    }
+  ],
+  "else": []
+}
+```
+
+## Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `type` | `"Condition"` | Yes | Component discriminator |
+| `cases` | `array` | Yes | One or more case branches (min 1) |
+| `cases[].when` | `string` | Yes | Expression to evaluate |
+| `cases[].children` | `array` | No | Components to render when `when` is truthy |
+| `else` | `array` | No | Components to render when no case matches |
+
+## Example
+
+```json
+{
+  "type": "Condition",
+  "cases": [
+    {
+      "when": "inventory == 0",
+      "children": [
+        { "type": "Badge", "label": "Out of stock", "variant": "destructive" }
+      ]
+    },
+    {
+      "when": "inventory < 10",
+      "children": [
+        { "type": "Badge", "label": "Low stock", "variant": "secondary" }
+      ]
+    }
+  ],
+  "else": [
+    { "type": "Badge", "label": "In stock", "variant": "default" }
+  ]
+}
+```

@@ -201,15 +201,25 @@ with Card():
 
 ## Protocol Reference
 
-For the complete protocol schema, see the [DatePicker protocol definition](/protocol/date-picker).
+<Card icon="braces" title="DatePicker Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json DatePicker
-{
-  "type": "DatePicker",
-  "placeholder?": "Pick a date",
-  "name?": "string",
-  "onChange?": "Action | Action[]",
-  "cssClass?": "string",
-  "visibleWhen?": "string"
-}
-```
+<ParamField body="type" type="DatePicker" default="DatePicker">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="placeholder" type="string" default="Pick a date">
+  Button text when no date is selected
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  State key for the selected date (ISO string)
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) when date changes
+</ParamField>
+
+</Card>

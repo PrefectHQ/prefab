@@ -327,29 +327,58 @@ with Column(gap=4):
 
 ## Protocol Reference
 
-For the complete protocol schemas, see [Tabs](/protocol/tabs) and [Tab](/protocol/tab).
+<Card icon="braces" title="Tabs Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
 
-```json Tabs
-{
-  "type": "Tabs",
-  "variant?": "default | line",
-  "defaultValue?": "string",
-  "name?": "string",
-  "onChange?": "Action | Action[]",
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": [Tab]
-}
-```
+<ParamField body="children" type="array">
+</ParamField>
 
-```json Tab
-{
-  "type": "Tab",
-  "title": "string (required)",
-  "value?": "string",
-  "disabled?": false,
-  "cssClass?": "string",
-  "visibleWhen?": "string",
-  "children": []
-}
-```
+<ParamField body="type" type="Tabs" default="Tabs">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="variant" type="string" default="default">
+  Visual style — 'default' (pill) or 'line' (underline). One of: `"default"`, `"line"`
+</ParamField>
+
+<ParamField body="defaultValue" type="string | null">
+  Value of the initially active tab
+</ParamField>
+
+<ParamField body="name" type="string | null">
+  State key for tracking the active tab
+</ParamField>
+
+<ParamField body="onChange" type="Action | Action[] | null">
+  Action(s) when the active tab changes
+</ParamField>
+
+</Card>
+
+<Card icon="braces" title="Tab Protocol">
+<ParamField body="cssClass" type="string | null">
+  CSS/Tailwind classes for styling
+</ParamField>
+
+<ParamField body="children" type="array">
+</ParamField>
+
+<ParamField body="type" type="Tab" default="Tab">
+  Component discriminator.
+</ParamField>
+
+<ParamField body="title" type="string" required>
+  Tab trigger label
+</ParamField>
+
+<ParamField body="value" type="string | null">
+  Unique value for this tab (defaults to title)
+</ParamField>
+
+<ParamField body="disabled" type="boolean" default="false">
+  Disable this tab
+</ParamField>
+
+</Card>

@@ -1,7 +1,7 @@
 /**
  * Shared base schema fragments for Prefab wire format.
  *
- * Every component carries optional `cssClass` and `visibleWhen` fields.
+ * Every component carries an optional `cssClass` field.
  * Container components add a recursive `children` array.
  */
 
@@ -10,7 +10,6 @@ import { z } from "zod";
 /** Fields present on every component. */
 export const componentBase = z.object({
   cssClass: z.string().optional(),
-  visibleWhen: z.string().optional(),
 });
 
 /**

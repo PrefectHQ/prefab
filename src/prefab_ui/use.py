@@ -35,8 +35,8 @@ _BASE_FIELDS = frozenset(Component.model_fields)
 class Use(Component):
     """Reference a defined component template by name.
 
-    Kwargs that aren't base component fields (``css_class``,
-    ``visible_when``) become scoped state overrides, automatically
+    Kwargs that aren't base component fields (``css_class``)
+    become scoped state overrides, automatically
     wrapping the ``$ref`` in a ``State`` node on the wire.
 
     Args:
@@ -65,7 +65,7 @@ class Use(Component):
         """Desugar to ``$ref`` + optional ``State`` wrapper."""
         ref: dict[str, Any] = {"$ref": self.name}
 
-        needs_wrapper = self.overrides or self.css_class or self.visible_when
+        needs_wrapper = self.overrides or self.css_class
         if not needs_wrapper:
             return ref
 
@@ -76,6 +76,4 @@ class Use(Component):
         }
         if self.css_class:
             wrapper["cssClass"] = self.css_class
-        if self.visible_when:
-            wrapper["visibleWhen"] = self.visible_when
         return wrapper

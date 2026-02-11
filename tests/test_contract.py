@@ -109,12 +109,21 @@ def _minimal_instance(cls: type[_M]) -> _M:
     return cls(**kwargs)
 
 
+# Python-only authoring constructs — excluded from wire format contract tests
+_AUTHORING_ONLY = {"If", "Elif", "Else"}
+
+# Wire-only types produced by serialization transforms (no Python class)
+_WIRE_ONLY = {"Condition"}
+
+
 def _all_concrete_components() -> list[type[Component]]:
-    """Discover all concrete Component subclasses."""
+    """Discover all concrete Component subclasses (excluding authoring-only)."""
     import prefab_ui.components as mod
 
     result = []
     for name in component_names:
+        if name in _AUTHORING_ONLY:
+            continue
         cls = getattr(mod, name)
         if (
             isinstance(cls, type)
@@ -225,14 +234,16 @@ def test_fixtures_are_fresh() -> None:
         expected = _generate_action_fixture(cls)
         assert existing == expected, f"Fixture drift: {discriminator}"
 
-    assert manifest["components"] == sorted(components.keys())
+    assert manifest["components"] == sorted([*components.keys(), *_WIRE_ONLY])
     assert manifest["actions"] == sorted(actions.keys())
 
 
 def test_manifest_components_match_discovered() -> None:
-    """Manifest component list matches discovered components."""
+    """Manifest component list matches discovered + wire-only components."""
     manifest = json.loads((SCHEMAS_DIR / "manifest.json").read_text())
-    discovered = sorted(cls.__name__ for cls in _all_concrete_components())
+    discovered = sorted(
+        [*(cls.__name__ for cls in _all_concrete_components()), *_WIRE_ONLY]
+    )
     assert manifest["components"] == discovered
 
 

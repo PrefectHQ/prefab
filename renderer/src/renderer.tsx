@@ -23,7 +23,6 @@ import { ValidationError } from "./components/validation-error";
 export interface ComponentNode {
   type: string;
   children?: ComponentNode[];
-  visibleWhen?: string;
   // All other props are component-specific
   [key: string]: unknown;
 }
@@ -242,7 +241,6 @@ function filterInternalProps(
 ): Record<string, unknown> {
   const filtered = { ...props };
   delete filtered._textContent;
-  delete filtered.visibleWhen;
   return filtered;
 }
 
@@ -274,18 +272,12 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     );
   }
 
-  const { type, children, visibleWhen, ...rawProps } = node;
+  const { type, children, ...rawProps } = node;
 
   // Validate node against its Zod schema before any processing
   const validationError = validateNode(node);
   if (validationError) {
     return <ValidationError error={validationError} node={node} />;
-  }
-
-  // Conditional rendering via expression evaluator
-  if (visibleWhen) {
-    const ctx = { ...state.getAll(), ...scope };
-    if (!evaluateCondition(visibleWhen, ctx)) return null;
   }
 
   const Component = REGISTRY[type];
@@ -488,6 +480,52 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         ))}
       </div>
     );
+  }
+
+  // Handle Condition — evaluate cases in order, render the first match.
+  // Falls back to else branch if no case matches.
+  if (type === "Condition") {
+    const cases = rawProps.cases as
+      | { when: string; children?: ComponentNode[] }[]
+      | undefined;
+    const elseChildren = rawProps.else as ComponentNode[] | undefined;
+    const ctx2 = { ...state.getAll(), ...scope };
+    if (cases) {
+      for (const c of cases) {
+        if (evaluateCondition(c.when, ctx2)) {
+          return (
+            <>
+              {c.children?.map((child, i) => (
+                <RenderNode
+                  key={i}
+                  node={child}
+                  scope={scope}
+                  state={state}
+                  app={app}
+                />
+              ))}
+            </>
+          );
+        }
+      }
+    }
+    // No case matched — render else branch if present
+    if (elseChildren) {
+      return (
+        <>
+          {elseChildren.map((child, i) => (
+            <RenderNode
+              key={i}
+              node={child}
+              scope={scope}
+              state={state}
+              app={app}
+            />
+          ))}
+        </>
+      );
+    }
+    return null;
   }
 
   // Render children recursively

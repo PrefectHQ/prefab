@@ -1031,7 +1031,7 @@ export const DEMO_TREE: ComponentNode = {
         },
       ],
     },
-    { type: "H3", content: "Conditional Rendering (visibleWhen)" },
+    { type: "H3", content: "Conditional Rendering" },
     {
       type: "Column",
       gap: 2,
@@ -1043,14 +1043,23 @@ export const DEMO_TREE: ComponentNode = {
           onClick: { action: "toggleState", key: "showDetails" },
         },
         {
-          type: "Alert",
-          visibleWhen: "showDetails",
-          children: [
-            { type: "AlertTitle", content: "Details" },
+          type: "Condition",
+          cases: [
             {
-              type: "AlertDescription",
-              content:
-                "This alert is conditionally rendered based on client state.",
+              when: "showDetails",
+              children: [
+                {
+                  type: "Alert",
+                  children: [
+                    { type: "AlertTitle", content: "Details" },
+                    {
+                      type: "AlertDescription",
+                      content:
+                        "This alert is conditionally rendered based on client state.",
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },
