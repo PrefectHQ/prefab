@@ -30,10 +30,8 @@ import { EXAMPLES, type Example } from "./examples";
 type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
-const DEFAULT_PYTHON = `from prefab_ui.components import (
-    Card, CardHeader, CardTitle, CardDescription, CardContent,
-    Button, Input, Column, Row, Badge, Text,
-)
+const DEFAULT_PYTHON = `from prefab_ui.components import *
+from prefab_ui.actions import *
 
 with Card():
     with CardHeader():
@@ -173,7 +171,7 @@ export function Playground() {
     const encoded = params.get("code");
     if (!encoded) return;
     try {
-      setCode(atob(encoded));
+      setCode(decodeURIComponent(escape(atob(encoded))));
     } catch {
       // ignore malformed hash
     }
@@ -182,8 +180,12 @@ export function Playground() {
   // Sync code to URL hash for shareability (only in Python mode)
   useEffect(() => {
     if (mode === "python") {
-      const encoded = btoa(code);
-      window.history.replaceState(null, "", `#code=${encoded}`);
+      try {
+        const encoded = btoa(unescape(encodeURIComponent(code)));
+        window.history.replaceState(null, "", `#code=${encoded}`);
+      } catch {
+        // non-encodable characters — skip hash update
+      }
     }
   }, [code, mode]);
 
