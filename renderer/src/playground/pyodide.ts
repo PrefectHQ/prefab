@@ -112,6 +112,8 @@ export async function executePython(code: string): Promise<ExecuteResult> {
 import json as _json
 from prefab_ui.components.base import _component_stack, ContainerComponent
 from prefab_ui.components.div import Div
+from prefab_ui.components import *
+from prefab_ui.actions import *
 
 # Reset the component stack
 _component_stack.set(None)
