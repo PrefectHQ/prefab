@@ -130,7 +130,6 @@ def _compile_layout_classes(
     *,
     gap: int | tuple[int | None, int | None] | Responsive | None = None,
     columns: int | dict[str, int] | Responsive | None = None,
-    min_column_width: str | None = None,
     align: str | None = None,
     justify: str | None = None,
 ) -> str | None:
@@ -145,9 +144,7 @@ def _compile_layout_classes(
             parts.append(_gap_classes(gap))
 
     # Columns
-    if min_column_width is not None:
-        parts.append(f"grid-cols-[repeat(auto-fill,minmax({min_column_width},1fr))]")
-    elif columns is not None:
+    if columns is not None:
         if isinstance(columns, Responsive):
             parts.append(columns.compile_css(lambda n: f"grid-cols-{n}"))
         elif isinstance(columns, dict):

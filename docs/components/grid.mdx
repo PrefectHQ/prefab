@@ -211,7 +211,7 @@ with Grid(columns=4, gap=4, css_class="p-3 border-3 border-dashed"):
 
 Set `min_column_width` instead of `columns` to let CSS Grid automatically fit as many columns as possible, each at least the given width. The grid reflows based on the container's actual width — try resizing your browser to see it in action.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]","type":"Grid","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Grid","minColumnWidth":"10rem","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Div, Grid
@@ -223,8 +223,9 @@ with Grid(min_column_width="10rem", gap=4):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4 grid-cols-[repeat(auto-fill,minmax(10rem,1fr))]",
+    "cssClass": "gap-4",
     "type": "Grid",
+    "minColumnWidth": "10rem",
     "children": [
       {
         "cssClass": "bg-emerald-500 rounded-md h-10",

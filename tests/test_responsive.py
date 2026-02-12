@@ -80,15 +80,15 @@ class TestResponsiveColumns:
 
     def test_grid_min_column_width(self) -> None:
         g = Grid(min_column_width="16rem")
-        css = g.css_class or ""
-        assert "grid-cols-[repeat(auto-fill,minmax(16rem,1fr))]" in css
-        assert "grid-cols-3" not in css
+        data = g.to_json()
+        assert data["minColumnWidth"] == "16rem"
+        # Should not have any grid-cols class — renderer applies inline style
+        assert "grid-cols" not in (g.css_class or "")
 
     def test_grid_min_column_width_no_default_columns(self) -> None:
         g = Grid(min_column_width="20rem")
-        css = g.css_class or ""
         # Should not have the default grid-cols-3
-        assert "grid-cols-3" not in css
+        assert "grid-cols-3" not in (g.css_class or "")
 
 
 class TestResponsiveGap:

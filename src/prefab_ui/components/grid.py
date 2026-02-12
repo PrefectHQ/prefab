@@ -49,7 +49,7 @@ class Grid(ContainerComponent):
         default=None,
         exclude=True,
     )
-    min_column_width: str | None = Field(default=None, exclude=True)
+    min_column_width: str | None = Field(default=None, alias="minColumnWidth")
     gap: Gap = Field(default=None, exclude=True)
     align: Align = Field(default=None, exclude=True)
     justify: Justify = Field(default=None, exclude=True)
@@ -84,7 +84,6 @@ class Grid(ContainerComponent):
         layout = _compile_layout_classes(
             gap=self.gap,
             columns=self.columns,
-            min_column_width=self.min_column_width,
             align=self.align,
             justify=self.justify,
         )
