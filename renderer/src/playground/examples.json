@@ -1295,6 +1295,36 @@
     "code": "from prefab_ui import Define, Use, UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
   },
   {
+    "title": "from prefab_ui.testing import Simulator, ActionResult",
+    "category": "General",
+    "code": "async def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"search_users\":\n        query = arguments.get(\"q\", \"\")\n        users = [{\"name\": \"Alice\", \"email\": \"alice@example.com\"}]\n        results = [u for u in users if query.lower() in u[\"name\"].lower()]\n        return ActionResult(content={\n            \"state\": {\"results\": results},\n            \"view\": {\"type\": \"Text\", \"content\": \"Found users\"},\n        })\n    return ActionResult(is_error=True, error_text=f\"Unknown tool: {name}\")\n\n\nsim = Simulator(handler)"
+  },
+  {
+    "title": "# Find the first match (raises ComponentNotFoundError if missing)",
+    "category": "General",
+    "code": "button = sim.find(\"Button\", label=\"Search\")\ninput_field = sim.find(\"Input\", name=\"query\")\n\n# Find all matches\ncards = sim.find_all(\"Card\")\nbuttons = sim.find_all(\"Button\", variant=\"destructive\")"
+  },
+  {
+    "title": "# Click a button — executes its onClick action chain",
+    "category": "General",
+    "code": "await sim.click(button)\n\n# Type into an input — sets the value, syncs named state, runs onChange\nawait sim.set_value(input_field, \"alice\")\n\n# Submit a form — executes its onSubmit action chain\nform = sim.find(\"Form\")\nawait sim.submit(form)"
+  },
+  {
+    "title": "# State was seeded by invoke",
+    "category": "General",
+    "code": "assert sim.state[\"query\"] == \"\"\n\n# set_value auto-synced the named input\nawait sim.set_value(input_field, \"alice\")\nassert sim.state[\"query\"] == \"alice\"\n\n# toolCall wrote results via resultKey\nawait sim.click(button)\nassert len(sim.state[\"results\"]) == 1\nassert sim.state[\"results\"][0][\"name\"] == \"Alice\""
+  },
+  {
+    "title": "assert len(sim.toasts) == 1",
+    "category": "General",
+    "code": "assert sim.toasts[0][\"message\"] == \"Found 1 user\"\nassert sim.toasts[0][\"variant\"] == \"success\""
+  },
+  {
+    "title": "import pytest",
+    "category": "General",
+    "code": "from prefab_ui import UIResponse, Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=ToolCall(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "General",
     "code": "from prefab_ui.components import Card, CardContent, Column, H3, Muted, Input, Badge, Row\n\nset_initial_state(name=\"world\")\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            H3(\"Hello, {{ name }}!\")\n            Muted(\"Type below and watch this update in real time.\")\n            Input(name=\"name\", placeholder=\"Your name...\")\n            with Row(gap=2):\n                Badge(\"{{ name }}\", variant=\"default\")\n                Badge(\"Prefab\", variant=\"secondary\")"
