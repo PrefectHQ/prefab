@@ -1,14 +1,16 @@
 ---
-title: State
-description: Set and toggle client-side state variables instantly, with no server round-trip.
+title: State Actions
+description: Actions that read and write client-side state — set values, toggle booleans, and manipulate lists, all without server calls.
 icon: pen-to-square
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Named form controls automatically sync their value to state — the slider below updates `brightness` on every drag, and the `Muted` text responds through `{{ brightness }}` interpolation. No action needed.
+State is client-side data that your UI can read and write. Components display state values, actions change them, and updates are instant — no server round-trip needed.
 
-`SetState` gives you explicit control when auto-binding isn't enough: setting literal values, computing new state from old, or wiring up non-form elements like buttons.
+## Setting Up State
+
+Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}`}>
 <CodeGroup>
@@ -48,46 +50,44 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-Drag the slider — the text updates instantly. `set_initial_state(brightness=50)` seeds the starting value; the `name` prop handles the rest.
+Drag the slider — the text updates instantly. The Slider has `name="brightness"`, which means it automatically reads from and writes to the `brightness` state key. Most form controls (Input, Checkbox, Switch, Select, etc.) support this `name` prop for automatic state binding.
 
-## Event Capture (the Default)
+For MCP tools, you can also provide initial state through `AppResult.state`:
 
-When you write `SetState("brightness")` without a second argument, it defaults to `{{ $event }}` — the value from the triggering interaction. What `$event` means depends on the component:
+```python AppResult State
+from prefab_ui import AppResult
 
-| Component | `$event` value |
-|-----------|---------------|
-| Slider | Current slider position (number) |
-| Input / Textarea | Current text value (string) |
-| Checkbox / Switch | Checked state (boolean) |
-| Select | Selected option value (string) |
-| RadioGroup | Selected radio value (string) |
-| Button | `undefined` |
+@mcp.tool()
+async def settings() -> AppResult:
+    return AppResult(
+        view=...,
+        state={"volume": 75, "muted": False},
+    )
+```
 
-This means `SetState("key")` is all you need for form controls — it automatically captures the right value.
+## SetState
 
-## Explicit Values
+`SetState` explicitly sets a state key to a value. When you wire it to a form control's `on_change`, the default value is `{{ $event }}` — the current value of that control (slider position, input text, checkbox state, etc.). This means `SetState("key")` with no second argument captures whatever the user entered.
 
-Pass a second argument to set a specific value instead of capturing the event. Click the buttons below to change the color:
+For non-form elements like buttons, pass an explicit value as the second argument:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"cssClass":"bg-blue-500 text-white","type":"Button","label":"Blue","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-blue-500"}},{"cssClass":"bg-emerald-500 text-white","type":"Button","label":"Emerald","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-emerald-500"}},{"cssClass":"bg-rose-500 text-white","type":"Button","label":"Rose","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-rose-500"}},{"cssClass":"bg-amber-500 text-white","type":"Button","label":"Amber","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-amber-500"}}]},{"cssClass":"{{ color }} h-10 rounded-md","type":"Div"}]},"state":{"color":"bg-blue-500"}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Div, Row, Column
+from prefab_ui.components import Badge, Button, Column, Row
 from prefab_ui import SetState
 
-set_initial_state(color="bg-blue-500")
+set_initial_state(drive="improbability")
 
 with Column(gap=3):
     with Row(gap=2):
-        Button("Blue", css_class="bg-blue-500 text-white",
-               on_click=SetState("color", "bg-blue-500"))
-        Button("Emerald", css_class="bg-emerald-500 text-white",
-               on_click=SetState("color", "bg-emerald-500"))
-        Button("Rose", css_class="bg-rose-500 text-white",
-               on_click=SetState("color", "bg-rose-500"))
-        Button("Amber", css_class="bg-amber-500 text-white",
-               on_click=SetState("color", "bg-amber-500"))
-    Div(css_class="{{ color }} h-10 rounded-md")
+        Button("Improbability", variant="outline",
+               on_click=SetState("drive", "improbability"))
+        Button("Conventional", variant="outline",
+               on_click=SetState("drive", "conventional"))
+        Button("Bistromath", variant="outline",
+               on_click=SetState("drive", "bistromath"))
+    Badge("Active drive: {{ drive }}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -100,92 +100,84 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {
-            "cssClass": "bg-blue-500 text-white",
             "type": "Button",
-            "label": "Blue",
-            "variant": "default",
+            "label": "Improbability",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-blue-500"
+              "key": "drive",
+              "value": "improbability"
             }
           },
           {
-            "cssClass": "bg-emerald-500 text-white",
             "type": "Button",
-            "label": "Emerald",
-            "variant": "default",
+            "label": "Conventional",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-emerald-500"
+              "key": "drive",
+              "value": "conventional"
             }
           },
           {
-            "cssClass": "bg-rose-500 text-white",
             "type": "Button",
-            "label": "Rose",
-            "variant": "default",
+            "label": "Bistromath",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-rose-500"
-            }
-          },
-          {
-            "cssClass": "bg-amber-500 text-white",
-            "type": "Button",
-            "label": "Amber",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-amber-500"
+              "key": "drive",
+              "value": "bistromath"
             }
           }
         ]
       },
       {
-        "cssClass": "{{ color }} h-10 rounded-md",
-        "type": "Div"
+        "type": "Badge",
+        "label": "Active drive: {{ drive }}",
+        "variant": "default"
       }
     ]
   },
   "state": {
-    "color": "bg-blue-500"
+    "drive": "improbability"
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-The div's `css_class` uses `{{ color }}` interpolation, so clicking a button swaps the Tailwind class and the color changes instantly.
+### Dot-paths
 
-## Resetting State
+State keys can contain dots to reach into nested objects. `profile.name` means "the `name` field inside the `profile` object." A purely numeric segment like `0` means an array index, so `todos.0.done` means "the `done` field of the first item in the `todos` array."
 
-Use explicit values to build reset buttons:
+The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}","type":"Muted"},{"type":"Button","label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50}}]},"state":{"volume":75}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Slider, Muted, Column
-from prefab_ui import SetState
+from prefab_ui.components import (
+    Card, CardDescription, CardHeader, CardTitle,
+    Column, Input,
+)
 
-set_initial_state(volume=75)
+set_initial_state(profile={
+    "name": "Arthur Dent",
+    "title": "Sandwich Maker, Lamuella",
+})
 
 with Column(gap=3):
-    Slider(name="volume", min=0, max=100)
-    Muted("Volume: {{ volume }}")
-    Button("Reset to 50", variant="outline",
-           on_click=SetState("volume", 50))
+    with Card():
+        with CardHeader():
+            CardTitle("{{ profile.name }}")
+            CardDescription("{{ profile.title }}")
+    Input(name="profile.name", placeholder="Name")
+    Input(name="profile.title", placeholder="Title")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -194,41 +186,74 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 100.0,
-        "name": "volume",
-        "disabled": false
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "{{ profile.name }}"
+              },
+              {
+                "type": "CardDescription",
+                "content": "{{ profile.title }}"
+              }
+            ]
+          }
+        ]
       },
       {
-        "content": "Volume: {{ volume }}",
-        "type": "Muted"
-      },
-      {
-        "type": "Button",
-        "label": "Reset to 50",
-        "variant": "outline",
-        "size": "default",
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Name",
+        "name": "profile.name",
         "disabled": false,
-        "onClick": {
-          "action": "setState",
-          "key": "volume",
-          "value": 50
-        }
+        "required": false
+      },
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Title",
+        "name": "profile.title",
+        "disabled": false,
+        "required": false
       }
     ]
   },
   "state": {
-    "volume": 75
+    "profile": {
+      "name": "Arthur Dent",
+      "title": "Sandwich Maker, Lamuella"
+    }
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-## Toggle State
+Integer segments address array items. Inside a [ForEach](/components/for-each) loop, combine this with `{{ $index }}` to target the current row:
 
-`ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. It's the shorthand for show/hide patterns, expand/collapse, and on/off toggles.
+```python Array Paths
+set_initial_state(todos=[
+    {"text": "Find Magrathea", "done": False},
+    {"text": "Have lunch", "done": True},
+])
+
+with ForEach("todos"):
+    Checkbox(name="todos.{{ $index }}.done")
+    Text("{{ $item.text }}")
+```
+
+`SetState("todos.0.done", True)` would also work for a hardcoded index — but `{{ $index }}` is how you target whichever row the user is interacting with.
+
+<Warning>
+If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning.
+</Warning>
+
+## ToggleState
+
+`ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. Pair it with [If](/components/conditional) for show/hide patterns:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
 <CodeGroup>
@@ -287,32 +312,40 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-`ToggleState` pairs naturally with [If](/components/conditional) — toggle the state variable, and the conditional block shows or hides the content. Click the button above to see it in action.
+## AppendState and PopState
 
-### Multiple Independent Toggles
+`AppendState` adds an item to a state array. `PopState` removes one by index. Together with [ForEach](/components/for-each), they let you build dynamic lists entirely client-side.
 
-Each `ToggleState` key is independent, so you can manage multiple visibility states:
+Type a name and click Add to see it appear in the list. Click × to remove a row.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"}},{"type":"Button","label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"}},{"type":"Button","label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"}}]},{"type":"Condition","cases":[{"when":"showA","children":[{"content":"Content for section A","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showB","children":[{"content":"Content for section B","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showC","children":[{"content":"Content for section C","type":"P"}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, If, P, Row, Column
-from prefab_ui import ToggleState
+from prefab_ui.components import (
+    Button, Column, ForEach, Input, Muted, Row, Text,
+)
+from prefab_ui import AppendState, PopState, SetState
+
+set_initial_state(
+    crew=["Arthur Dent", "Ford Prefect", "Trillian"],
+    new_member="",
+)
 
 with Column(gap=3):
+    with ForEach("crew"):
+        with Row(gap=2, align="center"):
+            Text("{{ $item }}")
+            Button(
+                "×", variant="ghost", size="sm",
+                on_click=PopState("crew", "{{ $index }}"),
+            )
     with Row(gap=2):
-        Button("Section A", variant="outline",
-               on_click=ToggleState("showA"))
-        Button("Section B", variant="outline",
-               on_click=ToggleState("showB"))
-        Button("Section C", variant="outline",
-               on_click=ToggleState("showC"))
-    with If("showA"):
-        P("Content for section A")
-    with If("showB"):
-        P("Content for section B")
-    with If("showC"):
-        P("Content for section C")
+        Input(name="new_member", placeholder="Crew member name...")
+        Button("Add", on_click=[
+            AppendState("crew", "{{ new_member }}"),
+            SetState("new_member", ""),
+        ])
+    Muted("{{ crew | length }} crew members")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -321,147 +354,135 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "type": "ForEach",
+        "key": "crew",
+        "children": [
+          {
+            "cssClass": "gap-2 items-center",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Text",
+                "content": "{{ $item }}"
+              },
+              {
+                "type": "Button",
+                "label": "\u00d7",
+                "variant": "ghost",
+                "size": "sm",
+                "disabled": false,
+                "onClick": {
+                  "action": "popState",
+                  "key": "crew",
+                  "index": "{{ $index }}"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "cssClass": "gap-2",
         "type": "Row",
         "children": [
           {
-            "type": "Button",
-            "label": "Section A",
-            "variant": "outline",
-            "size": "default",
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Crew member name...",
+            "name": "new_member",
             "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showA"
-            }
+            "required": false
           },
           {
             "type": "Button",
-            "label": "Section B",
-            "variant": "outline",
+            "label": "Add",
+            "variant": "default",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showB"
-            }
-          },
-          {
-            "type": "Button",
-            "label": "Section C",
-            "variant": "outline",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showC"
-            }
-          }
-        ]
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showA",
-            "children": [
+            "onClick": [
               {
-                "content": "Content for section A",
-                "type": "P"
+                "action": "appendState",
+                "key": "crew",
+                "value": "{{ new_member }}"
+              },
+              {
+                "action": "setState",
+                "key": "new_member",
+                "value": ""
               }
             ]
           }
         ]
       },
       {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showB",
-            "children": [
-              {
-                "content": "Content for section B",
-                "type": "P"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showC",
-            "children": [
-              {
-                "content": "Content for section C",
-                "type": "P"
-              }
-            ]
-          }
-        ]
+        "content": "{{ crew | length }} crew members",
+        "type": "Muted"
       }
     ]
+  },
+  "state": {
+    "crew": [
+      "Arthur Dent",
+      "Ford Prefect",
+      "Trillian"
+    ],
+    "new_member": ""
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-## Initial State
+The "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input. Each × button uses `PopState` with `{{ $index }}` — a variable provided by `ForEach` that gives the current row's position.
 
-Seed state with initial values using `set_initial_state()`:
+`AppendState` can also insert at a specific position with `index=0` to prepend or negative indices to count from the end. If the key doesn't exist yet, it creates a new array automatically.
 
-```python Initial State
-set_initial_state(volume=75, muted=False, theme="light")
-```
+## Valid State Keys
 
-Named form controls (`name="volume"`) automatically sync with state — the slider starts at 75, the switch starts off. For tools, you can also set initial state via `AppResult.state`:
-
-```python AppResult Initial State
-from prefab_ui import AppResult
-
-@mcp.tool()
-async def settings() -> AppResult:
-    return AppResult(
-        view=...,
-        state={"volume": 75, "muted": False},
-    )
-```
+State keys must be identifiers: letters, numbers, and underscores, starting with a letter or underscore (`volume`, `_count`, `item_2`). No hyphens (they conflict with expressions) and no periods (the dot is the path separator). These rules are validated in Python when you create the action.
 
 ## API Reference
 
 <Card icon="code" title="SetState Parameters">
 <ParamField body="key" type="str" required>
-  State variable name to set. Can be passed as a positional argument.
+  State key or dot-path to set (e.g. `"count"` or `"todos.0.done"`).
 </ParamField>
 
 <ParamField body="value" type="Any" default='"{{ $event }}"'>
-  Value to assign. Defaults to the event value from the triggering interaction (slider position, input text, checkbox state, etc.).
+  Value to assign. Defaults to the value from the triggering interaction (slider position, input text, checkbox state, etc.).
 </ParamField>
 </Card>
 
 <Card icon="code" title="ToggleState Parameters">
 <ParamField body="key" type="str" required>
-  State variable name to toggle. Can be passed as a positional argument.
+  State key or dot-path to toggle.
+</ParamField>
+</Card>
+
+<Card icon="code" title="AppendState Parameters">
+<ParamField body="key" type="str" required>
+  State key or dot-path to the target array.
+</ParamField>
+
+<ParamField body="value" type="Any" default='"{{ $event }}"'>
+  Value to append.
+</ParamField>
+
+<ParamField body="index" type="int | str | None" default="None">
+  Insert position. `None` appends to end. Supports negative indices and template strings like `"{{ $index }}"`.
+</ParamField>
+</Card>
+
+<Card icon="code" title="PopState Parameters">
+<ParamField body="key" type="str" required>
+  State key or dot-path to the target array.
+</ParamField>
+
+<ParamField body="index" type="int | str" required>
+  Index to remove. Supports negative indices and template strings like `"{{ $index }}"`.
 </ParamField>
 </Card>
 
 ## Protocol Reference
 
-```json SetState
-{
-  "action": "setState",
-  "key": "string (required)",
-  "value?": "any"
-}
-```
-
-```json ToggleState
-{
-  "action": "toggleState",
-  "key": "string (required)"
-}
-```
-
-For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state).
+For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state), [AppendState](/protocol/append-state), [PopState](/protocol/pop-state).

@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import pytest
+
 from prefab_ui.actions import (
     ActionBase,
+    AppendState,
     OpenLink,
+    PopState,
     SetState,
     ShowToast,
     ToggleState,
@@ -163,6 +167,8 @@ class TestActionCallbacks:
             OpenLink("http://example.com"),
             SetState("k"),
             ToggleState("k"),
+            AppendState("k"),
+            PopState("k", 0),
             ShowToast("m"),
         ]
         for action in action_types:
@@ -261,3 +267,115 @@ class TestFormOnSubmit:
         button = j["children"][-1]
         assert button["type"] == "Button"
         assert button["onClick"]["action"] == "toolCall"
+
+
+# ---------------------------------------------------------------------------
+# Path validation
+# ---------------------------------------------------------------------------
+
+
+class TestPathValidation:
+    def test_simple_key(self):
+        a = SetState("count", 1)
+        assert a.key == "count"
+
+    def test_dot_path(self):
+        a = SetState("todos.0.done", True)
+        assert a.key == "todos.0.done"
+
+    def test_underscore_key(self):
+        a = SetState("_private", 1)
+        assert a.key == "_private"
+
+    @pytest.mark.parametrize("bad_key", ["", "foo-bar", "123abc", "a..b", "a.b-c"])
+    def test_invalid_key_rejected(self, bad_key: str):
+        with pytest.raises(ValueError, match="Invalid path segment"):
+            SetState(bad_key, 1)
+
+    def test_toggle_validates_path(self):
+        a = ToggleState("user.active")
+        assert a.key == "user.active"
+
+    def test_toggle_rejects_invalid(self):
+        with pytest.raises(ValueError, match="Invalid path segment"):
+            ToggleState("bad-key")
+
+    def test_append_validates_path(self):
+        a = AppendState("items", "new")
+        assert a.key == "items"
+
+    def test_pop_validates_path(self):
+        a = PopState("items", 0)
+        assert a.key == "items"
+
+
+# ---------------------------------------------------------------------------
+# AppendState / PopState serialization
+# ---------------------------------------------------------------------------
+
+
+class TestAppendStateSerialization:
+    def test_basic(self):
+        a = AppendState("items", "new_item")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["action"] == "appendState"
+        assert d["key"] == "items"
+        assert d["value"] == "new_item"
+        assert "index" not in d
+
+    def test_default_event_value(self):
+        a = AppendState("items")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["value"] == "{{ $event }}"
+
+    def test_with_index(self):
+        a = AppendState("items", "new_item", index=0)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["index"] == 0
+
+    def test_with_template_index(self):
+        a = AppendState("items", "value", index="{{ $index }}")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["index"] == "{{ $index }}"
+
+    def test_with_negative_index(self):
+        a = AppendState("items", "value", index=-1)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["index"] == -1
+
+    def test_on_button(self):
+        b = Button(
+            label="Add", on_click=AppendState("todos", {"text": "New", "done": False})
+        )
+        j = b.to_json()
+        assert j["onClick"]["action"] == "appendState"
+        assert j["onClick"]["key"] == "todos"
+
+
+class TestPopStateSerialization:
+    def test_basic(self):
+        a = PopState("items", 2)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["action"] == "popState"
+        assert d["key"] == "items"
+        assert d["index"] == 2
+
+    def test_with_template_index(self):
+        a = PopState("todos", "{{ $index }}")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["index"] == "{{ $index }}"
+
+    def test_negative_index(self):
+        a = PopState("items", -1)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["index"] == -1
+
+    def test_on_button(self):
+        b = Button(label="Delete", on_click=PopState("todos", "{{ $index }}"))
+        j = b.to_json()
+        assert j["onClick"]["action"] == "popState"
+
+    def test_callbacks(self):
+        a = PopState("items", 0, on_success=ShowToast("Removed!"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["onSuccess"]["action"] == "showToast"

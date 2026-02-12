@@ -1,0 +1,46 @@
+---
+title: AppendState
+description: JSON Schema for the AppendState action.
+---
+
+Append a value to a state array.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "appendState",
+      "default": "appendState",
+      "type": "string"
+    },
+    "key": {
+      "description": "State key or dot-path to the array",
+      "type": "string"
+    },
+    "value": {
+      "default": "{{ $event }}",
+      "description": "Value to append."
+    },
+    "index": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Insert position (int or template string). None to append at end."
+    }
+  },
+  "required": [
+    "action",
+    "key"
+  ]
+}
+```
