@@ -154,22 +154,21 @@ with Column(gap=3):
 
 ### Dot-paths
 
-State keys can contain dots to reach into nested structures. An integer segment means an array index, so `todos.0.done` means "the `done` field of the first item in the `todos` array."
+State keys can contain dots to reach into nested objects. `profile.name` means "the `name` field inside the `profile` object." A purely numeric segment like `0` means an array index, so `todos.0.done` means "the `done` field of the first item in the `todos` array."
 
 The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"profile.panic","disabled":false,"required":false},{"type":"Text","content":"Don't Panic mode: {{ profile.panic }}"}]}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella","panic":false}}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
-    Card, CardContent, CardDescription, CardHeader, CardTitle,
-    Column, Input, Row, Switch, Text,
+    Card, CardDescription, CardHeader, CardTitle,
+    Column, Input,
 )
 
 set_initial_state(profile={
     "name": "Arthur Dent",
     "title": "Sandwich Maker, Lamuella",
-    "panic": False,
 })
 
 with Column(gap=3):
@@ -177,10 +176,6 @@ with Column(gap=3):
         with CardHeader():
             CardTitle("{{ profile.name }}")
             CardDescription("{{ profile.title }}")
-        with CardContent():
-            with Row(gap=2, align="center"):
-                Switch(name="profile.panic")
-                Text("Don't Panic mode: {{ profile.panic }}")
     Input(name="profile.name", placeholder="Name")
     Input(name="profile.title", placeholder="Title")
 ```
@@ -203,29 +198,6 @@ with Column(gap=3):
               {
                 "type": "CardDescription",
                 "content": "{{ profile.title }}"
-              }
-            ]
-          },
-          {
-            "type": "CardContent",
-            "children": [
-              {
-                "cssClass": "gap-2 items-center",
-                "type": "Row",
-                "children": [
-                  {
-                    "type": "Switch",
-                    "checked": false,
-                    "size": "default",
-                    "name": "profile.panic",
-                    "disabled": false,
-                    "required": false
-                  },
-                  {
-                    "type": "Text",
-                    "content": "Don't Panic mode: {{ profile.panic }}"
-                  }
-                ]
               }
             ]
           }
@@ -252,8 +224,7 @@ with Column(gap=3):
   "state": {
     "profile": {
       "name": "Arthur Dent",
-      "title": "Sandwich Maker, Lamuella",
-      "panic": false
+      "title": "Sandwich Maker, Lamuella"
     }
   }
 }
