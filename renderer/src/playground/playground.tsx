@@ -30,7 +30,10 @@ import { EXAMPLES, type Example } from "./examples";
 type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
-const DEFAULT_PYTHON = `with Card():
+const DEFAULT_PYTHON = `from prefab_ui.components import *
+from prefab_ui.actions import *
+
+with Card():
     with CardHeader():
         CardTitle("Welcome to Prefab")
         CardDescription("The agentic frontend framework that even humans can use.")
