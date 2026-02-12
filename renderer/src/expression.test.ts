@@ -284,6 +284,42 @@ describe("evaluate", () => {
         evaluate("loggedIn && isAdmin", { loggedIn: true, isAdmin: false }),
       ).toBe(false);
     });
+
+    it("'not' keyword as alias for !", () => {
+      expect(evaluate("not true", {})).toBe(false);
+      expect(evaluate("not false", {})).toBe(true);
+    });
+
+    it("'not' with variable", () => {
+      expect(evaluate("not active", { active: true })).toBe(false);
+      expect(evaluate("not active", { active: false })).toBe(true);
+    });
+
+    it("'not' with empty string (falsy)", () => {
+      expect(evaluate("not value", { value: "" })).toBe(true);
+      expect(evaluate("not value", { value: "hello" })).toBe(false);
+    });
+
+    it("'and' keyword as alias for &&", () => {
+      expect(evaluate("true and true", {})).toBe(true);
+      expect(evaluate("true and false", {})).toBe(false);
+    });
+
+    it("'or' keyword as alias for ||", () => {
+      expect(evaluate("false or true", {})).toBe(true);
+      expect(evaluate("false or false", {})).toBe(false);
+    });
+
+    it("mixed keyword and symbol operators", () => {
+      expect(evaluate("not false and true", {})).toBe(true);
+      expect(evaluate("!false && true", {})).toBe(true);
+      expect(evaluate("not false or false", {})).toBe(true);
+    });
+
+    it("'not' with dot-path", () => {
+      expect(evaluate("not $item.done", { $item: { done: false } })).toBe(true);
+      expect(evaluate("not $item.done", { $item: { done: true } })).toBe(false);
+    });
   });
 
   // ── Ternary ───────────────────────────────────────────────────────

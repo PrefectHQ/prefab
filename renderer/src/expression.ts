@@ -279,6 +279,12 @@ function tokenize(input: string): Token[] {
         tokens.push({ type: "bool", value: ident });
       } else if (ident === "null") {
         tokens.push({ type: "null", value: ident });
+      } else if (ident === "not") {
+        tokens.push({ type: "not", value: "!" });
+      } else if (ident === "and") {
+        tokens.push({ type: "op", value: "&&" });
+      } else if (ident === "or") {
+        tokens.push({ type: "op", value: "||" });
       } else {
         tokens.push({ type: "ident", value: ident });
       }

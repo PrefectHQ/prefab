@@ -75,7 +75,9 @@ class Button(Component):
         default="default",
         description="Size: default, sm, lg, icon",
     )
-    disabled: bool = Field(default=False, description="Whether the button is disabled")
+    disabled: bool | str = Field(
+        default=False, description="Whether the button is disabled"
+    )
     on_click: Action | list[Action] | None = Field(
         default=None,
         alias="onClick",

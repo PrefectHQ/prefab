@@ -31,7 +31,7 @@ export const buttonSchema = componentBase.extend({
       "icon-lg",
     ])
     .optional(),
-  disabled: z.boolean().optional(),
+  disabled: z.union([z.boolean(), z.string()]).optional(),
   onClick: actionOrList.optional(),
 });
 
