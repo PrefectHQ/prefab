@@ -19,6 +19,8 @@ def _validate_path(path: str) -> str:
     or a pure integer (array index). Periods delimit segments.
     """
     for segment in path.split("."):
+        if "{{" in segment:
+            continue
         if segment.isdigit():
             continue
         if not _KEY_RE.match(segment):

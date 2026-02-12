@@ -388,8 +388,8 @@ with Column(gap=3, css_class="items-start w-full"):
   Button dimensions: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`.
 </ParamField>
 
-<ParamField body="disabled" type="bool" default="False">
-  Whether the button is non-interactive.
+<ParamField body="disabled" type="bool | str" default="False">
+  Whether the button is non-interactive. Accepts a template expression like `"{{ not $item.name }}"` for conditional disabling.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

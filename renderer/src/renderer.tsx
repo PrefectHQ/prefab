@@ -430,7 +430,8 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Uses display:contents by default so children participate in the
   // parent's layout (e.g., Row gap applies between iterated items).
   if (type === "ForEach" && children) {
-    const key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
+    let key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
+    if (key) key = interpolateString(key, ctx) as string;
     const items = key ? (resolve(key, ctx) as unknown[]) : [];
     if (!Array.isArray(items)) return null;
 

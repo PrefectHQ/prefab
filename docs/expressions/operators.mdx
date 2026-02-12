@@ -220,13 +220,15 @@ with Elif("inventory > 0 && inventory < 10"):
 
 Boolean operators for combining conditions:
 
-| Operator | Meaning |
-|----------|---------|
-| `&&` | Logical AND |
-| `\|\|` | Logical OR |
-| `!` | Logical NOT |
+| Operator | Keyword | Meaning |
+|----------|---------|---------|
+| `&&` | `and` | Logical AND |
+| `\|\|` | `or` | Logical OR |
+| `!` | `not` | Logical NOT |
 
-These use short-circuit evaluation, just like JavaScript: `&&` returns the first falsy value (or the last value if all truthy), `||` returns the first truthy value (or the last value if all falsy). This makes `||` useful as a default mechanism:
+Both symbol and keyword forms are interchangeable — use whichever reads better in context. `not empty` tends to read more naturally in template expressions like `disabled="{{ not $item.new_todo }}"`, while `&&` and `||` are familiar to developers scanning code.
+
+These use short-circuit evaluation: `&&` returns the first falsy value (or the last value if all truthy), `||` returns the first truthy value (or the last value if all falsy). This makes `||` useful as a default mechanism:
 
 ```
 {{ name || 'Anonymous' }}
@@ -304,9 +306,9 @@ From lowest (loosest binding) to highest (tightest binding):
 |-----------|-----------|
 | Pipe | `\|` |
 | Ternary | `? :` |
-| Logical OR | `\|\|` |
-| Logical AND | `&&` |
-| Logical NOT | `!` |
+| Logical OR | `\|\|` / `or` |
+| Logical AND | `&&` / `and` |
+| Logical NOT | `!` / `not` |
 | Comparison | `==` `!=` `>` `<` `>=` `<=` |
 | Addition | `+` `-` |
 | Multiplication | `*` `/` |
