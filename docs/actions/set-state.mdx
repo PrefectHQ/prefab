@@ -1,14 +1,16 @@
 ---
-title: State
-description: Set, toggle, append, and pop client-side state variables instantly, with no server round-trip.
+title: State Actions
+description: Actions that read and write client-side state — set values, toggle booleans, and manipulate lists, all without server calls.
 icon: pen-to-square
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Named form controls automatically sync their value to state — the slider below updates `brightness` on every drag, and the text responds through `{{ brightness }}` interpolation. No action needed.
+State is client-side data that your UI can read and write. Components display state values, actions change them, and updates are instant — no server round-trip needed.
 
-`SetState` gives you explicit control when auto-binding isn't enough: setting literal values, wiring up non-form elements like buttons, or updating nested structures through dot-paths.
+## Setting Up State
+
+Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}`}>
 <CodeGroup>
@@ -48,31 +50,31 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-Drag the slider — the text updates instantly. `set_initial_state(brightness=50)` seeds the starting value; the `name` prop handles the rest.
+Drag the slider — the text updates instantly. The Slider has `name="brightness"`, which means it automatically reads from and writes to the `brightness` state key. Most form controls (Input, Checkbox, Switch, Select, etc.) support this `name` prop for automatic state binding.
 
-## Event Capture (the Default)
+For MCP tools, you can also provide initial state through `AppResult.state`:
 
-When you write `SetState("brightness")` without a second argument, it defaults to `{{ $event }}` — the value from the triggering interaction. What `$event` means depends on the component:
+```python AppResult State
+from prefab_ui import AppResult
 
-| Component | `$event` value |
-|-----------|---------------|
-| Slider | Current slider position (number) |
-| Input / Textarea | Current text value (string) |
-| Checkbox / Switch | Checked state (boolean) |
-| Select | Selected option value (string) |
-| RadioGroup | Selected radio value (string) |
-| Button | `undefined` |
+@mcp.tool()
+async def settings() -> AppResult:
+    return AppResult(
+        view=...,
+        state={"volume": 75, "muted": False},
+    )
+```
 
-This means `SetState("key")` is all you need for form controls — it automatically captures the right value.
+## SetState
 
-## Explicit Values
+`SetState` explicitly sets a state key to a value. When you wire it to a form control's `on_change`, the default value is `{{ $event }}` — the current value of that control (slider position, input text, checkbox state, etc.). This means `SetState("key")` with no second argument captures whatever the user entered.
 
-Pass a second argument to set a specific value instead of capturing the event. Click the buttons to switch the ship's drive mode:
+For non-form elements like buttons, pass an explicit value as the second argument:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Badge, Button, Column, Muted, Row
+from prefab_ui.components import Badge, Button, Column, Row
 from prefab_ui import SetState
 
 set_initial_state(drive="improbability")
@@ -150,83 +152,18 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-You can also use explicit values to build reset buttons — `SetState("volume", 50)` sets a known value regardless of the event.
+### Dot-paths
 
-## Toggle State
+State keys can contain dots to reach into nested structures. An integer segment means an array index, so `todos.0.done` means "the `done` field of the first item in the `todos` array."
 
-`ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. It's the shorthand for show/hide patterns, expand/collapse, and on/off toggles.
-
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Alert, AlertTitle, Button, Column, If
-from prefab_ui import ToggleState
-
-with Column(gap=2):
-    Button("Toggle Details", variant="outline",
-           on_click=ToggleState("showDetails"))
-    with If("showDetails"):
-        with Alert():
-            AlertTitle("Here are the details!")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Button",
-        "label": "Toggle Details",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {
-          "action": "toggleState",
-          "key": "showDetails"
-        }
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showDetails",
-            "children": [
-              {
-                "type": "Alert",
-                "variant": "default",
-                "children": [
-                  {
-                    "type": "AlertTitle",
-                    "content": "Here are the details!"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-`ToggleState` pairs naturally with [If](/components/conditional) — toggle the state variable, and the conditional block shows or hides the content.
-
-## Nested State (Dot-Paths)
-
-State keys support dot-paths for reaching into nested structures. An integer segment is treated as an array index, so `todos.0.done` means "the `done` property of the first element in the `todos` array." Auto-binding works with dot-paths too — `name="profile.name"` reads and writes through the path.
-
-Type in the inputs below to see the card update in real time. The inputs and the card text both reference the same nested `profile` state through dot-paths.
+The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"profile.panic","disabled":false,"required":false},{"type":"Text","content":"Don't Panic mode: {{ profile.panic }}"}]}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella","panic":false}}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
     Card, CardContent, CardDescription, CardHeader, CardTitle,
-    Column, Input, Muted, Row, Switch, Text,
+    Column, Input, Row, Switch, Text,
 )
 
 set_initial_state(profile={
@@ -324,17 +261,76 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-The inputs use `name="profile.name"` and `name="profile.title"` — the auto-binding reads and writes through the dot-path, so changes flow bidirectionally between the inputs and the card.
-
 <Warning>
-If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning. State paths never auto-create intermediate structures.
+If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning.
 </Warning>
 
-## List Actions
+## ToggleState
 
-`AppendState` and `PopState` add and remove items from state arrays. Combined with [ForEach](/components/for-each) and `{{ $index }}`, they enable fully client-side list manipulation.
+`ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. Pair it with [If](/components/conditional) for show/hide patterns:
 
-Type a crew member's name and click Add — the new entry appears in the list. Click the × button on any row to remove it. Everything happens client-side, no server calls.
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Alert, AlertTitle, Button, Column, If
+from prefab_ui import ToggleState
+
+with Column(gap=2):
+    Button("Toggle Details", variant="outline",
+           on_click=ToggleState("showDetails"))
+    with If("showDetails"):
+        with Alert():
+            AlertTitle("Here are the details!")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Toggle Details",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "toggleState",
+          "key": "showDetails"
+        }
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "showDetails",
+            "children": [
+              {
+                "type": "Alert",
+                "variant": "default",
+                "children": [
+                  {
+                    "type": "AlertTitle",
+                    "content": "Here are the details!"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## AppendState and PopState
+
+`AppendState` adds an item to a state array. `PopState` removes one by index. Together with [ForEach](/components/for-each), they let you build dynamic lists entirely client-side.
+
+Type a name and click Add to see it appear in the list. Click × to remove a row.
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}`}>
 <CodeGroup>
@@ -451,56 +447,35 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-The "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input. `PopState` uses `{{ $index }}` from the `ForEach` scope to remove the right row.
+The "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input. Each × button uses `PopState` with `{{ $index }}` — a variable provided by `ForEach` that gives the current row's position.
 
-`AppendState` also accepts an optional `index` for insert-at-position — `index=0` prepends, and negative indices count from the end. If the key doesn't exist yet, `AppendState` creates a new single-element array automatically.
+`AppendState` can also insert at a specific position with `index=0` to prepend or negative indices to count from the end. If the key doesn't exist yet, it creates a new array automatically.
 
-## State Keys
+## Valid State Keys
 
-Path segments follow a simple grammar: identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`) for object keys and integers for array indices. No hyphens (they conflict with subtraction in expressions) and no periods within key names (period is the path separator). These rules are validated in Python at construction time.
-
-## Initial State
-
-Seed state with initial values using `set_initial_state()`:
-
-```python Initial State
-set_initial_state(volume=75, muted=False, theme="light")
-```
-
-Named form controls (`name="volume"`) automatically sync with state — the slider starts at 75, the switch starts off. For tools, you can also set initial state via `AppResult.state`:
-
-```python AppResult Initial State
-from prefab_ui import AppResult
-
-@mcp.tool()
-async def settings() -> AppResult:
-    return AppResult(
-        view=...,
-        state={"volume": 75, "muted": False},
-    )
-```
+State keys must be identifiers: letters, numbers, and underscores, starting with a letter or underscore (`volume`, `_count`, `item_2`). No hyphens (they conflict with expressions) and no periods (the dot is the path separator). These rules are validated in Python when you create the action.
 
 ## API Reference
 
 <Card icon="code" title="SetState Parameters">
 <ParamField body="key" type="str" required>
-  State key or dot-path to set (e.g. `"count"` or `"todos.0.done"`). Can be passed as a positional argument.
+  State key or dot-path to set (e.g. `"count"` or `"todos.0.done"`).
 </ParamField>
 
 <ParamField body="value" type="Any" default='"{{ $event }}"'>
-  Value to assign. Defaults to the event value from the triggering interaction (slider position, input text, checkbox state, etc.).
+  Value to assign. Defaults to the value from the triggering interaction (slider position, input text, checkbox state, etc.).
 </ParamField>
 </Card>
 
 <Card icon="code" title="ToggleState Parameters">
 <ParamField body="key" type="str" required>
-  State key or dot-path to toggle. Can be passed as a positional argument.
+  State key or dot-path to toggle.
 </ParamField>
 </Card>
 
 <Card icon="code" title="AppendState Parameters">
 <ParamField body="key" type="str" required>
-  State key or dot-path to the array. Can be passed as a positional argument.
+  State key or dot-path to the target array.
 </ParamField>
 
 <ParamField body="value" type="Any" default='"{{ $event }}"'>
@@ -514,7 +489,7 @@ async def settings() -> AppResult:
 
 <Card icon="code" title="PopState Parameters">
 <ParamField body="key" type="str" required>
-  State key or dot-path to the array. Can be passed as a positional argument.
+  State key or dot-path to the target array.
 </ParamField>
 
 <ParamField body="index" type="int | str" required>
