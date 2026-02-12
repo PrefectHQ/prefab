@@ -20,7 +20,7 @@ Responsive CSS grid container.
         "null"
       ],
       "default": null,
-      "description": "CSS/Tailwind classes for styling"
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
     },
     "children": {
       "type": "array",
@@ -29,10 +29,28 @@ Responsive CSS grid container.
       }
     },
     "columns": {
-      "default": 3,
-      "maximum": 12,
-      "minimum": 1,
-      "type": "integer"
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "min_column_width": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
     },
     "gap": {
       "anyOf": [

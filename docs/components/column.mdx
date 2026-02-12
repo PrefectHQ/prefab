@@ -279,8 +279,8 @@ with Column(gap=4, align="end", css_class="p-3 border-3 border-dashed"):
 ## API Reference
 
 <Card icon="code" title="Column Parameters">
-<ParamField body="gap" type="int | tuple | None" default="None">
-  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis.
+<ParamField body="gap" type="int | tuple | Responsive | None" default="None">
+  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis. A `Responsive()` sets different gaps at different breakpoints.
 </ParamField>
 
 <ParamField body="align" type="str | None" default="None">
@@ -291,8 +291,8 @@ with Column(gap=4, align="end", css_class="p-3 border-3 border-dashed"):
   Main-axis distribution: `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`, `"stretch"`.
 </ParamField>
 
-<ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes. A `Responsive()` compiles breakpoint-prefixed classes.
 </ParamField>
 </Card>
 
