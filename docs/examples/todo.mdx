@@ -1,0 +1,210 @@
+---
+title: Todo List
+description: A fully interactive todo list built with client-side state actions.
+icon: square-check
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A complete todo app — add items, check them off, delete them — running entirely in the client with no server calls.
+
+<ComponentPreview auto json={`{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Todos"}]},{"cssClass":"gap-3","type":"CardContent","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"What needs doing?","name":"new_todo","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"todos","value":{"text":"{{ new_todo }}","done":false}},{"action":"setState","key":"new_todo","value":""}]}]},{"type":"Separator","orientation":"horizontal"},{"type":"ForEach","key":"todos","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Checkbox","checked":false,"name":"todos.{{ $index }}.done","disabled":false,"required":false},{"cssClass":"{{ $item.done ? 'line-through text-muted-foreground' : '' }}","type":"Text","content":"{{ $item.text }}"},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"todos","index":"{{ $index }}"}}]}]}]},{"type":"CardFooter","children":[{"content":"{{ todos | length }} items","type":"Muted"}]}]},"state":{"todos":[{"text":"Find Magrathea","done":false},{"text":"Have lunch at Milliways","done":true},{"text":"Escape Vogons","done":false}],"new_todo":""}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Button, Card, CardContent, CardFooter, CardHeader,
+    CardTitle, Checkbox, Column, ForEach, Input, Muted,
+    Row, Separator, Text,
+)
+from prefab_ui import AppendState, PopState, SetState
+
+set_initial_state(
+    todos=[
+        {"text": "Find Magrathea", "done": False},
+        {"text": "Have lunch at Milliways", "done": True},
+        {"text": "Escape Vogons", "done": False},
+    ],
+    new_todo="",
+)
+
+with Card():
+    with CardHeader():
+        CardTitle("Todos")
+    with CardContent(css_class="gap-3"):
+        with Row(gap=2):
+            Input(
+                name="new_todo",
+                placeholder="What needs doing?",
+            )
+            Button("Add", on_click=[
+                AppendState("todos", {
+                    "text": "{{ new_todo }}",
+                    "done": False,
+                }),
+                SetState("new_todo", ""),
+            ])
+        Separator()
+        with ForEach("todos"):
+            with Row(gap=2, align="center"):
+                Checkbox(
+                    name="todos.{{ $index }}.done",
+                )
+                Text(
+                    "{{ $item.text }}",
+                    css_class=(
+                        "{{ $item.done ? "
+                        "'line-through text-muted-foreground' "
+                        ": '' }}"
+                    ),
+                )
+                Button(
+                    "×", variant="ghost", size="sm",
+                    css_class="ml-auto",
+                    on_click=PopState("todos", "{{ $index }}"),
+                )
+    with CardFooter():
+        Muted("{{ todos | length }} items")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {
+            "type": "CardTitle",
+            "content": "Todos"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-3",
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-2",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "What needs doing?",
+                "name": "new_todo",
+                "disabled": false,
+                "required": false
+              },
+              {
+                "type": "Button",
+                "label": "Add",
+                "variant": "default",
+                "size": "default",
+                "disabled": false,
+                "onClick": [
+                  {
+                    "action": "appendState",
+                    "key": "todos",
+                    "value": {
+                      "text": "{{ new_todo }}",
+                      "done": false
+                    }
+                  },
+                  {
+                    "action": "setState",
+                    "key": "new_todo",
+                    "value": ""
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Separator",
+            "orientation": "horizontal"
+          },
+          {
+            "type": "ForEach",
+            "key": "todos",
+            "children": [
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Checkbox",
+                    "checked": false,
+                    "name": "todos.{{ $index }}.done",
+                    "disabled": false,
+                    "required": false
+                  },
+                  {
+                    "cssClass": "{{ $item.done ? 'line-through text-muted-foreground' : '' }}",
+                    "type": "Text",
+                    "content": "{{ $item.text }}"
+                  },
+                  {
+                    "cssClass": "ml-auto",
+                    "type": "Button",
+                    "label": "\u00d7",
+                    "variant": "ghost",
+                    "size": "sm",
+                    "disabled": false,
+                    "onClick": {
+                      "action": "popState",
+                      "key": "todos",
+                      "index": "{{ $index }}"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardFooter",
+        "children": [
+          {
+            "content": "{{ todos | length }} items",
+            "type": "Muted"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "todos": [
+      {
+        "text": "Find Magrathea",
+        "done": false
+      },
+      {
+        "text": "Have lunch at Milliways",
+        "done": true
+      },
+      {
+        "text": "Escape Vogons",
+        "done": false
+      }
+    ],
+    "new_todo": ""
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## How It Works
+
+Each todo is an object with `text` and `done` fields, stored in a `todos` array. [ForEach](/components/for-each) iterates the array, and everything inside the loop can reference `{{ $item }}` (the current todo) and `{{ $index }}` (its position).
+
+The interesting bits:
+
+**Checking items off** uses [dot-path auto-binding](/actions/set-state#dot-paths). `Checkbox(name="todos.{{ $index }}.done")` reads the done state of that specific todo and writes back to the same path when toggled. No action wiring needed — the `name` prop handles it.
+
+**Adding items** chains two [state actions](/actions/set-state) on one button: `AppendState` pushes a new `{text, done}` object onto the array, then `SetState` clears the input. The `{{ new_todo }}` template in the appended value reads the current input text at the moment the button is clicked.
+
+**Deleting items** uses `PopState("todos", "{{ $index }}")` — the `{{ $index }}` variable from ForEach tells it which row to remove.
+
+**Strikethrough styling** uses a ternary expression in `css_class`: `{{ $item.done ? 'line-through text-muted-foreground' : '' }}` applies Tailwind classes conditionally based on the item's done state.
