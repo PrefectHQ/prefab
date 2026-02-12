@@ -6,9 +6,9 @@ icon: pen-to-square
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Named form controls automatically sync their value to state — the slider below updates `brightness` on every drag, and the `Muted` text responds through `{{ brightness }}` interpolation. No action needed.
+Named form controls automatically sync their value to state — the slider below updates `brightness` on every drag, and the text responds through `{{ brightness }}` interpolation. No action needed.
 
-`SetState` gives you explicit control when auto-binding isn't enough: setting literal values, computing new state from old, or wiring up non-form elements like buttons.
+`SetState` gives you explicit control when auto-binding isn't enough: setting literal values, wiring up non-form elements like buttons, or updating nested structures through dot-paths.
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}`}>
 <CodeGroup>
@@ -67,27 +67,25 @@ This means `SetState("key")` is all you need for form controls — it automatica
 
 ## Explicit Values
 
-Pass a second argument to set a specific value instead of capturing the event. Click the buttons below to change the color:
+Pass a second argument to set a specific value instead of capturing the event. Click the buttons to switch the ship's drive mode:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"cssClass":"bg-blue-500 text-white","type":"Button","label":"Blue","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-blue-500"}},{"cssClass":"bg-emerald-500 text-white","type":"Button","label":"Emerald","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-emerald-500"}},{"cssClass":"bg-rose-500 text-white","type":"Button","label":"Rose","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-rose-500"}},{"cssClass":"bg-amber-500 text-white","type":"Button","label":"Amber","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"color","value":"bg-amber-500"}}]},{"cssClass":"{{ color }} h-10 rounded-md","type":"Div"}]},"state":{"color":"bg-blue-500"}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Div, Row, Column
+from prefab_ui.components import Badge, Button, Column, Muted, Row
 from prefab_ui import SetState
 
-set_initial_state(color="bg-blue-500")
+set_initial_state(drive="improbability")
 
 with Column(gap=3):
     with Row(gap=2):
-        Button("Blue", css_class="bg-blue-500 text-white",
-               on_click=SetState("color", "bg-blue-500"))
-        Button("Emerald", css_class="bg-emerald-500 text-white",
-               on_click=SetState("color", "bg-emerald-500"))
-        Button("Rose", css_class="bg-rose-500 text-white",
-               on_click=SetState("color", "bg-rose-500"))
-        Button("Amber", css_class="bg-amber-500 text-white",
-               on_click=SetState("color", "bg-amber-500"))
-    Div(css_class="{{ color }} h-10 rounded-md")
+        Button("Improbability", variant="outline",
+               on_click=SetState("drive", "improbability"))
+        Button("Conventional", variant="outline",
+               on_click=SetState("drive", "conventional"))
+        Button("Bistromath", variant="outline",
+               on_click=SetState("drive", "bistromath"))
+    Badge("Active drive: {{ drive }}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -100,131 +98,59 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {
-            "cssClass": "bg-blue-500 text-white",
             "type": "Button",
-            "label": "Blue",
-            "variant": "default",
+            "label": "Improbability",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-blue-500"
+              "key": "drive",
+              "value": "improbability"
             }
           },
           {
-            "cssClass": "bg-emerald-500 text-white",
             "type": "Button",
-            "label": "Emerald",
-            "variant": "default",
+            "label": "Conventional",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-emerald-500"
+              "key": "drive",
+              "value": "conventional"
             }
           },
           {
-            "cssClass": "bg-rose-500 text-white",
             "type": "Button",
-            "label": "Rose",
-            "variant": "default",
+            "label": "Bistromath",
+            "variant": "outline",
             "size": "default",
             "disabled": false,
             "onClick": {
               "action": "setState",
-              "key": "color",
-              "value": "bg-rose-500"
-            }
-          },
-          {
-            "cssClass": "bg-amber-500 text-white",
-            "type": "Button",
-            "label": "Amber",
-            "variant": "default",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "color",
-              "value": "bg-amber-500"
+              "key": "drive",
+              "value": "bistromath"
             }
           }
         ]
       },
       {
-        "cssClass": "{{ color }} h-10 rounded-md",
-        "type": "Div"
+        "type": "Badge",
+        "label": "Active drive: {{ drive }}",
+        "variant": "default"
       }
     ]
   },
   "state": {
-    "color": "bg-blue-500"
+    "drive": "improbability"
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-The div's `css_class` uses `{{ color }}` interpolation, so clicking a button swaps the Tailwind class and the color changes instantly.
-
-## Resetting State
-
-Use explicit values to build reset buttons:
-
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}","type":"Muted"},{"type":"Button","label":"Reset to 50","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"volume","value":50}}]},"state":{"volume":75}}`}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Button, Slider, Muted, Column
-from prefab_ui import SetState
-
-set_initial_state(volume=75)
-
-with Column(gap=3):
-    Slider(name="volume", min=0, max=100)
-    Muted("Volume: {{ volume }}")
-    Button("Reset to 50", variant="outline",
-           on_click=SetState("volume", 50))
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 100.0,
-        "name": "volume",
-        "disabled": false
-      },
-      {
-        "content": "Volume: {{ volume }}",
-        "type": "Muted"
-      },
-      {
-        "type": "Button",
-        "label": "Reset to 50",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {
-          "action": "setState",
-          "key": "volume",
-          "value": 50
-        }
-      }
-    ]
-  },
-  "state": {
-    "volume": 75
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
+You can also use explicit values to build reset buttons — `SetState("volume", 50)` sets a known value regardless of the event.
 
 ## Toggle State
 
@@ -287,32 +213,39 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-`ToggleState` pairs naturally with [If](/components/conditional) — toggle the state variable, and the conditional block shows or hides the content. Click the button above to see it in action.
+`ToggleState` pairs naturally with [If](/components/conditional) — toggle the state variable, and the conditional block shows or hides the content.
 
-### Multiple Independent Toggles
+## Nested State (Dot-Paths)
 
-Each `ToggleState` key is independent, so you can manage multiple visibility states:
+State keys support dot-paths for reaching into nested structures. An integer segment is treated as an array index, so `todos.0.done` means "the `done` property of the first element in the `todos` array." Auto-binding works with dot-paths too — `name="profile.name"` reads and writes through the path.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Section A","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showA"}},{"type":"Button","label":"Section B","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showB"}},{"type":"Button","label":"Section C","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showC"}}]},{"type":"Condition","cases":[{"when":"showA","children":[{"content":"Content for section A","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showB","children":[{"content":"Content for section B","type":"P"}]}]},{"type":"Condition","cases":[{"when":"showC","children":[{"content":"Content for section C","type":"P"}]}]}]}}`}>
+Type in the inputs below to see the card update in real time. The inputs and the card text both reference the same nested `profile` state through dot-paths.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"profile.panic","disabled":false,"required":false},{"type":"Text","content":"Don't Panic mode: {{ profile.panic }}"}]}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella","panic":false}}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, If, P, Row, Column
-from prefab_ui import ToggleState
+from prefab_ui.components import (
+    Card, CardContent, CardDescription, CardHeader, CardTitle,
+    Column, Input, Muted, Row, Switch, Text,
+)
+
+set_initial_state(profile={
+    "name": "Arthur Dent",
+    "title": "Sandwich Maker, Lamuella",
+    "panic": False,
+})
 
 with Column(gap=3):
-    with Row(gap=2):
-        Button("Section A", variant="outline",
-               on_click=ToggleState("showA"))
-        Button("Section B", variant="outline",
-               on_click=ToggleState("showB"))
-        Button("Section C", variant="outline",
-               on_click=ToggleState("showC"))
-    with If("showA"):
-        P("Content for section A")
-    with If("showB"):
-        P("Content for section B")
-    with If("showC"):
-        P("Content for section C")
+    with Card():
+        with CardHeader():
+            CardTitle("{{ profile.name }}")
+            CardDescription("{{ profile.title }}")
+        with CardContent():
+            with Row(gap=2, align="center"):
+                Switch(name="profile.panic")
+                Text("Don't Panic mode: {{ profile.panic }}")
+    Input(name="profile.name", placeholder="Name")
+    Input(name="profile.title", placeholder="Title")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -321,143 +254,210 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
-        "cssClass": "gap-2",
-        "type": "Row",
+        "type": "Card",
         "children": [
           {
-            "type": "Button",
-            "label": "Section A",
-            "variant": "outline",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showA"
-            }
+            "type": "CardHeader",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "{{ profile.name }}"
+              },
+              {
+                "type": "CardDescription",
+                "content": "{{ profile.title }}"
+              }
+            ]
           },
           {
-            "type": "Button",
-            "label": "Section B",
-            "variant": "outline",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showB"
-            }
-          },
-          {
-            "type": "Button",
-            "label": "Section C",
-            "variant": "outline",
-            "size": "default",
-            "disabled": false,
-            "onClick": {
-              "action": "toggleState",
-              "key": "showC"
-            }
-          }
-        ]
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showA",
+            "type": "CardContent",
             "children": [
               {
-                "content": "Content for section A",
-                "type": "P"
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Switch",
+                    "checked": false,
+                    "size": "default",
+                    "name": "profile.panic",
+                    "disabled": false,
+                    "required": false
+                  },
+                  {
+                    "type": "Text",
+                    "content": "Don't Panic mode: {{ profile.panic }}"
+                  }
+                ]
               }
             ]
           }
         ]
       },
       {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showB",
-            "children": [
-              {
-                "content": "Content for section B",
-                "type": "P"
-              }
-            ]
-          }
-        ]
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Name",
+        "name": "profile.name",
+        "disabled": false,
+        "required": false
       },
       {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "showC",
-            "children": [
-              {
-                "content": "Content for section C",
-                "type": "P"
-              }
-            ]
-          }
-        ]
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Title",
+        "name": "profile.title",
+        "disabled": false,
+        "required": false
       }
     ]
+  },
+  "state": {
+    "profile": {
+      "name": "Arthur Dent",
+      "title": "Sandwich Maker, Lamuella",
+      "panic": false
+    }
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-## Dot-Path Updates
-
-State keys support dot-paths for reaching into nested structures. An integer segment is treated as an array index, so `todos.0.done` means "the `done` property of the first element in the `todos` array."
-
-```python Dot-Path Update
-# Toggle the first todo's completion status
-Button("Complete first", on_click=SetState("todos.0.done", True))
-
-# Set a nested config value
-SetState("settings.theme", "dark")
-```
-
-Path segments follow a simple grammar: identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`) for object keys and integers for array indices. No hyphens (they conflict with subtraction in expressions), no periods within key names (the period is the path separator).
+The inputs use `name="profile.name"` and `name="profile.title"` — the auto-binding reads and writes through the dot-path, so changes flow bidirectionally between the inputs and the card.
 
 <Warning>
 If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning. State paths never auto-create intermediate structures.
 </Warning>
 
-## Append State
+## List Actions
 
-`AppendState` adds an item to a state array. Combined with [ForEach](/components/for-each) and `$index`, this enables dynamic list UIs without server round-trips.
+`AppendState` and `PopState` add and remove items from state arrays. Combined with [ForEach](/components/for-each) and `{{ $index }}`, they enable fully client-side list manipulation.
 
-```python Append to a List
-from prefab_ui import AppendState
-from prefab_ui.components import Button
+Type a crew member's name and click Add — the new entry appears in the list. Click the × button on any row to remove it. Everything happens client-side, no server calls.
 
-# Append to the end (default)
-Button("Add item", on_click=AppendState("todos", {"text": "New task", "done": False}))
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Button, Column, ForEach, Input, Muted, Row, Text,
+)
+from prefab_ui import AppendState, PopState, SetState
 
-# Insert at a specific position (index=0 prepends)
-Button("Prepend", on_click=AppendState("todos", {"text": "First!", "done": False}, index=0))
+set_initial_state(
+    crew=["Arthur Dent", "Ford Prefect", "Trillian"],
+    new_member="",
+)
+
+with Column(gap=3):
+    with ForEach("crew"):
+        with Row(gap=2, align="center"):
+            Text("{{ $item }}")
+            Button(
+                "×", variant="ghost", size="sm",
+                on_click=PopState("crew", "{{ $index }}"),
+            )
+    with Row(gap=2):
+        Input(name="new_member", placeholder="Crew member name...")
+        Button("Add", on_click=[
+            AppendState("crew", "{{ new_member }}"),
+            SetState("new_member", ""),
+        ])
+    Muted("{{ crew | length }} crew members")
 ```
-
-If the key doesn't exist yet, `AppendState` creates a new single-element array — no need to initialize empty arrays in advance. Negative indices are supported: `index=-1` inserts before the last element.
-
-## Pop State
-
-`PopState` removes an item by index from a state array. Pair it with `{{ $index }}` inside a `ForEach` to get per-item delete buttons:
-
-```python Remove from a List
-from prefab_ui import PopState
-from prefab_ui.components import Button, ForEach, Row, Text
-
-with ForEach("todos"):
-    with Row(gap=2, align="center"):
-        Text("{{ text }}")
-        Button("Delete", variant="destructive", on_click=PopState("todos", "{{ $index }}"))
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ForEach",
+        "key": "crew",
+        "children": [
+          {
+            "cssClass": "gap-2 items-center",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Text",
+                "content": "{{ $item }}"
+              },
+              {
+                "type": "Button",
+                "label": "\u00d7",
+                "variant": "ghost",
+                "size": "sm",
+                "disabled": false,
+                "onClick": {
+                  "action": "popState",
+                  "key": "crew",
+                  "index": "{{ $index }}"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Crew member name...",
+            "name": "new_member",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "type": "Button",
+            "label": "Add",
+            "variant": "default",
+            "size": "default",
+            "disabled": false,
+            "onClick": [
+              {
+                "action": "appendState",
+                "key": "crew",
+                "value": "{{ new_member }}"
+              },
+              {
+                "action": "setState",
+                "key": "new_member",
+                "value": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "content": "{{ crew | length }} crew members",
+        "type": "Muted"
+      }
+    ]
+  },
+  "state": {
+    "crew": [
+      "Arthur Dent",
+      "Ford Prefect",
+      "Trillian"
+    ],
+    "new_member": ""
+  }
+}
 ```
+</CodeGroup>
+</ComponentPreview>
 
-Negative indices work here too — `PopState("items", -1)` removes the last element.
+The "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input. `PopState` uses `{{ $index }}` from the `ForEach` scope to remove the right row.
+
+`AppendState` also accepts an optional `index` for insert-at-position — `index=0` prepends, and negative indices count from the end. If the key doesn't exist yet, `AppendState` creates a new single-element array automatically.
+
+## State Keys
+
+Path segments follow a simple grammar: identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`) for object keys and integers for array indices. No hyphens (they conflict with subtraction in expressions) and no periods within key names (period is the path separator). These rules are validated in Python at construction time.
 
 ## Initial State
 
