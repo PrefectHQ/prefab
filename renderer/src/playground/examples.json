@@ -897,7 +897,7 @@
   {
     "title": "When to Use Which",
     "category": "Components",
-    "code": "# Interactive — user changes this with the slider\nset_initial_state(volume=75)\nSlider(name=\"volume\")\n\n# Fixed — server data that templates reference\nwith State(ship=\"Heart of Gold\", captain=\"Zaphod\"):\n    CardTitle(\"{{ ship }}\")\n    CardDescription(\"Captain: {{ captain }}\")"
+    "code": "# Global, mutable — user changes this with the slider\nset_initial_state(volume=75)\nSlider(name=\"volume\")\n\n# Scoped, read-only — data for this section of the UI\nwith State(ship=\"Heart of Gold\", captain=\"Zaphod\"):\n    CardTitle(\"{{ ship }}\")\n    CardDescription(\"Captain: {{ captain }}\")"
   },
   {
     "title": "Python icon=\"python\"",

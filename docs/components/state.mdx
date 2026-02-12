@@ -1,12 +1,12 @@
 ---
 title: State
-description: Define named values that child components can reference with {{ }} expressions.
+description: Set client-side state values for a section of your UI.
 icon: database
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-When your components use `{{ name }}` or `{{ role }}` expressions, those values have to come from somewhere. The `State` component defines them — wrap a section of your UI and give it named values, and everything inside can reference them.
+The `State` component sets state values that are available to everything inside it — expressions, conditions, auto-binding, anything that reads state. Wrap a section of your UI and give it named values.
 
 ## Basic Usage
 
@@ -75,20 +75,20 @@ with State({"name": "Ford", "role": "Researcher"}):
 
 ## State vs set_initial_state
 
-Both define values that `{{ }}` expressions can reference, but they work differently.
+Both set state values, but they differ in scope and mutability.
 
-**`set_initial_state()`** creates values that the user can change. Form controls bind to it, and actions like `SetState` and `ToggleState` modify it. It's global — every component in the UI sees it.
+**`set_initial_state()`** sets *global, mutable* state. Every component sees it, form controls bind to it, and actions like `SetState` and `ToggleState` can change it.
 
-**`State`** defines fixed values scoped to a part of the tree. The user can't change them, and they only exist inside the `with State(...)` block.
+**`State`** sets *scoped, read-only* state. Values only exist inside the `with State(...)` block, and user interactions can't change them.
 
-Use `set_initial_state()` for anything interactive (form inputs, toggles, lists the user edits). Use `State` when you're passing server data into templates — things like names, labels, URLs, or configuration that shouldn't change.
+Use `set_initial_state()` for anything interactive (form inputs, toggles, lists the user edits). Use `State` when you're passing fixed data into a section of the UI — things like server results, labels, or configuration.
 
 ```python When to Use Which
-# Interactive — user changes this with the slider
+# Global, mutable — user changes this with the slider
 set_initial_state(volume=75)
 Slider(name="volume")
 
-# Fixed — server data that templates reference
+# Scoped, read-only — data for this section of the UI
 with State(ship="Heart of Gold", captain="Zaphod"):
     CardTitle("{{ ship }}")
     CardDescription("Captain: {{ captain }}")
