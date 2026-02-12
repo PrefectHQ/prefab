@@ -9,13 +9,13 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Multiple todo lists with inline editing, validation, and dynamic groups — all running client-side with no server calls.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4 items-start flex-wrap","type":"Row","children":[{"type":"ForEach","key":"groups","children":[{"type":"State","state":{"gi":"{{ $index }}"},"children":[{"cssClass":"w-56","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ $item.name }}"}]},{"cssClass":"gap-3","type":"CardContent","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Add a todo...","name":"groups.{{ gi }}.new_todo","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":"{{ not $item.new_todo }}","onClick":[{"action":"appendState","key":"groups.{{ gi }}.todos","value":{"text":"{{ $item.new_todo }}","done":false}},{"action":"setState","key":"groups.{{ gi }}.new_todo","value":""}]}]},{"type":"ForEach","key":"groups.{{ gi }}.todos","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Checkbox","checked":false,"name":"groups.{{ gi }}.todos.{{ $index }}.done","disabled":false,"required":false},{"cssClass":"border-0 shadow-none p-0 h-auto","type":"Input","inputType":"text","name":"groups.{{ gi }}.todos.{{ $index }}.text","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups.{{ gi }}.todos","index":"{{ $index }}"}}]}]}]},{"type":"CardFooter","children":[{"content":"{{ $item.todos | length }} items","type":"Muted"}]}]}]}]},{"cssClass":"w-56 border-dashed","type":"Card","children":[{"cssClass":"flex items-center justify-center py-20","type":"CardContent","children":[{"cssClass":"text-4xl text-muted-foreground h-16 w-16","type":"Button","label":"+","variant":"ghost","size":"lg","disabled":false,"onClick":{"action":"appendState","key":"groups","value":{"name":"New List","todos":[],"new_todo":""}}}]}]}]},"state":{"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":""},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":""}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4 items-start flex-wrap","type":"Row","children":[{"type":"ForEach","key":"groups","children":[{"type":"State","state":{"gi":"{{ $index }}","show_done":"{{ $item.show_done }}"},"children":[{"cssClass":"w-56","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ $item.name }}"}]},{"cssClass":"gap-3","type":"CardContent","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Add a todo...","name":"groups.{{ gi }}.new_todo","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":"{{ not $item.new_todo }}","onClick":[{"action":"appendState","key":"groups.{{ gi }}.todos","value":{"text":"{{ $item.new_todo }}","done":false}},{"action":"setState","key":"groups.{{ gi }}.new_todo","value":""}]}]},{"type":"ForEach","key":"groups.{{ gi }}.todos","children":[{"type":"Condition","cases":[{"when":"not $item.done or show_done","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Checkbox","checked":false,"name":"groups.{{ gi }}.todos.{{ $index }}.done","disabled":false,"required":false},{"cssClass":"border-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0","type":"Input","inputType":"text","name":"groups.{{ gi }}.todos.{{ $index }}.text","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups.{{ gi }}.todos","index":"{{ $index }}"}}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2 items-center w-full justify-between","type":"Row","children":[{"content":"{{ $item.todos | length }} items","type":"Muted"},{"cssClass":"gap-1 items-center","type":"Row","children":[{"cssClass":"h-3 w-3","type":"Checkbox","checked":false,"name":"groups.{{ gi }}.show_done","disabled":false,"required":false},{"content":"Show done","type":"Muted"}]}]}]}]}]}]},{"cssClass":"w-56 border-dashed","type":"Card","children":[{"cssClass":"flex items-center justify-center py-20","type":"CardContent","children":[{"cssClass":"text-4xl text-muted-foreground h-16 w-16","type":"Button","label":"+","variant":"ghost","size":"lg","disabled":false,"onClick":{"action":"appendState","key":"groups","value":{"name":"New List","todos":[],"new_todo":"","show_done":true}}}]}]}]},"state":{"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":"","show_done":true},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":"","show_done":true}]}}`}>
 <CodeGroup>
-```python Python icon="python"
+```python Python icon="python" expandable
 from prefab_ui.components import (
     Button, Card, CardContent, CardFooter, CardHeader,
-    CardTitle, Checkbox, Column, ForEach, Input, Muted,
-    Row, State,
+    CardTitle, Checkbox, Column, ForEach, If, Input,
+    Muted, Row, State,
 )
 from prefab_ui import AppendState, PopState, SetState
 
@@ -27,6 +27,7 @@ set_initial_state(groups=[
             {"text": "Escape Vogons", "done": False},
         ],
         "new_todo": "",
+        "show_done": True,
     },
     {
         "name": "Personal",
@@ -35,90 +36,50 @@ set_initial_state(groups=[
             {"text": "Buy towel", "done": False},
         ],
         "new_todo": "",
+        "show_done": True,
     },
 ])
 
 with Row(gap=4, align="start", css_class="flex-wrap"):
     with ForEach("groups"):
-        with State(gi="{{ $index }}"):
+        with State(gi="{{ $index }}", show_done="{{ $item.show_done }}"):
             with Card(css_class="w-56"):
                 with CardHeader():
                     CardTitle("{{ $item.name }}")
                 with CardContent(css_class="gap-3"):
                     with Row(gap=2):
-                        Input(
-                            name="groups.{{ gi }}.new_todo",
-                            placeholder="Add a todo...",
-                        )
+                        Input(name="groups.{{ gi }}.new_todo", placeholder="Add a todo...")
                         Button(
                             "Add",
                             disabled="{{ not $item.new_todo }}",
                             on_click=[
-                                AppendState(
-                                    "groups.{{ gi }}.todos",
-                                    {
-                                        "text": "{{ $item.new_todo }}",
-                                        "done": False,
-                                    },
-                                ),
-                                SetState(
-                                    "groups.{{ gi }}.new_todo",
-                                    "",
-                                ),
+                                AppendState("groups.{{ gi }}.todos", {"text": "{{ $item.new_todo }}", "done": False}),
+                                SetState("groups.{{ gi }}.new_todo", ""),
                             ],
                         )
                     with ForEach("groups.{{ gi }}.todos"):
-                        with Row(gap=2, align="center"):
-                            Checkbox(
-                                name=(
-                                    "groups.{{ gi }}"
-                                    ".todos.{{ $index }}.done"
-                                ),
-                            )
-                            Input(
-                                name=(
-                                    "groups.{{ gi }}"
-                                    ".todos.{{ $index }}.text"
-                                ),
-                                css_class=(
-                                    "border-0 shadow-none"
-                                    " p-0 h-auto"
-                                ),
-                            )
-                            Button(
-                                "×",
-                                variant="ghost",
-                                size="sm",
-                                css_class="ml-auto",
-                                on_click=PopState(
-                                    "groups.{{ gi }}.todos",
-                                    "{{ $index }}",
-                                ),
-                            )
+                        with If("not $item.done or show_done"):
+                            with Row(gap=2, align="center"):
+                                Checkbox(name="groups.{{ gi }}.todos.{{ $index }}.done")
+                                Input(
+                                    name="groups.{{ gi }}.todos.{{ $index }}.text",
+                                    css_class="border-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0",
+                                )
+                                Button("×", variant="ghost", size="sm", css_class="ml-auto", on_click=PopState("groups.{{ gi }}.todos", "{{ $index }}"))
                 with CardFooter():
-                    Muted(
-                        "{{ $item.todos | length }} items"
-                    )
+                    with Row(gap=2, align="center", css_class="w-full justify-between"):
+                        Muted("{{ $item.todos | length }} items")
+                        with Row(gap=1, align="center"):
+                            Checkbox(name="groups.{{ gi }}.show_done", css_class="h-3 w-3")
+                            Muted("Show done")
     with Card(css_class="w-56 border-dashed"):
-        with CardContent(
-            css_class=(
-                "flex items-center justify-center"
-                " py-20"
-            ),
-        ):
+        with CardContent(css_class="flex items-center justify-center py-20"):
             Button(
                 "+",
                 variant="ghost",
                 size="lg",
-                css_class=(
-                    "text-4xl text-muted-foreground"
-                    " h-16 w-16"
-                ),
-                on_click=AppendState("groups", {
-                    "name": "New List",
-                    "todos": [],
-                    "new_todo": "",
-                }),
+                css_class="text-4xl text-muted-foreground h-16 w-16",
+                on_click=AppendState("groups", {"name": "New List", "todos": [], "new_todo": "", "show_done": True}),
             )
 ```
 ```json Protocol icon="brackets-curly"
@@ -134,7 +95,8 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
           {
             "type": "State",
             "state": {
-              "gi": "{{ $index }}"
+              "gi": "{{ $index }}",
+              "show_done": "{{ $item.show_done }}"
             },
             "children": [
               {
@@ -195,36 +157,46 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
                         "key": "groups.{{ gi }}.todos",
                         "children": [
                           {
-                            "cssClass": "gap-2 items-center",
-                            "type": "Row",
-                            "children": [
+                            "type": "Condition",
+                            "cases": [
                               {
-                                "type": "Checkbox",
-                                "checked": false,
-                                "name": "groups.{{ gi }}.todos.{{ $index }}.done",
-                                "disabled": false,
-                                "required": false
-                              },
-                              {
-                                "cssClass": "border-0 shadow-none p-0 h-auto",
-                                "type": "Input",
-                                "inputType": "text",
-                                "name": "groups.{{ gi }}.todos.{{ $index }}.text",
-                                "disabled": false,
-                                "required": false
-                              },
-                              {
-                                "cssClass": "ml-auto",
-                                "type": "Button",
-                                "label": "\u00d7",
-                                "variant": "ghost",
-                                "size": "sm",
-                                "disabled": false,
-                                "onClick": {
-                                  "action": "popState",
-                                  "key": "groups.{{ gi }}.todos",
-                                  "index": "{{ $index }}"
-                                }
+                                "when": "not $item.done or show_done",
+                                "children": [
+                                  {
+                                    "cssClass": "gap-2 items-center",
+                                    "type": "Row",
+                                    "children": [
+                                      {
+                                        "type": "Checkbox",
+                                        "checked": false,
+                                        "name": "groups.{{ gi }}.todos.{{ $index }}.done",
+                                        "disabled": false,
+                                        "required": false
+                                      },
+                                      {
+                                        "cssClass": "border-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0",
+                                        "type": "Input",
+                                        "inputType": "text",
+                                        "name": "groups.{{ gi }}.todos.{{ $index }}.text",
+                                        "disabled": false,
+                                        "required": false
+                                      },
+                                      {
+                                        "cssClass": "ml-auto",
+                                        "type": "Button",
+                                        "label": "\u00d7",
+                                        "variant": "ghost",
+                                        "size": "sm",
+                                        "disabled": false,
+                                        "onClick": {
+                                          "action": "popState",
+                                          "key": "groups.{{ gi }}.todos",
+                                          "index": "{{ $index }}"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
                               }
                             ]
                           }
@@ -236,8 +208,32 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
                     "type": "CardFooter",
                     "children": [
                       {
-                        "content": "{{ $item.todos | length }} items",
-                        "type": "Muted"
+                        "cssClass": "gap-2 items-center w-full justify-between",
+                        "type": "Row",
+                        "children": [
+                          {
+                            "content": "{{ $item.todos | length }} items",
+                            "type": "Muted"
+                          },
+                          {
+                            "cssClass": "gap-1 items-center",
+                            "type": "Row",
+                            "children": [
+                              {
+                                "cssClass": "h-3 w-3",
+                                "type": "Checkbox",
+                                "checked": false,
+                                "name": "groups.{{ gi }}.show_done",
+                                "disabled": false,
+                                "required": false
+                              },
+                              {
+                                "content": "Show done",
+                                "type": "Muted"
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
@@ -268,7 +264,8 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
                   "value": {
                     "name": "New List",
                     "todos": [],
-                    "new_todo": ""
+                    "new_todo": "",
+                    "show_done": true
                   }
                 }
               }
@@ -292,7 +289,8 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
             "done": false
           }
         ],
-        "new_todo": ""
+        "new_todo": "",
+        "show_done": true
       },
       {
         "name": "Personal",
@@ -306,7 +304,8 @@ with Row(gap=4, align="start", css_class="flex-wrap"):
             "done": false
           }
         ],
-        "new_todo": ""
+        "new_todo": "",
+        "show_done": true
       }
     ]
   }
@@ -324,5 +323,7 @@ The tricky part is nested loops — the inner ForEach shadows `$index`, so the o
 **Inline editing** swaps `Text` for a borderless `Input` bound to `groups.{{ gi }}.todos.{{ $index }}.text`. Type directly in the list to rename items — [dot-path auto-binding](/actions/set-state#dot-paths) handles the read and write.
 
 **Validation** uses a template expression on the Add button: `disabled="{{ not $item.new_todo }}"`. The expression evaluates to `True` when the input is empty, preventing blank todos.
+
+**Hiding completed items** — each group has a `show_done` flag toggled by a small checkbox in the footer. The State component captures it as `show_done="{{ $item.show_done }}"` alongside `gi`, making it available inside the inner loop where `$item` refers to the todo, not the group. Each todo row is wrapped in `If("not $item.done or show_done")`.
 
 **Adding a group** — the dashed card at the end appends a new group object with `AppendState("groups", {...})`. ForEach picks it up and renders a new card automatically.
