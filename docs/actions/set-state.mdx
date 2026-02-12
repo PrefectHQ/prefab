@@ -1,6 +1,6 @@
 ---
 title: State
-description: Set and toggle client-side state variables instantly, with no server round-trip.
+description: Set, toggle, append, and pop client-side state variables instantly, with no server round-trip.
 icon: pen-to-square
 ---
 
@@ -408,6 +408,57 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
+## Dot-Path Updates
+
+State keys support dot-paths for reaching into nested structures. An integer segment is treated as an array index, so `todos.0.done` means "the `done` property of the first element in the `todos` array."
+
+```python Dot-Path Update
+# Toggle the first todo's completion status
+Button("Complete first", on_click=SetState("todos.0.done", True))
+
+# Set a nested config value
+SetState("settings.theme", "dark")
+```
+
+Path segments follow a simple grammar: identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`) for object keys and integers for array indices. No hyphens (they conflict with subtraction in expressions), no periods within key names (the period is the path separator).
+
+<Warning>
+If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning. State paths never auto-create intermediate structures.
+</Warning>
+
+## Append State
+
+`AppendState` adds an item to a state array. Combined with [ForEach](/components/for-each) and `$index`, this enables dynamic list UIs without server round-trips.
+
+```python Append to a List
+from prefab_ui import AppendState
+from prefab_ui.components import Button
+
+# Append to the end (default)
+Button("Add item", on_click=AppendState("todos", {"text": "New task", "done": False}))
+
+# Insert at a specific position (index=0 prepends)
+Button("Prepend", on_click=AppendState("todos", {"text": "First!", "done": False}, index=0))
+```
+
+If the key doesn't exist yet, `AppendState` creates a new single-element array — no need to initialize empty arrays in advance. Negative indices are supported: `index=-1` inserts before the last element.
+
+## Pop State
+
+`PopState` removes an item by index from a state array. Pair it with `{{ $index }}` inside a `ForEach` to get per-item delete buttons:
+
+```python Remove from a List
+from prefab_ui import PopState
+from prefab_ui.components import Button, ForEach, Row, Text
+
+with ForEach("todos"):
+    with Row(gap=2, align="center"):
+        Text("{{ text }}")
+        Button("Delete", variant="destructive", on_click=PopState("todos", "{{ $index }}"))
+```
+
+Negative indices work here too — `PopState("items", -1)` removes the last element.
+
 ## Initial State
 
 Seed state with initial values using `set_initial_state()`:
@@ -433,7 +484,7 @@ async def settings() -> AppResult:
 
 <Card icon="code" title="SetState Parameters">
 <ParamField body="key" type="str" required>
-  State variable name to set. Can be passed as a positional argument.
+  State key or dot-path to set (e.g. `"count"` or `"todos.0.done"`). Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="value" type="Any" default='"{{ $event }}"'>
@@ -443,25 +494,34 @@ async def settings() -> AppResult:
 
 <Card icon="code" title="ToggleState Parameters">
 <ParamField body="key" type="str" required>
-  State variable name to toggle. Can be passed as a positional argument.
+  State key or dot-path to toggle. Can be passed as a positional argument.
+</ParamField>
+</Card>
+
+<Card icon="code" title="AppendState Parameters">
+<ParamField body="key" type="str" required>
+  State key or dot-path to the array. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="value" type="Any" default='"{{ $event }}"'>
+  Value to append.
+</ParamField>
+
+<ParamField body="index" type="int | str | None" default="None">
+  Insert position. `None` appends to end. Supports negative indices and template strings like `"{{ $index }}"`.
+</ParamField>
+</Card>
+
+<Card icon="code" title="PopState Parameters">
+<ParamField body="key" type="str" required>
+  State key or dot-path to the array. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="index" type="int | str" required>
+  Index to remove. Supports negative indices and template strings like `"{{ $index }}"`.
 </ParamField>
 </Card>
 
 ## Protocol Reference
 
-```json SetState
-{
-  "action": "setState",
-  "key": "string (required)",
-  "value?": "any"
-}
-```
-
-```json ToggleState
-{
-  "action": "toggleState",
-  "key": "string (required)"
-}
-```
-
-For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state).
+For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state), [AppendState](/protocol/append-state), [PopState](/protocol/pop-state).

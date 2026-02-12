@@ -62,6 +62,21 @@ export const toggleStateSchema = z.object({
   ...actionCallbacks,
 });
 
+export const appendStateSchema = z.object({
+  action: z.literal("appendState"),
+  key: z.string(),
+  value: z.unknown().optional(),
+  index: z.number().optional(),
+  ...actionCallbacks,
+});
+
+export const popStateSchema = z.object({
+  action: z.literal("popState"),
+  key: z.string(),
+  index: z.number(),
+  ...actionCallbacks,
+});
+
 export const showToastSchema = z.object({
   action: z.literal("showToast"),
   message: z.string(),
@@ -82,6 +97,8 @@ export const actionSchema = z.discriminatedUnion("action", [
   openLinkSchema,
   setStateSchema,
   toggleStateSchema,
+  appendStateSchema,
+  popStateSchema,
   showToastSchema,
 ]);
 
@@ -96,6 +113,8 @@ export const HANDLED_ACTIONS = new Set([
   "openLink",
   "setState",
   "toggleState",
+  "appendState",
+  "popState",
   "showToast",
 ] as const);
 
@@ -110,6 +129,8 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   openLink: openLinkSchema,
   setState: setStateSchema,
   toggleState: toggleStateSchema,
+  appendState: appendStateSchema,
+  popState: popStateSchema,
   showToast: showToastSchema,
 };
 
@@ -119,6 +140,8 @@ export type UpdateContextWire = z.infer<typeof updateContextSchema>;
 export type OpenLinkWire = z.infer<typeof openLinkSchema>;
 export type SetStateWire = z.infer<typeof setStateSchema>;
 export type ToggleStateWire = z.infer<typeof toggleStateSchema>;
+export type AppendStateWire = z.infer<typeof appendStateSchema>;
+export type PopStateWire = z.infer<typeof popStateSchema>;
 export type ShowToastWire = z.infer<typeof showToastSchema>;
 export type ActionWire = z.infer<typeof actionSchema>;
 export type ActionOrListWire = z.infer<typeof actionOrList>;

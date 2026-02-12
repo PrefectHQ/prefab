@@ -183,6 +183,40 @@ export async function executeAction(
         state.set(key, !state.get(key));
         break;
       }
+      case "appendState": {
+        const key = resolved.key as string;
+        const current = state.get(key);
+        if (current != null && !Array.isArray(current)) {
+          console.warn(`[Prefab] appendState: "${key}" is not an array`);
+          break;
+        }
+        const arr = Array.isArray(current) ? [...current] : [];
+        const rawIndex = resolved.index as number | undefined;
+        if (rawIndex != null) {
+          const index =
+            rawIndex < 0 ? Math.max(0, arr.length + rawIndex) : rawIndex;
+          arr.splice(index, 0, resolved.value);
+        } else {
+          arr.push(resolved.value);
+        }
+        state.set(key, arr);
+        break;
+      }
+      case "popState": {
+        const key = resolved.key as string;
+        const rawIndex = resolved.index as number;
+        const current = state.get(key);
+        if (!Array.isArray(current)) {
+          console.warn(`[Prefab] popState: "${key}" is not an array`);
+          break;
+        }
+        const index = rawIndex < 0 ? current.length + rawIndex : rawIndex;
+        state.set(
+          key,
+          current.filter((_, i) => i !== index),
+        );
+        break;
+      }
       case "showToast": {
         const message = resolved.message as string;
         const opts = {

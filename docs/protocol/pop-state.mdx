@@ -1,0 +1,39 @@
+---
+title: PopState
+description: JSON Schema for the PopState action.
+---
+
+Remove an item by index from a state array.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "popState",
+      "default": "popState",
+      "type": "string"
+    },
+    "key": {
+      "description": "State key or dot-path to the array",
+      "type": "string"
+    },
+    "index": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Index to remove (int or template string like '{{ $index }}')."
+    }
+  },
+  "required": [
+    "action",
+    "key",
+    "index"
+  ]
+}
+```

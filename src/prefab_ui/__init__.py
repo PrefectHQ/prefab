@@ -22,7 +22,9 @@ import importlib.metadata
 from prefab_ui.actions import (
     Action,
     ActionBase,
+    AppendState,
     OpenLink,
+    PopState,
     SendMessage,
     SetState,
     ShowToast,
@@ -54,6 +56,7 @@ except importlib.metadata.PackageNotFoundError:
 __all__ = [
     "Action",
     "ActionBase",
+    "AppendState",
     "Code",
     "Column",
     "Component",
@@ -63,6 +66,7 @@ __all__ = [
     "Image",
     "Markdown",
     "OpenLink",
+    "PopState",
     "Row",
     "SendMessage",
     "SetState",

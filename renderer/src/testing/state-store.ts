@@ -7,6 +7,7 @@
  */
 
 import type { StateStore } from "../state";
+import { getByPath, setByPath } from "../state";
 
 export function createStateStore(
   initial?: Record<string, unknown>,
@@ -15,13 +16,15 @@ export function createStateStore(
 
   return {
     get(key: string): unknown {
-      return state[key];
+      return key.includes(".") ? getByPath(state, key) : state[key];
     },
     getAll(): Record<string, unknown> {
       return state;
     },
     set(key: string, value: unknown): void {
-      state = { ...state, [key]: value };
+      state = key.includes(".")
+        ? setByPath(state, key, value)
+        : { ...state, [key]: value };
     },
     merge(values: Record<string, unknown>): void {
       state = { ...state, ...values };

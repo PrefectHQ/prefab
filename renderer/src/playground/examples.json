@@ -70,6 +70,21 @@
     "code": "from prefab_ui.components import Button, If, P, Row, Column\nfrom prefab_ui import ToggleState\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Section A\", variant=\"outline\",\n               on_click=ToggleState(\"showA\"))\n        Button(\"Section B\", variant=\"outline\",\n               on_click=ToggleState(\"showB\"))\n        Button(\"Section C\", variant=\"outline\",\n               on_click=ToggleState(\"showC\"))\n    with If(\"showA\"):\n        P(\"Content for section A\")\n    with If(\"showB\"):\n        P(\"Content for section B\")\n    with If(\"showC\"):\n        P(\"Content for section C\")"
   },
   {
+    "title": "Dot-Path Update",
+    "category": "Actions",
+    "code": "# Toggle the first todo's completion status\nButton(\"Complete first\", on_click=SetState(\"todos.0.done\", True))\n\n# Set a nested config value\nSetState(\"settings.theme\", \"dark\")"
+  },
+  {
+    "title": "Append to a List",
+    "category": "Actions",
+    "code": "from prefab_ui import AppendState\nfrom prefab_ui.components import Button\n\n# Append to the end (default)\nButton(\"Add item\", on_click=AppendState(\"todos\", {\"text\": \"New task\", \"done\": False}))\n\n# Insert at a specific position (index=0 prepends)\nButton(\"Prepend\", on_click=AppendState(\"todos\", {\"text\": \"First!\", \"done\": False}, index=0))"
+  },
+  {
+    "title": "Remove from a List",
+    "category": "Actions",
+    "code": "from prefab_ui import PopState\nfrom prefab_ui.components import Button, ForEach, Row, Text\n\nwith ForEach(\"todos\"):\n    with Row(gap=2, align=\"center\"):\n        Text(\"{{ text }}\")\n        Button(\"Delete\", variant=\"destructive\", on_click=PopState(\"todos\", \"{{ $index }}\"))"
+  },
+  {
     "title": "Initial State",
     "category": "Actions",
     "code": "set_initial_state(volume=75, muted=False, theme=\"light\")"
@@ -405,9 +420,9 @@
     "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nset_initial_state(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"status == 'error'\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"status == 'active'\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
   },
   {
-    "title": "# Correct — raw expression",
+    "title": "# ✅ Correct — raw expression",
     "category": "Components",
-    "code": "with If(\"status == 'active'\"):\n    ...\n\n# Wrong — unnecessary template delimiters\nwith If(\"{{ status == 'active' }}\"):\n    ..."
+    "code": "with If(\"status == 'active'\"):\n    ...\n\n# ❌ Wrong — unnecessary template delimiters\nwith If(\"{{ status == 'active' }}\"):\n    ..."
   },
   {
     "title": "with Column():",
