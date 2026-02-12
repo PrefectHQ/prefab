@@ -892,7 +892,12 @@
   {
     "title": "Equivalent Forms",
     "category": "Components",
-    "code": "from prefab_ui.components import State, Text\n\n# Kwargs style\nwith State(name=\"Ford\", role=\"Researcher\"):\n    Text(\"{{ name }} is a {{ role }}\")\n\n# Dict style\nwith State({\"name\": \"Ford\", \"role\": \"Researcher\"}):\n    Text(\"{{ name }} is a {{ role }}\")"
+    "code": "# Kwargs\nwith State(name=\"Ford\", role=\"Researcher\"):\n    Text(\"{{ name }}\")\n\n# Dict\nwith State({\"name\": \"Ford\", \"role\": \"Researcher\"}):\n    Text(\"{{ name }}\")"
+  },
+  {
+    "title": "When to Use Which",
+    "category": "Components",
+    "code": "# Interactive — user changes this with the slider\nset_initial_state(volume=75)\nSlider(name=\"volume\")\n\n# Fixed — server data that templates reference\nwith State(ship=\"Heart of Gold\", captain=\"Zaphod\"):\n    CardTitle(\"{{ ship }}\")\n    CardDescription(\"Captain: {{ captain }}\")"
   },
   {
     "title": "Python icon=\"python\"",
