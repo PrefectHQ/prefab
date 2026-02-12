@@ -232,6 +232,21 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
+Integer segments address array items. Inside a [ForEach](/components/for-each) loop, combine this with `{{ $index }}` to target the current row:
+
+```python Array Paths
+set_initial_state(todos=[
+    {"text": "Find Magrathea", "done": False},
+    {"text": "Have lunch", "done": True},
+])
+
+with ForEach("todos"):
+    Checkbox(name="todos.{{ $index }}.done")
+    Text("{{ $item.text }}")
+```
+
+`SetState("todos.0.done", True)` would also work for a hardcoded index — but `{{ $index }}` is how you target whichever row the user is interacting with.
+
 <Warning>
 If an intermediate path segment is missing or the wrong type (e.g. an integer segment pointing at a non-array), the update is a no-op with a console warning.
 </Warning>

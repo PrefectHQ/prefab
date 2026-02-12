@@ -66,14 +66,14 @@ export const appendStateSchema = z.object({
   action: z.literal("appendState"),
   key: z.string(),
   value: z.unknown().optional(),
-  index: z.number().optional(),
+  index: z.union([z.number(), z.string()]).optional(),
   ...actionCallbacks,
 });
 
 export const popStateSchema = z.object({
   action: z.literal("popState"),
   key: z.string(),
-  index: z.number(),
+  index: z.union([z.number(), z.string()]),
   ...actionCallbacks,
 });
 
