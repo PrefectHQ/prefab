@@ -191,7 +191,7 @@ with Column(gap=3):
 
 Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders. Use the select below to change the status and watch the right badge appear.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","disabled":false,"required":false,"children":[{"type":"SelectOption","label":"Active","value":"active"},{"type":"SelectOption","label":"Warning","value":"warning"},{"type":"SelectOption","label":"Error","value":"error"},{"type":"SelectOption","label":"Something else","value":"other"}],"onChange":{"action":"setState","key":"status","value":"{{ $event }}"}},{"type":"Condition","cases":[{"when":"status == 'error'","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"status == 'warning'","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"status == 'active'","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"status":"active"}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"status == 'error'","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"status == 'warning'","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"status == 'active'","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"state":{"status":"active"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -230,35 +230,39 @@ with Column(gap=3):
         "type": "Select",
         "placeholder": "Choose a status...",
         "name": "status",
+        "size": "default",
         "disabled": false,
         "required": false,
         "children": [
           {
             "type": "SelectOption",
+            "value": "active",
             "label": "Active",
-            "value": "active"
+            "selected": false,
+            "disabled": false
           },
           {
             "type": "SelectOption",
+            "value": "warning",
             "label": "Warning",
-            "value": "warning"
+            "selected": false,
+            "disabled": false
           },
           {
             "type": "SelectOption",
+            "value": "error",
             "label": "Error",
-            "value": "error"
+            "selected": false,
+            "disabled": false
           },
           {
             "type": "SelectOption",
+            "value": "other",
             "label": "Something else",
-            "value": "other"
+            "selected": false,
+            "disabled": false
           }
-        ],
-        "onChange": {
-          "action": "setState",
-          "key": "status",
-          "value": "{{ $event }}"
-        }
+        ]
       },
       {
         "type": "Condition",
@@ -304,7 +308,9 @@ with Column(gap=3):
       }
     ]
   },
-  "status": "active"
+  "state": {
+    "status": "active"
+  }
 }
 ```
 </CodeGroup>

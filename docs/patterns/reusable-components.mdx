@@ -9,7 +9,9 @@ When building complex UIs, the same component structure often appears in multipl
 `Define` and `Use` solve this: Define captures a component template, Use references it with scoped data.
 
 ```python Define and Use
-from prefab_ui import Define, Use, UIResponse
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.response import UIResponse
 from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column
 
 with Define("user-card") as user_card:
@@ -33,7 +35,7 @@ This renders three cards with different names and roles, but the card structure 
 `Define` captures a component subtree as a named template. It uses the context manager like any container, but it does **not** attach itself to a parent — it lives outside the component tree.
 
 ```python
-from prefab_ui import Define
+from prefab_ui.define import Define
 from prefab_ui.components import Card, CardHeader, CardTitle, Badge, Row
 
 with Define("status-badge") as status_badge:
@@ -55,7 +57,7 @@ If a Define contains multiple children, they're automatically wrapped in a Colum
 `Use` references a Define by name and provides scoped data through kwargs. Any kwargs that aren't base component fields (`css_class`) become interpolation values scoped to the template.
 
 ```python
-from prefab_ui import Use
+from prefab_ui.use import Use
 
 # Bare reference (no overrides)
 Use("status-badge")
@@ -104,7 +106,9 @@ The renderer resolves `$ref` nodes by looking up the definition and rendering it
 Define/Use pairs well with `ForEach` when you have a reusable template that also appears outside the loop:
 
 ```python Define with ForEach
-from prefab_ui import Define, Use, UIResponse
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.response import UIResponse
 from prefab_ui.components import (
     Card, CardHeader, CardTitle, CardDescription,
     Column, ForEach, Heading,

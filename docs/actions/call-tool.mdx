@@ -12,7 +12,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 Button("Refresh Data", on_click=ToolCall("get_latest_data"))
 ```
@@ -45,7 +45,7 @@ Use `{{ key }}` interpolation in the `arguments` dict to pass client state to th
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
@@ -97,7 +97,7 @@ Pass a list to execute multiple actions from a single interaction. A common patt
 
 ```python Combined Actions
 from prefab_ui.components import Button
-from prefab_ui import ToolCall, SetState
+from prefab_ui.actions import ToolCall, SetState
 
 Button("Analyze", on_click=[
     SetState("status", "analyzing..."),

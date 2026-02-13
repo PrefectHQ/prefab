@@ -27,7 +27,8 @@ class UIResponse(BaseModel):
 
     Usage::
 
-        from prefab_ui import UIResponse, Column, Heading
+        from prefab_ui.response import UIResponse
+        from prefab_ui.components import Column, Heading
 
         def show_user(name: str) -> UIResponse:
             return UIResponse(

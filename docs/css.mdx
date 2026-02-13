@@ -1,0 +1,84 @@
+---
+title: CSS Helpers
+description: Compose Tailwind classes without repeating variant prefixes.
+---
+
+Every Prefab component accepts a `css_class` prop for Tailwind styling. A plain string works fine until you start mixing hover states, focus rings, and breakpoints — then the prefixes pile up:
+
+```python
+css_class="border-0 ring-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b focus-visible:border-border hover:bg-muted"
+```
+
+The `prefab_ui.css` module provides helpers that eliminate the repetition.
+
+## Composing with Lists
+
+`css_class` accepts a list of strings, joined with spaces at build time. This lets you group related concerns and mix in helpers without worrying about spacing:
+
+```python
+from prefab_ui.css import FocusVisible, Hover
+
+Input(css_class=[
+    "border-0 ring-0 shadow-none p-0 h-auto",
+    FocusVisible("ring-0 ring-offset-0 border-b border-border rounded-none"),
+    Hover("bg-muted"),
+])
+```
+
+Each helper returns a plain string — `FocusVisible("border-b border-border")` produces `"focus-visible:border-b focus-visible:border-border"`. The list stitches everything together.
+
+## Variant Helpers
+
+Each helper takes a string of space-separated classes and prefixes every one with its variant:
+
+| Helper | Prefix | Use case |
+|--------|--------|----------|
+| `Hover(...)` | `hover:` | Mouse-over styles |
+| `Focus(...)` | `focus:` | Focus ring / outline |
+| `FocusVisible(...)` | `focus-visible:` | Keyboard-only focus |
+| `FocusWithin(...)` | `focus-within:` | Parent has a focused child |
+| `Active(...)` | `active:` | Mouse-down / tap |
+| `Disabled(...)` | `disabled:` | Disabled state styles |
+
+## Breakpoint Helpers
+
+Same pattern, for responsive breakpoints:
+
+```python
+from prefab_ui.css import Md, Lg
+
+Button("Submit", css_class=["w-full", Md("w-auto"), Lg("w-1/2")])
+# → "w-full md:w-auto lg:w-1/2"
+```
+
+| Helper | Prefix | Min width |
+|--------|--------|-----------|
+| `Sm(...)` | `sm:` | 640px |
+| `Md(...)` | `md:` | 768px |
+| `Lg(...)` | `lg:` | 1024px |
+| `Xl(...)` | `xl:` | 1280px |
+| `Xxl(...)` | `2xl:` | 1536px |
+
+These match [Tailwind's default breakpoints](https://tailwindcss.com/docs/responsive-design) — each applies from that width *and up*.
+
+## Putting It Together
+
+Variants and breakpoints compose freely. Here's a card that adjusts padding at breakpoints, lifts on hover, and shows a focus ring for keyboard navigation:
+
+```python
+from prefab_ui.css import Hover, FocusVisible, Md, Lg
+
+Card(css_class=[
+    "p-3 text-sm transition-shadow",
+    Md("p-6 text-base"),
+    Lg("p-8 text-lg"),
+    Hover("shadow-lg"),
+    FocusVisible("ring-2 ring-primary"),
+])
+```
+
+Each line reads as a single concern — base styles, medium breakpoint, large breakpoint, hover, focus. No prefix repetition, and the list makes it easy to add or remove a line without touching the others.
+
+## Responsive Layout Props
+
+Layout props like `columns` and `gap` accept a separate `Responsive` helper that translates values into the right Tailwind classes — see [Responsive Layouts](/patterns/responsive-layouts) for that pattern.

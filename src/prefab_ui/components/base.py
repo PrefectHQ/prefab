@@ -8,76 +8,11 @@ from typing import Annotated, Any, Literal
 from pydantic import BaseModel, BeforeValidator, Field
 from typing_extensions import Self
 
+from prefab_ui.css import Responsive
+
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
 )
-
-# ── Responsive ─────────────────────────────────────────────────────────
-
-_BREAKPOINTS = ("default", "sm", "md", "lg", "xl", "2xl")
-
-
-class Responsive:
-    """Breakpoint-aware values for responsive layouts.
-
-    Maps Tailwind breakpoints to values. At compile time, each entry is
-    prefixed with its breakpoint (``default`` emits unprefixed classes).
-
-    Usage::
-
-        Grid(columns=Responsive(default=1, md=2, lg=3))
-        Row(gap=Responsive(default=2, md=4))
-        Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
-    """
-
-    __slots__ = ("_values",)
-
-    def __init__(self, **kwargs: Any) -> None:
-        invalid = set(kwargs) - set(_BREAKPOINTS)
-        if invalid:
-            raise ValueError(
-                f"Invalid breakpoint(s): {', '.join(sorted(invalid))}. "
-                f"Valid breakpoints: {', '.join(_BREAKPOINTS)}"
-            )
-        if not kwargs:
-            raise ValueError("Responsive() requires at least one breakpoint value")
-        self._values: dict[str, Any] = kwargs
-
-    def __repr__(self) -> str:
-        inner = ", ".join(f"{k}={v!r}" for k, v in self._values.items())
-        return f"Responsive({inner})"
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Responsive):
-            return self._values == other._values
-        return NotImplemented
-
-    @property
-    def values(self) -> dict[str, Any]:
-        return dict(self._values)
-
-    def compile_css(self, formatter: _BreakpointFormatter) -> str:
-        """Compile to a space-separated Tailwind class string.
-
-        The *formatter* is called once per breakpoint entry and should
-        return one or more CSS utility classes for the given value.
-        """
-        parts: list[str] = []
-        for bp in _BREAKPOINTS:
-            if bp not in self._values:
-                continue
-            classes = formatter(self._values[bp])
-            if not classes:
-                continue
-            if bp == "default":
-                parts.append(classes)
-            else:
-                for cls in classes.split():
-                    parts.append(f"{bp}:{cls}")
-        return " ".join(parts)
-
-
-_BreakpointFormatter = Any  # Callable[[Any], str] — avoid import complexity
 
 
 # ── Gap / Align / Justify ──────────────────────────────────────────────
@@ -166,9 +101,22 @@ def _merge_css_classes(*classes: str | None) -> str | None:
 
 
 def _coerce_css_class(v: Any) -> str | None:
-    """Compile Responsive css_class to a string, pass strings through."""
+    """Compile css_class to a flat string.
+
+    Accepts a plain string, a Responsive object, or a list mixing both.
+    """
     if v is None:
         return None
+    if isinstance(v, list):
+        parts: list[str] = []
+        for item in v:
+            if isinstance(item, Responsive):
+                compiled = item.compile_css(lambda s: str(s))
+                if compiled:
+                    parts.append(compiled)
+            elif item:
+                parts.append(str(item))
+        return " ".join(parts) or None
     if isinstance(v, Responsive):
         compiled = v.compile_css(lambda s: str(s))
         return compiled or None

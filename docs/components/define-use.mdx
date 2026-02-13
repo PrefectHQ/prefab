@@ -9,7 +9,9 @@ icon: clone
 ## Basic Usage
 
 ```python
-from prefab_ui import Define, Use, UIResponse
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.response import UIResponse
 from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column
 
 with Define("user-card") as user_card:
@@ -33,7 +35,7 @@ Three cards with different data, but the card structure is defined once. The kwa
 `Define` uses the context manager like any container, but it does **not** attach itself to a parent — it lives outside the component tree. Pass it to `UIResponse` via the `defs` parameter.
 
 ```python
-from prefab_ui import Define
+from prefab_ui.define import Define
 from prefab_ui.components import Badge, CardTitle, Row
 
 with Define("status-row") as status_row:
@@ -53,7 +55,7 @@ If a Define contains multiple children, they're automatically wrapped in a Colum
 `Use` references a Define by name. Any kwargs that aren't base component fields (`css_class`) become scoped interpolation values for the template.
 
 ```python
-from prefab_ui import Use
+from prefab_ui.use import Use
 
 # Bare reference (data comes from surrounding scope)
 Use("status-row")
@@ -67,7 +69,9 @@ Use("status-row", label="Build", status="passing", variant="default")
 Inside a [ForEach](/components/foreach), each item's fields become the interpolation context automatically — so `Use` doesn't need explicit overrides:
 
 ```python
-from prefab_ui import Define, Use, UIResponse
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.response import UIResponse
 from prefab_ui.components import (
     Card, CardHeader, CardTitle, CardDescription,
     Column, ForEach, Heading,

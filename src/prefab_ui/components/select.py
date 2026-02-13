@@ -14,7 +14,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal, overload
 
 from pydantic import Field
 
@@ -79,3 +79,15 @@ class SelectOption(Component):
     label: str = Field(description="Display text")
     selected: bool = Field(default=False, description="Whether option is selected")
     disabled: bool = Field(default=False, description="Whether option is disabled")
+
+    @overload
+    def __init__(self, label: str, /, **kwargs: Any) -> None: ...
+
+    @overload
+    def __init__(self, *, label: str, **kwargs: Any) -> None: ...
+
+    def __init__(self, label: str | None = None, **kwargs: Any) -> None:
+        """Accept label as positional or keyword argument."""
+        if label is not None:
+            kwargs["label"] = label
+        super().__init__(**kwargs)

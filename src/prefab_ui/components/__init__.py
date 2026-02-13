@@ -8,7 +8,7 @@ from this single package::
 
 from prefab_ui.components.alert import Alert, AlertDescription, AlertTitle
 from prefab_ui.components.badge import Badge
-from prefab_ui.components.base import Component, ContainerComponent, Responsive
+from prefab_ui.components.base import Component, ContainerComponent
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
 from prefab_ui.components.chart import (
@@ -152,7 +152,6 @@ __all__ = [
     "RadialChart",
     "Radio",
     "RadioGroup",
-    "Responsive",
     "Row",
     "Select",
     "SelectOption",

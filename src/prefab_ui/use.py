@@ -7,7 +7,8 @@ kwargs provide scoped values.
 
 Example::
 
-    from prefab_ui import Define, Use
+    from prefab_ui.define import Define
+    from prefab_ui.use import Use
     from prefab_ui.components import Card, Column, Heading, Badge
 
     with Define("user-card") as user_card:
