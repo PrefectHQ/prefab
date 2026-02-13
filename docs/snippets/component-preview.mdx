@@ -1,7 +1,10 @@
-export const ComponentPreview = ({ json, height, children }) => {
+export const ComponentPreview = ({ json, height, resizable, children }) => {
   const hostRef = React.useRef(null);
   const handleRef = React.useRef(null);
   const cardRef = React.useRef(null);
+  const containerRef = React.useRef(null);
+  const [previewWidth, setPreviewWidth] = React.useState(null);
+  const [isDragging, setIsDragging] = React.useState(false);
 
   React.useEffect(() => {
     if (cardRef.current) {
@@ -50,6 +53,108 @@ export const ComponentPreview = ({ json, height, children }) => {
       }
     };
   }, []);
+
+  function startResize(e) {
+    e.preventDefault();
+    var startX = e.clientX;
+    var startW = hostRef.current ? hostRef.current.offsetWidth : 0;
+    var maxW = containerRef.current
+      ? containerRef.current.offsetWidth - 10
+      : startW;
+
+    setIsDragging(true);
+
+    function onMove(ev) {
+      var w = Math.max(260, Math.min(startW + (ev.clientX - startX), maxW));
+      setPreviewWidth(w);
+    }
+
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      setIsDragging(false);
+    }
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  if (resizable) {
+    return (
+      <Card>
+        <div ref={cardRef} />
+        <div
+          ref={containerRef}
+          style={{ display: "flex", position: "relative", overflow: "hidden" }}
+        >
+          <div
+            ref={hostRef}
+            style={{
+              flex: previewWidth ? "none" : 1,
+              width: previewWidth ? previewWidth + "px" : undefined,
+              minWidth: 0,
+            }}
+          />
+          <div
+            onMouseDown={startResize}
+            style={{
+              width: "14px",
+              flexShrink: 0,
+              cursor: "col-resize",
+              background: isDragging
+                ? "var(--border, #e5e7eb)"
+                : "color-mix(in srgb, var(--border, #e5e7eb) 40%, transparent)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background 0.15s",
+              userSelect: "none",
+            }}
+          >
+            <svg width="6" height="24" style={{ opacity: 0.5 }}>
+              <circle cx="2" cy="4" r="1.2" fill="currentColor" />
+              <circle cx="2" cy="9" r="1.2" fill="currentColor" />
+              <circle cx="2" cy="14" r="1.2" fill="currentColor" />
+              <circle cx="2" cy="19" r="1.2" fill="currentColor" />
+              <circle cx="5" cy="4" r="1.2" fill="currentColor" />
+              <circle cx="5" cy="9" r="1.2" fill="currentColor" />
+              <circle cx="5" cy="14" r="1.2" fill="currentColor" />
+              <circle cx="5" cy="19" r="1.2" fill="currentColor" />
+            </svg>
+          </div>
+          <div
+            style={{
+              flex: previewWidth ? 1 : "0 0 24px",
+              minWidth: "24px",
+              background:
+                "repeating-linear-gradient(-45deg, transparent, transparent 3px, var(--border, #e5e7eb) 3px, var(--border, #e5e7eb) 4px)",
+              opacity: 0.3,
+            }}
+          />
+          {previewWidth && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: "8px",
+                right: "8px",
+                background: "var(--background, white)",
+                border: "1px solid var(--border, #e5e7eb)",
+                borderRadius: "4px",
+                padding: "1px 6px",
+                fontSize: "11px",
+                fontFamily: "monospace",
+                color: "var(--muted-foreground, #6b7280)",
+                pointerEvents: "none",
+              }}
+            >
+              {previewWidth}px
+            </div>
+          )}
+        </div>
+        <div style={{ marginBottom: "-2rem" }}>{children}</div>
+      </Card>
+    );
+  }
 
   return (
     <Card>

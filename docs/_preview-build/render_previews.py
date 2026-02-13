@@ -155,16 +155,20 @@ def _rebuild_block(
         python_source, shared_ns=shared_ns
     )
 
-    # Build the opening tag with json prop (and preserved height)
+    # Build the opening tag with json prop (preserving authored attributes)
     escaped_json = _escape_template_literal(compact_json)
     height_attr = f' height="{height}"' if height else ""
-    new_opening = f"<ComponentPreview auto{height_attr} json={{`{escaped_json}`}}>"
+    resizable_attr = " resizable" if "resizable" in opening_tag else ""
+    new_opening = f"<ComponentPreview{resizable_attr} auto{height_attr} json={{`{escaped_json}`}}>"
 
     # Build the interior
     if hide_json:
         new_interior = f"\n{python_block}\n"
     else:
-        json_block = f'```json Protocol icon="brackets-curly"\n{pretty_json}\n```'
+        expandable = " expandable" if "expandable" in python_fence_open else ""
+        json_block = (
+            f'```json Protocol icon="brackets-curly"{expandable}\n{pretty_json}\n```'
+        )
         new_interior = f"\n<CodeGroup>\n{python_block}\n{json_block}\n</CodeGroup>\n"
 
     return new_opening + new_interior + closing_tag
