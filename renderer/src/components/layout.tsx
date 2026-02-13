@@ -29,9 +29,25 @@ export function Column({ className, cssClass, children }: LayoutProps) {
   );
 }
 
-export function Grid({ className, cssClass, children }: LayoutProps) {
+interface GridProps extends LayoutProps {
+  minColumnWidth?: string;
+}
+
+export function Grid({
+  className,
+  cssClass,
+  children,
+  minColumnWidth,
+}: GridProps) {
+  const style = minColumnWidth
+    ? {
+        gridTemplateColumns: `repeat(auto-fill, minmax(${minColumnWidth}, 1fr))`,
+      }
+    : undefined;
   return (
-    <div className={cn("grid w-full", className, cssClass)}>{children}</div>
+    <div className={cn("grid w-full", className, cssClass)} style={style}>
+      {children}
+    </div>
   );
 }
 

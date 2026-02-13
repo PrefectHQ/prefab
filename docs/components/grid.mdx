@@ -207,6 +207,75 @@ with Grid(columns=4, gap=4, css_class="p-3 border-3 border-dashed"):
 </Tab>
 </Tabs>
 
+## Auto-fill Columns
+
+Set `min_column_width` instead of `columns` to let CSS Grid automatically fit as many columns as possible, each at least the given width. The grid reflows based on the container's actual width — try resizing your browser to see it in action.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Grid","minColumnWidth":"10rem","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Div, Grid
+
+with Grid(min_column_width="10rem", gap=4):
+    for _ in range(6):
+        Div(css_class="bg-emerald-500 rounded-md h-10")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Grid",
+    "minColumnWidth": "10rem",
+    "children": [
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-md h-10",
+        "type": "Div"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Responsive Columns
+
+Pass a dictionary of breakpoints to column counts when you need precise control over the layout at specific viewport widths. The `default` key sets the base, and Tailwind breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`) override it progressively.
+
+```python
+from prefab_ui.components import Grid, Responsive
+
+# Dictionary shorthand
+Grid(columns={"default": 1, "md": 2, "lg": 3})
+
+# Responsive object — equivalent, but works on any layout property
+Grid(columns=Responsive(default=1, md=2, lg=3))
+```
+
+<Note>
+Breakpoints respond to the **viewport** width, not the container. If your UI renders inside a narrow panel, `min_column_width` (auto-fill) is often a better fit since it reflows based on available space.
+</Note>
+
 ## Nested Content
 
 Grids nest naturally with other containers:
@@ -273,12 +342,16 @@ with Grid(columns=2, gap=6, css_class="p-3 border-3 border-dashed"):
 ## API Reference
 
 <Card icon="code" title="Grid Parameters">
-<ParamField body="columns" type="int" default="3">
-  Number of grid columns (1-12). Can be passed as a positional argument.
+<ParamField body="columns" type="int | dict | Responsive" default="3">
+  Number of grid columns (1-12). Can be passed as a positional argument. Pass a dict or `Responsive()` for breakpoint-aware column counts. Mutually exclusive with `min_column_width`.
 </ParamField>
 
-<ParamField body="gap" type="int | tuple | None" default="None">
-  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis.
+<ParamField body="min_column_width" type="str | None" default="None">
+  Minimum column width for auto-fill responsive grids (e.g. `"16rem"`). CSS Grid fits as many columns as possible at this minimum width. Mutually exclusive with `columns`.
+</ParamField>
+
+<ParamField body="gap" type="int | tuple | Responsive | None" default="None">
+  Gap between children. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps; use `None` to skip an axis. A `Responsive()` sets different gaps at different breakpoints.
 </ParamField>
 
 <ParamField body="align" type="str | None" default="None">
@@ -289,8 +362,8 @@ with Grid(columns=2, gap=6, css_class="p-3 border-3 border-dashed"):
   Main-axis distribution: `"start"`, `"center"`, `"end"`, `"between"`, `"around"`, `"evenly"`, `"stretch"`.
 </ParamField>
 
-<ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes. A `Responsive()` compiles breakpoint-prefixed classes.
 </ParamField>
 </Card>
 
