@@ -540,11 +540,6 @@
     "code": "from prefab_ui.components import Div, Grid\n\nwith Grid(min_column_width=\"10rem\", gap=4):\n    for _ in range(6):\n        Div(css_class=\"bg-emerald-500 rounded-md h-10\")"
   },
   {
-    "title": "from prefab_ui.components import Grid, Responsive",
-    "category": "Components",
-    "code": "# Dictionary shorthand\nGrid(columns={\"default\": 1, \"md\": 2, \"lg\": 3})\n\n# Responsive object — equivalent, but works on any layout property\nGrid(columns=Responsive(default=1, md=2, lg=3))"
-  },
-  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Column,\n    Grid,\n    H3,\n    P,\n)\n\nwith Grid(columns=2, gap=6, css_class=\"p-3 border-3 border-dashed\"):\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Left Panel\")\n        P(\"Primary content goes here.\")\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Right Panel\")\n        P(\"Secondary content goes here.\")"
@@ -1035,6 +1030,11 @@
     "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
   },
   {
+    "title": "Python icon=\"python\" expandable",
+    "category": "Examples",
+    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    CardTitle, Checkbox, Column, ForEach, Grid, If, Input,\n    Muted, Row, State,\n)\nfrom prefab_ui import AppendState, PopState, SetState\n\nset_initial_state(groups=[\n    {\n        \"name\": \"Work\",\n        \"todos\": [\n            {\"text\": \"Find Magrathea\", \"done\": False},\n            {\"text\": \"Escape Vogons\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n    {\n        \"name\": \"Personal\",\n        \"todos\": [\n            {\"text\": \"Have lunch at Milliways\", \"done\": True},\n            {\"text\": \"Buy towel\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n])\n\nwith Grid(min_column_width=\"16rem\", gap=4, align=\"start\"):\n    with ForEach(\"groups\"):\n        with State(gi=\"{{ $index }}\", show_done=\"{{ $item.show_done }}\"):\n            with Card():\n                with CardHeader():\n                    CardTitle(\"{{ $item.name }}\")\n                with CardContent(css_class=\"gap-4\"):\n                    with Row(gap=2):\n                        Input(name=\"groups.{{ gi }}.new_todo\", placeholder=\"Add a todo...\")\n                        Button(\n                            \"Add\",\n                            disabled=\"{{ not $item.new_todo }}\",\n                            on_click=[\n                                AppendState(\"groups.{{ gi }}.todos\", {\"text\": \"{{ $item.new_todo }}\", \"done\": False}),\n                                SetState(\"groups.{{ gi }}.new_todo\", \"\"),\n                            ],\n                        )\n                    with ForEach(\"groups.{{ gi }}.todos\"):\n                        with If(\"not $item.done or show_done\"):\n                            with Row(gap=2, align=\"center\", css_class=\"py-1\"):\n                                Checkbox(name=\"groups.{{ gi }}.todos.{{ $index }}.done\")\n                                Input(\n                                    name=\"groups.{{ gi }}.todos.{{ $index }}.text\",\n                                    css_class=\"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0\",\n                                )\n                                Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups.{{ gi }}.todos\", \"{{ $index }}\"))\n                with CardFooter():\n                    with Row(gap=2, align=\"center\", css_class=\"w-full justify-between\"):\n                        Muted(\"{{ $item.todos | length }} items\")\n                        with Row(gap=1, align=\"center\"):\n                            Checkbox(name=\"groups.{{ gi }}.show_done\", css_class=\"h-3 w-3\")\n                            Muted(\"Show done\")\n    with Card(css_class=\"border-dashed\"):\n        with CardContent(css_class=\"flex items-center justify-center py-20\"):\n            Button(\n                \"+\",\n                variant=\"ghost\",\n                size=\"lg\",\n                css_class=\"text-4xl text-muted-foreground h-16 w-16\",\n                on_click=AppendState(\"groups\", {\"name\": \"New List\", \"todos\": [], \"new_todo\": \"\", \"show_done\": True}),\n            )"
+  },
+  {
     "title": "from prefab_ui import AppResult",
     "category": "Expressions",
     "code": "AppResult(state={\"count\": 0, \"name\": \"Arthur\"}, view=...)"
@@ -1288,6 +1288,31 @@
     "title": "Python icon=\"python\"",
     "category": "Patterns",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, ShowToast\n\nButton(\"Delete\", variant=\"destructive\", on_click=ToolCall(\n    \"delete_item\",\n    arguments={\"id\": \"{{ item_id }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n))"
+  },
+  {
+    "title": "from prefab_ui.components import Grid, Row, Responsive",
+    "category": "Patterns",
+    "code": "# Grid that stacks on mobile, 2 columns on tablets, 3 on desktop\nGrid(columns=Responsive(default=1, md=2, lg=3))\n\n# Row with tighter gap on small screens\nRow(gap=Responsive(default=2, md=4, lg=6))"
+  },
+  {
+    "title": "# These are equivalent",
+    "category": "Patterns",
+    "code": "Grid(columns=Responsive(default=1, md=2, lg=3))\nGrid(columns={\"default\": 1, \"md\": 2, \"lg\": 3})"
+  },
+  {
+    "title": "from prefab_ui.components import Grid, Responsive",
+    "category": "Patterns",
+    "code": "# Product cards: 1 → 2 → 3 → 4 columns\nGrid(columns=Responsive(default=1, sm=2, lg=3, xl=4))"
+  },
+  {
+    "title": "from prefab_ui.components import Row, Responsive",
+    "category": "Patterns",
+    "code": "Row(gap=Responsive(default=2, md=4, lg=6))"
+  },
+  {
+    "title": "from prefab_ui.components import Button, Responsive",
+    "category": "Patterns",
+    "code": "# Full-width button on mobile, auto-width on desktop\nButton(\"Submit\", css_class=Responsive(default=\"w-full\", md=\"w-auto\"))"
   },
   {
     "title": "Define and Use",

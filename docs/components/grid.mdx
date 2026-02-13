@@ -209,9 +209,9 @@ with Grid(columns=4, gap=4, css_class="p-3 border-3 border-dashed"):
 
 ## Auto-fill Columns
 
-Set `min_column_width` instead of `columns` to let CSS Grid automatically fit as many columns as possible, each at least the given width. The grid reflows based on the container's actual width — try resizing your browser to see it in action.
+Set `min_column_width` instead of `columns` to let CSS Grid automatically fit as many columns as possible, each at least the given width. Drag the handle to see the grid reflow.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Grid","minColumnWidth":"10rem","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}}`}>
+<ComponentPreview resizable auto json={`{"view":{"cssClass":"gap-4","type":"Grid","minColumnWidth":"10rem","children":[{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Div, Grid
@@ -260,21 +260,13 @@ with Grid(min_column_width="10rem", gap=4):
 
 ## Responsive Columns
 
-Pass a dictionary of breakpoints to column counts when you need precise control over the layout at specific viewport widths. The `default` key sets the base, and Tailwind breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`) override it progressively.
+Pass a dictionary of breakpoints to `columns` for precise control at specific viewport widths. The `default` key sets the base, and Tailwind breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`) override it progressively.
 
 ```python
-from prefab_ui.components import Grid, Responsive
-
-# Dictionary shorthand
 Grid(columns={"default": 1, "md": 2, "lg": 3})
-
-# Responsive object — equivalent, but works on any layout property
-Grid(columns=Responsive(default=1, md=2, lg=3))
 ```
 
-<Note>
-Breakpoints respond to the **viewport** width, not the container. If your UI renders inside a narrow panel, `min_column_width` (auto-fill) is often a better fit since it reflows based on available space.
-</Note>
+See [Responsive Layouts](/patterns/responsive-layouts) for the full guide, including responsive `gap`, `css_class`, and the `Responsive` helper.
 
 ## Nested Content
 
