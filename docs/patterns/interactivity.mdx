@@ -54,7 +54,7 @@ Use `If` / `Else` blocks to show or hide content based on state. Pair with `Togg
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Button, Column, If
-from prefab_ui import ToggleState
+from prefab_ui.actions import ToggleState
 
 with Column(gap=2):
     Button("Toggle Details", variant="outline", on_click=ToggleState("showDetails"))
@@ -116,7 +116,7 @@ Clicking the button flips `showDetails` between `True` and `False`. When `False`
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Column(gap=3):
     Input(name="search", placeholder="Search users...")
@@ -208,7 +208,7 @@ from prefab_ui.components import (
     ForEach,
     Input,
 )
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Column(gap=3):
     Input(name="q", placeholder="Search products...")
@@ -293,7 +293,7 @@ Pass a list of actions to compose richer interactions. Actions execute in sequen
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui import ToolCall, SetState, ShowToast
+from prefab_ui.actions import ToolCall, SetState, ShowToast
 
 Button("Process", on_click=[
     SetState("processing", True),
@@ -359,7 +359,7 @@ When a `ToolCall` action fails, the error message is available as `$error` insid
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui import ToolCall, ShowToast
+from prefab_ui.actions import ToolCall, ShowToast
 
 Button("Delete", variant="destructive", on_click=ToolCall(
     "delete_item",

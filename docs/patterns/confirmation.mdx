@@ -16,7 +16,7 @@ Wrap a destructive trigger in a Dialog so users must confirm before the action f
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Dialog(title="Delete Item", description="This action cannot be undone."):
     Button("Delete", variant="destructive")
@@ -89,7 +89,7 @@ Some destructive actions need to show the user what will happen before they conf
 
 ```python Two-Step Confirmation
 from prefab_ui.components import Button, Column, Dialog, Row, Text
-from prefab_ui import ToolCall, ShowToast
+from prefab_ui.actions import ToolCall, ShowToast
 
 with Dialog(title="Remove User", description="This will revoke all access."):
     Button("Remove", variant="destructive")
@@ -128,7 +128,7 @@ The `on_success` and `on_error` callbacks on `ToolCall` fire after the server to
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui import ToolCall, ShowToast
+from prefab_ui.actions import ToolCall, ShowToast
 
 Button(
     "Save",
@@ -181,7 +181,7 @@ For lighter-weight confirmations that do not need a full modal overlay, use a Po
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Popover, Text
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Popover():
     Button("Archive", variant="outline")

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from prefab_ui import Define, UIResponse, Use
 from prefab_ui.components import (
     Badge,
     Card,
@@ -13,7 +12,9 @@ from prefab_ui.components import (
     State,
     Text,
 )
-from prefab_ui.response import PROTOCOL_VERSION
+from prefab_ui.define import Define
+from prefab_ui.response import PROTOCOL_VERSION, UIResponse
+from prefab_ui.use import Use
 
 # ---------------------------------------------------------------------------
 # State

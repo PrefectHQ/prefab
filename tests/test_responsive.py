@@ -2,8 +2,9 @@
 
 import pytest
 
-from prefab_ui.components import Column, Grid, Responsive, Row, Text
+from prefab_ui.components import Column, Grid, Row, Text
 from prefab_ui.components.base import _compile_layout_classes
+from prefab_ui.css import Responsive
 
 
 class TestResponsive:

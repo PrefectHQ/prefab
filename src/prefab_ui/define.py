@@ -7,7 +7,9 @@ via the ``defs`` parameter.
 
 Example::
 
-    from prefab_ui import Define, Use, UIResponse
+    from prefab_ui.define import Define
+    from prefab_ui.use import Use
+    from prefab_ui.response import UIResponse
     from prefab_ui.components import Card, Column, Heading, Badge
 
     with Define("user-card") as user_card:

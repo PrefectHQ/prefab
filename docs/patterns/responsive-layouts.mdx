@@ -1,93 +1,44 @@
 ---
 title: Responsive Layouts
-description: Adapt layouts to different screen sizes with breakpoint-aware properties and auto-fill grids.
+description: Adapt layouts to different screen sizes with breakpoint-aware grids and auto-fill.
 icon: arrows-left-right-to-line
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Prefab renders to Tailwind CSS, so Tailwind's responsive prefixes (`sm:`, `md:`, `lg:`, etc.) work directly in any `css_class`:
+There are two ways to make a grid adapt to screen size: **auto-fill** reflows based on available space, **responsive breakpoints** jump at fixed viewport widths. They solve different problems, and picking the right one avoids a lot of CSS fiddling.
+
+## Auto-fill
+
+`min_column_width` tells the grid the narrowest a column should be. Columns appear and disappear as the container widens or shrinks — no breakpoints involved.
 
 ```python
-from prefab_ui.components import Button
-
-Button("Submit", css_class="w-full md:w-auto")
+Grid(min_column_width="16rem", gap=4)
 ```
 
-Prefab also provides a `Responsive` helper that makes breakpoint logic more structured — especially when you're toggling multiple classes or want to keep things readable.
+This is the more flexible option. It adapts to whatever space is available, so it works in sidebars, dialogs, and variable-width panels without any breakpoint tuning.
 
-## The Responsive Helper
+## Responsive Breakpoints
 
-`Responsive` maps breakpoint keys to values. The `default` key sets the base, and `sm`, `md`, `lg`, `xl`, `2xl` override it progressively as the viewport widens. It's accepted anywhere `css_class` is — on any component.
+`Responsive` on the `columns` or `gap` prop sets explicit values at each viewport width. The column count jumps at fixed breakpoints regardless of the container.
 
 ```python
-from prefab_ui.components import Button, Responsive
+from prefab_ui.components import Grid, Row
+from prefab_ui.css import Responsive
 
-# Full-width on mobile, auto-width from md up
-Button("Submit", css_class=Responsive(default="w-full", md="w-auto"))
+Grid(columns=Responsive(default=1, md=2, lg=3))
+Row(gap=Responsive(default=2, md=4, lg=6))
 ```
 
-Under the hood, this compiles to the same Tailwind classes you'd write by hand: `w-full md:w-auto`. The advantage shows up when breakpoint values get more complex:
-
-```python
-from prefab_ui.components import Card, Responsive
-
-Card(css_class=Responsive(
-    default="p-3 text-sm",
-    md="p-6 text-base",
-    lg="p-8 text-lg shadow-lg",
-))
-# → p-3 text-sm md:p-6 md:text-base lg:p-8 lg:text-lg lg:shadow-lg
-```
-
-Each breakpoint value is a full string of classes. `Responsive` prefixes every class in that string with the breakpoint — you don't have to repeat the prefix yourself.
-
-## Responsive Layout Props
-
-Beyond `css_class`, a few layout props accept `Responsive` directly so you don't have to think in raw class names:
+`Responsive` maps breakpoint keys to values. The `default` key sets the base, and `sm`, `md`, `lg`, `xl`, `2xl` override it progressively. Use this for full-page layouts where you control the overall structure and want precise control over each breakpoint.
 
 | Prop | Components | Compiles to |
 |------|-----------|-------------|
 | `columns` | [Grid](/components/grid) | `grid-cols-{n}` |
 | `gap` | [Grid](/components/grid), [Row](/components/row), [Column](/components/column) | `gap-{n}` |
 
-```python
-from prefab_ui.components import Grid, Row, Responsive
+## Which One?
 
-# Stacks on mobile, 2 columns on tablets, 3 on desktop
-Grid(columns=Responsive(default=1, md=2, lg=3))
+When in doubt, start with `min_column_width`. It handles the most common case — "fill the space with reasonably-sized columns" — without thinking about specific screen widths. Reach for `Responsive` when you need the column count to be exact at each breakpoint.
 
-# Tighter gap on small screens
-Row(gap=Responsive(default=2, md=4, lg=6))
-```
-
-## Auto-fill vs. Responsive
-
-There are two ways to make a grid adapt. They solve different problems:
-
-**Auto-fill** (`min_column_width`) reflows based on the **container's** actual width. Columns appear and disappear as space allows. Use this when the grid lives inside a variable-width panel, sidebar, or dialog.
-
-```python
-Grid(min_column_width="16rem", gap=4)
-```
-
-**Responsive** (`columns` with breakpoints) reflows based on the **viewport** width. The column count jumps at fixed breakpoints regardless of the container. Use this for full-page layouts where you control the overall structure.
-
-```python
-Grid(columns=Responsive(default=1, md=2, lg=3))
-```
-
-When in doubt, start with `min_column_width` — it's the more flexible option since it adapts to whatever space is available.
-
-## Breakpoints
-
-| Key       | Min Width | Typical Device    |
-|-----------|-----------|-------------------|
-| `default` | —         | All screens       |
-| `sm`      | 640px     | Large phones      |
-| `md`      | 768px     | Tablets           |
-| `lg`      | 1024px    | Laptops           |
-| `xl`      | 1280px    | Desktops          |
-| `2xl`     | 1536px    | Large monitors    |
-
-These match [Tailwind's default breakpoints](https://tailwindcss.com/docs/responsive-design). Each breakpoint applies from that width *and up* — `md` means "768px and wider", not "exactly 768px".
+For responsive *styling* (padding, visibility, text size, hover states), see [CSS Helpers](/css).

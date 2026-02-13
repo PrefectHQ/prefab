@@ -16,7 +16,7 @@ Combine `Input`, `Label`, and `Button` components to create a form with full con
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input, Label
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 with Column(gap=3):
     Label("Name")
@@ -91,7 +91,7 @@ This approach gives you complete control, but it requires wiring up every label,
 ```python Python icon="python"
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 class ContactInfo(BaseModel):
     name: str = Field(title="Full Name", min_length=1)
@@ -247,7 +247,7 @@ When `on_submit` is a `ToolCall` with no `arguments`, `from_model()` auto-genera
 ```python Auto-Fill
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui import ToolCall
+from prefab_ui.actions import ToolCall
 
 class ContactInfo(BaseModel):
     name: str = Field(title="Full Name", min_length=1)
@@ -278,7 +278,8 @@ A single tool can serve as both the form renderer and the form handler. On the f
 ```python Self-Calling Tool
 from pydantic import BaseModel, Field
 from prefab_ui import FastMCP
-from prefab_ui import AppResult, ToolCall, ShowToast
+from prefab_ui import AppResult
+from prefab_ui.actions import ToolCall, ShowToast
 from prefab_ui.components import Form, Text
 
 mcp = FastMCP("Contacts")
@@ -321,7 +322,7 @@ You can override this with your own `on_error`:
 ```python Custom Error Handling
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui import ToolCall, ShowToast
+from prefab_ui.actions import ToolCall, ShowToast
 
 class Contact(BaseModel):
     name: str = Field(min_length=1)
