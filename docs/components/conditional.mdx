@@ -12,7 +12,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"outOfStock","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
@@ -21,7 +21,7 @@ with Column(gap=3):
     with Row(gap=2, align="center"):
         Switch(name="outOfStock")
         Text("Out of stock")
-    with If("outOfStock"):
+    with If("{{ outOfStock }}"):
         with Alert(variant="destructive"):
             AlertTitle("This item is unavailable")
 ```
@@ -53,7 +53,7 @@ with Column(gap=3):
         "type": "Condition",
         "cases": [
           {
-            "when": "outOfStock",
+            "when": "{{ outOfStock }}",
             "children": [
               {
                 "type": "Alert",
@@ -82,7 +82,7 @@ A lone `If` renders its children when the condition is truthy, and renders nothi
 
 Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \\u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -104,7 +104,7 @@ with Column(gap=3):
     with Row(gap=2, align="center"):
         Switch(name="showDetails")
         Text("Show details")
-    with If("showDetails"):
+    with If("{{ showDetails }}"):
         with Card():
             with CardHeader():
                 CardTitle("Project Details")
@@ -141,7 +141,7 @@ with Column(gap=3):
         "type": "Condition",
         "cases": [
           {
-            "when": "showDetails",
+            "when": "{{ showDetails }}",
             "children": [
               {
                 "type": "Card",
@@ -191,7 +191,7 @@ with Column(gap=3):
 
 Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders. Use the select below to change the status and watch the right badge appear.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"status == 'error'","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"status == 'warning'","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"status == 'active'","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"state":{"status":"active"}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"{{ status == 'error' }}","children":[{"type":"Badge","label":"Error \\u2014 system down","variant":"destructive"}]},{"when":"{{ status == 'warning' }}","children":[{"type":"Badge","label":"Warning \\u2014 degraded","variant":"warning"}]},{"when":"{{ status == 'active' }}","children":[{"type":"Badge","label":"Active \\u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"state":{"status":"active"}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -211,11 +211,11 @@ with Column(gap=3):
         SelectOption("Warning", value="warning")
         SelectOption("Error", value="error")
         SelectOption("Something else", value="other")
-    with If("status == 'error'"):
+    with If("{{ status == 'error' }}"):
         Badge("Error — system down", variant="destructive")
-    with Elif("status == 'warning'"):
+    with Elif("{{ status == 'warning' }}"):
         Badge("Warning — degraded", variant="warning")
-    with Elif("status == 'active'"):
+    with Elif("{{ status == 'active' }}"):
         Badge("Active — all systems go", variant="success")
     with Else():
         Badge("Unknown status: {{ status }}", variant="secondary")
@@ -268,7 +268,7 @@ with Column(gap=3):
         "type": "Condition",
         "cases": [
           {
-            "when": "status == 'error'",
+            "when": "{{ status == 'error' }}",
             "children": [
               {
                 "type": "Badge",
@@ -278,7 +278,7 @@ with Column(gap=3):
             ]
           },
           {
-            "when": "status == 'warning'",
+            "when": "{{ status == 'warning' }}",
             "children": [
               {
                 "type": "Badge",
@@ -288,7 +288,7 @@ with Column(gap=3):
             ]
           },
           {
-            "when": "status == 'active'",
+            "when": "{{ status == 'active' }}",
             "children": [
               {
                 "type": "Badge",
@@ -318,19 +318,19 @@ with Column(gap=3):
 
 Select "Error" or "Something else" to see different branches render. The `Else` catches anything that doesn't match the explicit conditions.
 
-## Conditions Are Expressions
+## Conditions Are Template Expressions
 
-The first argument to `If` and `Elif` is always a raw [expression](/expressions/overview), not a `{{ }}` template. Templates embed expressions inside larger strings (`Text("Hello, {{ name }}!")`), but a condition *is* the expression — there's nothing to embed it in.
+The first argument to `If` and `Elif` is a `{{ }}` [template expression](/expressions/templates), consistent with every other expression in the system:
 
 ```python
-# ✅ Correct — raw expression
-with If("status == 'active'"):
-    ...
-
-# ❌ Wrong — unnecessary template delimiters
 with If("{{ status == 'active' }}"):
     ...
+
+with If("{{ count > 0 && items | length }}"):
+    ...
 ```
+
+Any [expression](/expressions/overview) the language supports — comparisons, boolean logic, pipes — works inside the `{{ }}`.
 
 ## Chain Rules
 
@@ -344,9 +344,9 @@ Consecutive `If/Elif/Else` siblings in the same parent form a single conditional
 ```python
 with Column():
     # Chain 1: If / Elif / Else → one Condition node
-    with If("status == 'error'"):
+    with If("{{ status == 'error' }}"):
         Badge("Error", variant="destructive")
-    with Elif("status == 'warning'"):
+    with Elif("{{ status == 'warning' }}"):
         Badge("Warning", variant="secondary")
     with Else():
         Badge("OK")
@@ -354,11 +354,11 @@ with Column():
     Text("---")  # breaks the chain
 
     # Chain 2: standalone If → separate Condition node
-    with If("showDetails"):
+    with If("{{ showDetails }}"):
         Text("Details here...")
 
     # Chain 3: another If starts a new chain (not an Elif!)
-    with If("showFooter"):
+    with If("{{ showFooter }}"):
         Text("Footer content")
 ```
 

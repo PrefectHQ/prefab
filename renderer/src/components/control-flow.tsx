@@ -1,11 +1,10 @@
 /**
- * Control flow components: ForEach, State, Condition.
+ * Control flow components: ForEach, Condition.
  *
  * ForEach iterates over a data array and renders its children template
- * once per item. State provides scoped interpolation values to children.
- * Condition evaluates cases in order and renders the first match.
- * All are handled specially by the renderer — these components exist
- * for registry completeness.
+ * once per item. Condition evaluates cases in order and renders the first
+ * match. Both are handled specially by the renderer — these components
+ * exist for registry completeness.
  */
 
 import type { ReactNode } from "react";
@@ -23,18 +22,6 @@ interface ForEachProps {
  * This exists for the registry but the renderer intercepts it.
  */
 export function ForEach({ children }: ForEachProps) {
-  return <>{children}</>;
-}
-
-interface StateProps {
-  children?: ReactNode;
-}
-
-/**
- * State is handled by the recursive renderer (scope merging), not here.
- * This exists for the registry but the renderer intercepts it.
- */
-export function PrefabState({ children }: StateProps) {
   return <>{children}</>;
 }
 

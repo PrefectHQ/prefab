@@ -83,7 +83,6 @@ import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
 import { sliderSchema } from "./slider.ts";
 import { spinnerSchema } from "./spinner.ts";
-import { stateSchema } from "./state.ts";
 import { switchSchema } from "./switch.ts";
 import {
   tableSchema,
@@ -185,7 +184,6 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Small: smallSchema,
   Spinner: spinnerSchema,
   Span: spanSchema,
-  State: stateSchema,
   Switch: switchSchema,
   Tab: tabSchema,
   Table: tableSchema,

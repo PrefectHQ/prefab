@@ -481,6 +481,8 @@ describe("evaluate", () => {
     it("unknown pipe passes through", () => {
       expect(evaluate("val | nonexistent", { val: 42 })).toBe(42);
     });
+
+    // selectattr/rejectattr tests in expression-pipes.test.ts
   });
 
   // ── Pipe chaining ────────────────────────────────────────────────

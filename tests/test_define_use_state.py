@@ -1,4 +1,4 @@
-"""Tests for Define, Use, and State primitives."""
+"""Tests for Define, Use, and let bindings."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from prefab_ui.components import (
     Card,
     Column,
     Heading,
-    State,
+    If,
     Text,
 )
 from prefab_ui.define import Define
@@ -17,66 +17,64 @@ from prefab_ui.response import PROTOCOL_VERSION, UIResponse
 from prefab_ui.use import Use
 
 # ---------------------------------------------------------------------------
-# State
+# let on ContainerComponent
 # ---------------------------------------------------------------------------
 
 
-class TestState:
-    def test_kwargs_collected_into_state(self) -> None:
-        s = State(name="Alice", role="Engineer")
-        assert s.state == {"name": "Alice", "role": "Engineer"}
+class TestLet:
+    def test_let_in_to_json(self) -> None:
+        col = Column(let={"name": "Alice", "role": "Engineer"})
+        result = col.to_json()
+        assert result["let"] == {"name": "Alice", "role": "Engineer"}
+        assert result["type"] == "Column"
 
-    def test_positional_dict(self) -> None:
-        s = State({"x": 1, "y": 2})
-        assert s.state == {"x": 1, "y": 2}
+    def test_let_none_omitted(self) -> None:
+        col = Column()
+        result = col.to_json()
+        assert "let" not in result
 
-    def test_positional_dict_merged_with_kwargs(self) -> None:
-        s = State({"x": 1}, y=2)
-        assert s.state == {"x": 1, "y": 2}
-
-    def test_kwargs_override_positional(self) -> None:
-        s = State({"x": 1}, x=99)
-        assert s.state == {"x": 99}
-
-    def test_base_fields_not_in_state(self) -> None:
-        s = State(name="Alice", css_class="hidden")
-        assert s.state == {"name": "Alice"}
-        assert s.css_class == "hidden"
-
-    def test_unknown_kwargs_go_to_state(self) -> None:
-        s = State(name="Alice", visible_when="show")
-        # visible_when is no longer a base field, so it lands in state
-        assert s.state == {"name": "Alice", "visible_when": "show"}
-
-    def test_to_json_basic(self) -> None:
-        s = State(name="Alice")
-        result = s.to_json()
-        assert result == {"type": "State", "state": {"name": "Alice"}}
-
-    def test_to_json_with_children(self) -> None:
-        with State(name="Alice") as s:
+    def test_let_with_children(self) -> None:
+        with Column(let={"name": "Alice"}) as col:
             Text("{{ name }}")
-        result = s.to_json()
-        assert result["type"] == "State"
-        assert result["state"] == {"name": "Alice"}
+        result = col.to_json()
+        assert result["let"] == {"name": "Alice"}
         assert len(result["children"]) == 1
-        assert result["children"][0]["type"] == "Text"
 
-    def test_to_json_with_css_class(self) -> None:
-        result = State(name="Alice", css_class="mt-4").to_json()
+    def test_let_with_css_class(self) -> None:
+        result = Column(let={"x": 1}, css_class="mt-4").to_json()
+        assert result["let"] == {"x": 1}
         assert result["cssClass"] == "mt-4"
-        assert result["state"] == {"name": "Alice"}
 
-    def test_auto_appends_to_parent(self) -> None:
+    def test_let_empty_dict_in_to_json(self) -> None:
+        col = Column(let={})
+        result = col.to_json()
+        # Empty dict is truthy, so it should appear
+        assert result["let"] == {}
+
+
+# ---------------------------------------------------------------------------
+# Condition when wrapping
+# ---------------------------------------------------------------------------
+
+
+class TestConditionWhen:
+    def test_when_wrapped_in_braces(self) -> None:
         with Column() as col:
-            State(name="Alice")
-        assert len(col.children) == 1
-        assert isinstance(col.children[0], State)
+            with If("{{ count > 0 }}"):
+                Text("positive")
+        result = col.to_json()
+        condition = result["children"][0]
+        assert condition["type"] == "Condition"
+        assert condition["cases"][0]["when"] == "{{ count > 0 }}"
 
-    def test_empty_state(self) -> None:
-        s = State()
-        assert s.state == {}
-        assert s.to_json() == {"type": "State", "state": {}}
+    def test_bare_expression_wrapped(self) -> None:
+        """The SDK wraps bare expressions in {{ }} for protocol consistency."""
+        with Column() as col:
+            with If("count > 0"):
+                Text("positive")
+        result = col.to_json()
+        condition = result["children"][0]
+        assert condition["cases"][0]["when"] == "{{ count > 0 }}"
 
 
 # ---------------------------------------------------------------------------
@@ -136,29 +134,26 @@ class TestUse:
 
     def test_with_overrides(self) -> None:
         result = Use("user-card", name="Alice", role="Engineer").to_json()
-        assert result["type"] == "State"
-        assert result["state"] == {"name": "Alice", "role": "Engineer"}
-        assert result["children"] == [{"$ref": "user-card"}]
+        assert result == {
+            "$ref": "user-card",
+            "let": {"name": "Alice", "role": "Engineer"},
+        }
 
-    def test_css_class_on_wrapper(self) -> None:
+    def test_css_class_on_ref(self) -> None:
         result = Use("card", css_class="mt-4").to_json()
-        assert result["type"] == "State"
-        assert result["state"] == {}
-        assert result["cssClass"] == "mt-4"
-        assert result["children"] == [{"$ref": "card"}]
+        assert result == {"$ref": "card", "cssClass": "mt-4"}
 
-    def test_unknown_kwargs_become_overrides(self) -> None:
-        # visible_when is no longer a base field, so it becomes a state override
+    def test_unknown_kwargs_become_let(self) -> None:
         result = Use("card", visible_when="show").to_json()
-        assert result["type"] == "State"
-        assert result["state"] == {"visible_when": "show"}
+        assert result == {"$ref": "card", "let": {"visible_when": "show"}}
 
     def test_overrides_with_base_fields(self) -> None:
         result = Use("card", name="Alice", css_class="mt-4").to_json()
-        assert result["type"] == "State"
-        assert result["state"] == {"name": "Alice"}
-        assert result["cssClass"] == "mt-4"
-        assert result["children"] == [{"$ref": "card"}]
+        assert result == {
+            "$ref": "card",
+            "let": {"name": "Alice"},
+            "cssClass": "mt-4",
+        }
 
     def test_auto_appends_to_parent(self) -> None:
         with Column() as col:
@@ -203,7 +198,7 @@ class TestUIResponseDefs:
 
 
 def test_full_wire_format() -> None:
-    """Verify the exact wire format from the issue spec."""
+    """Verify the exact wire format with let bindings."""
     with Define("user-card") as user_card:
         with Card():
             Heading("{{ name }}")
@@ -230,14 +225,12 @@ def test_full_wire_format() -> None:
             "type": "Column",
             "children": [
                 {
-                    "type": "State",
-                    "state": {"name": "Alice", "role": "Engineer"},
-                    "children": [{"$ref": "user-card"}],
+                    "$ref": "user-card",
+                    "let": {"name": "Alice", "role": "Engineer"},
                 },
                 {
-                    "type": "State",
-                    "state": {"name": "Bob", "role": "Designer"},
-                    "children": [{"$ref": "user-card"}],
+                    "$ref": "user-card",
+                    "let": {"name": "Bob", "role": "Designer"},
                 },
             ],
         },

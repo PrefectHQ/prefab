@@ -263,13 +263,28 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       console.warn(`[Prefab] Circular $ref: "${refName}"`);
       return null;
     }
-    const newScope = {
+    let newScope: Record<string, unknown> = {
       ...scope,
       $resolving: new Set([...resolving, refName]),
     };
-    return (
+    // Evaluate let bindings on the $ref node
+    const letBindings = node["let"] as Record<string, unknown> | undefined;
+    if (letBindings) {
+      const ctx = { ...state.getAll(), ...newScope };
+      const evaluated = interpolateProps(letBindings, ctx) as Record<
+        string,
+        unknown
+      >;
+      newScope = { ...newScope, ...evaluated };
+    }
+    const refCssClass = node["cssClass"] as string | undefined;
+    const resolved = (
       <RenderNode node={defNode} scope={newScope} state={state} app={app} />
     );
+    if (refCssClass) {
+      return <div className={refCssClass}>{resolved}</div>;
+    }
+    return resolved;
   }
 
   const { type, children, ...rawProps } = node;
@@ -440,7 +455,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     return (
       <div className={wrapperClass}>
         {items.map((item, idx) => {
-          const itemScope =
+          let itemScope =
             typeof item === "object" && item !== null
               ? {
                   ...scope,
@@ -449,6 +464,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
                   $item: item,
                 }
               : { ...scope, $index: idx, $item: item };
+          // Evaluate let bindings per iteration (can reference $index/$item)
+          const forEachLet = rawProps.let as
+            | Record<string, unknown>
+            | undefined;
+          if (forEachLet) {
+            const letCtx = { ...state.getAll(), ...itemScope };
+            const evaluated = interpolateProps(forEachLet, letCtx) as Record<
+              string,
+              unknown
+            >;
+            itemScope = { ...itemScope, ...evaluated };
+          }
           return children.map((child, childIdx) => (
             <RenderNode
               key={`${idx}-${childIdx}`}
@@ -459,31 +486,6 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             />
           ));
         })}
-      </div>
-    );
-  }
-
-  // Handle State — merge state dict into interpolation scope.
-  // State keeps a real w-full box (unlike ForEach) because it's commonly the
-  // root node and needs to provide width to its children.
-  if (type === "State" && children) {
-    const stateOverrides = interpolateProps(
-      (rawProps.state ?? {}) as Record<string, unknown>,
-      ctx,
-    ) as Record<string, unknown>;
-    const newScope = { ...scope, ...stateOverrides };
-    const cssClass = rawProps.cssClass as string | undefined;
-    return (
-      <div className={["w-full", cssClass].filter(Boolean).join(" ")}>
-        {children.map((child, i) => (
-          <RenderNode
-            key={i}
-            node={child}
-            scope={newScope}
-            state={state}
-            app={app}
-          />
-        ))}
       </div>
     );
   }
@@ -534,9 +536,26 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     return null;
   }
 
+  // Evaluate let bindings — scoped variables available to children
+  let childScope = scope;
+  const letBindings = rawProps.let as Record<string, unknown> | undefined;
+  if (letBindings) {
+    const evaluated = interpolateProps(letBindings, ctx) as Record<
+      string,
+      unknown
+    >;
+    childScope = { ...scope, ...evaluated };
+  }
+
   // Render children recursively
   const renderedChildren = children?.map((child, i) => (
-    <RenderNode key={i} node={child} scope={scope} state={state} app={app} />
+    <RenderNode
+      key={i}
+      node={child}
+      scope={childScope}
+      state={state}
+      app={app}
+    />
   ));
 
   // Leaf components with no text content or children must render

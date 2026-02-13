@@ -18,7 +18,7 @@ class TestConditionalSerialization:
         cond = j["children"][0]
         assert cond["type"] == "Condition"
         assert len(cond["cases"]) == 1
-        assert cond["cases"][0]["when"] == "count > 0"
+        assert cond["cases"][0]["when"] == "{{ count > 0 }}"
         assert cond["cases"][0]["children"][0]["content"] == "has items"
         assert "else" not in cond
 
@@ -32,7 +32,7 @@ class TestConditionalSerialization:
         cond = j["children"][0]
         assert cond["type"] == "Condition"
         assert len(cond["cases"]) == 1
-        assert cond["cases"][0]["when"] == "active"
+        assert cond["cases"][0]["when"] == "{{ active }}"
         assert cond["else"][0]["label"] == "Off"
 
     def test_if_elif_else(self):
@@ -47,8 +47,8 @@ class TestConditionalSerialization:
         cond = j["children"][0]
         assert cond["type"] == "Condition"
         assert len(cond["cases"]) == 2
-        assert cond["cases"][0]["when"] == "inventory == 0"
-        assert cond["cases"][1]["when"] == "inventory < 10"
+        assert cond["cases"][0]["when"] == "{{ inventory == 0 }}"
+        assert cond["cases"][1]["when"] == "{{ inventory < 10 }}"
         assert cond["else"][0]["label"] == "In stock"
 
     def test_if_elif_elif_else(self):
@@ -64,7 +64,7 @@ class TestConditionalSerialization:
         j = col.to_json()
         cond = j["children"][0]
         assert len(cond["cases"]) == 3
-        assert cond["cases"][2]["when"] == "x == 3"
+        assert cond["cases"][2]["when"] == "{{ x == 3 }}"
         assert cond["else"][0]["content"] == "other"
 
     def test_multiple_independent_chains(self):
@@ -93,9 +93,9 @@ class TestConditionalSerialization:
         j = col.to_json()
         assert len(j["children"]) == 2
         assert j["children"][0]["type"] == "Condition"
-        assert j["children"][0]["cases"][0]["when"] == "a"
+        assert j["children"][0]["cases"][0]["when"] == "{{ a }}"
         assert j["children"][1]["type"] == "Condition"
-        assert j["children"][1]["cases"][0]["when"] == "b"
+        assert j["children"][1]["cases"][0]["when"] == "{{ b }}"
 
 
 class TestConditionalErrors:
@@ -137,7 +137,7 @@ class TestConditionalEdgeCases:
             If("empty")
         j = col.to_json()
         cond = j["children"][0]
-        assert cond["cases"][0]["when"] == "empty"
+        assert cond["cases"][0]["when"] == "{{ empty }}"
         assert "children" not in cond["cases"][0]
 
     def test_if_multiple_children(self):
@@ -161,7 +161,7 @@ class TestConditionalEdgeCases:
         assert outer["type"] == "Condition"
         inner = outer["cases"][0]["children"][0]
         assert inner["type"] == "Condition"
-        assert inner["cases"][0]["when"] == "inner"
+        assert inner["cases"][0]["when"] == "{{ inner }}"
 
     def test_positional_condition_arg(self):
         """If/Elif accept condition as positional arg."""

@@ -6,7 +6,7 @@ icon: database
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Expressions resolve identifiers from a context object. What's in that context depends on where the expression runs — global state is always available, but components like [State](/components/state) and [ForEach](/components/foreach) can layer on additional scoped values.
+Expressions resolve identifiers from a context object. What's in that context depends on where the expression runs — global state is always available, but `let` bindings and [ForEach](/components/foreach) can layer on additional scoped values.
 
 ## Global State
 
@@ -23,49 +23,43 @@ AppResult(state={"count": 0, "name": "Arthur"}, view=...)
 
 **Actions** — [SetState](/actions/set-state) and [ToolCall](/actions/call-tool) (via `result_key`) write to global state when they fire.
 
-## Local Scope
+## Local Scope (`let`)
 
-The [State](/components/state) component provides scoped values to its children. These shadow global state within the subtree — inner values win over outer ones for the same key.
+Any container component can introduce scoped bindings via `let` — a dict of names to template expressions. These values are available to all children and shadow outer scope for the same key.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"State","state":{"greeting":"Don't Panic","name":"Arthur"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"type":"State","state":{"name":"Ford"},"children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","let":{"greeting":"Don't Panic","name":"Arthur"},"type":"Column","children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"let":{"name":"Ford"},"type":"Column","children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, State, Text
+from prefab_ui.components import Column, Text
 
-with Column(gap=2):
-    with State(greeting="Don't Panic", name="Arthur"):
+with Column(gap=2, let={"greeting": "Don't Panic", "name": "Arthur"}):
+    Text("{{ greeting }}, {{ name }}")
+    with Column(let={"name": "Ford"}):
         Text("{{ greeting }}, {{ name }}")
-        with State(name="Ford"):
-            Text("{{ greeting }}, {{ name }}")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
     "cssClass": "gap-2",
+    "let": {
+      "greeting": "Don't Panic",
+      "name": "Arthur"
+    },
     "type": "Column",
     "children": [
       {
-        "type": "State",
-        "state": {
-          "greeting": "Don't Panic",
-          "name": "Arthur"
+        "type": "Text",
+        "content": "{{ greeting }}, {{ name }}"
+      },
+      {
+        "let": {
+          "name": "Ford"
         },
+        "type": "Column",
         "children": [
           {
             "type": "Text",
             "content": "{{ greeting }}, {{ name }}"
-          },
-          {
-            "type": "State",
-            "state": {
-              "name": "Ford"
-            },
-            "children": [
-              {
-                "type": "Text",
-                "content": "{{ greeting }}, {{ name }}"
-              }
-            ]
           }
         ]
       }
@@ -76,7 +70,18 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `State` shadows `name` but inherits `greeting` from the outer scope.
+The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `let` shadows `name` but inherits `greeting` from the outer scope.
+
+Unlike `set_initial_state()`, `let` bindings are scoped and read-only — they exist only inside the container, and user interactions can't change them. Use `set_initial_state()` for anything interactive (form inputs, toggles, lists the user edits). Use `let` when you're passing fixed data into a section of the UI.
+
+On [ForEach](/components/foreach), `let` is especially useful for capturing the loop index before it gets shadowed by a nested loop:
+
+```python
+with ForEach("groups", let={"gi": "{{ $index }}"}):
+    # gi holds the outer index; $index inside a nested ForEach refers to the inner loop
+    with ForEach("groups.{{ gi }}.todos"):
+        Text("Group {{ gi }}, item {{ $index }}")
+```
 
 ## Dot Paths
 
@@ -155,7 +160,7 @@ with ForEach("users"):
 
 [If/Elif/Else](/components/conditional) blocks use expressions to control which components render. The expression evaluates to a truthy or falsy value, and the first matching branch renders. This is one of the most practical uses of expression context — combining state from different sources to determine what the user sees:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"inventory == 0","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"inventory > 0 && inventory < 10","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -177,10 +182,10 @@ with Column(gap=3):
         max=30,
         step=1,
     )
-    with If("inventory == 0"):
+    with If("{{ inventory == 0 }}"):
         with Alert(variant="destructive"):
             AlertDescription("Out of stock!")
-    with Elif("inventory > 0 && inventory < 10"):
+    with Elif("{{ inventory > 0 && inventory < 10 }}"):
         with Alert():
             AlertDescription("Low stock warning")
 ```
@@ -206,7 +211,7 @@ with Column(gap=3):
         "type": "Condition",
         "cases": [
           {
-            "when": "inventory == 0",
+            "when": "{{ inventory == 0 }}",
             "children": [
               {
                 "type": "Alert",
@@ -221,7 +226,7 @@ with Column(gap=3):
             ]
           },
           {
-            "when": "inventory > 0 && inventory < 10",
+            "when": "{{ inventory > 0 && inventory < 10 }}",
             "children": [
               {
                 "type": "Alert",

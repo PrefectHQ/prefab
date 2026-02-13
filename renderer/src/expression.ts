@@ -149,6 +149,26 @@ const pipes: Record<string, PipeFn> = {
     if (isNaN(num)) return value;
     return Math.abs(num);
   },
+
+  selectattr(value, arg) {
+    if (!Array.isArray(value) || !arg) return value;
+    return value.filter(
+      (item) =>
+        item != null &&
+        typeof item === "object" &&
+        !!(item as Record<string, unknown>)[arg],
+    );
+  },
+
+  rejectattr(value, arg) {
+    if (!Array.isArray(value) || !arg) return value;
+    return value.filter(
+      (item) =>
+        item != null &&
+        typeof item === "object" &&
+        !(item as Record<string, unknown>)[arg],
+    );
+  },
 };
 
 // ── Tokenizer ──────────────────────────────────────────────────────────
