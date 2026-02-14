@@ -6,23 +6,23 @@ icon: sliders
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-Sliders let users select a numeric value from a range by dragging a handle.
+Sliders let users select a numeric value from a range by dragging a handle. The default range is 0–100.
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"view":{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"disabled":false}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
 
-Slider(min=0, max=100, value=50)
+Slider(value=50)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
     "type": "Slider",
-    "min": 0.0,
-    "max": 100.0,
+    "min": 0,
+    "max": 100,
     "value": 50.0,
     "disabled": false
   }
@@ -31,108 +31,16 @@ Slider(min=0, max=100, value=50)
 </CodeGroup>
 </ComponentPreview>
 
-## With Step Increment
-
-<ComponentPreview auto json={`{"view":{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"disabled":false}}`}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Slider
-
-Slider(min=0, max=10, step=0.5, value=5)
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "type": "Slider",
-    "min": 0.0,
-    "max": 10.0,
-    "value": 5.0,
-    "step": 0.5,
-    "disabled": false
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Different Ranges
-
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume (0-100)"},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature (0-10)"},{"type":"Slider","min":0.0,"max":10.0,"value":7.0,"disabled":false}]}]}}`}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    Column,
-    Label,
-    Slider,
-)
-
-with Column(gap=4):
-    with Column(gap=2):
-        Label("Volume (0-100)")
-        Slider(min=0, max=100, value=75)
-
-    with Column(gap=2):
-        Label("Temperature (0-10)")
-        Slider(min=0, max=10, value=7)
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "cssClass": "gap-2",
-        "type": "Column",
-        "children": [
-          {
-            "type": "Label",
-            "text": "Volume (0-100)"
-          },
-          {
-            "type": "Slider",
-            "min": 0.0,
-            "max": 100.0,
-            "value": 75.0,
-            "disabled": false
-          }
-        ]
-      },
-      {
-        "cssClass": "gap-2",
-        "type": "Column",
-        "children": [
-          {
-            "type": "Label",
-            "text": "Temperature (0-10)"
-          },
-          {
-            "type": "Slider",
-            "min": 0.0,
-            "max": 10.0,
-            "value": 7.0,
-            "disabled": false
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
 ## Displaying the Value
 
-Give the slider a `name` to store its value in state, then reference it with `{{ }}` interpolation in other components. Add a format specifier to control how the value displays:
+Give the slider a `name` to store its current value in state, then reference it with `{{ }}` interpolation. Drag the slider and the label updates instantly:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0.0,"max":100.0,"value":75.0,"name":"volume","disabled":false}]},{"type":"Progress","value":"{{ volume }}","max":100.0}]},"state":{"volume":75}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"type":"Text","content":"{{ volume | number }}%","bold":true}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"volume","disabled":false}]},"state":{"volume":75}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
     Column,
     Label,
-    Progress,
     Row,
     Slider,
     Text,
@@ -140,53 +48,40 @@ from prefab_ui.components import (
 
 set_initial_state(volume=75)
 
-with Column(gap=4):
-    with Column(gap=2):
-        with Row(css_class="justify-between"):
-            Label("Volume")
-            Text("{{ volume | number }}%", bold=True)
-        Slider(name="volume", min=0, max=100, value=75)
-    Progress(value="{{ volume }}", max=100)
+with Column(gap=2):
+    with Row(css_class="justify-between"):
+        Label("Volume")
+        Text("{{ volume | number }}%", bold=True)
+    Slider(value=75, name="volume")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4",
+    "cssClass": "gap-2",
     "type": "Column",
     "children": [
       {
-        "cssClass": "gap-2",
-        "type": "Column",
+        "cssClass": "justify-between",
+        "type": "Row",
         "children": [
           {
-            "cssClass": "justify-between",
-            "type": "Row",
-            "children": [
-              {
-                "type": "Label",
-                "text": "Volume"
-              },
-              {
-                "type": "Text",
-                "content": "{{ volume | number }}%",
-                "bold": true
-              }
-            ]
+            "type": "Label",
+            "text": "Volume"
           },
           {
-            "type": "Slider",
-            "min": 0.0,
-            "max": 100.0,
-            "value": 75.0,
-            "name": "volume",
-            "disabled": false
+            "type": "Text",
+            "content": "{{ volume | number }}%",
+            "bold": true
           }
         ]
       },
       {
-        "type": "Progress",
-        "value": "{{ volume }}",
-        "max": 100.0
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 75.0,
+        "name": "volume",
+        "disabled": false
       }
     ]
   },
@@ -198,23 +93,86 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-The slider, label, and progress bar all stay in sync — drag the slider and the displayed value and progress bar update instantly. This pattern works with any component that supports interpolation.
+The `| number` pipe strips trailing decimals so the display stays clean. This pattern works with any component that supports interpolation.
+
+## Range and Step
+
+Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–10 with 0.5 increments:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"type":"Text","content":"{{ rating }}","bold":true}]},{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"rating","disabled":false}]},"state":{"rating":5}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Column,
+    Label,
+    Row,
+    Slider,
+    Text,
+)
+
+set_initial_state(rating=5)
+
+with Column(gap=2):
+    with Row(css_class="justify-between"):
+        Label("Rating")
+        Text("{{ rating }}", bold=True)
+    Slider(value=5, name="rating", min=0, max=10, step=0.5)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "justify-between",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Rating"
+          },
+          {
+            "type": "Text",
+            "content": "{{ rating }}",
+            "bold": true
+          }
+        ]
+      },
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 10.0,
+        "value": 5.0,
+        "step": 0.5,
+        "name": "rating",
+        "disabled": false
+      }
+    ]
+  },
+  "state": {
+    "rating": 5
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"view":{"type":"Slider","min":0.0,"max":100.0,"value":30.0,"disabled":true}}`}>
+<ComponentPreview auto json={`{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"disabled":true}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
 
-Slider(min=0, max=100, value=30, disabled=True)
+Slider(value=30, disabled=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
     "type": "Slider",
-    "min": 0.0,
-    "max": 100.0,
+    "min": 0,
+    "max": 100,
     "value": 30.0,
     "disabled": true
   }
@@ -227,6 +185,14 @@ Slider(min=0, max=100, value=30, disabled=True)
 
 <Card icon="code" title="Slider Parameters">
 
+<ParamField body="value" type="float | None" default="None">
+  Initial value of the slider.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for the slider's current value. Set this to bind the slider to state for display or form submission.
+</ParamField>
+
 <ParamField body="min" type="float" default="0">
   Minimum value of the range.
 </ParamField>
@@ -235,16 +201,8 @@ Slider(min=0, max=100, value=30, disabled=True)
   Maximum value of the range.
 </ParamField>
 
-<ParamField body="value" type="float | None" default="None">
-  Initial value.
-</ParamField>
-
 <ParamField body="step" type="float | None" default="None">
-  Step increment for the slider. If not provided, slider moves continuously.
-</ParamField>
-
-<ParamField body="name" type="str | None" default="None">
-  Form field name for submission.
+  Step increment. If not provided, the slider moves continuously.
 </ParamField>
 
 <ParamField body="disabled" type="bool" default="False">
@@ -261,11 +219,11 @@ Slider(min=0, max=100, value=30, disabled=True)
 ```json Slider
 {
   "type": "Slider",
+  "value?": "number",
+  "name?": "string",
   "min?": 0,
   "max?": 100,
-  "value?": "number",
   "step?": "number",
-  "name?": "string",
   "disabled?": false,
   "onChange?": "Action | Action[]",
   "cssClass?": "string"
