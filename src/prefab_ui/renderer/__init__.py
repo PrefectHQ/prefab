@@ -54,7 +54,7 @@ def get_renderer_html() -> str:
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:
         return _EXTERNAL_TEMPLATE.format(base_url=override.rstrip("/"))
-    return _BUNDLED_HTML.read_text()
+    return _BUNDLED_HTML.read_text(encoding="utf-8")
 
 
 def get_renderer_csp() -> dict[str, list[str]]:
