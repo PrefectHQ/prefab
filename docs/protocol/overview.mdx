@@ -126,13 +126,12 @@ Templates let you define a component subtree once and reference it multiple time
 { "$ref": "user-card" }
 ```
 
-**With scoped data** — wrap the `$ref` in a `State` node to provide interpolation values:
+**With scoped data** — add `let` bindings to the `$ref` node:
 
 ```json
 {
-  "type": "State",
-  "state": { "name": "Alice", "role": "Engineer" },
-  "children": [{ "$ref": "user-card" }]
+  "$ref": "user-card",
+  "let": { "name": "Alice", "role": "Engineer" }
 }
 ```
 

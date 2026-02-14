@@ -50,7 +50,7 @@ Type in the input, and the text updates instantly. The `name="name"` prop create
 
 Use `If` / `Else` blocks to show or hide content based on state. Pair with `ToggleState` to toggle visibility on demand.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the hidden details!"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Button, Column, If
@@ -58,7 +58,7 @@ from prefab_ui.actions import ToggleState
 
 with Column(gap=2):
     Button("Toggle Details", variant="outline", on_click=ToggleState("showDetails"))
-    with If("showDetails"):
+    with If("{{ showDetails }}"):
         with Alert():
             AlertTitle("Here are the hidden details!")
 ```
@@ -83,7 +83,7 @@ with Column(gap=2):
         "type": "Condition",
         "cases": [
           {
-            "when": "showDetails",
+            "when": "{{ showDetails }}",
             "children": [
               {
                 "type": "Alert",

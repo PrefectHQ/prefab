@@ -144,12 +144,11 @@ UIResponse(
 {"$ref": "user-card"}
 ```
 
-With overrides, `Use` wraps the ref in a `State` node:
+With overrides, `Use` adds `let` bindings to the `$ref` node:
 
 ```json Use (with overrides)
 {
-  "type": "State",
-  "state": {"name": "Alice", "role": "Engineer"},
-  "children": [{"$ref": "user-card"}]
+  "$ref": "user-card",
+  "let": {"name": "Alice", "role": "Engineer"}
 }
 ```

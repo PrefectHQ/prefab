@@ -88,7 +88,7 @@ Expressions handle display-time computation — formatting values, computing der
 - **Conditional text** — `{{ active ? 'Online' : 'Offline' }}`
 - **String building** — `{{ first + ' ' + last }}`
 - **Formatting** — `{{ price | currency }}`, `{{ name | upper }}`
-- **Conditional rendering** — `If("inventory > 0")` / `Elif` / `Else`
+- **Conditional rendering** — `If("{{ inventory > 0 }}")` / `Elif` / `Else`
 
 ## What They Can't
 
@@ -118,9 +118,9 @@ Badge("{{ status | upper }}", variant="secondary")
 **[Conditional rendering](/components/conditional)** uses `If`, `Elif`, and `Else` blocks to show or hide components based on expression results. Each condition evaluates to a truthy or falsy value, and the first matching branch renders.
 
 ```python
-with If("inventory == 0"):
+with If("{{ inventory == 0 }}"):
     Alert("Out of stock", variant="destructive")
-with Elif("inventory < 10"):
+with Elif("{{ inventory < 10 }}"):
     Alert("Low stock")
 with Else():
     Badge("In stock")

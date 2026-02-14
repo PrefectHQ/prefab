@@ -164,6 +164,10 @@ class ContainerComponent(Component):
     """
 
     children: list[Component] = Field(default_factory=list)
+    let: dict[str, Any] | None = Field(
+        default=None,
+        description="Scoped bindings available to children. Values are template strings.",
+    )
 
     def __enter__(self) -> Self:
         stack = _component_stack.get() or []
@@ -186,7 +190,11 @@ class ContainerComponent(Component):
 
 def _to_case(node: Component) -> dict[str, Any]:
     """Convert an If or Elif node to a Condition case entry."""
-    case: dict[str, Any] = {"when": getattr(node, "condition", "")}
+    condition = getattr(node, "condition", "")
+    stripped = condition.strip()
+    if not (stripped.startswith("{{") and stripped.endswith("}}")):
+        condition = f"{{{{ {condition} }}}}"
+    case: dict[str, Any] = {"when": condition}
     children = getattr(node, "children", [])
     if children:
         case["children"] = _serialize_children(children)

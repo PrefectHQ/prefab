@@ -1,9 +1,8 @@
 """Use — reference a defined component template.
 
 A ``Use`` node references a :class:`~prefab_ui.define.Define` template by
-name. On the wire it desugars completely: bare ``{"$ref": "name"}`` when
-no overrides are given, or a ``State`` wrapper around the ``$ref`` when
-kwargs provide scoped values.
+name. On the wire it desugars to ``{"$ref": "name"}``, with optional ``let``
+bindings for scoped overrides and ``cssClass`` for styling.
 
 Example::
 
@@ -37,12 +36,11 @@ class Use(Component):
     """Reference a defined component template by name.
 
     Kwargs that aren't base component fields (``css_class``)
-    become scoped state overrides, automatically
-    wrapping the ``$ref`` in a ``State`` node on the wire.
+    become scoped ``let`` bindings on the ``$ref`` node.
 
     Args:
         name: The template name (must match a ``Define`` name).
-        **kwargs: Scoped state overrides and/or base component fields.
+        **kwargs: Scoped bindings and/or base component fields.
     """
 
     # Use has a type field for Pydantic, but to_json() never emits it.
@@ -63,18 +61,12 @@ class Use(Component):
         super().__init__(**init_kwargs)
 
     def to_json(self) -> dict[str, Any]:
-        """Desugar to ``$ref`` + optional ``State`` wrapper."""
+        """Desugar to ``$ref`` with optional ``let`` and ``cssClass``."""
         ref: dict[str, Any] = {"$ref": self.name}
 
-        needs_wrapper = self.overrides or self.css_class
-        if not needs_wrapper:
-            return ref
-
-        wrapper: dict[str, Any] = {
-            "type": "State",
-            "state": self.overrides or {},
-            "children": [ref],
-        }
+        if self.overrides:
+            ref["let"] = self.overrides
         if self.css_class:
-            wrapper["cssClass"] = self.css_class
-        return wrapper
+            ref["cssClass"] = self.css_class
+
+        return ref

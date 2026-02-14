@@ -255,7 +255,7 @@ If an intermediate path segment is missing or the wrong type (e.g. an integer se
 
 `ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. Pair it with [If](/components/conditional) for show/hide patterns:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"showDetails","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}`}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Button, Column, If
@@ -264,7 +264,7 @@ from prefab_ui.actions import ToggleState
 with Column(gap=2):
     Button("Toggle Details", variant="outline",
            on_click=ToggleState("showDetails"))
-    with If("showDetails"):
+    with If("{{ showDetails }}"):
         with Alert():
             AlertTitle("Here are the details!")
 ```
@@ -289,7 +289,7 @@ with Column(gap=2):
         "type": "Condition",
         "cases": [
           {
-            "when": "showDetails",
+            "when": "{{ showDetails }}",
             "children": [
               {
                 "type": "Alert",
