@@ -21,7 +21,7 @@ from prefab_ui.components import (
 
 with Column():
     P("Content above the separator")
-    Separator(css_class="my-4")
+    Separator(spacing=4)
     P("Content below the separator")
 ```
 ```json Protocol icon="brackets-curly"
@@ -117,9 +117,9 @@ from prefab_ui.components import (
 with Card():
     with CardContent():
         P("First section")
-        Separator(css_class="my-4")
+        Separator(spacing=4)
         P("Second section")
-        Separator(css_class="my-4")
+        Separator(spacing=4)
         P("Third section")
 ```
 ```json Protocol icon="brackets-curly"
@@ -169,8 +169,12 @@ with Card():
   Separator direction: `"horizontal"`, `"vertical"`.
 </ParamField>
 
+<ParamField body="spacing" type="int | None" default="None">
+  Space around the separator using the Tailwind spacing scale. Adds vertical margin (`my-N`) for horizontal separators and horizontal margin (`mx-N`) for vertical separators.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes. Useful for controlling height/width and spacing.
+  Additional Tailwind CSS classes. Useful for controlling height/width.
 </ParamField>
 </Card>
 
