@@ -347,17 +347,28 @@ def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
 
 
 def _watch_and_rebuild(repo_root: Path, stop: threading.Event) -> None:
-    """Poll for source changes and re-run build_docs when detected."""
+    """Poll for source changes and re-run build_docs when detected.
+
+    After detecting a change, waits a short settle period so bursts of
+    rapid saves (e.g. from automated tools) collapse into a single rebuild.
+    """
+    settle_seconds = 2.0
     prev = _collect_source_mtimes(repo_root)
 
     while not stop.wait(timeout=1.5):
         curr = _collect_source_mtimes(repo_root)
         changed = [p for p in curr if p not in prev or curr[p] != prev[p]]
         if not changed:
-            # Also check for deleted files.
             deleted = prev.keys() - curr.keys()
             if not deleted:
                 continue
+
+        # Settle: keep polling until files stop changing.
+        while not stop.wait(timeout=settle_seconds):
+            settled = _collect_source_mtimes(repo_root)
+            if settled == curr:
+                break
+            curr = settled
 
         names = [
             str(p.relative_to(repo_root))

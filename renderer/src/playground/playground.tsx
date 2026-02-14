@@ -203,7 +203,7 @@ export function Playground() {
       setError(result.error);
     } else if (result.tree) {
       setTree(result.tree);
-      if (result.state) stateRef.current.reset(result.state);
+      stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
       setError(null);
     }
   }, []);
