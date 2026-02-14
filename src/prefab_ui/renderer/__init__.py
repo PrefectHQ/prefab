@@ -1,35 +1,24 @@
 """Renderer resource loader for Prefab.
 
-Generates a lightweight HTML stub that loads the pre-built Prefab renderer.
-By default the renderer is loaded from a CDN (jsdelivr) using the installed
-package version.
+Ships a pre-built, self-contained HTML file (all JS/CSS inlined) inside the
+Python package.  ``get_renderer_html()`` reads and returns it directly — no
+external server, CDN, or CSP domains required.
 
-Set ``PREFAB_RENDERER_URL`` to load from a different origin — typically a
-local static server during development::
+Set ``PREFAB_RENDERER_URL`` to load renderer assets from an external origin
+instead — useful for local development with ``npx vite preview`` or a CDN::
 
-    # In the renderer/ directory:
-    npm run build              # build the renderer
-    npx vite preview           # serve dist/ on localhost:4173
-
-    # Then run your MCP server with:
     PREFAB_RENDERER_URL=http://localhost:4173 uv run python my_server.py
-
-The URL must point at **built assets** (the ``dist/`` output), not a Vite
-dev server.  Vite's dev server relies on HTML transforms (React Fast Refresh
-preamble injection) that only work when Vite serves the HTML directly — which
-isn't the case here, since the HTML is delivered as an MCP resource.
 """
 
 from __future__ import annotations
 
 import os
-from importlib.metadata import version as _pkg_version
+from pathlib import Path
 from urllib.parse import urlparse
 
-_NPM_PACKAGE = "@prefecthq/prefab-ui"
-_CDN_TEMPLATE = "https://cdn.jsdelivr.net/npm/{package}@{version}/dist"
+_BUNDLED_HTML = Path(__file__).parent / "app.html"
 
-_RENDERER_STUB = """\
+_EXTERNAL_TEMPLATE = """\
 <!doctype html>
 <html lang="en">
 <head>
@@ -55,37 +44,27 @@ def _get_origin(url: str) -> str:
     return origin
 
 
-def _cdn_base_url() -> str:
-    v = _pkg_version("prefab-ui")
-    return _CDN_TEMPLATE.format(package=_NPM_PACKAGE, version=v)
+def get_renderer_html() -> str:
+    """Return the renderer HTML.
 
-
-def get_renderer_url() -> str:
-    """Return the renderer base URL.
-
-    Uses ``PREFAB_RENDERER_URL`` if set (for local development), otherwise
-    constructs a CDN URL from the installed ``prefab-ui`` package version.
+    By default, returns the bundled single-file HTML with all JS/CSS
+    inlined.  When ``PREFAB_RENDERER_URL`` is set, returns a lightweight
+    stub that loads assets from that external origin.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:
-        return override.rstrip("/")
-    return _cdn_base_url()
-
-
-def get_renderer_html() -> str:
-    """Generate renderer HTML that loads built assets from the renderer URL."""
-    base = get_renderer_url()
-    return _RENDERER_STUB.format(base_url=base)
+        return _EXTERNAL_TEMPLATE.format(base_url=override.rstrip("/"))
+    return _BUNDLED_HTML.read_text(encoding="utf-8")
 
 
 def get_renderer_csp() -> dict[str, list[str]]:
     """Return CSP domains needed for the renderer to load.
 
-    Returns a dict with ``resource_domains`` — the origin(s) the host's
-    sandbox must allow for loading renderer scripts, styles, and images.
-
-    FastMCP uses this to populate ``_meta.ui.csp`` on the ``ui://`` resource
-    so the host's sandbox allows loading renderer assets.
+    The bundled renderer is fully self-contained, so no CSP domains are
+    needed.  When ``PREFAB_RENDERER_URL`` is set, returns the external
+    origin so the host sandbox allows loading those assets.
     """
-    base = get_renderer_url()
-    return {"resource_domains": [_get_origin(base)]}
+    override = os.environ.get("PREFAB_RENDERER_URL")
+    if override:
+        return {"resource_domains": [_get_origin(override.rstrip("/"))]}
+    return {"resource_domains": []}

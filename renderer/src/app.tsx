@@ -58,9 +58,7 @@ export function App() {
 
       // Check protocol version (warn but don't block rendering)
       const version = structured.version as string | undefined;
-      if (!version) {
-        console.warn("[Prefab] Missing version in structuredContent");
-      } else if (!SUPPORTED_VERSIONS.has(version)) {
+      if (version && !SUPPORTED_VERSIONS.has(version)) {
         console.warn(
           `[Prefab] Unrecognized protocol version "${version}" (supported: ${[
             ...SUPPORTED_VERSIONS,
@@ -128,8 +126,8 @@ export function App() {
   // Waiting for content
   if (!tree) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Waiting for content...</p>
+      <div className="p-4 text-sm text-muted-foreground">
+        Waiting for content…
       </div>
     );
   }
