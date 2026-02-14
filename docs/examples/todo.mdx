@@ -8,12 +8,12 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Multiple todo lists with inline editing, validation, and dynamic groups — all running client-side with no server calls.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-6 items-start","type":"Grid","minColumnWidth":"12rem","children":[{"let":{"gi":"{{ $index }}","show_done":"{{ $item.show_done }}"},"type":"ForEach","key":"groups","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0","type":"Input","inputType":"text","name":"groups.{{ gi }}.name","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups","index":"{{ gi }}"}}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Add a todo...","name":"groups.{{ gi }}.new_todo","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":"{{ not $item.new_todo }}","onClick":[{"action":"appendState","key":"groups.{{ gi }}.todos","value":{"text":"{{ $item.new_todo }}","done":false}},{"action":"setState","key":"groups.{{ gi }}.new_todo","value":""}]}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ $item.todos | length }}","children":[{"cssClass":"my-3","type":"Separator","orientation":"horizontal"}]}]},{"type":"ForEach","key":"groups.{{ gi }}.todos","children":[{"type":"Condition","cases":[{"when":"{{ not $item.done or show_done }}","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Checkbox","checked":false,"name":"groups.{{ gi }}.todos.{{ $index }}.done","disabled":false,"required":false},{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0","type":"Input","inputType":"text","name":"groups.{{ gi }}.todos.{{ $index }}.text","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups.{{ gi }}.todos","index":"{{ $index }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2 items-center w-full justify-between","type":"Row","children":[{"content":"{{ $item.todos | length }} items","type":"Muted"},{"cssClass":"gap-1 items-center","type":"Row","children":[{"cssClass":"h-3 w-3","type":"Checkbox","checked":false,"name":"groups.{{ gi }}.show_done","disabled":false,"required":false},{"content":"Show done","type":"Muted"}]}]}]}]}]},{"cssClass":"border-dashed p-3","type":"Card","children":[{"cssClass":"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md","type":"Button","label":"+","variant":"ghost","size":"lg","disabled":false,"onClick":{"action":"appendState","key":"groups","value":{"name":"New List","todos":[],"new_todo":"","show_done":true}}}]}]},"state":{"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":"","show_done":true},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":"","show_done":true}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-6 items-start","type":"Grid","minColumnWidth":"12rem","children":[{"let":{"gi":"{{ $index }}","show_done":"{{ $item.show_done }}"},"type":"ForEach","key":"groups","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0","type":"Input","inputType":"text","name":"groups.{{ gi }}.name","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups","index":"{{ gi }}"}}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-0","type":"Form","onSubmit":[{"action":"appendState","key":"groups.{{ gi }}.todos","value":{"text":"{{ $item.new_todo }}","done":false}},{"action":"setState","key":"groups.{{ gi }}.new_todo","value":""}],"children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Add a todo...","name":"groups.{{ gi }}.new_todo","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":"{{ not $item.new_todo }}"}]}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ $item.todos | length }}","children":[{"cssClass":"my-3","type":"Separator","orientation":"horizontal"}]}]},{"type":"ForEach","key":"groups.{{ gi }}.todos","children":[{"type":"Condition","cases":[{"when":"{{ not $item.done or show_done }}","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Checkbox","checked":false,"name":"groups.{{ gi }}.todos.{{ $index }}.done","disabled":false,"required":false},{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0","type":"Input","inputType":"text","name":"groups.{{ gi }}.todos.{{ $index }}.text","disabled":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups.{{ gi }}.todos","index":"{{ $index }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2 items-center w-full justify-between","type":"Row","children":[{"content":"{{ $item.todos | length }} items","type":"Muted"},{"cssClass":"gap-1 items-center","type":"Row","children":[{"cssClass":"h-3 w-3","type":"Checkbox","checked":false,"name":"groups.{{ gi }}.show_done","disabled":false,"required":false},{"content":"Show done","type":"Muted"}]}]}]}]}]},{"cssClass":"border-dashed p-3","type":"Card","children":[{"cssClass":"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md","type":"Button","label":"+","variant":"ghost","size":"lg","disabled":false,"onClick":{"action":"appendState","key":"groups","value":{"name":"New List","todos":[],"new_todo":"","show_done":true}}}]}]},"state":{"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":"","show_done":true},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":"","show_done":true}]}}`}>
 <CodeGroup>
 ```python Python icon="python" expandable
 from prefab_ui.components import (
     Button, Card, CardContent, CardFooter, CardHeader,
-    Checkbox, Column, ForEach, Grid, If, Input, Muted, Row, Separator,
+    Checkbox, Column, ForEach, Form, Grid, If, Input, Muted, Row, Separator,
 )
 from prefab_ui.actions import AppendState, PopState, SetState
 
@@ -55,17 +55,14 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                     Button("×", variant="ghost", size="sm", css_class="ml-auto", on_click=PopState("groups", "{{ gi }}"))
             with CardContent():
                 with Column(gap=4):
-                    # New todo input + add button (disabled until you type something)
-                    with Row(gap=2):
-                        Input(name="groups.{{ gi }}.new_todo", placeholder="Add a todo...")
-                        Button(
-                            "Add",
-                            disabled="{{ not $item.new_todo }}",
-                            on_click=[
-                                AppendState("groups.{{ gi }}.todos", {"text": "{{ $item.new_todo }}", "done": False}),
-                                SetState("groups.{{ gi }}.new_todo", ""),
-                            ],
-                        )
+                    # New todo input + add button — Form makes Enter submit too
+                    with Form(gap=0, on_submit=[
+                        AppendState("groups.{{ gi }}.todos", {"text": "{{ $item.new_todo }}", "done": False}),
+                        SetState("groups.{{ gi }}.new_todo", ""),
+                    ]):
+                        with Row(gap=2):
+                            Input(name="groups.{{ gi }}.new_todo", placeholder="Add a todo...")
+                            Button("Add", disabled="{{ not $item.new_todo }}")
 
                     # Inner loop over todos — gi keeps the outer group index
                     with Column(gap=2):
@@ -157,36 +154,42 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                     "type": "Column",
                     "children": [
                       {
-                        "cssClass": "gap-2",
-                        "type": "Row",
-                        "children": [
+                        "cssClass": "gap-0",
+                        "type": "Form",
+                        "onSubmit": [
                           {
-                            "type": "Input",
-                            "inputType": "text",
-                            "placeholder": "Add a todo...",
-                            "name": "groups.{{ gi }}.new_todo",
-                            "disabled": false,
-                            "required": false
+                            "action": "appendState",
+                            "key": "groups.{{ gi }}.todos",
+                            "value": {
+                              "text": "{{ $item.new_todo }}",
+                              "done": false
+                            }
                           },
                           {
-                            "type": "Button",
-                            "label": "Add",
-                            "variant": "default",
-                            "size": "default",
-                            "disabled": "{{ not $item.new_todo }}",
-                            "onClick": [
+                            "action": "setState",
+                            "key": "groups.{{ gi }}.new_todo",
+                            "value": ""
+                          }
+                        ],
+                        "children": [
+                          {
+                            "cssClass": "gap-2",
+                            "type": "Row",
+                            "children": [
                               {
-                                "action": "appendState",
-                                "key": "groups.{{ gi }}.todos",
-                                "value": {
-                                  "text": "{{ $item.new_todo }}",
-                                  "done": false
-                                }
+                                "type": "Input",
+                                "inputType": "text",
+                                "placeholder": "Add a todo...",
+                                "name": "groups.{{ gi }}.new_todo",
+                                "disabled": false,
+                                "required": false
                               },
                               {
-                                "action": "setState",
-                                "key": "groups.{{ gi }}.new_todo",
-                                "value": ""
+                                "type": "Button",
+                                "label": "Add",
+                                "variant": "default",
+                                "size": "default",
+                                "disabled": "{{ not $item.new_todo }}"
                               }
                             ]
                           }

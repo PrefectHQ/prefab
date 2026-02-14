@@ -7,7 +7,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 
 interface LayoutProps {
   className?: string;
@@ -48,6 +48,29 @@ export function Grid({
     <div className={cn("grid w-full", className, cssClass)} style={style}>
       {children}
     </div>
+  );
+}
+
+interface FormProps extends LayoutProps {
+  onSubmit?: (e: FormEvent) => void;
+}
+
+export function PrefabForm({
+  className,
+  cssClass,
+  children,
+  onSubmit,
+}: FormProps) {
+  return (
+    <form
+      className={cn("flex w-full flex-col", className, cssClass)}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit?.(e);
+      }}
+    >
+      {children}
+    </form>
   );
 }
 
