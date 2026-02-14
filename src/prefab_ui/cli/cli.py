@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import errno
 import functools
 import os
@@ -315,6 +316,64 @@ def build_docs() -> None:
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
 
+def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
+    """Snapshot mtimes of files that should trigger a doc rebuild."""
+    mtimes: dict[Path, float] = {}
+
+    watch_patterns: list[tuple[Path, str]] = [
+        (repo_root / "docs", "**/*.mdx"),
+        (repo_root / "src" / "prefab_ui", "**/*.py"),
+        (repo_root / "renderer" / "src", "**/*.ts"),
+        (repo_root / "renderer" / "src", "**/*.tsx"),
+        (repo_root / "docs" / "_preview-build", "*.py"),
+        (repo_root / "docs" / "_preview-build", "*.css"),
+    ]
+
+    # Exclude generated outputs so they don't re-trigger builds.
+    exclude = {
+        repo_root / "docs" / "renderer.js",
+        repo_root / "docs" / "playground-app.js",
+        repo_root / "docs" / "preview-styles.css",
+    }
+
+    for base, pattern in watch_patterns:
+        if not base.exists():
+            continue
+        for f in base.rglob(pattern):
+            if f.is_file() and f not in exclude:
+                with contextlib.suppress(OSError):
+                    mtimes[f] = f.stat().st_mtime
+    return mtimes
+
+
+def _watch_and_rebuild(repo_root: Path, stop: threading.Event) -> None:
+    """Poll for source changes and re-run build_docs when detected."""
+    prev = _collect_source_mtimes(repo_root)
+
+    while not stop.wait(timeout=1.5):
+        curr = _collect_source_mtimes(repo_root)
+        changed = [p for p in curr if p not in prev or curr[p] != prev[p]]
+        if not changed:
+            # Also check for deleted files.
+            deleted = prev.keys() - curr.keys()
+            if not deleted:
+                continue
+
+        names = [
+            str(p.relative_to(repo_root))
+            for p in (changed or list(prev.keys() - curr.keys()))
+        ]
+        console.print(
+            f"\n[bold cyan]↻[/bold cyan] Change detected in {len(names)} file(s): "
+            f"[dim]{', '.join(names[:5])}{'…' if len(names) > 5 else ''}[/dim]"
+        )
+        try:
+            build_docs()
+        except SystemExit:
+            console.print("[yellow]Rebuild failed, waiting for next change…[/yellow]")
+        prev = _collect_source_mtimes(repo_root)
+
+
 @dev_app.command
 def docs(
     *,
@@ -325,23 +384,24 @@ def docs(
             help="Port for the Mintlify docs server",
         ),
     ] = 3000,
-    skip_build: Annotated[
+    rebuild: Annotated[
         bool,
         cyclopts.Parameter(
-            name="--skip-build",
-            help="Skip rebuilding doc assets before serving",
+            negative="--no-rebuild",
+            help="Build doc assets on startup and watch for changes (default: on)",
         ),
-    ] = False,
+    ] = True,
 ) -> None:
     """Serve documentation locally with component previews.
 
-    Rebuilds all doc assets (embed module, previews, CSS, protocol ref)
-    then starts the Mintlify dev server.
+    Rebuilds all doc assets, starts the Mintlify dev server, and watches
+    for source changes to automatically rebuild. Use ``--no-rebuild`` to
+    skip both the initial build and the file watcher.
 
     Example:
         prefab dev docs
         prefab dev docs --docs-port 3001
-        prefab dev docs --skip-build
+        prefab dev docs --no-rebuild
     """
     repo_root = _find_repo_root()
     docs_dir = repo_root / "docs"
@@ -353,7 +413,7 @@ def docs(
         )
         raise SystemExit(1)
 
-    if not skip_build:
+    if rebuild:
         build_docs()
 
     actual_docs_port = _find_free_port(docs_port)
@@ -361,6 +421,16 @@ def docs(
         console.print(
             f"[yellow]Docs port {docs_port} in use, using {actual_docs_port}[/yellow]"
         )
+
+    stop_event = threading.Event()
+    if rebuild:
+        watcher = threading.Thread(
+            target=_watch_and_rebuild,
+            args=(repo_root, stop_event),
+            daemon=True,
+        )
+        watcher.start()
+        console.print("[dim]Watching for source changes (Ctrl+C to stop)…[/dim]")
 
     console.print(
         f"Starting Mintlify docs server ([cyan]localhost:{actual_docs_port}[/cyan])..."
@@ -376,6 +446,7 @@ def docs(
         proc.wait()
     except KeyboardInterrupt:
         console.print("\n[yellow]Docs server stopped[/yellow]")
+        stop_event.set()
         proc.terminate()
         try:
             proc.wait(timeout=5)
