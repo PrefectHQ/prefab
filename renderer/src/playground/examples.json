@@ -2,47 +2,47 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall\n\nButton(\"Refresh Data\", on_click=ToolCall(\"get_latest_data\"))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall\n\nButton(\"Refresh Data\", on_click=ToolCall(\"get_latest_data\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
   },
   {
     "title": "Combined Actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, SetState\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    ToolCall(\"run_analysis\", arguments={\"data\": \"{{ dataset }}\"}),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, SetState\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    ToolCall(\"run_analysis\", arguments={\"data\": \"{{ dataset }}\"}),\n])"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import OpenLink\n\nButton(\"View Documentation\", variant=\"link\",\n       on_click=OpenLink(\"https://prefab-ui.dev\"))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenLink\n\nButton(\"View Documentation\", variant=\"link\",\n       on_click=OpenLink(\"https://prefab-ui.dev\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui import OpenLink\n\nwith Row(gap=4):\n    Button(\"GitHub\", variant=\"link\",\n           on_click=OpenLink(\"https://github.com/prefecthq/prefab\"))\n    Button(\"PyPI\", variant=\"link\",\n           on_click=OpenLink(\"https://pypi.org/project/prefab-ui\"))"
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import OpenLink\n\nwith Row(gap=4):\n    Button(\"GitHub\", variant=\"link\",\n           on_click=OpenLink(\"https://github.com/prefecthq/prefab\"))\n    Button(\"PyPI\", variant=\"link\",\n           on_click=OpenLink(\"https://pypi.org/project/prefab-ui\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\"Open on GitHub\", on_click=OpenLink(\n        \"https://github.com/{{ repo }}\"\n    ))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\"Open on GitHub\", on_click=OpenLink(\n        \"https://github.com/{{ repo }}\"\n    ))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row, H3, Column\nfrom prefab_ui import SendMessage\n\nwith Column(gap=3):\n    H3(\"Quick Actions\")\n    with Row(gap=2):\n        Button(\"Summarize\", variant=\"outline\",\n               on_click=SendMessage(\"Summarize these results.\"))\n        Button(\"Explain Further\", variant=\"outline\",\n               on_click=SendMessage(\"Explain these results in more detail.\"))\n        Button(\"Compare Options\", variant=\"outline\",\n               on_click=SendMessage(\"Compare the top options and recommend one.\"))"
+    "code": "from prefab_ui.components import Button, Row, H3, Column\nfrom prefab_ui.actions import SendMessage\n\nwith Column(gap=3):\n    H3(\"Quick Actions\")\n    with Row(gap=2):\n        Button(\"Summarize\", variant=\"outline\",\n               on_click=SendMessage(\"Summarize these results.\"))\n        Button(\"Explain Further\", variant=\"outline\",\n               on_click=SendMessage(\"Explain these results in more detail.\"))\n        Button(\"Compare Options\", variant=\"outline\",\n               on_click=SendMessage(\"Compare the top options and recommend one.\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui import SendMessage\n\nwith Column(gap=3):\n    Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import SendMessage\n\nwith Column(gap=3):\n    Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
   },
   {
     "title": "Python icon=\"python\"",
@@ -57,7 +57,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui import SetState\n\nset_initial_state(drive=\"improbability\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(\"Active drive: {{ drive }}\")"
+    "code": "from prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui.actions import SetState\n\nset_initial_state(drive=\"improbability\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(\"Active drive: {{ drive }}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -72,37 +72,37 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"showDetails\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui import AppendState, PopState, SetState\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", \"{{ new_member }}\"),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(\"{{ crew | length }} crew members\")"
+    "code": "from prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", \"{{ new_member }}\"),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(\"{{ crew | length }} crew members\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import UpdateContext\n\nButton(\"Use Advanced Mode\", on_click=UpdateContext(\n    content=\"User has selected advanced mode. Provide detailed technical responses.\"\n))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import UpdateContext\n\nButton(\"Use Advanced Mode\", on_click=UpdateContext(\n    content=\"User has selected advanced mode. Provide detailed technical responses.\"\n))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\"Set Preference\", on_click=UpdateContext(\n        structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n    ))"
+    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\"Set Preference\", on_click=UpdateContext(\n        structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n    ))"
   },
   {
     "title": "from prefab_ui.components import Button",
     "category": "General",
-    "code": "from prefab_ui import ToolCall, SetState\n\nButton(\"Run Analysis\", on_click=ToolCall(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
+    "code": "from prefab_ui.actions import ToolCall, SetState\n\nButton(\"Run Analysis\", on_click=ToolCall(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
   },
   {
     "title": "from prefab_ui.components import Input, Button, Column",
     "category": "General",
-    "code": "from prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
   },
   {
     "title": "from prefab_ui.components import Button",
     "category": "General",
-    "code": "from prefab_ui import SetState, ToolCall\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    ToolCall(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
+    "code": "from prefab_ui.actions import SetState, ToolCall\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    ToolCall(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -392,27 +392,27 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(\"outOfStock\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(\"{{ outOfStock }}\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Else,\n    If,\n    Row,\n    Switch,\n    Text,\n)\nset_initial_state(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\")\n        Text(\"Show details\")\n    with If(\"showDetails\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Else,\n    If,\n    Row,\n    Switch,\n    Text,\n)\nset_initial_state(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\")\n        Text(\"Show details\")\n    with If(\"{{ showDetails }}\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nset_initial_state(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"status == 'error'\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"status == 'active'\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Elif,\n    Else,\n    If,\n    Select,\n    SelectOption,\n)\nset_initial_state(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"{{ status == 'error' }}\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"{{ status == 'warning' }}\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"{{ status == 'active' }}\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
   },
   {
-    "title": "# ✅ Correct — raw expression",
+    "title": "with If(\"{{ status == 'active' }}\"):",
     "category": "Components",
-    "code": "with If(\"status == 'active'\"):\n    ...\n\n# ❌ Wrong — unnecessary template delimiters\nwith If(\"{{ status == 'active' }}\"):\n    ..."
+    "code": "...\n\nwith If(\"{{ count > 0 && items | length }}\"):\n    ..."
   },
   {
     "title": "with Column():",
     "category": "Components",
-    "code": "# Chain 1: If / Elif / Else → one Condition node\n    with If(\"status == 'error'\"):\n        Badge(\"Error\", variant=\"destructive\")\n    with Elif(\"status == 'warning'\"):\n        Badge(\"Warning\", variant=\"secondary\")\n    with Else():\n        Badge(\"OK\")\n\n    Text(\"---\")  # breaks the chain\n\n    # Chain 2: standalone If → separate Condition node\n    with If(\"showDetails\"):\n        Text(\"Details here...\")\n\n    # Chain 3: another If starts a new chain (not an Elif!)\n    with If(\"showFooter\"):\n        Text(\"Footer content\")"
+    "code": "# Chain 1: If / Elif / Else → one Condition node\n    with If(\"{{ status == 'error' }}\"):\n        Badge(\"Error\", variant=\"destructive\")\n    with Elif(\"{{ status == 'warning' }}\"):\n        Badge(\"Warning\", variant=\"secondary\")\n    with Else():\n        Badge(\"OK\")\n\n    Text(\"---\")  # breaks the chain\n\n    # Chain 2: standalone If → separate Condition node\n    with If(\"{{ showDetails }}\"):\n        Text(\"Details here...\")\n\n    # Chain 3: another If starts a new chain (not an Elif!)\n    with If(\"{{ showFooter }}\"):\n        Text(\"Footer content\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -440,24 +440,24 @@
     "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    DatePicker,\n    Input,\n    Label,\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"New Event\")\n    with CardContent():\n        with Column(gap=3):\n            Label(\"Event Name\")\n            Input(name=\"eventName\", placeholder=\"Team standup\")\n            Label(\"Date\")\n            DatePicker(placeholder=\"Pick a date\", name=\"eventDate\")\n    with CardFooter():\n        Button(\"Create Event\")"
   },
   {
-    "title": "from prefab_ui import Define, Use, UIResponse",
+    "title": "from prefab_ui.define import Define",
     "category": "Components",
-    "code": "from prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
+    "code": "from prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
   },
   {
-    "title": "from prefab_ui import Define",
+    "title": "from prefab_ui.define import Define",
     "category": "Components",
     "code": "from prefab_ui.components import Badge, CardTitle, Row\n\nwith Define(\"status-row\") as status_row:\n    with Row(gap=2, css_class=\"items-center\"):\n        CardTitle(\"{{ label }}\")\n        Badge(\"{{ status }}\", variant=\"{{ variant }}\")"
   },
   {
-    "title": "from prefab_ui import Use",
+    "title": "from prefab_ui.use import Use",
     "category": "Components",
     "code": "# Bare reference (data comes from surrounding scope)\nUse(\"status-row\")\n\n# With scoped data\nUse(\"status-row\", label=\"Build\", status=\"passing\", variant=\"default\")"
   },
   {
-    "title": "from prefab_ui import Define, Use, UIResponse",
+    "title": "from prefab_ui.define import Define",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+    "code": "from prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -538,11 +538,6 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Div, Grid\n\nwith Grid(min_column_width=\"10rem\", gap=4):\n    for _ in range(6):\n        Div(css_class=\"bg-emerald-500 rounded-md h-10\")"
-  },
-  {
-    "title": "from prefab_ui.components import Grid, Responsive",
-    "category": "Components",
-    "code": "# Dictionary shorthand\nGrid(columns={\"default\": 1, \"md\": 2, \"lg\": 3})\n\n# Responsive object — equivalent, but works on any layout property\nGrid(columns=Responsive(default=1, md=2, lg=3))"
   },
   {
     "title": "Python icon=\"python\"",
@@ -857,27 +852,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=100, value=50)"
+    "code": "from prefab_ui.components import Slider\n\nSlider(value=50)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=10, step=0.5, value=5)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(volume=75)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(\"{{ volume | number }}%\", bold=True)\n    Slider(value=75, name=\"volume\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Slider,\n)\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Volume (0-100)\")\n        Slider(min=0, max=100, value=75)\n\n    with Column(gap=2):\n        Label(\"Temperature (0-10)\")\n        Slider(min=0, max=10, value=7)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(rating=5)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(\"{{ rating }}\", bold=True)\n    Slider(value=5, name=\"rating\", min=0, max=10, step=0.5)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Progress,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(volume=75)\n\nwith Column(gap=4):\n    with Column(gap=2):\n        with Row(css_class=\"justify-between\"):\n            Label(\"Volume\")\n            Text(\"{{ volume | number }}%\", bold=True)\n        Slider(name=\"volume\", min=0, max=100, value=75)\n    Progress(value=\"{{ volume }}\", max=100)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=100, value=30, disabled=True)"
+    "code": "from prefab_ui.components import Slider\n\nSlider(value=30, disabled=True)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -893,31 +883,6 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Row, Spinner, Text\n\nwith Row(gap=2, css_class=\"items-center\"):\n    Spinner(size=\"sm\")\n    Text(\"Computing the answer to life, the \"\n         \"universe, and everything...\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import (\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    State,\n)\n\nwith State(name=\"Arthur Dent\", role=\"Reluctant Adventurer\"):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")"
-  },
-  {
-    "title": "Equivalent Forms",
-    "category": "Components",
-    "code": "# Kwargs\nwith State(name=\"Ford\", role=\"Researcher\"):\n    Text(\"{{ name }}\")\n\n# Dict\nwith State({\"name\": \"Ford\", \"role\": \"Researcher\"}):\n    Text(\"{{ name }}\")"
-  },
-  {
-    "title": "When to Use Which",
-    "category": "Components",
-    "code": "# Global, mutable — user changes this with the slider\nset_initial_state(volume=75)\nSlider(name=\"volume\")\n\n# Scoped, read-only — data for this section of the UI\nwith State(ship=\"Heart of Gold\", captain=\"Zaphod\"):\n    CardTitle(\"{{ ship }}\")\n    CardDescription(\"Captain: {{ captain }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import Column, State, Text\n\nwith Column(gap=2):\n    with State(greeting=\"Don't Panic\", name=\"Arthur\"):\n        Text(\"{{ greeting }}, {{ name }}\")\n        with State(name=\"Ford\"):\n            Text(\"{{ greeting }}, {{ name }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import Badge, ForEach, Row, State\n\nset_initial_state(languages=[\"Python\", \"TypeScript\", \"Rust\"])\n\nwith State(prefix=\"Speaks\"):\n    with Row(gap=2, align=\"center\"):\n        with ForEach(\"languages\"):\n            Badge(\n                \"{{ prefix }}: {{ $item }}\",\n                variant=\"secondary\",\n            )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1035,9 +1000,24 @@
     "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
   },
   {
-    "title": "Python icon=\"python\"",
+    "title": "from prefab_ui.css import FocusVisible, Hover",
+    "category": "General",
+    "code": "Input(css_class=[\n    \"border-0 ring-0 shadow-none p-0 h-auto\",\n    FocusVisible(\"ring-0 ring-offset-0 border-b border-border rounded-none\"),\n    Hover(\"bg-muted\"),\n])"
+  },
+  {
+    "title": "from prefab_ui.css import Md, Lg",
+    "category": "General",
+    "code": "Button(\"Submit\", css_class=[\"w-full\", Md(\"w-auto\"), Lg(\"w-1/2\")])\n# → \"w-full md:w-auto lg:w-1/2\""
+  },
+  {
+    "title": "from prefab_ui.css import Hover, FocusVisible, Md, Lg",
+    "category": "General",
+    "code": "Card(css_class=[\n    \"p-3 text-sm transition-shadow\",\n    Md(\"p-6 text-base\"),\n    Lg(\"p-8 text-lg\"),\n    Hover(\"shadow-lg\"),\n    FocusVisible(\"ring-2 ring-primary\"),\n])"
+  },
+  {
+    "title": "Python icon=\"python\" expandable",
     "category": "Examples",
-    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    CardTitle, Checkbox, Column, ForEach, Input, Muted,\n    Row, State,\n)\nfrom prefab_ui import AppendState, PopState, SetState\n\nset_initial_state(groups=[\n    {\n        \"name\": \"Work\",\n        \"todos\": [\n            {\"text\": \"Find Magrathea\", \"done\": False},\n            {\"text\": \"Escape Vogons\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n    },\n    {\n        \"name\": \"Personal\",\n        \"todos\": [\n            {\"text\": \"Have lunch at Milliways\", \"done\": True},\n            {\"text\": \"Buy towel\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n    },\n])\n\nwith Row(gap=4, align=\"start\", css_class=\"flex-wrap\"):\n    with ForEach(\"groups\"):\n        with State(gi=\"{{ $index }}\"):\n            with Card(css_class=\"w-56\"):\n                with CardHeader():\n                    CardTitle(\"{{ $item.name }}\")\n                with CardContent(css_class=\"gap-3\"):\n                    with Row(gap=2):\n                        Input(\n                            name=\"groups.{{ gi }}.new_todo\",\n                            placeholder=\"Add a todo...\",\n                        )\n                        Button(\n                            \"Add\",\n                            disabled=\"{{ not $item.new_todo }}\",\n                            on_click=[\n                                AppendState(\n                                    \"groups.{{ gi }}.todos\",\n                                    {\n                                        \"text\": \"{{ $item.new_todo }}\",\n                                        \"done\": False,\n                                    },\n                                ),\n                                SetState(\n                                    \"groups.{{ gi }}.new_todo\",\n                                    \"\",\n                                ),\n                            ],\n                        )\n                    with ForEach(\"groups.{{ gi }}.todos\"):\n                        with Row(gap=2, align=\"center\"):\n                            Checkbox(\n                                name=(\n                                    \"groups.{{ gi }}\"\n                                    \".todos.{{ $index }}.done\"\n                                ),\n                            )\n                            Input(\n                                name=(\n                                    \"groups.{{ gi }}\"\n                                    \".todos.{{ $index }}.text\"\n                                ),\n                                css_class=(\n                                    \"border-0 shadow-none\"\n                                    \" p-0 h-auto\"\n                                ),\n                            )\n                            Button(\n                                \"×\",\n                                variant=\"ghost\",\n                                size=\"sm\",\n                                css_class=\"ml-auto\",\n                                on_click=PopState(\n                                    \"groups.{{ gi }}.todos\",\n                                    \"{{ $index }}\",\n                                ),\n                            )\n                with CardFooter():\n                    Muted(\n                        \"{{ $item.todos | length }} items\"\n                    )\n    with Card(css_class=\"w-56 border-dashed\"):\n        with CardContent(\n            css_class=(\n                \"flex items-center justify-center\"\n                \" py-20\"\n            ),\n        ):\n            Button(\n                \"+\",\n                variant=\"ghost\",\n                size=\"lg\",\n                css_class=(\n                    \"text-4xl text-muted-foreground\"\n                    \" h-16 w-16\"\n                ),\n                on_click=AppendState(\"groups\", {\n                    \"name\": \"New List\",\n                    \"todos\": [],\n                    \"new_todo\": \"\",\n                }),\n            )"
+    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    CardTitle, Checkbox, Column, ForEach, If, Input,\n    Muted, Row,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nset_initial_state(groups=[\n    {\n        \"name\": \"Work\",\n        \"todos\": [\n            {\"text\": \"Find Magrathea\", \"done\": False},\n            {\"text\": \"Escape Vogons\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n    {\n        \"name\": \"Personal\",\n        \"todos\": [\n            {\"text\": \"Have lunch at Milliways\", \"done\": True},\n            {\"text\": \"Buy towel\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n])\n\nwith Row(gap=4, align=\"start\", css_class=\"flex-wrap\"):\n    with ForEach(\"groups\", let=dict(gi=\"{{ $index }}\", show_done=\"{{ $item.show_done }}\")):\n        with Card(css_class=\"w-64\"):\n            with CardHeader():\n                CardTitle(\"{{ $item.name }}\")\n            with CardContent(css_class=\"gap-4\"):\n                with Row(gap=2):\n                    Input(name=\"groups.{{ gi }}.new_todo\", placeholder=\"Add a todo...\")\n                    Button(\n                        \"Add\",\n                        disabled=\"{{ not $item.new_todo }}\",\n                        on_click=[\n                            AppendState(\"groups.{{ gi }}.todos\", {\"text\": \"{{ $item.new_todo }}\", \"done\": False}),\n                            SetState(\"groups.{{ gi }}.new_todo\", \"\"),\n                        ],\n                    )\n                with ForEach(\"groups.{{ gi }}.todos\"):\n                    with If(\"{{ not $item.done or show_done }}\"):\n                        with Row(gap=2, align=\"center\", css_class=\"py-1\"):\n                            Checkbox(name=\"groups.{{ gi }}.todos.{{ $index }}.done\")\n                            Input(\n                                name=\"groups.{{ gi }}.todos.{{ $index }}.text\",\n                                css_class=\"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0\",\n                            )\n                            Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups.{{ gi }}.todos\", \"{{ $index }}\"))\n            with CardFooter():\n                with Row(gap=2, align=\"center\", css_class=\"w-full justify-between\"):\n                    Muted(\"{{ $item.todos | length }} items\")\n                    with Row(gap=1, align=\"center\"):\n                        Checkbox(name=\"groups.{{ gi }}.show_done\", css_class=\"h-3 w-3\")\n                        Muted(\"Show done\")\n    with Card(css_class=\"w-64 border-dashed\"):\n        with CardContent(css_class=\"flex items-center justify-center py-20\"):\n            Button(\n                \"+\",\n                variant=\"ghost\",\n                size=\"lg\",\n                css_class=\"text-4xl text-muted-foreground h-16 w-16\",\n                on_click=AppendState(\"groups\", {\"name\": \"New List\", \"todos\": [], \"new_todo\": \"\", \"show_done\": True}),\n            )"
   },
   {
     "title": "from prefab_ui import AppResult",
@@ -1045,7 +1025,17 @@
     "code": "AppResult(state={\"count\": 0, \"name\": \"Arthur\"}, view=...)"
   },
   {
-    "title": "from prefab_ui import ToolCall, ShowToast",
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Column, Text\n\nwith Column(gap=2, let={\"greeting\": \"Don't Panic\", \"name\": \"Arthur\"}):\n    Text(\"{{ greeting }}, {{ name }}\")\n    with Column(let={\"name\": \"Ford\"}):\n        Text(\"{{ greeting }}, {{ name }}\")"
+  },
+  {
+    "title": "with ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):",
+    "category": "Expressions",
+    "code": "# gi holds the outer index; $index inside a nested ForEach refers to the inner loop\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
+  },
+  {
+    "title": "from prefab_ui.actions import ToolCall, ShowToast",
     "category": "Expressions",
     "code": "Button(\"Save\", on_click=ToolCall(\n    \"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n))"
   },
@@ -1057,17 +1047,17 @@
   {
     "title": "from prefab_ui.components import ForEach, Button, Text",
     "category": "Expressions",
-    "code": "from prefab_ui import ToolCall\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=ToolCall(\n        \"edit_user\",\n        arguments={\"user\": \"{{ $item }}\"},\n    ))"
+    "code": "from prefab_ui.actions import ToolCall\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=ToolCall(\n        \"edit_user\",\n        arguments={\"user\": \"{{ $item }}\"},\n    ))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Elif,\n    If,\n    Slider,\n    Text,\n)\nset_initial_state(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n    )\n    with If(\"inventory == 0\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"inventory > 0 && inventory < 10\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
+    "code": "from prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Elif,\n    If,\n    Slider,\n    Text,\n)\nset_initial_state(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n    )\n    with If(\"{{ inventory == 0 }}\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"{{ inventory > 0 && inventory < 10 }}\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui import SetState\n\nset_initial_state(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
+    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui.actions import SetState\n\nset_initial_state(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1075,9 +1065,9 @@
     "code": "from prefab_ui.components import Column, Input, Row, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
   },
   {
-    "title": "with If(\"inventory == 0\"):",
+    "title": "with If(\"{{ inventory == 0 }}\"):",
     "category": "Expressions",
-    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"inventory > 0 && inventory < 10\"):\n    Alert(\"Low stock\")"
+    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"{{ inventory > 0 && inventory < 10 }}\"):\n    Alert(\"Low stock\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1087,7 +1077,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
+    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
   },
   {
     "title": "Text(\"{{ price * quantity | currency }}\")",
@@ -1095,34 +1085,34 @@
     "code": "Badge(\"{{ status | upper }}\", variant=\"secondary\")"
   },
   {
-    "title": "with If(\"inventory == 0\"):",
+    "title": "with If(\"{{ inventory == 0 }}\"):",
     "category": "Expressions",
-    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"inventory < 10\"):\n    Alert(\"Low stock\")\nwith Else():\n    Badge(\"In stock\")"
+    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"{{ inventory < 10 }}\"):\n    Alert(\"Low stock\")\nwith Else():\n    Badge(\"In stock\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Progress,\n    Row,\n    State,\n    Text,\n)\n\nwith State(revenue=2847500, target=3000000, growth=0.124):\n    with Card():\n        with CardHeader():\n            CardTitle(\"Q4 Revenue\")\n            CardDescription(\"{{ revenue | currency }}\")\n        with CardContent():\n            with Column(gap=2):\n                Progress(value=\"{{ revenue / target * 100 }}\", max=100)\n                with Row(gap=2, align=\"center\"):\n                    Text(\"{{ revenue / target | percent:1 }} of target\")\n                    Badge(\"{{ growth | percent:1 }} YoY\", variant=\"secondary\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Progress,\n    Row,\n    Text,\n)\n\nset_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(\"{{ revenue | currency }}\")\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=\"{{ revenue / target * 100 }}\", max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(\"{{ revenue / target | percent:1 }} of target\")\n                Badge(\"{{ growth | percent:1 }} YoY\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Row,\n    State,\n    Text,\n)\n\nwith State(starts=\"2025-01-15T14:30:00Z\"):\n    with Card():\n        with CardHeader():\n            CardTitle(\"Team Standup\")\n            CardDescription(\"{{ starts | date:long }}\")\n        with CardContent():\n            with Row(gap=2, align=\"center\"):\n                Badge(\"{{ starts | time }}\", variant=\"outline\")\n                Text(\"{{ starts | datetime }}\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Row,\n    Text,\n)\n\nset_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(\"{{ starts | date:long }}\")\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(\"{{ starts | time }}\", variant=\"outline\")\n            Text(\"{{ starts | datetime }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    State,\n    Text,\n)\n\nwith State(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.\",\n):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name | upper }}\")\n        with CardContent():\n            with Column(gap=2):\n                Badge(\"{{ name | lower }}\", variant=\"secondary\")\n                Text(\"{{ bio | truncate:80 }}\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\n\nset_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.\",\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"{{ name | upper }}\")\n    with CardContent():\n        with Column(gap=2):\n            Badge(\"{{ name | lower }}\", variant=\"secondary\")\n            Text(\"{{ bio | truncate:80 }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Row,\n    State,\n    Text,\n)\n\nwith State(skills=[\"Python\", \"TypeScript\", \"Rust\", \"Go\"]):\n    with Column(gap=2):\n        with Row(gap=2, align=\"center\"):\n            Badge(\"{{ skills | first }}\")\n            Badge(\"{{ skills | last }}\", variant=\"outline\")\n        Text(\"{{ skills | join }}\")\n        Text(\"{{ skills | length }} skills listed\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Row,\n    Text,\n)\n\nset_initial_state(skills=[\"Python\", \"TypeScript\", \"Rust\", \"Go\"])\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Badge(\"{{ skills | first }}\")\n        Badge(\"{{ skills | last }}\", variant=\"outline\")\n    Text(\"{{ skills | join }}\")\n    Text(\"{{ skills | length }} skills listed\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n    State,\n)\n\nwith State(name=\"Arthur Dent\", role=\"Reluctant Adventurer\", answer=42):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n        with CardContent():\n            with Column(gap=1):\n                Text(\"Role: {{ role }}\")\n                Text(\"The Answer to Everything: {{ answer }}\")"
+    "code": "from prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\n\nset_initial_state(name=\"Arthur Dent\", role=\"Reluctant Adventurer\", answer=42)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"{{ name }}\")\n    with CardContent():\n        with Column(gap=1):\n            Text(\"Role: {{ role }}\")\n            Text(\"The Answer to Everything: {{ answer }}\")"
   },
   {
     "title": "Text(\"{{ price * quantity | currency }}\")",
@@ -1137,7 +1127,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Input,\n    State,\n    Text,\n)\n\nwith State(\n    name=\"Zaphod Beeblebrox\",\n    role=\"President of the Galaxy\",\n):\n    with Column(gap=2):\n        Text(\"{{ name }}\")\n        Badge(\"{{ role }}\", variant=\"secondary\")\n        Input(placeholder=\"Message {{ name }}...\")"
+    "code": "from prefab_ui.components import (\n    Badge,\n    Column,\n    Input,\n    Text,\n)\n\nset_initial_state(\n    name=\"Zaphod Beeblebrox\",\n    role=\"President of the Galaxy\",\n)\n\nwith Column(gap=2):\n    Text(\"{{ name }}\")\n    Badge(\"{{ role }}\", variant=\"secondary\")\n    Input(placeholder=\"Message {{ name }}...\")"
   },
   {
     "title": "Text(\"{{ user.address.city }}\")",
@@ -1157,17 +1147,17 @@
   {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
-    "code": "from prefab_ui import AppResult, ToolCall\nfrom prefab_ui.components import Button, Column, Input, Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def search(query: str = \"\") -> AppResult:\n    results = find_items(query) if query else []\n    with Column(gap=3) as view:\n        Input(name=\"q\", placeholder=\"Search...\")\n        Button(\"Search\", on_click=ToolCall(\"search\", arguments={\"query\": \"{{ q }}\"}))\n        for r in results:\n            Text(r[\"title\"])\n    return AppResult(view=view, state={\"results\": results})"
+    "code": "from prefab_ui import AppResult\nfrom prefab_ui.actions import ToolCall\nfrom prefab_ui.components import Button, Column, Input, Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def search(query: str = \"\") -> AppResult:\n    results = find_items(query) if query else []\n    with Column(gap=3) as view:\n        Input(name=\"q\", placeholder=\"Search...\")\n        Button(\"Search\", on_click=ToolCall(\"search\", arguments={\"query\": \"{{ q }}\"}))\n        for r in results:\n            Text(r[\"title\"])\n    return AppResult(view=view, state={\"results\": results})"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=ToolCall(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import SetState, ToolCall\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    ToolCall(\"save_data\", arguments={\"item\": \"{{ item }}\"}),\n    SetState(\"saving\", False),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState, ToolCall\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    ToolCall(\"save_data\", arguments={\"item\": \"{{ item }}\"}),\n    SetState(\"saving\", False),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1177,22 +1167,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui import ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
+    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
   },
   {
     "title": "Two-Step Confirmation",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Dialog, Row, Text\nfrom prefab_ui import ToolCall, ShowToast\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Column(\n        gap=3,\n        children=[\n            Text(\"User {{ user_name }} will lose access to all projects.\"),\n            Row(\n                gap=2,\n                css_class=\"justify-end\",\n                children=[\n                    Button(\"Cancel\", variant=\"outline\"),\n                    Button(\n                        \"Remove User\",\n                        variant=\"destructive\",\n                        on_click=ToolCall(\n                            \"remove_user\",\n                            arguments={\"user_id\": \"{{ user_id }}\"},\n                            on_success=ShowToast(\"User removed\", variant=\"success\"),\n                            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n                        ),\n                    ),\n                ],\n            ),\n        ],\n    )"
+    "code": "from prefab_ui.components import Button, Column, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Column(\n        gap=3,\n        children=[\n            Text(\"User {{ user_name }} will lose access to all projects.\"),\n            Row(\n                gap=2,\n                css_class=\"justify-end\",\n                children=[\n                    Button(\"Cancel\", variant=\"outline\"),\n                    Button(\n                        \"Remove User\",\n                        variant=\"destructive\",\n                        on_click=ToolCall(\n                            \"remove_user\",\n                            arguments={\"user_id\": \"{{ user_id }}\"},\n                            on_success=ShowToast(\"User removed\", variant=\"success\"),\n                            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n                        ),\n                    ),\n                ],\n            ),\n        ],\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, ShowToast\n\nButton(\n    \"Save\",\n    on_click=ToolCall(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nButton(\n    \"Save\",\n    on_click=ToolCall(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui import ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
+    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1237,17 +1227,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Input, Label\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Label(\"Name\")\n    Input(name=\"name\", placeholder=\"Your name\")\n    Label(\"Email\")\n    Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n    Button(\"Submit\", on_click=ToolCall(\n        \"create_user\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"},\n    ))"
+    "code": "from prefab_ui.components import Button, Column, Input, Label\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Label(\"Name\")\n    Input(name=\"name\", placeholder=\"Your name\")\n    Label(\"Email\")\n    Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n    Button(\"Submit\", on_click=ToolCall(\n        \"create_user\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"},\n    ))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
   },
   {
     "title": "Auto-Fill",
     "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
   },
   {
     "title": "ToolCall(\"submit_contact\", arguments={",
@@ -1257,12 +1247,12 @@
   {
     "title": "Self-Calling Tool",
     "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui import FastMCP\nfrom prefab_ui import AppResult, ToolCall, ShowToast\nfrom prefab_ui.components import Form, Text\n\nmcp = FastMCP(\"Contacts\")\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n    phone: str = \"\"\n\n@mcp.tool(ui=True)\nasync def create_contact(data: Contact | None = None) -> AppResult:\n    if data is None:\n        return AppResult(\n            view=Form.from_model(\n                Contact,\n                on_submit=ToolCall(\n                    \"create_contact\",\n                    on_success=ShowToast(\"Saved!\"),\n                ),\n            ),\n        )\n    save_to_db(data)\n    return AppResult(view=Text(f\"Created contact: {data.name}\"))"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui import FastMCP\nfrom prefab_ui import AppResult\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.components import Form, Text\n\nmcp = FastMCP(\"Contacts\")\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n    phone: str = \"\"\n\n@mcp.tool(ui=True)\nasync def create_contact(data: Contact | None = None) -> AppResult:\n    if data is None:\n        return AppResult(\n            view=Form.from_model(\n                Contact,\n                on_submit=ToolCall(\n                    \"create_contact\",\n                    on_success=ShowToast(\"Saved!\"),\n                ),\n            ),\n        )\n    save_to_db(data)\n    return AppResult(view=Text(f\"Created contact: {data.name}\"))"
   },
   {
     "title": "Custom Error Handling",
     "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1272,47 +1262,52 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\", on_click=ToggleState(\"showDetails\"))\n    with If(\"showDetails\"):\n        with Alert():\n            AlertTitle(\"Here are the hidden details!\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\", on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the hidden details!\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"search\", placeholder=\"Search users...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"find_users\",\n        arguments={\"query\": \"{{ search }}\"},\n        result_key=\"results\",\n    ))\n    DataTable(\n        columns=[\n            DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n            DataTableColumn(key=\"email\", header=\"Email\"),\n        ],\n        rows=\"{{ results }}\",\n        searchable=True,\n    )"
+    "code": "from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"search\", placeholder=\"Search users...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"find_users\",\n        arguments={\"query\": \"{{ search }}\"},\n        result_key=\"results\",\n    ))\n    DataTable(\n        columns=[\n            DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n            DataTableColumn(key=\"email\", header=\"Email\"),\n        ],\n        rows=\"{{ results }}\",\n        searchable=True,\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    ForEach,\n    Input,\n)\nfrom prefab_ui import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"q\", placeholder=\"Search products...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"search_products\",\n        arguments={\"query\": \"{{ q }}\"},\n        result_key=\"products\",\n    ))\n    with ForEach(\"products\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"{{ description }}\")"
+    "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    ForEach,\n    Input,\n)\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"q\", placeholder=\"Search products...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"search_products\",\n        arguments={\"query\": \"{{ q }}\"},\n        result_key=\"products\",\n    ))\n    with ForEach(\"products\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"{{ description }}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, SetState, ShowToast\n\nButton(\"Process\", on_click=[\n    SetState(\"processing\", True),\n    ToolCall(\n        \"run_analysis\",\n        arguments={\"data\": \"{{ dataset }}\"},\n        on_success=ShowToast(\"Analysis complete!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n    SetState(\"processing\", False),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, SetState, ShowToast\n\nButton(\"Process\", on_click=[\n    SetState(\"processing\", True),\n    ToolCall(\n        \"run_analysis\",\n        arguments={\"data\": \"{{ dataset }}\"},\n        on_success=ShowToast(\"Analysis complete!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n    SetState(\"processing\", False),\n])"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui import ToolCall, ShowToast\n\nButton(\"Delete\", variant=\"destructive\", on_click=ToolCall(\n    \"delete_item\",\n    arguments={\"id\": \"{{ item_id }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nButton(\"Delete\", variant=\"destructive\", on_click=ToolCall(\n    \"delete_item\",\n    arguments={\"id\": \"{{ item_id }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n))"
+  },
+  {
+    "title": "from prefab_ui.components import Grid, Row",
+    "category": "Patterns",
+    "code": "from prefab_ui.css import Responsive\n\nGrid(columns=Responsive(default=1, md=2, lg=3))\nRow(gap=Responsive(default=2, md=4, lg=6))"
   },
   {
     "title": "Define and Use",
     "category": "Patterns",
-    "code": "from prefab_ui import Define, Use, UIResponse\nfrom prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
+    "code": "from prefab_ui.define import Define\nfrom prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
   },
   {
-    "title": "from prefab_ui import Define",
+    "title": "from prefab_ui.define import Define",
     "category": "Patterns",
     "code": "from prefab_ui.components import Card, CardHeader, CardTitle, Badge, Row\n\nwith Define(\"status-badge\") as status_badge:\n    with Row(gap=2, css_class=\"items-center\"):\n        CardTitle(\"{{ label }}\")\n        Badge(\"{{ status }}\", variant=\"{{ variant }}\")"
   },
   {
-    "title": "from prefab_ui import Use",
+    "title": "from prefab_ui.use import Use",
     "category": "Patterns",
     "code": "# Bare reference (no overrides)\nUse(\"status-badge\")\n\n# With scoped data\nUse(\"status-badge\", label=\"Build\", status=\"passing\", variant=\"default\")"
   },
   {
     "title": "Define with ForEach",
     "category": "Patterns",
-    "code": "from prefab_ui import Define, Use, UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+    "code": "from prefab_ui.define import Define\nfrom prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
   },
   {
     "title": "from prefab_ui.testing import Simulator, ActionResult",
@@ -1342,7 +1337,7 @@
   {
     "title": "import pytest",
     "category": "General",
-    "code": "from prefab_ui import UIResponse, Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=ToolCall(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
+    "code": "from prefab_ui.response import UIResponse\nfrom prefab_ui.components import Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=ToolCall(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
   },
   {
     "title": "Python icon=\"python\"",
