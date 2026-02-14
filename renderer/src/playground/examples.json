@@ -852,27 +852,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=100, value=50)"
+    "code": "from prefab_ui.components import Slider\n\nSlider(value=50)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=10, step=0.5, value=5)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(volume=75)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(\"{{ volume | number }}%\", bold=True)\n    Slider(value=75, name=\"volume\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Slider,\n)\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Volume (0-100)\")\n        Slider(min=0, max=100, value=75)\n\n    with Column(gap=2):\n        Label(\"Temperature (0-10)\")\n        Slider(min=0, max=10, value=7)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(rating=5)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(\"{{ rating }}\", bold=True)\n    Slider(value=5, name=\"rating\", min=0, max=10, step=0.5)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Progress,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(volume=75)\n\nwith Column(gap=4):\n    with Column(gap=2):\n        with Row(css_class=\"justify-between\"):\n            Label(\"Volume\")\n            Text(\"{{ volume | number }}%\", bold=True)\n        Slider(name=\"volume\", min=0, max=100, value=75)\n    Progress(value=\"{{ volume }}\", max=100)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import Slider\n\nSlider(min=0, max=100, value=30, disabled=True)"
+    "code": "from prefab_ui.components import Slider\n\nSlider(value=30, disabled=True)"
   },
   {
     "title": "Python icon=\"python\"",
