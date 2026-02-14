@@ -50,11 +50,12 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-layer]:outline-none [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className
         )}
         {...props}
       >
+        <ChartRechartsOverrides />
         <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
@@ -64,6 +65,26 @@ const ChartContainer = React.forwardRef<
   )
 })
 ChartContainer.displayName = "Chart"
+
+/**
+ * Recharts sets inline stroke attributes (#ccc on grids, #fff on dots/sectors)
+ * that we need to override with theme colors. These use attribute selectors
+ * like [stroke='#ccc'] which Tailwind v4's parser can't handle in utility
+ * classes, so we emit them as plain CSS instead.
+ */
+const RECHARTS_OVERRIDES_CSS = [
+  "[data-chart] .recharts-cartesian-grid line[stroke='#ccc'] { stroke: color-mix(in oklch, var(--color-border) 50%, transparent); }",
+  "[data-chart] .recharts-dot[stroke='#fff'] { stroke: transparent; }",
+  "[data-chart] .recharts-polar-grid [stroke='#ccc'] { stroke: var(--color-border); }",
+  "[data-chart] .recharts-reference-line [stroke='#ccc'] { stroke: var(--color-border); }",
+  "[data-chart] .recharts-sector[stroke='#fff'] { stroke: transparent; }",
+].join("\n");
+
+function ChartRechartsOverrides() {
+  return (
+    <style dangerouslySetInnerHTML={{ __html: RECHARTS_OVERRIDES_CSS }} />
+  );
+}
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
