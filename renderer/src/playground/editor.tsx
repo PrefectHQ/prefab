@@ -1,13 +1,33 @@
 /**
- * Code editor with Shiki syntax highlighting.
+ * Code editor powered by CodeMirror 6.
  *
- * Renders a transparent <textarea> on top of a Shiki-highlighted <div>.
- * The two are scroll-synchronized so highlights track the cursor.
+ * Provides syntax highlighting, indent/dedent (Tab/Shift-Tab),
+ * comment toggling (Cmd-/), and undo/redo out of the box.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createHighlighterCore, type HighlighterCore } from "shiki/core";
-import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import { useEffect, useRef } from "react";
+import { Compartment, EditorState } from "@codemirror/state";
+import {
+  EditorView,
+  keymap,
+  highlightSpecialChars,
+  drawSelection,
+} from "@codemirror/view";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+  toggleComment,
+} from "@codemirror/commands";
+import {
+  indentOnInput,
+  syntaxHighlighting,
+  defaultHighlightStyle,
+  bracketMatching,
+} from "@codemirror/language";
+import { python } from "@codemirror/lang-python";
+import { json } from "@codemirror/lang-json";
 
 type Language = "python" | "json";
 
@@ -18,105 +38,148 @@ interface EditorProps {
   dark: boolean;
 }
 
-let highlighter: HighlighterCore | null = null;
-let highlighterPromise: Promise<HighlighterCore> | null = null;
+const darkTheme = EditorView.theme(
+  {
+    "&": {
+      backgroundColor: "transparent",
+      height: "100%",
+    },
+    ".cm-content": {
+      fontFamily: "inherit",
+      fontSize: "inherit",
+      lineHeight: "inherit",
+      padding: "1rem",
+    },
+    ".cm-gutters": { display: "none" },
+    ".cm-activeLine": { backgroundColor: "transparent" },
+    ".cm-selectionBackground": {
+      backgroundColor: "rgba(255, 255, 255, 0.15) !important",
+    },
+    "&.cm-focused .cm-selectionBackground": {
+      backgroundColor: "rgba(255, 255, 255, 0.15) !important",
+    },
+    ".cm-cursor": { borderLeftColor: "var(--foreground)" },
+    ".cm-scroller": { overflow: "auto" },
+  },
+  { dark: true },
+);
 
-async function getHighlighter(): Promise<HighlighterCore> {
-  if (highlighter) return highlighter;
-  if (highlighterPromise) return highlighterPromise;
+const lightTheme = EditorView.theme({
+  "&": {
+    backgroundColor: "transparent",
+    height: "100%",
+  },
+  ".cm-content": {
+    fontFamily: "inherit",
+    fontSize: "inherit",
+    lineHeight: "inherit",
+    padding: "1rem",
+  },
+  ".cm-gutters": { display: "none" },
+  ".cm-activeLine": { backgroundColor: "transparent" },
+  ".cm-selectionBackground": {
+    backgroundColor: "rgba(0, 0, 0, 0.1) !important",
+  },
+  "&.cm-focused .cm-selectionBackground": {
+    backgroundColor: "rgba(0, 0, 0, 0.1) !important",
+  },
+  ".cm-cursor": { borderLeftColor: "var(--foreground)" },
+  ".cm-scroller": { overflow: "auto" },
+});
 
-  highlighterPromise = (async () => {
-    // Direct file imports — only python + json + 2 themes get bundled
-    const [pythonMod, jsonMod, lightMod, darkMod] = await Promise.all([
-      import("shiki/dist/langs/python.mjs"),
-      import("shiki/dist/langs/json.mjs"),
-      import("shiki/dist/themes/snazzy-light.mjs"),
-      import("shiki/dist/themes/dark-plus.mjs"),
-    ]);
-
-    const h = await createHighlighterCore({
-      themes: [lightMod.default, darkMod.default],
-      langs: [pythonMod.default, jsonMod.default],
-      engine: createJavaScriptRegexEngine(),
-    });
-    highlighter = h;
-    return h;
-  })();
-
-  return highlighterPromise;
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+function langExtension(language: Language) {
+  return language === "python" ? python() : json();
 }
 
 export function Editor({ value, onChange, language, dark }: EditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const highlightRef = useRef<HTMLDivElement>(null);
-  const [html, setHtml] = useState("");
-  const [ready, setReady] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<EditorView | null>(null);
+  const langCompartment = useRef(new Compartment());
+  const themeCompartment = useRef(new Compartment());
+  // Track whether we're pushing an external update into CM
+  const externalUpdate = useRef(false);
+  // Keep onChange stable for the update listener
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
+  // Create the editor on mount
   useEffect(() => {
-    getHighlighter().then(() => setReady(true));
+    if (!containerRef.current) return;
+
+    const state = EditorState.create({
+      doc: value,
+      extensions: [
+        highlightSpecialChars(),
+        history(),
+        drawSelection(),
+        indentOnInput(),
+        bracketMatching(),
+        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+        keymap.of([
+          ...defaultKeymap,
+          ...historyKeymap,
+          indentWithTab,
+          { key: "Mod-/", run: toggleComment },
+        ]),
+        langCompartment.current.of(langExtension(language)),
+        themeCompartment.current.of(dark ? darkTheme : lightTheme),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged && !externalUpdate.current) {
+            onChangeRef.current(update.state.doc.toString());
+          }
+        }),
+        EditorView.lineWrapping,
+      ],
+    });
+
+    const view = new EditorView({ state, parent: containerRef.current });
+    viewRef.current = view;
+
+    return () => {
+      view.destroy();
+      viewRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Sync external value changes into CM
   useEffect(() => {
-    if (!ready || !highlighter) {
-      setHtml(`<pre><code>${escapeHtml(value)}\n</code></pre>`);
-      return;
+    const view = viewRef.current;
+    if (!view) return;
+    const currentDoc = view.state.doc.toString();
+    if (currentDoc !== value) {
+      externalUpdate.current = true;
+      view.dispatch({
+        changes: { from: 0, to: currentDoc.length, insert: value },
+      });
+      externalUpdate.current = false;
     }
-    const theme = dark ? "dark-plus" : "snazzy-light";
-    setHtml(highlighter.codeToHtml(value, { lang: language, theme }));
-  }, [value, language, ready, dark]);
+  }, [value]);
 
-  const syncScroll = useCallback(() => {
-    if (textareaRef.current && highlightRef.current) {
-      highlightRef.current.scrollTop = textareaRef.current.scrollTop;
-      highlightRef.current.scrollLeft = textareaRef.current.scrollLeft;
-    }
-  }, []);
+  // Reconfigure language when it changes
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    view.dispatch({
+      effects: langCompartment.current.reconfigure(langExtension(language)),
+    });
+  }, [language]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === "Tab") {
-        e.preventDefault();
-        const ta = e.currentTarget;
-        const start = ta.selectionStart;
-        const end = ta.selectionEnd;
-        const newValue = value.slice(0, start) + "    " + value.slice(end);
-        onChange(newValue);
-        requestAnimationFrame(() => {
-          ta.selectionStart = start + 4;
-          ta.selectionEnd = start + 4;
-        });
-      }
-    },
-    [value, onChange],
-  );
+  // Reconfigure theme when it changes
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    view.dispatch({
+      effects: themeCompartment.current.reconfigure(
+        dark ? darkTheme : lightTheme,
+      ),
+    });
+  }, [dark]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden font-mono text-sm leading-relaxed">
-      <div
-        ref={highlightRef}
-        className="pointer-events-none absolute inset-0 overflow-auto whitespace-pre p-4 [&_pre]:!m-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!font-[inherit] [&_code]:!text-[inherit] [&_code]:!leading-[inherit] [&_.line]:!leading-relaxed"
-        aria-hidden
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-      <textarea
-        ref={textareaRef}
-        className="absolute inset-0 h-full w-full resize-none overflow-auto whitespace-pre bg-transparent p-4 text-transparent caret-foreground outline-none"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onScroll={syncScroll}
-        onKeyDown={handleKeyDown}
-        spellCheck={false}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-      />
-    </div>
+    <div
+      ref={containerRef}
+      className="h-full w-full overflow-hidden font-mono text-sm leading-relaxed [&_.cm-editor]:h-full [&_.cm-editor]:outline-none"
+    />
   );
 }
