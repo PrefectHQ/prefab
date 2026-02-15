@@ -82,6 +82,7 @@ import { radioGroupSchema, radioSchema } from "./radio.ts";
 import { rowSchema } from "./row.ts";
 import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
+import { slotSchema } from "./slot.ts";
 import { sliderSchema } from "./slider.ts";
 import { spinnerSchema } from "./spinner.ts";
 import { switchSchema } from "./switch.ts";
@@ -183,6 +184,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   SelectOption: selectOptionSchema,
   Separator: separatorSchema,
   Slider: sliderSchema,
+  Slot: slotSchema,
   Small: smallSchema,
   Spinner: spinnerSchema,
   Span: spanSchema,

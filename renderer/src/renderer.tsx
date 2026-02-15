@@ -536,6 +536,43 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     return null;
   }
 
+  // Handle Slot — render a component tree from state, or children as fallback.
+  if (type === "Slot") {
+    const slotName = interpolated.name as string;
+    const slotContent = slotName ? state.get(slotName) : undefined;
+    if (
+      slotContent != null &&
+      typeof slotContent === "object" &&
+      "type" in slotContent
+    ) {
+      return (
+        <RenderNode
+          node={slotContent as ComponentNode}
+          scope={scope}
+          state={state}
+          app={app}
+        />
+      );
+    }
+    // Render children as fallback when slot is empty
+    if (children && children.length > 0) {
+      return (
+        <>
+          {children.map((child, i) => (
+            <RenderNode
+              key={i}
+              node={child}
+              scope={scope}
+              state={state}
+              app={app}
+            />
+          ))}
+        </>
+      );
+    }
+    return null;
+  }
+
   // Evaluate let bindings — scoped variables available to children
   let childScope = scope;
   const letBindings = rawProps.let as Record<string, unknown> | undefined;

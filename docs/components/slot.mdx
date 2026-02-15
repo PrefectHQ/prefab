@@ -1,0 +1,165 @@
+---
+title: Slot
+description: A placeholder that renders dynamic component trees from state.
+icon: puzzle-piece
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Most components in a Prefab layout are defined up front — you know at build time that there's a heading here, a table there. But sometimes a region of your UI needs to be filled in later, maybe by an action that fetches content or by state that arrives after the initial render. `Slot` reserves a named place in your layout for that dynamic content.
+
+`Slot` watches a state key. When that key holds a component tree (a JSON object with a `type` field), Slot renders it. When the key is empty, Slot renders its children as fallback content — or nothing at all.
+
+## Basic Usage
+
+Pass the state key name as the first argument. Here, `info` holds a Card component tree in state:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Starship Registry","level":3},{"type":"Slot","name":"info"}]},"state":{"info":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Heading, Slot
+
+set_initial_state(
+    info={
+        "type": "Card",
+        "children": [
+            {
+                "type": "CardHeader",
+                "children": [
+                    {"type": "CardTitle", "content": "Heart of Gold"},
+                    {
+                        "type": "CardDescription",
+                        "content": "Infinite Improbability Drive equipped",
+                    },
+                ],
+            }
+        ],
+    }
+)
+
+with Column(gap=4):
+    Heading("Starship Registry", level=3)
+    Slot("info")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Heading",
+        "content": "Starship Registry",
+        "level": 3
+      },
+      {
+        "type": "Slot",
+        "name": "info"
+      }
+    ]
+  },
+  "state": {
+    "info": {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardTitle",
+              "content": "Heart of Gold"
+            },
+            {
+              "type": "CardDescription",
+              "content": "Infinite Improbability Drive equipped"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The layout defines *where* the dynamic content goes. The state (or an action that populates it) determines *what* appears there. In practice, the state key is often populated by a `ToolCall` or `API` action with `result_key` — the action fetches a component tree and writes it into state, and the Slot picks it up automatically.
+
+## Fallback Content
+
+Nest children inside `Slot` to define what shows when the state key is empty. This is useful for slots that start empty and get populated by a user action.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground py-8 text-center","type":"Text","content":"Select an item from the list to view details"}]}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Heading, Slot, Text
+
+set_initial_state()
+
+with Column(gap=4):
+    Heading("Item Detail", level=3)
+    with Slot("selected_item"):
+        Text(
+            "Select an item from the list to view details",
+            css_class="text-muted-foreground py-8 text-center",
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Heading",
+        "content": "Item Detail",
+        "level": 3
+      },
+      {
+        "type": "Slot",
+        "name": "selected_item",
+        "children": [
+          {
+            "cssClass": "text-muted-foreground py-8 text-center",
+            "type": "Text",
+            "content": "Select an item from the list to view details"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Since the fallback is a regular component tree, you can make it as rich as you need — icons, buttons, styled containers. Once `state["selected_item"]` gets a component tree, the fallback disappears and the slot content takes over.
+
+## API Reference
+
+<Card icon="code" title="Slot Parameters">
+<ParamField body="name" type="str" required>
+  State key containing the component tree to render. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="children" type="list[Component]" default="[]">
+  Fallback content rendered when the state key is empty or missing.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Slot
+{
+  "type": "Slot",
+  "name": "string (required)",
+  "children?": "[Component]",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Slot](/protocol/slot).

@@ -57,6 +57,7 @@ from prefab_ui.components.radio import Radio, RadioGroup
 from prefab_ui.components.row import Row
 from prefab_ui.components.select import Select, SelectOption
 from prefab_ui.components.separator import Separator
+from prefab_ui.components.slot import Slot
 from prefab_ui.components.slider import Slider
 from prefab_ui.components.spinner import Spinner
 from prefab_ui.components.switch import Switch
@@ -158,6 +159,7 @@ __all__ = [
     "SelectOption",
     "Separator",
     "Slider",
+    "Slot",
     "Small",
     "Span",
     "Spinner",

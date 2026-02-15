@@ -1,0 +1,50 @@
+---
+title: Slot
+description: JSON Schema for the Slot component.
+---
+
+Render a component tree stored in state.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Slot",
+      "default": "Slot",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    },
+    "name": {
+      "description": "State key containing the component tree to render.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "name"
+  ]
+}
+```

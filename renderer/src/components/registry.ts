@@ -74,7 +74,7 @@ import {
   BlockQuote,
 } from "./typography";
 import { Code, Image, Markdown } from "./content";
-import { Condition, ForEach } from "./control-flow";
+import { Condition, ForEach, Slot } from "./control-flow";
 import {
   PrefabBarChart,
   PrefabLineChart,
@@ -185,6 +185,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   // Control flow
   Condition,
   ForEach,
+  Slot,
 
   // Compound containers (wrapper components decompose children into parts)
   Tabs: PrefabTabs,
