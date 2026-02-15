@@ -57,7 +57,7 @@ import {
 } from "./form";
 
 // Custom components
-import { Row, Column, Grid, Div, Span, PrefabForm } from "./layout";
+import { Row, Column, Container, Grid, Div, Span, PrefabForm } from "./layout";
 import {
   Text,
   Heading,
@@ -155,6 +155,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   // Layout
   Row,
   Column,
+  Container,
   Form: PrefabForm,
   Grid,
   Div,

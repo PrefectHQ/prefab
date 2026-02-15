@@ -74,6 +74,20 @@ export function PrefabForm({
   );
 }
 
+export function Container({ className, cssClass, children }: LayoutProps) {
+  return (
+    <div
+      className={cn(
+        "container mx-auto px-4 sm:px-6 lg:px-8",
+        className,
+        cssClass,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 interface DivProps {
   className?: string;
   cssClass?: string;
