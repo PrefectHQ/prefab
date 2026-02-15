@@ -12,6 +12,7 @@ from prefab_ui.components import (
     Checkbox,
     Code,
     Column,
+    Container,
     DataTable,
     DataTableColumn,
     DatePicker,
@@ -128,6 +129,24 @@ class TestComponentSerialization:
         j = c.to_json()
         assert j["type"] == "Column"
         assert "children" not in j
+
+    def test_container_empty(self):
+        c = Container()
+        j = c.to_json()
+        assert j["type"] == "Container"
+        assert "children" not in j
+
+    def test_container_with_children(self):
+        with Container() as c:
+            Text(content="hello")
+        j = c.to_json()
+        assert j["type"] == "Container"
+        assert len(j["children"]) == 1
+
+    def test_container_css_class(self):
+        c = Container(css_class="max-w-2xl")
+        j = c.to_json()
+        assert j["cssClass"] == "max-w-2xl"
 
 
 class TestContextManagerNesting:

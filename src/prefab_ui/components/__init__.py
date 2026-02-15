@@ -34,6 +34,7 @@ from prefab_ui.components.combobox import Combobox, ComboboxOption
 from prefab_ui.components.code import Code
 from prefab_ui.components.conditional import Elif, Else, If
 from prefab_ui.components.column import Column
+from prefab_ui.components.container import Container
 from prefab_ui.components.data_table import DataTable, DataTableColumn
 from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
@@ -117,6 +118,7 @@ __all__ = [
     "Combobox",
     "ComboboxOption",
     "Component",
+    "Container",
     "ContainerComponent",
     "DataTable",
     "DataTableColumn",

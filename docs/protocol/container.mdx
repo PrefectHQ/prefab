@@ -1,0 +1,45 @@
+---
+title: Container
+description: JSON Schema for the Container component.
+---
+
+A centered, max-width container with responsive padding.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Container",
+      "default": "Container",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

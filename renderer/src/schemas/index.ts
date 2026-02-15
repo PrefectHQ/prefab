@@ -60,6 +60,7 @@ import { codeSchema } from "./code.ts";
 import { comboboxSchema, comboboxOptionSchema } from "./combobox.ts";
 import { conditionSchema } from "./conditional.ts";
 import { columnSchema } from "./column.ts";
+import { containerSchema } from "./container.ts";
 import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
@@ -143,6 +144,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   ComboboxOption: comboboxOptionSchema,
   Condition: conditionSchema,
   Column: columnSchema,
+  Container: containerSchema,
   DataTable: dataTableSchema,
   DatePicker: datePickerSchema,
   Dialog: dialogSchema,
