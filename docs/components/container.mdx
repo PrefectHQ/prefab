@@ -1,0 +1,100 @@
+---
+title: Container
+description: Responsive centered container with built-in padding.
+icon: box
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Container centers content with a responsive max-width and horizontal padding that scales with the viewport.
+
+## Basic Usage
+
+<ComponentPreview auto json={`{"view":{"type":"Container","children":[{"content":"The Hitchhiker's Guide","type":"H1"},{"content":"A wholly remarkable book, the standard repository for all the knowledge and wisdom in the Galaxy.","type":"P"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Container,
+    H1,
+    P,
+)
+
+with Container():
+    H1("The Hitchhiker's Guide")
+    P(
+        "A wholly remarkable book, the standard"
+        " repository for all the knowledge and"
+        " wisdom in the Galaxy."
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Container",
+    "children": [
+      {
+        "content": "The Hitchhiker's Guide",
+        "type": "H1"
+      },
+      {
+        "content": "A wholly remarkable book, the standard repository for all the knowledge and wisdom in the Galaxy.",
+        "type": "P"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Narrowing with css_class
+
+Override the default max-width for narrower content areas like forms or prose.
+
+<ComponentPreview auto json={`{"view":{"cssClass":"max-w-2xl","type":"Container","children":[{"content":"The ships hung in the sky in much the same way that bricks don't.","type":"P"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Container, P
+
+with Container(css_class="max-w-2xl"):
+    P(
+        "The ships hung in the sky in much the"
+        " same way that bricks don't."
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "max-w-2xl",
+    "type": "Container",
+    "children": [
+      {
+        "content": "The ships hung in the sky in much the same way that bricks don't.",
+        "type": "P"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Container Parameters">
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes. Use `max-w-*` to constrain width beyond the default responsive breakpoints.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Container
+{
+  "type": "Container",
+  "children?": "[Component]",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Container](/protocol/container).
