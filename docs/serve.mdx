@@ -1,0 +1,90 @@
+---
+title: Local Preview
+sidebarTitle: Local Preview
+description: Preview PrefabApp UIs in your browser without an MCP host.
+icon: browser
+---
+
+`prefab serve` renders a `PrefabApp` as a self-contained HTML page and serves it locally. This lets you iterate on layouts, styling, and client-side interactions (state, forms, conditionals) without wiring up an MCP server or host application.
+
+## Quick Start
+
+Create a Python file that defines a `PrefabApp`:
+
+```python app.py
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Heading, Text
+
+with Column(gap=3) as view:
+    Heading("Hello Prefab")
+    Text("This is a local preview.")
+
+app = PrefabApp(view=view, state={"greeting": "Hello"})
+```
+
+Then serve it:
+
+```bash
+prefab serve app.py
+```
+
+This opens your browser to `http://127.0.0.1:5175` with the rendered UI. All client-side behavior works — state binding, `SetState`/`ToggleState` actions, `ForEach` loops, conditional rendering, form submissions. The only thing that won't work is `ToolCall`, since there's no MCP server to call back to.
+
+## Auto-Discovery
+
+If your file has a single `PrefabApp` instance, `prefab serve` finds it automatically. If there are multiple, point to the one you want:
+
+```bash
+prefab serve app.py:dashboard
+```
+
+## Live Reload
+
+Pass `--reload` to watch for file changes and regenerate the page on save:
+
+```bash
+prefab serve app.py --reload
+```
+
+This watches all `.py` files in the same directory as your target file. When a change is detected, it re-executes the module and regenerates the HTML. Refresh your browser to see the update.
+
+## Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--port`, `-p` | `5175` | Port for the local server |
+| `--reload` / `--no-reload` | `--no-reload` | Watch for file changes |
+
+If the requested port is in use, `prefab serve` automatically finds the next available one.
+
+## PrefabApp
+
+`PrefabApp` is a pure data object describing a complete UI application. It holds the view tree, initial state, reusable definitions, and external asset URLs.
+
+```python
+from prefab_ui.app import PrefabApp
+
+app = PrefabApp(
+    view=view,
+    state={"count": 0},
+    stylesheets=["https://fonts.googleapis.com/css2?family=Inter"],
+    scripts=["https://cdn.example.com/chart.js"],
+)
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `view` | `Component` | Component tree to render |
+| `state` | `dict` | Initial client-side state |
+| `defs` | `list[Define]` | Reusable component definitions |
+| `stylesheets` | `list[str]` | External CSS URLs to load |
+| `scripts` | `list[str]` | External JS URLs to load |
+| `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` |
+
+### Methods
+
+**`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all application data baked in. This is what `prefab serve` uses internally, and it's also what any transport integration (FastMCP, FastAPI, etc.) ultimately delivers.
+
+**`app.to_json()`** returns the Prefab wire-format envelope — a dict with `version`, `view`, `state`, and `defs`. This is the data structure the renderer consumes.
+
+**`app.csp()`** computes Content Security Policy domains from the app's asset configuration. It merges the renderer's base CSP with origins extracted from `stylesheets`, `scripts`, and `connect_domains`.
