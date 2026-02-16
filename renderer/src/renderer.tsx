@@ -51,11 +51,16 @@ const ITEM_CHILD_TYPES: Record<string, string[]> = {
 
 /**
  * Bind action props — replace action spec objects with actual event handlers.
+ *
+ * The `scope` parameter captures render-time scope (ForEach $index, $item,
+ * let bindings) so that action templates can reference those variables
+ * alongside $event at execution time.
  */
 function bindActions(
   props: Record<string, unknown>,
   app: App | null,
   state: StateStore,
+  scope: Record<string, unknown>,
 ): Record<string, unknown> {
   const bound = { ...props };
 
@@ -82,7 +87,15 @@ function bindActions(
       if (Array.isArray(event) && typeof event[0] === "number") {
         eventValue = event[0];
       }
-      await executeActions(actionSpec, app, state, eventValue);
+      await executeActions(
+        actionSpec,
+        app,
+        state,
+        eventValue,
+        0,
+        undefined,
+        scope,
+      );
     };
   }
 
@@ -307,13 +320,29 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     ...scope,
   };
 
-  // Interpolate {{ ... }} templates in string props
-  const interpolated = interpolateProps(rawProps, ctx);
+  // Separate action specs from regular props. Action specs must NOT be
+  // interpolated at render time — they contain $event/$error references
+  // that only exist at action execution time. Interpolating here would
+  // prematurely resolve expressions like `{{ $event ? x : y }}` with
+  // $event=undefined.
+  const propsToInterpolate: Record<string, unknown> = {};
+  const rawActionSpecs: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(rawProps)) {
+    if (ACTION_PROPS.has(key) && value != null && typeof value === "object") {
+      rawActionSpecs[key] = value;
+    } else {
+      propsToInterpolate[key] = value;
+    }
+  }
 
-  // Bind action specs to event handlers BEFORE mapProps renames them.
-  // This ensures bindActions sees "onChange" (which is in ACTION_PROPS)
-  // before mapProps renames it to "onValueChange"/"onCheckedChange".
-  const bound = bindActions(interpolated, app, state);
+  // Interpolate {{ ... }} templates in non-action props only
+  const interpolated = interpolateProps(propsToInterpolate, ctx);
+
+  // Re-attach raw action specs, then bind them to event handlers.
+  // bindActions captures the current scope so action execution can
+  // resolve both scope vars ($index, $item) and event vars ($event).
+  const withActions = { ...interpolated, ...rawActionSpecs };
+  const bound = bindActions(withActions, app, state, scope);
 
   // Map Python prop names to React/shadcn prop names
   const mapped = mapProps(type, bound);

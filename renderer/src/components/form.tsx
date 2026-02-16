@@ -211,16 +211,24 @@ export function PrefabCheckbox({
 }: PrefabCheckboxProps) {
   const id = name ? `checkbox-${name}` : undefined;
 
-  // Controlled when handler exists, uncontrolled otherwise
-  const checkedProp = onCheckedChange
-    ? { checked: checked ?? false }
-    : { defaultChecked: checked };
+  // Internal state so the checkbox always toggles visually, even when
+  // onCheckedChange is provided (which would otherwise force controlled
+  // mode with a frozen checked prop).
+  const [internal, setInternal] = React.useState(checked ?? false);
+  React.useEffect(() => {
+    if (checked !== undefined) setInternal(checked);
+  }, [checked]);
+
+  const handleChange = (val: boolean) => {
+    setInternal(val);
+    onCheckedChange?.(val);
+  };
 
   const checkbox = (
     <ShadcnCheckbox
       id={id}
-      {...checkedProp}
-      onCheckedChange={onCheckedChange}
+      checked={internal}
+      onCheckedChange={handleChange}
       disabled={disabled}
       name={name}
       className={className}
@@ -267,15 +275,24 @@ export function PrefabSwitch({
 }: PrefabSwitchProps) {
   const id = name ? `switch-${name}` : undefined;
 
-  const checkedProp = onCheckedChange
-    ? { checked: checked ?? false }
-    : { defaultChecked: checked };
+  // Internal state so the switch always toggles visually on click, while
+  // still reflecting external state changes (e.g. another action sets the
+  // bound state key via `name`).
+  const [internal, setInternal] = React.useState(checked ?? false);
+  React.useEffect(() => {
+    if (checked !== undefined) setInternal(checked);
+  }, [checked]);
+
+  const handleChange = (val: boolean) => {
+    setInternal(val);
+    onCheckedChange?.(val);
+  };
 
   const switchEl = (
     <ShadcnSwitch
       id={id}
-      {...checkedProp}
-      onCheckedChange={onCheckedChange}
+      checked={internal}
+      onCheckedChange={handleChange}
       disabled={disabled}
       name={name}
       size={size}
