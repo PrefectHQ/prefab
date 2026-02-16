@@ -1,10 +1,11 @@
 /**
- * Control flow components: ForEach, Condition.
+ * Control flow components: ForEach, Condition, Slot.
  *
  * ForEach iterates over a data array and renders its children template
  * once per item. Condition evaluates cases in order and renders the first
- * match. Both are handled specially by the renderer — these components
- * exist for registry completeness.
+ * match. Slot renders a component tree stored in state. All are handled
+ * specially by the renderer — these components exist for registry
+ * completeness.
  */
 
 import type { ReactNode } from "react";
@@ -34,5 +35,17 @@ interface ConditionProps {
  * This exists for the registry but the renderer intercepts it.
  */
 export function Condition({ children }: ConditionProps) {
+  return <>{children}</>;
+}
+
+interface SlotProps {
+  children?: ReactNode;
+}
+
+/**
+ * Slot is handled by the recursive renderer (reads component tree from state).
+ * This exists for the registry but the renderer intercepts it.
+ */
+export function Slot({ children }: SlotProps) {
   return <>{children}</>;
 }

@@ -107,6 +107,82 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
+## With Actions
+
+The `on_change` parameter on `RadioGroup` runs actions when the selection changes. `$event` is the `value` string of the selected radio:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ choice | 'Make a selection' }}"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Radio, RadioGroup, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with RadioGroup(
+        name="theme",
+        on_change=SetState("choice", "You picked: {{ $event }}"),
+    ):
+        Radio(value="light", label="Light")
+        Radio(value="dark", label="Dark")
+        Radio(value="system", label="System", checked=True)
+    Text(
+        "{{ choice | 'Make a selection' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "RadioGroup",
+        "name": "theme",
+        "onChange": {
+          "action": "setState",
+          "key": "choice",
+          "value": "You picked: {{ $event }}"
+        },
+        "children": [
+          {
+            "type": "Radio",
+            "value": "light",
+            "label": "Light",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "type": "Radio",
+            "value": "dark",
+            "label": "Dark",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "type": "Radio",
+            "value": "system",
+            "label": "System",
+            "checked": true,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "type": "Text",
+        "content": "{{ choice | 'Make a selection' }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Disabled State
 
 <ComponentPreview auto json={`{"view":{"type":"RadioGroup","name":"plan","children":[{"type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}}`}>
@@ -166,6 +242,10 @@ with RadioGroup(name="plan"):
   Form field name shared by all radio buttons in the group.
 </ParamField>
 
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when the selection changes. `$event` is the `value` string of the selected radio.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
@@ -215,10 +295,13 @@ with RadioGroup(name="plan"):
 
 ```json Radio
 {
-  "type": "RadioGroup",
-  "children?": "[Component]",
+  "type": "Radio",
+  "value": "string (required)",
+  "label?": "string",
+  "checked?": false,
   "name?": "string",
-  "onChange?": "Action | Action[]",
+  "disabled?": false,
+  "required?": false,
   "cssClass?": "string"
 }
 ```

@@ -257,6 +257,82 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
+## With Actions
+
+The `on_change` parameter runs actions when the selection changes. `$event` is the `value` string of the selected option:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ picked | 'Make a selection' }}"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Select, SelectOption, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with Select(
+        placeholder="Pick a color...",
+        on_change=SetState("picked", "You chose: {{ $event }}"),
+    ):
+        SelectOption(value="red", label="Red")
+        SelectOption(value="green", label="Green")
+        SelectOption(value="blue", label="Blue")
+    Text(
+        "{{ picked | 'Make a selection' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Select",
+        "placeholder": "Pick a color...",
+        "size": "default",
+        "disabled": false,
+        "required": false,
+        "onChange": {
+          "action": "setState",
+          "key": "picked",
+          "value": "You chose: {{ $event }}"
+        },
+        "children": [
+          {
+            "type": "SelectOption",
+            "value": "red",
+            "label": "Red",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "green",
+            "label": "Green",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "blue",
+            "label": "Blue",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "type": "Text",
+        "content": "{{ picked | 'Make a selection' }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Select Parameters">
@@ -278,6 +354,10 @@ with Column(gap=2):
 
 <ParamField body="required" type="bool" default="False">
   Whether a selection is required for form submission.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when the selection changes. `$event` is the `value` string of the selected option.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

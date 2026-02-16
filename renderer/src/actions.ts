@@ -91,15 +91,17 @@ export async function executeAction(
   event?: unknown,
   depth = 0,
   error?: string,
+  scope?: Record<string, unknown>,
 ): Promise<boolean> {
   if (depth > MAX_DEPTH) {
     console.warn("[Prefab] Action callback depth limit exceeded");
     return false;
   }
 
-  // Interpolation context: state keys as bare names + $event + $error
+  // Interpolation context: state + scope (ForEach vars) + $event + $error
   const ctx: Record<string, unknown> = {
     ...state.getAll(),
+    ...scope,
     $event: event,
     $error: error,
   };
@@ -239,7 +241,15 @@ export async function executeAction(
 
   // Dispatch lifecycle callbacks, passing $error to onError
   if (success && resolved.onSuccess) {
-    await executeActions(resolved.onSuccess, app, state, undefined, depth + 1);
+    await executeActions(
+      resolved.onSuccess,
+      app,
+      state,
+      undefined,
+      depth + 1,
+      undefined,
+      scope,
+    );
   } else if (!success && resolved.onError) {
     await executeActions(
       resolved.onError,
@@ -248,6 +258,7 @@ export async function executeAction(
       undefined,
       depth + 1,
       errorMessage,
+      scope,
     );
   }
 
@@ -268,10 +279,19 @@ export async function executeActions(
   event?: unknown,
   depth = 0,
   error?: string,
+  scope?: Record<string, unknown>,
 ): Promise<void> {
   const list = Array.isArray(actions) ? actions : [actions];
   for (const action of list) {
-    const ok = await executeAction(action, app, state, event, depth, error);
+    const ok = await executeAction(
+      action,
+      app,
+      state,
+      event,
+      depth,
+      error,
+      scope,
+    );
     if (!ok) break;
   }
 }
