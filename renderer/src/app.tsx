@@ -22,7 +22,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Toaster } from "sonner";
 import {
-  useApp,
   applyDocumentTheme,
   applyHostStyleVariables,
   applyHostFonts,
@@ -33,6 +32,7 @@ import type {
 } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
+import { earlyBridge } from "./early-bridge";
 
 /** Protocol versions this renderer understands. */
 const SUPPORTED_VERSIONS = new Set(["0.2"]);
@@ -80,7 +80,7 @@ export function App() {
     INITIAL?.defs ?? {},
   );
   const state = useStateStore();
-  const appRef = useRef<McpApp | null>(null);
+  const appRef = useRef<McpApp | null>(earlyBridge.app);
 
   // Initialize state store with baked-in data.
   useEffect(() => {
@@ -123,40 +123,27 @@ export function App() {
     [state],
   );
 
-  const { app, isConnected, error } = useApp({
-    appInfo: { name: "Prefab", version: "1.0.0" },
-    capabilities: {
-      availableDisplayModes: ["inline", "fullscreen"],
-    },
-    onAppCreated: (newApp: McpApp) => {
-      appRef.current = newApp;
-
-      newApp.ontoolresult = (params) => {
-        handleToolResult(
-          params as { structuredContent?: Record<string, unknown> },
-        );
-      };
-
-      newApp.onhostcontextchanged = (ctx) => {
-        applyTheme(ctx as McpUiHostContext);
-      };
-    },
-  });
-
-  // Apply initial theme from host context
+  // Subscribe to the early bridge — this replays any buffered tool results
+  // that arrived before React mounted.
   useEffect(() => {
-    if (isConnected && app) {
-      const ctx = app.getHostContext();
+    earlyBridge.onToolResult(handleToolResult);
+    earlyBridge.onHostContext(applyTheme);
+  }, [handleToolResult]);
+
+  // Apply initial theme from host context (if already available)
+  useEffect(() => {
+    if (earlyBridge.app) {
+      const ctx = earlyBridge.app.getHostContext();
       if (ctx) applyTheme(ctx);
     }
-  }, [isConnected, app]);
+  }, []);
 
   // Error state — only fatal if we have no content to render
-  if (error && !tree) {
+  if (!earlyBridge.app && !tree) {
     return (
       <div className="p-4 text-destructive">
         <p className="font-medium">Connection error</p>
-        <p className="text-sm text-muted-foreground">{error.message}</p>
+        <p className="text-sm text-muted-foreground">Bridge not initialized</p>
       </div>
     );
   }
