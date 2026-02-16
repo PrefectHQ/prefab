@@ -103,6 +103,61 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
+## With Actions
+
+The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Checkbox","label":"Accept terms","checked":false,"name":"accepted","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ message | 'Check the box' }}"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Checkbox, Column, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    Checkbox(
+        label="Accept terms",
+        name="accepted",
+        on_change=SetState(
+            "message",
+            "{{ $event ? 'Thank you!' : 'Please accept to continue' }}",
+        ),
+    )
+    Text(
+        "{{ message | 'Check the box' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Checkbox",
+        "label": "Accept terms",
+        "checked": false,
+        "name": "accepted",
+        "disabled": false,
+        "required": false,
+        "onChange": {
+          "action": "setState",
+          "key": "message",
+          "value": "{{ $event ? 'Thank you!' : 'Please accept to continue' }}"
+        }
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "type": "Text",
+        "content": "{{ message | 'Check the box' }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## With Disabled State
 
 <ComponentPreview auto json={`{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]}}`}>
@@ -178,6 +233,10 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 <ParamField body="required" type="bool" default="False">
   Whether the checkbox is required for form submission.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when toggled. `$event` is `true` when checked, `false` when unchecked.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

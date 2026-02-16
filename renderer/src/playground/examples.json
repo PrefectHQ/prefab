@@ -317,6 +317,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            \"{{ $event ? 'Thank you!' : 'Please accept to continue' }}\",\n        ),\n    )\n    Text(\n        \"{{ message | 'Check the box' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import (\n    Checkbox,\n    Column,\n)\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    Checkbox(label=\"Enabled option\")\n    Checkbox(label=\"Disabled option\", disabled=True)\n    Checkbox(label=\"Disabled & checked\", checked=True, disabled=True)"
   },
   {
@@ -752,6 +757,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with RadioGroup(\n        name=\"theme\",\n        on_change=SetState(\"choice\", \"You picked: {{ $event }}\"),\n    ):\n        Radio(value=\"light\", label=\"Light\")\n        Radio(value=\"dark\", label=\"Dark\")\n        Radio(value=\"system\", label=\"System\", checked=True)\n    Text(\n        \"{{ choice | 'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import (\n    Radio,\n    RadioGroup,\n)\n\nwith RadioGroup(name=\"plan\"):\n    Radio(value=\"free\", label=\"Free\", checked=True)\n    Radio(value=\"pro\", label=\"Pro\")\n    Radio(value=\"enterprise\", label=\"Enterprise\", disabled=True)"
   },
   {
@@ -847,6 +857,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", \"You chose: {{ $event }}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        \"{{ picked | 'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import (\n    Column,\n    P,\n    Separator,\n)\n\nwith Column():\n    P(\"Content above the separator\")\n    Separator(spacing=4)\n    P(\"Content below the separator\")"
   },
   {
@@ -877,7 +892,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Slider, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Slider(\n        value=50,\n        on_change=SetState(\"level\", \"{{ $event }}\"),\n    )\n    Text(\n        \"{{ level | 'Drag the slider' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Slider\n\nSlider(value=30, disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Heading, Slot\n\nset_initial_state(\n    info={\n        \"type\": \"Card\",\n        \"children\": [\n            {\n                \"type\": \"CardHeader\",\n                \"children\": [\n                    {\"type\": \"CardTitle\", \"content\": \"Heart of Gold\"},\n                    {\n                        \"type\": \"CardDescription\",\n                        \"content\": \"Infinite Improbability Drive equipped\",\n                    },\n                ],\n            }\n        ],\n    }\n)\n\nwith Column(gap=4):\n    Heading(\"Starship Registry\", level=3)\n    Slot(\"info\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Heading, Slot, Switch, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(\n    detail_card={\n        \"type\": \"Card\",\n        \"children\": [\n            {\n                \"type\": \"CardHeader\",\n                \"children\": [\n                    {\"type\": \"CardTitle\", \"content\": \"Heart of Gold\"},\n                    {\n                        \"type\": \"CardDescription\",\n                        \"content\": \"Infinite Improbability Drive equipped\",\n                    },\n                ],\n            }\n        ],\n    }\n)\n\nwith Column(gap=4):\n    Heading(\"Item Detail\", level=3)\n    Switch(\n        label=\"Show details\",\n        name=\"selected_item\",\n        on_change=SetState(\n            \"selected_item\",\n            \"{{ $event ? detail_card : null }}\",\n        ),\n    )\n    with Slot(\"selected_item\"):\n        Text(\n            \"Toggle the switch to load details\",\n            css_class=\"text-muted-foreground\",\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -908,6 +938,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=4):\n    Switch(label=\"Default size\", checked=True)\n    Switch(label=\"Small size\", size=\"sm\", checked=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            \"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}\",\n        ),\n    )\n    Text(\n        \"{{ status | 'Toggle the switch' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",

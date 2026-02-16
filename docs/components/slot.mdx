@@ -87,21 +87,46 @@ The layout defines *where* the dynamic content goes. The state (or an action tha
 
 ## Fallback Content
 
-Nest children inside `Slot` to define what shows when the state key is empty. This is useful for slots that start empty and get populated by a user action.
+Nest children inside `Slot` to define what shows when the state key is empty. Toggle the switch to see the transition — the ternary expression pulls the `detail_card` component tree from state when on, or `null` when off.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground py-8 text-center","type":"Text","content":"Select an item from the list to view details"}]}]}}`}>
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Switch","label":"Show details","checked":false,"size":"default","name":"selected_item","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","type":"Text","content":"Toggle the switch to load details"}]}]},"state":{"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}`}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Heading, Slot, Text
+from prefab_ui.components import Column, Heading, Slot, Switch, Text
+from prefab_ui.actions import SetState
 
-set_initial_state()
+set_initial_state(
+    detail_card={
+        "type": "Card",
+        "children": [
+            {
+                "type": "CardHeader",
+                "children": [
+                    {"type": "CardTitle", "content": "Heart of Gold"},
+                    {
+                        "type": "CardDescription",
+                        "content": "Infinite Improbability Drive equipped",
+                    },
+                ],
+            }
+        ],
+    }
+)
 
 with Column(gap=4):
     Heading("Item Detail", level=3)
+    Switch(
+        label="Show details",
+        name="selected_item",
+        on_change=SetState(
+            "selected_item",
+            "{{ $event ? detail_card : null }}",
+        ),
+    )
     with Slot("selected_item"):
         Text(
-            "Select an item from the list to view details",
-            css_class="text-muted-foreground py-8 text-center",
+            "Toggle the switch to load details",
+            css_class="text-muted-foreground",
         )
 ```
 ```json Protocol icon="brackets-curly"
@@ -116,17 +141,51 @@ with Column(gap=4):
         "level": 3
       },
       {
+        "type": "Switch",
+        "label": "Show details",
+        "checked": false,
+        "size": "default",
+        "name": "selected_item",
+        "disabled": false,
+        "required": false,
+        "onChange": {
+          "action": "setState",
+          "key": "selected_item",
+          "value": "{{ $event ? detail_card : null }}"
+        }
+      },
+      {
         "type": "Slot",
         "name": "selected_item",
         "children": [
           {
-            "cssClass": "text-muted-foreground py-8 text-center",
+            "cssClass": "text-muted-foreground",
             "type": "Text",
-            "content": "Select an item from the list to view details"
+            "content": "Toggle the switch to load details"
           }
         ]
       }
     ]
+  },
+  "state": {
+    "detail_card": {
+      "type": "Card",
+      "children": [
+        {
+          "type": "CardHeader",
+          "children": [
+            {
+              "type": "CardTitle",
+              "content": "Heart of Gold"
+            },
+            {
+              "type": "CardDescription",
+              "content": "Infinite Improbability Drive equipped"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
 ```

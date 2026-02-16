@@ -158,6 +158,60 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
+## With Actions
+
+The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
+
+<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ level | 'Drag the slider' }}"}]}}`}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Slider, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    Slider(
+        value=50,
+        on_change=SetState("level", "{{ $event }}"),
+    )
+    Text(
+        "{{ level | 'Drag the slider' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 50.0,
+        "disabled": false,
+        "onChange": {
+          "action": "setState",
+          "key": "level",
+          "value": "{{ $event }}"
+        }
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "type": "Text",
+        "content": "{{ level | 'Drag the slider' }}"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+<Tip>
+For simply displaying the slider's current value, [auto-binding with `name`](#displaying-the-value) is usually easier. Use `on_change` when you need to run custom logic like triggering a tool call or updating multiple state keys.
+</Tip>
+
 ## Disabled State
 
 <ComponentPreview auto json={`{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"disabled":true}}`}>
@@ -207,6 +261,10 @@ Slider(value=30, disabled=True)
 
 <ParamField body="disabled" type="bool" default="False">
   Whether the slider is non-interactive.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when the value changes. `$event` is the current numeric value.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
