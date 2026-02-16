@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from prefab_ui.app import PROTOCOL_VERSION, PrefabApp
 from prefab_ui.components import (
     Badge,
     Card,
@@ -13,7 +14,6 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.define import Define
-from prefab_ui.response import PROTOCOL_VERSION, UIResponse
 from prefab_ui.use import Use
 
 # ---------------------------------------------------------------------------
@@ -163,24 +163,24 @@ class TestUse:
 
 
 # ---------------------------------------------------------------------------
-# UIResponse integration
+# PrefabApp integration
 # ---------------------------------------------------------------------------
 
 
-class TestUIResponseDefs:
+class TestPrefabAppDefs:
     def test_defs_in_envelope(self) -> None:
         with Define("card") as d:
             Text("hello")
-        result = UIResponse(defs=[d]).to_json()
+        result = PrefabApp(defs=[d]).to_json()
         assert "defs" in result
         assert result["defs"] == {"card": {"type": "Text", "content": "hello"}}
 
     def test_no_defs_omits_key(self) -> None:
-        result = UIResponse().to_json()
+        result = PrefabApp().to_json()
         assert "defs" not in result
 
     def test_empty_defs_omits_key(self) -> None:
-        result = UIResponse(defs=[]).to_json()
+        result = PrefabApp(defs=[]).to_json()
         assert "defs" not in result
 
     def test_multiple_defs(self) -> None:
@@ -188,7 +188,7 @@ class TestUIResponseDefs:
             Text("A")
         with Define("b") as db:
             Text("B")
-        result = UIResponse(defs=[da, db]).to_json()
+        result = PrefabApp(defs=[da, db]).to_json()
         assert set(result["defs"]) == {"a", "b"}
 
 
@@ -208,7 +208,7 @@ def test_full_wire_format() -> None:
         Use("user-card", name="Alice", role="Engineer")
         Use("user-card", name="Bob", role="Designer")
 
-    result = UIResponse(view=layout, defs=[user_card]).to_json()
+    result = PrefabApp(view=layout, defs=[user_card]).to_json()
 
     expected: dict[str, Any] = {
         "version": PROTOCOL_VERSION,

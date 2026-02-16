@@ -20,7 +20,6 @@ Submodules:
 - ``prefab_ui.components`` — UI components (Button, Grid, Card, etc.)
 - ``prefab_ui.actions`` — state actions (SetState, AppendState, etc.)
 - ``prefab_ui.css`` — CSS helpers (Responsive, Hover, Md, etc.)
-- ``prefab_ui.response`` — UIResponse (deprecated alias for PrefabApp)
 - ``prefab_ui.define`` — Define (reusable component definitions)
 - ``prefab_ui.use`` — Use (component instantiation)
 """

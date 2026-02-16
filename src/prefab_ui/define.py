@@ -2,14 +2,14 @@
 
 A ``Define`` captures a component subtree as a named template that can be
 referenced with :class:`~prefab_ui.use.Use`. Definitions live outside the
-component tree and are passed to :class:`~prefab_ui.response.UIResponse`
+component tree and are passed to :class:`~prefab_ui.app.PrefabApp`
 via the ``defs`` parameter.
 
 Example::
 
     from prefab_ui.define import Define
     from prefab_ui.use import Use
-    from prefab_ui.response import UIResponse
+    from prefab_ui.app import PrefabApp
     from prefab_ui.components import Card, Column, Heading, Badge
 
     with Define("user-card") as user_card:
@@ -21,7 +21,7 @@ Example::
         Use("user-card", name="Alice", role="Engineer")
         Use("user-card", name="Bob", role="Designer")
 
-    UIResponse(view=layout, defs=[user_card])
+    PrefabApp(view=layout, defs=[user_card])
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ class Define(ContainerComponent):
 
     Define captures children via the context manager but does **not**
     attach itself to any parent container. Pass Define instances to
-    ``UIResponse(defs=[...])`` to include them in the wire format.
+    ``PrefabApp(defs=[...])`` to include them in the wire format.
 
     Args:
         name: Template name, referenced by :class:`~prefab_ui.use.Use`.
