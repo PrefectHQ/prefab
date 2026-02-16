@@ -8,6 +8,11 @@
  * 4. Handle actions (server tool calls, client state mutations)
  * 5. Re-render on new tool results or state changes
  *
+ * Supports two modes:
+ * - **MCP mode**: data arrives via ontoolresult from the host bridge
+ * - **Standalone mode**: data is baked into the HTML as a <script> tag
+ *   (e.g. when served via `prefab serve` or a plain HTTP server)
+ *
  * State model: the `state` key in structuredContent holds client-side state.
  * The model sees initial state via structuredContent; all subsequent mutations
  * (SetState, form inputs, CallTool result_key) are renderer-private and never
@@ -32,6 +37,30 @@ import { useStateStore } from "./state";
 /** Protocol versions this renderer understands. */
 const SUPPORTED_VERSIONS = new Set(["0.2"]);
 
+/** Read baked-in data from the HTML (standalone mode). */
+function readInitialData(): {
+  view: ComponentNode | null;
+  defs: Record<string, ComponentNode>;
+  state: Record<string, unknown>;
+} | null {
+  const el = document.getElementById("prefab:initial-data");
+  if (!el?.textContent) return null;
+  try {
+    const data = JSON.parse(el.textContent) as Record<string, unknown>;
+    return {
+      view: (data.view as ComponentNode) ?? null,
+      defs: (data.defs ?? {}) as Record<string, ComponentNode>,
+      state: (data.state ?? {}) as Record<string, unknown>,
+    };
+  } catch {
+    console.error("[Prefab] Failed to parse baked-in initial data");
+    return null;
+  }
+}
+
+// Parse baked-in data once before React mounts.
+const INITIAL = readInitialData();
+
 /** Apply host theme context (dark mode, CSS variables, fonts). */
 function applyTheme(ctx: McpUiHostContext) {
   if (ctx.theme) {
@@ -46,10 +75,19 @@ function applyTheme(ctx: McpUiHostContext) {
 }
 
 export function App() {
-  const [tree, setTree] = useState<ComponentNode | null>(null);
-  const [defs, setDefs] = useState<Record<string, ComponentNode>>({});
+  const [tree, setTree] = useState<ComponentNode | null>(INITIAL?.view ?? null);
+  const [defs, setDefs] = useState<Record<string, ComponentNode>>(
+    INITIAL?.defs ?? {},
+  );
   const state = useStateStore();
   const appRef = useRef<McpApp | null>(null);
+
+  // Initialize state store with baked-in data.
+  useEffect(() => {
+    if (INITIAL?.state) {
+      state.reset(INITIAL.state);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleToolResult = useCallback(
     (result: { structuredContent?: Record<string, unknown> }) => {
@@ -113,8 +151,8 @@ export function App() {
     }
   }, [isConnected, app]);
 
-  // Error state
-  if (error) {
+  // Error state — only fatal if we have no content to render
+  if (error && !tree) {
     return (
       <div className="p-4 text-destructive">
         <p className="font-medium">Connection error</p>

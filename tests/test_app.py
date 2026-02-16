@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
-from prefab_ui.app import PROTOCOL_VERSION, MCPPayload, PrefabApp
+from prefab_ui.app import PROTOCOL_VERSION, PrefabApp
 from prefab_ui.components import Column, Heading, Text
 
 
@@ -47,61 +49,76 @@ class TestPrefabAppValidation:
         assert app.state == {"name": "ok", "count": 0}
 
 
-class TestPrefabAppTextFallback:
-    def test_custom_text(self):
-        app = PrefabApp(text="Custom fallback")
-        assert app.text_fallback() == "Custom fallback"
-
-    def test_view_fallback(self):
+class TestPrefabAppHtml:
+    def test_produces_valid_html(self):
         app = PrefabApp(view=Text(content="hi"))
-        assert app.text_fallback() == "[UI content]"
+        html = app.html()
+        assert "<!doctype html>" in html.lower()
+        assert "<html" in html
+        assert '<div id="root"></div>' in html
 
-    def test_state_fallback(self):
-        app = PrefabApp(state={"hello": "world"})
-        text = app.text_fallback()
-        assert "hello" in text
-        assert "world" in text
+    def test_contains_baked_in_data(self):
+        app = PrefabApp(view=Text(content="hi"), state={"x": 1})
+        html = app.html()
+        assert '<script id="prefab:initial-data" type="application/json">' in html
+        # Parse the baked-in JSON to verify it matches to_json()
+        start = html.index('type="application/json">') + len('type="application/json">')
+        end = html.index("</script>", start)
+        baked = json.loads(html[start:end])
+        assert baked == app.to_json()
 
-    def test_empty_fallback(self):
+    def test_empty_app_produces_valid_html(self):
         app = PrefabApp()
-        assert app.text_fallback() == "[No content]"
+        html = app.html()
+        assert "<!doctype html>" in html.lower()
+        start = html.index('type="application/json">') + len('type="application/json">')
+        end = html.index("</script>", start)
+        baked = json.loads(html[start:end])
+        assert baked == {"version": PROTOCOL_VERSION}
+
+    def test_includes_stylesheets(self):
+        app = PrefabApp(
+            view=Text(content="hi"),
+            stylesheets=["https://fonts.googleapis.com/css2?family=Inter"],
+        )
+        html = app.html()
+        assert (
+            '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter">'
+            in html
+        )
+
+    def test_includes_scripts(self):
+        app = PrefabApp(
+            view=Text(content="hi"),
+            scripts=["https://cdn.example.com/chart.js"],
+        )
+        html = app.html()
+        assert '<script src="https://cdn.example.com/chart.js"></script>' in html
+
+    def test_escapes_script_closing_tag_in_json(self):
+        app = PrefabApp(state={"html": "</script>"})
+        html = app.html()
+        # The raw </script> must be escaped so it doesn't break the HTML
+        assert "</script></script>" not in html
+        assert r"<\/script>" in html
 
 
-class TestPrefabAppForMcp:
-    def test_returns_mcp_payload(self):
-        app = PrefabApp(view=Text(content="hi"), state={"x": 1})
-        payload = app.for_mcp()
-        assert isinstance(payload, MCPPayload)
-
-    def test_payload_has_html(self):
+class TestPrefabAppCsp:
+    def test_baseline_csp(self):
         app = PrefabApp(view=Text(content="hi"))
-        payload = app.for_mcp()
-        assert isinstance(payload.html, str)
-        assert len(payload.html) > 0
-        assert "<html" in payload.html.lower() or "<!doctype" in payload.html.lower()
+        csp = app.csp()
+        assert isinstance(csp, dict)
+        assert "resource_domains" in csp
 
-    def test_payload_structured_content_matches_to_json(self):
-        app = PrefabApp(view=Text(content="hi"), state={"x": 1})
-        payload = app.for_mcp()
-        assert payload.structured_content == app.to_json()
-
-    def test_payload_csp_baseline(self):
-        app = PrefabApp(view=Text(content="hi"))
-        payload = app.for_mcp()
-        assert isinstance(payload.csp, dict)
-
-    def test_connect_domains_in_csp(self):
+    def test_connect_domains(self):
         app = PrefabApp(
             view=Text(content="hi"),
             connect_domains=["api.example.com", "data.example.com"],
         )
-        payload = app.for_mcp()
-        assert payload.csp["connect_domains"] == [
-            "api.example.com",
-            "data.example.com",
-        ]
+        csp = app.csp()
+        assert csp["connect_domains"] == ["api.example.com", "data.example.com"]
 
-    def test_stylesheet_origins_in_csp(self):
+    def test_stylesheet_origins(self):
         app = PrefabApp(
             view=Text(content="hi"),
             stylesheets=[
@@ -110,23 +127,23 @@ class TestPrefabAppForMcp:
                 "https://cdn.example.com/styles.css",
             ],
         )
-        payload = app.for_mcp()
-        origins = payload.csp["style_domains"]
+        csp = app.csp()
+        origins = csp["style_domains"]
         assert "https://fonts.googleapis.com" in origins
         assert "https://cdn.example.com" in origins
 
-    def test_script_origins_in_csp(self):
+    def test_script_origins(self):
         app = PrefabApp(
             view=Text(content="hi"),
             scripts=["https://cdn.example.com/chart.js"],
         )
-        payload = app.for_mcp()
-        assert "https://cdn.example.com" in payload.csp["script_domains"]
+        csp = app.csp()
+        assert "https://cdn.example.com" in csp["script_domains"]
 
 
-class TestPrefabAppNewFields:
-    """Verify the new fields (stylesheets, scripts, connect_domains) don't
-    leak into the wire format — they're deployment config, not protocol."""
+class TestPrefabAppWireFormatIsolation:
+    """Deployment config (stylesheets, scripts, connect_domains) stays out
+    of the wire format — it only affects HTML and CSP."""
 
     def test_stylesheets_not_in_wire_format(self):
         app = PrefabApp(

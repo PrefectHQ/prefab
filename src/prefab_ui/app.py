@@ -1,8 +1,7 @@
 """PrefabApp — the central application object for Prefab.
 
-Describes what to render, what state to initialize, what actions to fire on
-mount, and what external assets to load. Transport-agnostic — the same
-PrefabApp can be served via MCP, REST, or the CLI.
+Describes what to render, what state to initialize, and what external
+assets to load.  Pure data model — transport-agnostic.
 
 Usage::
 
@@ -14,60 +13,41 @@ Usage::
         state={"users": users},
     )
 
-For MCP delivery::
-
-    payload = app.for_mcp()
-    # payload.html — renderer HTML (empty shell)
-    # payload.csp — CSP domains for sandbox config
-    # payload.structured_content — wire format for structuredContent
+    html = app.html()      # complete self-contained page
+    csp = app.csp()        # CSP domains for sandboxed delivery
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import json
 from typing import Any
-from urllib.parse import urlparse
 
 import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
+from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
+
 PROTOCOL_VERSION = "0.2"
 
-
-def _get_origin(url: str) -> str:
-    """Extract the origin (scheme + host + port) from a URL."""
-    parsed = urlparse(url)
-    origin = f"{parsed.scheme}://{parsed.hostname}"
-    if parsed.port:
-        origin += f":{parsed.port}"
-    return origin
-
-
-@dataclass
-class MCPPayload:
-    """Payload returned by ``PrefabApp.for_mcp()``.
-
-    Contains everything FastMCP needs to serve a Prefab app:
-
-    - ``html`` — self-contained renderer HTML (empty shell, no data baked in)
-    - ``csp`` — CSP domains for the sandbox Content-Security-Policy
-    - ``structured_content`` — the Prefab wire format (view, state, etc.)
-    """
-
-    html: str
-    csp: dict[str, list[str]]
-    structured_content: dict[str, Any]
+_PAGE_TEMPLATE = """\
+<!doctype html>
+<html lang="en">
+<head>
+{head}
+</head>
+<body style="max-width:64rem;margin:0 auto;padding:2rem">
+  <div id="root"></div>
+  <script id="prefab:initial-data" type="application/json">{data}</script>
+</body>
+</html>"""
 
 
 class PrefabApp(BaseModel):
     """A complete Prefab application.
 
-    Describes the view, initial state, lifecycle actions, and deployment
-    config. Transport-agnostic — ``for_mcp()`` packages it for MCP,
-    ``to_html()`` (future) produces a self-contained HTML page.
-
-    Tools return a PrefabApp (or a bare Component, which gets auto-wrapped).
-    Mini-apps and full apps are the same object.
+    Describes the view, initial state, reusable component definitions,
+    and external assets.  Use ``html()`` to produce a self-contained
+    HTML page, or ``to_json()`` for the wire-format envelope.
     """
 
     view: Any | None = Field(default=None, description="Component tree to render")
@@ -90,10 +70,6 @@ class PrefabApp(BaseModel):
     connect_domains: list[str] | None = Field(
         default=None,
         description="Domains to allow in CSP connect-src (for Fetch actions)",
-    )
-    text: str | None = Field(
-        default=None,
-        description="Text fallback for non-UI hosts",
     )
 
     model_config = {"arbitrary_types_allowed": True}
@@ -125,40 +101,49 @@ class PrefabApp(BaseModel):
 
         return result
 
-    def for_mcp(self) -> MCPPayload:
-        """Package this app for MCP delivery.
+    def html(self) -> str:
+        """Produce a complete, self-contained HTML page.
 
-        Returns an ``MCPPayload`` containing the renderer HTML (empty shell),
-        CSP domains, and structured content. FastMCP consumes this directly —
-        it never needs to know about Prefab internals.
+        The page includes the Prefab renderer (JS/CSS), any user-specified
+        stylesheets and scripts, and the application data baked in as a
+        JSON ``<script>`` tag.
         """
-        from prefab_ui.renderer import get_renderer_csp, get_renderer_html
+        head_parts = [get_renderer_head()]
 
-        csp = get_renderer_csp()
+        if self.stylesheets:
+            for url in self.stylesheets:
+                head_parts.append(f'  <link rel="stylesheet" href="{url}">')
+
+        if self.scripts:
+            for url in self.scripts:
+                head_parts.append(f'  <script src="{url}"></script>')
+
+        data_json = json.dumps(self.to_json(), separators=(",", ":"))
+        # Escape </ to prevent premature closing of the script tag
+        safe_json = data_json.replace("</", r"<\/")
+
+        return _PAGE_TEMPLATE.format(
+            head="\n".join(head_parts),
+            data=safe_json,
+        )
+
+    def csp(self) -> dict[str, list[str]]:
+        """Compute CSP domains from the app's asset configuration.
+
+        Merges the renderer's base CSP with origins extracted from
+        ``stylesheets``, ``scripts``, and ``connect_domains``.
+        """
+        result = get_renderer_csp()
 
         if self.connect_domains:
-            csp["connect_domains"] = list(self.connect_domains)
+            result["connect_domains"] = list(self.connect_domains)
 
         if self.stylesheets:
             origins = sorted({_get_origin(url) for url in self.stylesheets})
-            csp["style_domains"] = origins
+            result["style_domains"] = origins
 
         if self.scripts:
             origins = sorted({_get_origin(url) for url in self.scripts})
-            csp["script_domains"] = origins
+            result["script_domains"] = origins
 
-        return MCPPayload(
-            html=get_renderer_html(),
-            csp=csp,
-            structured_content=self.to_json(),
-        )
-
-    def text_fallback(self) -> str:
-        """Generate a plain-text fallback for hosts that don't render UIs."""
-        if self.text is not None:
-            return self.text
-        if self.view is not None:
-            return "[UI content]"
-        if self.state is not None:
-            return str(pydantic_core.to_jsonable_python(self.state))
-        return "[No content]"
+        return result
