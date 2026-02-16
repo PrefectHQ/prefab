@@ -2,7 +2,7 @@
 
 <img src="docs/assets/banner.png" alt="Prefab" width="700">
 
-**The agentic frontend framework that even humans can use.**
+**The agentic frontend framework even a human can use.**
 
 *Made with 💙 by [Prefect](https://www.prefect.io/)*
 
