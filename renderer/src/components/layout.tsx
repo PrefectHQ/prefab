@@ -41,7 +41,7 @@ export function Grid({
 }: GridProps) {
   const style = minColumnWidth
     ? {
-        gridTemplateColumns: `repeat(auto-fill, minmax(${minColumnWidth}, 1fr))`,
+        gridTemplateColumns: `repeat(auto-fit, minmax(${minColumnWidth}, 1fr))`,
       }
     : undefined;
   return (

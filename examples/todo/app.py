@@ -26,7 +26,7 @@ from prefab_ui.components import (
 
 # -- View --
 
-with Grid(min_column_width="12rem", gap=6, align="start") as view:
+with Grid(min_column_width="18rem", gap=6, align="start") as view:
     with ForEach(
         "groups",
         let={"gi": "{{ $index }}", "show_done": "{{ $item.show_done }}"},
