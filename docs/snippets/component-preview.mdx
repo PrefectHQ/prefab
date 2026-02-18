@@ -1,4 +1,4 @@
-export const ComponentPreview = ({ json, height, resizable, children }) => {
+export const ComponentPreview = ({ json, height, resizable, bare, children }) => {
   const hostRef = React.useRef(null);
   const handleRef = React.useRef(null);
   const cardRef = React.useRef(null);
@@ -19,6 +19,10 @@ export const ComponentPreview = ({ json, height, resizable, children }) => {
       if (!window.__prefab || !host) return;
       var dark = document.documentElement.classList.contains("dark");
       handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
+      if (bare && host.shadowRoot) {
+        var m = host.shadowRoot.querySelector('[data-prefab-mount]');
+        if (m) m.style.background = 'transparent';
+      }
     }
 
     if (window.__prefab) {
@@ -77,6 +81,10 @@ export const ComponentPreview = ({ json, height, resizable, children }) => {
 
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
+  }
+
+  if (bare) {
+    return <div ref={hostRef} />;
   }
 
   if (resizable) {

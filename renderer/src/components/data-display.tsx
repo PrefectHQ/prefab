@@ -117,7 +117,7 @@ export function PrefabDataTable({
         </div>
       )}
 
-      <Table className="table-fixed">
+      <Table>
         {caption && <TableCaption>{caption}</TableCaption>}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

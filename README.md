@@ -10,54 +10,31 @@
 [![Tests](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml)
 [![License](https://img.shields.io/github/license/prefecthq/prefab.svg)](https://github.com/prefecthq/prefab/blob/main/LICENSE)
 
+[Docs](https://prefab.prefect.io) · [Playground](https://prefab.prefect.io/playground) · [GitHub](https://github.com/PrefectHQ/prefab)
+
 </div>
 
 ---
 
-Prefab is a JSON component format that renders to real interactive frontends. Describe a UI — from an MCP server, a ChatGPT app, an AI agent, or a Python script — and Prefab renders it as a live React application with forms, tables, state management, and real-time interactivity.
-
-For human authors, there's a Python DSL:
+Prefab is a JSON component format that renders to real interactive frontends. Describe a UI in Python — or raw JSON from any source — and Prefab renders it as a live React application with forms, tables, state management, and real-time interactivity. No JavaScript required.
 
 ```python
-from prefab_ui import UIResponse, Column, Heading, Text
-from prefab_ui.components import Card, CardContent, Input, Button, Row
+from prefab_ui.components import Card, CardContent, Column, H3, Input, Button, Muted
 from prefab_ui.actions import ToolCall
 
-def search_dashboard(query: str = "") -> UIResponse:
-
-    with Column() as view:
-        Heading("Search")
-
-        with Row():
-            Input(name="query", placeholder="Search...")
+with Card() as view:
+    with CardContent():
+        with Column(gap=3):
+            H3("Hello, {{ name }}!")
+            Muted("Type below and watch this update in real time.")
+            Input(name="name", placeholder="Your name...")
             Button(
-                "Go",
-                on_click=ToolCall(
-                    name="search",
-                    arguments={"q": "{{ query }}"},
-                    result_key="results",
-                ),
+                "Search",
+                on_click=ToolCall("search", arguments={"query": "{{ name }}"}),
             )
-
-        with Card():
-            with CardContent():
-                Text("{{ results.length }} results found")
-
-    return UIResponse(
-        state={"query": query, "results": []},
-        view=view,
-    )
 ```
 
-The Python side produces JSON. The React side renders it. The transport between them is your choice — MCP, REST, or anything else that can deliver a JSON payload.
-
-## Why Prefab
-
-Every frontend framework assumes a human wrote the code and a server is running. Prefab assumes neither. It's a JSON component format that anything can target: an MCP server, a ChatGPT app, an AI agent mid-conversation, or a Python developer who doesn't want to touch JavaScript.
-
-The renderer compiles that JSON to real React — not a toy dashboard, not a Streamlit approximation, but production UI components with state management, forms, data tables, and declarative interactivity. And it runs as a self-contained static bundle, no backend required at runtime.
-
-Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system and has been extracted as a standalone library so it can serve any backend. It ships as two packages: `prefab-ui` (Python, on PyPI) for building component trees, and `@prefecthq/prefab-ui` (TypeScript, on npm) for rendering them.
+The Python side produces JSON. A React renderer turns it into a live UI. The transport between them is your choice — MCP, REST, or anything else that can deliver a JSON payload.
 
 ## Installation
 
@@ -65,18 +42,24 @@ Prefab originated as [FastMCP](https://github.com/jlowin/fastmcp)'s Apps system 
 pip install prefab-ui
 ```
 
-Requires Python 3.10+. The only runtime dependency is Pydantic.
+Requires Python 3.10+.
+
+## How It Works
+
+1. Build a component tree in Python (or raw JSON from any source)
+2. The tree serializes to Prefab's JSON wire format
+3. A React renderer compiles the JSON into a live interface
+
+State flows through `{{ templates }}`. When you write `{{ query }}`, the renderer interpolates the current value from client-side state. Named form controls sync automatically — `Input(name="city")` keeps `{{ city }}` up to date on every keystroke. Actions like `ToolCall` and `SetState` drive interactivity without custom JavaScript.
 
 ## Components
 
-Prefab includes 35+ components that map to familiar UI primitives: layout (`Column`, `Row`, `Grid`), typography (`Heading`, `Text`, `Markdown`), forms (`Input`, `Select`, `Checkbox`, `Form`), data display (`Table`, `DataTable`, `Card`, `Badge`), and interactive elements (`Button`, `Dialog`, `Tabs`, `Accordion`).
-
-Components nest using Python's context manager protocol:
+35+ components covering layout, typography, forms, data display, and interactive elements. Containers nest with Python context managers:
 
 ```python
 from prefab_ui.components import Card, CardHeader, CardTitle, CardContent, Column, Text, Badge
 
-with Card() as card:
+with Card():
     with CardHeader():
         CardTitle("User Profile")
     with CardContent():
@@ -85,7 +68,7 @@ with Card() as card:
             Badge("{{ user.role }}", variant="secondary")
 ```
 
-Pydantic models generate forms automatically:
+Pydantic models generate forms automatically — constraints like `min_length` and `ge` become client-side validation:
 
 ```python
 from pydantic import BaseModel, Field
@@ -97,98 +80,41 @@ class SignupForm(BaseModel):
     name: str = Field(min_length=2, max_length=50)
     age: int = Field(ge=18, le=120)
 
-form = Form.from_model(SignupForm, on_submit=ToolCall(name="create_user"))
+Form.from_model(SignupForm, on_submit=ToolCall("create_user"))
 ```
-
-Constraints from the Pydantic model (`min_length`, `ge`, etc.) are automatically translated into client-side validation rules.
 
 ## Actions
 
-Actions define what happens when users interact with components. They're declarative — you describe the intent, and the renderer executes it.
-
-**Generic actions** work with any transport:
-
-- `SetState` / `ToggleState` — update client-side state
-- `ShowToast` — display a notification
-- `OpenLink` — navigate to a URL
-
-**MCP actions** communicate with an MCP server:
-
-- `ToolCall` — invoke a server tool and store the result
-- `SendMessage` — send a message to the model
-- `UpdateContext` — refresh the current view
-
-Actions support lifecycle callbacks and chaining:
+Actions define what happens on interaction — state updates, server calls, navigation, notifications:
 
 ```python
-Button(
-    "Delete",
-    on_click=ToolCall(
-        name="delete_item",
-        arguments={"id": "{{ item.id }}"},
-        on_success=ShowToast(title="Deleted", variant="success"),
+from prefab_ui.components import Button
+from prefab_ui.actions import SetState, ToolCall, ShowToast
+
+Button("Save", on_click=[
+    SetState("saving", True),
+    ToolCall(
+        "save_data",
+        arguments={"item": "{{ item }}"},
+        on_success=ShowToast(title="Saved"),
         on_error=ShowToast(title="Failed", variant="destructive"),
     ),
-)
+    SetState("saving", False),
+])
 ```
 
-## State and Templates
+## Documentation
 
-State is declared in `UIResponse` and referenced in components via `{{ template }}` syntax. The renderer interpolates state values at render time, so the UI stays reactive as state changes through actions.
+Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/playground) where you can try components live.
 
-```python
-UIResponse(
-    state={"count": 0},
-    view=Column(
-        Text("Count: {{ count }}"),
-        Button("+1", on_click=SetState(key="count", value="{{ count + 1 }}")),
-    ),
-)
-```
-
-## Testing
-
-Prefab includes a `Simulator` for testing interactive UIs without a browser. It executes actions, tracks state, and lets you query the rendered component tree:
-
-```python
-from prefab_ui.testing import ActionResult, Simulator
-
-async def my_handler(name: str, arguments: dict) -> ActionResult:
-    if name == "search":
-        return ActionResult(content={"results": [{"name": "Alice"}]})
-    return ActionResult(is_error=True, error_text=f"Unknown: {name}")
-
-sim = Simulator(my_handler)
-await sim.invoke("render_search", {"query": "test"})
-
-search_input = sim.find("Input", name="query")
-await sim.set_value(search_input, "Alice")
-await sim.click(sim.find("Button"))
-
-assert sim.state["results"][0]["name"] == "Alice"
-```
-
-## Development
+## Contributing
 
 ```bash
-git clone https://github.com/prefecthq/prefab
-cd prefab
-uv sync                          # Install Python dependencies
-uv run pytest tests              # Run Python tests
-cd renderer && npm install       # Install renderer dependencies
-npm test                         # Run renderer tests
-npm run dev                      # Start renderer dev server
-```
-
-The justfile has shortcuts for common tasks:
-
-```bash
-just test                        # Run Python tests
-just lint                        # Run all pre-commit checks
-just typecheck                   # Run ty type checker
-just docs                        # Start docs server with live renderer
+git clone https://github.com/prefecthq/prefab && cd prefab
+uv sync
+uv run pytest
 ```
 
 ## License
 
-Prefab is licensed under the Apache 2.0 license. See the [`LICENSE`](LICENSE) file for details.
+Apache 2.0 — see [LICENSE](LICENSE) for details.

@@ -30,6 +30,16 @@ _WRAPPING_RE = re.compile(
 # Extract attributes from the opening tag
 _HEIGHT_RE = re.compile(r'height="([^"]*)"')
 _HIDE_JSON_RE = re.compile(r"\bhide-json\b")
+_BARE_RE = re.compile(r"\bbare\b")
+_ID_RE = re.compile(r'id="([^"]*)"')
+
+# Match <ComponentCode for="..." /> tags (self-closing or with prior generated content)
+_COMPONENT_CODE_RE = re.compile(
+    r"<ComponentCode\s+for=\"([^\"]*)\"[^/]*/>"
+    r"|"
+    r"(\{/\* ComponentCode:(\w+) \*/\}).*?(\{/\* /ComponentCode \*/\})",
+    re.DOTALL,
+)
 
 # Match ```python ... ``` code block inside the tag (full block including fences)
 _PYTHON_BLOCK_RE = re.compile(
@@ -130,12 +140,16 @@ def _rebuild_block(
     closing_tag: str,
     *,
     shared_ns: dict[str, object] | None = None,
+    code_registry: dict[str, tuple[str, str]] | None = None,
 ) -> str:
     """Rebuild a ComponentPreview block from its opening tag and interior."""
     # Extract attributes from the opening tag
     height_m = _HEIGHT_RE.search(opening_tag)
     height = height_m.group(1) if height_m else None
     hide_json = bool(_HIDE_JSON_RE.search(opening_tag))
+    bare = bool(_BARE_RE.search(opening_tag))
+    id_m = _ID_RE.search(opening_tag)
+    block_id = id_m.group(1) if id_m else None
 
     # Find the Python code block (the authored source)
     python_m = _PYTHON_BLOCK_RE.search(interior)
@@ -155,14 +169,20 @@ def _rebuild_block(
         python_source, shared_ns=shared_ns
     )
 
+    # Stash code + JSON for ComponentCode references
+    if block_id and code_registry is not None:
+        code_registry[block_id] = (python_block, pretty_json)
+
     # Build the opening tag with json prop (preserving authored attributes)
     escaped_json = _escape_template_literal(compact_json)
     height_attr = f' height="{height}"' if height else ""
     resizable_attr = " resizable" if "resizable" in opening_tag else ""
-    new_opening = f"<ComponentPreview{resizable_attr} auto{height_attr} json={{`{escaped_json}`}}>"
+    bare_attr = " bare" if bare else ""
+    id_attr = f' id="{block_id}"' if block_id else ""
+    new_opening = f"<ComponentPreview{resizable_attr} auto{bare_attr}{id_attr}{height_attr} json={{`{escaped_json}`}}>"
 
     # Build the interior
-    if hide_json:
+    if bare or hide_json:
         new_interior = f"\n{python_block}\n"
     else:
         expandable = " expandable" if "expandable" in python_fence_open else ""
@@ -187,6 +207,7 @@ def process_file(path: Path) -> bool:
     # replacements in reverse order so offsets stay valid.
     replacements: list[tuple[re.Match[str], str]] = []
     shared_ns: dict[str, object] = {}
+    code_registry: dict[str, tuple[str, str]] = {}
     for match in matches:
         opening_tag = match.group(1)
         interior = match.group(2)
@@ -194,7 +215,11 @@ def process_file(path: Path) -> bool:
 
         try:
             replacement = _rebuild_block(
-                opening_tag, interior, closing_tag, shared_ns=shared_ns
+                opening_tag,
+                interior,
+                closing_tag,
+                shared_ns=shared_ns,
+                code_registry=code_registry,
             )
             replacements.append((match, replacement))
         except Exception as e:
@@ -203,6 +228,24 @@ def process_file(path: Path) -> bool:
 
     for match, replacement in reversed(replacements):
         content = content[: match.start()] + replacement + content[match.end() :]
+
+    # Replace <ComponentCode for="id" /> or previously generated markers
+    def _replace_code_ref(m: re.Match[str]) -> str:
+        # Group 1 = self-closing tag id, Group 3 = marker-wrapped id
+        ref_id = m.group(1) or m.group(3)
+        if ref_id not in code_registry:
+            print(f"  WARNING: ComponentCode references unknown id '{ref_id}'")
+            return m.group(0)
+        python_block, pretty_json = code_registry[ref_id]
+        json_block = (
+            f'```json Protocol icon="brackets-curly" expandable\n{pretty_json}\n```'
+        )
+        code_group = f"<CodeGroup>\n{python_block}\n{json_block}\n</CodeGroup>"
+        return (
+            f"{{/* ComponentCode:{ref_id} */}}\n{code_group}\n{{/* /ComponentCode */}}"
+        )
+
+    content = _COMPONENT_CODE_RE.sub(_replace_code_ref, content)
 
     if content != original:
         path.write_text(content)
