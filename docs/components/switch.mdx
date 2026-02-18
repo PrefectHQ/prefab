@@ -10,7 +10,7 @@ Switches provide a visual toggle for binary states, offering an alternative to c
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"view":{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false}}`}>
+<ComponentPreview json={{"view": {"type": "Switch", "label": "Enable notifications", "checked": false, "size": "default", "disabled": false, "required": false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -34,7 +34,7 @@ Switch(label="Enable notifications")
 
 ## Checked State
 
-<ComponentPreview auto json={`{"view":{"type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false}}`}>
+<ComponentPreview json={{"view": {"type": "Switch", "label": "Dark mode", "checked": true, "size": "default", "disabled": false, "required": false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -60,7 +60,7 @@ Switch(label="Dark mode", checked=True)
 
 Switches come in two sizes:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-4", "type": "Column", "children": [{"type": "Switch", "label": "Default size", "checked": true, "size": "default", "disabled": false, "required": false}, {"type": "Switch", "label": "Small size", "checked": true, "size": "sm", "disabled": false, "required": false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -105,7 +105,7 @@ with Column(gap=4):
 
 The `on_change` parameter runs actions when the switch is toggled. The `$event` variable is `true` when switched on, `false` when off. Here, toggling the switch updates a separate status message:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"notifications","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ status | 'Toggle the switch' }}"}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-4", "type": "Column", "children": [{"type": "Switch", "label": "Enable notifications", "checked": false, "size": "default", "name": "notifications", "disabled": false, "required": false, "onChange": {"action": "setState", "key": "status", "value": "{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}}, {"cssClass": "text-muted-foreground", "type": "Text", "content": "{{ status | 'Toggle the switch' }}"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Switch, Text
@@ -159,7 +159,7 @@ with Column(gap=4):
 
 ## Disabled State
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"type": "Switch", "label": "Enabled switch", "checked": false, "size": "default", "disabled": false, "required": false}, {"type": "Switch", "label": "Disabled off", "checked": false, "size": "default", "disabled": true, "required": false}, {"type": "Switch", "label": "Disabled on", "checked": true, "size": "default", "disabled": true, "required": false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

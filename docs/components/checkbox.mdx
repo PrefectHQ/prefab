@@ -10,7 +10,7 @@ Checkboxes let users select one or more options from a set.
 
 ## Basic Usage
 
-<ComponentPreview auto json={`{"view":{"type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false}}`}>
+<ComponentPreview json={{"view": {"type": "Checkbox", "label": "Accept terms and conditions", "checked": false, "disabled": false, "required": false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -33,7 +33,7 @@ Checkbox(label="Accept terms and conditions")
 
 ## Checked State
 
-<ComponentPreview auto json={`{"view":{"type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false}}`}>
+<ComponentPreview json={{"view": {"type": "Checkbox", "label": "Subscribe to newsletter", "checked": true, "disabled": false, "required": false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -56,7 +56,7 @@ Checkbox(label="Subscribe to newsletter", checked=True)
 
 ## Multiple Checkboxes
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-3 w-fit mx-auto", "type": "Column", "children": [{"type": "Checkbox", "label": "Email notifications", "checked": true, "disabled": false, "required": false}, {"type": "Checkbox", "label": "SMS notifications", "checked": false, "disabled": false, "required": false}, {"type": "Checkbox", "label": "Push notifications", "checked": true, "disabled": false, "required": false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -107,7 +107,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Checkbox","label":"Accept terms","checked":false,"name":"accepted","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ message | 'Check the box' }}"}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-4", "type": "Column", "children": [{"type": "Checkbox", "label": "Accept terms", "checked": false, "name": "accepted", "disabled": false, "required": false, "onChange": {"action": "setState", "key": "message", "value": "{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}}, {"cssClass": "text-muted-foreground", "type": "Text", "content": "{{ message | 'Check the box' }}"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Text
@@ -160,7 +160,7 @@ with Column(gap=4):
 
 ## With Disabled State
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]}}`}>
+<ComponentPreview json={{"view": {"cssClass": "gap-3 w-fit mx-auto", "type": "Column", "children": [{"type": "Checkbox", "label": "Enabled option", "checked": false, "disabled": false, "required": false}, {"type": "Checkbox", "label": "Disabled option", "checked": false, "disabled": true, "required": false}, {"type": "Checkbox", "label": "Disabled & checked", "checked": true, "disabled": true, "required": false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

@@ -1,8 +1,12 @@
 <div align="center">
 
-<img src="docs/assets/banner.png" alt="Prefab" width="700">
+# Prefab 🎨
+
+<img src="docs/assets/showcase.png" alt="Prefab" width="700">
 
 **The agentic frontend framework even a human can use.**
+
+[This is interactive on the docs site.](https://prefab.prefect.io/docs/welcome)
 
 *Made with 💙 by [Prefect](https://www.prefect.io/)*
 
@@ -16,25 +20,33 @@
 
 ---
 
-Prefab is a JSON component format that renders to real interactive frontends. Describe a UI in Python — or raw JSON from any source — and Prefab renders it as a live React application with forms, tables, state management, and real-time interactivity. No JavaScript required.
+Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity with both client-side state and server-side actions — and a bundled React renderer turns that JSON into a self-contained application. You (or your human) never have to touch JavaScript, a build system, or a running server.
+
+🚧 *Prefab is in early development. The API is unstable and likely to change.* 🚧
+
+<div align="center">
+<img src="docs/assets/hello-world-card.png" alt="Hello world card" width="400">
+</div>
+</br>
+
+This card has a live-updating heading, a text input bound to client-side state, and badges — all from a few lines of Python. Try an interactive version [in the Prefab docs](https://prefab.prefect.io/docs/welcome).
 
 ```python
-from prefab_ui.components import Card, CardContent, Column, H3, Input, Button, Muted
-from prefab_ui.actions import ToolCall
+from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
 
-with Card() as view:
+with Card():
     with CardContent():
         with Column(gap=3):
             H3("Hello, {{ name }}!")
             Muted("Type below and watch this update in real time.")
             Input(name="name", placeholder="Your name...")
-            Button(
-                "Search",
-                on_click=ToolCall("search", arguments={"query": "{{ name }}"}),
-            )
+    with CardFooter():
+        with Row(gap=2):
+            Badge("Name: {{ name }}", variant="default")
+            Badge("Prefab", variant="success")
 ```
 
-The Python side produces JSON. A React renderer turns it into a live UI. The transport between them is your choice — MCP, REST, or anything else that can deliver a JSON payload.
+Since everything compiles to JSON, any backend can produce a Prefab interface: MCP servers, AI agents, REST APIs, or standalone scripts.
 
 ## Installation
 
@@ -47,8 +59,8 @@ Requires Python 3.10+.
 ## How It Works
 
 1. Build a component tree in Python (or raw JSON from any source)
-2. The tree serializes to Prefab's JSON wire format
-3. A React renderer compiles the JSON into a live interface
+2. The tree compiles to Prefab's JSON format
+3. A bundled React renderer turns the JSON into a live interface
 
 State flows through `{{ templates }}`. When you write `{{ query }}`, the renderer interpolates the current value from client-side state. Named form controls sync automatically — `Input(name="city")` keeps `{{ city }}` up to date on every keystroke. Actions like `ToolCall` and `SetState` drive interactivity without custom JavaScript.
 

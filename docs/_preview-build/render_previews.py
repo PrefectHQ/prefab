@@ -1,13 +1,9 @@
 """Auto-render ComponentPreview content from Python code blocks.
 
-Scans MDX files for wrapping ``<ComponentPreview auto>...</ComponentPreview>``
-tags. For each one, extracts the Python code block (the authored source),
-executes it, serializes the component tree to JSON, and rebuilds the tag
-interior as a CodeGroup with Python + JSON tabs.
-
-The Python code block is the only authored content inside ComponentPreview.
-Everything else (CodeGroup, JSON tab, json prop) is derived and regenerated
-on every run.
+Scans MDX files for ``<ComponentPreview>...</ComponentPreview>`` tags that
+contain Python code blocks.  Executes each snippet, serializes the component
+tree to JSON, and rewrites the tag with an inline ``json`` prop so the
+ComponentPreview React component can render it immediately.
 
 Run via: uv run docs/_preview-build/render_previews.py
 """
@@ -21,9 +17,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-# Match wrapping <ComponentPreview auto ...>...</ComponentPreview>
+# Match <ComponentPreview ...>...</ComponentPreview>
 _WRAPPING_RE = re.compile(
-    r"(<ComponentPreview\s+auto\b[^>]*>)(.*?)(</ComponentPreview>)",
+    r"(<ComponentPreview\b[^>]*>)(.*?)(</ComponentPreview>)",
     re.DOTALL,
 )
 
@@ -52,11 +48,8 @@ def _execute_and_serialize(
     source: str,
     *,
     shared_ns: dict[str, object] | None = None,
-) -> tuple[str, str]:
-    """Execute a Python snippet and return (compact_json, pretty_json).
-
-    compact_json is for the iframe preview prop (no whitespace).
-    pretty_json is for the JSON tab in CodeGroup (human-readable).
+) -> str:
+    """Execute a Python snippet and return pretty-printed JSON.
 
     If *shared_ns* is provided, names defined by the snippet (imports,
     variables) are written back into it so later snippets in the same
@@ -121,17 +114,7 @@ def _execute_and_serialize(
     if initial_state:
         envelope["state"] = initial_state
 
-    pretty = json.dumps(envelope, indent=2)
-    compact = json.dumps(envelope, separators=(",", ":"))
-
-    return compact, pretty
-
-
-def _escape_template_literal(s: str) -> str:
-    """Escape a string for embedding in a JS template literal (`...`)."""
-    s = s.replace("\\", "\\\\")
-    s = s.replace("`", "\\`")
-    return s
+    return json.dumps(envelope, indent=2)
 
 
 def _rebuild_block(
@@ -165,30 +148,33 @@ def _rebuild_block(
     python_block = python_fence_open + python_source + python_fence_close
 
     # Execute the Python and get JSON
-    compact_json, pretty_json = _execute_and_serialize(
-        python_source, shared_ns=shared_ns
-    )
+    pretty_json = _execute_and_serialize(python_source, shared_ns=shared_ns)
 
     # Stash code + JSON for ComponentCode references
     if block_id and code_registry is not None:
         code_registry[block_id] = (python_block, pretty_json)
 
-    # Build the opening tag with json prop (preserving authored attributes)
-    escaped_json = _escape_template_literal(compact_json)
+    # Rebuild the tag attributes
     height_attr = f' height="{height}"' if height else ""
     resizable_attr = " resizable" if "resizable" in opening_tag else ""
     bare_attr = " bare" if bare else ""
+    hide_json_attr = " hideJson" if hide_json else ""
     id_attr = f' id="{block_id}"' if block_id else ""
-    new_opening = f"<ComponentPreview{resizable_attr} auto{bare_attr}{id_attr}{height_attr} json={{`{escaped_json}`}}>"
 
-    # Build the interior
-    if bare or hide_json:
+    # Inline JSON as a JSX expression prop
+    compact_json = json.dumps(json.loads(pretty_json))
+
+    new_opening = (
+        f"<ComponentPreview{resizable_attr}{bare_attr}{id_attr}"
+        f"{height_attr}{hide_json_attr}"
+        f" json={{{compact_json}}}>"
+    )
+
+    # Build interior: CodeGroup with Python + Protocol, or just Python if hideJson
+    if hide_json:
         new_interior = f"\n{python_block}\n"
     else:
-        expandable = " expandable" if "expandable" in python_fence_open else ""
-        json_block = (
-            f'```json Protocol icon="brackets-curly"{expandable}\n{pretty_json}\n```'
-        )
+        json_block = f'```json Protocol icon="brackets-curly"\n{pretty_json}\n```'
         new_interior = f"\n<CodeGroup>\n{python_block}\n{json_block}\n</CodeGroup>\n"
 
     return new_opening + new_interior + closing_tag
@@ -255,6 +241,7 @@ def process_file(path: Path) -> bool:
 
 def main() -> None:
     docs_dir = Path(__file__).resolve().parents[1]
+
     mdx_files = sorted(docs_dir.rglob("*.mdx"))
 
     if not mdx_files:

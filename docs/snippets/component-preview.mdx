@@ -1,4 +1,4 @@
-export const ComponentPreview = ({ json, height, resizable, bare, children }) => {
+export const ComponentPreview = ({ json, height, resizable, bare, hideJson, children }) => {
   const hostRef = React.useRef(null);
   const handleRef = React.useRef(null);
   const cardRef = React.useRef(null);
@@ -6,22 +6,24 @@ export const ComponentPreview = ({ json, height, resizable, bare, children }) =>
   const [previewWidth, setPreviewWidth] = React.useState(null);
   const [isDragging, setIsDragging] = React.useState(false);
 
-  React.useEffect(() => {
+  var jsonStr = typeof json === "string" ? json : JSON.stringify(json, null, 2);
+
+  React.useEffect(function () {
     if (cardRef.current) {
       var card = cardRef.current.closest(".group");
       if (card) card.classList.remove("group");
     }
 
     var host = hostRef.current;
-    if (!host) return;
+    if (!host || !json) return;
 
     function mount() {
       if (!window.__prefab || !host) return;
       var dark = document.documentElement.classList.contains("dark");
-      handleRef.current = window.__prefab.mountPreview(host, json, { dark: dark });
+      handleRef.current = window.__prefab.mountPreview(host, jsonStr, { dark: dark });
       if (bare && host.shadowRoot) {
-        var m = host.shadowRoot.querySelector('[data-prefab-mount]');
-        if (m) m.style.background = 'transparent';
+        var m = host.shadowRoot.querySelector("[data-prefab-mount]");
+        if (m) m.style.background = "transparent";
       }
     }
 
@@ -40,7 +42,7 @@ export const ComponentPreview = ({ json, height, resizable, bare, children }) =>
       window.__prefabLoading.then(mount);
     }
 
-    var observer = new MutationObserver(() => {
+    var observer = new MutationObserver(function () {
       var dark = document.documentElement.classList.contains("dark");
       if (handleRef.current) handleRef.current.setDark(dark);
     });
@@ -49,14 +51,14 @@ export const ComponentPreview = ({ json, height, resizable, bare, children }) =>
       attributeFilter: ["class"],
     });
 
-    return () => {
+    return function () {
       observer.disconnect();
       if (handleRef.current) {
         handleRef.current.unmount();
         handleRef.current = null;
       }
     };
-  }, []);
+  }, [json]);
 
   function startResize(e) {
     e.preventDefault();
