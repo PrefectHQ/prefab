@@ -148,9 +148,7 @@ with Grid(min_column_width="240px", gap=4):
                     Separator()
                     Switch(label="Failure notifications", checked=True, name="fail_notifs")
             with CardFooter():
-                with Dialog(title="Preferences Saved", description="Your agent configuration has been updated."):
-                    Button("Save Preferences")
-                    Text("Changes will take effect on next deployment.")
+                Button("Save Preferences", on_click=ShowToast("Preferences saved!"))
         with Card():
             with CardHeader():
                 CardTitle("Towel Inventory")
@@ -930,22 +928,15 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardFooter",
                 "children": [
                   {
-                    "type": "Dialog",
-                    "title": "Preferences Saved",
-                    "description": "Your agent configuration has been updated.",
-                    "children": [
-                      {
-                        "type": "Button",
-                        "label": "Save Preferences",
-                        "variant": "default",
-                        "size": "default",
-                        "disabled": false
-                      },
-                      {
-                        "type": "Text",
-                        "content": "Changes will take effect on next deployment."
-                      }
-                    ]
+                    "type": "Button",
+                    "label": "Save Preferences",
+                    "variant": "default",
+                    "size": "default",
+                    "disabled": false,
+                    "onClick": {
+                      "action": "showToast",
+                      "message": "Preferences saved!"
+                    }
                   }
                 ]
               }
