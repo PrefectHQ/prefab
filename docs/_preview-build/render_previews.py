@@ -73,12 +73,11 @@ def _execute_and_serialize(
     shared_ns: dict[str, object] | None = None,
 ) -> dict[str, Any]:
     """Execute a Python snippet and return the JSON envelope as a dict."""
+    from prefab_ui.app import clear_initial_state, get_initial_state
     from prefab_ui.components.base import (
         Component,
         ContainerComponent,
         _component_stack,
-        clear_initial_state,
-        get_initial_state,
     )
 
     _component_stack.set(None)

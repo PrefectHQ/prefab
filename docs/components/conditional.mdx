@@ -85,6 +85,7 @@ Add an `Else` branch to render fallback content when the condition is false. Tog
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Badge,
     Card,
@@ -194,6 +195,7 @@ Chain multiple conditions with `Elif`. The renderer evaluates them in order and 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Choose a status...","name":"status","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"{{ status == 'error' }}","children":[{"type":"Badge","label":"Error \u2014 system down","variant":"destructive"}]},{"when":"{{ status == 'warning' }}","children":[{"type":"Badge","label":"Warning \u2014 degraded","variant":"warning"}]},{"when":"{{ status == 'active' }}","children":[{"type":"Badge","label":"Active \u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"state":{"status":"active"}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Badge,
     Column,

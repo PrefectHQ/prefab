@@ -15,6 +15,7 @@ Use `set_initial_state()` to define starting values. Any component in your UI ca
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Slider, Muted, Column
 
 set_initial_state(brightness=50)
@@ -74,6 +75,7 @@ For non-form elements like buttons, pass an explicit value as the second argumen
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Badge, Button, Column, Row
 from prefab_ui.actions import SetState
 
@@ -161,6 +163,7 @@ The `name` prop works with dot-paths too — type in the inputs below to see the
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Card, CardDescription, CardHeader, CardTitle,
     Column, Input,
@@ -321,6 +324,7 @@ Type a name and click Add to see it appear in the list. Click × to remove a row
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Button, Column, ForEach, Input, Muted, Row, Text,
 )

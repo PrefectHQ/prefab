@@ -6,11 +6,11 @@ icon: square-dashed
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Div and Span are unstyled primitives — the escape hatches for when Row, Column, and Grid don't express what you need.
+Div and Span are unstyled primitives — the escape hatches for when Row, Column, and Grid don't express what you need. Both support `css_class` for Tailwind and `style` for arbitrary inline CSS.
 
 ## Div
 
-A block container with no default styling. Style it entirely through `css_class`:
+A block container with no default styling. Style it through `css_class` or `style`:
 
 <ComponentPreview json={{"view":{"cssClass":"flex items-center gap-3 rounded-lg border p-4","type":"Div","children":[{"cssClass":"bg-emerald-500 rounded-md h-8 w-8","type":"Div"},{"content":"Custom layout with Div","type":"P"}]}}}>
 <CodeGroup>
@@ -36,6 +36,45 @@ with Div(css_class="flex items-center gap-3 rounded-lg border p-4"):
       },
       {
         "content": "Custom layout with Div",
+        "type": "P"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+For CSS that Tailwind can't express — vendor prefixes, `clamp()`, `mask-image`, etc. — use the `style` prop:
+
+<ComponentPreview json={{"view":{"type":"Div","style":{"background":"linear-gradient(135deg, #667eea 0%, #764ba2 100%)","border-radius":"12px","padding":"24px"},"children":[{"cssClass":"text-white font-medium","content":"Styled with inline CSS","type":"P"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Div,
+    P,
+)
+
+with Div(style={
+    "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "border-radius": "12px",
+    "padding": "24px",
+}):
+    P("Styled with inline CSS", css_class="text-white font-medium")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Div",
+    "style": {
+      "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "border-radius": "12px",
+      "padding": "24px"
+    },
+    "children": [
+      {
+        "cssClass": "text-white font-medium",
+        "content": "Styled with inline CSS",
         "type": "P"
       }
     ]
@@ -90,6 +129,10 @@ with Row(gap=2, align="baseline"):
 <ParamField body="css_class" type="str | None" default="None">
   Tailwind CSS classes. Div has no built-in styling.
 </ParamField>
+
+<ParamField body="style" type="dict[str, str] | None" default="None">
+  Inline CSS styles for properties that Tailwind can't express.
+</ParamField>
 </Card>
 
 <Card icon="code" title="Span Parameters">
@@ -100,6 +143,10 @@ with Row(gap=2, align="baseline"):
 <ParamField body="css_class" type="str | None" default="None">
   Tailwind CSS classes. Span has no built-in styling.
 </ParamField>
+
+<ParamField body="style" type="dict[str, str] | None" default="None">
+  Inline CSS styles for properties that Tailwind can't express.
+</ParamField>
 </Card>
 
 ## Protocol Reference
@@ -108,7 +155,8 @@ with Row(gap=2, align="baseline"):
 {
   "type": "Div",
   "children?": "[Component]",
-  "cssClass?": "string"
+  "cssClass?": "string",
+  "style?": "Record<string, string>"
 }
 ```
 
@@ -116,7 +164,8 @@ with Row(gap=2, align="baseline"):
 {
   "type": "Span",
   "content": "string (required)",
-  "cssClass?": "string"
+  "cssClass?": "string",
+  "style?": "Record<string, string>"
 }
 ```
 

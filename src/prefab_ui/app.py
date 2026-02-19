@@ -20,15 +20,50 @@ Usage::
 from __future__ import annotations
 
 import json
+from contextvars import ContextVar
 from typing import Any
 
 import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
-from prefab_ui.components.base import clear_initial_state, get_initial_state
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 
 PROTOCOL_VERSION = "0.2"
+
+# ── Initial State ─────────────────────────────────────────────────────
+
+_initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
+    "_initial_state", default=None
+)
+
+
+def set_initial_state(**kwargs: Any) -> None:
+    """Declare initial client-side state for the current app.
+
+    Called alongside component construction to define the starting
+    values that templates like ``{{ name }}`` resolve against::
+
+        set_initial_state(name="world")
+
+        with Card():
+            H3("Hello, {{ name }}!")
+    """
+    current = _initial_state.get()
+    if current is None:
+        current = {}
+        _initial_state.set(current)
+    current.update(kwargs)
+
+
+def get_initial_state() -> dict[str, Any] | None:
+    """Retrieve state set by :func:`set_initial_state`, or ``None``."""
+    return _initial_state.get()
+
+
+def clear_initial_state() -> None:
+    """Reset the initial-state accumulator."""
+    _initial_state.set(None)
+
 
 _PAGE_TEMPLATE = """\
 <!doctype html>

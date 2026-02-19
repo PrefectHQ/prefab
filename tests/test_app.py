@@ -6,9 +6,13 @@ import json
 
 import pytest
 
-from prefab_ui.app import PROTOCOL_VERSION, PrefabApp
+from prefab_ui.app import (
+    PROTOCOL_VERSION,
+    PrefabApp,
+    clear_initial_state,
+    set_initial_state,
+)
 from prefab_ui.components import Column, Heading, Text
-from prefab_ui.components.base import clear_initial_state, set_initial_state
 
 
 class TestPrefabAppToJson:
