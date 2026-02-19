@@ -29,12 +29,13 @@ from prefab_ui.actions.base import ActionBase
 from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
-from prefab_ui.actions.ui import ShowToast
+from prefab_ui.actions.ui import CloseOverlay, ShowToast
 
 __all__ = [
     "Action",
     "ActionBase",
     "AppendState",
+    "CloseOverlay",
     "OpenLink",
     "PopState",
     "SendMessage",
@@ -55,4 +56,5 @@ Action = (
     | AppendState
     | PopState
     | ShowToast
+    | CloseOverlay
 )

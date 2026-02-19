@@ -25,3 +25,9 @@ class ShowToast(ActionBase):
     def __init__(self, message: str, **kwargs: Any) -> None:
         kwargs["message"] = message
         super().__init__(**kwargs)
+
+
+class CloseOverlay(ActionBase):
+    """Close the nearest ancestor overlay (Dialog or Popover)."""
+
+    action: Literal["closeOverlay"] = "closeOverlay"

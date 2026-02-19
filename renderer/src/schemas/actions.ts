@@ -88,6 +88,11 @@ export const showToastSchema = z.object({
   ...actionCallbacks,
 });
 
+export const closeOverlaySchema = z.object({
+  action: z.literal("closeOverlay"),
+  ...actionCallbacks,
+});
+
 // ── Union + helpers ─────────────────────────────────────────────────
 
 export const actionSchema = z.discriminatedUnion("action", [
@@ -100,6 +105,7 @@ export const actionSchema = z.discriminatedUnion("action", [
   appendStateSchema,
   popStateSchema,
   showToastSchema,
+  closeOverlaySchema,
 ]);
 
 /** Single action or array of actions — the shape of onClick / onChange / etc. */
@@ -116,6 +122,7 @@ export const HANDLED_ACTIONS = new Set([
   "appendState",
   "popState",
   "showToast",
+  "closeOverlay",
 ] as const);
 
 /**
@@ -132,6 +139,7 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   appendState: appendStateSchema,
   popState: popStateSchema,
   showToast: showToastSchema,
+  closeOverlay: closeOverlaySchema,
 };
 
 export type ToolCallWire = z.infer<typeof toolCallSchema>;
@@ -143,5 +151,6 @@ export type ToggleStateWire = z.infer<typeof toggleStateSchema>;
 export type AppendStateWire = z.infer<typeof appendStateSchema>;
 export type PopStateWire = z.infer<typeof popStateSchema>;
 export type ShowToastWire = z.infer<typeof showToastSchema>;
+export type CloseOverlayWire = z.infer<typeof closeOverlaySchema>;
 export type ActionWire = z.infer<typeof actionSchema>;
 export type ActionOrListWire = z.infer<typeof actionOrList>;

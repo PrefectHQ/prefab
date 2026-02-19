@@ -255,6 +255,61 @@ describe("executeAction", () => {
     });
   });
 
+  describe("closeOverlay", () => {
+    it("calls overlayClose callback", async () => {
+      const state = createStateStore();
+      const close = vi.fn();
+      const action: ActionSpec = { action: "closeOverlay" };
+
+      await executeAction(
+        action,
+        null,
+        state,
+        undefined,
+        0,
+        undefined,
+        undefined,
+        close,
+      );
+
+      expect(close).toHaveBeenCalledOnce();
+    });
+
+    it("succeeds even without overlay context", async () => {
+      const state = createStateStore();
+      const action: ActionSpec = { action: "closeOverlay" };
+
+      const result = await executeAction(action, null, state);
+
+      expect(result).toBe(true);
+    });
+
+    it("works in onSuccess callback chain", async () => {
+      const state = createStateStore();
+      const close = vi.fn();
+      const action: ActionSpec = {
+        action: "setState",
+        key: "done",
+        value: true,
+        onSuccess: { action: "closeOverlay" },
+      };
+
+      await executeAction(
+        action,
+        null,
+        state,
+        undefined,
+        0,
+        undefined,
+        undefined,
+        close,
+      );
+
+      expect(state.get("done")).toBe(true);
+      expect(close).toHaveBeenCalledOnce();
+    });
+  });
+
   describe("showToast", () => {
     it("calls default toast", async () => {
       const state = createStateStore();

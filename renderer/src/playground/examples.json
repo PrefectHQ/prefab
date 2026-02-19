@@ -507,17 +507,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Dialog,\n    Input,\n    Label,\n    Row,\n)\n\nwith Dialog(\n    title=\"Crew Profile\",\n    description=\"Update your details for the Heart of Gold crew manifest.\",\n):\n    Button(\"Edit Profile\", variant=\"outline\")\n    with Column(gap=3):\n        Label(\"Name\")\n        Input(name=\"crewName\", placeholder=\"Arthur Dent\")\n        Label(\"Designation\")\n        Input(name=\"crewDesignation\", placeholder=\"Sandwich Maker\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Save changes\")"
+    "code": "from prefab_ui.components import (\n    Button,\n    Column,\n    Dialog,\n    Input,\n    Label,\n    Row,\n)\nfrom prefab_ui.actions import CloseOverlay\n\nwith Dialog(\n    title=\"Crew Profile\",\n    description=\"Update your details for the Heart of Gold crew manifest.\",\n):\n    Button(\"Edit Profile\", variant=\"outline\")\n    with Column(gap=3):\n        Label(\"Name\")\n        Input(name=\"crewName\", placeholder=\"Arthur Dent\")\n        Label(\"Designation\")\n        Input(name=\"crewDesignation\", placeholder=\"Sandwich Maker\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Save changes\", on_click=CloseOverlay())"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
+    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay, ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=[\n                ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "from prefab_ui.components import Button, Dialog, Row, Text",
     "category": "Components",
-    "code": "from prefab_ui.actions import ToolCall, ShowToast\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=ToolCall(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=ShowToast(\"User removed\", variant=\"success\"),\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
+    "code": "from prefab_ui.actions import CloseOverlay, ShowToast, ToolCall\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=ToolCall(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -767,7 +767,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
+    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import CloseOverlay, ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=[\n                ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "Python icon=\"python\"",

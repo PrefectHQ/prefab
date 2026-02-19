@@ -7,6 +7,7 @@ import pytest
 from prefab_ui.actions import (
     ActionBase,
     AppendState,
+    CloseOverlay,
     OpenLink,
     PopState,
     SetState,
@@ -75,6 +76,27 @@ class TestShowToastAction:
         assert j["onClick"]["action"] == "showToast"
         assert j["onClick"]["message"] == "Done!"
         assert j["onClick"]["variant"] == "success"
+
+
+class TestCloseOverlayAction:
+    def test_serializes(self):
+        a = CloseOverlay()
+        d = a.model_dump()
+        assert d["action"] == "closeOverlay"
+
+    def test_on_button(self):
+        b = Button(label="Cancel", on_click=CloseOverlay())
+        j = b.to_json()
+        assert j["onClick"]["action"] == "closeOverlay"
+
+    def test_in_tool_call_on_success(self):
+        a = ToolCall(
+            "remove_user",
+            on_success=[ShowToast("Removed"), CloseOverlay()],
+        )
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        callbacks = d["onSuccess"]
+        assert callbacks[1]["action"] == "closeOverlay"
 
 
 class TestActionOnComponents:
@@ -170,6 +192,7 @@ class TestActionCallbacks:
             AppendState("k"),
             PopState("k", 0),
             ShowToast("m"),
+            CloseOverlay(),
         ]
         for action in action_types:
             assert isinstance(action, ActionBase), f"{type(action)} is not ActionBase"

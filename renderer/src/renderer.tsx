@@ -15,6 +15,8 @@ import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import { executeActions, type ActionSpec } from "./actions";
 import type { StateStore } from "./state";
+import type { OverlayCloseFn } from "./overlay-context";
+import { useOverlayClose } from "./overlay-context";
 import { evaluateCondition } from "./conditions";
 import { validateNode } from "./validation";
 import { ValidationError } from "./components/validation-error";
@@ -61,6 +63,7 @@ function bindActions(
   app: App | null,
   state: StateStore,
   scope: Record<string, unknown>,
+  overlayClose?: OverlayCloseFn,
 ): Record<string, unknown> {
   const bound = { ...props };
 
@@ -95,6 +98,7 @@ function bindActions(
         0,
         undefined,
         scope,
+        overlayClose,
       );
     };
   }
@@ -261,6 +265,8 @@ function filterInternalProps(
  * Render a single node from the JSON component tree.
  */
 export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
+  const overlayClose = useOverlayClose();
+
   // $ref resolution: inline a defined template before any other processing
   if ("$ref" in node && typeof node["$ref"] === "string") {
     const defs = (scope.$defs as Record<string, ComponentNode>) || {};
@@ -342,7 +348,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // bindActions captures the current scope so action execution can
   // resolve both scope vars ($index, $item) and event vars ($event).
   const withActions = { ...interpolated, ...rawActionSpecs };
-  const bound = bindActions(withActions, app, state, scope);
+  const bound = bindActions(withActions, app, state, scope, overlayClose);
 
   // Map Python prop names to React/shadcn prop names
   const mapped = mapProps(type, bound);
