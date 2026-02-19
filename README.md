@@ -2,7 +2,7 @@
 
 # Prefab 🎨
 
-<img src="docs/assets/showcase.png" alt="Prefab" width="700">
+<img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="700">
 
 **The agentic frontend framework that even a human can use.**
 
@@ -23,7 +23,7 @@ Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe
 🚧 *Prefab is in early development. The API is unstable and likely to change.* 🚧
 
 <div align="center">
-<img src="docs/assets/hello-world-card.png" alt="Hello world card" width="400">
+<img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/hello-world-card.png" alt="Hello world card" width="400">
 </div>
 </br>
 
