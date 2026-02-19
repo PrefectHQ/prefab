@@ -48,6 +48,7 @@ import {
 import { Calendar as ShadcnCalendar } from "@/ui/calendar";
 import { Button } from "@/ui/button";
 import type { DateRange } from "react-day-picker";
+import { OverlayProvider } from "../overlay-context";
 
 /** Metadata extracted from Tab/AccordionItem/Page child nodes. */
 interface ChildPanel {
@@ -253,25 +254,28 @@ export function PrefabPopover({
   side,
   children,
 }: PrefabPopoverProps) {
+  const [open, setOpen] = useState(false);
   const childArray = React.Children.toArray(children);
   const trigger = childArray[0];
   const content = childArray.slice(1);
 
   return (
-    <ShadcnPopover>
+    <ShadcnPopover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <TriggerSlot>{trigger}</TriggerSlot>
       </PopoverTrigger>
       <PopoverContent side={side} className="w-80">
-        {title && (
-          <div className="mb-4 space-y-1">
-            <h4 className="font-medium leading-none">{title}</h4>
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
-            )}
-          </div>
-        )}
-        {content}
+        <OverlayProvider close={() => setOpen(false)}>
+          {title && (
+            <div className="mb-4 space-y-1">
+              <h4 className="font-medium leading-none">{title}</h4>
+              {description && (
+                <p className="text-sm text-muted-foreground">{description}</p>
+              )}
+            </div>
+          )}
+          {content}
+        </OverlayProvider>
       </PopoverContent>
     </ShadcnPopover>
   );
@@ -291,25 +295,28 @@ export function PrefabDialog({
   description,
   children,
 }: PrefabDialogProps) {
+  const [open, setOpen] = useState(false);
   const childArray = React.Children.toArray(children);
   const trigger = childArray[0];
   const content = childArray.slice(1);
 
   return (
-    <ShadcnDialog>
+    <ShadcnDialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <TriggerSlot>{trigger}</TriggerSlot>
       </DialogTrigger>
       <DialogContent>
-        {(title || description) && (
-          <DialogHeader>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            {description && (
-              <DialogDescription>{description}</DialogDescription>
-            )}
-          </DialogHeader>
-        )}
-        {content}
+        <OverlayProvider close={() => setOpen(false)}>
+          {(title || description) && (
+            <DialogHeader>
+              {title && <DialogTitle>{title}</DialogTitle>}
+              {description && (
+                <DialogDescription>{description}</DialogDescription>
+              )}
+            </DialogHeader>
+          )}
+          {content}
+        </OverlayProvider>
       </DialogContent>
     </ShadcnDialog>
   );

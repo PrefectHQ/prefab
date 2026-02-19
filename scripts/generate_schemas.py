@@ -25,7 +25,7 @@ from prefab_ui.actions import ActionBase
 from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
-from prefab_ui.actions.ui import ShowToast
+from prefab_ui.actions.ui import CloseOverlay, ShowToast
 from prefab_ui.components import __all__ as component_names
 from prefab_ui.components.base import Component, ContainerComponent
 
@@ -152,6 +152,7 @@ def discover_actions() -> dict[str, type[ActionBase]]:
         AppendState,
         PopState,
         ShowToast,
+        CloseOverlay,
     ]
     result: dict[str, type[ActionBase]] = {}
     for cls in actions:

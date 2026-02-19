@@ -27,6 +27,7 @@
 import type { App } from "@modelcontextprotocol/ext-apps";
 import { toast } from "sonner";
 import type { StateStore } from "./state";
+import type { OverlayCloseFn } from "./overlay-context";
 import { interpolateProps } from "./interpolation";
 import { validateAction } from "./validation";
 
@@ -92,6 +93,7 @@ export async function executeAction(
   depth = 0,
   error?: string,
   scope?: Record<string, unknown>,
+  overlayClose?: OverlayCloseFn,
 ): Promise<boolean> {
   if (depth > MAX_DEPTH) {
     console.warn("[Prefab] Action callback depth limit exceeded");
@@ -233,6 +235,10 @@ export async function executeAction(
         else toast(message, opts);
         break;
       }
+      case "closeOverlay": {
+        overlayClose?.();
+        break;
+      }
     }
   } catch (e: unknown) {
     success = false;
@@ -249,6 +255,7 @@ export async function executeAction(
       depth + 1,
       undefined,
       scope,
+      overlayClose,
     );
   } else if (!success && resolved.onError) {
     await executeActions(
@@ -259,6 +266,7 @@ export async function executeAction(
       depth + 1,
       errorMessage,
       scope,
+      overlayClose,
     );
   }
 
@@ -280,6 +288,7 @@ export async function executeActions(
   depth = 0,
   error?: string,
   scope?: Record<string, unknown>,
+  overlayClose?: OverlayCloseFn,
 ): Promise<void> {
   const list = Array.isArray(actions) ? actions : [actions];
   for (const action of list) {
@@ -291,6 +300,7 @@ export async function executeActions(
       depth,
       error,
       scope,
+      overlayClose,
     );
     if (!ok) break;
   }
