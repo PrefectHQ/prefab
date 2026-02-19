@@ -6,11 +6,11 @@
 
 🚧 *Don't panic. Prefab is under **extremely** active development. You probably shouldn't use it yet.* 🚧
 
-[![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui.svg)](https://pypi.org/project/prefab-ui)
-[![Tests](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml)
-[![License](https://img.shields.io/github/license/prefecthq/prefab.svg)](https://github.com/prefecthq/prefab/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui)](https://pypi.org/project/prefab-ui)
+[![Tests](https://github.com/PrefectHQ/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/PrefectHQ/prefab/actions/workflows/run-tests.yml)
+[![License](https://img.shields.io/github/license/PrefectHQ/prefab)](https://github.com/PrefectHQ/prefab/blob/main/LICENSE)
 
-[Docs](https://prefab.prefect.io) · [Playground](https://prefab.prefect.io/playground) · [GitHub](https://github.com/PrefectHQ/prefab)
+[Docs](https://prefab.prefect.io) · [Playground](https://prefab.prefect.io/docs/playground) · [GitHub](https://github.com/PrefectHQ/prefab)
 
 </div>
 
