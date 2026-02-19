@@ -13,7 +13,14 @@ from prefab_ui.actions import (
 )
 from prefab_ui.actions.mcp import ToolCall
 from prefab_ui.components import (
+    Button,
+    Card,
+    CardContent,
+    CardFooter,
+    Column,
     Form,
+    Input,
+    Label,
 )
 
 # ---------------------------------------------------------------------------
@@ -23,8 +30,6 @@ from prefab_ui.components import (
 
 class TestFormComponent:
     def test_form_serializes_as_container(self):
-        from prefab_ui.components import Input, Label
-
         with Form() as f:
             Label("Name")
             Input(name="name")
@@ -324,3 +329,128 @@ class TestAutoFillConvention:
         form = Form.from_model(M, on_submit=ToolCall("save"))
         j = form.to_json()
         assert j["onSubmit"]["tool"] == "save"
+
+
+# ---------------------------------------------------------------------------
+# Context-manager isolation
+# ---------------------------------------------------------------------------
+
+
+class TestFromModelContextIsolation:
+    """from_model() must not leak internal components into outer containers."""
+
+    def test_from_model_inside_card_only_adds_form(self):
+        class M(BaseModel):
+            name: str
+            email: str
+
+        with Card() as card:
+            Form.from_model(M, on_submit=ToolCall("save"))
+
+        # Card should have exactly one child: the Form
+        assert len(card.children) == 1
+        child = card.children[0]
+        assert isinstance(child, Form)
+        assert len(child.children) == 3  # name col, email col, button
+
+    def test_from_model_inside_nested_containers(self):
+        class M(BaseModel):
+            name: str
+
+        with Column() as col:
+            with Card() as card:
+                Form.from_model(M, on_submit=ToolCall("save"))
+
+        # Column has one child (Card), Card has one child (Form)
+        assert len(col.children) == 1
+        assert len(card.children) == 1
+        assert isinstance(card.children[0], Form)
+
+    def test_from_model_without_context_still_works(self):
+        class M(BaseModel):
+            name: str
+
+        form = Form.from_model(M)
+        assert form.type == "Form"
+        assert len(form.children) == 1  # name col, no button (no on_submit)
+
+
+# ---------------------------------------------------------------------------
+# fields_only mode
+# ---------------------------------------------------------------------------
+
+
+class TestFieldsOnly:
+    """from_model(fields_only=True) generates fields without Form or button."""
+
+    def test_fields_only_returns_list(self):
+        class M(BaseModel):
+            name: str
+            email: str
+
+        result = Form.from_model(M, fields_only=True)
+        assert isinstance(result, list)
+        assert len(result) == 2
+
+    def test_fields_only_no_form_wrapper(self):
+        class M(BaseModel):
+            name: str
+
+        result = Form.from_model(M, fields_only=True)
+        assert all(not isinstance(c, Form) for c in result)
+
+    def test_fields_only_no_button(self):
+        class M(BaseModel):
+            name: str
+
+        result = Form.from_model(M, fields_only=True, on_submit=ToolCall("save"))
+        assert all(not isinstance(c, Button) for c in result)
+
+    def test_fields_only_auto_parents_to_context(self):
+        class M(BaseModel):
+            name: str
+            email: str
+
+        with Column() as col:
+            Form.from_model(M, fields_only=True)
+
+        assert len(col.children) == 2
+        assert isinstance(col.children[0], Column)
+        assert isinstance(col.children[1], Column)
+
+    def test_fields_only_no_duplicate_children(self):
+        """Internal Labels/Inputs must not leak into the outer context."""
+
+        class M(BaseModel):
+            name: str
+            email: str
+
+        with Column() as col:
+            Form.from_model(M, fields_only=True)
+
+        # Only 2 top-level Columns, not 2 Columns + 2 Labels + 2 Inputs
+        assert len(col.children) == 2
+
+    def test_fields_only_composes_with_card(self):
+        class M(BaseModel):
+            name: str
+
+        with Card() as card:
+            with Form(on_submit=ToolCall("save")) as form:
+                with CardContent() as content:
+                    Form.from_model(M, fields_only=True)
+                with CardFooter() as footer:
+                    Button("Submit")
+
+        # Card > Form > [CardContent, CardFooter]
+        assert len(card.children) == 1
+        assert isinstance(card.children[0], Form)
+        assert len(form.children) == 2
+        assert isinstance(form.children[0], CardContent)
+        assert isinstance(form.children[1], CardFooter)
+        # Fields are inside CardContent
+        assert len(content.children) == 1
+        assert isinstance(content.children[0], Column)
+        # Button is inside CardFooter
+        assert len(footer.children) == 1
+        assert isinstance(footer.children[0], Button)

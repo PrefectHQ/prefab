@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import datetime
 import types
-from typing import Any, Literal, Union, get_args, get_origin
+from typing import Any, Literal, Union, get_args, get_origin, overload
 
 import annotated_types
 from pydantic import BaseModel, Field, SecretStr
@@ -66,15 +66,40 @@ class Form(ContainerComponent):
         self.css_class = _merge_css_classes(layout, self.css_class)
         super().model_post_init(__context)
 
+    @overload
     @classmethod
     def from_model(
         cls,
         model: type[BaseModel],
         *,
+        fields_only: Literal[True],
         submit_label: str = "Submit",
         on_submit: Action | list[Action] | None = None,
         css_class: str | None = None,
-    ) -> Form:
+    ) -> list[Any]: ...
+
+    @overload
+    @classmethod
+    def from_model(
+        cls,
+        model: type[BaseModel],
+        *,
+        fields_only: Literal[False] = ...,
+        submit_label: str = "Submit",
+        on_submit: Action | list[Action] | None = None,
+        css_class: str | None = None,
+    ) -> Form: ...
+
+    @classmethod
+    def from_model(
+        cls,
+        model: type[BaseModel],
+        *,
+        fields_only: bool = False,
+        submit_label: str = "Submit",
+        on_submit: Action | list[Action] | None = None,
+        css_class: str | None = None,
+    ) -> Form | list[Any]:
         """Generate a form from a Pydantic model.
 
         Introspects the model's fields and creates appropriate input
@@ -108,27 +133,74 @@ class Form(ContainerComponent):
 
         A default ``on_error`` toast is added if not already specified.
 
+        When ``fields_only=True``, only the field components (labeled
+        inputs) are created — no ``Form`` wrapper and no submit button.
+        The fields auto-parent to whatever context manager is active,
+        letting you compose them into custom layouts::
+
+            with Form(on_submit=ToolCall("save")):
+                with CardContent():
+                    Form.from_model(Contact, fields_only=True)
+                with CardFooter():
+                    Button("Submit")
+
         Args:
             model: Pydantic model class to generate from.
+            fields_only: If True, generate only field components without
+                a Form wrapper or submit button. Returns a list of the
+                created components.
             submit_label: Text for the submit button.
             on_submit: Action(s) fired on submit. A ``ToolCall`` with no
                 arguments gets auto-filled from model fields.
             css_class: Additional CSS classes on the form container.
         """
+        from prefab_ui.components.base import _component_stack
         from prefab_ui.components.button import Button
+
+        if fields_only:
+            # Suppress the stack during creation to avoid duplicates
+            # (Labels/Inputs would otherwise auto-parent to both the
+            # Column AND the outer context). Then manually add the
+            # top-level field components to the active context.
+            saved_stack = _component_stack.get()
+            _component_stack.set(None)
+            try:
+                children: list[Any] = []
+                for name, field_info in model.model_fields.items():
+                    component = _field_to_component(name, field_info)
+                    if component is not None:
+                        children.append(component)
+            finally:
+                _component_stack.set(saved_stack)
+
+            if saved_stack:
+                for child in children:
+                    saved_stack[-1].children.append(child)
+
+            return children
 
         on_submit = _maybe_enrich_tool_call(on_submit, model)
 
+        # Form is created with the stack active so it auto-parents to any
+        # outer context manager (e.g. ``with Card(): Form.from_model(...)``).
         form = cls(on_submit=on_submit, css_class=css_class)
-        children: list[Any] = []
 
-        for name, field_info in model.model_fields.items():
-            component = _field_to_component(name, field_info)
-            if component is not None:
-                children.append(component)
+        # Suppress the stack while building internal components so they
+        # don't also get auto-added to the outer container.
+        saved_stack = _component_stack.get()
+        _component_stack.set(None)
+        try:
+            children = []
 
-        if on_submit is not None:
-            children.append(Button(submit_label, on_click=on_submit))
+            for name, field_info in model.model_fields.items():
+                component = _field_to_component(name, field_info)
+                if component is not None:
+                    children.append(component)
+
+            if on_submit is not None:
+                children.append(Button(submit_label, on_click=on_submit))
+        finally:
+            _component_stack.set(saved_stack)
 
         form.children = children
         return form
