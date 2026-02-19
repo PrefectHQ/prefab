@@ -1362,6 +1362,21 @@
   {
     "title": "app.py",
     "category": "General",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                H3(\"Hello, {{ name }}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n                Input(name=\"name\", placeholder=\"Your name...\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(\"Hey there, {{ name }}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+  },
+  {
+    "title": "# Coming soon — this is the target API",
+    "category": "Running",
+    "code": "from fastapi import FastAPI\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Card, CardContent, Column, H3, Text\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef dashboard():\n    with Card() as view:\n        with CardContent():\n            with Column(gap=3):\n                H3(\"Dashboard\")\n                Text(\"Backed by a real server.\")\n    return PrefabApp(view=view).html()"
+  },
+  {
+    "title": "from prefab_ui import FastMCP",
+    "category": "Running",
+    "code": "from prefab_ui.components import Card, CardContent, Column, H3, Input, Button\nfrom prefab_ui.actions import ToolCall\n\nmcp = FastMCP(\"My Server\")\n\n@mcp.tool(app=True)\nasync def search(query: str = \"\") -> Card:\n    results = find_items(query) if query else []\n    with Card() as view:\n        with CardContent():\n            with Column(gap=3):\n                Input(name=\"q\", placeholder=\"Search...\")\n                Button(\"Go\", on_click=ToolCall(\"search\", arguments={\"query\": \"{{ q }}\"}))\n    return view"
+  },
+  {
+    "title": "app.py",
+    "category": "General",
     "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Heading, Text\n\nwith Column(gap=3) as view:\n    Heading(\"Hello Prefab\")\n    Text(\"This is a local preview.\")\n\napp = PrefabApp(view=view, state={\"greeting\": \"Hello\"})"
   },
   {

@@ -6,7 +6,6 @@
  * on document.body so `position: fixed` overlays can use the full viewport.
  */
 
-import { createPortal } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { Toaster } from "sonner";
 import { PortalContainerProvider } from "./portal-container";
@@ -17,6 +16,10 @@ import { useStateStore } from "./state";
 // plugin, which strips @property declarations and emits initial values as
 // regular custom properties. The CSS arrives ready for shadow DOM use.
 import rawCss from "./index.css?inline";
+
+// Sonner ships its own CSS for toast positioning, animations, and theming.
+// In shadow DOM we need to inject it manually since it can't reach `:root`.
+import sonnerCss from "sonner/dist/styles.css?inline";
 
 // --- Shared shadow CSS base ---
 // Both the preview and portal shadow roots reuse the same rewritten Tailwind
@@ -34,6 +37,7 @@ const fontStack = `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
 // Preview shadow root: positioned container with background
 const shadowCss =
   rewrittenCss +
+  sonnerCss +
   `
 [data-prefab-mount] {
   position: relative;
@@ -79,7 +83,17 @@ function EmbedPreview({
   return (
     <PortalContainerProvider container={container}>
       <RenderTree tree={tree} state={state} app={null} />
-      {createPortal(<Toaster />, container)}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 9999,
+        }}
+      >
+        <Toaster />
+      </div>
     </PortalContainerProvider>
   );
 }
