@@ -25,6 +25,7 @@ from typing import Any
 import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
+from prefab_ui.components.base import clear_initial_state, get_initial_state
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 
 PROTOCOL_VERSION = "0.2"
@@ -75,7 +76,16 @@ class PrefabApp(BaseModel):
     model_config = {"arbitrary_types_allowed": True}
 
     @model_validator(mode="after")
-    def _validate_state_keys(self) -> PrefabApp:
+    def _consume_initial_state(self) -> PrefabApp:
+        accumulated = get_initial_state()
+        if accumulated:
+            clear_initial_state()
+            if self.state is None:
+                self.state = accumulated
+            else:
+                # Explicit state= wins; accumulated values fill in gaps
+                self.state = {**accumulated, **self.state}
+
         if self.state is not None:
             for key in self.state:
                 if key.startswith("$"):

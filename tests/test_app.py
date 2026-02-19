@@ -8,6 +8,7 @@ import pytest
 
 from prefab_ui.app import PROTOCOL_VERSION, PrefabApp
 from prefab_ui.components import Column, Heading, Text
+from prefab_ui.components.base import clear_initial_state, set_initial_state
 
 
 class TestPrefabAppToJson:
@@ -139,6 +140,40 @@ class TestPrefabAppCsp:
         )
         csp = app.csp()
         assert "https://cdn.example.com" in csp["script_domains"]
+
+
+class TestSetInitialState:
+    def setup_method(self):
+        clear_initial_state()
+
+    def teardown_method(self):
+        clear_initial_state()
+
+    def test_consumed_by_prefab_app(self):
+        set_initial_state(name="world")
+        app = PrefabApp(view=Text(content="hi"))
+        assert app.state == {"name": "world"}
+
+    def test_cleared_after_consumption(self):
+        set_initial_state(name="world")
+        PrefabApp()
+        app2 = PrefabApp()
+        assert app2.state is None
+
+    def test_explicit_state_overrides(self):
+        set_initial_state(name="world", count=0)
+        app = PrefabApp(state={"name": "Alice"})
+        assert app.state == {"name": "Alice", "count": 0}
+
+    def test_accumulates_across_calls(self):
+        set_initial_state(name="world")
+        set_initial_state(count=0)
+        app = PrefabApp()
+        assert app.state == {"name": "world", "count": 0}
+
+    def test_no_initial_state_means_none(self):
+        app = PrefabApp()
+        assert app.state is None
 
 
 class TestPrefabAppWireFormatIsolation:
