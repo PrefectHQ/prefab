@@ -91,11 +91,16 @@ export function Container({ className, cssClass, children }: LayoutProps) {
 interface DivProps {
   className?: string;
   cssClass?: string;
+  style?: React.CSSProperties;
   children?: ReactNode;
 }
 
-export function Div({ className, cssClass, children }: DivProps) {
-  return <div className={cn(className, cssClass)}>{children}</div>;
+export function Div({ className, cssClass, style, children }: DivProps) {
+  return (
+    <div className={cn(className, cssClass)} style={style}>
+      {children}
+    </div>
+  );
 }
 
 interface SpanProps extends DivProps {
@@ -106,12 +111,13 @@ interface SpanProps extends DivProps {
 export function Span({
   className,
   cssClass,
+  style,
   children,
   content,
   text,
 }: SpanProps) {
   return (
-    <span className={cn(className, cssClass)}>
+    <span className={cn(className, cssClass)} style={style}>
       {children ?? content ?? text}
     </span>
   );

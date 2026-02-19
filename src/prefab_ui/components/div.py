@@ -21,9 +21,17 @@ class Div(ContainerComponent):
         with Div(css_class="flex items-center gap-4 px-6 py-4"):
             Badge("deploy", variant="outline")
             P("Deployed v2.4.1")
+
+    For CSS that Tailwind can't express (vendor prefixes, ``clamp()``,
+    ``mask-image``, etc.), use the *style* escape hatch::
+
+        Div(style={"mask-image": "linear-gradient(to bottom, black 70%, transparent)"})
     """
 
     type: Literal["Div"] = "Div"
+    style: dict[str, str] | None = Field(
+        default=None, description="Inline CSS styles as a dict of property/value pairs."
+    )
 
 
 class Span(Component):
@@ -36,6 +44,9 @@ class Span(Component):
 
     type: Literal["Span"] = "Span"
     content: str = Field(description="Text content")
+    style: dict[str, str] | None = Field(
+        default=None, description="Inline CSS styles as a dict of property/value pairs."
+    )
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
