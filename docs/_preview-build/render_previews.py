@@ -77,14 +77,12 @@ def _execute_and_serialize(
         Component,
         ContainerComponent,
         _component_stack,
+        clear_initial_state,
+        get_initial_state,
     )
 
     _component_stack.set(None)
-
-    initial_state: dict[str, Any] = {}
-
-    def set_initial_state(**kwargs: Any) -> None:
-        initial_state.update(kwargs)
+    clear_initial_state()
 
     created: list[Component] = []
     original = Component.model_post_init
@@ -98,7 +96,6 @@ def _execute_and_serialize(
         ns: dict[str, object] = {}
         if shared_ns:
             ns.update(shared_ns)
-        ns["set_initial_state"] = set_initial_state
         exec(source, ns)  # noqa: S102
         if shared_ns is not None:
             for k, v in ns.items():
@@ -123,6 +120,7 @@ def _execute_and_serialize(
     tree = roots[0].to_json()
 
     envelope: dict[str, Any] = {"view": tree}
+    initial_state = get_initial_state()
     if initial_state:
         envelope["state"] = initial_state
 
