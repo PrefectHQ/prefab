@@ -33,11 +33,20 @@ jobs:
           cache-dependency-path: renderer/package-lock.json
           registry-url: "https://registry.npmjs.org"
 
+      - name: Set npm version from git tag
+        working-directory: renderer
+        run: |
+          # Strip PEP 440 pre-release suffix: v0.1.0a1 → 0.1.0
+          RAW="${{ github.ref_name }}"
+          VERSION="${RAW#v}"
+          VERSION=$(echo "$VERSION" | sed -E 's/(a|b|rc)[0-9]+$//')
+          npm version "$VERSION" --no-git-tag-version
+
       - run: npm ci
         working-directory: renderer
 
       - run: npm run build:publish
         working-directory: renderer
 
-      - run: npm publish --access public
+      - run: npm publish --access public --tag latest
         working-directory: renderer
