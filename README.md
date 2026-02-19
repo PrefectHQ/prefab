@@ -20,7 +20,7 @@
 
 ---
 
-Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity with both client-side state and server-side actions — and a bundled React renderer turns that JSON into a self-contained application. You (or your human) never have to touch JavaScript, a build system, or a running server.
+Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity — and a bundled React renderer turns that JSON into a self-contained application.
 
 🚧 *Prefab is in early development. The API is unstable and likely to change.* 🚧
 
@@ -46,7 +46,7 @@ with Card():
             Badge("Prefab", variant="success")
 ```
 
-Since everything compiles to JSON, any backend can produce a Prefab interface: MCP servers, AI agents, REST APIs, or standalone scripts.
+Since everything compiles to JSON, you can author a UI from a Python script, have an agent generate one on the fly, or serve one from any MCP server or REST API.
 
 ## Installation
 
