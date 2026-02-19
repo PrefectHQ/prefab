@@ -105,12 +105,18 @@ with Grid(min_column_width="240px", gap=4):
                         DataTableColumn(key="status", header="Status", sortable=True),
                     ],
                     rows=[
-                        {"crew": "Arthur Dent", "species": "Human", "towel": "Yes", "status": "Confused"},
-                        {"crew": "Ford Prefect", "species": "Betelgeusian", "towel": "Always", "status": "Drinking"},
-                        {"crew": "Zaphod", "species": "Betelgeusian", "towel": "Lost it", "status": "Presidential"},
-                        {"crew": "Trillian", "species": "Human", "towel": "Yes", "status": "Navigating"},
-                        {"crew": "Marvin", "species": "Android", "towel": "No point", "status": "Depressed"},
-                        {"crew": "Slartibartfast", "species": "Magrathean", "towel": "Somewhere", "status": "Designing"},
+                        {"crew": "Arthur Dent", "species": "Human",
+                         "towel": "Yes", "status": "Confused"},
+                        {"crew": "Ford Prefect", "species": "Betelgeusian",
+                         "towel": "Always", "status": "Drinking"},
+                        {"crew": "Zaphod", "species": "Betelgeusian",
+                         "towel": "Lost it", "status": "Presidential"},
+                        {"crew": "Trillian", "species": "Human",
+                         "towel": "Yes", "status": "Navigating"},
+                        {"crew": "Marvin", "species": "Android",
+                         "towel": "No point", "status": "Depressed"},
+                        {"crew": "Slartibartfast", "species": "Magrathean",
+                         "towel": "Somewhere", "status": "Designing"},
                     ],
                     searchable=True, paginated=False,
                 )
@@ -142,7 +148,9 @@ with Grid(min_column_width="240px", gap=4):
         with Card():
             with CardHeader():
                 CardTitle("Towel Inventory")
-                CardDescription("The most massively useful thing an interstellar hitchhiker can have")
+                CardDescription(
+                    "The most massively useful thing an interstellar hitchhiker can have"
+                )
             with CardContent():
                 with Column(gap=2):
                     with Row(align="center", css_class="justify-between"):
@@ -169,9 +177,18 @@ with Grid(min_column_width="240px", gap=4):
                 with Column(gap=3):
                     P("How is your experience with the Infinite Improbability Drive?")
                     with Row(gap=2, css_class="flex-wrap"):
-                        Button("Improbable", on_click=ToolCall("mood", arguments={"rating": "improbable"}))
-                        Button("Meh", variant="secondary", on_click=ToolCall("mood", arguments={"rating": "meh"}))
-                        Button("Depressed", variant="outline", on_click=ToolCall("mood", arguments={"rating": "depressed"}))
+                        Button(
+                            "Improbable",
+                            on_click=ToolCall("mood", arguments={"rating": "improbable"}),
+                        )
+                        Button(
+                            "Meh", variant="secondary",
+                            on_click=ToolCall("mood", arguments={"rating": "meh"}),
+                        )
+                        Button(
+                            "Depressed", variant="outline",
+                            on_click=ToolCall("mood", arguments={"rating": "depressed"}),
+                        )
                     Textarea(placeholder="Brain the size of a planet...", name="feedback")
         with Card():
             with CardHeader():
