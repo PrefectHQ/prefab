@@ -2,6 +2,7 @@ import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { DevPreview } from "./dev-preview";
+import { earlyBridge } from "./early-bridge";
 
 // Lazy-import App so the MCP SDK (@modelcontextprotocol/ext-apps) is only
 // loaded when we actually need it. The SDK has module-level side effects that
@@ -25,6 +26,13 @@ const isPreview =
   window.location.hash.startsWith("#preview") ||
   window.location.hash.startsWith("#kitchen-sink") ||
   window.location.hash.startsWith("#docpreview");
+
+// In MCP mode, start the bridge connection immediately so we don't miss
+// early tool-result messages from hosts with aggressive delivery timing
+// (e.g. MCPJam's double-iframe sandbox).
+if (!isPreview) {
+  earlyBridge.connect();
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

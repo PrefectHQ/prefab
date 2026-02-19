@@ -18,6 +18,13 @@ from urllib.parse import urlparse
 
 _BUNDLED_HTML = Path(__file__).parent / "app.html"
 
+_EXTERNAL_HEAD = """\
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefab</title>
+  <link rel="stylesheet" crossorigin href="{base_url}/assets/renderer.css">
+  <script type="module" crossorigin src="{base_url}/assets/renderer.js"></script>"""
+
 _EXTERNAL_TEMPLATE = """\
 <!doctype html>
 <html lang="en">
@@ -42,6 +49,22 @@ def _get_origin(url: str) -> str:
     if parsed.port:
         origin += f":{parsed.port}"
     return origin
+
+
+def get_renderer_head() -> str:
+    """Return the renderer ``<head>`` content (JS, CSS, meta tags).
+
+    For bundled mode, extracts everything between ``<head>`` and
+    ``</head>`` from the self-contained HTML bundle.  For external mode,
+    returns ``<link>``/``<script>`` tags pointing at the external URL.
+    """
+    override = os.environ.get("PREFAB_RENDERER_URL")
+    if override:
+        return _EXTERNAL_HEAD.format(base_url=override.rstrip("/"))
+    html = _BUNDLED_HTML.read_text(encoding="utf-8")
+    head_start = html.index("<head>") + len("<head>")
+    head_end = html.index("</head>")
+    return html[head_start:head_end].rstrip()
 
 
 def get_renderer_html() -> str:

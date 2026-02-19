@@ -5,13 +5,19 @@ from __future__ import annotations
 import contextlib
 import errno
 import functools
+import importlib.util
 import os
 import shutil
 import socket
 import subprocess
+import sys
 import threading
 import webbrowser
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from http.server import (
+    BaseHTTPRequestHandler,
+    SimpleHTTPRequestHandler,
+    ThreadingHTTPServer,
+)
 from pathlib import Path
 from typing import Annotated
 
@@ -20,6 +26,7 @@ from cyclopts import Parameter
 from rich.console import Console
 
 import prefab_ui
+from prefab_ui.app import PrefabApp
 
 console = Console()
 
@@ -60,6 +67,201 @@ def _find_free_port(start: int) -> int:
 def version() -> None:
     """Display the current Prefab version."""
     console.print(f"prefab-ui [cyan]{prefab_ui.__version__}[/cyan]")
+
+
+def _load_prefab_app(target: str) -> PrefabApp:
+    """Load a PrefabApp from a ``file.py:attribute`` target string.
+
+    If no attribute is given, scans the module for the first PrefabApp
+    instance.
+    """
+    path_str, _, attr_name = target.partition(":")
+    file_path = Path(path_str).resolve()
+
+    if not file_path.is_file():
+        console.print(f"[bold red]Error:[/bold red] File not found: {path_str}")
+        raise SystemExit(1)
+
+    # Add file's parent to sys.path so its imports work.
+    parent = str(file_path.parent)
+    if parent not in sys.path:
+        sys.path.insert(0, parent)
+
+    spec = importlib.util.spec_from_file_location(file_path.stem, file_path)
+    if spec is None or spec.loader is None:
+        console.print(f"[bold red]Error:[/bold red] Cannot load module from {path_str}")
+        raise SystemExit(1)
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    if attr_name:
+        obj = getattr(module, attr_name, None)
+        if obj is None:
+            console.print(
+                f"[bold red]Error:[/bold red] Attribute [cyan]{attr_name}[/cyan] "
+                f"not found in {path_str}"
+            )
+            raise SystemExit(1)
+        if not isinstance(obj, PrefabApp):
+            console.print(
+                f"[bold red]Error:[/bold red] [cyan]{attr_name}[/cyan] is not a PrefabApp"
+            )
+            raise SystemExit(1)
+        return obj
+
+    # Auto-discover: find the first PrefabApp in the module.
+    for name in dir(module):
+        obj = getattr(module, name)
+        if isinstance(obj, PrefabApp):
+            return obj
+
+    console.print(f"[bold red]Error:[/bold red] No PrefabApp found in {path_str}")
+    raise SystemExit(1)
+
+
+def _make_html_handler(html_ref: list[str]) -> type:
+    """Create an HTTP request handler that serves HTML from a mutable ref.
+
+    ``html_ref`` is a single-element list so the reload watcher can swap
+    the content between requests.
+    """
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(html_ref[0].encode("utf-8"))
+
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    return Handler
+
+
+def _watch_and_reload(
+    target: str,
+    html_ref: list[str],
+    stop: threading.Event,
+) -> None:
+    """Poll the target file for changes and regenerate HTML on save."""
+    path_str, _, _ = target.partition(":")
+    file_path = Path(path_str).resolve()
+    watch_dir = file_path.parent
+    prev_mtimes: dict[Path, float] = {}
+
+    for f in watch_dir.rglob("*.py"):
+        if f.is_file():
+            prev_mtimes[f] = f.stat().st_mtime
+
+    while not stop.wait(timeout=1.0):
+        curr_mtimes: dict[Path, float] = {}
+        for f in watch_dir.rglob("*.py"):
+            if f.is_file():
+                curr_mtimes[f] = f.stat().st_mtime
+
+        changed = [
+            p
+            for p in curr_mtimes
+            if p not in prev_mtimes or curr_mtimes[p] != prev_mtimes[p]
+        ]
+        if not changed and not (prev_mtimes.keys() - curr_mtimes.keys()):
+            continue
+
+        prev_mtimes = curr_mtimes
+        names = [str(p.relative_to(watch_dir)) for p in changed]
+        console.print(
+            f"[bold cyan]↻[/bold cyan] Change detected: "
+            f"[dim]{', '.join(names[:5])}[/dim]"
+        )
+        try:
+            prefab_app = _load_prefab_app(target)
+            html_ref[0] = prefab_app.html()
+            console.print("[bold green]✓[/bold green] Reloaded — refresh your browser")
+        except Exception as exc:
+            console.print(f"[bold red]✗[/bold red] Reload failed: {exc}")
+
+
+@app.command
+def serve(
+    target: Annotated[
+        str,
+        cyclopts.Parameter(
+            help="Path to a Python file, optionally with :attribute (e.g. app.py:my_app)",
+        ),
+    ],
+    *,
+    port: Annotated[
+        int,
+        cyclopts.Parameter(name="--port", alias="-p", help="Port for the server"),
+    ] = 5175,
+    reload: Annotated[
+        bool,
+        cyclopts.Parameter(
+            "--reload",
+            negative="--no-reload",
+            help="Watch for file changes and regenerate on save",
+        ),
+    ] = False,
+) -> None:
+    """Preview a PrefabApp in your browser.
+
+    Loads a PrefabApp from a Python file, renders it to a self-contained
+    HTML page, and serves it locally. If no attribute name is given, the
+    first PrefabApp found in the module is used.
+
+    Example:
+        prefab serve app.py
+        prefab serve app.py:dashboard --reload
+        prefab serve app.py --port 8000
+    """
+    prefab_app = _load_prefab_app(target)
+    html_ref = [prefab_app.html()]
+
+    actual_port = _find_free_port(port)
+    if actual_port != port:
+        console.print(f"[yellow]Port {port} in use, using {actual_port}[/yellow]")
+
+    handler = _make_html_handler(html_ref)
+
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", actual_port), handler)
+    except OSError as exc:
+        if exc.errno == errno.EADDRINUSE:
+            console.print(
+                f"[bold red]Error:[/bold red] Port {actual_port} is already in use."
+            )
+            raise SystemExit(1) from None
+        raise
+
+    server_thread = threading.Thread(target=server.serve_forever, daemon=True)
+    server_thread.start()
+
+    stop_event = threading.Event()
+    if reload:
+        watcher = threading.Thread(
+            target=_watch_and_reload,
+            args=(target, html_ref, stop_event),
+            daemon=True,
+        )
+        watcher.start()
+
+    url = f"http://127.0.0.1:{actual_port}"
+    console.print(
+        f"[bold green]✓[/bold green] Serving at [cyan]{url}[/cyan]"
+        + (" [dim](reload enabled)[/dim]" if reload else "")
+    )
+    console.print("  Press [bold]Ctrl+C[/bold] to stop\n")
+
+    webbrowser.open(url)
+
+    try:
+        threading.Event().wait()
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Server stopped[/yellow]")
+        stop_event.set()
+        server.shutdown()
 
 
 @app.command
