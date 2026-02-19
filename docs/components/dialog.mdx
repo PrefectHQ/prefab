@@ -174,37 +174,27 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
 
 ## Confirmation with Feedback
 
-Combine a confirmation Dialog with `ShowToast` callbacks to give feedback after the server responds. The `on_success` and `on_error` callbacks on `ToolCall` fire after the tool completes.
+Wire `ShowToast` callbacks onto a `ToolCall` to give feedback after the server responds. The `on_success` toast confirms the action completed; `on_error` shows what went wrong — both while the user is still in context.
 
-```python Confirmation with Toast Feedback
-from prefab_ui.components import Button, Column, Dialog, Row, Text
+```python
+from prefab_ui.components import Button, Dialog, Row, Text
 from prefab_ui.actions import ToolCall, ShowToast
 
 with Dialog(title="Remove User", description="This will revoke all access."):
     Button("Remove", variant="destructive")
-    Column(
-        gap=3,
-        children=[
-            Text("User {{ user_name }} will lose access to all projects."),
-            Row(
-                gap=2,
-                css_class="justify-end",
-                children=[
-                    Button("Cancel", variant="outline"),
-                    Button(
-                        "Remove User",
-                        variant="destructive",
-                        on_click=ToolCall(
-                            "remove_user",
-                            arguments={"user_id": "{{ user_id }}"},
-                            on_success=ShowToast("User removed", variant="success"),
-                            on_error=ShowToast("{{ $error }}", variant="error"),
-                        ),
-                    ),
-                ],
+    Text("User {{ user_name }} will lose access to all projects.")
+    with Row(gap=2, css_class="justify-end"):
+        Button("Cancel", variant="outline")
+        Button(
+            "Remove User",
+            variant="destructive",
+            on_click=ToolCall(
+                "remove_user",
+                arguments={"user_id": "{{ user_id }}"},
+                on_success=ShowToast("User removed", variant="success"),
+                on_error=ShowToast("{{ $error }}", variant="error"),
             ),
-        ],
-    )
+        )
 ```
 
 ## API Reference

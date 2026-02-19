@@ -1,7 +1,7 @@
 ---
 title: Show Toast
 description: Display a notification from any UI interaction.
-icon: message-circle
+icon: bell
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
@@ -59,7 +59,7 @@ with Row(gap=2):
 
 The `variant` parameter controls the toast's visual style. Omit it for a neutral default.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 flex-wrap","type":"Row","children":[{"type":"Button","label":"Default","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Success","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel registered","variant":"success"}},{"type":"Button","label":"Error","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel not found","variant":"error"}},{"type":"Button","label":"Warning","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability drive unstable","variant":"warning"}},{"type":"Button","label":"Info","variant":"secondary","size":"default","disabled":false,"onClick":{"action":"showToast","message":"42 towels in inventory","variant":"info"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2 flex-wrap","type":"Row","children":[{"type":"Button","label":"Default","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Success","variant":"success","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel registered","variant":"success"}},{"type":"Button","label":"Error","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel not found","variant":"error"}},{"type":"Button","label":"Warning","variant":"warning","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability drive unstable","variant":"warning"}},{"type":"Button","label":"Info","variant":"info","size":"default","disabled":false,"onClick":{"action":"showToast","message":"42 towels in inventory","variant":"info"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
@@ -68,13 +68,13 @@ from prefab_ui.actions import ShowToast
 with Row(gap=2, css_class="flex-wrap"):
     Button("Default", variant="outline",
            on_click=ShowToast("Something happened"))
-    Button("Success",
+    Button("Success", variant="success",
            on_click=ShowToast("Towel registered", variant="success"))
     Button("Error", variant="destructive",
            on_click=ShowToast("Towel not found", variant="error"))
-    Button("Warning", variant="outline",
+    Button("Warning", variant="warning",
            on_click=ShowToast("Improbability drive unstable", variant="warning"))
-    Button("Info", variant="secondary",
+    Button("Info", variant="info",
            on_click=ShowToast("42 towels in inventory", variant="info"))
 ```
 ```json Protocol icon="brackets-curly"
@@ -97,7 +97,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Success",
-        "variant": "default",
+        "variant": "success",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -121,7 +121,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Warning",
-        "variant": "outline",
+        "variant": "warning",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -133,7 +133,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Info",
-        "variant": "secondary",
+        "variant": "info",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -199,34 +199,19 @@ ShowToast("Read this carefully", duration=10000)
 
 ## As ToolCall Callbacks
 
-The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `ToolCall` to give feedback after a server action completes. The `{{ $error }}` variable captures the error message from the server.
+The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `ToolCall` to give feedback after a server action completes.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item","arguments":{"data":"{{ item }}"}}},{"type":"Button","label":"Save (will fail)","variant":"destructive","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item_broken","arguments":{"data":"{{ item }}"}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Success callback","variant":"success","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Saved successfully!","variant":"success"}},{"type":"Button","label":"Error callback","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Could not save: connection timed out","variant":"error"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
-from prefab_ui.actions import ToolCall, ShowToast
+from prefab_ui.actions import ShowToast
 
 with Row(gap=2):
-    Button(
-        "Save",
-        on_click=ToolCall(
-            "save_item",
-            arguments={"data": "{{ item }}"},
-            on_success=ShowToast("Saved successfully!", variant="success"),
-            on_error=ShowToast("{{ $error }}", variant="error"),
-        ),
-    )
-    Button(
-        "Save (will fail)",
-        variant="destructive",
-        on_click=ToolCall(
-            "save_item_broken",
-            arguments={"data": "{{ item }}"},
-            on_success=ShowToast("Saved successfully!", variant="success"),
-            on_error=ShowToast("{{ $error }}", variant="error"),
-        ),
-    )
+    Button("Success callback", variant="success",
+           on_click=ShowToast("Saved successfully!", variant="success"))
+    Button("Error callback", variant="destructive",
+           on_click=ShowToast("Could not save: connection timed out", variant="error"))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -236,50 +221,26 @@ with Row(gap=2):
     "children": [
       {
         "type": "Button",
-        "label": "Save",
-        "variant": "default",
+        "label": "Success callback",
+        "variant": "success",
         "size": "default",
         "disabled": false,
         "onClick": {
-          "onSuccess": {
-            "action": "showToast",
-            "message": "Saved successfully!",
-            "variant": "success"
-          },
-          "onError": {
-            "action": "showToast",
-            "message": "{{ $error }}",
-            "variant": "error"
-          },
-          "action": "toolCall",
-          "tool": "save_item",
-          "arguments": {
-            "data": "{{ item }}"
-          }
+          "action": "showToast",
+          "message": "Saved successfully!",
+          "variant": "success"
         }
       },
       {
         "type": "Button",
-        "label": "Save (will fail)",
+        "label": "Error callback",
         "variant": "destructive",
         "size": "default",
         "disabled": false,
         "onClick": {
-          "onSuccess": {
-            "action": "showToast",
-            "message": "Saved successfully!",
-            "variant": "success"
-          },
-          "onError": {
-            "action": "showToast",
-            "message": "{{ $error }}",
-            "variant": "error"
-          },
-          "action": "toolCall",
-          "tool": "save_item_broken",
-          "arguments": {
-            "data": "{{ item }}"
-          }
+          "action": "showToast",
+          "message": "Could not save: connection timed out",
+          "variant": "error"
         }
       }
     ]
@@ -288,6 +249,20 @@ with Row(gap=2):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+Wire these onto a `ToolCall` with `on_success` and `on_error`. The `{{ $error }}` variable captures the error message from the server.
+
+```python
+Button(
+    "Save",
+    on_click=ToolCall(
+        "save_item",
+        arguments={"data": "{{ item }}"},
+        on_success=ShowToast("Saved successfully!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+)
+```
 
 ## API Reference
 
