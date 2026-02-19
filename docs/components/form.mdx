@@ -1,90 +1,16 @@
 ---
-title: Forms
-description: Collect structured input with manual forms or auto-generated forms from Pydantic models.
+title: Form
+description: Generate complete forms from Pydantic models with automatic labels, validation, and submission.
 icon: file-lines
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Forms are how Prefab collect structured data from users. You can build forms by hand with individual input components, or generate them automatically from a Pydantic model with `Form.from_model()`.
+`Form.from_model()` introspects a Pydantic model and generates a complete form — labels, typed inputs, validation constraints, and a submit button — from the model's field definitions. You can also build forms by hand for full control over layout and behavior.
 
-## Building Forms by Hand
+## Generating Forms from Models
 
-Combine `Input`, `Label`, and `Button` components to create a form with full control over layout and behavior. Named inputs automatically sync their values to client state, so `{{ name }}` interpolation references the current value of the input with `name="name"`.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}}}]}}}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Button, Column, Input, Label
-from prefab_ui.actions import ToolCall
-
-with Column(gap=3):
-    Label("Name")
-    Input(name="name", placeholder="Your name")
-    Label("Email")
-    Input(name="email", input_type="email", placeholder="you@example.com")
-    Button("Submit", on_click=ToolCall(
-        "create_user",
-        arguments={"name": "{{ name }}", "email": "{{ email }}"},
-    ))
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Label",
-        "text": "Name"
-      },
-      {
-        "type": "Input",
-        "inputType": "text",
-        "placeholder": "Your name",
-        "name": "name",
-        "disabled": false,
-        "required": false
-      },
-      {
-        "type": "Label",
-        "text": "Email"
-      },
-      {
-        "type": "Input",
-        "inputType": "email",
-        "placeholder": "you@example.com",
-        "name": "email",
-        "disabled": false,
-        "required": false
-      },
-      {
-        "type": "Button",
-        "label": "Submit",
-        "variant": "default",
-        "size": "default",
-        "disabled": false,
-        "onClick": {
-          "action": "toolCall",
-          "tool": "create_user",
-          "arguments": {
-            "name": "{{ name }}",
-            "email": "{{ email }}"
-          }
-        }
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-This approach gives you complete control, but it requires wiring up every label, input type, and argument template yourself. For models with many fields, `Form.from_model()` handles all of that automatically.
-
-## Generating Forms from Pydantic Models
-
-`Form.from_model()` introspects a Pydantic model and generates a complete form -- labels, inputs, validation constraints, and submit button -- from the model's field definitions.
+Pass a Pydantic model to `Form.from_model()` along with a submit action. Each field becomes a labeled input, with the field's type determining the input component and `Field()` metadata controlling labels, placeholders, and constraints.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}}}>
 <CodeGroup>
@@ -210,24 +136,9 @@ Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
 </CodeGroup>
 </ComponentPreview>
 
-Each field in the model becomes a labeled input. The field's type determines what kind of input is rendered, and Pydantic `Field()` metadata controls labels, placeholders, and constraints.
+## Type Mapping
 
-### Metadata Mapping
-
-Pydantic `Field()` parameters map directly to form behavior:
-
-| Field metadata | Form effect |
-|---|---|
-| `Field(title="...")` | Label text (fallback: humanized field name) |
-| `Field(description="...")` | Placeholder text |
-| `Field(min_length=..., max_length=...)` | HTML input constraints |
-| `Field(ge=..., le=...)` | Number input min/max |
-| `Field(json_schema_extra={"ui": {"type": "textarea", "rows": 4}})` | Textarea override |
-| `Field(exclude=True)` | Skip field entirely |
-
-### Type Mapping
-
-The field's Python type determines the input component:
+The field's Python type determines which input component is rendered:
 
 | Python type | Input component |
 |---|---|
@@ -239,6 +150,19 @@ The field's Python type determines the input component:
 | `datetime.date` | Date picker |
 | `datetime.time` | Time picker |
 | `datetime.datetime` | Datetime picker |
+
+## Constraints and Metadata
+
+Pydantic `Field()` parameters map directly to form behavior:
+
+| Field metadata | Form effect |
+|---|---|
+| `Field(title="...")` | Label text (fallback: humanized field name) |
+| `Field(description="...")` | Placeholder text |
+| `Field(min_length=..., max_length=...)` | HTML input constraints |
+| `Field(ge=..., le=...)` | Number input min/max |
+| `Field(json_schema_extra={"ui": {"type": "textarea", "rows": 4}})` | Textarea override |
+| `Field(exclude=True)` | Skip field entirely |
 
 ## Auto-Fill Arguments
 
@@ -337,6 +261,127 @@ Form.from_model(
 )
 ```
 
+## Building Forms by Hand
+
+For full control over layout and behavior, combine individual input components directly. Named inputs automatically sync their values to client state, so `{{ name }}` references the current value of `Input(name="name")`.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}}}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Column, Input, Label
+from prefab_ui.actions import ToolCall
+
+with Column(gap=3):
+    Label("Name")
+    Input(name="name", placeholder="Your name")
+    Label("Email")
+    Input(name="email", input_type="email", placeholder="you@example.com")
+    Button("Submit", on_click=ToolCall(
+        "create_user",
+        arguments={"name": "{{ name }}", "email": "{{ email }}"},
+    ))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Label",
+        "text": "Name"
+      },
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Your name",
+        "name": "name",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Label",
+        "text": "Email"
+      },
+      {
+        "type": "Input",
+        "inputType": "email",
+        "placeholder": "you@example.com",
+        "name": "email",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Button",
+        "label": "Submit",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "toolCall",
+          "tool": "create_user",
+          "arguments": {
+            "name": "{{ name }}",
+            "email": "{{ email }}"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+This approach gives you complete control, but it requires wiring up every label, input type, and argument template yourself. For models with many fields, `Form.from_model()` handles all of that automatically.
+
 ## Unsupported Types
 
 `from_model()` skips fields with complex types that have no natural form input mapping: `list`, `dict`, `set`, `tuple`, and nested `BaseModel` instances. If you need these, build those parts of the form manually and handle the arguments yourself.
+
+## API Reference
+
+<Card icon="code" title="Form Parameters">
+<ParamField body="gap" type="int" default="4">
+  Spacing between form children (maps to Tailwind `gap-N`).
+</ParamField>
+
+<ParamField body="on_submit" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when the form is submitted.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Form.from_model() Parameters">
+<ParamField body="model" type="type[BaseModel]" required>
+  Pydantic model class to generate the form from.
+</ParamField>
+
+<ParamField body="submit_label" type="str" default='"Submit"'>
+  Text for the submit button.
+</ParamField>
+
+<ParamField body="on_submit" type="Action | list[Action] | None" default="None">
+  Action(s) fired on submit. A `ToolCall` with no arguments gets auto-filled from model fields.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional CSS classes on the form container.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Form
+{
+  "type": "Form",
+  "children?": "[Component]",
+  "onSubmit?": "Action | [Action]",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Form](/protocol/form).

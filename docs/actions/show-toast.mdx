@@ -1,0 +1,249 @@
+---
+title: Show Toast
+description: Display a notification from any UI interaction.
+icon: message-circle
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`ShowToast` displays a brief notification. It's a client-side action — no server round-trip — so feedback is instant. Fire it directly from a button click, or use it as a `ToolCall` callback to report success or failure after a server action completes.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Say hello","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Hey there, {{ name }}!"}},{"type":"Button","label":"Warn me","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability levels rising","variant":"warning"}}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Row
+from prefab_ui.actions import ShowToast
+
+with Row(gap=2):
+    Button("Say hello", on_click=ShowToast("Hey there, {{ name }}!"))
+    Button("Warn me", variant="outline",
+           on_click=ShowToast("Improbability levels rising", variant="warning"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Say hello",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Hey there, {{ name }}!"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "Warn me",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Improbability levels rising",
+          "variant": "warning"
+        }
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Variants
+
+The `variant` parameter controls the toast's visual style. Omit it for a neutral default.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 flex-wrap","type":"Row","children":[{"type":"Button","label":"Default","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Success","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel registered","variant":"success"}},{"type":"Button","label":"Error","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel not found","variant":"error"}},{"type":"Button","label":"Warning","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability drive unstable","variant":"warning"}},{"type":"Button","label":"Info","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"42 towels in inventory","variant":"info"}}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Row
+from prefab_ui.actions import ShowToast
+
+with Row(gap=2, css_class="flex-wrap"):
+    Button("Default", variant="outline",
+           on_click=ShowToast("Something happened"))
+    Button("Success", variant="outline",
+           on_click=ShowToast("Towel registered", variant="success"))
+    Button("Error", variant="outline",
+           on_click=ShowToast("Towel not found", variant="error"))
+    Button("Warning", variant="outline",
+           on_click=ShowToast("Improbability drive unstable", variant="warning"))
+    Button("Info", variant="outline",
+           on_click=ShowToast("42 towels in inventory", variant="info"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 flex-wrap",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Default",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Something happened"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "Success",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Towel registered",
+          "variant": "success"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "Error",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Towel not found",
+          "variant": "error"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "Warning",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "Improbability drive unstable",
+          "variant": "warning"
+        }
+      },
+      {
+        "type": "Button",
+        "label": "Info",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "showToast",
+          "message": "42 towels in inventory",
+          "variant": "info"
+        }
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Description Text
+
+Add a secondary line with the `description` parameter for toasts that need more context.
+
+```python
+ShowToast("Deployment complete", description="3 agents online", variant="success")
+```
+
+## Duration
+
+By default the host decides how long toasts persist. Override with `duration` (in milliseconds):
+
+```python
+ShowToast("Quick flash", duration=1500)
+ShowToast("Read this carefully", duration=10000)
+```
+
+## As ToolCall Callbacks
+
+The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `ToolCall` to give feedback after a server action completes. The `{{ $error }}` variable captures the error message from the server.
+
+<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item","arguments":{"data":"{{ item }}"}}}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import ToolCall, ShowToast
+
+Button(
+    "Save",
+    on_click=ToolCall(
+        "save_item",
+        arguments={"data": "{{ item }}"},
+        on_success=ShowToast("Saved successfully!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Save",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "onSuccess": {
+        "action": "showToast",
+        "message": "Saved successfully!",
+        "variant": "success"
+      },
+      "onError": {
+        "action": "showToast",
+        "message": "{{ $error }}",
+        "variant": "error"
+      },
+      "action": "toolCall",
+      "tool": "save_item",
+      "arguments": {
+        "data": "{{ item }}"
+      }
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="ShowToast Parameters">
+<ParamField body="message" type="str" required>
+  Toast message text. Can be passed as a positional argument. Supports `{{ key }}` interpolation.
+</ParamField>
+<ParamField body="description" type="str | None" default="None">
+  Optional secondary text displayed below the message.
+</ParamField>
+<ParamField body="variant" type='"default" | "success" | "error" | "warning" | "info" | None' default="None">
+  Visual style of the toast.
+</ParamField>
+<ParamField body="duration" type="int | None" default="None">
+  Auto-dismiss duration in milliseconds. When omitted, the host decides.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json ShowToast
+{
+  "action": "showToast",
+  "message": "string (required)",
+  "description": "string | null",
+  "variant": "default | success | error | warning | info | null",
+  "duration": "integer | null"
+}
+```
+
+For the complete protocol schema, see [ShowToast](/protocol/show-toast).

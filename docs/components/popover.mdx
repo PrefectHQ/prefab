@@ -152,6 +152,68 @@ with Popover(title="Guide Entry", side="right"):
 
 The renderer auto-adjusts if the popover would overflow the viewport, so the `side` is a preference rather than a hard constraint.
 
+## Inline Confirmation
+
+For lighter-weight confirmations that don't need a full modal overlay, a Popover works well. The same trigger-then-content pattern applies.
+
+<ComponentPreview json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Archive","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Archive this item?"},{"type":"Button","label":"Confirm","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"archive_item","arguments":{"id":"{{ item_id }}"}}}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Column, Popover, Text
+from prefab_ui.actions import ToolCall
+
+with Popover():
+    Button("Archive", variant="outline")
+    with Column(gap=2):
+        Text("Archive this item?")
+        Button(
+            "Confirm",
+            on_click=ToolCall("archive_item", arguments={"id": "{{ item_id }}"}),
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Popover",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Archive",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Text",
+            "content": "Archive this item?"
+          },
+          {
+            "type": "Button",
+            "label": "Confirm",
+            "variant": "default",
+            "size": "default",
+            "disabled": false,
+            "onClick": {
+              "action": "toolCall",
+              "tool": "archive_item",
+              "arguments": {
+                "id": "{{ item_id }}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Popover Parameters">
