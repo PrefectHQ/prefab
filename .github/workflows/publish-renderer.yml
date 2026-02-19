@@ -33,13 +33,22 @@ jobs:
           cache-dependency-path: renderer/package-lock.json
           registry-url: "https://registry.npmjs.org"
 
+      - name: Set npm version from git tag
+        working-directory: renderer
+        run: |
+          # Convert git tag (e.g. v0.1.0a1) to semver (e.g. 0.1.0-alpha.1)
+          RAW="${{ github.ref_name }}"
+          VERSION="${RAW#v}"
+          VERSION=$(echo "$VERSION" | sed -E 's/a([0-9]+)/-alpha.\1/; s/b([0-9]+)/-beta.\1/; s/rc([0-9]+)/-rc.\1/')
+          npm version "$VERSION" --no-git-tag-version
+
       - run: npm ci
         working-directory: renderer
 
       - run: npm run build:publish
         working-directory: renderer
 
-      - name: Get npm tag from version
+      - name: Derive npm dist-tag
         id: npm-tag
         working-directory: renderer
         run: |
