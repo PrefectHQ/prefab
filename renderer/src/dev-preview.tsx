@@ -133,6 +133,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
           </div>
         )}
         <RenderTree tree={tree} state={state} app={null} />
+        <Toaster />
       </div>
     );
   }

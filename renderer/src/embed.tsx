@@ -6,7 +6,9 @@
  * on document.body so `position: fixed` overlays can use the full viewport.
  */
 
+import { createPortal } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
+import { Toaster } from "sonner";
 import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
@@ -77,6 +79,7 @@ function EmbedPreview({
   return (
     <PortalContainerProvider container={container}>
       <RenderTree tree={tree} state={state} app={null} />
+      {createPortal(<Toaster />, container)}
     </PortalContainerProvider>
   );
 }

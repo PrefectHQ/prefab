@@ -1,0 +1,34 @@
+---
+title: MCP Server
+sidebarTitle: MCP Server
+description: Build MCP Apps that render inside Claude Desktop, ChatGPT, and other hosts.
+icon: message-bot
+---
+
+<Info>
+MCP App support will be available in [FastMCP 3.1](https://github.com/jlowin/fastmcp). This page will be updated with full documentation when it ships.
+</Info>
+
+MCP Apps are an extension of the Model Context Protocol that lets MCP servers render interactive UIs directly inside the conversation. Your tool returns a component tree, and the host displays it as a live interface — forms, charts, data tables — not as static text.
+
+The integration targets FastMCP. Mark any tool with `app=True` and return a Prefab component tree:
+
+```python
+from prefab_ui import FastMCP
+from prefab_ui.components import Card, CardContent, Column, H3, Input, Button
+from prefab_ui.actions import ToolCall
+
+mcp = FastMCP("My Server")
+
+@mcp.tool(app=True)
+async def search(query: str = "") -> Card:
+    results = find_items(query) if query else []
+    with Card() as view:
+        with CardContent():
+            with Column(gap=3):
+                Input(name="q", placeholder="Search...")
+                Button("Go", on_click=ToolCall("search", arguments={"query": "{{ q }}"}))
+    return view
+```
+
+When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive search UI instead of plain text. Client-side actions like `SetState`, `ToggleState`, and `ShowToast` work immediately in the browser, while server actions like `ToolCall` make a round-trip through the MCP protocol back to your server — so the UI can fetch fresh data, submit input, and trigger server-side logic.
