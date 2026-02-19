@@ -43,6 +43,19 @@ Responsive CSS grid container.
           "type": "integer"
         },
         {
+          "items": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        {
           "additionalProperties": {
             "type": "integer"
           },
@@ -53,6 +66,14 @@ Responsive CSS grid container.
         }
       ],
       "default": null
+    },
+    "columnTemplate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS grid-template-columns value for custom column widths."
     },
     "minColumnWidth": {
       "type": [

@@ -622,6 +622,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Grid, H3, P\n\nwith Grid(columns=[1, 3], gap=6, css_class=\"p-3 border-3 border-dashed\"):\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Sidebar\")\n        P(\"Navigation or filters.\")\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Main Content\")\n        P(\"The sidebar gets 1/4 of the space; main content gets 3/4.\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Grid, H3, P, Separator\n\nwith Grid(columns=[1, \"auto\", 1], gap=6, css_class=\"p-3 border-3 border-dashed\"):\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Panel A\")\n        P(\"Left side content.\")\n    Separator(orientation=\"vertical\")\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Panel B\")\n        P(\"Right side content.\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Div, Grid\n\nwith Grid(min_column_width=\"10rem\", gap=4):\n    for _ in range(6):\n        Div(css_class=\"bg-emerald-500 rounded-md h-10\")"
   },
   {
