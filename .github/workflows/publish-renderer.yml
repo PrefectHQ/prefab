@@ -53,11 +53,7 @@ jobs:
         working-directory: renderer
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          if [[ "$VERSION" == *"-alpha"* ]]; then TAG=alpha
-          elif [[ "$VERSION" == *"-beta"* ]]; then TAG=beta
-          elif [[ "$VERSION" == *"-rc"* ]]; then TAG=next
-          else TAG=latest
-          fi
+          [[ "$VERSION" == *"-"* ]] && TAG=next || TAG=latest
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - run: npm publish --access public --tag ${{ steps.npm-tag.outputs.tag }}
