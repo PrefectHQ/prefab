@@ -170,7 +170,7 @@ def _rebuild_block(
         f" json={{{compact_json}}}>"
     )
 
-    # Build interior: CodeGroup with Python + Protocol, or just Python if hideJson
+    # Build interior: CodeGroup with Python + Protocol tabs (unless hideJson)
     if hide_json:
         new_interior = f"\n{python_block}\n"
     else:
