@@ -82,6 +82,36 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2):\n    Button(\"Notify\", on_click=ShowToast(\"Something happened\"))\n    Button(\"Warn me\", variant=\"outline\",\n           on_click=ShowToast(\"Improbability levels rising\", variant=\"warning\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2, css_class=\"flex-wrap\"):\n    Button(\"Default\", variant=\"outline\",\n           on_click=ShowToast(\"Something happened\"))\n    Button(\"Success\", variant=\"success\",\n           on_click=ShowToast(\"Towel registered\", variant=\"success\"))\n    Button(\"Error\", variant=\"destructive\",\n           on_click=ShowToast(\"Towel not found\", variant=\"error\"))\n    Button(\"Warning\", variant=\"warning\",\n           on_click=ShowToast(\"Improbability drive unstable\", variant=\"warning\"))\n    Button(\"Info\", variant=\"info\",\n           on_click=ShowToast(\"42 towels in inventory\", variant=\"info\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ShowToast\n\nButton(\n    \"Deploy\",\n    on_click=ShowToast(\n        \"Deployment complete\",\n        description=\"3 agents online\",\n        variant=\"success\",\n    ),\n)"
+  },
+  {
+    "title": "ShowToast(\"Quick flash\", duration=1500)",
+    "category": "Actions",
+    "code": "ShowToast(\"Read this carefully\", duration=10000)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2):\n    Button(\"Success callback\", variant=\"success\",\n           on_click=ShowToast(\"Saved successfully!\", variant=\"success\"))\n    Button(\"Error callback\", variant=\"destructive\",\n           on_click=ShowToast(\"Could not save: connection timed out\", variant=\"error\"))"
+  },
+  {
+    "title": "Button(",
+    "category": "Actions",
+    "code": "\"Save\",\n    on_click=ToolCall(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import UpdateContext\n\nButton(\"Use Advanced Mode\", on_click=UpdateContext(\n    content=\"User has selected advanced mode. Provide detailed technical responses.\"\n))"
   },
   {
@@ -482,7 +512,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\n\nwith Dialog(\n    title=\"Activate Improbability Drive\",\n    description=\"This action cannot be undone.\",\n):\n    Button(\"Engage Drive\", variant=\"destructive\")\n    Text(\n        \"Are you sure? The last time this was engaged, \"\n        \"a sperm whale and a bowl of petunias materialized in mid-air.\"\n    )\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\"Engage\", variant=\"destructive\")"
+    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
+  },
+  {
+    "title": "from prefab_ui.components import Button, Dialog, Row, Text",
+    "category": "Components",
+    "code": "from prefab_ui.actions import ToolCall, ShowToast\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=ToolCall(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=ShowToast(\"User removed\", variant=\"success\"),\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -533,6 +568,36 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    ForEach,\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Column,\n)\n\nset_initial_state(projects=[\n    {\"name\": \"Heart of Gold\", \"owner\": {\"name\": \"Zaphod Beeblebrox\"}},\n    {\"name\": \"Hitchhiker's Guide\", \"owner\": {\"name\": \"Ford Prefect\"}},\n])\n\nwith Column(gap=2):\n    with ForEach(\"projects\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"Owner: {{ owner.name }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardDescription, CardFooter,\n    CardHeader, CardTitle, Column, Form, Grid, Input, Label,\n)\nfrom prefab_ui.actions import ToolCall\n\nsubmit = ToolCall(\"create_user\", arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})\n\nwith Grid(columns=2, gap=6):\n    with Form(on_submit=submit):\n        with Column(gap=2):\n            Label(\"Name\")\n            Input(name=\"name\", placeholder=\"Your name\")\n        with Column(gap=2):\n            Label(\"Email\")\n            Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n        Button(\"Submit\")\n\n    with Card():\n        with Form(on_submit=submit):\n            with CardHeader():\n                CardTitle(\"Create Account\")\n                CardDescription(\"Enter your information to get started.\")\n            with CardContent():\n                with Column(gap=4):\n                    with Column(gap=2):\n                        Label(\"Name\")\n                        Input(name=\"name\", placeholder=\"Your name\")\n                    with Column(gap=2):\n                        Label(\"Email\")\n                        Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n            with CardFooter(css_class=\"justify-end\"):\n                Button(\"Submit\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=ToolCall(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\")\n            Button(\"Send Message\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field, SecretStr\nfrom prefab_ui.components import Form\n\nclass UserProfile(BaseModel):\n    username: str\n    email: str\n    age: int = Field(ge=0, le=150)\n    password: SecretStr\n    active: bool = True\n\nForm.from_model(UserProfile)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\n\nclass Profile(BaseModel):\n    name: str = Field(\n        title=\"Your Name\",\n        description=\"How should we address you?\",\n        min_length=2,\n        max_length=50,\n    )\n    bio: str = Field(\n        default=\"\",\n        description=\"Tell us about yourself\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 3}},\n    )\n\nForm.from_model(Profile)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_success=ShowToast(\"Contact saved!\", variant=\"success\"),\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -698,6 +763,11 @@
     "title": "from prefab_ui.components import Button, Popover, Text",
     "category": "Components",
     "code": "with Popover(title=\"Guide Entry\", side=\"right\"):\n    Button(\"Hover for info\", variant=\"outline\")\n    Text(\"A towel is about the most massively useful thing an interstellar hitchhiker can have.\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1213,151 +1283,6 @@
     "title": "Python icon=\"python\"",
     "category": "General",
     "code": "from prefab_ui.components import Button, Card, CardContent, Column, Input\n\nwith Card() as view:\n    with CardContent():\n        with Column(gap=3):\n            Input(name=\"email\", placeholder=\"you@example.com\")\n            Button(\"Subscribe\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\")\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=ToolCall(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
-  },
-  {
-    "title": "Two-Step Confirmation",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Dialog, Row, Text\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Column(\n        gap=3,\n        children=[\n            Text(\"User {{ user_name }} will lose access to all projects.\"),\n            Row(\n                gap=2,\n                css_class=\"justify-end\",\n                children=[\n                    Button(\"Cancel\", variant=\"outline\"),\n                    Button(\n                        \"Remove User\",\n                        variant=\"destructive\",\n                        on_click=ToolCall(\n                            \"remove_user\",\n                            arguments={\"user_id\": \"{{ user_id }}\"},\n                            on_success=ShowToast(\"User removed\", variant=\"success\"),\n                            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n                        ),\n                    ),\n                ],\n            ),\n        ],\n    )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nButton(\n    \"Save\",\n    on_click=ToolCall(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import ToolCall\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=ToolCall(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n        )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n        DataTableColumn(key=\"updated\", header=\"Updated\", sortable=True),\n    ],\n    rows=[\n        {\"name\": \"Auth service\", \"status\": \"Healthy\", \"updated\": \"2 min ago\"},\n        {\"name\": \"API gateway\", \"status\": \"Degraded\", \"updated\": \"30 sec ago\"},\n        {\"name\": \"Database\", \"status\": \"Healthy\", \"updated\": \"5 min ago\"},\n    ],\n    searchable=True,\n    paginated=True,\n    page_size=10,\n)"
-  },
-  {
-    "title": "from prefab_ui.components import DataTable, DataTableColumn",
-    "category": "Patterns",
-    "code": "DataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=\"{{ items }}\",\n    searchable=True,\n)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import (\n    Badge,\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    ForEach,\n    Row,\n)\n\nwith ForEach(\"users\"):\n    with Card():\n        with CardHeader():\n            with Row(gap=2, css_class=\"items-center\"):\n                CardTitle(\"{{ name }}\")\n                Badge(\"{{ role }}\", variant=\"secondary\")\n            CardDescription(\"{{ email }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import Badge, ForEach, Row",
-    "category": "Patterns",
-    "code": "with Row(gap=2):\n    with ForEach(\"tags\"):\n        Badge(\"{{ $item }}\", variant=\"outline\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Tab, Tabs, Text\n\nwith Tabs(default_value=\"active\"):\n    with Tab(\"Active\", value=\"active\"):\n        Text(\"Active items go here\")\n    with Tab(\"Archived\", value=\"archived\"):\n        Text(\"Archived items go here\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Accordion, AccordionItem, Text\n\nwith Accordion():\n    with AccordionItem(\"Section 1\", value=\"s1\"):\n        Text(\"Content for section 1\")\n    with AccordionItem(\"Section 2\", value=\"s2\"):\n        Text(\"Content for section 2\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(name=\"step\", default_value=\"setup\"):\n        with Page(\"Setup\", value=\"setup\"):\n            Text(\"Configure your settings\")\n            Button(\"Next\", on_click=SetState(\"step\", \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            Text(\"Review your choices\")\n            Button(\"Next\", on_click=SetState(\"step\", \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Column, Progress, Text\n\nwith Column(gap=2):\n    Text(\"Processing: {{ progress }}%\")\n    Progress(value=\"{{ progress }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, Input, Label\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Label(\"Name\")\n    Input(name=\"name\", placeholder=\"Your name\")\n    Label(\"Email\")\n    Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n    Button(\"Submit\", on_click=ToolCall(\n        \"create_user\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"},\n    ))"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
-  },
-  {
-    "title": "Auto-Fill",
-    "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
-  },
-  {
-    "title": "ToolCall(\"submit_contact\", arguments={",
-    "category": "Patterns",
-    "code": "\"data\": {\n        \"name\": \"{{ name }}\",\n        \"email\": \"{{ email }}\",\n        \"message\": \"{{ message }}\",\n    }\n})"
-  },
-  {
-    "title": "Self-Calling Tool",
-    "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui import FastMCP\nfrom prefab_ui import AppResult\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.components import Form, Text\n\nmcp = FastMCP(\"Contacts\")\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n    phone: str = \"\"\n\n@mcp.tool(ui=True)\nasync def create_contact(data: Contact | None = None) -> AppResult:\n    if data is None:\n        return AppResult(\n            view=Form.from_model(\n                Contact,\n                on_submit=ToolCall(\n                    \"create_contact\",\n                    on_success=ShowToast(\"Saved!\"),\n                ),\n            ),\n        )\n    save_to_db(data)\n    return AppResult(view=Text(f\"Created contact: {data.name}\"))"
-  },
-  {
-    "title": "Custom Error Handling",
-    "category": "Patterns",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Column, Input, Text\n\nwith Column(gap=3):\n    Input(name=\"name\", placeholder=\"Type your name...\")\n    Text(\"Hello, {{ name }}!\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\", on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the hidden details!\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button, Column, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"search\", placeholder=\"Search users...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"find_users\",\n        arguments={\"query\": \"{{ search }}\"},\n        result_key=\"results\",\n    ))\n    DataTable(\n        columns=[\n            DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n            DataTableColumn(key=\"email\", header=\"Email\"),\n        ],\n        rows=\"{{ results }}\",\n        searchable=True,\n    )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    ForEach,\n    Input,\n)\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Input(name=\"q\", placeholder=\"Search products...\")\n    Button(\"Search\", on_click=ToolCall(\n        \"search_products\",\n        arguments={\"query\": \"{{ q }}\"},\n        result_key=\"products\",\n    ))\n    with ForEach(\"products\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"{{ name }}\")\n                CardDescription(\"{{ description }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, SetState, ShowToast\n\nButton(\"Process\", on_click=[\n    SetState(\"processing\", True),\n    ToolCall(\n        \"run_analysis\",\n        arguments={\"data\": \"{{ dataset }}\"},\n        on_success=ShowToast(\"Analysis complete!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n    SetState(\"processing\", False),\n])"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nButton(\"Delete\", variant=\"destructive\", on_click=ToolCall(\n    \"delete_item\",\n    arguments={\"id\": \"{{ item_id }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n))"
-  },
-  {
-    "title": "from prefab_ui.components import Grid, Row",
-    "category": "Patterns",
-    "code": "from prefab_ui.css import Responsive\n\nGrid(columns=Responsive(default=1, md=2, lg=3))\nRow(gap=Responsive(default=2, md=4, lg=6))"
-  },
-  {
-    "title": "Define and Use",
-    "category": "Patterns",
-    "code": "from prefab_ui.define import Define\nfrom prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import Card, CardHeader, CardTitle, CardDescription, Column\n\nwith Define(\"user-card\") as user_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ role }}\")\n\nwith Column(gap=3) as view:\n    Use(\"user-card\", name=\"Alice\", role=\"Engineer\")\n    Use(\"user-card\", name=\"Bob\", role=\"Designer\")\n    Use(\"user-card\", name=\"Carol\", role=\"PM\")\n\nUIResponse(view=view, defs=[user_card])"
-  },
-  {
-    "title": "from prefab_ui.define import Define",
-    "category": "Patterns",
-    "code": "from prefab_ui.components import Card, CardHeader, CardTitle, Badge, Row\n\nwith Define(\"status-badge\") as status_badge:\n    with Row(gap=2, css_class=\"items-center\"):\n        CardTitle(\"{{ label }}\")\n        Badge(\"{{ status }}\", variant=\"{{ variant }}\")"
-  },
-  {
-    "title": "from prefab_ui.use import Use",
-    "category": "Patterns",
-    "code": "# Bare reference (no overrides)\nUse(\"status-badge\")\n\n# With scoped data\nUse(\"status-badge\", label=\"Build\", status=\"passing\", variant=\"default\")"
-  },
-  {
-    "title": "Define with ForEach",
-    "category": "Patterns",
-    "code": "from prefab_ui.define import Define\nfrom prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
   },
   {
     "title": "app.py",

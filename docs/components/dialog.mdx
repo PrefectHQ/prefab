@@ -101,43 +101,42 @@ with Dialog(
 
 ## Confirmation Pattern
 
-Dialogs work well for destructive actions that need explicit confirmation before proceeding.
+Dialogs work well for destructive actions that need explicit confirmation before proceeding. The Cancel button closes the dialog automatically — no extra wiring required.
 
-<ComponentPreview height="360px" json={{"view":{"type":"Dialog","title":"Activate Improbability Drive","description":"This action cannot be undone.","children":[{"type":"Button","label":"Engage Drive","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Engage","variant":"destructive","size":"default","disabled":false}]}]}}}>
+<ComponentPreview height="420px" json={{"view":{"type":"Dialog","title":"Delete Item","description":"This action cannot be undone.","children":[{"type":"Button","label":"Delete","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure you want to permanently delete this item?"},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Confirm Delete","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"delete_item","arguments":{"id":"{{ item_id }}"}}}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
+from prefab_ui.actions import ToolCall
 
-with Dialog(
-    title="Activate Improbability Drive",
-    description="This action cannot be undone.",
-):
-    Button("Engage Drive", variant="destructive")
-    Text(
-        "Are you sure? The last time this was engaged, "
-        "a sperm whale and a bowl of petunias materialized in mid-air."
-    )
+with Dialog(title="Delete Item", description="This action cannot be undone."):
+    Button("Delete", variant="destructive")
+    Text("Are you sure you want to permanently delete this item?")
     with Row(gap=2, css_class="justify-end"):
         Button("Cancel", variant="outline")
-        Button("Engage", variant="destructive")
+        Button(
+            "Confirm Delete",
+            variant="destructive",
+            on_click=ToolCall("delete_item", arguments={"id": "{{ item_id }}"}),
+        )
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
     "type": "Dialog",
-    "title": "Activate Improbability Drive",
+    "title": "Delete Item",
     "description": "This action cannot be undone.",
     "children": [
       {
         "type": "Button",
-        "label": "Engage Drive",
+        "label": "Delete",
         "variant": "destructive",
         "size": "default",
         "disabled": false
       },
       {
         "type": "Text",
-        "content": "Are you sure? The last time this was engaged, a sperm whale and a bowl of petunias materialized in mid-air."
+        "content": "Are you sure you want to permanently delete this item?"
       },
       {
         "cssClass": "gap-2 justify-end",
@@ -152,10 +151,17 @@ with Dialog(
           },
           {
             "type": "Button",
-            "label": "Engage",
+            "label": "Confirm Delete",
             "variant": "destructive",
             "size": "default",
-            "disabled": false
+            "disabled": false,
+            "onClick": {
+              "action": "toolCall",
+              "tool": "delete_item",
+              "arguments": {
+                "id": "{{ item_id }}"
+              }
+            }
           }
         ]
       }
@@ -165,6 +171,31 @@ with Dialog(
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Confirmation with Feedback
+
+Wire `ShowToast` callbacks onto a `ToolCall` to give feedback after the server responds. The `on_success` toast confirms the action completed; `on_error` shows what went wrong — both while the user is still in context.
+
+```python
+from prefab_ui.components import Button, Dialog, Row, Text
+from prefab_ui.actions import ToolCall, ShowToast
+
+with Dialog(title="Remove User", description="This will revoke all access."):
+    Button("Remove", variant="destructive")
+    Text("User {{ user_name }} will lose access to all projects.")
+    with Row(gap=2, css_class="justify-end"):
+        Button("Cancel", variant="outline")
+        Button(
+            "Remove User",
+            variant="destructive",
+            on_click=ToolCall(
+                "remove_user",
+                arguments={"user_id": "{{ user_id }}"},
+                on_success=ShowToast("User removed", variant="success"),
+                on_error=ShowToast("{{ $error }}", variant="error"),
+            ),
+        )
+```
 
 ## API Reference
 
