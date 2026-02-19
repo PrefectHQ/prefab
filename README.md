@@ -6,8 +6,6 @@
 
 **The agentic frontend framework that even a human can use.**
 
-[This is interactive on the docs site.](https://prefab.prefect.io/docs/welcome)
-
 *Made with 💙 by [Prefect](https://www.prefect.io/)*
 
 [![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui.svg)](https://pypi.org/project/prefab-ui)
