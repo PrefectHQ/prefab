@@ -1,4 +1,4 @@
-"""Prefab — the agentic frontend framework even a human can use.
+"""Prefab — the agentic frontend framework that even a human can use.
 
 A JSON component format that renders to real interactive frontends.
 Transport-agnostic: works with MCP servers, REST APIs, or any backend

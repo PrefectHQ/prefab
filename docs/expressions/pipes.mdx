@@ -21,7 +21,7 @@ Because pipe is the **lowest-precedence** operator, everything to the left evalu
 
 Numbers rarely belong in a UI raw. Prices need currency symbols and decimal alignment, ratios need percent signs, and KPIs need thousands separators. The number pipes handle locale-aware formatting so your expressions produce display-ready values:
 
-<ComponentPreview json={{"view": {"type": "Card", "children": [{"type": "CardHeader", "children": [{"type": "CardTitle", "content": "Q4 Revenue"}, {"type": "CardDescription", "content": "{{ revenue | currency }}"}]}, {"type": "CardContent", "children": [{"cssClass": "gap-2", "type": "Column", "children": [{"type": "Progress", "value": "{{ revenue / target * 100 }}", "max": 100.0}, {"cssClass": "gap-2 items-center", "type": "Row", "children": [{"type": "Text", "content": "{{ revenue / target | percent:1 }} of target"}, {"type": "Badge", "label": "{{ growth | percent:1 }} YoY", "variant": "secondary"}]}]}]}]}, "state": {"revenue": 2847500, "target": 3000000, "growth": 0.124}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ revenue / target | percent:1 }} of target"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]},"state":{"revenue":2847500,"target":3000000,"growth":0.124}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -124,7 +124,7 @@ with Card():
 
 Dates arrive from APIs as ISO strings — dense and machine-oriented. The date and time pipes transform them into human-friendly formats at varying levels of detail, from a terse `1/15/2025` to a full `January 15, 2025, 2:30 PM`:
 
-<ComponentPreview json={{"view": {"type": "Card", "children": [{"type": "CardHeader", "children": [{"type": "CardTitle", "content": "Team Standup"}, {"type": "CardDescription", "content": "{{ starts | date:long }}"}]}, {"type": "CardContent", "children": [{"cssClass": "gap-2 items-center", "type": "Row", "children": [{"type": "Badge", "label": "{{ starts | time }}", "variant": "outline"}, {"type": "Text", "content": "{{ starts | datetime }}"}]}]}]}, "state": {"starts": "2025-01-15T14:30:00Z"}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Team Standup"},{"type":"CardDescription","content":"{{ starts | date:long }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ starts | time }}","variant":"outline"},{"type":"Text","content":"{{ starts | datetime }}"}]}]}]},"state":{"starts":"2025-01-15T14:30:00Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -211,7 +211,7 @@ Pass an ISO date string as the input value. The `time` pipe also accepts time-on
 
 String pipes adjust casing and length — `upper` and `lower` normalize text for headings or labels, while `truncate` clamps to a maximum character count and appends `...` when the string overflows:
 
-<ComponentPreview json={{"view": {"type": "Card", "children": [{"type": "CardHeader", "children": [{"type": "CardTitle", "content": "{{ name | upper }}"}]}, {"type": "CardContent", "children": [{"cssClass": "gap-2", "type": "Column", "children": [{"type": "Badge", "label": "{{ name | lower }}", "variant": "secondary"}, {"type": "Text", "content": "{{ bio | truncate:80 }}"}]}]}]}, "state": {"name": "Arthur Dent", "bio": "A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name | upper }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"{{ name | lower }}","variant":"secondary"},{"type":"Text","content":"{{ bio | truncate:80 }}"}]}]}]},"state":{"name":"Arthur Dent","bio":"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -292,7 +292,7 @@ with Card():
 
 When state contains a list, you often need to summarize it — count the items, pull out the first or last entry, or collapse everything into a single readable string. The array pipes handle these without arithmetic or concatenation:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-2", "type": "Column", "children": [{"cssClass": "gap-2 items-center", "type": "Row", "children": [{"type": "Badge", "label": "{{ skills | first }}", "variant": "default"}, {"type": "Badge", "label": "{{ skills | last }}", "variant": "outline"}]}, {"type": "Text", "content": "{{ skills | join }}"}, {"type": "Text", "content": "{{ skills | length }} skills listed"}]}, "state": {"skills": ["Python", "TypeScript", "Rust", "Go"]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ skills | first }}","variant":"default"},{"type":"Badge","label":"{{ skills | last }}","variant":"outline"}]},{"type":"Text","content":"{{ skills | join }}"},{"type":"Text","content":"{{ skills | length }} skills listed"}]},"state":{"skills":["Python","TypeScript","Rust","Go"]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

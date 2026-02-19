@@ -4,7 +4,7 @@
 
 <img src="docs/assets/showcase.png" alt="Prefab" width="700">
 
-**The agentic frontend framework even a human can use.**
+**The agentic frontend framework that even a human can use.**
 
 [This is interactive on the docs site.](https://prefab.prefect.io/docs/welcome)
 

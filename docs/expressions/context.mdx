@@ -27,7 +27,7 @@ AppResult(state={"count": 0, "name": "Arthur"}, view=...)
 
 Any container component can introduce scoped bindings via `let` — a dict of names to template expressions. These values are available to all children and shadow outer scope for the same key.
 
-<ComponentPreview json={{"view": {"cssClass": "gap-2", "let": {"greeting": "Don't Panic", "name": "Arthur"}, "type": "Column", "children": [{"type": "Text", "content": "{{ greeting }}, {{ name }}"}, {"let": {"name": "Ford"}, "type": "Column", "children": [{"type": "Text", "content": "{{ greeting }}, {{ name }}"}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","let":{"greeting":"Don't Panic","name":"Arthur"},"type":"Column","children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"},{"let":{"name":"Ford"},"type":"Column","children":[{"type":"Text","content":"{{ greeting }}, {{ name }}"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Text
@@ -160,7 +160,7 @@ with ForEach("users"):
 
 [If/Elif/Else](/components/conditional) blocks use expressions to control which components render. The expression evaluates to a truthy or falsy value, and the first matching branch renders. This is one of the most practical uses of expression context — combining state from different sources to determine what the user sees:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"type": "Text", "content": "Inventory: {{ inventory }}"}, {"type": "Slider", "min": 0.0, "max": 30.0, "step": 1.0, "name": "inventory", "disabled": false}, {"type": "Condition", "cases": [{"when": "{{ inventory == 0 }}", "children": [{"type": "Alert", "variant": "destructive", "children": [{"type": "AlertDescription", "content": "Out of stock!"}]}]}, {"when": "{{ inventory > 0 && inventory < 10 }}", "children": [{"type": "Alert", "variant": "default", "children": [{"type": "AlertDescription", "content": "Low stock warning"}]}]}]}]}, "state": {"inventory": 15}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

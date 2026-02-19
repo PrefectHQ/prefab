@@ -12,7 +12,7 @@ State is client-side data that your UI can read and write. Components display st
 
 Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"type": "Slider", "min": 0.0, "max": 100.0, "name": "brightness", "disabled": false}, {"content": "Brightness: {{ brightness }}%", "type": "Muted"}]}, "state": {"brightness": 50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider, Muted, Column
@@ -71,7 +71,7 @@ async def settings() -> AppResult:
 
 For non-form elements like buttons, pass an explicit value as the second argument:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"cssClass": "gap-2", "type": "Row", "children": [{"type": "Button", "label": "Improbability", "variant": "outline", "size": "default", "disabled": false, "onClick": {"action": "setState", "key": "drive", "value": "improbability"}}, {"type": "Button", "label": "Conventional", "variant": "outline", "size": "default", "disabled": false, "onClick": {"action": "setState", "key": "drive", "value": "conventional"}}, {"type": "Button", "label": "Bistromath", "variant": "outline", "size": "default", "disabled": false, "onClick": {"action": "setState", "key": "drive", "value": "bistromath"}}]}, {"type": "Badge", "label": "Active drive: {{ drive }}", "variant": "default"}]}, "state": {"drive": "improbability"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, Button, Column, Row
@@ -158,7 +158,7 @@ State keys can contain dots to reach into nested objects. `profile.name` means "
 
 The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"type": "Card", "children": [{"type": "CardHeader", "children": [{"type": "CardTitle", "content": "{{ profile.name }}"}, {"type": "CardDescription", "content": "{{ profile.title }}"}]}]}, {"type": "Input", "inputType": "text", "placeholder": "Name", "name": "profile.name", "disabled": false, "required": false}, {"type": "Input", "inputType": "text", "placeholder": "Title", "name": "profile.title", "disabled": false, "required": false}]}, "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -255,7 +255,7 @@ If an intermediate path segment is missing or the wrong type (e.g. an integer se
 
 `ToggleState` flips a boolean — `True` becomes `False`, `False` becomes `True`. Pair it with [If](/components/conditional) for show/hide patterns:
 
-<ComponentPreview json={{"view": {"cssClass": "gap-2", "type": "Column", "children": [{"type": "Button", "label": "Toggle Details", "variant": "outline", "size": "default", "disabled": false, "onClick": {"action": "toggleState", "key": "showDetails"}}, {"type": "Condition", "cases": [{"when": "{{ showDetails }}", "children": [{"type": "Alert", "variant": "default", "children": [{"type": "AlertTitle", "content": "Here are the details!"}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Button, Column, If
@@ -318,7 +318,7 @@ with Column(gap=2):
 
 Type a name and click Add to see it appear in the list. Click × to remove a row.
 
-<ComponentPreview json={{"view": {"cssClass": "gap-3", "type": "Column", "children": [{"type": "ForEach", "key": "crew", "children": [{"cssClass": "gap-2 items-center", "type": "Row", "children": [{"type": "Text", "content": "{{ $item }}"}, {"type": "Button", "label": "\u00d7", "variant": "ghost", "size": "sm", "disabled": false, "onClick": {"action": "popState", "key": "crew", "index": "{{ $index }}"}}]}]}, {"cssClass": "gap-2", "type": "Row", "children": [{"type": "Input", "inputType": "text", "placeholder": "Crew member name...", "name": "new_member", "disabled": false, "required": false}, {"type": "Button", "label": "Add", "variant": "default", "size": "default", "disabled": false, "onClick": [{"action": "appendState", "key": "crew", "value": "{{ new_member }}"}, {"action": "setState", "key": "new_member", "value": ""}]}]}, {"content": "{{ crew | length }} crew members", "type": "Muted"}]}, "state": {"crew": ["Arthur Dent", "Ford Prefect", "Trillian"], "new_member": ""}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
