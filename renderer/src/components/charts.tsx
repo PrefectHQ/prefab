@@ -100,7 +100,11 @@ export function PrefabBarChart({
   const config = buildConfig(series);
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"}>
         {showGrid && (
           <CartesianGrid vertical={horizontal} horizontal={!horizontal} />
@@ -164,7 +168,11 @@ export function PrefabLineChart({
   const config = buildConfig(series);
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <LineChart data={data}>
         {showGrid && <CartesianGrid vertical={false} />}
         {xAxis && (
@@ -211,7 +219,11 @@ export function PrefabAreaChart({
   const config = buildConfig(series);
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <AreaChart data={data}>
         {showGrid && <CartesianGrid vertical={false} />}
         {xAxis && (
@@ -265,7 +277,11 @@ export function PrefabPieChart({
   }));
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <PieChart>
         {showTooltip && (
           <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
@@ -304,7 +320,11 @@ export function PrefabRadarChart({
   const config = buildConfig(series);
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <RadarChart data={data}>
         {showGrid && <PolarGrid />}
         {axisKey && <PolarAngleAxis dataKey={axisKey} />}
@@ -349,7 +369,11 @@ export function PrefabRadialChart({
   }));
 
   return (
-    <ChartContainer config={config} className={className} style={{ height }}>
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
       <RadialBarChart
         data={coloredData}
         innerRadius={innerRadius}

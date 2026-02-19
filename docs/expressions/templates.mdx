@@ -14,7 +14,7 @@ The key idea: **state keys become template variables.** When you set `name="Arth
 
 In this example, `set_initial_state` defines three keys — `name`, `role`, and `answer`. Each `{{ }}` template resolves its corresponding key from that state:
 
-<ComponentPreview auto json={`{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-1","type":"Column","children":[{"type":"Text","content":"Role: {{ role }}"},{"type":"Text","content":"The Answer to Everything: {{ answer }}"}]}]}]},"state":{"name":"Arthur Dent","role":"Reluctant Adventurer","answer":42}}`}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-1","type":"Column","children":[{"type":"Text","content":"Role: {{ role }}"},{"type":"Text","content":"The Answer to Everything: {{ answer }}"}]}]}]},"state":{"name":"Arthur Dent","role":"Reluctant Adventurer","answer":42}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -108,7 +108,7 @@ This distinction is important when passing values to props like `value`, `min`, 
 
 Templates aren't restricted to `content` or `label` — they work in any string prop anywhere in the component tree. Placeholders, CSS classes, URLs, titles, descriptions, action arguments — if it's a string, you can put `{{ }}` in it.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}`}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"{{ name }}"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -184,7 +184,7 @@ State keys and template variables are the same thing, which means form inputs ca
 
 Try typing in these inputs — the text below updates as you type:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false},{"type":"Text","content":"{{ first + ' ' + last }}"}]},"state":{"first":"Arthur","last":"Dent"}}`}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false},{"type":"Text","content":"{{ first + ' ' + last }}"}]},"state":{"first":"Arthur","last":"Dent"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Input, Text

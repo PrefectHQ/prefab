@@ -14,7 +14,7 @@ Most components in a Prefab layout are defined up front — you know at build ti
 
 Pass the state key name as the first argument. Here, `info` holds a Card component tree in state:
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Starship Registry","level":3},{"type":"Slot","name":"info"}]},"state":{"info":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}`}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Starship Registry","level":3},{"type":"Slot","name":"info"}]},"state":{"info":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Heading, Slot
@@ -89,7 +89,7 @@ The layout defines *where* the dynamic content goes. The state (or an action tha
 
 Nest children inside `Slot` to define what shows when the state key is empty. Toggle the switch to see the transition — the ternary expression pulls the `detail_card` component tree from state when on, or `null` when off.
 
-<ComponentPreview auto json={`{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Switch","label":"Show details","checked":false,"size":"default","name":"selected_item","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","type":"Text","content":"Toggle the switch to load details"}]}]},"state":{"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}`}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Switch","label":"Show details","checked":false,"size":"default","name":"selected_item","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","type":"Text","content":"Toggle the switch to load details"}]}]},"state":{"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Heading, Slot, Switch, Text
