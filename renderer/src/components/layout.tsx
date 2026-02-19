@@ -31,6 +31,7 @@ export function Column({ className, cssClass, children }: LayoutProps) {
 
 interface GridProps extends LayoutProps {
   minColumnWidth?: string;
+  columnTemplate?: string;
 }
 
 export function Grid({
@@ -38,12 +39,15 @@ export function Grid({
   cssClass,
   children,
   minColumnWidth,
+  columnTemplate,
 }: GridProps) {
-  const style = minColumnWidth
-    ? {
-        gridTemplateColumns: `repeat(auto-fit, minmax(${minColumnWidth}, 1fr))`,
-      }
-    : undefined;
+  const style = columnTemplate
+    ? { gridTemplateColumns: columnTemplate }
+    : minColumnWidth
+      ? {
+          gridTemplateColumns: `repeat(auto-fit, minmax(${minColumnWidth}, 1fr))`,
+        }
+      : undefined;
   return (
     <div className={cn("grid w-full", className, cssClass)} style={style}>
       {children}

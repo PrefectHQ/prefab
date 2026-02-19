@@ -92,6 +92,44 @@ class TestResponsiveColumns:
         assert "grid-cols-3" not in (g.css_class or "")
 
 
+class TestGridColumnTemplate:
+    def test_list_basic(self) -> None:
+        g = Grid(columns=[1, "auto", 1])
+        assert g.column_template == "1fr auto 1fr"
+        assert "grid-cols" not in (g.css_class or "")
+
+    def test_list_fractional(self) -> None:
+        g = Grid(columns=[2, 1])
+        assert g.column_template == "2fr 1fr"
+
+    def test_list_with_fixed_units(self) -> None:
+        g = Grid(columns=["200px", 1, 1])
+        assert g.column_template == "200px 1fr 1fr"
+
+    def test_list_serializes_to_json(self) -> None:
+        g = Grid(columns=[1, "auto", 1])
+        j = g.to_json()
+        assert j["columnTemplate"] == "1fr auto 1fr"
+        assert "minColumnWidth" not in j
+
+    def test_list_with_gap(self) -> None:
+        g = Grid(columns=[1, "auto", 1], gap=4)
+        assert g.column_template == "1fr auto 1fr"
+        assert "gap-4" in (g.css_class or "")
+
+    def test_int_columns_unchanged(self) -> None:
+        g = Grid(columns=3)
+        assert g.column_template is None
+        assert "grid-cols-3" in (g.css_class or "")
+
+    def test_responsive_columns_unchanged(self) -> None:
+        g = Grid(columns=Responsive(default=1, md=2))
+        assert g.column_template is None
+        css = g.css_class or ""
+        assert "grid-cols-1" in css
+        assert "md:grid-cols-2" in css
+
+
 class TestResponsiveGap:
     def test_fixed_gap_unchanged(self) -> None:
         css = _compile_layout_classes(gap=4)
