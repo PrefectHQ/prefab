@@ -1,0 +1,76 @@
+---
+title: Quickstart
+sidebarTitle: Quickstart
+description: Build your first Prefab app in under 2 minutes.
+icon: rocket
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+## Install
+
+```bash
+pip install prefab-ui
+```
+
+Requires Python 3.10+.
+
+## Create an app
+
+Save this as `app.py`:
+
+```python app.py
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted
+from prefab_ui.actions import ShowToast
+
+with Column(css_class="max-w-md mx-auto") as view:
+    with Card():
+        with CardContent():
+            with Column(gap=3):
+                H3("Hello, {{ name }}!")
+                Muted("Type your name and watch the heading update in real time.")
+                Input(name="name", placeholder="Your name...")
+        with CardFooter():
+            Button("Say hi", on_click=ShowToast("Hey there, {{ name }}!"))
+
+app = PrefabApp(view=view, state={"name": "world"})
+```
+
+## Run it
+
+```bash
+prefab serve app.py
+```
+
+Your browser opens to `http://127.0.0.1:5175`. Here's what you'll see:
+
+<ComponentPreview json={{"view":{"type":"Column","cssClass":"max-w-md mx-auto","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type your name and watch the heading update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Say hi","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Hey there, {{ name }}!"}}]}]}]},"state":{"name":"world"}}} />
+
+Type in the input — the heading updates instantly. Click the button — toast notification. That's reactive state, event handling, and a production component library, all from a dozen lines of Python.
+
+Pass `--reload` to regenerate on save while you iterate:
+
+```bash
+prefab serve app.py --reload
+```
+
+## What just happened
+
+Three things worth understanding:
+
+**Component trees.** Prefab components nest using Python's `with` statement. `Card`, `Column`, `Input` — they compose into a tree that compiles to JSON, which a bundled React renderer turns into real HTML.
+
+**Client-side state.** Every named form control (`Input(name="name")`) automatically syncs its value to client-side state. The `{{ name }}` syntax reads from that state and updates the UI reactively — no server round-trip needed. You seed initial values with `PrefabApp(state={"name": "world"})`.
+
+**Actions.** `ShowToast` is a client-side action — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `ToolCall` for when you need a backend.
+
+## Where to go from here
+
+**Explore components.** Browse all 35+ components in the [Playground](/playground), or dive into the [component reference](/components/button).
+
+**Add client interactivity.** The `{{ }}` syntax supports [operators, conditionals, and pipes](/expressions/overview) — enough to build surprisingly rich UIs without a server.
+
+**Wire up a backend.** When you need server logic, Prefab works with [API servers](/running/api) and [MCP servers](/running/mcp). Server actions like `ToolCall` let your UI make round-trips for real data.
+
+**See patterns.** [Common recipes](/patterns/interactivity) for forms, data tables, and confirmation dialogs.

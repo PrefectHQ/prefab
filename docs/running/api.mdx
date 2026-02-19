@@ -1,0 +1,32 @@
+---
+title: API Server
+sidebarTitle: API Server
+description: Wire Prefab apps to a REST backend.
+icon: server
+---
+
+<Info>
+The API server integration is under active development. This page will be updated with full documentation when it ships.
+</Info>
+
+Prefab apps can be backed by a REST API for server-side data, persistence, and business logic. The integration targets FastAPI as the primary backend, with conventions for routing, tool calls, and serving the renderer.
+
+The core idea: your Prefab UI defines the frontend, and your API routes handle the backend. Client-side actions like `SetState`, `ToggleState`, and `ShowToast` work immediately, and server actions like `ToolCall` map to your API endpoints — so your UI can fetch data, submit forms, and trigger backend logic with a round-trip to your server.
+
+```python
+# Coming soon — this is the target API
+from fastapi import FastAPI
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Card, CardContent, Column, H3, Text
+
+app = FastAPI()
+
+@app.get("/")
+def dashboard():
+    with Card() as view:
+        with CardContent():
+            with Column(gap=3):
+                H3("Dashboard")
+                Text("Backed by a real server.")
+    return PrefabApp(view=view).html()
+```

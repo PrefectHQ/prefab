@@ -2,11 +2,9 @@
 
 # Prefab 🎨
 
-<img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="700">
-
 **The agentic frontend framework that even a human can use.**
 
-*Made with 💙 by [Prefect](https://www.prefect.io/)*
+🚧 *Don't panic. Prefab is under **extremely** active development. You probably shouldn't use it yet.* 🚧
 
 [![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui.svg)](https://pypi.org/project/prefab-ui)
 [![Tests](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml)
@@ -16,18 +14,18 @@
 
 </div>
 
----
+<img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="1000">
 
 Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity — and a bundled React renderer turns that JSON into a self-contained application.
 
-🚧 *Prefab is in early development. The API is unstable and likely to change.* 🚧
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because it's a JSON protocol, any source can produce a Prefab UI. Write one in Python, serve one as an [MCP App](https://modelcontextprotocol.io/docs/extensions/apps), or let an agent generate one dynamically — no templates or predefined views required.
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/hello-world-card.png" alt="Hello world card" width="400">
 </div>
 </br>
 
-This card has a live-updating heading, a text input bound to client-side state, and badges — all from a few lines of Python. Try an interactive version [in the Prefab docs](https://prefab.prefect.io/docs/welcome).
+This card has a live-updating heading, a text input bound to client-side state, and badges — all from a few lines of Python. You can try an interactive version [in the Prefab docs](https://prefab.prefect.io/docs/welcome). In fact, every example in the Prefab docs is rendered with Prefab itself.
 
 ```python
 from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
@@ -45,6 +43,8 @@ with Card():
 ```
 
 Since everything compiles to JSON, you can author a UI from a Python script, have an agent generate one on the fly, or serve one from any MCP server or REST API.
+
+*Made with 💙 by [Prefect](https://www.prefect.io/)*
 
 ## Installation
 
@@ -116,15 +116,3 @@ Button("Save", on_click=[
 ## Documentation
 
 Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/playground) where you can try components live.
-
-## Contributing
-
-```bash
-git clone https://github.com/prefecthq/prefab && cd prefab
-uv sync
-uv run pytest
-```
-
-## License
-
-Apache 2.0 — see [LICENSE](LICENSE) for details.
