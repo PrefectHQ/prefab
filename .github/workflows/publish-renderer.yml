@@ -39,5 +39,17 @@ jobs:
       - run: npm run build:publish
         working-directory: renderer
 
-      - run: npm publish --access public
+      - name: Get npm tag from version
+        id: npm-tag
+        working-directory: renderer
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *"-alpha"* ]]; then TAG=alpha
+          elif [[ "$VERSION" == *"-beta"* ]]; then TAG=beta
+          elif [[ "$VERSION" == *"-rc"* ]]; then TAG=next
+          else TAG=latest
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - run: npm publish --access public --tag ${{ steps.npm-tag.outputs.tag }}
         working-directory: renderer
