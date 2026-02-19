@@ -82,12 +82,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2):\n    Button(\"Say hello\", on_click=ShowToast(\"Hey there, {{ name }}!\"))\n    Button(\"Warn me\", variant=\"outline\",\n           on_click=ShowToast(\"Improbability levels rising\", variant=\"warning\"))"
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2):\n    Button(\"Notify\", on_click=ShowToast(\"Something happened\"))\n    Button(\"Warn me\", variant=\"outline\",\n           on_click=ShowToast(\"Improbability levels rising\", variant=\"warning\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2, css_class=\"flex-wrap\"):\n    Button(\"Default\", variant=\"outline\",\n           on_click=ShowToast(\"Something happened\"))\n    Button(\"Success\", variant=\"outline\",\n           on_click=ShowToast(\"Towel registered\", variant=\"success\"))\n    Button(\"Error\", variant=\"outline\",\n           on_click=ShowToast(\"Towel not found\", variant=\"error\"))\n    Button(\"Warning\", variant=\"outline\",\n           on_click=ShowToast(\"Improbability drive unstable\", variant=\"warning\"))\n    Button(\"Info\", variant=\"outline\",\n           on_click=ShowToast(\"42 towels in inventory\", variant=\"info\"))"
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2, css_class=\"flex-wrap\"):\n    Button(\"Default\", variant=\"outline\",\n           on_click=ShowToast(\"Something happened\"))\n    Button(\"Success\",\n           on_click=ShowToast(\"Towel registered\", variant=\"success\"))\n    Button(\"Error\", variant=\"destructive\",\n           on_click=ShowToast(\"Towel not found\", variant=\"error\"))\n    Button(\"Warning\", variant=\"outline\",\n           on_click=ShowToast(\"Improbability drive unstable\", variant=\"warning\"))\n    Button(\"Info\", variant=\"secondary\",\n           on_click=ShowToast(\"42 towels in inventory\", variant=\"info\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ShowToast\n\nButton(\n    \"Deploy\",\n    on_click=ShowToast(\n        \"Deployment complete\",\n        description=\"3 agents online\",\n        variant=\"success\",\n    ),\n)"
   },
   {
     "title": "ShowToast(\"Quick flash\", duration=1500)",
@@ -97,7 +102,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nButton(\n    \"Save\",\n    on_click=ToolCall(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nwith Row(gap=2):\n    Button(\n        \"Save\",\n        on_click=ToolCall(\n            \"save_item\",\n            arguments={\"data\": \"{{ item }}\"},\n            on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    )\n    Button(\n        \"Save (will fail)\",\n        variant=\"destructive\",\n        on_click=ToolCall(\n            \"save_item_broken\",\n            arguments={\"data\": \"{{ item }}\"},\n            on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -562,32 +567,32 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
-  },
-  {
-    "title": "Auto-Fill",
-    "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
-  },
-  {
-    "title": "ToolCall(\"submit_contact\", arguments={",
-    "category": "Components",
-    "code": "\"data\": {\n        \"name\": \"{{ name }}\",\n        \"email\": \"{{ email }}\",\n        \"message\": \"{{ message }}\",\n    }\n})"
-  },
-  {
-    "title": "Self-Calling Tool",
-    "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui import FastMCP\nfrom prefab_ui import AppResult\nfrom prefab_ui.actions import ToolCall, ShowToast\nfrom prefab_ui.components import Form, Text\n\nmcp = FastMCP(\"Contacts\")\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n    phone: str = \"\"\n\n@mcp.tool(ui=True)\nasync def create_contact(data: Contact | None = None) -> AppResult:\n    if data is None:\n        return AppResult(\n            view=Form.from_model(\n                Contact,\n                on_submit=ToolCall(\n                    \"create_contact\",\n                    on_success=ShowToast(\"Saved!\"),\n                ),\n            ),\n        )\n    save_to_db(data)\n    return AppResult(view=Text(f\"Created contact: {data.name}\"))"
-  },
-  {
-    "title": "Custom Error Handling",
-    "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardDescription, CardFooter,\n    CardHeader, CardTitle, Column, Form, Grid, Input, Label,\n)\nfrom prefab_ui.actions import ToolCall\n\nsubmit = ToolCall(\"create_user\", arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})\n\nwith Grid(columns=2, gap=6):\n    with Form(on_submit=submit):\n        with Column(gap=2):\n            Label(\"Name\")\n            Input(name=\"name\", placeholder=\"Your name\")\n        with Column(gap=2):\n            Label(\"Email\")\n            Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n        Button(\"Submit\")\n\n    with Card():\n        with Form(on_submit=submit):\n            with CardHeader():\n                CardTitle(\"Create Account\")\n                CardDescription(\"Enter your information to get started.\")\n            with CardContent():\n                with Column(gap=4):\n                    with Column(gap=2):\n                        Label(\"Name\")\n                        Input(name=\"name\", placeholder=\"Your name\")\n                    with Column(gap=2):\n                        Label(\"Email\")\n                        Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n            with CardFooter(css_class=\"justify-end\"):\n                Button(\"Submit\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Input, Label\nfrom prefab_ui.actions import ToolCall\n\nwith Column(gap=3):\n    Label(\"Name\")\n    Input(name=\"name\", placeholder=\"Your name\")\n    Label(\"Email\")\n    Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n    Button(\"Submit\", on_click=ToolCall(\n        \"create_user\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"},\n    ))"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=ToolCall(\"submit_contact\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=ToolCall(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\")\n            Button(\"Send Message\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field, SecretStr\nfrom prefab_ui.components import Form\n\nclass UserProfile(BaseModel):\n    username: str\n    email: str\n    age: int = Field(ge=0, le=150)\n    password: SecretStr\n    active: bool = True\n\nForm.from_model(UserProfile)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\n\nclass Profile(BaseModel):\n    name: str = Field(\n        title=\"Your Name\",\n        description=\"How should we address you?\",\n        min_length=2,\n        max_length=50,\n    )\n    bio: str = Field(\n        default=\"\",\n        description=\"Tell us about yourself\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 3}},\n    )\n\nForm.from_model(Profile)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ToolCall, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=ToolCall(\n        \"create_contact\",\n        on_success=ShowToast(\"Contact saved!\", variant=\"success\"),\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",

@@ -8,14 +8,14 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `ShowToast` displays a brief notification. It's a client-side action — no server round-trip — so feedback is instant. Fire it directly from a button click, or use it as a `ToolCall` callback to report success or failure after a server action completes.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Say hello","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Hey there, {{ name }}!"}},{"type":"Button","label":"Warn me","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability levels rising","variant":"warning"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Notify","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Warn me","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability levels rising","variant":"warning"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
 from prefab_ui.actions import ShowToast
 
 with Row(gap=2):
-    Button("Say hello", on_click=ShowToast("Hey there, {{ name }}!"))
+    Button("Notify", on_click=ShowToast("Something happened"))
     Button("Warn me", variant="outline",
            on_click=ShowToast("Improbability levels rising", variant="warning"))
 ```
@@ -27,13 +27,13 @@ with Row(gap=2):
     "children": [
       {
         "type": "Button",
-        "label": "Say hello",
+        "label": "Notify",
         "variant": "default",
         "size": "default",
         "disabled": false,
         "onClick": {
           "action": "showToast",
-          "message": "Hey there, {{ name }}!"
+          "message": "Something happened"
         }
       },
       {
@@ -59,7 +59,7 @@ with Row(gap=2):
 
 The `variant` parameter controls the toast's visual style. Omit it for a neutral default.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 flex-wrap","type":"Row","children":[{"type":"Button","label":"Default","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Success","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel registered","variant":"success"}},{"type":"Button","label":"Error","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel not found","variant":"error"}},{"type":"Button","label":"Warning","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability drive unstable","variant":"warning"}},{"type":"Button","label":"Info","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"42 towels in inventory","variant":"info"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2 flex-wrap","type":"Row","children":[{"type":"Button","label":"Default","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Success","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel registered","variant":"success"}},{"type":"Button","label":"Error","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Towel not found","variant":"error"}},{"type":"Button","label":"Warning","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability drive unstable","variant":"warning"}},{"type":"Button","label":"Info","variant":"secondary","size":"default","disabled":false,"onClick":{"action":"showToast","message":"42 towels in inventory","variant":"info"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
@@ -68,13 +68,13 @@ from prefab_ui.actions import ShowToast
 with Row(gap=2, css_class="flex-wrap"):
     Button("Default", variant="outline",
            on_click=ShowToast("Something happened"))
-    Button("Success", variant="outline",
+    Button("Success",
            on_click=ShowToast("Towel registered", variant="success"))
-    Button("Error", variant="outline",
+    Button("Error", variant="destructive",
            on_click=ShowToast("Towel not found", variant="error"))
     Button("Warning", variant="outline",
            on_click=ShowToast("Improbability drive unstable", variant="warning"))
-    Button("Info", variant="outline",
+    Button("Info", variant="secondary",
            on_click=ShowToast("42 towels in inventory", variant="info"))
 ```
 ```json Protocol icon="brackets-curly"
@@ -97,7 +97,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Success",
-        "variant": "outline",
+        "variant": "default",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -109,7 +109,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Error",
-        "variant": "outline",
+        "variant": "destructive",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -133,7 +133,7 @@ with Row(gap=2, css_class="flex-wrap"):
       {
         "type": "Button",
         "label": "Info",
-        "variant": "outline",
+        "variant": "secondary",
         "size": "default",
         "disabled": false,
         "onClick": {
@@ -153,9 +153,40 @@ with Row(gap=2, css_class="flex-wrap"):
 
 Add a secondary line with the `description` parameter for toasts that need more context.
 
-```python
-ShowToast("Deployment complete", description="3 agents online", variant="success")
+<ComponentPreview json={{"view":{"type":"Button","label":"Deploy","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Deployment complete","description":"3 agents online","variant":"success"}}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import ShowToast
+
+Button(
+    "Deploy",
+    on_click=ShowToast(
+        "Deployment complete",
+        description="3 agents online",
+        variant="success",
+    ),
+)
 ```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Deploy",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "action": "showToast",
+      "message": "Deployment complete",
+      "description": "3 agents online",
+      "variant": "success"
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Duration
 
@@ -170,47 +201,88 @@ ShowToast("Read this carefully", duration=10000)
 
 The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `ToolCall` to give feedback after a server action completes. The `{{ $error }}` variable captures the error message from the server.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item","arguments":{"data":"{{ item }}"}}}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item","arguments":{"data":"{{ item }}"}}},{"type":"Button","label":"Save (will fail)","variant":"destructive","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Saved successfully!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"save_item_broken","arguments":{"data":"{{ item }}"}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button
+from prefab_ui.components import Button, Row
 from prefab_ui.actions import ToolCall, ShowToast
 
-Button(
-    "Save",
-    on_click=ToolCall(
-        "save_item",
-        arguments={"data": "{{ item }}"},
-        on_success=ShowToast("Saved successfully!", variant="success"),
-        on_error=ShowToast("{{ $error }}", variant="error"),
-    ),
-)
+with Row(gap=2):
+    Button(
+        "Save",
+        on_click=ToolCall(
+            "save_item",
+            arguments={"data": "{{ item }}"},
+            on_success=ShowToast("Saved successfully!", variant="success"),
+            on_error=ShowToast("{{ $error }}", variant="error"),
+        ),
+    )
+    Button(
+        "Save (will fail)",
+        variant="destructive",
+        on_click=ToolCall(
+            "save_item_broken",
+            arguments={"data": "{{ item }}"},
+            on_success=ShowToast("Saved successfully!", variant="success"),
+            on_error=ShowToast("{{ $error }}", variant="error"),
+        ),
+    )
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "Button",
-    "label": "Save",
-    "variant": "default",
-    "size": "default",
-    "disabled": false,
-    "onClick": {
-      "onSuccess": {
-        "action": "showToast",
-        "message": "Saved successfully!",
-        "variant": "success"
+    "cssClass": "gap-2",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Save",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "onSuccess": {
+            "action": "showToast",
+            "message": "Saved successfully!",
+            "variant": "success"
+          },
+          "onError": {
+            "action": "showToast",
+            "message": "{{ $error }}",
+            "variant": "error"
+          },
+          "action": "toolCall",
+          "tool": "save_item",
+          "arguments": {
+            "data": "{{ item }}"
+          }
+        }
       },
-      "onError": {
-        "action": "showToast",
-        "message": "{{ $error }}",
-        "variant": "error"
-      },
-      "action": "toolCall",
-      "tool": "save_item",
-      "arguments": {
-        "data": "{{ item }}"
+      {
+        "type": "Button",
+        "label": "Save (will fail)",
+        "variant": "destructive",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "onSuccess": {
+            "action": "showToast",
+            "message": "Saved successfully!",
+            "variant": "success"
+          },
+          "onError": {
+            "action": "showToast",
+            "message": "{{ $error }}",
+            "variant": "error"
+          },
+          "action": "toolCall",
+          "tool": "save_item_broken",
+          "arguments": {
+            "data": "{{ item }}"
+          }
+        }
       }
-    }
+    ]
   }
 }
 ```

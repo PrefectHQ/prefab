@@ -6,11 +6,216 @@ icon: file-lines
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`Form.from_model()` introspects a Pydantic model and generates a complete form — labels, typed inputs, validation constraints, and a submit button — from the model's field definitions. You can also build forms by hand for full control over layout and behavior.
+Forms collect structured data from users. You can build them by hand with individual input components, or generate them automatically from a Pydantic model with `Form.from_model()`.
 
-## Generating Forms from Models
+## Basic Usage
 
-Pass a Pydantic model to `Form.from_model()` along with a submit action. Each field becomes a labeled input, with the field's type determining the input component and `Field()` metadata controlling labels, placeholders, and constraints.
+A `Form` groups labeled inputs with a submit action. Named inputs automatically sync their values to client state, so `{{ name }}` always reflects the current value of `Input(name="name")`. Wrap in a `Card` for visual structure.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]},{"type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create Account"},{"type":"CardDescription","content":"Enter your information to get started."}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false}]}]}]},{"cssClass":"justify-end","type":"CardFooter","children":[{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Button, Card, CardContent, CardDescription, CardFooter,
+    CardHeader, CardTitle, Column, Form, Grid, Input, Label,
+)
+from prefab_ui.actions import ToolCall
+
+submit = ToolCall("create_user", arguments={"name": "{{ name }}", "email": "{{ email }}"})
+
+with Grid(columns=2, gap=6):
+    with Form(on_submit=submit):
+        with Column(gap=2):
+            Label("Name")
+            Input(name="name", placeholder="Your name")
+        with Column(gap=2):
+            Label("Email")
+            Input(name="email", input_type="email", placeholder="you@example.com")
+        Button("Submit")
+
+    with Card():
+        with Form(on_submit=submit):
+            with CardHeader():
+                CardTitle("Create Account")
+                CardDescription("Enter your information to get started.")
+            with CardContent():
+                with Column(gap=4):
+                    with Column(gap=2):
+                        Label("Name")
+                        Input(name="name", placeholder="Your name")
+                    with Column(gap=2):
+                        Label("Email")
+                        Input(name="email", input_type="email", placeholder="you@example.com")
+            with CardFooter(css_class="justify-end"):
+                Button("Submit")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 grid-cols-2",
+    "type": "Grid",
+    "children": [
+      {
+        "cssClass": "gap-4",
+        "type": "Form",
+        "onSubmit": {
+          "action": "toolCall",
+          "tool": "create_user",
+          "arguments": {
+            "name": "{{ name }}",
+            "email": "{{ email }}"
+          }
+        },
+        "children": [
+          {
+            "cssClass": "gap-2",
+            "type": "Column",
+            "children": [
+              {
+                "type": "Label",
+                "text": "Name"
+              },
+              {
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "Your name",
+                "name": "name",
+                "disabled": false,
+                "required": false
+              }
+            ]
+          },
+          {
+            "cssClass": "gap-2",
+            "type": "Column",
+            "children": [
+              {
+                "type": "Label",
+                "text": "Email"
+              },
+              {
+                "type": "Input",
+                "inputType": "email",
+                "placeholder": "you@example.com",
+                "name": "email",
+                "disabled": false,
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": "Button",
+            "label": "Submit",
+            "variant": "default",
+            "size": "default",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "gap-4",
+            "type": "Form",
+            "onSubmit": {
+              "action": "toolCall",
+              "tool": "create_user",
+              "arguments": {
+                "name": "{{ name }}",
+                "email": "{{ email }}"
+              }
+            },
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Create Account"
+                  },
+                  {
+                    "type": "CardDescription",
+                    "content": "Enter your information to get started."
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "gap-4",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "cssClass": "gap-2",
+                        "type": "Column",
+                        "children": [
+                          {
+                            "type": "Label",
+                            "text": "Name"
+                          },
+                          {
+                            "type": "Input",
+                            "inputType": "text",
+                            "placeholder": "Your name",
+                            "name": "name",
+                            "disabled": false,
+                            "required": false
+                          }
+                        ]
+                      },
+                      {
+                        "cssClass": "gap-2",
+                        "type": "Column",
+                        "children": [
+                          {
+                            "type": "Label",
+                            "text": "Email"
+                          },
+                          {
+                            "type": "Input",
+                            "inputType": "email",
+                            "placeholder": "you@example.com",
+                            "name": "email",
+                            "disabled": false,
+                            "required": false
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cssClass": "justify-end",
+                "type": "CardFooter",
+                "children": [
+                  {
+                    "type": "Button",
+                    "label": "Submit",
+                    "variant": "default",
+                    "size": "default",
+                    "disabled": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Building forms by hand gives full control over layout and behavior, but requires wiring up every label, input type, and argument template yourself. For models with many fields, `Form.from_model()` handles all of that automatically.
+
+## Generating Forms Automatically
+
+`Form.from_model()` introspects a Pydantic model and generates a complete form — labels, typed inputs, validation constraints, and a submit button — from the model's field definitions. Pass a `ToolCall` as the submit action, and `from_model()` automatically wires up the arguments from the model's fields so you don't have to write `{{ template }}` expressions for every field.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}}}>
 <CodeGroup>
@@ -136,9 +341,294 @@ Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
 </CodeGroup>
 </ComponentPreview>
 
-## Type Mapping
+Notice that the `ToolCall` only specifies the tool name — no `arguments`. `from_model()` generates them automatically, wrapping each field as `{{ field_name }}` under a `data` key. It also adds a default error toast so validation failures are visible without any extra configuration.
 
-The field's Python type determines which input component is rendered:
+### Custom Layout
+
+The turnkey `from_model()` handles everything: the `Form` wrapper, the submit button, and the `ToolCall` argument wiring. When you need more control — a Card with a footer, a cancel button, a title — pass `fields_only=True` to generate just the labeled inputs, and take over the rest.
+
+With `fields_only`, three things that were automatic become your responsibility. You create the `Form` yourself and provide `on_submit` with explicit `arguments` (the turnkey version auto-generates these from the model, but `fields_only` doesn't touch your `ToolCall`). You add your own submit button wherever it belongs in the layout. And you handle spacing — wrap the fields in a `Column(gap=4)` since they're no longer inside a Form that provides gap for you.
+
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-lg","type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Message sent!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}},"children":[{"type":"CardContent","children":[{"cssClass":"mb-2","type":"CardTitle","content":"Contact Us"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]}]}]},{"cssClass":"justify-end gap-2","type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Send Message","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from pydantic import BaseModel, Field
+from prefab_ui.components import (
+    Button, Card, CardContent, CardFooter, CardTitle,
+    Column, Form,
+)
+from prefab_ui.actions import ToolCall, ShowToast
+
+class ContactInfo(BaseModel):
+    name: str = Field(title="Full Name", min_length=1)
+    email: str
+    message: str = Field(
+        description="Your message",
+        json_schema_extra={"ui": {"type": "textarea", "rows": 4}},
+    )
+
+with Card(css_class="w-full max-w-lg"):
+    with Form(on_submit=ToolCall(
+        "submit_contact",
+        arguments={"name": "{{ name }}", "email": "{{ email }}", "message": "{{ message }}"},
+        on_success=ShowToast("Message sent!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    )):
+
+        with CardContent():
+            CardTitle("Contact Us", css_class="mb-2")
+            with Column(gap=4):
+                Form.from_model(ContactInfo, fields_only=True)
+        with CardFooter(css_class="justify-end gap-2"):
+            Button("Cancel", variant="outline")
+            Button("Send Message")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full max-w-lg",
+    "type": "Card",
+    "children": [
+      {
+        "cssClass": "gap-4",
+        "type": "Form",
+        "onSubmit": {
+          "onSuccess": {
+            "action": "showToast",
+            "message": "Message sent!",
+            "variant": "success"
+          },
+          "onError": {
+            "action": "showToast",
+            "message": "{{ $error }}",
+            "variant": "error"
+          },
+          "action": "toolCall",
+          "tool": "submit_contact",
+          "arguments": {
+            "name": "{{ name }}",
+            "email": "{{ email }}",
+            "message": "{{ message }}"
+          }
+        },
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "mb-2",
+                "type": "CardTitle",
+                "content": "Contact Us"
+              },
+              {
+                "cssClass": "gap-4",
+                "type": "Column",
+                "children": [
+                  {
+                    "cssClass": "gap-2",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "type": "Label",
+                        "text": "Full Name"
+                      },
+                      {
+                        "type": "Input",
+                        "inputType": "text",
+                        "placeholder": "Full Name",
+                        "name": "name",
+                        "disabled": false,
+                        "required": true,
+                        "minLength": 1
+                      }
+                    ]
+                  },
+                  {
+                    "cssClass": "gap-2",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "type": "Label",
+                        "text": "Email"
+                      },
+                      {
+                        "type": "Input",
+                        "inputType": "email",
+                        "placeholder": "Email",
+                        "name": "email",
+                        "disabled": false,
+                        "required": true
+                      }
+                    ]
+                  },
+                  {
+                    "cssClass": "gap-2",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "type": "Label",
+                        "text": "Message"
+                      },
+                      {
+                        "type": "Textarea",
+                        "placeholder": "Your message",
+                        "name": "message",
+                        "rows": 4,
+                        "disabled": false,
+                        "required": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "cssClass": "justify-end gap-2",
+            "type": "CardFooter",
+            "children": [
+              {
+                "type": "Button",
+                "label": "Cancel",
+                "variant": "outline",
+                "size": "default",
+                "disabled": false
+              },
+              {
+                "type": "Button",
+                "label": "Send Message",
+                "variant": "default",
+                "size": "default",
+                "disabled": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Compare this to the turnkey version above: the `ToolCall` now has explicit `arguments`, the buttons are placed in `CardFooter`, and the fields are wrapped in `Column(gap=4)` for spacing. The model still defines all the labels, input types, and validation — `fields_only` just stops short of deciding how to lay them out.
+
+### Type Mapping
+
+Each field's Python type determines which input component is rendered. A field named `email` gets an email input automatically, a `bool` becomes a checkbox, number types get number inputs with constraints, and so on.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"type":"Input","inputType":"text","placeholder":"Username","name":"username","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"type":"Input","inputType":"number","placeholder":"Age","name":"age","disabled":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"type":"Input","inputType":"password","placeholder":"Password","name":"password","disabled":false,"required":true}]},{"type":"Checkbox","label":"Active","checked":true,"name":"active","disabled":false,"required":false}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from pydantic import BaseModel, Field, SecretStr
+from prefab_ui.components import Form
+
+class UserProfile(BaseModel):
+    username: str
+    email: str
+    age: int = Field(ge=0, le=150)
+    password: SecretStr
+    active: bool = True
+
+Form.from_model(UserProfile)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Form",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Username"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Username",
+            "name": "username",
+            "disabled": false,
+            "required": true
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Email"
+          },
+          {
+            "type": "Input",
+            "inputType": "email",
+            "placeholder": "Email",
+            "name": "email",
+            "disabled": false,
+            "required": true
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Age"
+          },
+          {
+            "type": "Input",
+            "inputType": "number",
+            "placeholder": "Age",
+            "name": "age",
+            "disabled": false,
+            "required": true,
+            "min": 0.0,
+            "max": 150.0
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Password"
+          },
+          {
+            "type": "Input",
+            "inputType": "password",
+            "placeholder": "Password",
+            "name": "password",
+            "disabled": false,
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": "Checkbox",
+        "label": "Active",
+        "checked": true,
+        "name": "active",
+        "disabled": false,
+        "required": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The full type mapping:
 
 | Python type | Input component |
 |---|---|
@@ -151,9 +641,84 @@ The field's Python type determines which input component is rendered:
 | `datetime.time` | Time picker |
 | `datetime.datetime` | Datetime picker |
 
-## Constraints and Metadata
+### Field Metadata
 
-Pydantic `Field()` parameters map directly to form behavior:
+Pydantic `Field()` parameters control labels, placeholders, and HTML validation constraints. In this example, `title` sets the label, `description` sets the placeholder, `min_length` enforces a minimum, and the `ui` hint overrides the default text input with a textarea.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Your Name"},{"type":"Input","inputType":"text","placeholder":"How should we address you?","name":"name","disabled":false,"required":true,"minLength":2,"maxLength":50}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bio"},{"type":"Textarea","placeholder":"Tell us about yourself","value":"","name":"bio","rows":3,"disabled":false,"required":false}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
+
+class Profile(BaseModel):
+    name: str = Field(
+        title="Your Name",
+        description="How should we address you?",
+        min_length=2,
+        max_length=50,
+    )
+    bio: str = Field(
+        default="",
+        description="Tell us about yourself",
+        json_schema_extra={"ui": {"type": "textarea", "rows": 3}},
+    )
+
+Form.from_model(Profile)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Form",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Your Name"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "How should we address you?",
+            "name": "name",
+            "disabled": false,
+            "required": true,
+            "minLength": 2,
+            "maxLength": 50
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Bio"
+          },
+          {
+            "type": "Textarea",
+            "placeholder": "Tell us about yourself",
+            "value": "",
+            "name": "bio",
+            "rows": 3,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The full metadata mapping:
 
 | Field metadata | Form effect |
 |---|---|
@@ -164,86 +729,13 @@ Pydantic `Field()` parameters map directly to form behavior:
 | `Field(json_schema_extra={"ui": {"type": "textarea", "rows": 4}})` | Textarea override |
 | `Field(exclude=True)` | Skip field entirely |
 
-## Auto-Fill Arguments
+### Error Handling
 
-When `on_submit` is a `ToolCall` with no `arguments`, `from_model()` auto-generates the arguments from the model's fields, wrapped under a `data` key.
+When `on_submit` is a `ToolCall` with no explicit `on_error`, `from_model()` adds a default error toast that displays the server's error message. You can override it with your own feedback.
 
-```python Auto-Fill
-from pydantic import BaseModel, Field
-from prefab_ui.components import Form
-from prefab_ui.actions import ToolCall
-
-class ContactInfo(BaseModel):
-    name: str = Field(title="Full Name", min_length=1)
-    email: str
-    message: str
-
-Form.from_model(ContactInfo, on_submit=ToolCall("submit_contact"))
-```
-
-The generated `ToolCall` is equivalent to writing this explicitly:
-
-```python
-ToolCall("submit_contact", arguments={
-    "data": {
-        "name": "{{ name }}",
-        "email": "{{ email }}",
-        "message": "{{ message }}",
-    }
-})
-```
-
-This convention enables a powerful pattern: a tool that both displays the form and processes the submission.
-
-## Self-Calling Tool Pattern
-
-A single tool can serve as both the form renderer and the form handler. On the first call (no data), it returns the form. When the user submits, the auto-filled arguments pass the form values back to the same tool as a validated Pydantic model.
-
-```python Self-Calling Tool
-from pydantic import BaseModel, Field
-from prefab_ui import FastMCP
-from prefab_ui import AppResult
-from prefab_ui.actions import ToolCall, ShowToast
-from prefab_ui.components import Form, Text
-
-mcp = FastMCP("Contacts")
-
-class Contact(BaseModel):
-    name: str = Field(min_length=1)
-    email: str
-    phone: str = ""
-
-@mcp.tool(ui=True)
-async def create_contact(data: Contact | None = None) -> AppResult:
-    if data is None:
-        return AppResult(
-            view=Form.from_model(
-                Contact,
-                on_submit=ToolCall(
-                    "create_contact",
-                    on_success=ShowToast("Saved!"),
-                ),
-            ),
-        )
-    save_to_db(data)
-    return AppResult(view=Text(f"Created contact: {data.name}"))
-```
-
-When `data` is `None` (the initial call), the tool returns a form. When the user fills in the fields and clicks submit, the renderer calls `create_contact` again with `data` populated from the form values. Pydantic validates the input automatically, so `data` arrives as a fully validated `Contact` instance.
-
-## Error Handling
-
-When `on_submit` is auto-filled and no `on_error` is specified, `from_model()` adds a default error toast:
-
-```python
-ShowToast("{{ $error }}", variant="error")
-```
-
-The `$error` variable captures the error message from a failed tool call, making validation errors visible to the user without any extra configuration.
-
-You can override this with your own `on_error`:
-
-```python Custom Error Handling
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}}}]}}}>
+<CodeGroup>
+```python Python icon="python"
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
 from prefab_ui.actions import ToolCall, ShowToast
@@ -256,60 +748,73 @@ Form.from_model(
     Contact,
     on_submit=ToolCall(
         "create_contact",
+        on_success=ShowToast("Contact saved!", variant="success"),
         on_error=ShowToast("Could not save: {{ $error }}", variant="error"),
     ),
 )
 ```
-
-## Building Forms by Hand
-
-For full control over layout and behavior, combine individual input components directly. Named inputs automatically sync their values to client state, so `{{ name }}` references the current value of `Input(name="name")`.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}}}]}}}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Button, Column, Input, Label
-from prefab_ui.actions import ToolCall
-
-with Column(gap=3):
-    Label("Name")
-    Input(name="name", placeholder="Your name")
-    Label("Email")
-    Input(name="email", input_type="email", placeholder="you@example.com")
-    Button("Submit", on_click=ToolCall(
-        "create_user",
-        arguments={"name": "{{ name }}", "email": "{{ email }}"},
-    ))
-```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
+    "cssClass": "gap-4",
+    "type": "Form",
+    "onSubmit": {
+      "onSuccess": {
+        "action": "showToast",
+        "message": "Contact saved!",
+        "variant": "success"
+      },
+      "onError": {
+        "action": "showToast",
+        "message": "Could not save: {{ $error }}",
+        "variant": "error"
+      },
+      "action": "toolCall",
+      "tool": "create_contact",
+      "arguments": {
+        "data": {
+          "name": "{{ name }}",
+          "email": "{{ email }}"
+        }
+      }
+    },
     "children": [
       {
-        "type": "Label",
-        "text": "Name"
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Name"
+          },
+          {
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Name",
+            "name": "name",
+            "disabled": false,
+            "required": true,
+            "minLength": 1
+          }
+        ]
       },
       {
-        "type": "Input",
-        "inputType": "text",
-        "placeholder": "Your name",
-        "name": "name",
-        "disabled": false,
-        "required": false
-      },
-      {
-        "type": "Label",
-        "text": "Email"
-      },
-      {
-        "type": "Input",
-        "inputType": "email",
-        "placeholder": "you@example.com",
-        "name": "email",
-        "disabled": false,
-        "required": false
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Label",
+            "text": "Email"
+          },
+          {
+            "type": "Input",
+            "inputType": "email",
+            "placeholder": "Email",
+            "name": "email",
+            "disabled": false,
+            "required": true
+          }
+        ]
       },
       {
         "type": "Button",
@@ -318,11 +823,23 @@ with Column(gap=3):
         "size": "default",
         "disabled": false,
         "onClick": {
+          "onSuccess": {
+            "action": "showToast",
+            "message": "Contact saved!",
+            "variant": "success"
+          },
+          "onError": {
+            "action": "showToast",
+            "message": "Could not save: {{ $error }}",
+            "variant": "error"
+          },
           "action": "toolCall",
-          "tool": "create_user",
+          "tool": "create_contact",
           "arguments": {
-            "name": "{{ name }}",
-            "email": "{{ email }}"
+            "data": {
+              "name": "{{ name }}",
+              "email": "{{ email }}"
+            }
           }
         }
       }
@@ -333,9 +850,9 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-This approach gives you complete control, but it requires wiring up every label, input type, and argument template yourself. For models with many fields, `Form.from_model()` handles all of that automatically.
+The `$error` variable captures the error message from a failed tool call. When no `on_error` is provided, `from_model()` adds `ShowToast("{{ $error }}", variant="error")` automatically.
 
-## Unsupported Types
+### Unsupported Types
 
 `from_model()` skips fields with complex types that have no natural form input mapping: `list`, `dict`, `set`, `tuple`, and nested `BaseModel` instances. If you need these, build those parts of the form manually and handle the arguments yourself.
 
@@ -360,12 +877,16 @@ This approach gives you complete control, but it requires wiring up every label,
   Pydantic model class to generate the form from.
 </ParamField>
 
+<ParamField body="fields_only" type="bool" default="False">
+  When `True`, returns a list of field components without a `Form` wrapper or submit button. The fields auto-parent to the active context manager. Use this for custom layouts where you provide your own `Form`, button, and `ToolCall` arguments.
+</ParamField>
+
 <ParamField body="submit_label" type="str" default='"Submit"'>
-  Text for the submit button.
+  Text for the submit button. Ignored when `fields_only=True`.
 </ParamField>
 
 <ParamField body="on_submit" type="Action | list[Action] | None" default="None">
-  Action(s) fired on submit. A `ToolCall` with no arguments gets auto-filled from model fields.
+  Action(s) fired on submit. A `ToolCall` with no arguments gets auto-filled from model fields under a `data` key.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
