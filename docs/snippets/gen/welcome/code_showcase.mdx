@@ -23,7 +23,9 @@ with Grid(min_column_width="240px", gap=4):
                     Checkbox(label="Wrap-capable (sapient being)", name="wrap_capable")
             with CardFooter():
                 with Row(gap=2):
-                    Button("Register", on_click=ToolCall("register_towel"))
+                    with Dialog(title="Towel Registered!", description="Your towel has been added to the galactic registry."):
+                        Button("Register")
+                        Text("Don't forget to bring it.")
                     Button("Cancel", variant="outline")
         with Card():
             with CardHeader():
@@ -61,7 +63,9 @@ with Grid(min_column_width="240px", gap=4):
         with Card():
             with CardHeader():
                 with Row(align="center", css_class="justify-between"):
-                    CardTitle("Agent Queries")
+                    with Row(gap=2, align="center"):
+                        CardTitle("Agent Queries")
+                        Spinner(size="sm")
                     with Select(placeholder="6 months", name="period"):
                         SelectOption(value="3m", label="3 months")
                         SelectOption(value="6m", label="6 months")
@@ -144,7 +148,9 @@ with Grid(min_column_width="240px", gap=4):
                     Separator()
                     Switch(label="Failure notifications", checked=True, name="fail_notifs")
             with CardFooter():
-                Button("Save Preferences", on_click=ShowToast("Preferences saved!"))
+                with Dialog(title="Preferences Saved", description="Your agent configuration has been updated."):
+                    Button("Save Preferences")
+                    Text("Changes will take effect on next deployment.")
         with Card():
             with CardHeader():
                 CardTitle("Towel Inventory")
@@ -342,16 +348,22 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Row",
                     "children": [
                       {
-                        "type": "Button",
-                        "label": "Register",
-                        "variant": "default",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {
-                          "action": "toolCall",
-                          "tool": "register_towel",
-                          "arguments": {}
-                        }
+                        "type": "Dialog",
+                        "title": "Towel Registered!",
+                        "description": "Your towel has been added to the galactic registry.",
+                        "children": [
+                          {
+                            "type": "Button",
+                            "label": "Register",
+                            "variant": "default",
+                            "size": "default",
+                            "disabled": false
+                          },
+                          {
+                            "type": "Text",
+                            "content": "Don't forget to bring it."
+                          }
+                        ]
                       },
                       {
                         "type": "Button",
@@ -547,8 +559,18 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Row",
                     "children": [
                       {
-                        "type": "CardTitle",
-                        "content": "Agent Queries"
+                        "cssClass": "gap-2 items-center",
+                        "type": "Row",
+                        "children": [
+                          {
+                            "type": "CardTitle",
+                            "content": "Agent Queries"
+                          },
+                          {
+                            "type": "Spinner",
+                            "size": "sm"
+                          }
+                        ]
                       },
                       {
                         "type": "Select",
@@ -908,15 +930,22 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardFooter",
                 "children": [
                   {
-                    "type": "Button",
-                    "label": "Save Preferences",
-                    "variant": "default",
-                    "size": "default",
-                    "disabled": false,
-                    "onClick": {
-                      "action": "showToast",
-                      "message": "Preferences saved!"
-                    }
+                    "type": "Dialog",
+                    "title": "Preferences Saved",
+                    "description": "Your agent configuration has been updated.",
+                    "children": [
+                      {
+                        "type": "Button",
+                        "label": "Save Preferences",
+                        "variant": "default",
+                        "size": "default",
+                        "disabled": false
+                      },
+                      {
+                        "type": "Text",
+                        "content": "Changes will take effect on next deployment."
+                      }
+                    ]
                   }
                 ]
               }

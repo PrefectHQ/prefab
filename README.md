@@ -4,7 +4,7 @@
 
 **The agentic frontend framework that even a human can use.**
 
-🚧 *Prefab is in early development. The API is unstable and likely to change.* 🚧
+🚧 *Don't panic. Prefab is under **extremely** active development. You probably shouldn't use it yet.* 🚧
 
 [![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui.svg)](https://pypi.org/project/prefab-ui)
 [![Tests](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/prefecthq/prefab/actions/workflows/run-tests.yml)
