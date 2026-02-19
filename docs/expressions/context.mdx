@@ -163,6 +163,7 @@ with ForEach("users"):
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Text","content":"Inventory: {{ inventory }}"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Alert,
     AlertDescription,

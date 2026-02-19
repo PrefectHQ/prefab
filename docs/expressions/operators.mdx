@@ -24,6 +24,7 @@ Arithmetic combined with [SetState](/actions/set-state) is how you build interac
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"Quantity:"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"type":"Text","content":"{{ quantity }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"type":"Text","content":"Total: {{ price * quantity | currency }}"}]},"state":{"price":42,"quantity":1}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Button,
     Column,
@@ -134,6 +135,7 @@ This is how you build composed strings from multiple state values:
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false}]},{"type":"Text","content":"Hello, {{ first + ' ' + last }}!"}]},"state":{"first":"Arthur","last":"Dent"}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Input, Row, Text
 
 set_initial_state(first="Arthur", last="Dent")
@@ -243,6 +245,7 @@ The ternary operator `condition ? ifTrue : ifFalse` selects between two values. 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false},{"type":"Text","content":"{{ active ? 'Online' : 'Offline' }}"}]}]},"state":{"active":true}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Row, Switch, Text
 
 set_initial_state(active=True)

@@ -17,6 +17,7 @@ Pass the state key name as the first argument. Here, `info` holds a Card compone
 <ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Starship Registry","level":3},{"type":"Slot","name":"info"}]},"state":{"info":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Heading, Slot
 
 set_initial_state(
@@ -92,6 +93,7 @@ Nest children inside `Slot` to define what shows when the state key is empty. To
 <ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Heading","content":"Item Detail","level":3},{"type":"Switch","label":"Show details","checked":false,"size":"default","name":"selected_item","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","type":"Text","content":"Toggle the switch to load details"}]}]},"state":{"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Heading, Slot, Switch, Text
 from prefab_ui.actions import SetState
 

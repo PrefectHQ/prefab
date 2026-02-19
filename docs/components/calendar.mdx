@@ -37,6 +37,7 @@ Set `mode="range"` to let users select a start and end date. The selected range 
 <CodeGroup>
 ```python Python icon="python"
 import json
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Calendar
 
 set_initial_state(
@@ -71,6 +72,7 @@ Select multiple individual dates with `mode="multiple"`. Selected dates are stor
 <CodeGroup>
 ```python Python icon="python"
 import json
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Calendar
 
 set_initial_state(
@@ -105,6 +107,7 @@ Bind the calendar's state to a label using `{{ name | date }}` to show a formatt
 <ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Calendar,
     Column,

@@ -130,17 +130,17 @@ with Grid(min_column_width="240px", gap=4):
                     ],
                     rows=[
                         {"crew": "Arthur Dent", "species": "Human",
-                         "towel": "Yes", "status": "Confused"},
+                        "towel": "Yes", "status": "Confused"},
                         {"crew": "Ford Prefect", "species": "Betelgeusian",
-                         "towel": "Always", "status": "Drinking"},
+                        "towel": "Always", "status": "Drinking"},
                         {"crew": "Zaphod", "species": "Betelgeusian",
-                         "towel": "Lost it", "status": "Presidential"},
+                        "towel": "Lost it", "status": "Presidential"},
                         {"crew": "Trillian", "species": "Human",
-                         "towel": "Yes", "status": "Navigating"},
+                        "towel": "Yes", "status": "Navigating"},
                         {"crew": "Marvin", "species": "Android",
-                         "towel": "No point", "status": "Depressed"},
+                        "towel": "No point", "status": "Depressed"},
                         {"crew": "Slartibartfast", "species": "Magrathean",
-                         "towel": "Somewhere", "status": "Designing"},
+                        "towel": "Somewhere", "status": "Designing"},
                     ],
                     searchable=True, paginated=False,
                 )
@@ -1366,6 +1366,7 @@ Here's a simpler example — type in the input and watch the heading update in r
 <ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]},"state":{"name":"world"}}}>
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import set_initial_state
 from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
 
 set_initial_state(name="world")
