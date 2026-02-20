@@ -167,7 +167,7 @@ With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one 
 
 Beyond the item's own fields, every iteration exposes two special variables: `$index` (zero-based position) and `$item` (the entire current item). Individual fields like `{{ name }}` are still available directly — `$item` is for when you need to pass the whole object somewhere, like an action argument.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"type":"Text","content":"{{ $index + 1 }}. {{ $item }}"}]}]},"state":{"steps":["Collect underpants","?","Profit"]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","?","Profit"]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -190,8 +190,8 @@ with Column(gap=1):
         "key": "steps",
         "children": [
           {
-            "type": "Text",
-            "content": "{{ $index + 1 }}. {{ $item }}"
+            "content": "{{ $index + 1 }}. {{ $item }}",
+            "type": "Text"
           }
         ]
       }
@@ -311,6 +311,7 @@ with Column(gap=2):
 {
   "type": "ForEach",
   "children?": "[Component]",
+  "let?": "object",
   "key": "string (required)",
   "cssClass?": "string"
 }

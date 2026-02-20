@@ -10,7 +10,7 @@ Accordions let users expand and collapse sections to reveal content progressivel
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Accordion","multiple":false,"collapsible":true,"children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Accordion","multiple":false,"collapsible":true,"children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything.","type":"Text"}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously.","type":"Text"}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42.","type":"Text"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Accordion, AccordionItem, Text
@@ -48,8 +48,8 @@ with Accordion():
         "title": "What is the Answer?",
         "children": [
           {
-            "type": "Text",
-            "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."
+            "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything.",
+            "type": "Text"
           }
         ]
       },
@@ -58,8 +58,8 @@ with Accordion():
         "title": "What is the Heart of Gold?",
         "children": [
           {
-            "type": "Text",
-            "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."
+            "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously.",
+            "type": "Text"
           }
         ]
       },
@@ -68,8 +68,8 @@ with Accordion():
         "title": "What is Deep Thought?",
         "children": [
           {
-            "type": "Text",
-            "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."
+            "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42.",
+            "type": "Text"
           }
         ]
       }
@@ -84,7 +84,7 @@ with Accordion():
 
 Use `default_open_items` to expand items when the accordion first renders. Pass an index or title.
 
-<ComponentPreview json={{"view":{"type":"Accordion","multiple":false,"collapsible":true,"defaultValues":["What is the Answer?"],"children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"type":"Text","content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"type":"Text","content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"type":"Text","content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Accordion","multiple":false,"collapsible":true,"defaultValues":["What is the Answer?"],"children":[{"type":"AccordionItem","title":"What is the Answer?","children":[{"content":"Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything.","type":"Text"}]},{"type":"AccordionItem","title":"What is the Heart of Gold?","children":[{"content":"A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously.","type":"Text"}]},{"type":"AccordionItem","title":"What is Deep Thought?","children":[{"content":"A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42.","type":"Text"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Accordion, AccordionItem, Text
@@ -125,8 +125,8 @@ with Accordion(default_open_items=0):
         "title": "What is the Answer?",
         "children": [
           {
-            "type": "Text",
-            "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything."
+            "content": "Forty-two. The Answer to the Ultimate Question of Life, the Universe, and Everything.",
+            "type": "Text"
           }
         ]
       },
@@ -135,8 +135,8 @@ with Accordion(default_open_items=0):
         "title": "What is the Heart of Gold?",
         "children": [
           {
-            "type": "Text",
-            "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously."
+            "content": "A starship powered by the Infinite Improbability Drive. It can pass through every conceivable point in every conceivable universe almost simultaneously.",
+            "type": "Text"
           }
         ]
       },
@@ -145,8 +145,8 @@ with Accordion(default_open_items=0):
         "title": "What is Deep Thought?",
         "children": [
           {
-            "type": "Text",
-            "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42."
+            "content": "A supercomputer designed to find the Answer to the Ultimate Question. It took 7.5 million years to compute: 42.",
+            "type": "Text"
           }
         ]
       }
@@ -171,7 +171,7 @@ with Accordion(default_open_items="faq"):
 
 Set `multiple=True` to allow more than one section open at a time.
 
-<ComponentPreview json={{"view":{"type":"Accordion","multiple":true,"collapsible":true,"defaultValues":["Who is Arthur Dent?","Who is Ford Prefect?"],"children":[{"type":"AccordionItem","title":"Who is Arthur Dent?","children":[{"type":"Text","content":"An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."}]},{"type":"AccordionItem","title":"Who is Ford Prefect?","children":[{"type":"Text","content":"A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."}]},{"type":"AccordionItem","title":"What is the Guide?","children":[{"type":"Text","content":"A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Accordion","multiple":true,"collapsible":true,"defaultValues":["Who is Arthur Dent?","Who is Ford Prefect?"],"children":[{"type":"AccordionItem","title":"Who is Arthur Dent?","children":[{"content":"An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass.","type":"Text"}]},{"type":"AccordionItem","title":"Who is Ford Prefect?","children":[{"content":"A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse.","type":"Text"}]},{"type":"AccordionItem","title":"What is the Guide?","children":[{"content":"A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover.","type":"Text"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Accordion, AccordionItem, Text
@@ -217,8 +217,8 @@ with Accordion(
         "title": "Who is Arthur Dent?",
         "children": [
           {
-            "type": "Text",
-            "content": "An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass."
+            "content": "An ordinary human from Earth, unexpectedly swept into the cosmos when his planet is demolished to make way for a hyperspace bypass.",
+            "type": "Text"
           }
         ]
       },
@@ -227,8 +227,8 @@ with Accordion(
         "title": "Who is Ford Prefect?",
         "children": [
           {
-            "type": "Text",
-            "content": "A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse."
+            "content": "A researcher for the Hitchhiker's Guide to the Galaxy, and Arthur's best friend. He's from a small planet somewhere in the vicinity of Betelgeuse.",
+            "type": "Text"
           }
         ]
       },
@@ -237,8 +237,8 @@ with Accordion(
         "title": "What is the Guide?",
         "children": [
           {
-            "type": "Text",
-            "content": "A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover."
+            "content": "A digital reference with the words 'Don't Panic' written in large, friendly letters on the cover.",
+            "type": "Text"
           }
         ]
       }
@@ -285,6 +285,7 @@ with Accordion(
 {
   "type": "Accordion",
   "children?": "[Component]",
+  "let?": "object",
   "multiple?": false,
   "collapsible?": true,
   "default_open_items?": "number | string | Action[]",
@@ -297,6 +298,7 @@ with Accordion(
 {
   "type": "AccordionItem",
   "children?": "[Component]",
+  "let?": "object",
   "title": "string (required)",
   "value?": "string",
   "cssClass?": "string"

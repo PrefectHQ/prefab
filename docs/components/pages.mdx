@@ -198,7 +198,7 @@ The `name` prop connects the Pages component to client state. When the `entry` k
 
 Pages pair naturally with `SetState` to build wizard flows. Each page's button advances to the next step:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Configure your settings."},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Text","content":"Review your choices."},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"type":"Text","content":"All done!"}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Pages","defaultValue":"setup","name":"step","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Configure your settings.","type":"Text"},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Review your choices.","type":"Text"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"content":"All done!","type":"Text"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
@@ -241,8 +241,8 @@ with Column(gap=4):
                 "type": "Column",
                 "children": [
                   {
-                    "type": "Text",
-                    "content": "Configure your settings."
+                    "content": "Configure your settings.",
+                    "type": "Text"
                   },
                   {
                     "type": "Row",
@@ -275,8 +275,8 @@ with Column(gap=4):
                 "type": "Column",
                 "children": [
                   {
-                    "type": "Text",
-                    "content": "Review your choices."
+                    "content": "Review your choices.",
+                    "type": "Text"
                   },
                   {
                     "cssClass": "gap-2",
@@ -318,8 +318,8 @@ with Column(gap=4):
             "value": "complete",
             "children": [
               {
-                "type": "Text",
-                "content": "All done!"
+                "content": "All done!",
+                "type": "Text"
               }
             ]
           }
@@ -364,6 +364,7 @@ with Column(gap=4):
 {
   "type": "Pages",
   "children?": "[Component]",
+  "let?": "object",
   "defaultValue?": "string",
   "name?": "string",
   "cssClass?": "string"
@@ -374,6 +375,7 @@ with Column(gap=4):
 {
   "type": "Page",
   "children?": "[Component]",
+  "let?": "object",
   "title": "string (required)",
   "value?": "string",
   "cssClass?": "string"

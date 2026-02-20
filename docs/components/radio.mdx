@@ -111,7 +111,7 @@ with Column(gap=3):
 
 The `on_change` parameter on `RadioGroup` runs actions when the selection changes. `$event` is the `value` string of the selected radio:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ choice | 'Make a selection' }}"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | 'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Radio, RadioGroup, Text
@@ -173,8 +173,8 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "type": "Text",
-        "content": "{{ choice | 'Make a selection' }}"
+        "content": "{{ choice | 'Make a selection' }}",
+        "type": "Text"
       }
     ]
   }
@@ -287,6 +287,7 @@ with RadioGroup(name="plan"):
 {
   "type": "RadioGroup",
   "children?": "[Component]",
+  "let?": "object",
   "name?": "string",
   "onChange?": "Action | Action[]",
   "cssClass?": "string"
@@ -295,13 +296,11 @@ with RadioGroup(name="plan"):
 
 ```json Radio
 {
-  "type": "Radio",
-  "value": "string (required)",
-  "label?": "string",
-  "checked?": false,
+  "type": "RadioGroup",
+  "children?": "[Component]",
+  "let?": "object",
   "name?": "string",
-  "disabled?": false,
-  "required?": false,
+  "onChange?": "Action | Action[]",
   "cssClass?": "string"
 }
 ```
