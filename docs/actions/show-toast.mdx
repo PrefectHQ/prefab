@@ -6,7 +6,7 @@ icon: bell
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`ShowToast` displays a brief notification. It's a client-side action — no server round-trip — so feedback is instant. Fire it directly from a button click, or use it as a `ToolCall` callback to report success or failure after a server action completes.
+`ShowToast` displays a brief notification. It's a client-side action — no server round-trip — so feedback is instant. Fire it directly from a button click, or use it as a `CallTool` callback to report success or failure after a server action completes.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Notify","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Something happened"}},{"type":"Button","label":"Warn me","variant":"outline","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Improbability levels rising","variant":"warning"}}]}}}>
 <CodeGroup>
@@ -197,9 +197,9 @@ ShowToast("Quick flash", duration=1500)
 ShowToast("Read this carefully", duration=10000)
 ```
 
-## As ToolCall Callbacks
+## As CallTool Callbacks
 
-The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `ToolCall` to give feedback after a server action completes.
+The most common pattern: use `ShowToast` as `on_success` and `on_error` callbacks on a `CallTool` to give feedback after a server action completes.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Success callback","variant":"success","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Saved successfully!","variant":"success"}},{"type":"Button","label":"Error callback","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Could not save: connection timed out","variant":"error"}}]}}}>
 <CodeGroup>
@@ -250,12 +250,12 @@ with Row(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-Wire these onto a `ToolCall` with `on_success` and `on_error`. The `{{ $error }}` variable captures the error message from the server.
+Wire these onto a `CallTool` with `on_success` and `on_error`. The `{{ $error }}` variable captures the error message from the server.
 
 ```python
 Button(
     "Save",
-    on_click=ToolCall(
+    on_click=CallTool(
         "save_item",
         arguments={"data": "{{ item }}"},
         on_success=ShowToast("Saved successfully!", variant="success"),

@@ -167,7 +167,7 @@ def _class_to_slug(name: str) -> str:
 def _name_to_class(card_name: str) -> tuple[str, bool]:
     """Map a Card title name to (class_name, is_action)."""
     special: dict[str, tuple[str, bool]] = {
-        "ToolCall": ("ToolCall", True),
+        "CallTool": ("CallTool", True),
         "SendMessage": ("SendMessage", True),
         "UpdateContext": ("UpdateContext", True),
         "OpenLink": ("OpenLink", True),

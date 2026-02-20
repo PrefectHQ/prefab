@@ -9,7 +9,7 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 A styled drag-and-drop area for file uploads. Users can drop files onto it or click to browse — either way, the selected files are read client-side, converted to base64, and passed through the action system as `$event`. No server round-trip until you want one.
 
 <Info>
-  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an action (like `ToolCall`) to do so.
+  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an action (like `CallTool`) to do so.
 </Info>
 
 If you don't need a dedicated upload area — say you just want an "Upload" button — see the [OpenFilePicker](/actions/open-file-picker) action instead. It turns any clickable element into a file input.
@@ -128,16 +128,16 @@ DropZone(
 
 ## Handling Uploads
 
-Files stay in the browser until you do something with them. The `on_change` parameter fires actions when files are selected, with `$event` containing the file data — so the typical pattern is to pair it with a `ToolCall` that sends the base64 payload to your MCP server for processing.
+Files stay in the browser until you do something with them. The `on_change` parameter fires actions when files are selected, with `$event` containing the file data — so the typical pattern is to pair it with a `CallTool` that sends the base64 payload to your MCP server for processing.
 
-```python DropZone with ToolCall
+```python DropZone with CallTool
 from prefab_ui.components import DropZone
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 DropZone(
     label="Upload CSV",
     accept=".csv",
-    on_change=ToolCall(
+    on_change=CallTool(
         "process_csv",
         arguments={"file": "{{ $event }}"},
     ),
@@ -148,13 +148,13 @@ Since `on_change` accepts a list, you can chain actions for UI feedback — show
 
 ```python DropZone with chained actions
 from prefab_ui.components import DropZone
-from prefab_ui.actions import SetState, ToolCall
+from prefab_ui.actions import SetState, CallTool
 
 DropZone(
     label="Upload data file",
     on_change=[
         SetState("uploading", True),
-        ToolCall("upload_file", arguments={"file": "{{ $event }}"}),
+        CallTool("upload_file", arguments={"file": "{{ $event }}"}),
         SetState("uploading", False),
     ],
 )

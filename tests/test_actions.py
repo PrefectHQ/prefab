@@ -16,20 +16,20 @@ from prefab_ui.actions import (
     ToggleState,
     UpdateContext,
 )
-from prefab_ui.actions.mcp import SendMessage, ToolCall
+from prefab_ui.actions.mcp import CallTool, SendMessage
 from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
 
 
 class TestActionSerialization:
     def test_tool_call_positional(self):
-        a = ToolCall("refresh")
+        a = CallTool("refresh")
         d = a.model_dump()
         assert d["action"] == "toolCall"
         assert d["tool"] == "refresh"
         assert d["arguments"] == {}
 
     def test_tool_call_with_args(self):
-        a = ToolCall("search", arguments={"q": "{{ query }}"})
+        a = CallTool("search", arguments={"q": "{{ query }}"})
         d = a.model_dump()
         assert d["arguments"]["q"] == "{{ query }}"
 
@@ -91,7 +91,7 @@ class TestCloseOverlayAction:
         assert j["onClick"]["action"] == "closeOverlay"
 
     def test_in_tool_call_on_success(self):
-        a = ToolCall(
+        a = CallTool(
             "remove_user",
             on_success=[ShowToast("Removed"), CloseOverlay()],
         )
@@ -102,7 +102,7 @@ class TestCloseOverlayAction:
 
 class TestActionOnComponents:
     def test_button_on_click(self):
-        b = Button(label="Go", on_click=ToolCall("refresh"))
+        b = Button(label="Go", on_click=CallTool("refresh"))
         j = b.to_json()
         assert j["onClick"]["action"] == "toolCall"
         assert j["onClick"]["tool"] == "refresh"
@@ -110,7 +110,7 @@ class TestActionOnComponents:
     def test_button_action_list(self):
         b = Button(
             label="Submit",
-            on_click=[SetState("loading", True), ToolCall("process")],
+            on_click=[SetState("loading", True), CallTool("process")],
         )
         j = b.to_json()
         assert isinstance(j["onClick"], list)
@@ -142,27 +142,27 @@ class TestActionOnComponents:
 
 class TestActionCallbacks:
     def test_on_success_serializes(self):
-        action = ToolCall("save", on_success=ShowToast("Saved!"))
+        action = CallTool("save", on_success=ShowToast("Saved!"))
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert d["onSuccess"]["action"] == "showToast"
         assert d["onSuccess"]["message"] == "Saved!"
 
     def test_on_error_serializes(self):
-        action = ToolCall("save", on_error=ShowToast("Failed", variant="error"))
+        action = CallTool("save", on_error=ShowToast("Failed", variant="error"))
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert d["onError"]["action"] == "showToast"
         assert d["onError"]["variant"] == "error"
 
     def test_callbacks_excluded_when_none(self):
-        action = ToolCall("save")
+        action = CallTool("save")
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert "onSuccess" not in d
         assert "onError" not in d
 
     def test_recursive_callbacks(self):
-        action = ToolCall(
+        action = CallTool(
             "save",
-            on_success=ToolCall("refresh", on_success=ShowToast("All done!")),
+            on_success=CallTool("refresh", on_success=ShowToast("All done!")),
         )
         d = action.model_dump(by_alias=True, exclude_none=True)
         inner = d["onSuccess"]
@@ -171,7 +171,7 @@ class TestActionCallbacks:
         assert inner["onSuccess"]["message"] == "All done!"
 
     def test_callback_list(self):
-        action = ToolCall(
+        action = CallTool(
             "save",
             on_success=[SetState("saved", True), ShowToast("Done!")],
         )
@@ -184,7 +184,7 @@ class TestActionCallbacks:
 
     def test_all_action_types_have_callbacks(self):
         action_types = [
-            ToolCall("t"),
+            CallTool("t"),
             SendMessage("m"),
             UpdateContext(content="c"),
             OpenLink("http://example.com"),
@@ -209,23 +209,23 @@ class TestActionCallbacks:
 
 
 # ---------------------------------------------------------------------------
-# ToolCall result_key
+# CallTool result_key
 # ---------------------------------------------------------------------------
 
 
-class TestToolCallResultKey:
+class TestCallToolResultKey:
     def test_result_key_serializes(self):
-        action = ToolCall("search", result_key="results")
+        action = CallTool("search", result_key="results")
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert d["resultKey"] == "results"
 
     def test_result_key_excluded_when_none(self):
-        action = ToolCall("search")
+        action = CallTool("search")
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert "resultKey" not in d
 
     def test_result_key_with_callbacks(self):
-        action = ToolCall(
+        action = CallTool(
             "search",
             result_key="results",
             on_success=ShowToast("Found results!"),
@@ -237,7 +237,7 @@ class TestToolCallResultKey:
     def test_result_key_on_component(self):
         btn = Button(
             label="Search",
-            on_click=ToolCall("search", result_key="results"),
+            on_click=CallTool("search", result_key="results"),
         )
         j = btn.to_json()
         assert j["onClick"]["resultKey"] == "results"
@@ -287,7 +287,7 @@ class TestFormOnSubmit:
         class Simple(BaseModel):
             name: str
 
-        form = Form.from_model(Simple, on_submit=ToolCall("save"))
+        form = Form.from_model(Simple, on_submit=CallTool("save"))
         j = form.to_json()
         button = j["children"][-1]
         assert button["type"] == "Button"
@@ -431,7 +431,7 @@ class TestOpenFilePickerSerialization:
             label="Upload",
             on_click=OpenFilePicker(
                 accept=".csv",
-                on_success=ToolCall("process", arguments={"file": "{{ $event }}"}),
+                on_success=CallTool("process", arguments={"file": "{{ $event }}"}),
             ),
         )
         j = b.to_json()
@@ -441,7 +441,7 @@ class TestOpenFilePickerSerialization:
 
     def test_callbacks(self):
         a = OpenFilePicker(
-            on_success=ToolCall("upload"),
+            on_success=CallTool("upload"),
             on_error=ShowToast("Upload failed", variant="error"),
         )
         d = a.model_dump(by_alias=True, exclude_none=True)
@@ -458,7 +458,7 @@ class TestDropZoneOnChange:
     def test_on_change_serializes(self):
         dz = DropZone(
             label="Drop here",
-            on_change=ToolCall("process", arguments={"files": "{{ $event }}"}),
+            on_change=CallTool("process", arguments={"files": "{{ $event }}"}),
         )
         j = dz.to_json()
         assert j["onChange"]["action"] == "toolCall"
@@ -466,7 +466,7 @@ class TestDropZoneOnChange:
 
     def test_on_change_action_list(self):
         dz = DropZone(
-            on_change=[SetState("uploading", True), ToolCall("upload")],
+            on_change=[SetState("uploading", True), CallTool("upload")],
         )
         j = dz.to_json()
         assert isinstance(j["onChange"], list)

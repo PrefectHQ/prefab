@@ -63,7 +63,7 @@ Three things worth understanding:
 
 **Client-side state.** Every named form control (`Input(name="name")`) automatically syncs its value to client-side state. The `{{ name }}` syntax reads from that state and updates the UI reactively — no server round-trip needed. You seed initial values with `PrefabApp(state={"name": "world"})`.
 
-**Actions.** `ShowToast` is a client-side action — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `ToolCall` for when you need a backend.
+**Actions.** `ShowToast` is a client-side action — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
 
 ## Where to go from here
 
@@ -71,6 +71,6 @@ Three things worth understanding:
 
 **Add client interactivity.** The `{{ }}` syntax supports [operators, conditionals, and pipes](/expressions/overview) — enough to build surprisingly rich UIs without a server.
 
-**Wire up a backend.** When you need server logic, Prefab works with [API servers](/running/api) and [FastMCP](/running/fastmcp). Server actions like `ToolCall` let your UI make round-trips for real data.
+**Wire up a backend.** When you need server logic, Prefab works with [API servers](/running/api) and [FastMCP](/running/fastmcp). Server actions like `CallTool` let your UI make round-trips for real data.
 
 **Add expressions.** [Templates, operators, and pipes](/expressions/overview) let you build reactive UIs with `{{ }}` syntax.

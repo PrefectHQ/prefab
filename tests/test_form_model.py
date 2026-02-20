@@ -11,7 +11,7 @@ from prefab_ui.actions import (
     SetState,
     ShowToast,
 )
-from prefab_ui.actions.mcp import ToolCall
+from prefab_ui.actions.mcp import CallTool
 from prefab_ui.components import (
     Button,
     Card,
@@ -87,7 +87,7 @@ class TestFormComponent:
         class Simple(BaseModel):
             name: str
 
-        form = Form.from_model(Simple, on_submit=ToolCall("save"))
+        form = Form.from_model(Simple, on_submit=CallTool("save"))
         j = form.to_json()
         assert len(j["children"]) == 2
         assert j["children"][1]["type"] == "Button"
@@ -224,7 +224,7 @@ class TestAutoFillConvention:
             name: str
             email: str
 
-        form = Form.from_model(Contact, on_submit=ToolCall("save"))
+        form = Form.from_model(Contact, on_submit=CallTool("save"))
         j = form.to_json()
         on_submit = j["onSubmit"]
         assert on_submit["action"] == "toolCall"
@@ -239,7 +239,7 @@ class TestAutoFillConvention:
 
         form = Form.from_model(
             Contact,
-            on_submit=ToolCall("save", arguments={"custom": "value"}),
+            on_submit=CallTool("save", arguments={"custom": "value"}),
         )
         j = form.to_json()
         assert j["onSubmit"]["arguments"] == {"custom": "value"}
@@ -248,7 +248,7 @@ class TestAutoFillConvention:
         class M(BaseModel):
             name: str
 
-        form = Form.from_model(M, on_submit=ToolCall("save"))
+        form = Form.from_model(M, on_submit=CallTool("save"))
         j = form.to_json()
         on_error = j["onSubmit"]["onError"]
         assert on_error["action"] == "showToast"
@@ -261,7 +261,7 @@ class TestAutoFillConvention:
 
         form = Form.from_model(
             M,
-            on_submit=ToolCall(
+            on_submit=CallTool(
                 "save",
                 on_error=ShowToast("Custom error"),
             ),
@@ -275,7 +275,7 @@ class TestAutoFillConvention:
 
         form = Form.from_model(
             M,
-            on_submit=ToolCall(
+            on_submit=CallTool(
                 "save",
                 result_key="result",
                 on_success=ShowToast("Saved!"),
@@ -289,7 +289,7 @@ class TestAutoFillConvention:
         class M(BaseModel):
             name: str
 
-        actions = [SetState("loading", True), ToolCall("save")]
+        actions = [SetState("loading", True), CallTool("save")]
         form = Form.from_model(M, on_submit=actions)
         j = form.to_json()
         assert j["onSubmit"][0]["action"] == "setState"
@@ -307,7 +307,7 @@ class TestAutoFillConvention:
             name: str
             internal: str = Field(exclude=True)
 
-        form = Form.from_model(M, on_submit=ToolCall("save"))
+        form = Form.from_model(M, on_submit=CallTool("save"))
         j = form.to_json()
         assert "internal" not in j["onSubmit"]["arguments"]["data"]
 
@@ -315,7 +315,7 @@ class TestAutoFillConvention:
         class M(BaseModel):
             name: str
 
-        form = Form.from_model(M, on_submit=ToolCall("save"))
+        form = Form.from_model(M, on_submit=CallTool("save"))
         j = form.to_json()
         button = j["children"][-1]
         assert button["type"] == "Button"
@@ -326,7 +326,7 @@ class TestAutoFillConvention:
         class M(BaseModel):
             name: str
 
-        form = Form.from_model(M, on_submit=ToolCall("save"))
+        form = Form.from_model(M, on_submit=CallTool("save"))
         j = form.to_json()
         assert j["onSubmit"]["tool"] == "save"
 
@@ -345,7 +345,7 @@ class TestFromModelContextIsolation:
             email: str
 
         with Card() as card:
-            Form.from_model(M, on_submit=ToolCall("save"))
+            Form.from_model(M, on_submit=CallTool("save"))
 
         # Card should have exactly one child: the Form
         assert len(card.children) == 1
@@ -359,7 +359,7 @@ class TestFromModelContextIsolation:
 
         with Column() as col:
             with Card() as card:
-                Form.from_model(M, on_submit=ToolCall("save"))
+                Form.from_model(M, on_submit=CallTool("save"))
 
         # Column has one child (Card), Card has one child (Form)
         assert len(col.children) == 1
@@ -403,7 +403,7 @@ class TestFieldsOnly:
         class M(BaseModel):
             name: str
 
-        result = Form.from_model(M, fields_only=True, on_submit=ToolCall("save"))
+        result = Form.from_model(M, fields_only=True, on_submit=CallTool("save"))
         assert all(not isinstance(c, Button) for c in result)
 
     def test_fields_only_auto_parents_to_context(self):
@@ -436,7 +436,7 @@ class TestFieldsOnly:
             name: str
 
         with Card() as card:
-            with Form(on_submit=ToolCall("save")) as form:
+            with Form(on_submit=CallTool("save")) as form:
                 with CardContent() as content:
                     Form.from_model(M, fields_only=True)
                 with CardFooter() as footer:
