@@ -1,18 +1,17 @@
 ---
-title: MCP Server
-sidebarTitle: MCP Server
+title: FastMCP
+sidebarTitle: FastMCP
 description: Build MCP Apps that render inside Claude Desktop, ChatGPT, and other hosts.
-icon: message-bot
+icon: rocket
 ---
 
 <Info>
 MCP App support will be available in [FastMCP 3.1](https://github.com/jlowin/fastmcp). This page will be updated with full documentation when it ships.
 </Info>
 
-[MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps) are an extension of the Model Context Protocol that lets MCP servers render interactive UIs directly inside the conversation. Your tool returns a UI, and the host displays it as a live interface — forms, charts, data tables — not as static text.
+Prefab integrates with [FastMCP](https://github.com/jlowin/fastmcp) to build [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps) — interactive UIs that render directly inside the conversation. Mark any tool with `app=True` and return a component tree or a `PrefabApp`:
 
-The integration targets FastMCP. Mark any tool with `app=True` and return either a component tree or a `PrefabApp`:
-
+<CodeGroup>
 ```python Component Tree
 from prefab_ui import FastMCP
 from prefab_ui.components import Card, CardContent, Column, H3, Input, Button
@@ -33,9 +32,6 @@ async def search(query: str = "") -> Card:
                 )
     return view
 ```
-
-Returning a component tree is the simplest option — FastMCP wraps it in a `PrefabApp` automatically. For more control over initial state, reusable definitions, or external assets, return a `PrefabApp` directly:
-
 ```python PrefabApp
 from prefab_ui import FastMCP
 from prefab_ui.app import PrefabApp
@@ -53,5 +49,8 @@ async def greeting() -> PrefabApp:
                 Input(name="name", placeholder="Your name...")
     return PrefabApp(view=view, state={"name": "world"})
 ```
+</CodeGroup>
 
-When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive UI instead of plain text. Client-side actions like `SetState`, `ToggleState`, and `ShowToast` work immediately in the browser, while server actions like `ToolCall` make a round-trip through the MCP protocol back to your server — so the UI can fetch fresh data, submit input, and trigger server-side logic.
+Returning a component tree is the simplest option — FastMCP wraps it in a `PrefabApp` automatically. Return a `PrefabApp` directly when you need initial state, reusable definitions, or external assets.
+
+When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive UI instead of plain text. Client-side [actions](/actions) like `SetState` and `ShowToast` work immediately in the browser, while `ToolCall` makes a round-trip through MCP back to your server for fresh data and server-side logic.

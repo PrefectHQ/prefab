@@ -15,7 +15,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 **Prefab is a frontend framework with a Python DSL that compiles to JSON.** Describe a UI — layouts, forms, charts, data tables, full interactivity — and a bundled React renderer turns that JSON into a self-contained application.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because it's a JSON protocol, any source can produce a Prefab UI. Write one in Python, serve one as an [MCP App](/running/mcp), or let an agent generate one dynamically — no templates or predefined views required.
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because it's a JSON protocol, any source can produce a Prefab UI. Write one in Python, serve one as an [MCP App](/running/fastmcp), or let an agent generate one dynamically — no templates or predefined views required.
 
 <div style={{
   margin: '0 clamp(-160px, calc(-10vw + 140px), 0px) 2rem',
@@ -1354,7 +1354,7 @@ In fact, **every example in the Prefab docs is rendered by Prefab itself.** The 
 
 ## Why Prefab
 
-Prefab began as a DSL for building [MCP Apps](/running/mcp) as part of [FastMCP](https://github.com/jlowin/fastmcp). MCP Apps are an extension of the Model Context Protocol that lets MCP servers render fully interactive UIs directly inside the chat — dashboards, forms, data tables, visualizations — not as static text, but as live interfaces the user can interact with while talking to an agent.
+Prefab began as a DSL for building [MCP Apps](/running/fastmcp) as part of [FastMCP](https://github.com/jlowin/fastmcp). MCP Apps are an extension of the Model Context Protocol that lets MCP servers render fully interactive UIs directly inside the chat — dashboards, forms, data tables, visualizations — not as static text, but as live interfaces the user can interact with while talking to an agent.
 
 Building an MCP App means shipping a self-contained UI bundle. For TypeScript SDK users, that's natural — they're already in the JavaScript ecosystem. But the vast majority of MCP servers are written in Python, and for those developers, building an MCP App means spinning up an entirely new project in an entirely new language, tightly coupled to their server with no shared types or enforcement. Prefab eliminates that gap entirely: describe your UI in Python, right next to your server logic, and Prefab compiles it to a production React bundle.
 
