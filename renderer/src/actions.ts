@@ -241,6 +241,64 @@ export async function executeAction(
         break;
       }
 
+      case "fetch": {
+        const url = resolved.url as string;
+        const method = (resolved.method as string) ?? "GET";
+        const headers = (resolved.headers as Record<string, string>) ?? {};
+        const rawBody = resolved.body;
+
+        const fetchInit: RequestInit = { method, headers: { ...headers } };
+        if (rawBody != null && method !== "GET" && method !== "HEAD") {
+          if (typeof rawBody === "object") {
+            fetchInit.body = JSON.stringify(rawBody);
+            (fetchInit.headers as Record<string, string>)["Content-Type"] ??=
+              "application/json";
+          } else {
+            fetchInit.body = rawBody as string;
+          }
+        }
+
+        const response = await globalThis.fetch(url, fetchInit);
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+
+        // Parse response: try JSON first, fall back to text
+        const contentType = response.headers.get("content-type") ?? "";
+        let data: unknown;
+        if (contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          const text = await response.text();
+          try {
+            data = JSON.parse(text);
+          } catch {
+            data = text;
+          }
+        }
+
+        // Write to state if resultKey set
+        const resultKey = resolved.resultKey as string | undefined;
+        if (resultKey) {
+          state.set(resultKey, data);
+        }
+
+        // Fire onSuccess with response data as $event
+        if (resolved.onSuccess) {
+          await executeActions(
+            resolved.onSuccess,
+            app,
+            state,
+            data,
+            depth + 1,
+            undefined,
+            scope,
+            overlayClose,
+          );
+        }
+        return true;
+      }
+
       case "openFilePicker": {
         const accept = resolved.accept as string | undefined;
         const multiple = (resolved.multiple as boolean) ?? false;

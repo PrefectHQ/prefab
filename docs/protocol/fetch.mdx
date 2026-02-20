@@ -1,0 +1,74 @@
+---
+title: Fetch
+description: JSON Schema for the Fetch action.
+---
+
+Make an HTTP request from the browser.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "fetch",
+      "default": "fetch",
+      "type": "string"
+    },
+    "url": {
+      "description": "URL to fetch. Supports {{ key }} interpolation.",
+      "type": "string"
+    },
+    "method": {
+      "default": "GET",
+      "description": "HTTP method.",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ],
+      "type": "string"
+    },
+    "headers": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Request headers."
+    },
+    "body": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Request body. Dicts are JSON-serialized automatically."
+    },
+    "resultKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key to store the response under."
+    }
+  },
+  "required": [
+    "action",
+    "url"
+  ]
+}
+```

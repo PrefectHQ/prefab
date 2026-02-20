@@ -17,6 +17,41 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch\n\nButton(\"Load Users\", on_click=Fetch.get(\n    \"/api/users\",\n    result_key=\"users\",\n))"
+  },
+  {
+    "title": "GET with query params",
+    "category": "Actions",
+    "code": "Fetch.get(\"/api/search\", params={\"q\": \"{{ query }}\", \"page\": \"1\"})"
+  },
+  {
+    "title": "POST with JSON body",
+    "category": "Actions",
+    "code": "Fetch.post(\"/api/users\", body={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})"
+  },
+  {
+    "title": "DELETE",
+    "category": "Actions",
+    "code": "Fetch.delete(\"/api/users/{{ user_id }}\")"
+  },
+  {
+    "title": "Full form",
+    "category": "Actions",
+    "code": "Fetch(\n    \"/api/submit\",\n    method=\"POST\",\n    headers={\"X-Custom\": \"value\"},\n    body={\"data\": \"{{ form_data }}\"},\n    result_key=\"response\",\n)"
+  },
+  {
+    "title": "Error handling",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import Fetch, ShowToast\n\nFetch.post(\n    \"/api/save\",\n    body={\"item\": \"{{ item }}\"},\n    on_success=ShowToast(\"Saved!\", variant=\"success\"),\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+  },
+  {
+    "title": "Combined actions",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\n\nButton(\"Submit\", on_click=[\n    SetState(\"loading\", True),\n    Fetch.post(\"/api/submit\", body={\"q\": \"{{ query }}\"}, result_key=\"result\"),\n    SetState(\"loading\", False),\n])"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker\n\nButton(\"Upload File\", on_click=OpenFilePicker())"
   },
   {
