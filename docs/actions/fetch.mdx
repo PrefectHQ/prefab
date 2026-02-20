@@ -8,16 +8,20 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `Fetch` makes HTTP requests from the browser using the native `fetch()` API. Use it to call REST endpoints, load external data, or submit forms — anything that speaks HTTP without needing an MCP server in the middle.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Load Users","variant":"default","size":"default","disabled":false,"onClick":{"action":"fetch","url":"/api/users","method":"GET","resultKey":"users"}}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"Load Users","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Users loaded!","variant":"success"},"action":"fetch","url":"/api/users","method":"GET","resultKey":"users"}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import Fetch
+from prefab_ui.actions import Fetch, ShowToast
 
-Button("Load Users", on_click=Fetch.get(
-    "/api/users",
-    result_key="users",
-))
+Button(
+    "Load Users",
+    on_click=Fetch.get(
+        "/api/users",
+        result_key="users",
+        on_success=ShowToast("Users loaded!", variant="success"),
+    ),
+)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -28,6 +32,11 @@ Button("Load Users", on_click=Fetch.get(
     "size": "default",
     "disabled": false,
     "onClick": {
+      "onSuccess": {
+        "action": "showToast",
+        "message": "Users loaded!",
+        "variant": "success"
+      },
       "action": "fetch",
       "url": "/api/users",
       "method": "GET",
@@ -39,7 +48,7 @@ Button("Load Users", on_click=Fetch.get(
 </CodeGroup>
 </ComponentPreview>
 
-The response is parsed automatically — JSON becomes an object, everything else becomes a string. If `result_key` is set, the parsed response is written into client-side state, making it immediately available via `{{ users }}` interpolation.
+The response is parsed automatically — JSON becomes an object, everything else becomes a string. If `result_key` is set, the parsed response is written into client-side state, making it immediately available via `{{ users }}` interpolation. The `on_success` callback fires after a successful request, so you can confirm the result with a toast or trigger follow-up actions.
 
 ## Classmethods
 
@@ -98,11 +107,18 @@ Like any action, `Fetch` composes in a list. A common pattern: show a loading st
 from prefab_ui.components import Button
 from prefab_ui.actions import Fetch, SetState
 
-Button("Submit", on_click=[
-    SetState("loading", True),
-    Fetch.post("/api/submit", body={"q": "{{ query }}"}, result_key="result"),
-    SetState("loading", False),
-])
+Button(
+    "Submit",
+    on_click=[
+        SetState("loading", True),
+        Fetch.post(
+            "/api/submit",
+            body={"q": "{{ query }}"},
+            result_key="result",
+        ),
+        SetState("loading", False),
+    ],
+)
 ```
 
 If the request fails, `SetState("loading", False)` never runs (the chain short-circuits). Use `on_error` on the `Fetch` to handle that case.

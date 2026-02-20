@@ -7,7 +7,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=CallTool(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "Combined Actions",
@@ -17,7 +17,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch\n\nButton(\"Load Users\", on_click=Fetch.get(\n    \"/api/users\",\n    result_key=\"users\",\n))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, ShowToast\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\n        \"/api/users\",\n        result_key=\"users\",\n        on_success=ShowToast(\"Users loaded!\", variant=\"success\"),\n    ),\n)"
   },
   {
     "title": "GET with query params",
@@ -47,7 +47,7 @@
   {
     "title": "Combined actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\n\nButton(\"Submit\", on_click=[\n    SetState(\"loading\", True),\n    Fetch.post(\"/api/submit\", body={\"q\": \"{{ query }}\"}, result_key=\"result\"),\n    SetState(\"loading\", False),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\n\nButton(\n    \"Submit\",\n    on_click=[\n        SetState(\"loading\", True),\n        Fetch.post(\n            \"/api/submit\",\n            body={\"q\": \"{{ query }}\"},\n            result_key=\"result\",\n        ),\n        SetState(\"loading\", False),\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -87,7 +87,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\"Open on GitHub\", on_click=OpenLink(\n        \"https://github.com/{{ repo }}\"\n    ))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\n        \"Open on GitHub\",\n        on_click=OpenLink(\"https://github.com/{{ repo }}\"),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -172,12 +172,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import UpdateContext\n\nButton(\"Use Advanced Mode\", on_click=UpdateContext(\n    content=\"User has selected advanced mode. Provide detailed technical responses.\"\n))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import UpdateContext\n\nButton(\n    \"Use Advanced Mode\",\n    on_click=UpdateContext(\n        content=\"User has selected advanced mode. Provide detailed technical responses.\"\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\"Set Preference\", on_click=UpdateContext(\n        structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n    ))"
+    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n        ),\n    )"
   },
   {
     "title": "from prefab_ui.components import Button",
@@ -187,7 +187,7 @@
   {
     "title": "from prefab_ui.components import Input, Button, Column",
     "category": "General",
-    "code": "from prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=CallTool(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "from prefab_ui.components import Button",
@@ -1282,7 +1282,7 @@
   {
     "title": "from prefab_ui.actions import CallTool, ShowToast",
     "category": "Expressions",
-    "code": "Button(\"Save\", on_click=CallTool(\n    \"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n))"
+    "code": "Button(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "from prefab_ui.components import ForEach, Text",
@@ -1292,7 +1292,7 @@
   {
     "title": "from prefab_ui.components import ForEach, Button, Text",
     "category": "Expressions",
-    "code": "from prefab_ui.actions import CallTool\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=CallTool(\n        \"edit_user\",\n        arguments={\"user\": \"{{ $item }}\"},\n    ))"
+    "code": "from prefab_ui.actions import CallTool\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\n        \"Edit\",\n        on_click=CallTool(\n            \"edit_user\",\n            arguments={\"user\": \"{{ $item }}\"},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1397,7 +1397,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\"Get Weather\", on_click=CallTool(\n        \"get_weather\",\n        arguments={\"location\": \"{{ city }}\"},\n    ))"
+    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
