@@ -1,0 +1,382 @@
+---
+title: DropZone
+description: Drag-and-drop file upload area.
+icon: cloud-arrow-up
+---
+
+import { ComponentPreview } from "/snippets/component-preview.mdx";
+
+A styled drag-and-drop area for file uploads. Users can drop files onto it or click to browse — either way, the selected files are read client-side, converted to base64, and passed through the action system as `$event`. No server round-trip until you want one.
+
+<Info>
+  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an action (like `ToolCall`) to do so.
+</Info>
+
+If you don't need a dedicated upload area — say you just want an "Upload" button — see the [OpenFilePicker](/actions/open-file-picker) action instead. It turns any clickable element into a file input.
+
+## Basic Usage
+
+With no configuration, DropZone renders a full-width dashed upload area that accepts a single file of any type.
+
+<ComponentPreview json={{"view":{"type":"DropZone","multiple":false,"disabled":false}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DropZone
+
+DropZone()
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DropZone",
+    "multiple": false,
+    "disabled": false
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Customizing the Prompt
+
+The `label` sets the primary prompt text and `description` adds secondary helper text below it — useful for hinting at accepted formats or size limits. You can also swap the default upload icon for any [Lucide icon](https://lucide.dev/icons) via the `icon` prop.
+
+<ComponentPreview json={{"view":{"type":"DropZone","icon":"image","label":"Drop images here","description":"PNG, JPG, or GIF up to 10MB","multiple":false,"disabled":false}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DropZone
+
+DropZone(
+    icon="image",
+    label="Drop images here",
+    description="PNG, JPG, or GIF up to 10MB",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DropZone",
+    "icon": "image",
+    "label": "Drop images here",
+    "description": "PNG, JPG, or GIF up to 10MB",
+    "multiple": false,
+    "disabled": false
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Accepted File Types
+
+The `accept` parameter restricts which files the browser will allow. It works just like the HTML `accept` attribute — MIME types (`"image/*"`), extensions (`".csv"`), or a comma-separated mix of both.
+
+<ComponentPreview json={{"view":{"type":"DropZone","label":"Upload documents","description":"PDF, DOCX, or TXT","accept":".pdf,.docx,.txt","multiple":false,"disabled":false}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DropZone
+
+DropZone(
+    label="Upload documents",
+    description="PDF, DOCX, or TXT",
+    accept=".pdf,.docx,.txt",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DropZone",
+    "label": "Upload documents",
+    "description": "PDF, DOCX, or TXT",
+    "accept": ".pdf,.docx,.txt",
+    "multiple": false,
+    "disabled": false
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Multiple Files
+
+By default, DropZone accepts one file. Set `multiple=True` to let users select several at once — `$event` becomes a `list[FileUpload]` instead of a single `FileUpload`.
+
+<ComponentPreview json={{"view":{"type":"DropZone","label":"Upload files","description":"Select as many as you like","multiple":true,"disabled":false}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DropZone
+
+DropZone(
+    label="Upload files",
+    description="Select as many as you like",
+    multiple=True,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DropZone",
+    "label": "Upload files",
+    "description": "Select as many as you like",
+    "multiple": true,
+    "disabled": false
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Handling Uploads
+
+Files stay in the browser until you do something with them. The `on_change` parameter fires actions when files are selected, with `$event` containing the file data — so the typical pattern is to pair it with a `ToolCall` that sends the base64 payload to your MCP server for processing.
+
+```python DropZone with ToolCall
+from prefab_ui.components import DropZone
+from prefab_ui.actions import ToolCall
+
+DropZone(
+    label="Upload CSV",
+    accept=".csv",
+    on_change=ToolCall(
+        "process_csv",
+        arguments={"file": "{{ $event }}"},
+    ),
+)
+```
+
+Since `on_change` accepts a list, you can chain actions for UI feedback — show a loading state, call the tool, then clear the loading state:
+
+```python DropZone with chained actions
+from prefab_ui.components import DropZone
+from prefab_ui.actions import SetState, ToolCall
+
+DropZone(
+    label="Upload data file",
+    on_change=[
+        SetState("uploading", True),
+        ToolCall("upload_file", arguments={"file": "{{ $event }}"}),
+        SetState("uploading", False),
+    ],
+)
+```
+
+### Try it
+
+Give a DropZone a `name` and it stores file data in client state automatically — no `on_change` needed. Other components can then reference that state with template expressions. Drop some files here to see it work:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false,"name":"files"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"files","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"},{"cssClass":"ml-auto h-6 w-6 p-0","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"setState","key":"files"}}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge, Button, Column, DropZone, ForEach,
+    If, Else, Muted, Row, Small,
+)
+from prefab_ui.actions import SetState
+
+with Column(gap=3) as view:
+    DropZone(
+        name="files",
+        label="Drop files to try it",
+        multiple=True,
+    )
+    with If("{{ files | length }}"):
+        with Column(gap=2):
+            with ForEach("files"):
+                with Row(gap=2, align="center"):
+                    Badge("{{ $item.type }}", variant="secondary")
+                    Small("{{ $item.name }}")
+                    Muted("{{ $item.size }} bytes")
+                    Button(
+                        "×",
+                        variant="ghost",
+                        size="sm",
+                        css_class="ml-auto h-6 w-6 p-0",
+                        on_click=SetState("files", None),
+                    )
+    with Else():
+        Muted("No files selected yet")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "DropZone",
+        "label": "Drop files to try it",
+        "multiple": true,
+        "disabled": false,
+        "name": "files"
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "{{ files | length }}",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "ForEach",
+                    "key": "files",
+                    "children": [
+                      {
+                        "cssClass": "gap-2 items-center",
+                        "type": "Row",
+                        "children": [
+                          {
+                            "type": "Badge",
+                            "label": "{{ $item.type }}",
+                            "variant": "secondary"
+                          },
+                          {
+                            "content": "{{ $item.name }}",
+                            "type": "Small"
+                          },
+                          {
+                            "content": "{{ $item.size }} bytes",
+                            "type": "Muted"
+                          },
+                          {
+                            "cssClass": "ml-auto h-6 w-6 p-0",
+                            "type": "Button",
+                            "label": "\u00d7",
+                            "variant": "ghost",
+                            "size": "sm",
+                            "disabled": false,
+                            "onClick": {
+                              "action": "setState",
+                              "key": "files"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "else": [
+          {
+            "content": "No files selected yet",
+            "type": "Muted"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## The `FileUpload` Type
+
+Both DropZone and [OpenFilePicker](/actions/open-file-picker) produce the same event shape: an object with `name`, `size` (bytes), `type` (MIME), and `data` (raw base64 — no `data:` URL prefix). For multiple-file mode, you get an array of these objects.
+
+Prefab ships a `FileUpload` type so you can annotate your MCP tool parameters with it:
+
+```python Typing a tool parameter
+from prefab_ui.actions import FileUpload
+
+@server.tool()
+def process_csv(file: FileUpload):
+    import base64
+    contents = base64.b64decode(file.data)
+    # file.name, file.size, file.type also available
+    ...
+```
+
+For multiple-file uploads, annotate as `list[FileUpload]`.
+
+## Disabled State
+
+<ComponentPreview json={{"view":{"type":"DropZone","label":"Uploads disabled","multiple":false,"disabled":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DropZone
+
+DropZone(label="Uploads disabled", disabled=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DropZone",
+    "label": "Uploads disabled",
+    "multiple": false,
+    "disabled": true
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="DropZone Parameters">
+
+<ParamField body="icon" type="str | None" default="None">
+  Lucide icon name in kebab-case (e.g. `"cloud-upload"`, `"image"`). Defaults to an upload icon.
+</ParamField>
+
+<ParamField body="label" type="str | None" default="None">
+  Primary prompt text shown in the drop zone.
+</ParamField>
+
+<ParamField body="description" type="str | None" default="None">
+  Secondary helper text below the label (e.g. file type hints).
+</ParamField>
+
+<ParamField body="accept" type="str | None" default="None">
+  File type filter. Accepts MIME types (`"image/*"`), extensions (`".csv"`), or a comma-separated mix (`".pdf,.docx,.txt"`).
+</ParamField>
+
+<ParamField body="multiple" type="bool" default="False">
+  Allow selecting multiple files. When `True`, `$event` is a `list[FileUpload]`.
+</ParamField>
+
+<ParamField body="max_size" type="int | None" default="None">
+  Maximum file size in bytes per file. Files exceeding this are rejected with a toast notification.
+</ParamField>
+
+<ParamField body="disabled" type="bool" default="False">
+  Whether the drop zone is non-interactive.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  State key for auto-state binding. When set without `on_change`, file data is stored in state under this key.
+</ParamField>
+
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when files are selected. `$event` is a `FileUpload` (single) or `list[FileUpload]` (multiple).
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes appended to the component's built-in styles.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json DropZone
+{
+  "type": "DropZone",
+  "icon?": "string",
+  "label?": "string",
+  "description?": "string",
+  "accept?": "string",
+  "multiple?": false,
+  "maxSize?": "integer",
+  "disabled?": false,
+  "name?": "string",
+  "onChange?": "Action | Action[]",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [DropZone](/protocol/drop-zone).

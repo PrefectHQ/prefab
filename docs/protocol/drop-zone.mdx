@@ -1,0 +1,93 @@
+---
+title: DropZone
+description: JSON Schema for the DropZone component.
+---
+
+Drag-and-drop file upload area.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "DropZone",
+      "default": "DropZone",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "icon": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Lucide icon name (kebab-case, e.g. 'cloud-upload'). Defaults to an upload icon when not specified."
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Primary prompt text (e.g. 'Drop files here')"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Secondary helper text (e.g. 'PNG, JPG up to 10MB')"
+    },
+    "accept": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "File type filter (e.g. 'image/*', '.csv,.xlsx')"
+    },
+    "multiple": {
+      "default": false,
+      "description": "Allow selecting multiple files",
+      "type": "boolean"
+    },
+    "maxSize": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum file size in bytes per file"
+    },
+    "disabled": {
+      "default": false,
+      "description": "Whether the drop zone is disabled",
+      "type": "boolean"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for auto-state binding"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to execute when files are selected",
+      "default": null
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

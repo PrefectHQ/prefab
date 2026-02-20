@@ -290,6 +290,9 @@ with Card():
 | `upper` | | Uppercase the string |
 | `lower` | | Lowercase the string |
 | `truncate` | max length | Clamp to N characters, append `...` if truncated |
+| `pluralize` | singular word (default `item`) | Returns the word as-is for count 1, appends `s` otherwise |
+
+`pluralize` is especially useful after `length` to label dynamic counts: `{{ items | length }} {{ items | length | pluralize:'item' }}` produces "1 item" or "3 items".
 
 ## Array Operations
 

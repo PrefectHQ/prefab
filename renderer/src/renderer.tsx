@@ -434,6 +434,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
           state.set(name, val);
         };
       }
+    } else if (type === "DropZone") {
+      if (!finalProps.onChange) {
+        finalProps.onChange = (val: unknown) => {
+          if (Array.isArray(val)) {
+            // Multiple mode: extend existing array so files accumulate
+            const prev = state.get(name);
+            state.set(name, [...(Array.isArray(prev) ? prev : []), ...val]);
+          } else {
+            state.set(name, val);
+          }
+        };
+      }
     }
   }
 

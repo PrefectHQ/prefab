@@ -93,6 +93,14 @@ export const closeOverlaySchema = z.object({
   ...actionCallbacks,
 });
 
+export const openFilePickerSchema = z.object({
+  action: z.literal("openFilePicker"),
+  accept: z.string().optional(),
+  multiple: z.boolean().optional(),
+  maxSize: z.number().int().optional(),
+  ...actionCallbacks,
+});
+
 // ── Union + helpers ─────────────────────────────────────────────────
 
 export const actionSchema = z.discriminatedUnion("action", [
@@ -106,6 +114,7 @@ export const actionSchema = z.discriminatedUnion("action", [
   popStateSchema,
   showToastSchema,
   closeOverlaySchema,
+  openFilePickerSchema,
 ]);
 
 /** Single action or array of actions — the shape of onClick / onChange / etc. */
@@ -123,6 +132,7 @@ export const HANDLED_ACTIONS = new Set([
   "popState",
   "showToast",
   "closeOverlay",
+  "openFilePicker",
 ] as const);
 
 /**
@@ -140,6 +150,7 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   popState: popStateSchema,
   showToast: showToastSchema,
   closeOverlay: closeOverlaySchema,
+  openFilePicker: openFilePickerSchema,
 };
 
 export type ToolCallWire = z.infer<typeof toolCallSchema>;
@@ -152,5 +163,6 @@ export type AppendStateWire = z.infer<typeof appendStateSchema>;
 export type PopStateWire = z.infer<typeof popStateSchema>;
 export type ShowToastWire = z.infer<typeof showToastSchema>;
 export type CloseOverlayWire = z.infer<typeof closeOverlaySchema>;
+export type OpenFilePickerWire = z.infer<typeof openFilePickerSchema>;
 export type ActionWire = z.infer<typeof actionSchema>;
 export type ActionOrListWire = z.infer<typeof actionOrList>;

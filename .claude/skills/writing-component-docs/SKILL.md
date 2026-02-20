@@ -71,6 +71,23 @@ Inline JSON schema conventions (for reference / hand-written exceptions):
 - Use `[Component]` for children arrays
 - Protocol slug is kebab-case of wire type (e.g., `AreaChart` → `area-chart`)
 
+## Writing Style
+
+Code blocks — including component previews — are **illustrations**, not
+documentation. They show *how* to do something. They do not teach concepts
+or introduce features. Prose does that.
+
+**Every feature section must have helpful prose**, preferably *before* the
+code example. Explain what the feature does, why you'd use it, or what
+behavior to expect. The one exception: discrete visual variants (e.g.
+showing all button sizes, disabled states) where the preview speaks for
+itself — there it's fine to lead with the visual example.
+
+Use the `explain` skill liberally when writing docs to ensure quality and
+conceptual clarity. That said, this is documentation, not a blog post.
+Be concise and direct. We do want the wry, almost self-aware "this is...
+Python... for front ends" tone that runs through the project.
+
 ## Content Rules
 
 - Use Hitchhiker's Guide to the Galaxy references for placeholder content.

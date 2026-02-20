@@ -1,0 +1,261 @@
+---
+title: File Upload
+description: Upload files and inspect their metadata — all client-side.
+icon: cloud-arrow-up
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+MCP servers typically receive files only through the LLM conversation — every byte burns tokens and inflates latency. File upload components let users send files directly to your backend tools via `ToolCall`, keeping binary data out of the context window entirely. This example stays fully client-side to demonstrate the UI mechanics, but in practice you'd wire the DropZone's `on_change` (or a button's `on_click`) to a `ToolCall` that sends the base64 payload to your server for processing.
+
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-2xl","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"File Inbox","type":"H3"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"type":"Badge","label":"{{ files | length }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"DropZone","icon":"inbox","label":"Drop files here","description":"Any file type, up to 10MB each","multiple":true,"maxSize":10000000,"disabled":false,"name":"files"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"files","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"cssClass":"gap-0","type":"Column","children":[{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.type }} \u00b7 {{ $item.size }} bytes","type":"Muted"}]},{"cssClass":"ml-auto h-6 w-6 p-0 text-muted-foreground","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"files","index":"{{ $index }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"items-center w-full","type":"Row","children":[{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"content":"{{ files | length }} {{ files | length | pluralize:'file' }}","type":"Muted"}]}],"else":[{"content":"No files uploaded","type":"Muted"}]},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"ml-auto","type":"Button","label":"Clear all","variant":"outline","size":"sm","disabled":false,"onClick":{"action":"setState","key":"files","value":[]}}]}]}]}]}]},"state":{"files":[]}}}>
+<CodeGroup>
+```python Python expandable icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import (
+    Badge, Button, Card, CardContent, CardFooter,
+    CardHeader, CardTitle, Column, DropZone, ForEach,
+    H3, If, Else, Muted, Row, Separator, Small,
+)
+from prefab_ui.actions import PopState, SetState
+
+set_initial_state(files=[])
+
+with Card(css_class="w-full max-w-2xl") as view:
+    with CardHeader():
+        with Row(gap=2, align="center"):
+            H3("File Inbox")
+            with If("{{ files | length }}"):
+                Badge(
+                    "{{ files | length }}",
+                    variant="secondary",
+                )
+
+    with CardContent():
+        with Column(gap=4):
+            DropZone(
+                icon="inbox",
+                label="Drop files here",
+                description="Any file type, up to 10MB each",
+                multiple=True,
+                max_size=10_000_000,
+                name="files",
+            )
+
+            with If("{{ files | length }}"):
+                with Column(gap=2):
+                    with ForEach("files"):
+                        with Row(gap=3, align="center"):
+                            with Column(gap=0):
+                                Small("{{ $item.name }}")
+                                Muted(
+                                    "{{ $item.type }}"
+                                    " · {{ $item.size }} bytes"
+                                )
+                            Button(
+                                "×",
+                                variant="ghost",
+                                size="sm",
+                                css_class=(
+                                    "ml-auto h-6 w-6 p-0"
+                                    " text-muted-foreground"
+                                ),
+                                on_click=PopState(
+                                    "files", "{{ $index }}"
+                                ),
+                            )
+
+    with CardFooter():
+        with Row(align="center", css_class="w-full"):
+            with If("{{ files | length }}"):
+                Muted(
+                    "{{ files | length }}"
+                    " {{ files | length | pluralize:'file' }}"
+                )
+            with Else():
+                Muted("No files uploaded")
+            with If("{{ files | length }}"):
+                Button(
+                    "Clear all",
+                    variant="outline",
+                    size="sm",
+                    css_class="ml-auto",
+                    on_click=SetState("files", []),
+                )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full max-w-2xl",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {
+            "cssClass": "gap-2 items-center",
+            "type": "Row",
+            "children": [
+              {
+                "content": "File Inbox",
+                "type": "H3"
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ files | length }}",
+                    "children": [
+                      {
+                        "type": "Badge",
+                        "label": "{{ files | length }}",
+                        "variant": "secondary"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-4",
+            "type": "Column",
+            "children": [
+              {
+                "type": "DropZone",
+                "icon": "inbox",
+                "label": "Drop files here",
+                "description": "Any file type, up to 10MB each",
+                "multiple": true,
+                "maxSize": 10000000,
+                "disabled": false,
+                "name": "files"
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ files | length }}",
+                    "children": [
+                      {
+                        "cssClass": "gap-2",
+                        "type": "Column",
+                        "children": [
+                          {
+                            "type": "ForEach",
+                            "key": "files",
+                            "children": [
+                              {
+                                "cssClass": "gap-3 items-center",
+                                "type": "Row",
+                                "children": [
+                                  {
+                                    "cssClass": "gap-0",
+                                    "type": "Column",
+                                    "children": [
+                                      {
+                                        "content": "{{ $item.name }}",
+                                        "type": "Small"
+                                      },
+                                      {
+                                        "content": "{{ $item.type }} \u00b7 {{ $item.size }} bytes",
+                                        "type": "Muted"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "cssClass": "ml-auto h-6 w-6 p-0 text-muted-foreground",
+                                    "type": "Button",
+                                    "label": "\u00d7",
+                                    "variant": "ghost",
+                                    "size": "sm",
+                                    "disabled": false,
+                                    "onClick": {
+                                      "action": "popState",
+                                      "key": "files",
+                                      "index": "{{ $index }}"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardFooter",
+        "children": [
+          {
+            "cssClass": "items-center w-full",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ files | length }}",
+                    "children": [
+                      {
+                        "content": "{{ files | length }} {{ files | length | pluralize:'file' }}",
+                        "type": "Muted"
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "content": "No files uploaded",
+                    "type": "Muted"
+                  }
+                ]
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ files | length }}",
+                    "children": [
+                      {
+                        "cssClass": "ml-auto",
+                        "type": "Button",
+                        "label": "Clear all",
+                        "variant": "outline",
+                        "size": "sm",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "files",
+                          "value": []
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "files": []
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
