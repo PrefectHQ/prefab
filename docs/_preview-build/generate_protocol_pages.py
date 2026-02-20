@@ -89,6 +89,7 @@ COMPONENT_TYPES = set(COMPONENT_CLASSES.keys()) - LAYOUT_TYPES
 _ACTION_DEF_NAMES = {
     "ActionBase",
     "CallTool",
+    "Fetch",
     "SendMessage",
     "UpdateContext",
     "OpenLink",
