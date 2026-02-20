@@ -6,6 +6,17 @@ Pre-commit hooks are run via `prek`, not `pre-commit`. Run `prek` before committ
 
 **loq (line limits):** When a file exceeds its loq limit, **never remove functionality or tests** to fit. Instead, split the file into smaller modules. For example, split test files by component group rather than deleting test cases.
 
+## Test Layout
+
+Tests mirror `src/prefab_ui/` — one test file per source module:
+
+```
+src/prefab_ui/components/button.py  →  tests/components/test_button.py
+src/prefab_ui/actions/state.py      →  tests/actions/test_state.py
+```
+
+`tests/test_components.py` is a legacy monolith to be broken up over time. New component tests go in `tests/components/`. Run `uv run pytest` — coverage is on by default.
+
 ## Component Architecture
 
 **Pure-CSS kwargs resolve in Python, not the renderer.** When a Python component has a convenience kwarg that maps directly to CSS (like `spacing=4` → `my-4`), resolve it in `model_post_init` by compiling to `css_class` and marking the field `exclude=True`. The renderer should only see `cssClass` — it never needs to know about the kwarg. See `Row.gap`/`Row.align` and `Separator.spacing` for examples.
