@@ -74,19 +74,10 @@ jobs:
           - documentation: Primary change is to user-facing docs, examples, or guides
           - maintenance: Refactoring, CI/CD improvements, dependency updates, code cleanup
 
-          PRIORITY (apply if clearly evident):
-          - priority:high: Critical bugs affecting many users, security issues, or blocking core functionality
-          - priority:medium: Important but not urgent issues
-          - priority:low: Edge cases, nice-to-have improvements, or cosmetic issues
-          - Default to no priority label if unclear
-
           AREA LABELS (apply ONLY when thematically central to the issue):
-          - platform: Issues about the core Python platform/SDK
-          - orchestration: Related to orchestration features
-          - observability: Related to observability features
-          - growth: Related to growth features
-          - javascript: Issues primarily about the TypeScript/React renderer
-          - security: Security-related issues
+          - python: Issues primarily about the Python SDK (components, actions, serialization)
+          - json: Issues primarily about the JSON protocol or schema
+          - renderer: Issues primarily about the TypeScript/React renderer
 
           STATUS (apply if applicable):
           - good first issue: ONLY if it's clearly scoped, has obvious solution, and touches limited files
@@ -99,7 +90,7 @@ jobs:
           - Don't apply area labels just because a file in that area is mentioned
           - The issue must be PRIMARILY about that area to get the label
           - When in doubt, don't apply the label
-          - Apply 2-4 labels total typically (category + maybe priority + maybe 1 area)
+          - Apply 1-3 labels total typically (category + maybe 1 area)
 
           META LABELS (rarely needed):
           - dependencies: Only for dependabot PRs or issues specifically about package updates
@@ -127,7 +118,7 @@ jobs:
             --allowedTools Bash(gh label list),mcp__github__get_issue,mcp__github__get_issue_comments,mcp__github__update_issue,mcp__github__get_pull_request_files
           settings: |
             {
-              "model": "claude-sonnet-4-5-20250929",
+              "model": "claude-sonnet-4-6",
               "env": {
                 "GH_TOKEN": "${{ steps.marvin-token.outputs.token }}"
               }
