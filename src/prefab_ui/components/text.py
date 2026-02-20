@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Literal, overload
 
-from pydantic import Field
-
-from prefab_ui.components.base import Component
+from prefab_ui.components.typography import _text_init, _TextComponent
 
 
-class Text(Component):
+class Text(_TextComponent):
     """Body text component.
 
     Example::
@@ -18,9 +16,6 @@ class Text(Component):
     """
 
     type: Literal["Text"] = "Text"
-    content: str = Field(description="Text content")
-    bold: bool | None = Field(default=None, description="Render text in bold")
-    italic: bool | None = Field(default=None, description="Render text in italic")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -29,6 +24,4 @@ class Text(Component):
     def __init__(self, *, content: str, **kwargs: Any) -> None: ...
 
     def __init__(self, content: str | None = None, **kwargs: Any) -> None:
-        if content is not None:
-            kwargs["content"] = content
-        super().__init__(**kwargs)
+        _text_init(self, content, **kwargs)

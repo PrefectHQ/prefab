@@ -69,7 +69,7 @@ import { fieldSchema } from "./field.ts";
 import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
-import { headingSchema } from "./heading.ts";
+import { headingSchema } from "./typography.ts";
 import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
 import { inputSchema } from "./input.ts";
@@ -97,7 +97,7 @@ import {
   tableCaptionSchema,
 } from "./table.ts";
 import { tabsSchema, tabSchema } from "./tabs.ts";
-import { textSchema } from "./text.ts";
+import { textSchema } from "./typography.ts";
 import { textareaSchema } from "./textarea.ts";
 import { tooltipSchema } from "./tooltip.ts";
 import {
