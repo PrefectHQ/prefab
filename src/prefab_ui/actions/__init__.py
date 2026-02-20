@@ -26,6 +26,7 @@ Actions compose — pass a list for sequential execution::
 from __future__ import annotations
 
 from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.file import FileUpload, OpenFilePicker
 from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
@@ -36,6 +37,8 @@ __all__ = [
     "ActionBase",
     "AppendState",
     "CloseOverlay",
+    "FileUpload",
+    "OpenFilePicker",
     "OpenLink",
     "PopState",
     "SendMessage",
@@ -57,4 +60,5 @@ Action = (
     | PopState
     | ShowToast
     | CloseOverlay
+    | OpenFilePicker
 )

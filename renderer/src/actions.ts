@@ -30,6 +30,7 @@ import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 import { interpolateProps } from "./interpolation";
 import { validateAction } from "./validation";
+import { readFiles, filterByAccept } from "./file-utils";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -238,6 +239,71 @@ export async function executeAction(
       case "closeOverlay": {
         overlayClose?.();
         break;
+      }
+
+      case "openFilePicker": {
+        const accept = resolved.accept as string | undefined;
+        const multiple = (resolved.multiple as boolean) ?? false;
+        const maxSize = resolved.maxSize as number | undefined;
+
+        const fileData = await new Promise<unknown>((resolve, reject) => {
+          const input = document.createElement("input");
+          input.type = "file";
+          if (accept) input.accept = accept;
+          if (multiple) input.multiple = true;
+          input.style.display = "none";
+          document.body.appendChild(input);
+
+          input.addEventListener("change", async () => {
+            try {
+              let files = Array.from(input.files ?? []);
+              files = filterByAccept(files, accept);
+              const result = await readFiles(files, { multiple, maxSize });
+              resolve(result);
+            } catch (err) {
+              reject(err);
+            } finally {
+              document.body.removeChild(input);
+            }
+          });
+
+          // Handle cancel — the input fires no change event on cancel,
+          // but we can detect it when the window regains focus.
+          const onFocus = () => {
+            // Small delay to let the change event fire first if files were selected
+            setTimeout(() => {
+              if (document.body.contains(input)) {
+                document.body.removeChild(input);
+                resolve(null);
+              }
+              window.removeEventListener("focus", onFocus);
+            }, 300);
+          };
+          window.addEventListener("focus", onFocus);
+
+          input.click();
+        });
+
+        if (fileData == null) {
+          // User cancelled — not an error, just stop the chain
+          return true;
+        }
+
+        // Fire onSuccess with the file data as $event
+        if (resolved.onSuccess) {
+          await executeActions(
+            resolved.onSuccess,
+            app,
+            state,
+            fileData,
+            depth + 1,
+            undefined,
+            scope,
+            overlayClose,
+          );
+        }
+        // Skip the generic onSuccess handling below
+        return true;
       }
     }
   } catch (e: unknown) {

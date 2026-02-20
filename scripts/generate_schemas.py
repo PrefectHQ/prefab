@@ -22,6 +22,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import ActionBase
+from prefab_ui.actions.file import OpenFilePicker
 from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
@@ -153,6 +154,7 @@ def discover_actions() -> dict[str, type[ActionBase]]:
         PopState,
         ShowToast,
         CloseOverlay,
+        OpenFilePicker,
     ]
     result: dict[str, type[ActionBase]] = {}
     for cls in actions:

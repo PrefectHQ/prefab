@@ -56,6 +56,9 @@ import {
   PrefabButtonGroup,
 } from "./form";
 
+// File upload
+import { PrefabDropZone } from "./drop-zone";
+
 // Custom components
 import { Row, Column, Container, Grid, Div, Span, PrefabForm } from "./layout";
 import {
@@ -148,6 +151,9 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
+
+  // File upload
+  DropZone: PrefabDropZone,
 
   // Field (choice card wrapper)
   Field: PrefabField,

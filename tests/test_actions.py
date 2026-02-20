@@ -8,6 +8,7 @@ from prefab_ui.actions import (
     ActionBase,
     AppendState,
     CloseOverlay,
+    OpenFilePicker,
     OpenLink,
     PopState,
     SetState,
@@ -16,7 +17,7 @@ from prefab_ui.actions import (
     UpdateContext,
 )
 from prefab_ui.actions.mcp import SendMessage, ToolCall
-from prefab_ui.components import Button, Checkbox, Input, Slider
+from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
 
 
 class TestActionSerialization:
@@ -193,6 +194,7 @@ class TestActionCallbacks:
             PopState("k", 0),
             ShowToast("m"),
             CloseOverlay(),
+            OpenFilePicker(),
         ]
         for action in action_types:
             assert isinstance(action, ActionBase), f"{type(action)} is not ActionBase"
@@ -402,3 +404,75 @@ class TestPopStateSerialization:
         a = PopState("items", 0, on_success=ShowToast("Removed!"))
         d = a.model_dump(by_alias=True, exclude_none=True)
         assert d["onSuccess"]["action"] == "showToast"
+
+
+# ---------------------------------------------------------------------------
+# OpenFilePicker serialization
+# ---------------------------------------------------------------------------
+
+
+class TestOpenFilePickerSerialization:
+    def test_minimal(self):
+        a = OpenFilePicker()
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["action"] == "openFilePicker"
+        assert "accept" not in d
+        assert "maxSize" not in d
+
+    def test_with_options(self):
+        a = OpenFilePicker(accept="image/*", multiple=True, max_size=5_000_000)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["accept"] == "image/*"
+        assert d["multiple"] is True
+        assert d["maxSize"] == 5_000_000
+
+    def test_on_button(self):
+        b = Button(
+            label="Upload",
+            on_click=OpenFilePicker(
+                accept=".csv",
+                on_success=ToolCall("process", arguments={"file": "{{ $event }}"}),
+            ),
+        )
+        j = b.to_json()
+        assert j["onClick"]["action"] == "openFilePicker"
+        assert j["onClick"]["accept"] == ".csv"
+        assert j["onClick"]["onSuccess"]["action"] == "toolCall"
+
+    def test_callbacks(self):
+        a = OpenFilePicker(
+            on_success=ToolCall("upload"),
+            on_error=ShowToast("Upload failed", variant="error"),
+        )
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["onSuccess"]["action"] == "toolCall"
+        assert d["onError"]["action"] == "showToast"
+
+
+# ---------------------------------------------------------------------------
+# DropZone on_change
+# ---------------------------------------------------------------------------
+
+
+class TestDropZoneOnChange:
+    def test_on_change_serializes(self):
+        dz = DropZone(
+            label="Drop here",
+            on_change=ToolCall("process", arguments={"files": "{{ $event }}"}),
+        )
+        j = dz.to_json()
+        assert j["onChange"]["action"] == "toolCall"
+        assert j["onChange"]["arguments"]["files"] == "{{ $event }}"
+
+    def test_on_change_action_list(self):
+        dz = DropZone(
+            on_change=[SetState("uploading", True), ToolCall("upload")],
+        )
+        j = dz.to_json()
+        assert isinstance(j["onChange"], list)
+        assert len(j["onChange"]) == 2
+
+    def test_on_change_excluded_when_none(self):
+        dz = DropZone(label="Upload")
+        j = dz.to_json()
+        assert "onChange" not in j
