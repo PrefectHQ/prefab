@@ -107,7 +107,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Checkbox","label":"Accept terms","checked":false,"name":"accepted","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ message | 'Check the box' }}"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Checkbox","label":"Accept terms","checked":false,"name":"accepted","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | 'Check the box' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Text
@@ -148,8 +148,8 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "type": "Text",
-        "content": "{{ message | 'Check the box' }}"
+        "content": "{{ message | 'Check the box' }}",
+        "type": "Text"
       }
     ]
   }

@@ -156,7 +156,7 @@ The renderer auto-adjusts if the popover would overflow the viewport, so the `si
 
 For lighter-weight confirmations that don't need a full modal overlay, a Popover works well. The same trigger-then-content pattern applies.
 
-<ComponentPreview json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Archive","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Archive this item?"},{"type":"Button","label":"Confirm","variant":"default","size":"default","disabled":false,"onClick":[{"action":"toolCall","tool":"archive_item","arguments":{"id":"{{ item_id }}"}},{"action":"closeOverlay"}]}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Archive","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-2","type":"Column","children":[{"content":"Archive this item?","type":"Text"},{"type":"Button","label":"Confirm","variant":"default","size":"default","disabled":false,"onClick":[{"action":"toolCall","tool":"archive_item","arguments":{"id":"{{ item_id }}"}},{"action":"closeOverlay"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Popover, Text
@@ -191,8 +191,8 @@ with Popover():
         "type": "Column",
         "children": [
           {
-            "type": "Text",
-            "content": "Archive this item?"
+            "content": "Archive this item?",
+            "type": "Text"
           },
           {
             "type": "Button",
@@ -248,6 +248,7 @@ with Popover():
 {
   "type": "Popover",
   "children?": "[Component]",
+  "let?": "object",
   "title?": "string",
   "description?": "string",
   "side?": "top | right | bottom | left",

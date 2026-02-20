@@ -104,7 +104,7 @@ Calendar(mode="multiple", name="selectedDates")
 
 Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","content":"Selected date:"},{"type":"Text","content":"{{ selectedDate | date:long }}","bold":true},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"content":"Selected date:","type":"Text"},{"content":"{{ selectedDate | date:long }}","bold":true,"type":"Text"},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -141,13 +141,13 @@ with Row(gap=6):
         "type": "Column",
         "children": [
           {
-            "type": "Text",
-            "content": "Selected date:"
+            "content": "Selected date:",
+            "type": "Text"
           },
           {
-            "type": "Text",
             "content": "{{ selectedDate | date:long }}",
-            "bold": true
+            "bold": true,
+            "type": "Text"
           },
           {
             "content": "Raw: {{ selectedDate }}",

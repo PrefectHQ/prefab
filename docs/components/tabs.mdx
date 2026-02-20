@@ -174,7 +174,7 @@ with Tabs(default_value="account"):
 
 The `variant` prop controls the visual style of the tab triggers. The default uses a pill-style background, while `"line"` uses an underline indicator.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"type":"Tabs","variant":"default","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]},{"type":"Tabs","variant":"line","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"type":"Text","content":"Don't panic."}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"type":"Text","content":"It's a wholly remarkable book."}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"type":"Tabs","variant":"default","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]}]},{"type":"Tabs","variant":"line","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Tab, Tabs, Text
@@ -210,8 +210,8 @@ with Column(gap=6):
             "disabled": false,
             "children": [
               {
-                "type": "Text",
-                "content": "Don't panic."
+                "content": "Don't panic.",
+                "type": "Text"
               }
             ]
           },
@@ -222,8 +222,8 @@ with Column(gap=6):
             "disabled": false,
             "children": [
               {
-                "type": "Text",
-                "content": "It's a wholly remarkable book."
+                "content": "It's a wholly remarkable book.",
+                "type": "Text"
               }
             ]
           }
@@ -241,8 +241,8 @@ with Column(gap=6):
             "disabled": false,
             "children": [
               {
-                "type": "Text",
-                "content": "Don't panic."
+                "content": "Don't panic.",
+                "type": "Text"
               }
             ]
           },
@@ -253,8 +253,8 @@ with Column(gap=6):
             "disabled": false,
             "children": [
               {
-                "type": "Text",
-                "content": "It's a wholly remarkable book."
+                "content": "It's a wholly remarkable book.",
+                "type": "Text"
               }
             ]
           }
@@ -331,6 +331,7 @@ with Column(gap=4):
 {
   "type": "Tabs",
   "children?": "[Component]",
+  "let?": "object",
   "variant?": "default | line",
   "defaultValue?": "string",
   "name?": "string",
@@ -343,6 +344,7 @@ with Column(gap=4):
 {
   "type": "Tab",
   "children?": "[Component]",
+  "let?": "object",
   "title": "string (required)",
   "value?": "string",
   "disabled?": false,

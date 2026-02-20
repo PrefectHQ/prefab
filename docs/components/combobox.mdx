@@ -76,7 +76,7 @@ with Combobox(
 
 The `name` prop creates a state key that holds the selected option's `value`. Use `{{ key }}` interpolation to display it anywhere, or reference it in actions and visibility conditions.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"type":"Text","content":"Selected: {{ planet }}"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"content":"Selected: {{ planet }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -130,8 +130,8 @@ with Column(gap=3):
         ]
       },
       {
-        "type": "Text",
-        "content": "Selected: {{ planet }}"
+        "content": "Selected: {{ planet }}",
+        "type": "Text"
       }
     ]
   }
@@ -304,6 +304,7 @@ with Combobox(
 {
   "type": "Combobox",
   "children?": "[Component]",
+  "let?": "object",
   "placeholder?": "string",
   "searchPlaceholder?": "string",
   "name?": "string",

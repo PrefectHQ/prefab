@@ -6,10 +6,10 @@ from typing import Any, Literal, overload
 
 from pydantic import Field
 
-from prefab_ui.components.base import Component
+from prefab_ui.components.typography import _text_init, _TextComponent
 
 
-class Heading(Component):
+class Heading(_TextComponent):
     """Section heading (h1-h4).
 
     Example::
@@ -18,7 +18,6 @@ class Heading(Component):
     """
 
     type: Literal["Heading"] = "Heading"
-    content: str = Field(description="Heading text")
     level: Literal[1, 2, 3, 4] = Field(
         default=1, description="Heading level (1=h1, 4=h4)"
     )
@@ -30,6 +29,4 @@ class Heading(Component):
     def __init__(self, *, content: str, **kwargs: Any) -> None: ...
 
     def __init__(self, content: str | None = None, **kwargs: Any) -> None:
-        if content is not None:
-            kwargs["content"] = content
-        super().__init__(**kwargs)
+        _text_init(self, content, **kwargs)

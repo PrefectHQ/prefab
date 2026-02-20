@@ -12,7 +12,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"type":"Text","content":"Out of stock"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"content":"Out of stock","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
@@ -44,8 +44,8 @@ with Column(gap=3):
             "required": false
           },
           {
-            "type": "Text",
-            "content": "Out of stock"
+            "content": "Out of stock",
+            "type": "Text"
           }
         ]
       },
@@ -82,7 +82,7 @@ A lone `If` renders its children when the condition is truthy, and renders nothi
 
 Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"type":"Text","content":"Show details"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"type":"Text","content":"Heart of Gold \u2014 Infinite Improbability Drive"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"showDetails","disabled":false,"required":false},{"content":"Show details","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"content":"Heart of Gold \u2014 Infinite Improbability Drive","type":"Text"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -133,8 +133,8 @@ with Column(gap=3):
             "required": false
           },
           {
-            "type": "Text",
-            "content": "Show details"
+            "content": "Show details",
+            "type": "Text"
           }
         ]
       },
@@ -160,8 +160,8 @@ with Column(gap=3):
                     "type": "CardContent",
                     "children": [
                       {
-                        "type": "Text",
-                        "content": "Heart of Gold \u2014 Infinite Improbability Drive"
+                        "content": "Heart of Gold \u2014 Infinite Improbability Drive",
+                        "type": "Text"
                       }
                     ]
                   }

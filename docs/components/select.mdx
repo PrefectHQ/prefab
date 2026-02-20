@@ -261,7 +261,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the selection changes. `$event` is the `value` string of the selected option:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","type":"Text","content":"{{ picked | 'Make a selection' }}"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | 'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -323,8 +323,8 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "type": "Text",
-        "content": "{{ picked | 'Make a selection' }}"
+        "content": "{{ picked | 'Make a selection' }}",
+        "type": "Text"
       }
     ]
   }
@@ -393,6 +393,7 @@ with Column(gap=4):
 {
   "type": "Select",
   "children?": "[Component]",
+  "let?": "object",
   "placeholder?": "string",
   "name?": "string",
   "size?": "sm | default",

@@ -254,7 +254,7 @@ with Row(gap=2, css_class="items-center"):
 
 ## Text and Markdown
 
-`Text` and `Markdown` are simpler alternatives to the styled components above. `Text` renders an unstyled `<p>`, while `Markdown` parses and renders markdown syntax. `Heading` is a parametric heading that takes a `level` kwarg instead of using separate H1-H4 classes.
+`Text` and `Markdown` are simpler alternatives to the styled components above. `Text` renders an unstyled `<p>`, while `Markdown` parses and renders markdown syntax. `Heading` is a parametric heading that takes a `level` kwarg instead of using separate H1-H4 classes. `Text` and `Heading` support the same `bold`, `italic`, and `align` props as the styled components.
 
 ```python Simpler Alternatives
 from prefab_ui.components import (
@@ -274,7 +274,7 @@ These are handy for data-driven UIs where the styling comes from the container r
 
 All text components accept `bold` and `italic` props for quick emphasis without reaching for CSS classes:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"type":"Text","content":"Bold and italic combined.","bold":true,"italic":true}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"content":"Bold and italic combined.","bold":true,"italic":true,"type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -310,10 +310,63 @@ with Column(gap=2):
         "type": "P"
       },
       {
-        "type": "Text",
         "content": "Bold and italic combined.",
         "bold": true,
-        "italic": true
+        "italic": true,
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Alignment
+
+All text components accept an `align` prop to control horizontal text alignment. This compiles to Tailwind's `text-left`, `text-center`, `text-right`, or `text-justify` classes.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-center","content":"Welcome Back","type":"H2"},{"cssClass":"text-center","content":"Your dashboard is ready.","type":"P"},{"cssClass":"text-right","content":"Last login: February 19, 2026","type":"Muted"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    H2,
+    P,
+    Muted,
+    Column,
+)
+
+with Column(gap=2):
+    H2("Welcome Back", align="center")
+    P(
+        "Your dashboard is ready.",
+        align="center",
+    )
+    Muted(
+        "Last login: February 19, 2026",
+        align="right",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "text-center",
+        "content": "Welcome Back",
+        "type": "H2"
+      },
+      {
+        "cssClass": "text-center",
+        "content": "Your dashboard is ready.",
+        "type": "P"
+      },
+      {
+        "cssClass": "text-right",
+        "content": "Last login: February 19, 2026",
+        "type": "Muted"
       }
     ]
   }
@@ -340,6 +393,10 @@ with Column(gap=2):
   Render text in italic style.
 </ParamField>
 
+<ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
+  Horizontal text alignment. Compiles to a Tailwind `text-*` class.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
@@ -348,6 +405,18 @@ with Column(gap=2):
 <Card icon="code" title="Text Parameters">
 <ParamField body="content" type="str" required>
   Text content with `{{ field }}` interpolation. Renders as an unstyled `<p>`.
+</ParamField>
+
+<ParamField body="bold" type="bool | None" default="None">
+  Render text in bold weight.
+</ParamField>
+
+<ParamField body="italic" type="bool | None" default="None">
+  Render text in italic style.
+</ParamField>
+
+<ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
+  Horizontal text alignment.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -362,6 +431,18 @@ with Column(gap=2):
 
 <ParamField body="level" type="int" default="1">
   Heading level: `1` (h1), `2` (h2), `3` (h3), or `4` (h4).
+</ParamField>
+
+<ParamField body="bold" type="bool | None" default="None">
+  Render text in bold weight.
+</ParamField>
+
+<ParamField body="italic" type="bool | None" default="None">
+  Render text in italic style.
+</ParamField>
+
+<ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
+  Horizontal text alignment.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -387,6 +468,7 @@ with Column(gap=2):
   "content": "string (required)",
   "bold?": "boolean",
   "italic?": "boolean",
+  "align?": "left | center | right | justify",
   "cssClass?": "string"
 }
 ```
@@ -395,6 +477,9 @@ with Column(gap=2):
 {
   "type": "Heading",
   "content": "string (required)",
+  "bold?": "boolean",
+  "italic?": "boolean",
+  "align?": "left | center | right | justify",
   "level?": "1 | 2 | 3 | 4",
   "cssClass?": "string"
 }

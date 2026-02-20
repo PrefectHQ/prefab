@@ -107,7 +107,7 @@ with Dialog(
 
 Dialogs work well for destructive actions that need explicit confirmation before proceeding. Use `CloseOverlay()` on the Cancel button to dismiss the dialog, and on the confirm button to close it after the action fires.
 
-<ComponentPreview height="420px" json={{"view":{"type":"Dialog","title":"Delete Item","description":"This action cannot be undone.","children":[{"type":"Button","label":"Delete","variant":"destructive","size":"default","disabled":false},{"type":"Text","content":"Are you sure you want to permanently delete this item?"},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}},{"type":"Button","label":"Confirm Delete","variant":"destructive","size":"default","disabled":false,"onClick":[{"action":"toolCall","tool":"delete_item","arguments":{"id":"{{ item_id }}"}},{"action":"closeOverlay"}]}]}]}}}>
+<ComponentPreview height="420px" json={{"view":{"type":"Dialog","title":"Delete Item","description":"This action cannot be undone.","children":[{"type":"Button","label":"Delete","variant":"destructive","size":"default","disabled":false},{"content":"Are you sure you want to permanently delete this item?","type":"Text"},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}},{"type":"Button","label":"Confirm Delete","variant":"destructive","size":"default","disabled":false,"onClick":[{"action":"toolCall","tool":"delete_item","arguments":{"id":"{{ item_id }}"}},{"action":"closeOverlay"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
@@ -142,8 +142,8 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
         "disabled": false
       },
       {
-        "type": "Text",
-        "content": "Are you sure you want to permanently delete this item?"
+        "content": "Are you sure you want to permanently delete this item?",
+        "type": "Text"
       },
       {
         "cssClass": "gap-2 justify-end",
@@ -237,6 +237,7 @@ with Dialog(title="Remove User", description="This will revoke all access."):
 {
   "type": "Dialog",
   "children?": "[Component]",
+  "let?": "object",
   "title?": "string",
   "description?": "string",
   "cssClass?": "string"

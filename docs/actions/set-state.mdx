@@ -321,7 +321,7 @@ with Column(gap=2):
 
 Type a name and click Add to see it appear in the list. Click × to remove a row.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Text","content":"{{ $item }}"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -366,8 +366,8 @@ with Column(gap=3):
             "type": "Row",
             "children": [
               {
-                "type": "Text",
-                "content": "{{ $item }}"
+                "content": "{{ $item }}",
+                "type": "Text"
               },
               {
                 "type": "Button",
@@ -488,5 +488,37 @@ State keys must be identifiers: letters, numbers, and underscores, starting with
 </Card>
 
 ## Protocol Reference
+
+```json SetState
+{
+  "action": "setState",
+  "key": "string (required)",
+  "value?": "any"
+}
+```
+
+```json ToggleState
+{
+  "action": "toggleState",
+  "key": "string (required)"
+}
+```
+
+```json AppendState
+{
+  "action": "appendState",
+  "key": "string (required)",
+  "value?": "any",
+  "index?": "number | string"
+}
+```
+
+```json PopState
+{
+  "action": "popState",
+  "key": "string (required)",
+  "index": "number | string (required)"
+}
+```
 
 For the complete protocol schema, see [SetState](/protocol/set-state), [ToggleState](/protocol/toggle-state), [AppendState](/protocol/append-state), [PopState](/protocol/pop-state).

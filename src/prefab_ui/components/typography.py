@@ -18,7 +18,9 @@ from typing import Any, Literal, overload
 
 from pydantic import Field
 
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, _merge_css_classes
+
+TextAlign = Literal["left", "center", "right", "justify"] | None
 
 
 class _TextComponent(Component):
@@ -27,6 +29,7 @@ class _TextComponent(Component):
     content: str = Field(description="Text content")
     bold: bool | None = Field(default=None, description="Render text in bold")
     italic: bool | None = Field(default=None, description="Render text in italic")
+    align: TextAlign = Field(default=None, exclude=True)
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -39,6 +42,11 @@ class _TextComponent(Component):
         if content is not None:
             kwargs["content"] = content
         super().__init__(**kwargs)
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.align is not None:
+            self.css_class = _merge_css_classes(f"text-{self.align}", self.css_class)
+        super().model_post_init(__context)
 
 
 def _text_init(self: _TextComponent, content: str | None = None, **kwargs: Any) -> None:
