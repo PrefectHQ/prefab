@@ -21,7 +21,7 @@ AppResult(state={"count": 0, "name": "Arthur"}, view=...)
 
 **Named form controls** — any component with a `name` prop syncs its current value to state automatically. `Input(name="city")` updates `{{ city }}` on every keystroke.
 
-**Actions** — [SetState](/actions/set-state) and [ToolCall](/actions/call-tool) (via `result_key`) write to global state when they fire.
+**Actions** — [SetState](/actions/set-state) and [CallTool](/actions/call-tool) (via `result_key`) write to global state when they fire.
 
 ## Local Scope (`let`)
 
@@ -118,9 +118,9 @@ Available inside action specs. Contains the value from the triggering interactio
 Available inside `on_error` callbacks. Contains the error message string from the failed action.
 
 ```python
-from prefab_ui.actions import ToolCall, ShowToast
+from prefab_ui.actions import CallTool, ShowToast
 
-Button("Save", on_click=ToolCall(
+Button("Save", on_click=CallTool(
     "save_data",
     on_error=ShowToast("Failed: {{ $error }}", variant="error"),
 ))
@@ -146,11 +146,11 @@ Available inside [ForEach](/components/foreach) iterations. A reference to the e
 
 ```python
 from prefab_ui.components import ForEach, Button, Text
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 with ForEach("users"):
     Text("{{ name }}")
-    Button("Edit", on_click=ToolCall(
+    Button("Edit", on_click=CallTool(
         "edit_user",
         arguments={"user": "{{ $item }}"},
     ))

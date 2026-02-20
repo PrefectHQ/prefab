@@ -214,15 +214,15 @@ with Grid(min_column_width="240px", gap=4):
                     with Row(gap=2, css_class="flex-wrap"):
                         Button(
                             "Improbable",
-                            on_click=ToolCall("mood", arguments={"rating": "improbable"}),
+                            on_click=CallTool("mood", arguments={"rating": "improbable"}),
                         )
                         Button(
                             "Meh", variant="secondary",
-                            on_click=ToolCall("mood", arguments={"rating": "meh"}),
+                            on_click=CallTool("mood", arguments={"rating": "meh"}),
                         )
                         Button(
                             "Depressed", variant="outline",
-                            on_click=ToolCall("mood", arguments={"rating": "depressed"}),
+                            on_click=CallTool("mood", arguments={"rating": "depressed"}),
                         )
                     Textarea(placeholder="Brain the size of a planet...", name="feedback")
         with Card():
@@ -1386,7 +1386,7 @@ The core idea is a pipeline: **JSON → React**. For Python authors, it's **Pyth
 2. The tree serializes to Prefab's JSON wire format
 3. A React renderer (shipped as `@prefecthq/prefab-ui` on npm) compiles the JSON into a live interface
 
-State flows through templates. When you write `{{ query }}`, the renderer interpolates the current value of `query` from client-side state. Actions like `ToolCall` and `SetState` update that state, keeping the UI reactive.
+State flows through templates. When you write `{{ query }}`, the renderer interpolates the current value of `query` from client-side state. Actions like `CallTool` and `SetState` update that state, keeping the UI reactive.
 
 Here's a simpler example — type in the input and watch the heading update in real time:
 

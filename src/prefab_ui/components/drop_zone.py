@@ -6,13 +6,13 @@ Reads selected files to base64 and fires ``onChange`` with structured file data.
 Example::
 
     from prefab_ui.components import DropZone
-    from prefab_ui.actions import ToolCall
+    from prefab_ui.actions import CallTool
 
     DropZone(
         label="Drop files here",
         accept="image/*",
         multiple=True,
-        on_change=ToolCall("process_images", arguments={"files": "{{ $event }}"}),
+        on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
     )
 """
 

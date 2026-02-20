@@ -16,7 +16,7 @@ The core mental model is a cycle between your server and the host's renderer:
 1. A tool returns a component tree (as a `Component` or wrapped in `AppResult`)
 2. The renderer displays it in the host application
 3. The user interacts -- clicks a button, fills an input, moves a slider
-4. That interaction triggers an action: either an instant client-side state change, or a server round-trip via `ToolCall`
+4. That interaction triggers an action: either an instant client-side state change, or a server round-trip via `CallTool`
 5. The server tool returns a new view, and the renderer updates the display
 
 This loop is what makes Prefab feel like a live application rather than a static response.
@@ -43,7 +43,7 @@ For tools that need client-side state, return an `AppResult` instead:
 ```python
 from prefab_ui import FastMCP
 from prefab_ui import AppResult
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 from prefab_ui.components import Button, Column, Input, Text
 
 mcp = FastMCP("Demo")
@@ -53,13 +53,13 @@ async def search(query: str = "") -> AppResult:
     results = find_items(query) if query else []
     with Column(gap=3) as view:
         Input(name="q", placeholder="Search...")
-        Button("Search", on_click=ToolCall("search", arguments={"query": "{{ q }}"}))
+        Button("Search", on_click=CallTool("search", arguments={"query": "{{ q }}"}))
         for r in results:
             Text(r["title"])
     return AppResult(view=view, state={"results": results})
 ```
 
-When the user types a query and clicks "Search", the `ToolCall` action calls the `search` tool again with the current input value. The tool returns a new view with the results, and the renderer replaces the display.
+When the user types a query and clicks "Search", the `CallTool` action calls the `search` tool again with the current input value. The tool returns a new view with the results, and the renderer replaces the display.
 
 ## State
 
@@ -71,11 +71,11 @@ You can reference state values in actions and component props using `{{ key }}` 
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
-    Button("Get Weather", on_click=ToolCall(
+    Button("Get Weather", on_click=CallTool(
         "get_weather",
         arguments={"location": "{{ city }}"},
     ))
@@ -134,7 +134,7 @@ Actions define what happens when a user interacts with a component. There are tw
 
 | Action | Purpose |
 |--------|---------|
-| `ToolCall` | Call a server tool and update the view with the result |
+| `CallTool` | Call a server tool and update the view with the result |
 | `SendMessage` | Send a message to the chat as if the user typed it |
 | `UpdateContext` | Silently update structured data the model can see |
 
@@ -144,11 +144,11 @@ Pass a list to compose multiple actions from a single interaction:
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, ToolCall
+from prefab_ui.actions import SetState, CallTool
 
 Button("Save", on_click=[
     SetState("saving", True),
-    ToolCall("save_data", arguments={"item": "{{ item }}"}),
+    CallTool("save_data", arguments={"item": "{{ item }}"}),
     SetState("saving", False),
 ])
 ```

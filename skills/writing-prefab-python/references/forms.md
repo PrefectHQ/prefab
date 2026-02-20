@@ -6,7 +6,7 @@ Generate a complete form from a Pydantic model:
 from typing import Literal
 from pydantic import BaseModel, Field, SecretStr
 from prefab_ui.components import Form
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 class UserProfile(BaseModel):
     name: str = Field(min_length=1, title="Full Name")
@@ -20,7 +20,7 @@ class UserProfile(BaseModel):
 form = Form.from_model(
     UserProfile,
     submit_label="Save Profile",
-    on_submit=ToolCall("save_profile"),
+    on_submit=CallTool("save_profile"),
     css_class="max-w-md",
 )
 ```
@@ -53,11 +53,11 @@ form = Form.from_model(
 
 ## Auto-filled Arguments
 
-When `on_submit` is a `ToolCall` with no explicit `arguments`, they are
+When `on_submit` is a `CallTool` with no explicit `arguments`, they are
 auto-filled under a `data` key:
 
 ```python
-Form.from_model(Contact, on_submit=ToolCall("create_contact"))
+Form.from_model(Contact, on_submit=CallTool("create_contact"))
 # generates: arguments={"data": {"name": "{{ name }}", "email": "{{ email }}", ...}}
 ```
 

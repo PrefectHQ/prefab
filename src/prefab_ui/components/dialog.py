@@ -5,14 +5,14 @@ The first child becomes the trigger; remaining children become the dialog body.
 Example::
 
     from prefab_ui.components import Dialog, Button, Text, Row
-    from prefab_ui.actions import ToolCall
+    from prefab_ui.actions import CallTool
 
     with Dialog(title="Confirm Delete", description="This action cannot be undone."):
         Button("Delete", variant="destructive")  # trigger
         Text("Are you sure you want to delete this item?")
         with Row(gap=2):
             Button("Cancel", variant="outline")
-            Button("Confirm", on_click=ToolCall("delete_item"))
+            Button("Confirm", on_click=CallTool("delete_item"))
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ class Dialog(ContainerComponent):
             Button("Edit")
             with Column(gap=3):
                 Input(name="displayName", placeholder="Display name")
-                Button("Save", on_click=ToolCall("update_profile"))
+                Button("Save", on_click=CallTool("update_profile"))
     """
 
     type: Literal["Dialog"] = "Dialog"

@@ -15,7 +15,7 @@ Example::
         age: int = Field(ge=0, le=150)
         active: bool = True
 
-    Form.from_model(UserProfile, on_submit=ToolCall("save_profile"))
+    Form.from_model(UserProfile, on_submit=CallTool("save_profile"))
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import Action
-from prefab_ui.actions.mcp import ToolCall
+from prefab_ui.actions.mcp import CallTool
 from prefab_ui.actions.ui import ShowToast
 from prefab_ui.components.base import (
     ContainerComponent,
@@ -50,7 +50,7 @@ class Form(ContainerComponent):
         with Form():
             Label("Name")
             Input(name="name", placeholder="Your name")
-            Button("Submit", on_click=ToolCall("save"))
+            Button("Submit", on_click=CallTool("save"))
     """
 
     type: Literal["Form"] = "Form"
@@ -124,11 +124,11 @@ class Form(ContainerComponent):
         - ``Literal[...]`` → select dropdown
         - ``SecretStr`` → password input
 
-        When ``on_submit`` is a single ``ToolCall`` with no ``arguments``,
+        When ``on_submit`` is a single ``CallTool`` with no ``arguments``,
         arguments are auto-filled from the model's fields under a ``data``
         key. This enables the self-calling tool pattern::
 
-            Form.from_model(Contact, on_submit=ToolCall("create_contact"))
+            Form.from_model(Contact, on_submit=CallTool("create_contact"))
             # auto-generates: arguments={"data": {"name": "{{ name }}", ...}}
 
         A default ``on_error`` toast is added if not already specified.
@@ -138,7 +138,7 @@ class Form(ContainerComponent):
         The fields auto-parent to whatever context manager is active,
         letting you compose them into custom layouts::
 
-            with Form(on_submit=ToolCall("save")):
+            with Form(on_submit=CallTool("save")):
                 with CardContent():
                     Form.from_model(Contact, fields_only=True)
                 with CardFooter():
@@ -150,7 +150,7 @@ class Form(ContainerComponent):
                 a Form wrapper or submit button. Returns a list of the
                 created components.
             submit_label: Text for the submit button.
-            on_submit: Action(s) fired on submit. A ``ToolCall`` with no
+            on_submit: Action(s) fired on submit. A ``CallTool`` with no
                 arguments gets auto-filled from model fields.
             css_class: Additional CSS classes on the form container.
         """
@@ -210,13 +210,13 @@ def _maybe_enrich_tool_call(
     on_submit: Action | list[Action] | None,
     model: type[BaseModel],
 ) -> Action | list[Action] | None:
-    """Auto-fill ToolCall arguments from model fields when empty.
+    """Auto-fill CallTool arguments from model fields when empty.
 
-    Only triggers when on_submit is a single ToolCall with no arguments.
+    Only triggers when on_submit is a single CallTool with no arguments.
     Wraps field templates under a ``data`` key so the receiving tool gets
     ``data: Model`` as a single parameter.
     """
-    if not isinstance(on_submit, ToolCall):
+    if not isinstance(on_submit, CallTool):
         return on_submit
     if on_submit.arguments:
         return on_submit
@@ -240,7 +240,7 @@ def _maybe_enrich_tool_call(
     else:
         kwargs["on_error"] = ShowToast("{{ $error }}", variant="error")
 
-    return ToolCall(**kwargs)
+    return CallTool(**kwargs)
 
 
 def _humanize(name: str) -> str:

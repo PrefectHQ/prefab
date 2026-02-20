@@ -60,7 +60,7 @@ Requires Python 3.10+.
 2. The tree compiles to Prefab's JSON format
 3. A bundled React renderer turns the JSON into a live interface
 
-State flows through `{{ templates }}`. When you write `{{ query }}`, the renderer interpolates the current value from client-side state. Named form controls sync automatically — `Input(name="city")` keeps `{{ city }}` up to date on every keystroke. Actions like `ToolCall` and `SetState` drive interactivity without custom JavaScript.
+State flows through `{{ templates }}`. When you write `{{ query }}`, the renderer interpolates the current value from client-side state. Named form controls sync automatically — `Input(name="city")` keeps `{{ city }}` up to date on every keystroke. Actions like `CallTool` and `SetState` drive interactivity without custom JavaScript.
 
 ## Components
 
@@ -83,14 +83,14 @@ Pydantic models generate forms automatically — constraints like `min_length` a
 ```python
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 class SignupForm(BaseModel):
     email: str = Field(description="Your email address")
     name: str = Field(min_length=2, max_length=50)
     age: int = Field(ge=18, le=120)
 
-Form.from_model(SignupForm, on_submit=ToolCall("create_user"))
+Form.from_model(SignupForm, on_submit=CallTool("create_user"))
 ```
 
 ## Actions
@@ -99,11 +99,11 @@ Actions define what happens on interaction — state updates, server calls, navi
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, ToolCall, ShowToast
+from prefab_ui.actions import SetState, CallTool, ShowToast
 
 Button("Save", on_click=[
     SetState("saving", True),
-    ToolCall(
+    CallTool(
         "save_data",
         arguments={"item": "{{ item }}"},
         on_success=ShowToast(title="Saved"),

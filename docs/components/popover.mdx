@@ -160,7 +160,7 @@ For lighter-weight confirmations that don't need a full modal overlay, a Popover
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Popover, Text
-from prefab_ui.actions import CloseOverlay, ToolCall
+from prefab_ui.actions import CloseOverlay, CallTool
 
 with Popover():
     Button("Archive", variant="outline")
@@ -169,7 +169,7 @@ with Popover():
         Button(
             "Confirm",
             on_click=[
-                ToolCall("archive_item", arguments={"id": "{{ item_id }}"}),
+                CallTool("archive_item", arguments={"id": "{{ item_id }}"}),
                 CloseOverlay(),
             ],
         )

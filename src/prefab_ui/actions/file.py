@@ -7,11 +7,11 @@ picker from any clickable element) and the :class:`FileUpload` data type
 Example::
 
     from prefab_ui.components import Button
-    from prefab_ui.actions import OpenFilePicker, ToolCall
+    from prefab_ui.actions import OpenFilePicker, CallTool
 
     Button("Upload CSV", on_click=OpenFilePicker(
         accept=".csv",
-        on_success=ToolCall("process_csv", arguments={"file": "{{ $event }}"}),
+        on_success=CallTool("process_csv", arguments={"file": "{{ $event }}"}),
     ))
 """
 
@@ -55,7 +55,7 @@ class OpenFilePicker(ActionBase):
     - Multiple file mode: ``[{name, size, type, data}, ...]``
 
     Must execute before any async server actions in the action chain
-    (ToolCall, SendMessage) since those break the browser's
+    (CallTool, SendMessage) since those break the browser's
     user-activation window needed to open the file picker.
 
     Args:

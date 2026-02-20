@@ -15,7 +15,7 @@ Prefab integrates with [FastMCP](https://github.com/PrefectHQ/fastmcp) to build 
 ```python Component Tree
 from prefab_ui import FastMCP
 from prefab_ui.components import Card, CardContent, Column, H3, Input, Button
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 mcp = FastMCP("My Server")
 
@@ -28,7 +28,7 @@ async def search(query: str = "") -> Card:
                 Input(name="q", placeholder="Search...")
                 Button(
                     "Go",
-                    on_click=ToolCall("search", arguments={"query": "{{ q }}"}),
+                    on_click=CallTool("search", arguments={"query": "{{ q }}"}),
                 )
     return view
 ```
@@ -53,4 +53,4 @@ async def greeting() -> PrefabApp:
 
 Returning a component tree is the simplest option — FastMCP wraps it in a `PrefabApp` automatically. Return a `PrefabApp` directly when you need initial state, reusable definitions, or external assets.
 
-When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive UI instead of plain text. Client-side [actions](/actions) like `SetState` and `ShowToast` work immediately in the browser, while `ToolCall` makes a round-trip through MCP back to your server for fresh data and server-side logic.
+When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive UI instead of plain text. Client-side [actions](/actions) like `SetState` and `ShowToast` work immediately in the browser, while `CallTool` makes a round-trip through MCP back to your server for fresh data and server-side logic.

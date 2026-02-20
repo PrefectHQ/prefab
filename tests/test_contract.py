@@ -20,7 +20,7 @@ from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import ActionBase
 from prefab_ui.actions.file import OpenFilePicker
-from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
@@ -33,7 +33,7 @@ COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"
 
 ALL_ACTION_CLASSES: list[type[ActionBase]] = [
-    ToolCall,
+    CallTool,
     SendMessage,
     UpdateContext,
     OpenLink,
