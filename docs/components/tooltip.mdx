@@ -6,7 +6,7 @@ icon: comment
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Tooltips show brief helper text when users hover over a component. Wrap any single element to add a tooltip.
+Tooltips show brief helper text when users hover over a component. Wrap any single element to add a tooltip. For richer hover content like status previews or structured data, use [HoverCard](/components/hover-card). For interactive content that stays open until dismissed, use [Popover](/components/popover).
 
 ## Basic Usage
 
@@ -149,6 +149,72 @@ with Row(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
+## Instant Tooltips
+
+By default, tooltips wait 700ms before appearing. Set `delay=0` for immediate feedback — useful in dashboards or status displays where users are scanning quickly.
+
+<ComponentPreview height="140px" json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"type":"Tooltip","content":"Deployed 2h ago","delay":0,"children":[{"type":"Badge","label":"In Orbit","variant":"default"}]},{"type":"Tooltip","content":"64% \u2014 ETA 12 min","delay":0,"children":[{"type":"Badge","label":"Deploying","variant":"secondary"}]},{"type":"Tooltip","content":"Position 3 of 8","delay":0,"children":[{"type":"Badge","label":"Queued","variant":"outline"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Badge, Row, Tooltip
+
+with Row(gap=4):
+    with Tooltip("Deployed 2h ago", delay=0):
+        Badge("In Orbit")
+    with Tooltip("64% — ETA 12 min", delay=0):
+        Badge("Deploying", variant="secondary")
+    with Tooltip("Position 3 of 8", delay=0):
+        Badge("Queued", variant="outline")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Tooltip",
+        "content": "Deployed 2h ago",
+        "delay": 0,
+        "children": [
+          {
+            "type": "Badge",
+            "label": "In Orbit",
+            "variant": "default"
+          }
+        ]
+      },
+      {
+        "type": "Tooltip",
+        "content": "64% \u2014 ETA 12 min",
+        "delay": 0,
+        "children": [
+          {
+            "type": "Badge",
+            "label": "Deploying",
+            "variant": "secondary"
+          }
+        ]
+      },
+      {
+        "type": "Tooltip",
+        "content": "Position 3 of 8",
+        "delay": 0,
+        "children": [
+          {
+            "type": "Badge",
+            "label": "Queued",
+            "variant": "outline"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Tooltip Parameters">
@@ -158,6 +224,10 @@ with Row(gap=4):
 
 <ParamField body="side" type="str | None" default="None">
   Which side to show the tooltip: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="delay" type="int | None" default="None">
+  Delay in milliseconds before showing the tooltip. Defaults to 700ms. Set to `0` for instant display.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -174,6 +244,7 @@ with Row(gap=4):
   "let?": "object",
   "content": "string (required)",
   "side?": "top | right | bottom | left",
+  "delay?": "number",
   "cssClass?": "string"
 }
 ```

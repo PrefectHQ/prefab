@@ -92,6 +92,7 @@ import {
   PrefabAccordion,
   PrefabPages,
   PrefabTooltip,
+  PrefabHoverCard,
   PrefabPopover,
   PrefabDialog,
   PrefabCalendar,
@@ -203,6 +204,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // Overlay wrappers (first child = trigger, rest = content)
   Tooltip: PrefabTooltip,
+  HoverCard: PrefabHoverCard,
   Popover: PrefabPopover,
   Dialog: PrefabDialog,
 
