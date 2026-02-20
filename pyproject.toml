@@ -49,6 +49,7 @@ dev = [
     "prek>=0.1.0",
     "loq>=0.1.0a3",
     "jsonschema>=4.26.0",
+    "pytest-cov>=7.0.0",
 ]
 
 [build-system]
@@ -77,6 +78,17 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 filterwarnings = [
     "error",
+]
+addopts = "--cov=src/prefab_ui --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/prefab_ui"]
+omit = ["src/prefab_ui/cli/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
 ]
 
 [tool.ty.src]
