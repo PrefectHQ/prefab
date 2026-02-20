@@ -1,0 +1,134 @@
+name: Marvin Label Triage
+# Automatically triage GitHub issues and PRs using Marvin
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue or PR number to triage"
+        required: true
+        type: string
+
+concurrency:
+  group: triage-${{ github.event.issue.number || github.event.pull_request.number || inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  label-issue-or-pr:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout base repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Generate Marvin App token
+        id: marvin-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.MARVIN_APP_ID }}
+          private-key: ${{ secrets.MARVIN_APP_PRIVATE_KEY }}
+          owner: PrefectHQ
+
+      - name: Set triage prompt
+        id: triage-prompt
+        run: |
+          cat >> $GITHUB_OUTPUT << 'EOF'
+          PROMPT<<PROMPT_END
+          You're an issue triage assistant for Prefab, an agentic frontend framework for building UIs with Python. Prefab provides a Python SDK of UI components (cards, tables, forms, charts, etc.) that render via a React/TypeScript renderer. Your task is to analyze issues/PRs and apply appropriate labels.
+
+          IMPORTANT: Your ONLY action should be to apply labels using mcp__github__update_issue. DO NOT post any comments.
+
+          Issue/PR Information:
+          - REPO: ${{ github.repository }}
+          - NUMBER: ${{ github.event.issue.number || github.event.pull_request.number || inputs.issue_number }}
+          - TYPE: ${{ github.event.issue && 'issue' || (github.event.pull_request && 'pull_request') || 'unknown' }}
+
+          TRIAGE PROCESS:
+
+          1. Get available labels:
+             Run: `gh label list`
+
+          2. Retrieve issue/PR details using GitHub tools:
+             - mcp__github__get_issue: Get the issue/PR details
+             - mcp__github__get_issue_comments: Read any discussion
+             - If the issue/PR mentions other issues (e.g., "fixes #123", "related to #456"), use mcp__github__get_issue to read those linked issues for additional context
+
+          3. Analyze and apply labels based on these guidelines:
+
+          CORE CATEGORIES (apply EXACTLY ONE - these are mutually exclusive):
+          - bug: Reports of broken functionality OR PRs that fix bugs
+          - enhancement: New feature or request, improvements to existing features, internal tooling, workflow improvements
+          - documentation: Primary change is to user-facing docs, examples, or guides
+          - maintenance: Refactoring, CI/CD improvements, dependency updates, code cleanup
+
+          PRIORITY (apply if clearly evident):
+          - priority:high: Critical bugs affecting many users, security issues, or blocking core functionality
+          - priority:medium: Important but not urgent issues
+          - priority:low: Edge cases, nice-to-have improvements, or cosmetic issues
+          - Default to no priority label if unclear
+
+          AREA LABELS (apply ONLY when thematically central to the issue):
+          - platform: Issues about the core Python platform/SDK
+          - orchestration: Related to orchestration features
+          - observability: Related to observability features
+          - growth: Related to growth features
+          - javascript: Issues primarily about the TypeScript/React renderer
+          - security: Security-related issues
+
+          STATUS (apply if applicable):
+          - good first issue: ONLY if it's clearly scoped, has obvious solution, and touches limited files
+          - help wanted: Extra attention is needed from the community
+          - invalid: Spam, completely off-topic, or nonsensical
+          - question: Issue is really a question, not a bug or feature request
+
+          IMPORTANT LABELING RULES:
+          - Be selective - only apply labels that are clearly relevant
+          - Don't apply area labels just because a file in that area is mentioned
+          - The issue must be PRIMARILY about that area to get the label
+          - When in doubt, don't apply the label
+          - Apply 2-4 labels total typically (category + maybe priority + maybe 1 area)
+
+          META LABELS (rarely needed):
+          - dependencies: Only for dependabot PRs or issues specifically about package updates
+          - duplicate: Only if clearly a duplicate of another open issue
+
+          4. Apply selected labels:
+             Use mcp__github__update_issue to apply your selected labels
+             DO NOT post any comments
+          PROMPT_END
+          EOF
+
+      - name: Clean up stale Claude locks
+        run: rm -rf ~/.claude/.locks ~/.local/state/claude/locks || true
+
+      - name: Run Marvin for Issue Triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          github_token: ${{ steps.marvin-token.outputs.token }}
+          bot_name: "Marvin Context Protocol"
+          prompt: ${{ steps.triage-prompt.outputs.PROMPT }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY_FOR_CI }}
+          allowed_non_write_users: "*"
+          allowed_bots: "marvin-context-protocol"
+          claude_args: |
+            --allowedTools Bash(gh label list),mcp__github__get_issue,mcp__github__get_issue_comments,mcp__github__update_issue,mcp__github__get_pull_request_files
+          settings: |
+            {
+              "model": "claude-sonnet-4-5-20250929",
+              "env": {
+                "GH_TOKEN": "${{ steps.marvin-token.outputs.token }}"
+              }
+            }
