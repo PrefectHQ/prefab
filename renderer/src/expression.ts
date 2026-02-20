@@ -169,6 +169,12 @@ const pipes: Record<string, PipeFn> = {
         !(item as Record<string, unknown>)[arg],
     );
   },
+
+  pluralize(value, arg) {
+    const count = Number(value);
+    const singular = arg ?? "item";
+    return count === 1 ? singular : singular + "s";
+  },
 };
 
 // ── Tokenizer ──────────────────────────────────────────────────────────

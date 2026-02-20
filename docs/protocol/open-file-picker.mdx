@@ -1,0 +1,43 @@
+---
+title: OpenFilePicker
+description: JSON Schema for the OpenFilePicker action.
+---
+
+Open the browser file picker and read selected files to base64.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "openFilePicker",
+      "default": "openFilePicker",
+      "type": "string"
+    },
+    "accept": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "File type filter (e.g. 'image/*', '.csv,.xlsx')"
+    },
+    "multiple": {
+      "default": false,
+      "description": "Allow selecting multiple files",
+      "type": "boolean"
+    },
+    "maxSize": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum file size in bytes"
+    }
+  },
+  "required": [
+    "action"
+  ]
+}
+```

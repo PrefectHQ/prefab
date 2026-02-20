@@ -1,0 +1,199 @@
+---
+title: Open File Picker
+description: Open the browser file picker from any clickable element.
+icon: file-arrow-up
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`OpenFilePicker` is an action, not a component. It opens the browser's native file picker when triggered — attach it to any clickable element and it handles the rest: reading selected files to base64 and passing them to `onSuccess` as `$event`.
+
+This is the counterpart to [DropZone](/components/drop-zone). Where DropZone gives you a dedicated upload area, OpenFilePicker turns any existing element into a file input. A button, a badge, an icon — anything with an `on_click`.
+
+<Info>
+  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an `on_success` action (like `ToolCall`) to do so.
+</Info>
+
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker
+
+Button("Upload File", on_click=OpenFilePicker())
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Upload File",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "action": "openFilePicker",
+      "multiple": false
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Processing Files with a Tool
+
+Files are read client-side, but they don't go anywhere until you tell them to. The typical pattern is to nest a `ToolCall` inside `on_success` — pick the file, then send its base64 data to your MCP server for processing.
+
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker, ToolCall
+
+Button(
+    "Upload CSV",
+    icon="upload",
+    variant="outline",
+    on_click=OpenFilePicker(
+        accept=".csv",
+        on_success=ToolCall(
+            "process_csv",
+            arguments={"file": "{{ $event }}"},
+        ),
+    ),
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Upload CSV",
+    "icon": "upload",
+    "variant": "outline",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "onSuccess": {
+        "action": "toolCall",
+        "tool": "process_csv",
+        "arguments": {
+          "file": "{{ $event }}"
+        }
+      },
+      "action": "openFilePicker",
+      "accept": ".csv",
+      "multiple": false
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Multiple Files
+
+Set `multiple=True` to let users select several files at once. `$event` becomes an array of file objects.
+
+```python Multiple file upload
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker, ToolCall
+
+Button(
+    "Upload Images",
+    on_click=OpenFilePicker(
+        accept="image/*",
+        multiple=True,
+        on_success=ToolCall(
+            "process_images",
+            arguments={"images": "{{ $event }}"},
+        ),
+    ),
+)
+```
+
+## File Size Limits
+
+The `max_size` parameter rejects files that exceed a byte limit before they ever reach `onSuccess`. Oversized files are silently dropped with a toast notification — the user sees the error, your tool never has to deal with it.
+
+```python With size limit
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker, ToolCall
+
+Button(
+    "Upload (max 5MB)",
+    on_click=OpenFilePicker(
+        max_size=5_000_000,
+        on_success=ToolCall("upload", arguments={"file": "{{ $event }}"}),
+    ),
+)
+```
+
+## Error Handling
+
+The `on_error` callback on the nested `ToolCall` fires if the server-side processing fails. The error message is available as `$error`.
+
+```python With error handling
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker, ToolCall, ShowToast
+
+Button(
+    "Upload",
+    on_click=OpenFilePicker(
+        accept=".csv",
+        on_success=ToolCall(
+            "process_csv",
+            arguments={"file": "{{ $event }}"},
+            on_success=ShowToast("File processed!", variant="success"),
+            on_error=ShowToast(
+                "Processing failed: {{ $error }}",
+                variant="error",
+            ),
+        ),
+    ),
+)
+```
+
+## The `FileUpload` Type
+
+Both OpenFilePicker and [DropZone](/components/drop-zone) produce the same `$event` shape. Prefab ships a `FileUpload` type you can use to annotate your tool parameters — see [The FileUpload Type](/components/drop-zone#the-fileupload-type) for details and usage.
+
+## User Activation
+
+One constraint worth knowing: `OpenFilePicker` must execute before any async server actions in the same chain. Browsers require a recent user gesture to open the file picker — if a `ToolCall` or `SendMessage` fires first, the activation window expires and the picker silently won't open. This is the natural ordering anyway (pick the file, then send it), but it's worth understanding why.
+
+## API Reference
+
+<Card icon="code" title="OpenFilePicker Parameters">
+<ParamField body="accept" type="str | None" default="None">
+  File type filter. Accepts MIME types (`"image/*"`), extensions (`".csv"`), or a comma-separated mix.
+</ParamField>
+
+<ParamField body="multiple" type="bool" default="False">
+  Allow selecting multiple files. When `True`, `$event` is a `list[FileUpload]`.
+</ParamField>
+
+<ParamField body="max_size" type="int | None" default="None">
+  Maximum file size in bytes. Oversized files are rejected with a toast notification.
+</ParamField>
+
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Action(s) to run after files are selected. `$event` is a `FileUpload` (single) or `list[FileUpload]` (multiple).
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Action(s) to run if file reading fails.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json OpenFilePicker
+{
+  "action": "openFilePicker",
+  "accept?": "string",
+  "multiple?": false,
+  "maxSize?": "integer"
+}
+```
+
+For the complete protocol schema, see [OpenFilePicker](/protocol/open-file-picker).

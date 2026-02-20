@@ -1,0 +1,35 @@
+---
+title: FileUpload
+description: JSON Schema for the FileUpload component.
+---
+
+Data for a single uploaded file.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "name": {
+      "description": "Original filename",
+      "type": "string"
+    },
+    "size": {
+      "description": "File size in bytes",
+      "type": "integer"
+    },
+    "data": {
+      "description": "Base64-encoded file content (no data: URL prefix)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "size",
+    "type",
+    "data"
+  ]
+}
+```

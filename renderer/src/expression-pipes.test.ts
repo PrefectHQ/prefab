@@ -44,3 +44,36 @@ describe("selectattr / rejectattr pipes", () => {
     expect(evaluate("val | selectattr:'x'", { val: 42 })).toBe(42);
   });
 });
+
+describe("pluralize pipe", () => {
+  it("returns singular for count of 1", () => {
+    expect(evaluate("count | pluralize:'file'", { count: 1 })).toBe("file");
+  });
+
+  it("returns plural for count of 0", () => {
+    expect(evaluate("count | pluralize:'file'", { count: 0 })).toBe("files");
+  });
+
+  it("returns plural for count > 1", () => {
+    expect(evaluate("count | pluralize:'item'", { count: 5 })).toBe("items");
+  });
+
+  it("defaults to 'item' when no arg given", () => {
+    expect(evaluate("count | pluralize", { count: 1 })).toBe("item");
+    expect(evaluate("count | pluralize", { count: 3 })).toBe("items");
+  });
+
+  it("works chained after length", () => {
+    const files = [{ name: "a.txt" }, { name: "b.txt" }];
+    expect(evaluate("files | length | pluralize:'file'", { files })).toBe(
+      "files",
+    );
+  });
+
+  it("works with single-element array chained after length", () => {
+    const files = [{ name: "a.txt" }];
+    expect(evaluate("files | length | pluralize:'file'", { files })).toBe(
+      "file",
+    );
+  });
+});
