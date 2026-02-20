@@ -14,9 +14,12 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 from prefab_ui.components import Button
 from prefab_ui.actions import UpdateContext
 
-Button("Use Advanced Mode", on_click=UpdateContext(
-    content="User has selected advanced mode. Provide detailed technical responses."
-))
+Button(
+    "Use Advanced Mode",
+    on_click=UpdateContext(
+        content="User has selected advanced mode. Provide detailed technical responses."
+    ),
+)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -59,9 +62,12 @@ with Column(gap=3):
         SelectOption(value="low", label="Low")
         SelectOption(value="medium", label="Medium")
         SelectOption(value="high", label="High")
-    Button("Set Preference", on_click=UpdateContext(
-        structured_content={"preference": {"thinking": "{{ thinking }}"}},
-    ))
+    Button(
+        "Set Preference",
+        on_click=UpdateContext(
+            structured_content={"preference": {"thinking": "{{ thinking }}"}},
+        ),
+    )
 ```
 ```json Protocol icon="brackets-curly"
 {

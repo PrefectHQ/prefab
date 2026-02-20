@@ -120,10 +120,13 @@ Available inside `on_error` callbacks. Contains the error message string from th
 ```python
 from prefab_ui.actions import CallTool, ShowToast
 
-Button("Save", on_click=CallTool(
-    "save_data",
-    on_error=ShowToast("Failed: {{ $error }}", variant="error"),
-))
+Button(
+    "Save",
+    on_click=CallTool(
+        "save_data",
+        on_error=ShowToast("Failed: {{ $error }}", variant="error"),
+    ),
+)
 ```
 
 ### `$index`
@@ -150,10 +153,13 @@ from prefab_ui.actions import CallTool
 
 with ForEach("users"):
     Text("{{ name }}")
-    Button("Edit", on_click=CallTool(
-        "edit_user",
-        arguments={"user": "{{ $item }}"},
-    ))
+    Button(
+        "Edit",
+        on_click=CallTool(
+            "edit_user",
+            arguments={"user": "{{ $item }}"},
+        ),
+    )
 ```
 
 ## Conditional Rendering

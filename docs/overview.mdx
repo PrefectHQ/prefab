@@ -75,10 +75,13 @@ from prefab_ui.actions import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
-    Button("Get Weather", on_click=CallTool(
-        "get_weather",
-        arguments={"location": "{{ city }}"},
-    ))
+    Button(
+        "Get Weather",
+        on_click=CallTool(
+            "get_weather",
+            arguments={"location": "{{ city }}"},
+        ),
+    )
 ```
 ```json Protocol icon="brackets-curly"
 {

@@ -47,10 +47,13 @@ from prefab_ui.actions import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
-    Button("Get Weather", on_click=CallTool(
-        "get_weather",
-        arguments={"location": "{{ city }}"},
-    ))
+    Button(
+        "Get Weather",
+        on_click=CallTool(
+            "get_weather",
+            arguments={"location": "{{ city }}"},
+        ),
+    )
 ```
 
 This works for all named controls: `Input`, `Textarea`, `Select`, `Combobox`, `RadioGroup`, `Slider`, `Checkbox`, `Switch`, `Calendar`, `DatePicker`, `Tabs`, and `Pages`. The `name` is the state key.
