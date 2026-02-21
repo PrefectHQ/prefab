@@ -7,11 +7,17 @@ mode: custom
 ---
 
 export const PlaygroundFrame = () => {
+  const ref = React.useRef(null);
   const isLocal = typeof window !== "undefined" && (location.hostname === "localhost" || location.hostname === "127.0.0.1");
   const src = isLocal
     ? "/playground.html"
-    : "https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.1.0-alpha.1/dist/playground.html";
-  return <iframe src={src} style={{ width: "100%", height: "100vh", border: "none" }} sandbox="allow-scripts allow-same-origin" />;
+    : "https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.2.0/dist/playground.html";
+  React.useEffect(function () {
+    if (ref.current) {
+      ref.current.style.height = "calc(100vh - 60px)";
+    }
+  }, []);
+  return <iframe ref={ref} src={src} style={{ width: "100%", border: "none" }} sandbox="allow-scripts allow-same-origin" />;
 };
 
 <PlaygroundFrame />
