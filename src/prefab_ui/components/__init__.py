@@ -49,6 +49,7 @@ from prefab_ui.components.foreach import ForEach
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
 from prefab_ui.components.heading import Heading
+from prefab_ui.components.hover_card import HoverCard
 from prefab_ui.components.icon import Icon
 from prefab_ui.components.image import Image
 from prefab_ui.components.input import Input
@@ -138,6 +139,7 @@ __all__ = [
     "Form",
     "Grid",
     "Heading",
+    "HoverCard",
     "Icon",
     "If",
     "Image",

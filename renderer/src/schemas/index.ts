@@ -71,6 +71,7 @@ import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
 import { headingSchema } from "./typography.ts";
+import { hoverCardSchema } from "./hover_card.ts";
 import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
 import { inputSchema } from "./input.ts";
@@ -161,6 +162,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   H3: h3Schema,
   H4: h4Schema,
   Heading: headingSchema,
+  HoverCard: hoverCardSchema,
   Icon: iconSchema,
   Image: imageSchema,
   InlineCode: inlineCodeSchema,

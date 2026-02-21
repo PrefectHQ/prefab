@@ -1,0 +1,168 @@
+---
+title: HoverCard
+description: Rich content panel that appears on hover.
+icon: square-info
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+HoverCards display rich content in a floating panel when users hover over a trigger element. The first child becomes the trigger; all remaining children become the panel content. For plain-text hover labels, [Tooltip](/components/tooltip) is simpler. For interactive content that needs to stay open (forms, menus), use [Popover](/components/popover) instead — it requires a click and stays open until dismissed.
+
+## Basic Usage
+
+<ComponentPreview height="200px" json={{"view":{"type":"HoverCard","children":[{"type":"Button","label":"@heart-of-gold","variant":"link","size":"default","disabled":false},{"cssClass":"gap-2","type":"Column","children":[{"content":"heart-of-gold","type":"Text"},{"content":"Infinite Improbability Drive vessel. Currently in orbit around Magrathea.","type":"Muted"},{"cssClass":"gap-4","type":"Row","children":[{"content":"Status: In Orbit","type":"Muted"},{"content":"Deployed 2h ago","type":"Muted"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Column, HoverCard, Muted, Row, Text
+
+with HoverCard():
+    Button("@heart-of-gold", variant="link")
+    with Column(gap=2):
+        Text("heart-of-gold")
+        Muted("Infinite Improbability Drive vessel. Currently in orbit around Magrathea.")
+        with Row(gap=4):
+            Muted("Status: In Orbit")
+            Muted("Deployed 2h ago")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "HoverCard",
+    "children": [
+      {
+        "type": "Button",
+        "label": "@heart-of-gold",
+        "variant": "link",
+        "size": "default",
+        "disabled": false
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "content": "heart-of-gold",
+            "type": "Text"
+          },
+          {
+            "content": "Infinite Improbability Drive vessel. Currently in orbit around Magrathea.",
+            "type": "Muted"
+          },
+          {
+            "cssClass": "gap-4",
+            "type": "Row",
+            "children": [
+              {
+                "content": "Status: In Orbit",
+                "type": "Muted"
+              },
+              {
+                "content": "Deployed 2h ago",
+                "type": "Muted"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Instant Hover
+
+Set `open_delay=0` for immediate feedback, useful in dashboards and status displays where users are scanning quickly.
+
+<ComponentPreview height="200px" json={{"view":{"type":"HoverCard","openDelay":0,"closeDelay":200,"children":[{"type":"Badge","label":"Healthy","variant":"default"},{"cssClass":"gap-2","type":"Column","children":[{"content":"weather-api","type":"Text"},{"content":"Uptime: 99.97%","type":"Muted"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Badge, Column, HoverCard, Muted, Text
+
+with HoverCard(open_delay=0, close_delay=200):
+    Badge("Healthy")
+    with Column(gap=2):
+        Text("weather-api")
+        Muted("Uptime: 99.97%")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "HoverCard",
+    "openDelay": 0,
+    "closeDelay": 200,
+    "children": [
+      {
+        "type": "Badge",
+        "label": "Healthy",
+        "variant": "default"
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {
+            "content": "weather-api",
+            "type": "Text"
+          },
+          {
+            "content": "Uptime: 99.97%",
+            "type": "Muted"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Side Placement
+
+Control which side the panel appears on. The renderer auto-adjusts if the card would overflow the viewport.
+
+```python
+from prefab_ui.components import Badge, HoverCard, Text
+
+with HoverCard(side="right"):
+    Badge("Details")
+    Text("Panel appears to the right of the trigger.")
+```
+
+## API Reference
+
+<Card icon="code" title="HoverCard Parameters">
+<ParamField body="side" type="str | None" default="None">
+  Preferred side to show the card: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="open_delay" type="int | None" default="None">
+  Delay in milliseconds before the card appears. Defaults to the Radix default (700ms). Set to `0` for instant hover.
+</ParamField>
+
+<ParamField body="close_delay" type="int | None" default="None">
+  Delay in milliseconds before the card dismisses after the cursor leaves.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json HoverCard
+{
+  "type": "HoverCard",
+  "children?": "[Component]",
+  "let?": "object",
+  "side?": "top | right | bottom | left",
+  "openDelay?": "number",
+  "closeDelay?": "number",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [HoverCard](/protocol/hover-card).

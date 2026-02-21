@@ -33,6 +33,9 @@ class Tooltip(ContainerComponent):
     side: Literal["top", "right", "bottom", "left"] | None = Field(
         default=None, description="Which side to show the tooltip"
     )
+    delay: int | None = Field(
+        default=None, description="Delay in milliseconds before showing the tooltip"
+    )
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
