@@ -22,9 +22,28 @@ A badge component for displaying status or labels.
       "default": null,
       "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
     },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    },
     "label": {
-      "description": "Badge text",
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Badge text"
     },
     "variant": {
       "default": "default",
@@ -43,8 +62,7 @@ A badge component for displaying status or labels.
     }
   },
   "required": [
-    "type",
-    "label"
+    "type"
   ]
 }
 ```

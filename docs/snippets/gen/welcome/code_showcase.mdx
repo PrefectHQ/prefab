@@ -47,7 +47,9 @@ with Grid(min_column_width="240px", gap=4):
                     with Row(align="center", css_class="justify-between"):
                         Text("vogon-poetry")
                         with Tooltip("64% — ETA 12 min", delay=0):
-                            Badge("Deploying", variant="secondary")
+                            with Badge(variant="secondary"):
+                                Loader(size="sm")
+                                Text("Deploying")
                     Progress(value=64, max=100)
                     with Row(align="center", css_class="justify-between"):
                         Text("bistromath")
@@ -57,7 +59,7 @@ with Grid(min_column_width="240px", gap=4):
                     with Row(align="center", css_class="justify-between"):
                         Text("deep-thought")
                         with Tooltip("Computing... 7.5 million years remaining", delay=0):
-                            Spinner(size="sm")
+                            Loader(variant="ios", size="sm")
         with Alert(variant="info", icon="book-open"):
             AlertTitle("The Guide Says")
             AlertDescription("Prefab: Mostly Harmless.")
@@ -74,9 +76,7 @@ with Grid(min_column_width="240px", gap=4):
         with Card():
             with CardHeader():
                 with Row(align="center", css_class="justify-between"):
-                    with Row(gap=2, align="center"):
-                        CardTitle("Agent Queries")
-                        Spinner(size="sm")
+                    CardTitle("Agent Queries")
                     with Select(placeholder="6 months", name="period"):
                         SelectOption(value="3m", label="3 months")
                         SelectOption(value="6m", label="6 months")
@@ -100,7 +100,9 @@ with Grid(min_column_width="240px", gap=4):
                 )
         with Card():
             with CardHeader():
-                CardTitle("Context Window")
+                with Row(gap=2, align="center"):
+                    CardTitle("Context Window")
+                    Loader(variant="bars", size="sm")
             with CardContent():
                 with Column(gap=2):
                     with Row(align="center", css_class="justify-between"):
@@ -140,7 +142,9 @@ with Grid(min_column_width="240px", gap=4):
     with Column(gap=4):
         with Card():
             with CardHeader():
-                CardTitle("Improbability Drive")
+                with Row(gap=2, align="center"):
+                    CardTitle("Improbability Drive")
+                    Loader(variant="pulse", size="sm", css_class="text-blue-500")
             with CardContent():
                 with Column(gap=2):
                     Slider(min=0, max=100, value=42, name="improbability")
@@ -208,6 +212,9 @@ with Grid(min_column_width="240px", gap=4):
                             ),
                         )
                     Textarea(placeholder="Brain the size of a planet...", name="feedback")
+                    with Row(gap=2, align="center"):
+                        Loader(variant="dots", size="sm")
+                        Muted("Marvin is thinking...")
         with Card():
             with CardHeader():
                 CardTitle("Questions Answered")
@@ -480,8 +487,18 @@ with Grid(min_column_width="240px", gap=4):
                             "children": [
                               {
                                 "type": "Badge",
-                                "label": "Deploying",
-                                "variant": "secondary"
+                                "variant": "secondary",
+                                "children": [
+                                  {
+                                    "type": "Loader",
+                                    "variant": "spin",
+                                    "size": "sm"
+                                  },
+                                  {
+                                    "content": "Deploying",
+                                    "type": "Text"
+                                  }
+                                ]
                               }
                             ]
                           }
@@ -533,7 +550,8 @@ with Grid(min_column_width="240px", gap=4):
                             "delay": 0,
                             "children": [
                               {
-                                "type": "Spinner",
+                                "type": "Loader",
+                                "variant": "ios",
                                 "size": "sm"
                               }
                             ]
@@ -627,18 +645,8 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Row",
                     "children": [
                       {
-                        "cssClass": "gap-2 items-center",
-                        "type": "Row",
-                        "children": [
-                          {
-                            "type": "CardTitle",
-                            "content": "Agent Queries"
-                          },
-                          {
-                            "type": "Spinner",
-                            "size": "sm"
-                          }
-                        ]
+                        "type": "CardTitle",
+                        "content": "Agent Queries"
                       },
                       {
                         "type": "Select",
@@ -742,8 +750,19 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardHeader",
                 "children": [
                   {
-                    "type": "CardTitle",
-                    "content": "Context Window"
+                    "cssClass": "gap-2 items-center",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "type": "CardTitle",
+                        "content": "Context Window"
+                      },
+                      {
+                        "type": "Loader",
+                        "variant": "bars",
+                        "size": "sm"
+                      }
+                    ]
                   }
                 ]
               },
@@ -890,8 +909,20 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardHeader",
                 "children": [
                   {
-                    "type": "CardTitle",
-                    "content": "Improbability Drive"
+                    "cssClass": "gap-2 items-center",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "type": "CardTitle",
+                        "content": "Improbability Drive"
+                      },
+                      {
+                        "cssClass": "text-blue-500",
+                        "type": "Loader",
+                        "variant": "pulse",
+                        "size": "sm"
+                      }
+                    ]
                   }
                 ]
               },
@@ -1197,6 +1228,21 @@ with Grid(min_column_width="240px", gap=4):
                         "name": "feedback",
                         "disabled": false,
                         "required": false
+                      },
+                      {
+                        "cssClass": "gap-2 items-center",
+                        "type": "Row",
+                        "children": [
+                          {
+                            "type": "Loader",
+                            "variant": "dots",
+                            "size": "sm"
+                          },
+                          {
+                            "content": "Marvin is thinking...",
+                            "type": "Muted"
+                          }
+                        ]
                       }
                     ]
                   }
