@@ -8,15 +8,17 @@ mode: frame
 
 export const PlaygroundFrame = () => {
   const ref = React.useRef(null);
-  const isLocal = typeof window !== "undefined" && (location.hostname === "localhost" || location.hostname === "127.0.0.1");
-  const src = isLocal
-    ? "/playground.html"
-    : "https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.2.0/dist/playground.html";
+  const [src, setSrc] = React.useState(null);
   React.useEffect(function () {
+    var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    setSrc(isLocal
+      ? "/playground.html"
+      : "https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.2.0/dist/playground.html");
     if (ref.current) {
       ref.current.style.height = "calc(100vh - 60px)";
     }
   }, []);
+  if (!src) return null;
   return <iframe ref={ref} src={src} style={{ width: "100%", border: "none" }} sandbox="allow-scripts allow-same-origin" />;
 };
 
