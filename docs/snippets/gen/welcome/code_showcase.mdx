@@ -13,14 +13,13 @@ with Grid(min_column_width="240px", gap=4):
             with CardContent():
                 with Column(gap=3):
                     Input(name="towel_name", placeholder="Towel name...")
+                    Input(name="owner", placeholder="Owner name...")
                     with Select(placeholder="Type...", name="towel_type"):
                         SelectOption(value="bath", label="Bath")
                         SelectOption(value="beach", label="Beach")
                         SelectOption(value="interstellar", label="Interstellar")
                         SelectOption(value="micro", label="Microfiber")
-                    Input(name="owner", placeholder="Owner name...")
                     Checkbox(label="Panic-proof certified", name="panic_proof", checked=True)
-                    Checkbox(label="Wrap-capable (sapient being)", name="wrap_capable")
             with CardFooter():
                 with Row(gap=2):
                     with Dialog(
@@ -28,7 +27,10 @@ with Grid(min_column_width="240px", gap=4):
                         description="Your towel has been added to the galactic registry.",
                     ):
                         Button("Register")
-                        Text("Don't forget to bring it.")
+                        with If("owner"):
+                            Text("Thanks, {{ owner }}. Don't forget to bring it.")
+                        with Else():
+                            Text("Anonymous, I see? Don't forget to bring it.")
                     Button("Cancel", variant="outline")
         with Card():
             with CardHeader():
@@ -65,13 +67,14 @@ with Grid(min_column_width="240px", gap=4):
             AlertDescription("Prefab: Mostly Harmless.")
         with Card():
             with CardHeader():
-                CardTitle("Travel Class")
+                CardTitle("Questions Answered")
+                CardDescription("Horizon agents this quarter")
             with CardContent():
-                with RadioGroup(name="travel_class"):
-                    Radio(value="economy", label="Economy")
-                    Radio(value="business", label="Business Class")
-                    Radio(value="improbability", label="Infinite Improbability", checked=True)
-
+                with Column(gap=2):
+                    Large("1,842")
+                    Muted("+23% from last quarter")
+                    with Tooltip("84% of quarterly goal", delay=0):
+                        Progress(value=84, max=100, indicator_class="bg-green-500")
     with Column(gap=4):
         with Card():
             with CardHeader():
@@ -110,9 +113,6 @@ with Grid(min_column_width="240px", gap=4):
                         Muted("90k / 200k tokens")
                     with Tooltip("Auto-compact buffer: 12%", delay=0):
                         Progress(value=45, max=100)
-        with Alert(variant="success", icon="check-circle"):
-            AlertTitle("Don't Panic")
-            AlertDescription("All 42 deployments are running normally.")
         with Card():
             with CardContent():
                 DataTable(
@@ -158,13 +158,17 @@ with Grid(min_column_width="240px", gap=4):
                 with Column(gap=3):
                     Switch(label="Auto-scale agents", checked=True, name="autoscale")
                     Separator()
-                    Switch(label="Tool call caching", checked=True, name="cache")
-                    Separator()
-                    Switch(label="Agent heartbeats", checked=False, name="heartbeats")
+                    Switch(label="Tool call caching", checked=False, name="cache")
                     Separator()
                     Switch(label="Failure notifications", checked=True, name="fail_notifs")
             with CardFooter():
                 Button("Save Preferences", on_click=ShowToast("Preferences saved!"))
+        with Alert(variant="success", icon="check-circle"):
+            AlertTitle("Don't Panic")
+            AlertDescription("All 42 deployments are running normally.")
+        with Alert(variant="warning", icon="alert-triangle"):
+            AlertTitle("Babel Fish Advisory")
+            AlertDescription("Insert in ear before approaching Vogons.")
         with Card():
             with CardHeader():
                 CardTitle("Towel Inventory")
@@ -185,9 +189,6 @@ with Grid(min_column_width="240px", gap=4):
                         Text("Interstellar")
                         Muted("1")
                     Progress(value=4, max=100, indicator_class="bg-purple-500")
-        with Alert(variant="warning", icon="alert-triangle"):
-            AlertTitle("Babel Fish Advisory")
-            AlertDescription("Insert in ear before approaching Vogons.")
 
     with Column(gap=4):
         with Card():
@@ -215,16 +216,27 @@ with Grid(min_column_width="240px", gap=4):
                     with Row(gap=2, align="center"):
                         Loader(variant="dots", size="sm")
                         Muted("Marvin is thinking...")
+        with Column(gap=3):
+            with If("!pressed"):
+                Button(
+                    "This is probably the best button to press.",
+                    variant="info",
+                    on_click=SetState("pressed", True),
+                )
+            with Else():
+                Button(
+                    "Please do not press this button again.",
+                    variant="secondary",
+                    on_click=SetState("pressed", False),
+                )
         with Card():
             with CardHeader():
-                CardTitle("Questions Answered")
-                CardDescription("Horizon agents this quarter")
+                CardTitle("Travel Class")
             with CardContent():
-                with Column(gap=2):
-                    Large("1,842")
-                    Muted("+23% from last quarter")
-                    with Tooltip("84% of quarterly goal", delay=0):
-                        Progress(value=84, max=100, indicator_class="bg-green-500")
+                with RadioGroup(name="travel_class"):
+                    Radio(value="economy", label="Economy")
+                    Radio(value="business", label="Business Class")
+                    Radio(value="improbability", label="Infinite Improbability", checked=True)
         with Card():
             with CardHeader():
                 CardTitle("MCP Servers")
@@ -250,14 +262,6 @@ with Grid(min_column_width="240px", gap=4):
                                 Muted("Uptime: 100% — not that it matters")
                                 Progress(value=100, max=100)
 
-        with Card():
-            with CardHeader():
-                CardTitle("Flow Runs")
-                CardDescription("Prefect Cloud")
-            with CardContent():
-                with Column(gap=2):
-                    Large("38,300")
-                    Progress(value=76, max=100, indicator_class="bg-blue-500")
 ```
 ```json Protocol icon="brackets-curly" expandable
 {
@@ -302,6 +306,14 @@ with Grid(min_column_width="240px", gap=4):
                         "required": false
                       },
                       {
+                        "type": "Input",
+                        "inputType": "text",
+                        "placeholder": "Owner name...",
+                        "name": "owner",
+                        "disabled": false,
+                        "required": false
+                      },
+                      {
                         "type": "Select",
                         "placeholder": "Type...",
                         "name": "towel_type",
@@ -340,26 +352,10 @@ with Grid(min_column_width="240px", gap=4):
                         ]
                       },
                       {
-                        "type": "Input",
-                        "inputType": "text",
-                        "placeholder": "Owner name...",
-                        "name": "owner",
-                        "disabled": false,
-                        "required": false
-                      },
-                      {
                         "type": "Checkbox",
                         "label": "Panic-proof certified",
                         "checked": true,
                         "name": "panic_proof",
-                        "disabled": false,
-                        "required": false
-                      },
-                      {
-                        "type": "Checkbox",
-                        "label": "Wrap-capable (sapient being)",
-                        "checked": false,
-                        "name": "wrap_capable",
                         "disabled": false,
                         "required": false
                       }
@@ -387,8 +383,24 @@ with Grid(min_column_width="240px", gap=4):
                             "disabled": false
                           },
                           {
-                            "content": "Don't forget to bring it.",
-                            "type": "Text"
+                            "type": "Condition",
+                            "cases": [
+                              {
+                                "when": "{{ owner }}",
+                                "children": [
+                                  {
+                                    "content": "Thanks, {{ owner }}. Don't forget to bring it.",
+                                    "type": "Text"
+                                  }
+                                ]
+                              }
+                            ],
+                            "else": [
+                              {
+                                "content": "Anonymous, I see? Don't forget to bring it.",
+                                "type": "Text"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -587,7 +599,11 @@ with Grid(min_column_width="240px", gap=4):
                 "children": [
                   {
                     "type": "CardTitle",
-                    "content": "Travel Class"
+                    "content": "Questions Answered"
+                  },
+                  {
+                    "type": "CardDescription",
+                    "content": "Horizon agents this quarter"
                   }
                 ]
               },
@@ -595,32 +611,29 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardContent",
                 "children": [
                   {
-                    "type": "RadioGroup",
-                    "name": "travel_class",
+                    "cssClass": "gap-2",
+                    "type": "Column",
                     "children": [
                       {
-                        "type": "Radio",
-                        "value": "economy",
-                        "label": "Economy",
-                        "checked": false,
-                        "disabled": false,
-                        "required": false
+                        "content": "1,842",
+                        "type": "Large"
                       },
                       {
-                        "type": "Radio",
-                        "value": "business",
-                        "label": "Business Class",
-                        "checked": false,
-                        "disabled": false,
-                        "required": false
+                        "content": "+23% from last quarter",
+                        "type": "Muted"
                       },
                       {
-                        "type": "Radio",
-                        "value": "improbability",
-                        "label": "Infinite Improbability",
-                        "checked": true,
-                        "disabled": false,
-                        "required": false
+                        "type": "Tooltip",
+                        "content": "84% of quarterly goal",
+                        "delay": 0,
+                        "children": [
+                          {
+                            "type": "Progress",
+                            "value": 84.0,
+                            "max": 100.0,
+                            "indicatorClass": "bg-green-500"
+                          }
+                        ]
                       }
                     ]
                   }
@@ -806,21 +819,6 @@ with Grid(min_column_width="240px", gap=4):
             ]
           },
           {
-            "type": "Alert",
-            "variant": "success",
-            "icon": "check-circle",
-            "children": [
-              {
-                "type": "AlertTitle",
-                "content": "Don't Panic"
-              },
-              {
-                "type": "AlertDescription",
-                "content": "All 42 deployments are running normally."
-              }
-            ]
-          },
-          {
             "type": "Card",
             "children": [
               {
@@ -996,22 +994,9 @@ with Grid(min_column_width="240px", gap=4):
                       {
                         "type": "Switch",
                         "label": "Tool call caching",
-                        "checked": true,
-                        "size": "default",
-                        "name": "cache",
-                        "disabled": false,
-                        "required": false
-                      },
-                      {
-                        "type": "Separator",
-                        "orientation": "horizontal"
-                      },
-                      {
-                        "type": "Switch",
-                        "label": "Agent heartbeats",
                         "checked": false,
                         "size": "default",
-                        "name": "heartbeats",
+                        "name": "cache",
                         "disabled": false,
                         "required": false
                       },
@@ -1047,6 +1032,36 @@ with Grid(min_column_width="240px", gap=4):
                     }
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "Alert",
+            "variant": "success",
+            "icon": "check-circle",
+            "children": [
+              {
+                "type": "AlertTitle",
+                "content": "Don't Panic"
+              },
+              {
+                "type": "AlertDescription",
+                "content": "All 42 deployments are running normally."
+              }
+            ]
+          },
+          {
+            "type": "Alert",
+            "variant": "warning",
+            "icon": "alert-triangle",
+            "children": [
+              {
+                "type": "AlertTitle",
+                "content": "Babel Fish Advisory"
+              },
+              {
+                "type": "AlertDescription",
+                "content": "Insert in ear before approaching Vogons."
               }
             ]
           },
@@ -1136,21 +1151,6 @@ with Grid(min_column_width="240px", gap=4):
                     ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "type": "Alert",
-            "variant": "warning",
-            "icon": "alert-triangle",
-            "children": [
-              {
-                "type": "AlertTitle",
-                "content": "Babel Fish Advisory"
-              },
-              {
-                "type": "AlertDescription",
-                "content": "Insert in ear before approaching Vogons."
               }
             ]
           }
@@ -1251,6 +1251,48 @@ with Grid(min_column_width="240px", gap=4):
             ]
           },
           {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ !pressed }}",
+                    "children": [
+                      {
+                        "type": "Button",
+                        "label": "This is probably the best button to press.",
+                        "variant": "info",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "pressed",
+                          "value": true
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "Button",
+                    "label": "Please do not press this button again.",
+                    "variant": "secondary",
+                    "size": "default",
+                    "disabled": false,
+                    "onClick": {
+                      "action": "setState",
+                      "key": "pressed",
+                      "value": false
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "type": "Card",
             "children": [
               {
@@ -1258,11 +1300,7 @@ with Grid(min_column_width="240px", gap=4):
                 "children": [
                   {
                     "type": "CardTitle",
-                    "content": "Questions Answered"
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "Horizon agents this quarter"
+                    "content": "Travel Class"
                   }
                 ]
               },
@@ -1270,29 +1308,32 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardContent",
                 "children": [
                   {
-                    "cssClass": "gap-2",
-                    "type": "Column",
+                    "type": "RadioGroup",
+                    "name": "travel_class",
                     "children": [
                       {
-                        "content": "1,842",
-                        "type": "Large"
+                        "type": "Radio",
+                        "value": "economy",
+                        "label": "Economy",
+                        "checked": false,
+                        "disabled": false,
+                        "required": false
                       },
                       {
-                        "content": "+23% from last quarter",
-                        "type": "Muted"
+                        "type": "Radio",
+                        "value": "business",
+                        "label": "Business Class",
+                        "checked": false,
+                        "disabled": false,
+                        "required": false
                       },
                       {
-                        "type": "Tooltip",
-                        "content": "84% of quarterly goal",
-                        "delay": 0,
-                        "children": [
-                          {
-                            "type": "Progress",
-                            "value": 84.0,
-                            "max": 100.0,
-                            "indicatorClass": "bg-green-500"
-                          }
-                        ]
+                        "type": "Radio",
+                        "value": "improbability",
+                        "label": "Infinite Improbability",
+                        "checked": true,
+                        "disabled": false,
+                        "required": false
                       }
                     ]
                   }
@@ -1415,45 +1456,6 @@ with Grid(min_column_width="240px", gap=4):
                             ]
                           }
                         ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [
-                  {
-                    "type": "CardTitle",
-                    "content": "Flow Runs"
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "Prefect Cloud"
-                  }
-                ]
-              },
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "cssClass": "gap-2",
-                    "type": "Column",
-                    "children": [
-                      {
-                        "content": "38,300",
-                        "type": "Large"
-                      },
-                      {
-                        "type": "Progress",
-                        "value": 76.0,
-                        "max": 100.0,
-                        "indicatorClass": "bg-blue-500"
                       }
                     ]
                   }
