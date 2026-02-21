@@ -77,6 +77,52 @@ Loader(variant="pulse")
 </CodeGroup>
 </ComponentPreview>
 
+### Bars
+
+Three vertical bars oscillating in sequence — an equalizer-style processing indicator.
+
+<ComponentPreview json={{"view":{"type":"Loader","variant":"bars","size":"default"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Loader
+
+Loader(variant="bars")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Loader",
+    "variant": "bars",
+    "size": "default"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### iOS
+
+A segmented circle with chasing opacity — the classic iOS activity indicator.
+
+<ComponentPreview json={{"view":{"type":"Loader","variant":"ios","size":"default"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Loader
+
+Loader(variant="ios")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Loader",
+    "variant": "ios",
+    "size": "default"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Sizes
 
 All variants support three sizes.
@@ -267,7 +313,7 @@ with Row(gap=4, css_class="items-center"):
 
 <Card icon="code" title="Loader Parameters">
 <ParamField body="variant" type="str" default="spin">
-  Animation style: `"spin"`, `"dots"`, `"pulse"`.
+  Animation style: `"spin"`, `"dots"`, `"pulse"`, `"bars"`, `"ios"`.
 </ParamField>
 
 <ParamField body="size" type="str" default="default">
@@ -284,7 +330,7 @@ with Row(gap=4, css_class="items-center"):
 ```json Loader
 {
   "type": "Loader",
-  "variant?": "spin | dots | pulse",
+  "variant?": "spin | dots | pulse | bars | ios",
   "size?": "sm | default | lg",
   "cssClass?": "string"
 }

@@ -30,9 +30,11 @@ class Loader(Component):
     - ``"spin"`` — a rotating arc (default, classic loading spinner)
     - ``"dots"`` — three dots bouncing in sequence (typing / processing)
     - ``"pulse"`` — a pulsing dot (background activity / heartbeat)
+    - ``"bars"`` — three vertical bars oscillating (equalizer / processing)
+    - ``"ios"`` — segmented circle with chasing opacity (iOS-style)
 
     Args:
-        variant: Animation style — "spin", "dots", or "pulse"
+        variant: Animation style — "spin", "dots", "pulse", "bars", or "ios"
         size: Indicator size — "sm", "default", or "lg"
 
     Example::
@@ -40,12 +42,14 @@ class Loader(Component):
         Loader()
         Loader(variant="dots")
         Loader(variant="pulse", size="lg")
+        Loader(variant="bars")
+        Loader(variant="ios")
     """
 
     type: Literal["Loader"] = "Loader"
-    variant: Literal["spin", "dots", "pulse"] = Field(
+    variant: Literal["spin", "dots", "pulse", "bars", "ios"] = Field(
         default="spin",
-        description="Animation style: spin (rotating arc), dots (bouncing dots), or pulse (pulsing dot)",
+        description="Animation style: spin (rotating arc), dots (bouncing dots), pulse (pulsing dot), bars (oscillating bars), or ios (segmented circle)",
     )
     size: Literal["sm", "default", "lg"] = Field(
         default="default",
