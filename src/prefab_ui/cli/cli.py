@@ -364,7 +364,7 @@ def _should_rebuild_renderer(repo_root: Path) -> bool:
 
 def _should_rebuild_playground(repo_root: Path) -> bool:
     """Check whether the playground HTML needs rebuilding."""
-    playground_html = repo_root / "docs" / "playground.js"
+    playground_html = repo_root / "docs" / "playground.html"
     if not playground_html.exists():
         return True
     output_mtime = playground_html.stat().st_mtime
@@ -507,11 +507,10 @@ def build_docs() -> None:
         )
 
     if rebuild_playground:
-        import json as _json
-
-        html = (renderer_dir / "dist" / "playground.html").read_text()
-        js_content = "window.__PLAYGROUND_HTML=" + _json.dumps(html) + ";\n"
-        (repo_root / "docs" / "playground.js").write_text(js_content, encoding="utf-8")
+        shutil.copy2(
+            renderer_dir / "dist" / "playground.html",
+            repo_root / "docs" / "playground.html",
+        )
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
@@ -532,7 +531,7 @@ def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
     # Exclude generated outputs so they don't re-trigger builds.
     exclude = {
         repo_root / "docs" / "renderer.js",
-        repo_root / "docs" / "playground.js",
+        repo_root / "docs" / "playground.html",
         repo_root / "docs" / "preview-styles.css",
     }
 
