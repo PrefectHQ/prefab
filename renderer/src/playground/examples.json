@@ -1415,9 +1415,54 @@
     "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                H3(\"Hello, {{ name }}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n                Input(name=\"name\", placeholder=\"Your name...\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(\"Hey there, {{ name }}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
   },
   {
-    "title": "# Coming soon — this is the target API",
+    "title": "from fastapi import FastAPI",
     "category": "Running",
-    "code": "from fastapi import FastAPI\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Card, CardContent, Column, H3, Text\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef dashboard():\n    with Card() as view:\n        with CardContent():\n            with Column(gap=3):\n                H3(\"Dashboard\")\n                Text(\"Backed by a real server.\")\n    return PrefabApp(view=view).html()"
+    "code": "from fastapi.responses import HTMLResponse\n\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, ForEach, Input, Text\n\napp = FastAPI()\n\n\n@app.get(\"/api/items\")\ndef list_items(q: str = \"\"):\n    items = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n    if q:\n        items = [i for i in items if q.lower() in i[\"name\"].lower()]\n    return items\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                Fetch.get(\n                    \"/api/items\",\n                    params={\"q\": \"{{ $event }}\"},\n                    result_key=\"items\",\n                ),\n            ],\n        )\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n\n    return HTMLResponse(\n        PrefabApp(\n            title=\"My App\",\n            view=view,\n            state={\"q\": \"\", \"items\": []},\n        ).html()\n    )"
+  },
+  {
+    "title": "Button(",
+    "category": "Running",
+    "code": "\"Load Users\",\n    on_click=Fetch.get(\"/api/users\", result_key=\"users\"),\n)"
+  },
+  {
+    "title": "from prefab_ui.actions import Fetch, ShowToast",
+    "category": "Running",
+    "code": "from prefab_ui.components import Button, Column, Form, Input\n\nwith Form(\n    on_submit=Fetch.post(\n        \"/api/items\",\n        body={\"name\": \"{{ item_name }}\", \"category\": \"{{ item_category }}\"},\n        on_success=ShowToast(\"Item created!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n):\n    with Column(gap=3):\n        Input(name=\"item_name\", placeholder=\"Name\")\n        Input(name=\"item_category\", placeholder=\"Category\")\n        Button(\"Add Item\")"
+  },
+  {
+    "title": "{10-14}",
+    "category": "Running",
+    "code": "from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast\nfrom prefab_ui.components import Button, Column, Dialog, Form, Input\n\nwith Dialog(title=\"New Item\", description=\"Add an item to the catalog.\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=Fetch.post(\n            \"/api/items\",\n            body={\"name\": \"{{ new_name }}\"},\n            on_success=[\n                ShowToast(\"Created!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                Fetch.get(\"/api/items\", result_key=\"items\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        with Column(gap=3):\n            Input(name=\"new_name\", placeholder=\"Name\")\n            Button(\"Add Item\")"
+  },
+  {
+    "title": "Button(",
+    "category": "Running",
+    "code": "\"Delete\",\n    icon=\"trash-2\",\n    size=\"icon-xs\",\n    variant=\"ghost\",\n    on_click=Fetch.delete(\n        \"/api/items/{{ id }}\",\n        on_success=Fetch.get(\"/api/items\", result_key=\"items\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+  },
+  {
+    "title": "{11,25}",
+    "category": "Running",
+    "code": "from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text\n\n@app.get(\"/api/items/{id}/detail\")\ndef item_detail(id: str):\n    item = get_item(id)\n    with Card() as detail:\n        with CardHeader():\n            CardTitle(item[\"name\"])\n        with CardContent():\n            Text(item[\"description\"])\n    return detail.to_json()\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        with ForEach(\"items\"):\n            Button(\n                \"{{ name }}\",\n                on_click=Fetch.get(\n                    \"/api/items/{{ id }}/detail\",\n                    result_key=\"detail\",\n                ),\n            )\n        with Slot(\"detail\"):\n            Text(\"Select an item to see details\", css_class=\"text-muted-foreground\")\n\n    return HTMLResponse(\n        PrefabApp(view=view, state={\"items\": items, \"detail\": None}).html()\n    )"
+  },
+  {
+    "title": "Fetch.post(",
+    "category": "Running",
+    "code": "\"/api/save\",\n    body={\"data\": \"{{ form_data }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+  },
+  {
+    "title": "from fastapi import HTTPException",
+    "category": "Running",
+    "code": "@app.post(\"/api/items\")\ndef create_item(item: dict):\n    if not item.get(\"name\"):\n        raise HTTPException(status_code=400, detail=\"Name is required\")\n    # ..."
+  },
+  {
+    "title": "{4,10}",
+    "category": "Running",
+    "code": "Button(\n    \"Save\",\n    on_click=[\n        SetState(\"saving\", True),\n        Fetch.post(\n            \"/api/save\",\n            body={\"item\": \"{{ item }}\"},\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n        SetState(\"saving\", False),\n    ],\n)"
+  },
+  {
+    "title": "Fetch.post(",
+    "category": "Running",
+    "code": "\"/api/items\",\n    body={\"name\": \"{{ new_name }}\"},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", result_key=\"items\"),\n    ],\n)"
   },
   {
     "title": "Component Tree",

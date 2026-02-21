@@ -19,7 +19,7 @@ Example::
 from __future__ import annotations
 
 from typing import Any, Literal
-from urllib.parse import urlencode
+from urllib.parse import quote
 
 from pydantic import Field, field_validator
 
@@ -77,10 +77,15 @@ class Fetch(ActionBase):
         params: dict[str, str] | None = None,
         **kwargs: Any,
     ) -> Fetch:
-        """GET request. ``params`` are appended as a query string."""
+        """GET request. ``params`` are appended as a query string.
+
+        Values are kept raw so ``{{ key }}`` interpolation survives to the
+        renderer. Only param *names* are percent-encoded.
+        """
         if params:
             sep = "&" if "?" in url else "?"
-            url = f"{url}{sep}{urlencode(params)}"
+            qs = "&".join(f"{quote(k, safe='')}={v}" for k, v in params.items())
+            url = f"{url}{sep}{qs}"
         return cls(url, method="GET", **kwargs)
 
     @classmethod

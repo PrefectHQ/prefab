@@ -69,10 +69,11 @@ _PAGE_TEMPLATE = """\
 <!doctype html>
 <html lang="en">
 <head>
+  <title>{title}</title>
 {head}
 </head>
-<body style="max-width:64rem;margin:0 auto;padding:2rem">
-  <div id="root"></div>
+<body>
+  <div id="root" style="max-width:64rem;margin:0 auto;padding:2rem"></div>
   <script id="prefab:initial-data" type="application/json">{data}</script>
 </body>
 </html>"""
@@ -86,6 +87,7 @@ class PrefabApp(BaseModel):
     HTML page, or ``to_json()`` for the wire-format envelope.
     """
 
+    title: str = Field(default="Prefab", description="HTML page title")
     view: Any | None = Field(default=None, description="Component tree to render")
     state: dict[str, Any] | None = Field(
         default=None,
@@ -168,6 +170,7 @@ class PrefabApp(BaseModel):
         safe_json = data_json.replace("</", r"<\/")
 
         return _PAGE_TEMPLATE.format(
+            title=self.title,
             head="\n".join(head_parts),
             data=safe_json,
         )
