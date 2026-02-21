@@ -228,4 +228,68 @@ with Column(gap=3):
                on_click=SetState("color", "bg-rose-500"))
     Div(css_class="{{ color }} h-10 rounded-md")`,
   },
+  {
+    title: "The Button",
+    category: "Patterns",
+    code: `from prefab_ui.components import *
+from prefab_ui.actions import *
+
+set_initial_state(presses=0)
+
+with Card():
+    with CardHeader():
+        with Row(align="center", css_class="justify-between"):
+            CardTitle("The Button")
+            with If("presses > 0"):
+                Badge("{{ presses }}", variant="secondary")
+    with CardContent():
+        with Column(gap=4):
+            with If("presses == 0"):
+                Button(
+                    "This is probably the best button to press",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 1"):
+                with Alert(variant="info", icon="info"):
+                    AlertTitle("Thank you!")
+                    AlertDescription(
+                        "Your cooperation has been noted and will be reported."
+                    )
+                Button(
+                    "Please do not press this button again",
+                    variant="outline",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 2"):
+                with Alert(variant="warning", icon="alert-triangle"):
+                    AlertTitle("We did ask nicely")
+                    AlertDescription("Management has been informed.")
+                Progress(value=66, max=100, indicator_class="bg-yellow-500")
+                Muted("Patience remaining: 34%")
+                Button(
+                    "Please do not press this button again",
+                    variant="destructive",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 3"):
+                with Alert(variant="destructive", icon="alert-triangle"):
+                    AlertTitle("Now look what you've done")
+                    AlertDescription(
+                        "The improbability drive has been activated."
+                    )
+                Progress(value=100, max=100, indicator_class="bg-red-500")
+                with Row(gap=2, align="center"):
+                    Loader(variant="spin", size="sm")
+                    Muted("Recalculating the probability of your existence...")
+                Button(
+                    "OK maybe press it one more time",
+                    variant="ghost",
+                    on_click=SetState("presses", 0),
+                )
+            with Else():
+                Text("This should not happen.")
+    with CardFooter():
+        with If("presses > 0"):
+            Muted("Share and Enjoy!")`,
+  },
 ];

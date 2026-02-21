@@ -1,0 +1,310 @@
+---
+title: The Button
+description: A button you probably shouldn't press, built with conditional rendering and client-side state.
+icon: hand-pointer
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A single button that escalates through four states of increasingly urgent warnings — all driven by `If`/`Elif`/`Else` branches and `SetState` actions with no server calls.
+
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"type":"CardTitle","content":"The Button"},{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"type":"Badge","label":"{{ presses }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ presses == 0 }}","children":[{"type":"Button","label":"This is probably the best button to press","variant":"info","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 1 }}","children":[{"type":"Alert","variant":"info","icon":"info","children":[{"type":"AlertTitle","content":"Thank you!"},{"type":"AlertDescription","content":"Your cooperation has been noted and will be reported."}]},{"type":"Button","label":"Please do not press this button again","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 2 }}","children":[{"type":"Alert","variant":"warning","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"We did ask nicely"},{"type":"AlertDescription","content":"Management has been informed."}]},{"type":"Progress","value":66.0,"max":100.0,"indicatorClass":"bg-yellow-500"},{"content":"Patience remaining: 34%","type":"Muted"},{"type":"Button","label":"Please do not press this button again","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 3 }}","children":[{"type":"Alert","variant":"destructive","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"Now look what you've done"},{"type":"AlertDescription","content":"The improbability drive has been activated."}]},{"type":"Progress","value":100.0,"max":100.0,"indicatorClass":"bg-red-500"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Recalculating the probability of your existence...","type":"Muted"}]},{"type":"Button","label":"OK maybe press it one more time","variant":"ghost","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":0}}]}],"else":[{"content":"This should not happen.","type":"Text"}]}]}]},{"type":"CardFooter","children":[{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"content":"Share and Enjoy!","type":"Muted"}]}]}]}]},"state":{"presses":0}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import (
+    Alert, AlertDescription, AlertTitle, Badge, Button, Card, CardContent,
+    CardFooter, CardHeader, CardTitle, Column, Elif, Else, If, Loader,
+    Muted, Progress, Row, Text,
+)
+from prefab_ui.actions import SetState
+
+set_initial_state(presses=0)
+
+with Card():
+    with CardHeader():
+        with Row(align="center", css_class="justify-between"):
+            CardTitle("The Button")
+            with If("presses > 0"):
+                Badge("{{ presses }}", variant="secondary")
+    with CardContent():
+        with Column(gap=4):
+            with If("presses == 0"):
+                Button(
+                    "This is probably the best button to press",
+                    variant="info",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 1"):
+                with Alert(variant="info", icon="info"):
+                    AlertTitle("Thank you!")
+                    AlertDescription(
+                        "Your cooperation has been noted and will be reported."
+                    )
+                Button(
+                    "Please do not press this button again",
+                    variant="outline",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 2"):
+                with Alert(variant="warning", icon="alert-triangle"):
+                    AlertTitle("We did ask nicely")
+                    AlertDescription("Management has been informed.")
+                Progress(value=66, max=100, indicator_class="bg-yellow-500")
+                Muted("Patience remaining: 34%")
+                Button(
+                    "Please do not press this button again",
+                    variant="destructive",
+                    on_click=SetState("presses", "{{ presses + 1 }}"),
+                )
+            with Elif("presses == 3"):
+                with Alert(variant="destructive", icon="alert-triangle"):
+                    AlertTitle("Now look what you've done")
+                    AlertDescription(
+                        "The improbability drive has been activated."
+                    )
+                Progress(value=100, max=100, indicator_class="bg-red-500")
+                with Row(gap=2, align="center"):
+                    Loader(variant="spin", size="sm")
+                    Muted("Recalculating the probability of your existence...")
+                Button(
+                    "OK maybe press it one more time",
+                    variant="ghost",
+                    on_click=SetState("presses", 0),
+                )
+            with Else():
+                Text("This should not happen.")
+    with CardFooter():
+        with If("presses > 0"):
+            Muted("Share and Enjoy!")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {
+            "cssClass": "items-center justify-between",
+            "type": "Row",
+            "children": [
+              {
+                "type": "CardTitle",
+                "content": "The Button"
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ presses > 0 }}",
+                    "children": [
+                      {
+                        "type": "Badge",
+                        "label": "{{ presses }}",
+                        "variant": "secondary"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-4",
+            "type": "Column",
+            "children": [
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ presses == 0 }}",
+                    "children": [
+                      {
+                        "type": "Button",
+                        "label": "This is probably the best button to press",
+                        "variant": "info",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "presses",
+                          "value": "{{ presses + 1 }}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "when": "{{ presses == 1 }}",
+                    "children": [
+                      {
+                        "type": "Alert",
+                        "variant": "info",
+                        "icon": "info",
+                        "children": [
+                          {
+                            "type": "AlertTitle",
+                            "content": "Thank you!"
+                          },
+                          {
+                            "type": "AlertDescription",
+                            "content": "Your cooperation has been noted and will be reported."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Please do not press this button again",
+                        "variant": "outline",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "presses",
+                          "value": "{{ presses + 1 }}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "when": "{{ presses == 2 }}",
+                    "children": [
+                      {
+                        "type": "Alert",
+                        "variant": "warning",
+                        "icon": "alert-triangle",
+                        "children": [
+                          {
+                            "type": "AlertTitle",
+                            "content": "We did ask nicely"
+                          },
+                          {
+                            "type": "AlertDescription",
+                            "content": "Management has been informed."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Progress",
+                        "value": 66.0,
+                        "max": 100.0,
+                        "indicatorClass": "bg-yellow-500"
+                      },
+                      {
+                        "content": "Patience remaining: 34%",
+                        "type": "Muted"
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Please do not press this button again",
+                        "variant": "destructive",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "presses",
+                          "value": "{{ presses + 1 }}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "when": "{{ presses == 3 }}",
+                    "children": [
+                      {
+                        "type": "Alert",
+                        "variant": "destructive",
+                        "icon": "alert-triangle",
+                        "children": [
+                          {
+                            "type": "AlertTitle",
+                            "content": "Now look what you've done"
+                          },
+                          {
+                            "type": "AlertDescription",
+                            "content": "The improbability drive has been activated."
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Progress",
+                        "value": 100.0,
+                        "max": 100.0,
+                        "indicatorClass": "bg-red-500"
+                      },
+                      {
+                        "cssClass": "gap-2 items-center",
+                        "type": "Row",
+                        "children": [
+                          {
+                            "type": "Loader",
+                            "variant": "spin",
+                            "size": "sm"
+                          },
+                          {
+                            "content": "Recalculating the probability of your existence...",
+                            "type": "Muted"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Button",
+                        "label": "OK maybe press it one more time",
+                        "variant": "ghost",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {
+                          "action": "setState",
+                          "key": "presses",
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "content": "This should not happen.",
+                    "type": "Text"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardFooter",
+        "children": [
+          {
+            "type": "Condition",
+            "cases": [
+              {
+                "when": "{{ presses > 0 }}",
+                "children": [
+                  {
+                    "content": "Share and Enjoy!",
+                    "type": "Muted"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "presses": 0
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
