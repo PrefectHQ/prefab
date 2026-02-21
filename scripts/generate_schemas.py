@@ -22,8 +22,9 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import ActionBase
+from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
-from prefab_ui.actions.mcp import SendMessage, ToolCall, UpdateContext
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
@@ -144,7 +145,7 @@ def discover_components() -> dict[str, type[Component]]:
 def discover_actions() -> dict[str, type[ActionBase]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
-        ToolCall,
+        CallTool,
         SendMessage,
         UpdateContext,
         OpenLink,
@@ -155,6 +156,7 @@ def discover_actions() -> dict[str, type[ActionBase]]:
         ShowToast,
         CloseOverlay,
         OpenFilePicker,
+        Fetch,
     ]
     result: dict[str, type[ActionBase]] = {}
     for cls in actions:

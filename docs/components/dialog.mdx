@@ -111,7 +111,7 @@ Dialogs work well for destructive actions that need explicit confirmation before
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
-from prefab_ui.actions import CloseOverlay, ToolCall
+from prefab_ui.actions import CloseOverlay, CallTool
 
 with Dialog(title="Delete Item", description="This action cannot be undone."):
     Button("Delete", variant="destructive")
@@ -122,7 +122,7 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
             "Confirm Delete",
             variant="destructive",
             on_click=[
-                ToolCall("delete_item", arguments={"id": "{{ item_id }}"}),
+                CallTool("delete_item", arguments={"id": "{{ item_id }}"}),
                 CloseOverlay(),
             ],
         )
@@ -189,11 +189,11 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
 
 ## Confirmation with Feedback
 
-Wire `ShowToast` callbacks onto a `ToolCall` to give feedback after the server responds. `CloseOverlay()` in the `on_success` list dismisses the dialog once the operation succeeds; `on_error` keeps the dialog open so the user can retry.
+Wire `ShowToast` callbacks onto a `CallTool` to give feedback after the server responds. `CloseOverlay()` in the `on_success` list dismisses the dialog once the operation succeeds; `on_error` keeps the dialog open so the user can retry.
 
 ```python
 from prefab_ui.components import Button, Dialog, Row, Text
-from prefab_ui.actions import CloseOverlay, ShowToast, ToolCall
+from prefab_ui.actions import CloseOverlay, ShowToast, CallTool
 
 with Dialog(title="Remove User", description="This will revoke all access."):
     Button("Remove", variant="destructive")
@@ -203,7 +203,7 @@ with Dialog(title="Remove User", description="This will revoke all access."):
         Button(
             "Remove User",
             variant="destructive",
-            on_click=ToolCall(
+            on_click=CallTool(
                 "remove_user",
                 arguments={"user_id": "{{ user_id }}"},
                 on_success=[

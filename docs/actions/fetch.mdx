@@ -1,0 +1,162 @@
+---
+title: Fetch
+description: Make HTTP requests directly from the browser.
+icon: globe
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`Fetch` makes HTTP requests from the browser using the native `fetch()` API. Use it to call REST endpoints, load external data, or submit forms — anything that speaks HTTP without needing an MCP server in the middle.
+
+<ComponentPreview json={{"view":{"type":"Button","label":"Load Users","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Users loaded!","variant":"success"},"action":"fetch","url":"/api/users","method":"GET","resultKey":"users"}}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import Fetch, ShowToast
+
+Button(
+    "Load Users",
+    on_click=Fetch.get(
+        "/api/users",
+        result_key="users",
+        on_success=ShowToast("Users loaded!", variant="success"),
+    ),
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Load Users",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {
+      "onSuccess": {
+        "action": "showToast",
+        "message": "Users loaded!",
+        "variant": "success"
+      },
+      "action": "fetch",
+      "url": "/api/users",
+      "method": "GET",
+      "resultKey": "users"
+    }
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The response is parsed automatically — JSON becomes an object, everything else becomes a string. If `result_key` is set, the parsed response is written into client-side state, making it immediately available via `{{ users }}` interpolation. The `on_success` callback fires after a successful request, so you can confirm the result with a toast or trigger follow-up actions.
+
+## Classmethods
+
+Each HTTP method has a dedicated classmethod with a tailored signature. `GET` accepts query `params`, while `POST`/`PUT`/`PATCH` accept a `body`.
+
+```python GET with query params
+Fetch.get("/api/search", params={"q": "{{ query }}", "page": "1"})
+```
+
+```python POST with JSON body
+Fetch.post("/api/users", body={"name": "{{ name }}", "email": "{{ email }}"})
+```
+
+```python DELETE
+Fetch.delete("/api/users/{{ user_id }}")
+```
+
+You can also construct a `Fetch` directly for full control:
+
+```python Full form
+Fetch(
+    "/api/submit",
+    method="POST",
+    headers={"X-Custom": "value"},
+    body={"data": "{{ form_data }}"},
+    result_key="response",
+)
+```
+
+## Error Handling
+
+Non-2xx responses trigger `on_error` with the status line as `$error`. This follows the same callback pattern as every other Prefab action.
+
+```python Error handling
+from prefab_ui.actions import Fetch, ShowToast
+
+Fetch.post(
+    "/api/save",
+    body={"item": "{{ item }}"},
+    on_success=ShowToast("Saved!", variant="success"),
+    on_error=ShowToast("{{ $error }}", variant="error"),
+)
+```
+
+A 404 would show a toast reading "404 Not Found".
+
+## Request Bodies
+
+Dict bodies are automatically JSON-serialized with a `Content-Type: application/json` header. String bodies are sent as-is — useful for form-encoded data or raw text. The auto-set `Content-Type` won't override a header you set explicitly.
+
+## Combined with Client Actions
+
+Like any action, `Fetch` composes in a list. A common pattern: show a loading state, make the request, then clear it.
+
+```python Combined actions
+from prefab_ui.components import Button
+from prefab_ui.actions import Fetch, SetState
+
+Button(
+    "Submit",
+    on_click=[
+        SetState("loading", True),
+        Fetch.post(
+            "/api/submit",
+            body={"q": "{{ query }}"},
+            result_key="result",
+        ),
+        SetState("loading", False),
+    ],
+)
+```
+
+If the request fails, `SetState("loading", False)` never runs (the chain short-circuits). Use `on_error` on the `Fetch` to handle that case.
+
+## API Reference
+
+<Card icon="code" title="Fetch Parameters">
+<ParamField body="url" type="str" required>
+  URL to fetch. Supports `{{ key }}` interpolation. Can be passed as a positional argument.
+</ParamField>
+
+<ParamField body="method" type="str" default="GET">
+  HTTP method: `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`.
+</ParamField>
+
+<ParamField body="headers" type="dict[str, str]">
+  Request headers. Values support `{{ key }}` interpolation.
+</ParamField>
+
+<ParamField body="body" type="dict | str">
+  Request body. Dicts are JSON-serialized automatically. Ignored for GET requests.
+</ParamField>
+
+<ParamField body="result_key" type="str">
+  State key to store the parsed response under. Supports dot-paths like `data.users`.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Fetch
+{
+  "action": "fetch",
+  "url": "string (required)",
+  "method?": "GET | POST | PUT | PATCH | DELETE",
+  "headers?": "object",
+  "body?": "object | string",
+  "resultKey?": "string"
+}
+```
+

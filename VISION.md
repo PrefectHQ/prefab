@@ -138,7 +138,7 @@ interprets Prefab's JSON component format and renders interactive UIs.
 - Component registry maps JSON type names to React components
 
 **Transport interface:** The renderer's action system dispatches through a
-pluggable transport. A `ToolCall("list_users", {id: "123"})` doesn't know
+pluggable transport. A `CallTool("list_users", {id: "123"})` doesn't know
 whether it resolves via postMessage (MCP) or fetch (REST). The transport
 adapter is selected at renderer initialization based on the embedding context.
 
@@ -226,7 +226,7 @@ complexity. Not blocking for v1.
 | FastMCP | Prefab |
 |---------|--------|
 | `AppResult` | `UIResponse` |
-| `CallTool` | `ToolCall` |
+| `CallTool` | `CallTool` |
 | `_fastmcp_view` | `view` |
 | `_fastmcp` reserved prefix | (none — clean keys) |
 | `FASTMCP_RENDERER_URL` | `PREFAB_RENDERER_URL` |

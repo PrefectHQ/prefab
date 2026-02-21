@@ -117,7 +117,7 @@ import pytest
 from prefab_ui.response import UIResponse
 from prefab_ui.components import Column
 from prefab_ui.components import Button, DataTable, DataTableColumn, Input
-from prefab_ui.actions import ToolCall, ShowToast
+from prefab_ui.actions import CallTool, ShowToast
 from prefab_ui.testing import Simulator, ActionResult
 
 USERS = [
@@ -131,7 +131,7 @@ def build_search_ui() -> UIResponse:
         Input(name="query", placeholder="Search...")
         Button(
             "Search",
-            on_click=ToolCall(
+            on_click=CallTool(
                 "search_users",
                 arguments={"q": "{{ query }}"},
                 result_key="results",

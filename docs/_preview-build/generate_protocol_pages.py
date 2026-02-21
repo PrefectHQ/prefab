@@ -88,7 +88,8 @@ COMPONENT_TYPES = set(COMPONENT_CLASSES.keys()) - LAYOUT_TYPES
 # Names of $defs entries that represent the action union or base types.
 _ACTION_DEF_NAMES = {
     "ActionBase",
-    "ToolCall",
+    "CallTool",
+    "Fetch",
     "SendMessage",
     "UpdateContext",
     "OpenLink",

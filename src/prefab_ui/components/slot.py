@@ -24,7 +24,7 @@ class Slot(ContainerComponent):
 
         Button(
             "Load Details",
-            on_click=ToolCall("get_detail", result_key="detail_view"),
+            on_click=CallTool("get_detail", result_key="detail_view"),
         )
     """
 

@@ -16,8 +16,8 @@ from pydantic import Field
 from prefab_ui.actions.base import ActionBase
 
 
-class ToolCall(ActionBase):
-    """Call a server tool. The renderer proxies via ``app.callServerTool()``.
+class CallTool(ActionBase):
+    """Call an MCP server tool via ``app.callServerTool()``.
 
     If ``result_key`` is set, the tool's return value is written into
     client-side state at that key. The key supports interpolation:

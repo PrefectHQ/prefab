@@ -6,15 +6,15 @@ icon: wrench
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`ToolCall` is the bridge between your UI and your server logic. When a user clicks a button or submits a form, `ToolCall` invokes a server tool with the arguments you specify — the same tools you define with `@mcp.tool()`.
+`CallTool` is the bridge between your UI and your server logic. When a user clicks a button or submits a form, `CallTool` invokes a server tool with the arguments you specify — the same tools you define with `@mcp.tool()`.
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Refresh Data","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_latest_data","arguments":{}}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
-Button("Refresh Data", on_click=ToolCall("get_latest_data"))
+Button("Refresh Data", on_click=CallTool("get_latest_data"))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -45,14 +45,17 @@ Use `{{ key }}` interpolation in the `arguments` dict to pass client state to th
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
-    Button("Get Weather", on_click=ToolCall(
-        "get_weather",
-        arguments={"location": "{{ city }}"},
-    ))
+    Button(
+        "Get Weather",
+        on_click=CallTool(
+            "get_weather",
+            arguments={"location": "{{ city }}"},
+        ),
+    )
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -97,19 +100,19 @@ Pass a list to execute multiple actions from a single interaction. A common patt
 
 ```python Combined Actions
 from prefab_ui.components import Button
-from prefab_ui.actions import ToolCall, SetState
+from prefab_ui.actions import CallTool, SetState
 
 Button("Analyze", on_click=[
     SetState("status", "analyzing..."),
-    ToolCall("run_analysis", arguments={"data": "{{ dataset }}"}),
+    CallTool("run_analysis", arguments={"data": "{{ dataset }}"}),
 ])
 ```
 
-The `SetState` executes first (instant), then `ToolCall` fires the server request.
+The `SetState` executes first (instant), then `CallTool` fires the server request.
 
 ## API Reference
 
-<Card icon="code" title="ToolCall Parameters">
+<Card icon="code" title="CallTool Parameters">
 <ParamField body="tool" type="str" required>
   Name of the server tool to call. Can be passed as a positional argument.
 </ParamField>
@@ -121,7 +124,7 @@ The `SetState` executes first (instant), then `ToolCall` fires the server reques
 
 ## Protocol Reference
 
-```json ToolCall
+```json CallTool
 {
   "action": "toolCall",
   "tool": "string (required)",
@@ -130,4 +133,4 @@ The `SetState` executes first (instant), then `ToolCall` fires the server reques
 }
 ```
 
-For the complete protocol schema, see [ToolCall](/protocol/tool-call).
+For the complete protocol schema, see [CallTool](/protocol/tool-call).

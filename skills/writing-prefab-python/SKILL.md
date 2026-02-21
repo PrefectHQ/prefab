@@ -28,14 +28,14 @@ or read the source in `src/prefab_ui/components/`.
 ```python
 from prefab_ui import UIResponse, Column, Heading, Text
 from prefab_ui.components import Button, Input, DataTable, DataTableColumn, If, Muted
-from prefab_ui.actions import ToolCall, ShowToast
+from prefab_ui.actions import CallTool, ShowToast
 
 with Column(gap=4) as view:
     Heading("User Search")
     Input(name="query", placeholder="Search...")
     Button(
         "Search",
-        on_click=ToolCall(
+        on_click=CallTool(
             "search_users",
             arguments={"q": "{{ query }}"},
             result_key="results",
@@ -59,7 +59,7 @@ return UIResponse(view=view, state={"query": "", "results": []})
 2. Child components auto-append to the nearest parent context manager
 3. `UIResponse` packages the tree + initial state
 4. `{{ key }}` templates resolve against client-side state
-5. Actions like `ToolCall` call server tools; `result_key` writes the response into state
+5. Actions like `CallTool` call server tools; `result_key` writes the response into state
 
 ## Imports
 
@@ -90,7 +90,7 @@ from prefab_ui.components import (
 # Actions
 from prefab_ui.actions import (
     SetState, ToggleState, ShowToast, OpenLink,
-    ToolCall, SendMessage, UpdateContext,
+    CallTool, SendMessage, UpdateContext,
 )
 
 # Testing
@@ -108,7 +108,7 @@ with Column(gap=4) as view:
         with CardContent():
             Input(name="email", placeholder="Email")
         with CardFooter():
-            Button("Save", on_click=ToolCall("save"))
+            Button("Save", on_click=CallTool("save"))
 ```
 
 Only the root needs `as` (to pass to UIResponse).
@@ -130,7 +130,7 @@ Text("Hello")                # content
 Heading("Title", level=2)    # content
 Tab("General")               # title
 ForEach("users")             # key
-ToolCall("search")           # tool
+CallTool("search")           # tool
 SetState("count", 42)        # key, value
 ShowToast("Saved!")          # message
 ```
@@ -147,14 +147,14 @@ ShowToast("Done!", variant="success")
 OpenLink("https://example.com")
 
 # MCP round-trip
-ToolCall("search", arguments={"q": "{{ query }}"}, result_key="results")
+CallTool("search", arguments={"q": "{{ query }}"}, result_key="results")
 SendMessage("Summarize {{ item }}")
 UpdateContext(content="User selected {{ item }}")
 
 # Chaining
 Button("Save", on_click=[
     SetState("loading", True),
-    ToolCall("save", result_key="saved"),
+    CallTool("save", result_key="saved"),
     SetState("loading", False),
 ])
 ```
@@ -182,7 +182,7 @@ class Contact(BaseModel):
     email: str
     role: Literal["admin", "user"] = "user"
 
-Form.from_model(Contact, on_submit=ToolCall("create_contact"))
+Form.from_model(Contact, on_submit=CallTool("create_contact"))
 ```
 
 ## Testing

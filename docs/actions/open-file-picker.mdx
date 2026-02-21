@@ -11,7 +11,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 This is the counterpart to [DropZone](/components/drop-zone). Where DropZone gives you a dedicated upload area, OpenFilePicker turns any existing element into a file input. A button, a badge, an icon — anything with an `on_click`.
 
 <Info>
-  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an `on_success` action (like `ToolCall`) to do so.
+  All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an `on_success` action (like `CallTool`) to do so.
 </Info>
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}}>
@@ -42,13 +42,13 @@ Button("Upload File", on_click=OpenFilePicker())
 
 ## Processing Files with a Tool
 
-Files are read client-side, but they don't go anywhere until you tell them to. The typical pattern is to nest a `ToolCall` inside `on_success` — pick the file, then send its base64 data to your MCP server for processing.
+Files are read client-side, but they don't go anywhere until you tell them to. The typical pattern is to nest a `CallTool` inside `on_success` — pick the file, then send its base64 data to your MCP server for processing.
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, ToolCall
+from prefab_ui.actions import OpenFilePicker, CallTool
 
 Button(
     "Upload CSV",
@@ -56,7 +56,7 @@ Button(
     variant="outline",
     on_click=OpenFilePicker(
         accept=".csv",
-        on_success=ToolCall(
+        on_success=CallTool(
             "process_csv",
             arguments={"file": "{{ $event }}"},
         ),
@@ -96,14 +96,14 @@ Set `multiple=True` to let users select several files at once. `$event` becomes 
 
 ```python Multiple file upload
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, ToolCall
+from prefab_ui.actions import OpenFilePicker, CallTool
 
 Button(
     "Upload Images",
     on_click=OpenFilePicker(
         accept="image/*",
         multiple=True,
-        on_success=ToolCall(
+        on_success=CallTool(
             "process_images",
             arguments={"images": "{{ $event }}"},
         ),
@@ -117,30 +117,30 @@ The `max_size` parameter rejects files that exceed a byte limit before they ever
 
 ```python With size limit
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, ToolCall
+from prefab_ui.actions import OpenFilePicker, CallTool
 
 Button(
     "Upload (max 5MB)",
     on_click=OpenFilePicker(
         max_size=5_000_000,
-        on_success=ToolCall("upload", arguments={"file": "{{ $event }}"}),
+        on_success=CallTool("upload", arguments={"file": "{{ $event }}"}),
     ),
 )
 ```
 
 ## Error Handling
 
-The `on_error` callback on the nested `ToolCall` fires if the server-side processing fails. The error message is available as `$error`.
+The `on_error` callback on the nested `CallTool` fires if the server-side processing fails. The error message is available as `$error`.
 
 ```python With error handling
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, ToolCall, ShowToast
+from prefab_ui.actions import OpenFilePicker, CallTool, ShowToast
 
 Button(
     "Upload",
     on_click=OpenFilePicker(
         accept=".csv",
-        on_success=ToolCall(
+        on_success=CallTool(
             "process_csv",
             arguments={"file": "{{ $event }}"},
             on_success=ShowToast("File processed!", variant="success"),
@@ -159,7 +159,7 @@ Both OpenFilePicker and [DropZone](/components/drop-zone) produce the same `$eve
 
 ## User Activation
 
-One constraint worth knowing: `OpenFilePicker` must execute before any async server actions in the same chain. Browsers require a recent user gesture to open the file picker — if a `ToolCall` or `SendMessage` fires first, the activation window expires and the picker silently won't open. This is the natural ordering anyway (pick the file, then send it), but it's worth understanding why.
+One constraint worth knowing: `OpenFilePicker` must execute before any async server actions in the same chain. Browsers require a recent user gesture to open the file picker — if a `CallTool` or `SendMessage` fires first, the activation window expires and the picker silently won't open. This is the natural ordering anyway (pick the file, then send it), but it's worth understanding why.
 
 ## API Reference
 

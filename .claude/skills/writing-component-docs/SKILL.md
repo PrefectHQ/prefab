@@ -40,6 +40,31 @@ the CodeGroup that users can't click. The title goes before other directives:
 - Wrap function arguments when they don't fit on one line
 - Include all necessary imports
 
+**Action line-break convention:** When an action value is a simple one-liner
+(no inner arguments that need their own lines), keep it inline:
+
+```python
+Button("Reset", on_click=SetState("count", 0))
+Button("Warn me", variant="outline",
+       on_click=ShowToast("Danger!", variant="warning"))
+```
+
+When the action itself takes multi-line arguments, break after `on_click=`
+so the action constructor starts on a new indented line:
+
+```python
+Button(
+    "Get Weather",
+    on_click=CallTool(
+        "get_weather",
+        arguments={"location": "{{ city }}"},
+    ),
+)
+```
+
+Never cram a multi-line action onto the same line as `on_click=`. The action
+name must be visually distinct from the component that triggers it.
+
 ## API Reference
 
 Use Card + ParamField. Lead with the most important parameters:

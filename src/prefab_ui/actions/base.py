@@ -4,7 +4,7 @@ Every action type inherits from ``ActionBase``, which provides the
 ``on_success`` and ``on_error`` lifecycle callbacks. These let you chain
 reactions to action outcomes without writing custom logic:
 
-    ToolCall("save",
+    CallTool("save",
         on_success=ShowToast("Saved!"),
         on_error=ShowToast("Save failed", variant="error"),
     )

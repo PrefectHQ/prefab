@@ -12,7 +12,7 @@ from typing import Any
 import pytest
 
 from prefab_ui.actions import SetState, ShowToast, ToggleState
-from prefab_ui.actions.mcp import ToolCall
+from prefab_ui.actions.mcp import CallTool
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Button, Column, Form, Input, Text
 from prefab_ui.testing import ActionResult, ComponentNotFoundError, Simulator
@@ -35,7 +35,7 @@ def _search_users_response(q: str = "") -> dict[str, Any]:
         Input(name="query", placeholder="Search...")
         Button(
             label="Search",
-            on_click=ToolCall(
+            on_click=CallTool(
                 "search_users",
                 arguments={"q": "{{ query }}"},
                 result_key="search_result",
@@ -243,7 +243,7 @@ class TestSimulatorActions:
                             label="Run",
                             on_click=[
                                 SetState("step1", True),
-                                ToolCall("nonexistent_tool"),
+                                CallTool("nonexistent_tool"),
                                 SetState("step3", True),
                             ],
                         ),
@@ -272,7 +272,7 @@ class TestSimulatorActions:
                     content=PrefabApp(
                         view=Button(
                             label="Save",
-                            on_click=ToolCall(
+                            on_click=CallTool(
                                 "save_item",
                                 on_success=ShowToast("Saved!", variant="success"),
                                 on_error=ShowToast("Failed", variant="error"),
@@ -333,7 +333,7 @@ class TestSimulatorResultKey:
                     content=PrefabApp(
                         view=Button(
                             label="Refresh",
-                            on_click=ToolCall("get_data", result_key="data"),
+                            on_click=CallTool("get_data", result_key="data"),
                         ),
                         state={"data": None},
                     ).to_json()
@@ -365,7 +365,7 @@ class TestSimulatorError:
                     content=PrefabApp(
                         view=Button(
                             label="Fail",
-                            on_click=ToolCall(
+                            on_click=CallTool(
                                 "failing_tool",
                                 on_error=SetState("error_msg", "{{ $error }}"),
                             ),
@@ -392,7 +392,7 @@ class TestSimulatorError:
                     content=PrefabApp(
                         view=Button(
                             label="Go",
-                            on_click=ToolCall(
+                            on_click=CallTool(
                                 "fail",
                                 on_error=ShowToast("{{ $error }}", variant="error"),
                             ),
@@ -418,7 +418,7 @@ class TestSimulatorError:
                     content=PrefabApp(
                         view=Button(
                             label="Go",
-                            on_click=ToolCall(
+                            on_click=CallTool(
                                 "ok_tool",
                                 on_success=SetState("msg", "{{ $error }}"),
                             ),

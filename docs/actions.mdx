@@ -10,9 +10,9 @@ Every component that supports interaction accepts action props like `on_click`, 
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import ToolCall, SetState
+from prefab_ui.actions import CallTool, SetState
 
-Button("Run Analysis", on_click=ToolCall("analyze"))
+Button("Run Analysis", on_click=CallTool("analyze"))
 Button("Reset", on_click=SetState("count", 0))
 ```
 
@@ -25,6 +25,7 @@ Client actions mutate local state instantly — no server round-trip, no waiting
 | [State](/actions/set-state) | Set or toggle state variables (captures event values by default) |
 | [Show Toast](/actions/show-toast) | Display a notification |
 | [Open Link](/actions/open-link) | Open a URL through the host's link handler |
+| [Fetch](/actions/fetch) | Make HTTP requests directly from the browser |
 
 ## MCP Actions
 
@@ -42,14 +43,17 @@ Every form control with a `name` prop automatically syncs its value to `$state`.
 
 ```python
 from prefab_ui.components import Input, Button, Column
-from prefab_ui.actions import ToolCall
+from prefab_ui.actions import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
-    Button("Get Weather", on_click=ToolCall(
-        "get_weather",
-        arguments={"location": "{{ city }}"},
-    ))
+    Button(
+        "Get Weather",
+        on_click=CallTool(
+            "get_weather",
+            arguments={"location": "{{ city }}"},
+        ),
+    )
 ```
 
 This works for all named controls: `Input`, `Textarea`, `Select`, `Combobox`, `RadioGroup`, `Slider`, `Checkbox`, `Switch`, `Calendar`, `DatePicker`, `Tabs`, and `Pages`. The `name` is the state key.
@@ -66,11 +70,11 @@ Pass a list to execute multiple actions from a single interaction:
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, ToolCall
+from prefab_ui.actions import SetState, CallTool
 
 Button("Submit", on_click=[
     SetState("status", "analyzing..."),
-    ToolCall("process", arguments={"query": "{{ query }}"}),
+    CallTool("process", arguments={"query": "{{ query }}"}),
 ])
 ```
 
