@@ -17,11 +17,17 @@ interface PrefabButtonProps extends ButtonProps {
 
 export function PrefabButton({ icon, children, ...props }: PrefabButtonProps) {
   const IconComponent = icon ? resolveIcon(icon) : undefined;
+  const isIconSize =
+    typeof props.size === "string" && props.size.startsWith("icon");
 
   return (
     <Button {...props}>
       {IconComponent && <IconComponent />}
-      {children}
+      {isIconSize && children ? (
+        <span className="sr-only">{children}</span>
+      ) : (
+        children
+      )}
     </Button>
   );
 }

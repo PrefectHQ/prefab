@@ -1,32 +1,291 @@
 ---
 title: API Server
 sidebarTitle: API Server
-description: Wire Prefab apps to a REST backend.
+description: Wire Prefab apps to a REST backend with FastAPI.
 icon: server
 ---
 
-<Info>
-The API server integration is under active development. This page will be updated with full documentation when it ships.
-</Info>
+Prefab apps can be backed by any HTTP server. Build your UI with components, serve it as HTML, and use [`Fetch`](/actions/fetch) to make HTTP requests back to your API routes. Client actions like `SetState` and `ShowToast` run instantly in the browser — `Fetch` handles the server round-trips.
 
-Prefab apps can be backed by a REST API for server-side data, persistence, and business logic. The integration targets FastAPI as the primary backend, with conventions for routing, tool calls, and serving the renderer.
+Prefab has no dependency on any web framework. This guide uses [FastAPI](https://fastapi.tiangolo.com/), but the pattern works with anything that can serve HTML and JSON — Flask, Django, Starlette, or even a plain socket server.
 
-The core idea: your Prefab UI defines the frontend, and your API routes handle the backend. Client-side actions like `SetState`, `ToggleState`, and `ShowToast` work immediately, and server actions like `CallTool` map to your API endpoints — so your UI can fetch data, submit forms, and trigger backend logic with a round-trip to your server.
+## Quick Start
+
+A Prefab + FastAPI app has three kinds of routes:
+
+- **Page routes** return HTML — they build a component tree, wrap it in `PrefabApp`, and call `.html()`
+- **Data routes** return plain JSON (lists, dicts) — consumed via `result_key` into state
+- **Component routes** return a component tree as JSON (via `.to_json()`) — rendered by a [`Slot`](/components/slot)
+
+<Tip>
+FastAPI is not bundled with Prefab. Install it separately: `pip install fastapi uvicorn`
+</Tip>
+
+Here's a minimal app with a page route and a data route wired together with live search:
 
 ```python
-# Coming soon — this is the target API
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+
+from prefab_ui.actions import Fetch, SetState
 from prefab_ui.app import PrefabApp
-from prefab_ui.components import Card, CardContent, Column, H3, Text
+from prefab_ui.components import Column, ForEach, Input, Text
 
 app = FastAPI()
 
-@app.get("/")
-def dashboard():
-    with Card() as view:
+
+@app.get("/api/items")
+def list_items(q: str = ""):
+    items = [{"name": "Widget"}, {"name": "Gadget"}, {"name": "Gizmo"}]
+    if q:
+        items = [i for i in items if q.lower() in i["name"].lower()]
+    return items
+
+
+@app.get("/", response_class=HTMLResponse)
+def page():
+    with Column(gap=4) as view:
+        Input(
+            name="q",
+            placeholder="Search...",
+            on_change=[
+                SetState("q", "{{ $event }}"),
+                Fetch.get(
+                    "/api/items",
+                    params={"q": "{{ $event }}"},
+                    result_key="items",
+                ),
+            ],
+        )
+        with ForEach("items"):
+            Text("{{ name }}")
+
+    return HTMLResponse(
+        PrefabApp(
+            title="My App",
+            view=view,
+            state={"q": "", "items": []},
+        ).html()
+    )
+```
+
+Run it with `uvicorn app:app --reload` and visit `http://localhost:8000`. Typing in the search box fires a `GET /api/items?q=...` request on every keystroke, and the results re-render automatically.
+
+`PrefabApp.html()` returns a self-contained HTML page with the renderer, component tree, and initial state baked in — no external assets or build step needed. The `title` parameter sets the browser tab title.
+
+<Note>
+When an Input has `on_change`, you must include `SetState` to update the input's value — the auto-sync is replaced by your custom handler. Use `{{ $event }}` to reference the current input value.
+</Note>
+
+## Patterns
+
+### Loading Data
+
+`Fetch.get` makes a GET request and writes the parsed JSON response into client-side state via `result_key`. Components that reference that key re-render automatically.
+
+```python
+Button(
+    "Load Users",
+    on_click=Fetch.get("/api/users", result_key="users"),
+)
+```
+
+Pass query parameters with `params` — values support `{{ key }}` interpolation:
+
+```python
+Fetch.get("/api/search", params={"q": "{{ search_input }}", "page": "1"})
+```
+
+### Submitting Data
+
+`Fetch.post` sends a JSON body to your API. Wrap inputs in a `Form` so that pressing Enter triggers submission.
+
+Reference named inputs with `{{ key }}` — make sure each key is initialized in your `PrefabApp(state=...)`, otherwise unset values render as literal template strings.
+
+```python
+from prefab_ui.actions import Fetch, ShowToast
+from prefab_ui.components import Button, Column, Form, Input
+
+with Form(
+    on_submit=Fetch.post(
+        "/api/items",
+        body={"name": "{{ item_name }}", "category": "{{ item_category }}"},
+        on_success=ShowToast("Item created!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+):
+    with Column(gap=3):
+        Input(name="item_name", placeholder="Name")
+        Input(name="item_category", placeholder="Category")
+        Button("Add Item")
+```
+
+### Forms in Dialogs
+
+For forms that shouldn't clutter the main layout, put them inside a `Dialog`. Use `CloseOverlay()` in the success chain to dismiss the dialog after submission:
+
+```python {10-14}
+from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast
+from prefab_ui.components import Button, Column, Dialog, Form, Input
+
+with Dialog(title="New Item", description="Add an item to the catalog."):
+    Button("+ Add", size="sm")
+    with Form(
+        on_submit=Fetch.post(
+            "/api/items",
+            body={"name": "{{ new_name }}"},
+            on_success=[
+                ShowToast("Created!", variant="success"),
+                SetState("new_name", ""),
+                Fetch.get("/api/items", result_key="items"),
+                CloseOverlay(),
+            ],
+            on_error=ShowToast("{{ $error }}", variant="error"),
+        ),
+    ):
+        with Column(gap=3):
+            Input(name="new_name", placeholder="Name")
+            Button("Add Item")
+```
+
+The first child of `Dialog` is the trigger element (the "+ Add" button). Everything after it becomes the dialog's body.
+
+### Deleting Data
+
+`Fetch.delete` sends a DELETE request. Chain a `Fetch.get` in `on_success` to refresh the list after removal:
+
+```python
+Button(
+    "Delete",
+    icon="trash-2",
+    size="icon-xs",
+    variant="ghost",
+    on_click=Fetch.delete(
+        "/api/items/{{ id }}",
+        on_success=Fetch.get("/api/items", result_key="items"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+)
+```
+
+### Dynamic Component Routes
+
+Data routes return plain values that templates interpolate. But sometimes you want the server to return entire UI fragments — a detail panel, a chart, a custom card layout. That's what component routes are for.
+
+A component route builds a component tree in Python and returns its JSON representation. On the client, a [`Slot`](/components/slot) renders whatever component tree lands in its state key:
+
+```python {11,25}
+from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text
+
+@app.get("/api/items/{id}/detail")
+def item_detail(id: str):
+    item = get_item(id)
+    with Card() as detail:
+        with CardHeader():
+            CardTitle(item["name"])
         with CardContent():
-            with Column(gap=3):
-                H3("Dashboard")
-                Text("Backed by a real server.")
-    return PrefabApp(view=view).html()
+            Text(item["description"])
+    return detail.to_json()
+
+
+@app.get("/", response_class=HTMLResponse)
+def page():
+    with Column(gap=4) as view:
+        with ForEach("items"):
+            Button(
+                "{{ name }}",
+                on_click=Fetch.get(
+                    "/api/items/{{ id }}/detail",
+                    result_key="detail",
+                ),
+            )
+        with Slot("detail"):
+            Text("Select an item to see details", css_class="text-muted-foreground")
+
+    return HTMLResponse(
+        PrefabApp(view=view, state={"items": items, "detail": None}).html()
+    )
+```
+
+The `Slot` shows its fallback children until a Fetch writes a component tree into the `detail` state key. This is the same pattern that `CallTool` uses in FastMCP — the server decides what to render, not just what data to return.
+
+### Error Handling
+
+Non-2xx responses trigger `on_error`. The `$error` variable contains the status line (e.g., "400 Bad Request"), which you can surface with a toast or write to state for inline display:
+
+```python
+Fetch.post(
+    "/api/save",
+    body={"data": "{{ form_data }}"},
+    on_error=ShowToast("{{ $error }}", variant="error"),
+)
+```
+
+On the server side, raise an `HTTPException` to return error status codes:
+
+```python
+from fastapi import HTTPException
+
+@app.post("/api/items")
+def create_item(item: dict):
+    if not item.get("name"):
+        raise HTTPException(status_code=400, detail="Name is required")
+    # ...
+```
+
+### Loading States
+
+Action chains execute sequentially and short-circuit on failure. Wrap a `Fetch` with `SetState` calls to show and hide a loading indicator:
+
+```python {4,10}
+Button(
+    "Save",
+    on_click=[
+        SetState("saving", True),
+        Fetch.post(
+            "/api/save",
+            body={"item": "{{ item }}"},
+            on_error=ShowToast("{{ $error }}", variant="error"),
+        ),
+        SetState("saving", False),
+    ],
+)
+```
+
+If the request fails, the chain stops — `SetState("saving", False)` never runs. Handle cleanup in `on_error` if needed.
+
+### Refreshing After Mutations
+
+After a successful POST or DELETE, you often want to reload the data list. Chain a `Fetch.get` inside `on_success`:
+
+```python
+Fetch.post(
+    "/api/items",
+    body={"name": "{{ new_name }}"},
+    on_success=[
+        ShowToast("Created!", variant="success"),
+        Fetch.get("/api/items", result_key="items"),
+    ],
+)
+```
+
+## FastMCP vs API Server
+
+Both use the same components and state model. The difference is how the UI talks to your server:
+
+| | FastMCP | API Server |
+|---|---|---|
+| **Transport** | MCP protocol | HTTP (fetch) |
+| **Server action** | `CallTool` | `Fetch` |
+| **Hosting** | Inside Claude Desktop, ChatGPT, etc. | Standalone web page |
+| **Renderer** | Provided by the MCP host | Bundled in `PrefabApp.html()` |
+
+If you're building an MCP server, use `CallTool`. If you're building a web app, use `Fetch`. The component tree and client-side actions are identical either way.
+
+## Example App
+
+The [`examples/fastapi`](https://github.com/PrefectHQ/prefab/tree/main/examples/fastapi) directory contains a complete working app — a Hitchhiker's Guide catalog with live search, dialog-based entry creation, inline deletion, and error handling.
+
+```bash
+uvicorn examples.fastapi.app:app --reload
 ```

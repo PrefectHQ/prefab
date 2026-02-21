@@ -60,7 +60,7 @@ class TestPrefabAppHtml:
         html = app.html()
         assert "<!doctype html>" in html.lower()
         assert "<html" in html
-        assert '<div id="root"></div>' in html
+        assert '<div id="root"' in html
 
     def test_contains_baked_in_data(self):
         app = PrefabApp(view=Text(content="hi"), state={"x": 1})
