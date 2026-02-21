@@ -31,13 +31,20 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
       mount();
     } else {
       if (!window.__prefabLoading) {
-        window.__prefabLoading = new Promise(function (resolve, reject) {
+        if (!window.__prefabReady) {
           var s = document.createElement("script");
-          s.type = "module";
           s.src = "/renderer.js";
-          s.onload = resolve;
-          s.onerror = reject;
           document.head.appendChild(s);
+        }
+        window.__prefabLoading = new Promise(function (resolve) {
+          function check() {
+            if (window.__prefabReady) {
+              window.__prefabReady.then(resolve);
+            } else {
+              setTimeout(check, 10);
+            }
+          }
+          check();
         });
       }
       window.__prefabLoading.then(mount);

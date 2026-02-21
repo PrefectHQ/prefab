@@ -6,6 +6,7 @@
  * on document.body so `position: fixed` overlays can use the full viewport.
  */
 
+import { Suspense } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { Toaster } from "sonner";
 import { PortalContainerProvider } from "./portal-container";
@@ -82,7 +83,9 @@ function EmbedPreview({
   const state = useStateStore(initialState);
   return (
     <PortalContainerProvider container={container}>
-      <RenderTree tree={tree} state={state} app={null} />
+      <Suspense fallback={null}>
+        <RenderTree tree={tree} state={state} app={null} />
+      </Suspense>
       <div
         style={{
           position: "absolute",

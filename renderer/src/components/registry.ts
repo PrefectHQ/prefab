@@ -5,12 +5,30 @@
  * to JSON with { "type": "Button", ... }. The renderer looks up the
  * type name here to find the corresponding React component.
  *
- * For components where Python's API differs from shadcn's multi-part
- * structure (Select, RadioGroup, Checkbox, Switch), we register
- * wrapper components from form.tsx that bridge the gap.
+ * Heavy dependencies (recharts, highlight.js, react-markdown, date-fns)
+ * are lazy-loaded so they only download when a component using them
+ * actually appears in the tree.
  */
 
-import type { ComponentType } from "react";
+import { lazy, type ComponentType } from "react";
+
+// ── Lazy-load helper ────────────────────────────────────────────────────
+// React.lazy expects () => Promise<{ default: Component }>. This helper
+// wraps a named export from a dynamic import into that shape. Multiple
+// calls to the same module share the browser's module cache — each chunk
+// is only fetched once.
+function lazyNamed<T extends Record<string, unknown>>(
+  factory: () => Promise<T>,
+  name: keyof T & string,
+): React.LazyExoticComponent<ComponentType<Record<string, unknown>>> {
+  return lazy(() =>
+    factory().then((m) => ({
+      default: m[name] as ComponentType<Record<string, unknown>>,
+    })),
+  );
+}
+
+// ── Eager imports (lightweight) ─────────────────────────────────────────
 
 // shadcn components (used directly when APIs match)
 import { PrefabButton } from "./button-wrapper";
@@ -76,16 +94,8 @@ import {
   InlineCode,
   BlockQuote,
 } from "./typography";
-import { Code, Image, Markdown } from "./content";
+import { Image } from "./image";
 import { Condition, ForEach, Slot } from "./control-flow";
-import {
-  PrefabBarChart,
-  PrefabLineChart,
-  PrefabAreaChart,
-  PrefabPieChart,
-  PrefabRadarChart,
-  PrefabRadialChart,
-} from "./charts";
 import { PrefabDataTable } from "./data-display";
 import {
   PrefabTabs,
@@ -95,9 +105,30 @@ import {
   PrefabHoverCard,
   PrefabPopover,
   PrefabDialog,
-  PrefabCalendar,
-  PrefabDatePicker,
 } from "./compound";
+
+// ── Lazy imports (heavy dependencies) ───────────────────────────────────
+
+// Charts — recharts (~506 KB)
+const chartsModule = () => import("./charts");
+const LazyBarChart = lazyNamed(chartsModule, "PrefabBarChart");
+const LazyLineChart = lazyNamed(chartsModule, "PrefabLineChart");
+const LazyAreaChart = lazyNamed(chartsModule, "PrefabAreaChart");
+const LazyPieChart = lazyNamed(chartsModule, "PrefabPieChart");
+const LazyRadarChart = lazyNamed(chartsModule, "PrefabRadarChart");
+const LazyRadialChart = lazyNamed(chartsModule, "PrefabRadialChart");
+
+// Code + Markdown — highlight.js (~167 KB), react-markdown (~70 KB)
+const contentModule = () => import("./content");
+const LazyCode = lazyNamed(contentModule, "Code");
+const LazyMarkdown = lazyNamed(contentModule, "Markdown");
+
+// Calendar / DatePicker — date-fns (~169 KB)
+const calendarModule = () => import("./compound-calendar");
+const LazyCalendar = lazyNamed(calendarModule, "PrefabCalendar");
+const LazyDatePicker = lazyNamed(calendarModule, "PrefabDatePicker");
+
+// ── Registry ────────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const REGISTRY: Record<string, ComponentType<any>> = {
@@ -142,13 +173,13 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   TableCell,
   TableCaption,
 
-  // Charts (wrappers around Recharts + shadcn ChartContainer)
-  BarChart: PrefabBarChart,
-  LineChart: PrefabLineChart,
-  AreaChart: PrefabAreaChart,
-  PieChart: PrefabPieChart,
-  RadarChart: PrefabRadarChart,
-  RadialChart: PrefabRadialChart,
+  // Charts (lazy — recharts)
+  BarChart: LazyBarChart,
+  LineChart: LazyLineChart,
+  AreaChart: LazyAreaChart,
+  PieChart: LazyPieChart,
+  RadarChart: LazyRadarChart,
+  RadialChart: LazyRadialChart,
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
@@ -183,10 +214,10 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   InlineCode,
   BlockQuote,
 
-  // Content
-  Code,
+  // Content (lazy — highlight.js, react-markdown)
+  Code: LazyCode,
   Image,
-  Markdown,
+  Markdown: LazyMarkdown,
   Icon: PrefabIcon,
 
   // Control flow
@@ -208,7 +239,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Popover: PrefabPopover,
   Dialog: PrefabDialog,
 
-  // Calendar / DatePicker
-  Calendar: PrefabCalendar,
-  DatePicker: PrefabDatePicker,
+  // Calendar / DatePicker (lazy — date-fns)
+  Calendar: LazyCalendar,
+  DatePicker: LazyDatePicker,
 };

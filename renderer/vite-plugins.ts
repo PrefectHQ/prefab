@@ -1,4 +1,47 @@
-import type { Plugin } from "vite";
+import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
+
+/**
+ * Rewrite the renderer entry to use dynamic import() instead of static import.
+ *
+ * Mintlify inlines all .js files from the docs directory as non-module
+ * <script> tags. Static `import`/`export` statements fail in that context.
+ * Dynamic `import()` works in both module and non-module scripts, so we
+ * rewrite the thin entry to:
+ *
+ *   import("./_chunks/embed-HASH.mjs").then(function(m) {
+ *     window.__prefab = { mountPreview: m.mountPreview };
+ *   });
+ *
+ * The entry is also loaded separately as <script type="module"> by
+ * component-preview.mdx, where this dynamic import works identically.
+ */
+export function rewriteEntryLoader(): Plugin {
+  return {
+    name: "rewrite-entry-loader",
+    enforce: "post",
+    generateBundle(_options: NormalizedOutputOptions, bundle: OutputBundle) {
+      const entry = bundle["renderer.js"];
+      if (!entry || entry.type !== "chunk") return;
+
+      // Find the chunk path from the static import in the generated entry.
+      // Vite generates: import { m as o } from "./_chunks/embed-HASH.mjs";
+      const match = entry.code.match(/from\s+["'](\.\/_chunks\/[^"']+)['"]/);
+      if (!match) return;
+
+      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
+      const chunkPath = match[1].replace(/^\.\//, "");
+
+      // Use an absolute path so the import resolves correctly regardless of
+      // the current page URL. Mintlify inlines renderer.js as a non-module
+      // <script> where dynamic import() resolves relative to the page URL
+      // (e.g. /components/button). An absolute path avoids this problem.
+      //
+      // For CDN/npm consumers, the package exports the real ESM entry in
+      // package.json "module" field — they don't use this loader script.
+      entry.code = `window.__prefabReady=import("/${chunkPath}");\n`;
+    },
+  };
+}
 
 /**
  * Tailwind v4 uses @property declarations for internal variables (e.g.
