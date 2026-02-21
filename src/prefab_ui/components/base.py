@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
+from contextlib import contextmanager
 from contextvars import ContextVar
 from typing import Annotated, Any, Literal
 
@@ -13,6 +15,32 @@ from prefab_ui.css import Responsive
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
 )
+
+
+@contextmanager
+def suppress() -> Generator[None, None, None]:
+    """Temporarily suppress auto-attachment of components to parent containers.
+
+    Components created inside a ``suppress()`` block are **not** automatically
+    appended as children to any enclosing context manager.  They can still be
+    used as context managers themselves to collect their own children::
+
+        with Column() as outer:
+            Text("attached to outer")
+
+            with suppress():
+                sidebar = Column()
+                with sidebar:
+                    Text("attached to sidebar, not outer")
+
+        assert len(outer.children) == 1  # only the first Text
+    """
+    saved = _component_stack.get()
+    _component_stack.set(None)
+    try:
+        yield
+    finally:
+        _component_stack.set(saved)
 
 
 # ── Gap / Align / Justify ──────────────────────────────────────────────
