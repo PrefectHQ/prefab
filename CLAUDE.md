@@ -21,6 +21,12 @@ src/prefab_ui/actions/state.py      →  tests/actions/test_state.py
 
 **Pure-CSS kwargs resolve in Python, not the renderer.** When a Python component has a convenience kwarg that maps directly to CSS (like `spacing=4` → `my-4`), resolve it in `model_post_init` by compiling to `css_class` and marking the field `exclude=True`. The renderer should only see `cssClass` — it never needs to know about the kwarg. See `Row.gap`/`Row.align` and `Separator.spacing` for examples.
 
+**New components need BOTH registries.** The renderer has two separate registries that must stay in sync:
+- `renderer/src/components/registry.ts` — maps type names to React components
+- `renderer/src/schemas/index.ts` — maps type names to Zod validation schemas
+
+The renderer validates JSON against the **schema registry** before rendering. A component missing from `SCHEMA_REGISTRY` will show "Unknown component" even if it's in the component `REGISTRY`. When adding a new component, create a schema file in `renderer/src/schemas/` and register it in both places.
+
 ## Component Documentation
 
 Doc conventions are encoded as agent skills in `.claude/skills/`:

@@ -38,6 +38,11 @@ import {
   PopoverContent,
 } from "@/ui/popover";
 import {
+  HoverCard as ShadcnHoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/ui/hover-card";
+import {
   Dialog as ShadcnDialog,
   DialogTrigger,
   DialogContent,
@@ -219,13 +224,19 @@ export function PrefabPages({
 interface PrefabTooltipProps {
   content: string;
   side?: "top" | "right" | "bottom" | "left";
+  delay?: number;
   className?: string;
   children?: ReactNode;
 }
 
-export function PrefabTooltip({ content, side, children }: PrefabTooltipProps) {
+export function PrefabTooltip({
+  content,
+  side,
+  delay,
+  children,
+}: PrefabTooltipProps) {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={delay}>
       <ShadcnTooltip>
         <TooltipTrigger asChild>
           <TriggerSlot>{children}</TriggerSlot>
@@ -235,6 +246,36 @@ export function PrefabTooltip({ content, side, children }: PrefabTooltipProps) {
         </TooltipContent>
       </ShadcnTooltip>
     </TooltipProvider>
+  );
+}
+
+// ── HoverCard ─────────────────────────────────────────────────────────
+
+interface PrefabHoverCardProps {
+  side?: "top" | "right" | "bottom" | "left";
+  openDelay?: number;
+  closeDelay?: number;
+  className?: string;
+  children?: ReactNode;
+}
+
+export function PrefabHoverCard({
+  side,
+  openDelay,
+  closeDelay,
+  children,
+}: PrefabHoverCardProps) {
+  const childArray = React.Children.toArray(children);
+  const trigger = childArray[0];
+  const content = childArray.slice(1);
+
+  return (
+    <ShadcnHoverCard openDelay={openDelay} closeDelay={closeDelay}>
+      <HoverCardTrigger asChild>
+        <TriggerSlot>{trigger}</TriggerSlot>
+      </HoverCardTrigger>
+      <HoverCardContent side={side}>{content}</HoverCardContent>
+    </ShadcnHoverCard>
   );
 }
 

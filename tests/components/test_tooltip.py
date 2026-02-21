@@ -19,3 +19,15 @@ class TestTooltipComponent:
     def test_tooltip_positional(self):
         t = Tooltip("Hover text")
         assert t.content == "Hover text"
+
+    def test_tooltip_delay(self):
+        with Tooltip("Fast", delay=0) as tip:
+            Button(label="Save")
+
+        j = tip.to_json()
+        assert j["delay"] == 0
+
+    def test_tooltip_delay_omitted_when_none(self):
+        t = Tooltip("Default delay")
+        j = t.to_json()
+        assert "delay" not in j

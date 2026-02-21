@@ -16,6 +16,7 @@ const TooltipContent = React.forwardRef<
   <TooltipPrimitive.Content
     ref={ref}
     sideOffset={sideOffset}
+    data-slot="tooltip-content"
     className={cn(
       "cn-tooltip-content z-50 origin-[--radix-tooltip-content-transform-origin]",
       className

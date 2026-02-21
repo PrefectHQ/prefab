@@ -1,17 +1,17 @@
 ---
-title: Tooltip
-description: JSON Schema for the Tooltip component.
+title: HoverCard
+description: JSON Schema for the HoverCard component.
 ---
 
-Tooltip that appears on hover over its child.
+Hover card with rich content.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Tooltip",
-      "default": "Tooltip",
+      "const": "HoverCard",
+      "default": "HoverCard",
       "type": "string"
     },
     "cssClass": {
@@ -37,10 +37,6 @@ Tooltip that appears on hover over its child.
       "default": null,
       "description": "Scoped bindings available to children. Values are template strings."
     },
-    "content": {
-      "description": "Tooltip text",
-      "type": "string"
-    },
     "side": {
       "enum": [
         "top",
@@ -53,20 +49,27 @@ Tooltip that appears on hover over its child.
         "null"
       ],
       "default": null,
-      "description": "Which side to show the tooltip"
+      "description": "Which side to show the hover card"
     },
-    "delay": {
+    "openDelay": {
       "type": [
         "integer",
         "null"
       ],
       "default": null,
-      "description": "Delay in milliseconds before showing the tooltip"
+      "description": "Delay in milliseconds before opening"
+    },
+    "closeDelay": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Delay in milliseconds before closing"
     }
   },
   "required": [
-    "type",
-    "content"
+    "type"
   ]
 }
 ```
