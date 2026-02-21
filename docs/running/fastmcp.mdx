@@ -5,52 +5,192 @@ description: Build MCP Apps that render inside Claude Desktop, ChatGPT, and othe
 icon: rocket
 ---
 
-<Info>
-MCP App support will be available in [FastMCP 3.1](https://github.com/PrefectHQ/fastmcp). This page will be updated with full documentation when it ships.
-</Info>
-
 Prefab integrates with [FastMCP](https://github.com/PrefectHQ/fastmcp) to build [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps) — interactive UIs that render directly inside the conversation. Mark any tool with `app=True` and return a component tree or a `PrefabApp`:
 
-<CodeGroup>
-```python Component Tree
-from prefab_ui import FastMCP
-from prefab_ui.components import Card, CardContent, Column, H3, Input, Button
+<Tip>
+FastMCP is not bundled with Prefab. Install it separately: `pip install fastmcp`
+</Tip>
+
+```python
+from fastmcp import FastMCP
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, ForEach, Heading, Text
 from prefab_ui.actions import CallTool
 
 mcp = FastMCP("My Server")
 
+ITEMS = [{"name": "Widget"}, {"name": "Gadget"}, {"name": "Gizmo"}]
+
 @mcp.tool(app=True)
-async def search(query: str = "") -> Card:
-    results = find_items(query) if query else []
-    with Card() as view:
-        with CardContent():
-            with Column(gap=3):
-                Input(name="q", placeholder="Search...")
-                Button(
-                    "Go",
-                    on_click=CallTool("search", arguments={"query": "{{ q }}"}),
-                )
-    return view
+def browse() -> PrefabApp:
+    """Show all items."""
+    with Column(gap=4) as view:
+        Heading("Items")
+        with ForEach("items"):
+            Text("{{ name }}")
+    return PrefabApp(view=view, state={"items": ITEMS})
 ```
+
+When a host like Claude Desktop calls this tool, the user sees a fully interactive UI instead of plain text. FastMCP handles the wiring automatically: it registers a shared Prefab renderer as a `ui://` resource, sets the MCP Apps metadata on your tool, and converts `PrefabApp` returns to `structuredContent` in the tool result.
+
+## How It Works
+
+The flow has three steps:
+
+1. **Tool call** — the host calls your tool via MCP
+2. **PrefabApp → structuredContent** — FastMCP serializes your return value into the Prefab JSON envelope (`version`, `view`, `state`, `defs`)
+3. **Renderer** — the host loads the Prefab renderer (from `ui://prefab/renderer.html`) and passes it the structured content. The renderer builds the UI.
+
+When the user interacts with the UI (clicks a button, submits a form), [`CallTool`](/actions/call-tool) sends a new tool call through MCP back to your server. The tool returns a fresh `PrefabApp`, and the renderer updates.
+
+## Returning UI
+
+You can return either a `PrefabApp` or a bare component. Returning a component is a shorthand — FastMCP wraps it in a `PrefabApp` automatically.
+
+<CodeGroup>
 ```python PrefabApp
-from prefab_ui import FastMCP
-from prefab_ui.app import PrefabApp
-from prefab_ui.components import Card, CardContent, Column, H3, Muted, Input
-
-mcp = FastMCP("My Server")
-
 @mcp.tool(app=True)
-async def greeting() -> PrefabApp:
-    with Card() as view:
-        with CardContent():
-            with Column(gap=3):
-                H3("Hello, {{ name }}!")
-                Muted("Type below and watch this update.")
-                Input(name="name", placeholder="Your name...")
-    return PrefabApp(view=view, state={"name": "world"})
+def dashboard() -> PrefabApp:
+    with Column(gap=4) as view:
+        Heading("Dashboard")
+        Text("Welcome, {{ name }}")
+    return PrefabApp(
+        title="Dashboard",
+        view=view,
+        state={"name": "Alice"},
+    )
+```
+```python Bare Component
+@mcp.tool(app=True)
+def dashboard() -> Column:
+    with Column(gap=4) as view:
+        Heading("Dashboard")
+        Text("Hello!")
+    return view
 ```
 </CodeGroup>
 
-Returning a component tree is the simplest option — FastMCP wraps it in a `PrefabApp` automatically. Return a `PrefabApp` directly when you need initial state, reusable definitions, or external assets.
+Return a `PrefabApp` when you need initial state, a page title, or reusable definitions. Return a bare component for simple, stateless views.
 
-When a host like Claude Desktop or Prefect Horizon calls this tool, the user sees a fully interactive UI instead of plain text. Client-side [actions](/actions) like `SetState` and `ShowToast` work immediately in the browser, while `CallTool` makes a round-trip through MCP back to your server for fresh data and server-side logic.
+## Patterns
+
+### Calling Back to the Server
+
+[`CallTool`](/actions/call-tool) is the MCP equivalent of [`Fetch`](/actions/fetch). It sends a tool call through MCP and writes the response into client-side state:
+
+```python
+@mcp.tool(app=True)
+def browse() -> PrefabApp:
+    with Column(gap=4) as view:
+        Input(
+            name="q",
+            placeholder="Search...",
+            on_change=[
+                SetState("q", "{{ $event }}"),
+                CallTool("search", arguments={"q": "{{ $event }}"}, result_key="results"),
+            ],
+        )
+        Slot("results")
+    return PrefabApp(view=view, state={"q": "", "results": None})
+
+@mcp.tool
+def search(q: str = "") -> PrefabApp:
+    matches = [i for i in ITEMS if q.lower() in i["name"].lower()] if q else ITEMS
+    with ForEach("items") as view:
+        Text("{{ name }}")
+    return PrefabApp(view=view, state={"items": matches})
+```
+
+The first tool (`browse`) defines the layout with a `Slot`. The second tool (`search`) returns a component tree that fills that slot. This is the core MCP Apps pattern: the initial tool sets up the shell, and subsequent tool calls swap content in and out.
+
+<Note>
+`search` and `add_entry` don't need `app=True` — they're helper tools called from within the UI, not entry points that a host would show directly. FastMCP still auto-wires them because their return type is `PrefabApp`.
+</Note>
+
+### Dynamic Component Results with Slot
+
+When a `CallTool` has `result_key`, the tool's `PrefabApp` response is written into that state key. A [`Slot`](/components/slot) watching that key renders whatever component tree arrives:
+
+```python {5,11}
+# In the main view
+with Slot("detail"):
+    Text("Select an item", css_class="text-muted-foreground")
+
+# A tool that returns component content for the slot
+@mcp.tool
+def get_detail(id: str) -> PrefabApp:
+    item = lookup(id)
+    with Card() as view:
+        CardTitle(item["name"])
+        Text(item["description"])
+    return PrefabApp(view=view, state={"item": item})
+```
+
+The `Slot` shows its fallback children until a `CallTool` populates the state key. This is the same pattern as [Dynamic Component Routes](/running/api#dynamic-component-routes) in the API Server guide — the server decides what to render, not just what data to return.
+
+### Error Handling
+
+If a tool raises an exception, the MCP protocol surfaces it as an error. Use `on_error` to display it:
+
+```python
+CallTool(
+    "add_entry",
+    arguments={"title": "{{ new_title }}"},
+    on_error=ShowToast("{{ $error }}", variant="error"),
+)
+```
+
+On the server side, just raise:
+
+```python
+@mcp.tool
+def add_entry(title: str) -> PrefabApp:
+    if not title.strip():
+        raise ValueError("Title is required")
+    # ...
+```
+
+### Forms in Dialogs
+
+Same pattern as the [API Server guide](/running/api#forms-in-dialogs) — use `Dialog` + `Form` + `CloseOverlay`:
+
+```python {10-14}
+with Dialog(title="New Item"):
+    Button("+ Add", size="sm")
+    with Form(
+        on_submit=CallTool(
+            "add_item",
+            arguments={"name": "{{ new_name }}"},
+            result_key="items",
+            on_success=[
+                ShowToast("Added!", variant="success"),
+                SetState("new_name", ""),
+                CloseOverlay(),
+            ],
+            on_error=ShowToast("{{ $error }}", variant="error"),
+        ),
+    ):
+        Input(name="new_name", placeholder="Name")
+        Button("Add")
+```
+
+## API Server vs FastMCP
+
+Both use the same components and state model. The difference is transport:
+
+| | FastMCP | API Server |
+|---|---|---|
+| **Transport** | MCP protocol | HTTP (fetch) |
+| **Server action** | `CallTool` | `Fetch` |
+| **Hosting** | Inside Claude Desktop, ChatGPT, etc. | Standalone web page |
+| **Renderer** | Provided by the MCP host | Bundled in `PrefabApp.html()` |
+
+If you're building an MCP server, use `CallTool`. If you're building a web app, use `Fetch`. The component tree and client-side actions are identical either way.
+
+## Example App
+
+The [`examples/hitchhikers-guide`](https://github.com/PrefectHQ/prefab/tree/main/examples/hitchhikers-guide) directory contains a complete working MCP server — a Hitchhiker's Guide catalog with search, dialog-based entry creation, inline deletion, and error handling. The same directory also contains a [FastAPI version](/running/api) of the same app for comparison.
+
+```bash
+uv run examples/hitchhikers-guide/mcp_server.py
+```
