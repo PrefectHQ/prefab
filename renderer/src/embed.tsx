@@ -194,3 +194,6 @@ export function mountPreview(
     },
   };
 }
+
+// Expose public API on window for script-tag consumers.
+(window as unknown as Record<string, unknown>).__prefab = { mountPreview };

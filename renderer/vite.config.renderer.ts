@@ -5,11 +5,15 @@ import path from "path";
 import { tailwindShadowDom } from "./vite-plugins";
 
 /**
- * IIFE build for the renderer bundle.
+ * ESM build for the renderer bundle.
  *
- * Produces a single self-contained script (dist/renderer.js) that registers
- * `window.__prefab = { mountPreview }`. Published to npm as part of
- * @prefecthq/prefab-ui; loaded from jsdelivr CDN in the Mintlify docs.
+ * Produces a code-split ESM entry (dist/renderer.js) plus lazy chunks for
+ * heavy features (charts, code highlighting, calendar, icons). The entry
+ * assigns `window.__prefab = { mountPreview }` on load.
+ *
+ * Published to npm as part of @prefecthq/prefab-ui; loaded from CDN in docs.
+ * Chunks use relative imports so they resolve from whatever origin serves
+ * the entry script — CDN, local dev server, or same-origin static files.
  */
 export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom()],
@@ -27,16 +31,10 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/embed.tsx"),
-      formats: ["iife"],
-      name: "__prefab",
+      formats: ["es"],
       fileName: () => "renderer.js",
     },
     outDir: "dist",
     emptyOutDir: false,
-    rollupOptions: {
-      output: {
-        inlineDynamicImports: true,
-      },
-    },
   },
 });

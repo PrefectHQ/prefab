@@ -501,10 +501,8 @@ def build_docs() -> None:
             raise SystemExit(result.returncode)
 
     if copy_renderer:
-        shutil.copy2(
-            renderer_dir / "dist" / "renderer.js",
-            repo_root / "docs" / "renderer.js",
-        )
+        for js_file in (renderer_dir / "dist").glob("renderer*.js"):
+            shutil.copy2(js_file, repo_root / "docs" / js_file.name)
 
     if rebuild_playground:
         shutil.copy2(

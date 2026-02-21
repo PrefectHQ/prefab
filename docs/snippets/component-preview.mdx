@@ -33,10 +33,11 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
       if (!window.__prefabLoading) {
         window.__prefabLoading = new Promise(function (resolve, reject) {
           var s = document.createElement("script");
+          s.type = "module";
           var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
           s.src = isLocal
             ? "/renderer.js"
-            : "https://unpkg.com/@prefecthq/prefab-ui@latest/dist/renderer.js";
+            : "https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.2.0/dist/renderer.js";
           s.onload = resolve;
           s.onerror = reject;
           document.head.appendChild(s);
