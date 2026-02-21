@@ -101,9 +101,9 @@ with Grid(gap=8, columns=4, css_class="place-items-center"):
 </CodeGroup>
 </ComponentPreview>
 
-## In Context
+## Examples
 
-Badges pair well with cards and other layout components as inline status indicators:
+Badges pair well with cards and other layout components as inline status indicators.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"Badge","label":"Online","variant":"success"}]},{"type":"CardDescription","content":"Infinite Improbability Drive engaged"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Vogon Fleet"},{"type":"Badge","label":"Approaching","variant":"warning"}]},{"type":"CardDescription","content":"Demolition order filed with local planning authority"}]}]}]}}}>
 <CodeGroup>
@@ -203,11 +203,87 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
+Badge is a container component, so you can compose children for richer content — icons, loaders, or custom ordering.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Badge","variant":"success","children":[{"type":"Icon","name":"check","size":"sm"},{"content":"Verified","type":"Text"}]},{"type":"Badge","variant":"default","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Syncing","type":"Text"}]},{"type":"Badge","variant":"secondary","children":[{"type":"Loader","variant":"dots","size":"sm"},{"content":"Processing","type":"Text"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Badge, Icon, Loader, Row, Text
+
+with Row(gap=4, css_class="items-center"):
+    with Badge(variant="success"):
+        Icon("check", size="sm")
+        Text("Verified")
+    with Badge():
+        Loader(size="sm")
+        Text("Syncing")
+    with Badge(variant="secondary"):
+        Loader(variant="dots", size="sm")
+        Text("Processing")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Badge",
+        "variant": "success",
+        "children": [
+          {
+            "type": "Icon",
+            "name": "check",
+            "size": "sm"
+          },
+          {
+            "content": "Verified",
+            "type": "Text"
+          }
+        ]
+      },
+      {
+        "type": "Badge",
+        "variant": "default",
+        "children": [
+          {
+            "type": "Loader",
+            "variant": "spin",
+            "size": "sm"
+          },
+          {
+            "content": "Syncing",
+            "type": "Text"
+          }
+        ]
+      },
+      {
+        "type": "Badge",
+        "variant": "secondary",
+        "children": [
+          {
+            "type": "Loader",
+            "variant": "dots",
+            "size": "sm"
+          },
+          {
+            "content": "Processing",
+            "type": "Text"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Badge Parameters">
-<ParamField body="label" type="str" required>
-  Badge text. Can be passed as a positional argument.
+<ParamField body="label" type="str | None" default="None">
+  Badge text. Can be passed as a positional argument. When using children, omit the label and compose content directly.
 </ParamField>
 
 <ParamField body="variant" type="str" default="default">
@@ -224,8 +300,9 @@ with Column(gap=3):
 ```json Badge
 {
   "type": "Badge",
-  "label": "string (required)",
+  "label?": "string",
   "variant?": "default | secondary | destructive | success | warning | info | outline | ghost",
+  "children?": "[Component, ...]",
   "cssClass?": "string"
 }
 ```

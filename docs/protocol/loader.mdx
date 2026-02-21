@@ -1,17 +1,17 @@
 ---
-title: Spinner
-description: JSON Schema for the Spinner component.
+title: Loader
+description: JSON Schema for the Loader component.
 ---
 
-Animated loading spinner.
+Animated activity indicator.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Spinner",
-      "default": "Spinner",
+      "const": "Loader",
+      "default": "Loader",
       "type": "string"
     },
     "cssClass": {
@@ -22,9 +22,19 @@ Animated loading spinner.
       "default": null,
       "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
     },
+    "variant": {
+      "default": "spin",
+      "description": "Animation style: spin (rotating arc), dots (bouncing dots), or pulse (pulsing dot)",
+      "enum": [
+        "spin",
+        "dots",
+        "pulse"
+      ],
+      "type": "string"
+    },
     "size": {
       "default": "default",
-      "description": "Spinner size variant",
+      "description": "Indicator size variant",
       "enum": [
         "sm",
         "default",

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { componentBase } from "./base.ts";
+import { containerBase } from "./base.ts";
 
-export const badgeSchema = componentBase.extend({
+export const badgeSchema = containerBase.extend({
   type: z.literal("Badge"),
-  label: z.string(),
+  label: z.string().optional(),
   variant: z
     .enum([
       "default",

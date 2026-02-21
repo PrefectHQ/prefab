@@ -57,7 +57,7 @@ with Grid(min_column_width="240px", gap=4):
                     with Row(align="center", css_class="justify-between"):
                         Text("deep-thought")
                         with Tooltip("Computing... 7.5 million years remaining", delay=0):
-                            Spinner(size="sm")
+                            Loader(size="sm")
         with Alert(variant="info", icon="book-open"):
             AlertTitle("The Guide Says")
             AlertDescription("Prefab: Mostly Harmless.")
@@ -76,7 +76,7 @@ with Grid(min_column_width="240px", gap=4):
                 with Row(align="center", css_class="justify-between"):
                     with Row(gap=2, align="center"):
                         CardTitle("Agent Queries")
-                        Spinner(size="sm")
+                        Loader(size="sm")
                     with Select(placeholder="6 months", name="period"):
                         SelectOption(value="3m", label="3 months")
                         SelectOption(value="6m", label="6 months")
@@ -533,7 +533,8 @@ with Grid(min_column_width="240px", gap=4):
                             "delay": 0,
                             "children": [
                               {
-                                "type": "Spinner",
+                                "type": "Loader",
+                                "variant": "spin",
                                 "size": "sm"
                               }
                             ]
@@ -635,7 +636,8 @@ with Grid(min_column_width="240px", gap=4):
                             "content": "Agent Queries"
                           },
                           {
-                            "type": "Spinner",
+                            "type": "Loader",
+                            "variant": "spin",
                             "size": "sm"
                           }
                         ]

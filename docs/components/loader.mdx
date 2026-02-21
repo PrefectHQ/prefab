@@ -1,0 +1,293 @@
+---
+title: Loader
+description: Animated activity indicators for loading and processing states.
+icon: loader
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Loaders communicate that something is happening — a request in flight, content loading, or a background process running. Three visual variants cover the most common patterns.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"Loader","variant":"spin","size":"default"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Loader
+
+Loader()
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Loader",
+    "variant": "spin",
+    "size": "default"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Variants
+
+### Dots
+
+Three dots bouncing in sequence — a "typing" or "processing" indicator.
+
+<ComponentPreview json={{"view":{"type":"Loader","variant":"dots","size":"default"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Loader
+
+Loader(variant="dots")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Loader",
+    "variant": "dots",
+    "size": "default"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Pulse
+
+A pulsing dot — subtle, good for background activity or heartbeat indicators.
+
+<ComponentPreview json={{"view":{"type":"Loader","variant":"pulse","size":"default"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Loader
+
+Loader(variant="pulse")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Loader",
+    "variant": "pulse",
+    "size": "default"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Sizes
+
+All variants support three sizes.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Loader","variant":"spin","size":"sm"},{"type":"Loader","variant":"spin","size":"default"},{"type":"Loader","variant":"spin","size":"lg"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Loader
+
+with Row(gap=4, css_class="items-center"):
+    Loader(size="sm")
+    Loader(size="default")
+    Loader(size="lg")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Loader",
+        "variant": "spin",
+        "size": "sm"
+      },
+      {
+        "type": "Loader",
+        "variant": "spin",
+        "size": "default"
+      },
+      {
+        "type": "Loader",
+        "variant": "spin",
+        "size": "lg"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Examples
+
+Pair a loader with text to describe what's happening.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Fetching results...","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Loader, Text
+
+with Row(gap=2, css_class="items-center"):
+    Loader(size="sm")
+    Text("Fetching results...")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Loader",
+        "variant": "spin",
+        "size": "sm"
+      },
+      {
+        "content": "Fetching results...",
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The dots variant works well for "thinking" or "typing" states.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Agent is thinking","type":"Text"},{"type":"Loader","variant":"dots","size":"sm"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Loader, Text
+
+with Row(gap=2, css_class="items-center"):
+    Text("Agent is thinking")
+    Loader(variant="dots", size="sm")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "content": "Agent is thinking",
+        "type": "Text"
+      },
+      {
+        "type": "Loader",
+        "variant": "dots",
+        "size": "sm"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Badges accept children, so you can embed a loader directly inside and control the order.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Badge","variant":"default","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Syncing","type":"Text"}]},{"type":"Badge","variant":"secondary","children":[{"type":"Loader","variant":"dots","size":"sm"},{"content":"Processing","type":"Text"}]},{"type":"Badge","variant":"outline","children":[{"type":"Loader","variant":"pulse","size":"sm"},{"content":"Connected","type":"Text"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Badge, Loader, Text
+
+with Row(gap=4, css_class="items-center"):
+    with Badge():
+        Loader(size="sm")
+        Text("Syncing")
+    with Badge(variant="secondary"):
+        Loader(variant="dots", size="sm")
+        Text("Processing")
+    with Badge(variant="outline"):
+        Loader(variant="pulse", size="sm")
+        Text("Connected")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Badge",
+        "variant": "default",
+        "children": [
+          {
+            "type": "Loader",
+            "variant": "spin",
+            "size": "sm"
+          },
+          {
+            "content": "Syncing",
+            "type": "Text"
+          }
+        ]
+      },
+      {
+        "type": "Badge",
+        "variant": "secondary",
+        "children": [
+          {
+            "type": "Loader",
+            "variant": "dots",
+            "size": "sm"
+          },
+          {
+            "content": "Processing",
+            "type": "Text"
+          }
+        ]
+      },
+      {
+        "type": "Badge",
+        "variant": "outline",
+        "children": [
+          {
+            "type": "Loader",
+            "variant": "pulse",
+            "size": "sm"
+          },
+          {
+            "content": "Connected",
+            "type": "Text"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Loader Parameters">
+<ParamField body="variant" type="str" default="spin">
+  Animation style: `"spin"`, `"dots"`, `"pulse"`.
+</ParamField>
+
+<ParamField body="size" type="str" default="default">
+  Indicator size: `"sm"`, `"default"`, `"lg"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Loader
+{
+  "type": "Loader",
+  "variant?": "spin | dots | pulse",
+  "size?": "sm | default | lg",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Loader](/protocol/loader).
