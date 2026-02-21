@@ -362,20 +362,6 @@ def _should_rebuild_renderer(repo_root: Path) -> bool:
     )
 
 
-def _should_rebuild_playground(repo_root: Path) -> bool:
-    """Check whether the playground HTML needs rebuilding."""
-    playground_html = repo_root / "docs" / "playground.js"
-    if not playground_html.exists():
-        return True
-    output_mtime = playground_html.stat().st_mtime
-    playground_src = repo_root / "renderer" / "src" / "playground"
-    return any(
-        f.stat().st_mtime > output_mtime
-        for f in playground_src.rglob("*")
-        if f.is_file()
-    )
-
-
 @dev_app.command(name="build-docs")
 def build_docs() -> None:
     """Regenerate all doc assets: previews, CSS, playground, and protocol ref.
@@ -432,8 +418,6 @@ def build_docs() -> None:
         console.print("  [dim]→[/dim] Renderer up to date, skipping")
         copy_renderer = False
 
-    rebuild_playground = _should_rebuild_playground(repo_root)
-
     steps += [
         (
             "Rendering component previews",
@@ -472,17 +456,6 @@ def build_docs() -> None:
         ),
     ]
 
-    if rebuild_playground:
-        steps.append(
-            (
-                "Building playground",
-                ["npm", "run", "--prefix", str(renderer_dir), "build:playground"],
-                None,
-            )
-        )
-    else:
-        console.print("  [dim]→[/dim] Playground up to date, skipping")
-
     steps.append(
         (
             "Generating protocol reference",
@@ -506,13 +479,6 @@ def build_docs() -> None:
             repo_root / "docs" / "renderer.js",
         )
 
-    if rebuild_playground:
-        import json as _json
-
-        html = (renderer_dir / "dist" / "playground.html").read_text()
-        js_content = "window.__PLAYGROUND_HTML=" + _json.dumps(html) + ";\n"
-        (repo_root / "docs" / "playground.js").write_text(js_content, encoding="utf-8")
-
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
 
@@ -532,7 +498,6 @@ def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
     # Exclude generated outputs so they don't re-trigger builds.
     exclude = {
         repo_root / "docs" / "renderer.js",
-        repo_root / "docs" / "playground.js",
         repo_root / "docs" / "preview-styles.css",
     }
 

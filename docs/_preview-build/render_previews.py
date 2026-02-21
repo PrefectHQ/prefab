@@ -343,7 +343,6 @@ def main() -> None:
         if "snippets/gen" not in str(f)
         and "snippets/_gen" not in str(f)
         and f.name != "component-preview.mdx"
-        and f.name != "component-playground.mdx"
     ]
 
     if not mdx_files:
