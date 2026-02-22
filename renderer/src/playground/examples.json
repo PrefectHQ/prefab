@@ -90,6 +90,21 @@
     "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\n        \"Open on GitHub\",\n        on_click=OpenLink(\"https://github.com/{{ repo }}\"),\n    )"
   },
   {
+    "title": "from prefab_ui.components import Button",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import CallTool, SetState\n\nButton(\"Run Analysis\", on_click=CallTool(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
+  },
+  {
+    "title": "from prefab_ui.components import Input, Button, Column",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+  },
+  {
+    "title": "from prefab_ui.components import Button",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import SetState, CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
@@ -118,41 +133,6 @@
     "title": "Python icon=\"python\"",
     "category": "Actions",
     "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetInterval, SetState\n\nwith Row(gap=4, css_class=\"items-center\"):\n    Button(\n        \"Start\",\n        disabled=\"{{ running | false }}\",\n        on_click=[\n            SetState(\"running\", True),\n            SetState(\"ticks\", 0),\n            SetInterval(\n                1000,\n                while_=\"{{ running }}\",\n                on_tick=SetState(\n                    \"ticks\", \"{{ ticks + 1 }}\"\n                ),\n            ),\n        ],\n    )\n    Text(\n        \"{{ ticks | 0 }}\",\n        css_class=\"text-2xl font-mono tabular-nums\",\n    )\n    Button(\n        \"Stop\",\n        variant=\"outline\",\n        disabled=\"{{ !running }}\",\n        on_click=SetState(\"running\", False),\n    )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Slider, Muted, Column\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(\"Brightness: {{ brightness }}%\")"
-  },
-  {
-    "title": "AppResult State",
-    "category": "Actions",
-    "code": "from prefab_ui import AppResult\n\n@mcp.tool()\nasync def settings() -> AppResult:\n    return AppResult(\n        view=...,\n        state={\"volume\": 75, \"muted\": False},\n    )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui.actions import SetState\n\nset_initial_state(drive=\"improbability\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(\"Active drive: {{ drive }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Input,\n)\n\nset_initial_state(profile={\n    \"name\": \"Arthur Dent\",\n    \"title\": \"Sandwich Maker, Lamuella\",\n})\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    Input(name=\"profile.name\", placeholder=\"Name\")\n    Input(name=\"profile.title\", placeholder=\"Title\")"
-  },
-  {
-    "title": "Array Paths",
-    "category": "Actions",
-    "code": "set_initial_state(todos=[\n    {\"text\": \"Find Magrathea\", \"done\": False},\n    {\"text\": \"Have lunch\", \"done\": True},\n])\n\nwith ForEach(\"todos\"):\n    Checkbox(name=\"todos.{{ $index }}.done\")\n    Text(\"{{ $item.text }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Actions",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", \"{{ new_member }}\"),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(\"{{ crew | length }} crew members\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -195,19 +175,39 @@
     "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n        ),\n    )"
   },
   {
-    "title": "from prefab_ui.components import Button",
-    "category": "General",
-    "code": "from prefab_ui.actions import CallTool, SetState\n\nButton(\"Run Analysis\", on_click=CallTool(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Slider, Muted, Column\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(\"Brightness: {{ brightness }}%\")"
   },
   {
-    "title": "from prefab_ui.components import Input, Button, Column",
-    "category": "General",
-    "code": "from prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+    "title": "AppResult State",
+    "category": "Actions",
+    "code": "from prefab_ui import AppResult\n\n@mcp.tool()\nasync def settings() -> AppResult:\n    return AppResult(\n        view=...,\n        state={\"volume\": 75, \"muted\": False},\n    )"
   },
   {
-    "title": "from prefab_ui.components import Button",
-    "category": "General",
-    "code": "from prefab_ui.actions import SetState, CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui.actions import SetState\n\nset_initial_state(drive=\"improbability\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(\"Active drive: {{ drive }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Input,\n)\n\nset_initial_state(profile={\n    \"name\": \"Arthur Dent\",\n    \"title\": \"Sandwich Maker, Lamuella\",\n})\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    Input(name=\"profile.name\", placeholder=\"Name\")\n    Input(name=\"profile.title\", placeholder=\"Title\")"
+  },
+  {
+    "title": "Array Paths",
+    "category": "Actions",
+    "code": "set_initial_state(todos=[\n    {\"text\": \"Find Magrathea\", \"done\": False},\n    {\"text\": \"Have lunch\", \"done\": True},\n])\n\nwith ForEach(\"todos\"):\n    Checkbox(name=\"todos.{{ $index }}.done\")\n    Text(\"{{ $item.text }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column, If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", \"{{ new_member }}\"),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(\"{{ crew | length }} crew members\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1397,7 +1397,7 @@
   {
     "title": "Python expandable icon=\"python\"",
     "category": "Examples",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Button, Card, CardContent, CardFooter,\n    CardHeader, CardTitle, Column, DropZone, ForEach,\n    H3, If, Else, Muted, Row, Separator, Small,\n)\nfrom prefab_ui.actions import PopState, SetState\n\nset_initial_state(files=[])\n\nwith Card(css_class=\"w-full max-w-2xl\") as view:\n    with CardHeader():\n        with Row(gap=2, align=\"center\"):\n            H3(\"File Inbox\")\n            with If(\"{{ files | length }}\"):\n                Badge(\n                    \"{{ files | length }}\",\n                    variant=\"secondary\",\n                )\n\n    with CardContent():\n        with Column(gap=4):\n            DropZone(\n                icon=\"inbox\",\n                label=\"Drop files here\",\n                description=\"Any file type, up to 10MB each\",\n                multiple=True,\n                max_size=10_000_000,\n                name=\"files\",\n            )\n\n            with If(\"{{ files | length }}\"):\n                with Column(gap=2):\n                    with ForEach(\"files\"):\n                        with Row(gap=3, align=\"center\"):\n                            with Column(gap=0):\n                                Small(\"{{ $item.name }}\")\n                                Muted(\n                                    \"{{ $item.type }}\"\n                                    \" · {{ $item.size }} bytes\"\n                                )\n                            Button(\n                                \"×\",\n                                variant=\"ghost\",\n                                size=\"sm\",\n                                css_class=(\n                                    \"ml-auto h-6 w-6 p-0\"\n                                    \" text-muted-foreground\"\n                                ),\n                                on_click=PopState(\n                                    \"files\", \"{{ $index }}\"\n                                ),\n                            )\n\n    with CardFooter():\n        with Row(align=\"center\", css_class=\"w-full\"):\n            with If(\"{{ files | length }}\"):\n                Muted(\n                    \"{{ files | length }}\"\n                    \" {{ files | length | pluralize:'file' }}\"\n                )\n            with Else():\n                Muted(\"No files uploaded\")\n            with If(\"{{ files | length }}\"):\n                Button(\n                    \"Clear all\",\n                    variant=\"outline\",\n                    size=\"sm\",\n                    css_class=\"ml-auto\",\n                    on_click=SetState(\"files\", []),\n                )"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Button, Card, CardContent, CardFooter,\n    CardHeader, CardTitle, Column, DropZone, ForEach,\n    H3, If, Else, Muted, Row, Separator, Small,\n)\nfrom prefab_ui.actions import PopState, SetState\n\nset_initial_state(files=[])\n\nwith Card(css_class=\"w-full max-w-2xl\") as view:\n    with CardHeader():\n        with Row(gap=2, align=\"center\"):\n            H3(\"File Inbox\")\n            with If(\"{{ files | length }}\"):\n                Badge(\n                    \"{{ files | length }}\",\n                    variant=\"secondary\",\n                )\n\n    with CardContent():\n        with Column(gap=4):\n            DropZone(\n                icon=\"inbox\",\n                label=\"Drop files here\",\n                description=\"Don't worry, files aren't actually uploaded\",\n                multiple=True,\n                max_size=10_000_000,\n                name=\"files\",\n            )\n\n            with If(\"{{ files | length }}\"):\n                with Column(gap=2):\n                    with ForEach(\"files\"):\n                        with Row(gap=3, align=\"center\"):\n                            with Column(gap=0):\n                                Small(\"{{ $item.name }}\")\n                                Muted(\n                                    \"{{ $item.type }}\"\n                                    \" · {{ $item.size }} bytes\"\n                                )\n                            Button(\n                                \"×\",\n                                variant=\"ghost\",\n                                size=\"sm\",\n                                css_class=(\n                                    \"ml-auto h-6 w-6 p-0\"\n                                    \" text-muted-foreground\"\n                                ),\n                                on_click=PopState(\n                                    \"files\", \"{{ $index }}\"\n                                ),\n                            )\n\n    with CardFooter():\n        with Row(align=\"center\", css_class=\"w-full\"):\n            with If(\"{{ files | length }}\"):\n                Muted(\n                    \"{{ files | length }}\"\n                    \" {{ files | length | pluralize:'file' }}\"\n                )\n            with Else():\n                Muted(\"No files uploaded\")\n            with If(\"{{ files | length }}\"):\n                Button(\n                    \"Clear all\",\n                    variant=\"outline\",\n                    size=\"sm\",\n                    css_class=\"ml-auto\",\n                    on_click=SetState(\"files\", []),\n                )"
   },
   {
     "title": "Python icon=\"python\"",
