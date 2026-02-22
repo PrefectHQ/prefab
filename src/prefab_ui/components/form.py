@@ -36,6 +36,7 @@ from prefab_ui.components.base import (
     ContainerComponent,
     _compile_layout_classes,
     _merge_css_classes,
+    detached,
 )
 
 
@@ -158,20 +159,17 @@ class Form(ContainerComponent):
         from prefab_ui.components.button import Button
 
         if fields_only:
-            # Suppress the stack during creation to avoid duplicates
+            # Suppress auto-parenting during creation to avoid duplicates
             # (Labels/Inputs would otherwise auto-parent to both the
             # Column AND the outer context). Then manually add the
             # top-level field components to the active context.
             saved_stack = _component_stack.get()
-            _component_stack.set(None)
-            try:
+            with detached():
                 children: list[Any] = []
                 for name, field_info in model.model_fields.items():
                     component = _field_to_component(name, field_info)
                     if component is not None:
                         children.append(component)
-            finally:
-                _component_stack.set(saved_stack)
 
             if saved_stack:
                 for child in children:
@@ -185,11 +183,9 @@ class Form(ContainerComponent):
         # outer context manager (e.g. ``with Card(): Form.from_model(...)``).
         form = cls(on_submit=on_submit, css_class=css_class)
 
-        # Suppress the stack while building internal components so they
-        # don't also get auto-added to the outer container.
-        saved_stack = _component_stack.get()
-        _component_stack.set(None)
-        try:
+        # Suppress auto-parenting while building internal components so
+        # they don't also get auto-added to the outer container.
+        with detached():
             children = []
 
             for name, field_info in model.model_fields.items():
@@ -199,8 +195,6 @@ class Form(ContainerComponent):
 
             if on_submit is not None:
                 children.append(Button(submit_label, on_click=on_submit))
-        finally:
-            _component_stack.set(saved_stack)
 
         form.children = children
         return form
