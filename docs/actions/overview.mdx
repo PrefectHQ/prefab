@@ -16,26 +16,7 @@ Button("Run Analysis", on_click=CallTool("analyze"))
 Button("Reset", on_click=SetState("count", 0))
 ```
 
-## Client Actions
-
-Client actions mutate local state instantly — no server round-trip, no waiting. These are the building blocks for responsive UIs.
-
-| Action | Purpose |
-|--------|---------|
-| [State](/actions/set-state) | Set or toggle state variables (captures event values by default) |
-| [Show Toast](/actions/show-toast) | Display a notification |
-| [Open Link](/actions/open-link) | Open a URL through the host's link handler |
-| [Fetch](/actions/fetch) | Make HTTP requests directly from the browser |
-
-## MCP Actions
-
-MCP actions communicate with the host application — they call tools, send messages, or update context. Each one triggers a round-trip through the Prefab SDK.
-
-| Action | Purpose |
-|--------|---------|
-| [Call Tool](/actions/call-tool) | Call a server-side tool with optional arguments |
-| [Send Message](/actions/send-message) | Send a message to the chat as if the user typed it |
-| [Update Context](/actions/update-context) | Silently update what the model knows |
+There are two kinds of actions. **Client actions** mutate local state instantly with no server round-trip: [SetState](/actions/state), [ShowToast](/actions/show-toast), [OpenLink](/actions/open-link), [Fetch](/actions/fetch). **MCP actions** communicate with the host application through the Prefab SDK: [CallTool](/actions/call-tool), [SendMessage](/actions/send-message), [UpdateContext](/actions/update-context).
 
 ## Form Controls and State
 
