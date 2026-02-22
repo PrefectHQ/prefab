@@ -1,8 +1,8 @@
-"""Tests for context manager nesting and suppress."""
+"""Tests for context manager nesting and detached."""
 
 from __future__ import annotations
 
-from prefab_ui.components import Column, Heading, Row, Text, suppress
+from prefab_ui.components import Column, Heading, Row, Text, detached
 
 
 class TestContextManagerNesting:
@@ -54,20 +54,20 @@ class TestContextManagerNesting:
         assert len(col.children) == 0
 
 
-class TestSuppress:
-    def test_suppress_prevents_auto_attach(self):
+class TestDetached:
+    def test_prevents_auto_attach(self):
         with Column() as col:
             Text(content="attached")
-            with suppress():
-                detached = Text(content="detached")
+            with detached():
+                orphan = Text(content="detached")
         assert len(col.children) == 1
         assert col.children[0].content == "attached"  # type: ignore[attr-defined]
-        assert detached.content == "detached"
+        assert orphan.content == "detached"
 
-    def test_suppress_allows_explicit_context_managers(self):
+    def test_allows_explicit_context_managers(self):
         with Column() as outer:
             Text(content="outer-child")
-            with suppress():
+            with detached():
                 sidebar = Column()
                 with sidebar:
                     Text(content="sidebar-child")
@@ -75,35 +75,35 @@ class TestSuppress:
         assert len(sidebar.children) == 1
         assert sidebar.children[0].content == "sidebar-child"  # type: ignore[attr-defined]
 
-    def test_suppress_restores_stack(self):
+    def test_restores_stack(self):
         with Column() as col:
             Text(content="before")
-            with suppress():
-                Text(content="suppressed")
+            with detached():
+                Text(content="ignored")
             Text(content="after")
         assert len(col.children) == 2
         assert col.children[0].content == "before"  # type: ignore[attr-defined]
         assert col.children[1].content == "after"  # type: ignore[attr-defined]
 
-    def test_suppress_nested_in_suppress(self):
+    def test_nested(self):
         with Column() as col:
-            with suppress():
-                with suppress():
-                    Text(content="double-suppressed")
-                Text(content="single-suppressed")
+            with detached():
+                with detached():
+                    Text(content="double-detached")
+                Text(content="single-detached")
             Text(content="attached")
         assert len(col.children) == 1
         assert col.children[0].content == "attached"  # type: ignore[attr-defined]
 
-    def test_suppress_at_top_level(self):
-        with suppress():
+    def test_at_top_level(self):
+        with detached():
             t = Text(content="orphan")
         assert t.content == "orphan"
 
-    def test_suppress_restores_on_exception(self):
+    def test_restores_on_exception(self):
         with Column() as col:
             try:
-                with suppress():
+                with detached():
                     raise ValueError("boom")
             except ValueError:
                 pass

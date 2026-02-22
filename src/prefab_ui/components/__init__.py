@@ -11,7 +11,7 @@ from prefab_ui.components.badge import Badge
 from prefab_ui.components.base import (
     Component,
     ContainerComponent,
-    suppress,
+    detached,
 )
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
@@ -185,5 +185,5 @@ __all__ = [
     "Text",
     "Textarea",
     "Tooltip",
-    "suppress",
+    "detached",
 ]

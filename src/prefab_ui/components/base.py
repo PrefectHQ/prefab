@@ -18,17 +18,17 @@ _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
 
 
 @contextmanager
-def suppress() -> Generator[None, None, None]:
-    """Temporarily suppress auto-attachment of components to parent containers.
+def detached() -> Generator[None, None, None]:
+    """Build components detached from the current parent context.
 
-    Components created inside a ``suppress()`` block are **not** automatically
+    Components created inside a ``detached()`` block are **not** automatically
     appended as children to any enclosing context manager.  They can still be
     used as context managers themselves to collect their own children::
 
         with Column() as outer:
             Text("attached to outer")
 
-            with suppress():
+            with detached():
                 sidebar = Column()
                 with sidebar:
                     Text("attached to sidebar, not outer")

@@ -36,7 +36,7 @@ from prefab_ui.components.base import (
     ContainerComponent,
     _compile_layout_classes,
     _merge_css_classes,
-    suppress,
+    detached,
 )
 
 
@@ -164,7 +164,7 @@ class Form(ContainerComponent):
             # Column AND the outer context). Then manually add the
             # top-level field components to the active context.
             saved_stack = _component_stack.get()
-            with suppress():
+            with detached():
                 children: list[Any] = []
                 for name, field_info in model.model_fields.items():
                     component = _field_to_component(name, field_info)
@@ -185,7 +185,7 @@ class Form(ContainerComponent):
 
         # Suppress auto-parenting while building internal components so
         # they don't also get auto-added to the outer container.
-        with suppress():
+        with detached():
             children = []
 
             for name, field_info in model.model_fields.items():
