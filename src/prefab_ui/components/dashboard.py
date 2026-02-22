@@ -1,4 +1,4 @@
-"""Dashboard grid layout for explicit cell placement."""
+"""Dashboard layout for explicit cell placement."""
 
 from __future__ import annotations
 
@@ -14,13 +14,13 @@ from prefab_ui.components.base import (
 )
 
 
-class DashboardGrid(ContainerComponent):
+class Dashboard(ContainerComponent):
     """Explicit-placement grid for dashboard layouts.
 
-    Unlike ``Grid`` (auto-flow), ``DashboardGrid`` places children at
+    Unlike ``Grid`` (auto-flow), ``Dashboard`` places children at
     specific grid coordinates using ``DashboardItem`` wrappers::
 
-        with DashboardGrid(columns=12, row_height=120, gap=4):
+        with Dashboard(columns=12, row_height=120, gap=4):
             with DashboardItem(col=1, row=1, col_span=8, row_span=3):
                 LineChart(...)
             with DashboardItem(col=9, row=1, col_span=4, row_span=1):
@@ -29,7 +29,7 @@ class DashboardGrid(ContainerComponent):
     Positions are **1-indexed** (matching CSS Grid conventions).
     """
 
-    type: Literal["DashboardGrid"] = "DashboardGrid"
+    type: Literal["Dashboard"] = "Dashboard"
     columns: int = Field(default=12, description="Number of grid columns.")
     row_height: int | str = Field(
         default=120,
@@ -49,7 +49,7 @@ class DashboardGrid(ContainerComponent):
 
 
 class DashboardItem(ContainerComponent):
-    """A positioned cell within a ``DashboardGrid``.
+    """A positioned cell within a ``Dashboard``.
 
     Specifies where this item sits and how many columns/rows it spans::
 

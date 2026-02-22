@@ -61,7 +61,7 @@ import { comboboxSchema, comboboxOptionSchema } from "./combobox.ts";
 import { conditionSchema } from "./conditional.ts";
 import { columnSchema } from "./column.ts";
 import { containerSchema } from "./container.ts";
-import { dashboardGridSchema, dashboardItemSchema } from "./dashboard.ts";
+import { dashboardSchema, dashboardItemSchema } from "./dashboard.ts";
 import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
@@ -149,7 +149,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Condition: conditionSchema,
   Column: columnSchema,
   Container: containerSchema,
-  DashboardGrid: dashboardGridSchema,
+  Dashboard: dashboardSchema,
   DashboardItem: dashboardItemSchema,
   DataTable: dataTableSchema,
   DatePicker: datePickerSchema,

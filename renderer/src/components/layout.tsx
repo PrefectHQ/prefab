@@ -112,20 +112,20 @@ interface SpanProps extends DivProps {
   text?: string;
 }
 
-interface DashboardGridProps extends LayoutProps {
+interface DashboardProps extends LayoutProps {
   columns?: number;
   rowHeight?: number | string;
   rows?: number;
 }
 
-export function DashboardGrid({
+export function Dashboard({
   className,
   cssClass,
   children,
   columns = 12,
   rowHeight = 120,
   rows,
-}: DashboardGridProps) {
+}: DashboardProps) {
   const style: React.CSSProperties = {
     gridTemplateColumns: `repeat(${columns}, 1fr)`,
     ...(rows

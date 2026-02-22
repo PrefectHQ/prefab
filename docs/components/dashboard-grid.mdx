@@ -1,7 +1,7 @@
 ---
 title: Dashboard
 description: Explicit grid placement for dashboard-style layouts with positioned items.
-icon: layout-dashboard
+icon: objects-column
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
@@ -10,20 +10,20 @@ Prefab has two grid components, and the choice between them comes down to whethe
 
 - [**Grid**](/components/grid) is for uniform layouts. You set a column count and children flow in left-to-right, wrapping to new rows automatically. Every child gets the same column width. Use Grid when you have a collection of same-shaped items — a card grid, a gallery, a set of form fields.
 
-- **DashboardGrid** is for composed layouts where items have different sizes and specific positions. A chart might span 8 of 12 columns while stat cards stack in the remaining 4. A table might stretch the full width below. You place each item at exact grid coordinates and control how many columns and rows it spans.
+- **Dashboard** is for composed layouts where items have different sizes and specific positions. A chart might span 8 of 12 columns while stat cards stack in the remaining 4. A table might stretch the full width below. You place each item at exact grid coordinates and control how many columns and rows it spans.
 
-DashboardGrid works like pinning widgets to a canvas. You define the grid with a `columns` count and a `row_height`, then wrap each piece of content in a DashboardItem that declares its position (`col`, `row`) and size (`col_span`, `row_span`). Coordinates are 1-indexed, matching CSS Grid conventions.
+Dashboard works like pinning widgets to a canvas. You define the grid with a `columns` count and a `row_height`, then wrap each piece of content in a DashboardItem that declares its position (`col`, `row`) and size (`col_span`, `row_span`). Coordinates are 1-indexed, matching CSS Grid conventions.
 
 ## Basic Usage
 
-A DashboardGrid needs a `columns` count and a `row_height` (in pixels by default). Each child DashboardItem declares where it sits on the grid. Here, a 4-column grid places four blocks: A spans 2 columns across the top-left, B fills the top-right, C occupies a single cell on the second row, and D stretches across the remaining 3 columns.
+A Dashboard needs a `columns` count and a `row_height` (in pixels by default). Each child DashboardItem declares where it sits on the grid. Here, a 4-column grid places four blocks: A spans 2 columns across the top-left, B fills the top-right, C occupies a single cell on the second row, and D stretches across the remaining 3 columns.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"DashboardGrid","columns":4,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"A","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"B","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-amber-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"C","type":"Text"}]}]},{"type":"DashboardItem","col":2,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"D","type":"Text"}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Dashboard","columns":4,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"A","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"B","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-amber-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"C","type":"Text"}]}]},{"type":"DashboardItem","col":2,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"D","type":"Text"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import DashboardGrid, DashboardItem, Div, Text
+from prefab_ui.components import Dashboard, DashboardItem, Div, Text
 
-with DashboardGrid(columns=4, row_height=80, gap=4):
+with Dashboard(columns=4, row_height=80, gap=4):
     # A: starts at column 1, row 1, spans 2 columns
     with DashboardItem(col=1, row=1, col_span=2):
         with Div(css_class="bg-blue-500 rounded-md h-full flex items-center justify-center"):
@@ -45,7 +45,7 @@ with DashboardGrid(columns=4, row_height=80, gap=4):
 {
   "view": {
     "cssClass": "gap-4",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 4,
     "rowHeight": 80,
     "children": [
@@ -142,16 +142,16 @@ A common dashboard pattern uses a 12-column grid (like Bootstrap's grid system) 
 
 To make children fill their grid cells, use `css_class="h-full"` on the content inside each DashboardItem.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"DashboardGrid","columns":12,"rowHeight":100,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":8,"rowSpan":3,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Revenue Over Time"}]},{"type":"CardContent","children":[{"cssClass":"h-full bg-gradient-to-r from-blue-100 to-blue-50 rounded-md","type":"Div"}]}]}]},{"type":"DashboardItem","col":9,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Total Revenue","type":"Muted"}]},{"type":"CardContent","children":[{"content":"$45,231","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":2,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Active Users","type":"Muted"}]},{"type":"CardContent","children":[{"content":"2,350","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":3,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Conversion Rate","type":"Muted"}]},{"type":"CardContent","children":[{"content":"3.2%","type":"H2"}]}]}]},{"type":"DashboardItem","col":1,"row":4,"colSpan":12,"rowSpan":2,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Recent Transactions"}]},{"type":"CardContent","children":[{"cssClass":"h-full bg-gradient-to-r from-gray-100 to-gray-50 rounded-md","type":"Div"}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Dashboard","columns":12,"rowHeight":100,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":8,"rowSpan":3,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Revenue Over Time"}]},{"type":"CardContent","children":[{"cssClass":"h-full bg-gradient-to-r from-blue-100 to-blue-50 rounded-md","type":"Div"}]}]}]},{"type":"DashboardItem","col":9,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Total Revenue","type":"Muted"}]},{"type":"CardContent","children":[{"content":"$45,231","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":2,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Active Users","type":"Muted"}]},{"type":"CardContent","children":[{"content":"2,350","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":3,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Conversion Rate","type":"Muted"}]},{"type":"CardContent","children":[{"content":"3.2%","type":"H2"}]}]}]},{"type":"DashboardItem","col":1,"row":4,"colSpan":12,"rowSpan":2,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Recent Transactions"}]},{"type":"CardContent","children":[{"cssClass":"h-full bg-gradient-to-r from-gray-100 to-gray-50 rounded-md","type":"Div"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
     Card, CardContent, CardHeader, CardTitle,
-    DashboardGrid, DashboardItem,
+    Dashboard, DashboardItem,
     Div, H2, Muted,
 )
 
-with DashboardGrid(columns=12, row_height=100, gap=4):
+with Dashboard(columns=12, row_height=100, gap=4):
     # Chart: columns 1-8, rows 1-3 (spans all three stat card rows)
     with DashboardItem(col=1, row=1, col_span=8, row_span=3):
         with Card(css_class="h-full"):
@@ -194,7 +194,7 @@ with DashboardGrid(columns=12, row_height=100, gap=4):
 {
   "view": {
     "cssClass": "gap-4",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 12,
     "rowHeight": 100,
     "children": [
@@ -379,12 +379,12 @@ By default, every row in the grid is the same height — set by `row_height` in 
 
 <Tabs>
 <Tab title="80px rows">
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Dashboard","columns":3,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import DashboardGrid, DashboardItem, Div
+from prefab_ui.components import Dashboard, DashboardItem, Div
 
-with DashboardGrid(columns=3, row_height=80, gap=3):
+with Dashboard(columns=3, row_height=80, gap=3):
     with DashboardItem(col=1, row=1, col_span=2):
         Div(css_class="bg-blue-500 rounded-md h-full")
     with DashboardItem(col=3, row=1):
@@ -396,7 +396,7 @@ with DashboardGrid(columns=3, row_height=80, gap=3):
 {
   "view": {
     "cssClass": "gap-3",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 3,
     "rowHeight": 80,
     "children": [
@@ -447,12 +447,12 @@ with DashboardGrid(columns=3, row_height=80, gap=3):
 </ComponentPreview>
 </Tab>
 <Tab title="150px rows">
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":150,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Dashboard","columns":3,"rowHeight":150,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import DashboardGrid, DashboardItem, Div
+from prefab_ui.components import Dashboard, DashboardItem, Div
 
-with DashboardGrid(columns=3, row_height=150, gap=3):
+with Dashboard(columns=3, row_height=150, gap=3):
     with DashboardItem(col=1, row=1, col_span=2):
         Div(css_class="bg-blue-500 rounded-md h-full")
     with DashboardItem(col=3, row=1):
@@ -464,7 +464,7 @@ with DashboardGrid(columns=3, row_height=150, gap=3):
 {
   "view": {
     "cssClass": "gap-3",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 3,
     "rowHeight": 150,
     "children": [
@@ -522,16 +522,16 @@ Pass a string instead of an integer for CSS values. `row_height="auto"` makes ea
 
 You can also use `row_height="minmax(80px, auto)"` to set a minimum height while still allowing rows to expand for taller content.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":"auto","children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"This card has a paragraph of content, so the first row expands to fit. The green cell to the right stretches to match, even though its own content is short.","type":"P"}]}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Stretches","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full p-3 flex items-center","type":"Div","children":[{"cssClass":"text-white","content":"Row 2 has less content, so it's shorter.","type":"Text"}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Dashboard","columns":3,"rowHeight":"auto","children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"This card has a paragraph of content, so the first row expands to fit. The green cell to the right stretches to match, even though its own content is short.","type":"P"}]}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Stretches","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full p-3 flex items-center","type":"Div","children":[{"cssClass":"text-white","content":"Row 2 has less content, so it's shorter.","type":"Text"}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
     Card, CardContent,
-    DashboardGrid, DashboardItem,
+    Dashboard, DashboardItem,
     Div, P, Text,
 )
 
-with DashboardGrid(columns=3, row_height="auto", gap=3):
+with Dashboard(columns=3, row_height="auto", gap=3):
     # Row 1 — the card's paragraph makes this row tall
     with DashboardItem(col=1, row=1, col_span=2):
         with Card(css_class="h-full"):
@@ -552,7 +552,7 @@ with DashboardGrid(columns=3, row_height="auto", gap=3):
 {
   "view": {
     "cssClass": "gap-3",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 3,
     "rowHeight": "auto",
     "children": [
@@ -631,16 +631,16 @@ with DashboardGrid(columns=3, row_height="auto", gap=3):
 
 When items overlap on the grid (their column/row ranges intersect), they stack visually. By default, later items render on top of earlier ones. Use `z_index` to control the stacking order explicitly — higher values render on top.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"DashboardGrid","columns":6,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":4,"rowSpan":2,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Background panel","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":4,"rowSpan":2,"zIndex":1,"children":[{"cssClass":"h-full border-2 border-amber-500","type":"Card","children":[{"cssClass":"flex items-center justify-center h-full","type":"CardContent","children":[{"cssClass":"font-semibold","content":"Overlay (z_index=1)","type":"Text"}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Dashboard","columns":6,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":4,"rowSpan":2,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Background panel","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":4,"rowSpan":2,"zIndex":1,"children":[{"cssClass":"h-full border-2 border-amber-500","type":"Card","children":[{"cssClass":"flex items-center justify-center h-full","type":"CardContent","children":[{"cssClass":"font-semibold","content":"Overlay (z_index=1)","type":"Text"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
     Card, CardContent,
-    DashboardGrid, DashboardItem,
+    Dashboard, DashboardItem,
     Div, Text,
 )
 
-with DashboardGrid(columns=6, row_height=80, gap=2):
+with Dashboard(columns=6, row_height=80, gap=2):
     # This panel covers columns 1-4
     with DashboardItem(col=1, row=1, col_span=4, row_span=2):
         with Div(css_class="bg-blue-500 rounded-md h-full flex items-center justify-center"):
@@ -655,7 +655,7 @@ with DashboardGrid(columns=6, row_height=80, gap=2):
 {
   "view": {
     "cssClass": "gap-2",
-    "type": "DashboardGrid",
+    "type": "Dashboard",
     "columns": 6,
     "rowHeight": 80,
     "children": [
@@ -715,7 +715,7 @@ with DashboardGrid(columns=6, row_height=80, gap=2):
 
 ## API Reference
 
-<Card icon="code" title="DashboardGrid Parameters">
+<Card icon="code" title="Dashboard Parameters">
 <ParamField body="columns" type="int" default="12">
   Number of grid columns.
 </ParamField>
@@ -765,9 +765,9 @@ with DashboardGrid(columns=6, row_height=80, gap=2):
 
 ## Protocol Reference
 
-```json DashboardGrid
+```json Dashboard
 {
-  "type": "DashboardGrid",
+  "type": "Dashboard",
   "children?": "[DashboardItem]",
   "columns?": "number",
   "rowHeight?": "number | string",
@@ -789,4 +789,4 @@ with DashboardGrid(columns=6, row_height=80, gap=2):
 }
 ```
 
-For complete protocol schemas, see [DashboardGrid](/protocol/dashboard-grid) and [DashboardItem](/protocol/dashboard-item).
+For complete protocol schemas, see [Dashboard](/protocol/dashboard) and [DashboardItem](/protocol/dashboard-item).

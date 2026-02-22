@@ -1,12 +1,12 @@
 /**
- * Zod schemas for DashboardGrid and DashboardItem.
+ * Zod schemas for Dashboard and DashboardItem.
  */
 
 import { z } from "zod";
 import { containerBase } from "./base.ts";
 
-export const dashboardGridSchema = containerBase.extend({
-  type: z.literal("DashboardGrid"),
+export const dashboardSchema = containerBase.extend({
+  type: z.literal("Dashboard"),
   columns: z.number().optional(),
   rowHeight: z.union([z.number(), z.string()]).optional(),
   rows: z.number().optional(),

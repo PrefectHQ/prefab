@@ -1,16 +1,16 @@
-"""Tests for DashboardGrid and DashboardItem components."""
+"""Tests for Dashboard and DashboardItem components."""
 
 import pytest
 
-from prefab_ui.components.dashboard import DashboardGrid, DashboardItem
+from prefab_ui.components.dashboard import Dashboard, DashboardItem
 from prefab_ui.components.text import Text
 
 
-class TestDashboardGrid:
+class TestDashboard:
     def test_default_serialization(self) -> None:
-        grid = DashboardGrid()
+        grid = Dashboard()
         d = grid.to_json()
-        assert d["type"] == "DashboardGrid"
+        assert d["type"] == "Dashboard"
         assert d["columns"] == 12
         assert d["rowHeight"] == 120
         assert "rows" not in d
@@ -18,40 +18,40 @@ class TestDashboardGrid:
         assert "cssClass" not in d
 
     def test_custom_columns_and_row_height(self) -> None:
-        grid = DashboardGrid(columns=6, row_height=200)
+        grid = Dashboard(columns=6, row_height=200)
         d = grid.to_json()
         assert d["columns"] == 6
         assert d["rowHeight"] == 200
 
     def test_string_row_height(self) -> None:
-        grid = DashboardGrid(row_height="auto")
+        grid = Dashboard(row_height="auto")
         d = grid.to_json()
         assert d["rowHeight"] == "auto"
 
     def test_fixed_rows(self) -> None:
-        grid = DashboardGrid(rows=4)
+        grid = Dashboard(rows=4)
         d = grid.to_json()
         assert d["rows"] == 4
 
     def test_gap_compiles_to_css_class(self) -> None:
-        grid = DashboardGrid(gap=4)
+        grid = Dashboard(gap=4)
         d = grid.to_json()
         assert d["cssClass"] == "gap-4"
         assert "gap" not in d
 
     def test_gap_tuple_compiles_to_css_class(self) -> None:
-        grid = DashboardGrid(gap=(2, 4))
+        grid = Dashboard(gap=(2, 4))
         d = grid.to_json()
         assert d["cssClass"] == "gap-x-2 gap-y-4"
 
     def test_gap_merges_with_css_class(self) -> None:
-        grid = DashboardGrid(gap=4, css_class="p-2")
+        grid = Dashboard(gap=4, css_class="p-2")
         d = grid.to_json()
         assert "gap-4" in d["cssClass"]
         assert "p-2" in d["cssClass"]
 
     def test_context_manager_collects_children(self) -> None:
-        with DashboardGrid() as grid:
+        with Dashboard() as grid:
             with DashboardItem():
                 Text("cell 1")
             with DashboardItem():
@@ -59,7 +59,7 @@ class TestDashboardGrid:
         assert len(grid.children) == 2
 
     def test_children_serialized(self) -> None:
-        with DashboardGrid() as grid:
+        with Dashboard() as grid:
             with DashboardItem():
                 Text("hello")
         d = grid.to_json()
