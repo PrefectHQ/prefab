@@ -1,11 +1,8 @@
 # Publishes @prefecthq/prefab-ui to npm on release.
 #
-# Currently Mintlify loads renderer.js from the repo (committed by
-# build-renderer.yml on PR). Once we're cutting regular releases, we
-# should switch published docs to load from the npm CDN instead and
-# stop committing renderer.js to git. The CDN fallback in
-# component-preview.mdx already supports this — just remove
-# docs/renderer.js from the repo and gitignore it.
+# docs/renderer.js is a stable loader committed to the repo that imports
+# from @latest on the CDN via a stable _chunks/embed.mjs shim. New
+# releases are picked up automatically — no docs rebuild needed.
 name: Publish renderer to npm
 
 on:
