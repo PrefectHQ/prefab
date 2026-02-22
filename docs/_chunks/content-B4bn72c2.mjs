@@ -1,4 +1,5 @@
-import { g as Zt, j as ce, r as il, b as bi } from "./embed-B1RIUKmL.mjs";
+import { j as ce, a as bi } from "./embed-CQ69ppdm.mjs";
+import { g as Zt, a as il } from "./icons-xEV2Rqfo.mjs";
 var kt, Cr;
 function ol() {
   if (Cr) return kt;
@@ -14095,7 +14096,7 @@ xe.registerLanguage("md", Oi);
 function Bo(e, t) {
   return t && xe.getLanguage(t) ? xe.highlight(e, { language: t }).value : xe.highlightAuto(e).value;
 }
-function Yp({
+function Xp({
   code: e,
   content: t,
   language: n,
@@ -14124,7 +14125,7 @@ function Yp({
     }
   );
 }
-function Xp({
+function Qp({
   content: e,
   text: t,
   className: n,
@@ -14172,6 +14173,6 @@ function Xp({
   ) });
 }
 export {
-  Yp as Code,
-  Xp as Markdown
+  Xp as Code,
+  Qp as Markdown
 };

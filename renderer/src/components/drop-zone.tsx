@@ -7,7 +7,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { resolveIcon } from "@/lib/icons";
+import { useIcon } from "@/lib/icons";
 import { readFiles, filterByAccept } from "../file-utils";
 
 interface PrefabDropZoneProps {
@@ -99,7 +99,7 @@ export function PrefabDropZone({
     [disabled],
   );
 
-  const IconComponent = resolveIcon(icon ?? "upload");
+  const IconComponent = useIcon(icon ?? "upload");
 
   return (
     <div

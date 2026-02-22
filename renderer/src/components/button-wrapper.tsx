@@ -8,7 +8,7 @@
 
 import type { ReactNode } from "react";
 import { Button, type ButtonProps } from "@/ui/button";
-import { resolveIcon } from "@/lib/icons";
+import { useIcon } from "@/lib/icons";
 
 interface PrefabButtonProps extends ButtonProps {
   icon?: string;
@@ -16,7 +16,7 @@ interface PrefabButtonProps extends ButtonProps {
 }
 
 export function PrefabButton({ icon, children, ...props }: PrefabButtonProps) {
-  const IconComponent = icon ? resolveIcon(icon) : undefined;
+  const IconComponent = useIcon(icon);
   const isIconSize =
     typeof props.size === "string" && props.size.startsWith("icon");
 

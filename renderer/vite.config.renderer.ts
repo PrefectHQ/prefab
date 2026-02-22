@@ -40,6 +40,16 @@ export default defineConfig({
         // as non-module scripts, breaking ESM chunks. Using .mjs extension
         // avoids this — Mintlify only processes .js files.
         chunkFileNames: "_chunks/[name]-[hash].mjs",
+        manualChunks(id) {
+          // The full lucide-react icon barrel (~500-800KB) is lazy-loaded
+          // via icons-barrel.ts. Force it into its own chunk so the barrel
+          // doesn't get pulled into the core embed chunk. Individual icon
+          // imports (Check, X, etc.) used by UI primitives are NOT matched
+          // here — they stay in core via tree-shaking.
+          if (id.includes("icons-barrel")) {
+            return "icons";
+          }
+        },
       },
     },
     outDir: "dist",
