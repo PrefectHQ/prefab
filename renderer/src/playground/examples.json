@@ -582,6 +582,36 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import DashboardGrid, DashboardItem, Div, Text\n\nwith DashboardGrid(columns=4, row_height=80, gap=4):\n    with DashboardItem(col=1, row=1, col_span=2):\n        with Div(css_class=\"bg-blue-500 rounded-md h-full flex items-center justify-center\"):\n            Text(\"A\", css_class=\"text-white font-semibold\")\n    with DashboardItem(col=3, row=1, col_span=2):\n        with Div(css_class=\"bg-emerald-500 rounded-md h-full flex items-center justify-center\"):\n            Text(\"B\", css_class=\"text-white font-semibold\")\n    with DashboardItem(col=1, row=2):\n        with Div(css_class=\"bg-amber-500 rounded-md h-full flex items-center justify-center\"):\n            Text(\"C\", css_class=\"text-white font-semibold\")\n    with DashboardItem(col=2, row=2, col_span=3):\n        with Div(css_class=\"bg-purple-500 rounded-md h-full flex items-center justify-center\"):\n            Text(\"D\", css_class=\"text-white font-semibold\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Card, CardContent, CardHeader, CardTitle,\n    DashboardGrid, DashboardItem,\n    Div, H2, Muted,\n)\n\nwith DashboardGrid(columns=12, row_height=100, gap=4):\n    # Wide chart spanning 8 columns and 3 rows\n    with DashboardItem(col=1, row=1, col_span=8, row_span=3):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Revenue Over Time\")\n            with CardContent():\n                Div(css_class=\"h-40 bg-gradient-to-r from-blue-100 to-blue-50 rounded-md\")\n\n    # Stat cards stacked on the right\n    with DashboardItem(col=9, row=1, col_span=4):\n        with Card(css_class=\"h-full\"):\n            with CardHeader(css_class=\"pb-2\"):\n                Muted(\"Total Revenue\")\n            with CardContent():\n                H2(\"$45,231\")\n\n    with DashboardItem(col=9, row=2, col_span=4):\n        with Card(css_class=\"h-full\"):\n            with CardHeader(css_class=\"pb-2\"):\n                Muted(\"Active Users\")\n            with CardContent():\n                H2(\"2,350\")\n\n    with DashboardItem(col=9, row=3, col_span=4):\n        with Card(css_class=\"h-full\"):\n            with CardHeader(css_class=\"pb-2\"):\n                Muted(\"Conversion Rate\")\n            with CardContent():\n                H2(\"3.2%\")\n\n    # Full-width data table below\n    with DashboardItem(col=1, row=4, col_span=12, row_span=2):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Recent Transactions\")\n            with CardContent():\n                Div(css_class=\"h-24 bg-gradient-to-r from-gray-100 to-gray-50 rounded-md\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import DashboardGrid, DashboardItem, Div\n\nwith DashboardGrid(columns=3, row_height=80, gap=3):\n    with DashboardItem(col=1, row=1, col_span=2):\n        Div(css_class=\"bg-blue-500 rounded-md h-full\")\n    with DashboardItem(col=3, row=1):\n        Div(css_class=\"bg-emerald-500 rounded-md h-full\")\n    with DashboardItem(col=1, row=2, col_span=3):\n        Div(css_class=\"bg-purple-500 rounded-md h-full\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import DashboardGrid, DashboardItem, Div\n\nwith DashboardGrid(columns=3, row_height=150, gap=3):\n    with DashboardItem(col=1, row=1, col_span=2):\n        Div(css_class=\"bg-blue-500 rounded-md h-full\")\n    with DashboardItem(col=3, row=1):\n        Div(css_class=\"bg-emerald-500 rounded-md h-full\")\n    with DashboardItem(col=1, row=2, col_span=3):\n        Div(css_class=\"bg-purple-500 rounded-md h-full\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Card, CardContent,\n    DashboardGrid, DashboardItem,\n    P,\n)\n\nwith DashboardGrid(columns=3, row_height=\"auto\", gap=3):\n    with DashboardItem(col=1, row=1, col_span=2):\n        with Card():\n            with CardContent():\n                P('This card sizes to its content because row_height is set to \"auto\".')\n    with DashboardItem(col=3, row=1):\n        with Card():\n            with CardContent():\n                P(\"Short.\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Card, CardContent,\n    DashboardGrid, DashboardItem,\n    Div, Text,\n)\n\nwith DashboardGrid(columns=6, row_height=80, gap=2):\n    with DashboardItem(col=1, row=1, col_span=4, row_span=2):\n        with Div(css_class=\"bg-blue-500 rounded-md h-full flex items-center justify-center\"):\n            Text(\"Background panel\", css_class=\"text-white font-semibold\")\n    with DashboardItem(col=3, row=1, col_span=4, row_span=2, z_index=1):\n        with Card(css_class=\"h-full border-2 border-amber-500\"):\n            with CardContent(css_class=\"flex items-center justify-center h-full\"):\n                Text(\"Overlay (z_index=1)\", css_class=\"font-semibold\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"email\", header=\"Email\"),\n        DataTableColumn(key=\"role\", header=\"Role\", sortable=True),\n    ],\n    rows=[\n        {\"name\": \"Alice Johnson\", \"email\": \"alice@example.com\", \"role\": \"Admin\"},\n        {\"name\": \"Bob Smith\", \"email\": \"bob@example.com\", \"role\": \"Editor\"},\n        {\"name\": \"Carol White\", \"email\": \"carol@example.com\", \"role\": \"Viewer\"},\n    ],\n    searchable=True,\n)"
   },
   {

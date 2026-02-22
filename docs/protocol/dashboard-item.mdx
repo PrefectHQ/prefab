@@ -1,0 +1,73 @@
+---
+title: DashboardItem
+description: JSON Schema for the DashboardItem component.
+---
+
+A positioned cell within a `DashboardGrid`.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "DashboardItem",
+      "default": "DashboardItem",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    },
+    "col": {
+      "default": 1,
+      "description": "Starting column (1-indexed).",
+      "type": "integer"
+    },
+    "row": {
+      "default": 1,
+      "description": "Starting row (1-indexed).",
+      "type": "integer"
+    },
+    "colSpan": {
+      "default": 1,
+      "description": "Number of columns to span.",
+      "type": "integer"
+    },
+    "rowSpan": {
+      "default": 1,
+      "description": "Number of rows to span.",
+      "type": "integer"
+    },
+    "zIndex": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS z-index for layering."
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

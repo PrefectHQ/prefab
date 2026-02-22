@@ -1,0 +1,746 @@
+---
+title: DashboardGrid
+description: Explicit grid placement for dashboard-style layouts with positioned items.
+icon: layout-dashboard
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+DashboardGrid places children at exact grid coordinates using DashboardItem wrappers. Each item specifies its column, row, and span — giving you full control over a dashboard canvas. Positions are 1-indexed, matching CSS Grid conventions.
+
+For auto-flow grids where children fill cells left-to-right, use [Grid](/components/grid) instead.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"DashboardGrid","columns":4,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"A","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"B","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-amber-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"C","type":"Text"}]}]},{"type":"DashboardItem","col":2,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"D","type":"Text"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DashboardGrid, DashboardItem, Div, Text
+
+with DashboardGrid(columns=4, row_height=80, gap=4):
+    with DashboardItem(col=1, row=1, col_span=2):
+        with Div(css_class="bg-blue-500 rounded-md h-full flex items-center justify-center"):
+            Text("A", css_class="text-white font-semibold")
+    with DashboardItem(col=3, row=1, col_span=2):
+        with Div(css_class="bg-emerald-500 rounded-md h-full flex items-center justify-center"):
+            Text("B", css_class="text-white font-semibold")
+    with DashboardItem(col=1, row=2):
+        with Div(css_class="bg-amber-500 rounded-md h-full flex items-center justify-center"):
+            Text("C", css_class="text-white font-semibold")
+    with DashboardItem(col=2, row=2, col_span=3):
+        with Div(css_class="bg-purple-500 rounded-md h-full flex items-center justify-center"):
+            Text("D", css_class="text-white font-semibold")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "DashboardGrid",
+    "columns": 4,
+    "rowHeight": 80,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "A",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-emerald-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "B",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 1,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-amber-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "C",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 2,
+        "row": 2,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-purple-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "D",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Dashboard Layout
+
+A realistic dashboard with a wide chart area, stat cards on the right, and a full-width data section below.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"DashboardGrid","columns":12,"rowHeight":100,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":8,"rowSpan":3,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Revenue Over Time"}]},{"type":"CardContent","children":[{"cssClass":"h-40 bg-gradient-to-r from-blue-100 to-blue-50 rounded-md","type":"Div"}]}]}]},{"type":"DashboardItem","col":9,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Total Revenue","type":"Muted"}]},{"type":"CardContent","children":[{"content":"$45,231","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":2,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Active Users","type":"Muted"}]},{"type":"CardContent","children":[{"content":"2,350","type":"H2"}]}]}]},{"type":"DashboardItem","col":9,"row":3,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"pb-2","type":"CardHeader","children":[{"content":"Conversion Rate","type":"Muted"}]},{"type":"CardContent","children":[{"content":"3.2%","type":"H2"}]}]}]},{"type":"DashboardItem","col":1,"row":4,"colSpan":12,"rowSpan":2,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Recent Transactions"}]},{"type":"CardContent","children":[{"cssClass":"h-24 bg-gradient-to-r from-gray-100 to-gray-50 rounded-md","type":"Div"}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card, CardContent, CardHeader, CardTitle,
+    DashboardGrid, DashboardItem,
+    Div, H2, Muted,
+)
+
+with DashboardGrid(columns=12, row_height=100, gap=4):
+    # Wide chart spanning 8 columns and 3 rows
+    with DashboardItem(col=1, row=1, col_span=8, row_span=3):
+        with Card():
+            with CardHeader():
+                CardTitle("Revenue Over Time")
+            with CardContent():
+                Div(css_class="h-40 bg-gradient-to-r from-blue-100 to-blue-50 rounded-md")
+
+    # Stat cards stacked on the right
+    with DashboardItem(col=9, row=1, col_span=4):
+        with Card(css_class="h-full"):
+            with CardHeader(css_class="pb-2"):
+                Muted("Total Revenue")
+            with CardContent():
+                H2("$45,231")
+
+    with DashboardItem(col=9, row=2, col_span=4):
+        with Card(css_class="h-full"):
+            with CardHeader(css_class="pb-2"):
+                Muted("Active Users")
+            with CardContent():
+                H2("2,350")
+
+    with DashboardItem(col=9, row=3, col_span=4):
+        with Card(css_class="h-full"):
+            with CardHeader(css_class="pb-2"):
+                Muted("Conversion Rate")
+            with CardContent():
+                H2("3.2%")
+
+    # Full-width data table below
+    with DashboardItem(col=1, row=4, col_span=12, row_span=2):
+        with Card():
+            with CardHeader():
+                CardTitle("Recent Transactions")
+            with CardContent():
+                Div(css_class="h-24 bg-gradient-to-r from-gray-100 to-gray-50 rounded-md")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "DashboardGrid",
+    "columns": 12,
+    "rowHeight": 100,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 8,
+        "rowSpan": 3,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Revenue Over Time"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "h-40 bg-gradient-to-r from-blue-100 to-blue-50 rounded-md",
+                    "type": "Div"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 9,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "pb-2",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "content": "Total Revenue",
+                    "type": "Muted"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "$45,231",
+                    "type": "H2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 9,
+        "row": 2,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "pb-2",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "content": "Active Users",
+                    "type": "Muted"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "2,350",
+                    "type": "H2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 9,
+        "row": 3,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "pb-2",
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "content": "Conversion Rate",
+                    "type": "Muted"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "3.2%",
+                    "type": "H2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 4,
+        "colSpan": 12,
+        "rowSpan": 2,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Recent Transactions"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "h-24 bg-gradient-to-r from-gray-100 to-gray-50 rounded-md",
+                    "type": "Div"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Row Height
+
+Control the height of auto-generated rows with `row_height`. Pass an integer for pixels or a string for any CSS value.
+
+<Tabs>
+<Tab title="80px rows">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DashboardGrid, DashboardItem, Div
+
+with DashboardGrid(columns=3, row_height=80, gap=3):
+    with DashboardItem(col=1, row=1, col_span=2):
+        Div(css_class="bg-blue-500 rounded-md h-full")
+    with DashboardItem(col=3, row=1):
+        Div(css_class="bg-emerald-500 rounded-md h-full")
+    with DashboardItem(col=1, row=2, col_span=3):
+        Div(css_class="bg-purple-500 rounded-md h-full")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "DashboardGrid",
+    "columns": 3,
+    "rowHeight": 80,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 1,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-emerald-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-purple-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title="150px rows">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":150,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full","type":"Div"}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full","type":"Div"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DashboardGrid, DashboardItem, Div
+
+with DashboardGrid(columns=3, row_height=150, gap=3):
+    with DashboardItem(col=1, row=1, col_span=2):
+        Div(css_class="bg-blue-500 rounded-md h-full")
+    with DashboardItem(col=3, row=1):
+        Div(css_class="bg-emerald-500 rounded-md h-full")
+    with DashboardItem(col=1, row=2, col_span=3):
+        Div(css_class="bg-purple-500 rounded-md h-full")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "DashboardGrid",
+    "columns": 3,
+    "rowHeight": 150,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 1,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-emerald-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-purple-500 rounded-md h-full",
+            "type": "Div"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+<Tab title="auto rows">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":"auto","children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"content":"This card sizes to its content because row_height is set to \"auto\".","type":"P"}]}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"content":"Short.","type":"P"}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card, CardContent,
+    DashboardGrid, DashboardItem,
+    P,
+)
+
+with DashboardGrid(columns=3, row_height="auto", gap=3):
+    with DashboardItem(col=1, row=1, col_span=2):
+        with Card():
+            with CardContent():
+                P('This card sizes to its content because row_height is set to "auto".')
+    with DashboardItem(col=3, row=1):
+        with Card():
+            with CardContent():
+                P("Short.")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "DashboardGrid",
+    "columns": 3,
+    "rowHeight": "auto",
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "This card sizes to its content because row_height is set to \"auto\".",
+                    "type": "P"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 1,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "Short.",
+                    "type": "P"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+</Tab>
+</Tabs>
+
+## Layering
+
+Items can overlap. Use `z_index` to control which item renders on top.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"DashboardGrid","columns":6,"rowHeight":80,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":4,"rowSpan":2,"children":[{"cssClass":"bg-blue-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Background panel","type":"Text"}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":4,"rowSpan":2,"zIndex":1,"children":[{"cssClass":"h-full border-2 border-amber-500","type":"Card","children":[{"cssClass":"flex items-center justify-center h-full","type":"CardContent","children":[{"cssClass":"font-semibold","content":"Overlay (z_index=1)","type":"Text"}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card, CardContent,
+    DashboardGrid, DashboardItem,
+    Div, Text,
+)
+
+with DashboardGrid(columns=6, row_height=80, gap=2):
+    with DashboardItem(col=1, row=1, col_span=4, row_span=2):
+        with Div(css_class="bg-blue-500 rounded-md h-full flex items-center justify-center"):
+            Text("Background panel", css_class="text-white font-semibold")
+    with DashboardItem(col=3, row=1, col_span=4, row_span=2, z_index=1):
+        with Card(css_class="h-full border-2 border-amber-500"):
+            with CardContent(css_class="flex items-center justify-center h-full"):
+                Text("Overlay (z_index=1)", css_class="font-semibold")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "DashboardGrid",
+    "columns": 6,
+    "rowHeight": 80,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 2,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "Background panel",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 2,
+        "zIndex": 1,
+        "children": [
+          {
+            "cssClass": "h-full border-2 border-amber-500",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "flex items-center justify-center h-full",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "font-semibold",
+                    "content": "Overlay (z_index=1)",
+                    "type": "Text"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="DashboardGrid Parameters">
+<ParamField body="columns" type="int" default="12">
+  Number of grid columns.
+</ParamField>
+
+<ParamField body="row_height" type="int | str" default="120">
+  Height of each auto-generated row. Integer for pixels, string for any CSS value (e.g. `"auto"`, `"minmax(100px, auto)"`).
+</ParamField>
+
+<ParamField body="rows" type="int | None" default="None">
+  Fixed number of rows. When set, uses `grid-template-rows` instead of `grid-auto-rows`. Omit for auto-expanding rows.
+</ParamField>
+
+<ParamField body="gap" type="int | tuple | Responsive | None" default="None">
+  Gap between items. An int maps to `gap-{n}`. A tuple `(x, y)` sets per-axis gaps.
+</ParamField>
+
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="DashboardItem Parameters">
+<ParamField body="col" type="int" default="1">
+  Starting column (1-indexed).
+</ParamField>
+
+<ParamField body="row" type="int" default="1">
+  Starting row (1-indexed).
+</ParamField>
+
+<ParamField body="col_span" type="int" default="1">
+  Number of columns to span.
+</ParamField>
+
+<ParamField body="row_span" type="int" default="1">
+  Number of rows to span.
+</ParamField>
+
+<ParamField body="z_index" type="int | None" default="None">
+  CSS z-index for layering overlapping items.
+</ParamField>
+
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json DashboardGrid
+{
+  "type": "DashboardGrid",
+  "children?": "[DashboardItem]",
+  "columns?": "number",
+  "rowHeight?": "number | string",
+  "rows?": "number",
+  "cssClass?": "string"
+}
+```
+
+```json DashboardItem
+{
+  "type": "DashboardItem",
+  "children?": "[Component]",
+  "col?": "number",
+  "row?": "number",
+  "colSpan?": "number",
+  "rowSpan?": "number",
+  "zIndex?": "number",
+  "cssClass?": "string"
+}
+```
+
+For complete protocol schemas, see [DashboardGrid](/protocol/dashboard-grid) and [DashboardItem](/protocol/dashboard-item).

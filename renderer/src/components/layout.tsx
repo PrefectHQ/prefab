@@ -112,6 +112,66 @@ interface SpanProps extends DivProps {
   text?: string;
 }
 
+interface DashboardGridProps extends LayoutProps {
+  columns?: number;
+  rowHeight?: number | string;
+  rows?: number;
+}
+
+export function DashboardGrid({
+  className,
+  cssClass,
+  children,
+  columns = 12,
+  rowHeight = 120,
+  rows,
+}: DashboardGridProps) {
+  const style: React.CSSProperties = {
+    gridTemplateColumns: `repeat(${columns}, 1fr)`,
+    ...(rows
+      ? { gridTemplateRows: `repeat(${rows}, 1fr)` }
+      : {
+          gridAutoRows:
+            typeof rowHeight === "number" ? `${rowHeight}px` : rowHeight,
+        }),
+  };
+  return (
+    <div className={cn("grid w-full", className, cssClass)} style={style}>
+      {children}
+    </div>
+  );
+}
+
+interface DashboardItemProps extends LayoutProps {
+  col?: number;
+  row?: number;
+  colSpan?: number;
+  rowSpan?: number;
+  zIndex?: number;
+}
+
+export function DashboardItem({
+  className,
+  cssClass,
+  children,
+  col = 1,
+  row = 1,
+  colSpan = 1,
+  rowSpan = 1,
+  zIndex,
+}: DashboardItemProps) {
+  const style: React.CSSProperties = {
+    gridColumn: `${col} / span ${colSpan}`,
+    gridRow: `${row} / span ${rowSpan}`,
+    ...(zIndex != null ? { zIndex } : {}),
+  };
+  return (
+    <div className={cn("min-w-0 min-h-0", className, cssClass)} style={style}>
+      {children}
+    </div>
+  );
+}
+
 export function Span({
   className,
   cssClass,
