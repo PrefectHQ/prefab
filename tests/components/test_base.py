@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from prefab_ui.components import Column, Heading, Row, Text, detached
+from prefab_ui.components.base import ContainerComponent
 
 
 class TestContextManagerNesting:
@@ -52,6 +53,50 @@ class TestContextManagerNesting:
         col = Column()
         Text(content="orphan")
         assert len(col.children) == 0
+
+
+class TestExplicitChildren:
+    def test_no_double_append(self):
+        """children= kwarg should not also auto-attach to the outer parent."""
+        with Column() as outer:
+            Row(children=[Text(content="inner")])
+        assert len(outer.children) == 1
+        assert isinstance(outer.children[0], Row)
+        assert len(outer.children[0].children) == 1
+
+    def test_mixed_explicit_and_auto(self):
+        with Column() as outer:
+            Text(content="auto")
+            Row(children=[Text(content="explicit")])
+            Text(content="also-auto")
+        assert len(outer.children) == 3
+        assert outer.children[0].content == "auto"  # type: ignore[attr-defined]
+        assert isinstance(outer.children[1], Row)
+        assert outer.children[2].content == "also-auto"  # type: ignore[attr-defined]
+
+    def test_multiple_explicit_children(self):
+        with Column() as outer:
+            Row(children=[Text(content="a"), Text(content="b"), Text(content="c")])
+        assert len(outer.children) == 1
+        inner_row = outer.children[0]
+        assert isinstance(inner_row, ContainerComponent)
+        assert len(inner_row.children) == 3
+
+    def test_nested_explicit_children(self):
+        with Column() as outer:
+            Row(children=[Column(children=[Text(content="deep")])])
+        assert len(outer.children) == 1
+        inner_row = outer.children[0]
+        assert isinstance(inner_row, ContainerComponent)
+        assert len(inner_row.children) == 1
+        inner_col = inner_row.children[0]
+        assert isinstance(inner_col, ContainerComponent)
+        assert len(inner_col.children) == 1
+
+    def test_explicit_children_outside_context(self):
+        """No stack parent — explicit children should just work."""
+        row = Row(children=[Text(content="a"), Text(content="b")])
+        assert len(row.children) == 2
 
 
 class TestDetached:
