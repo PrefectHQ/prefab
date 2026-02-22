@@ -1,4 +1,9 @@
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Rewrite the renderer entry to use dynamic import() instead of static import.
@@ -8,9 +13,10 @@ import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
  * Dynamic `import()` works in both module and non-module scripts, so we
  * rewrite the thin entry to a one-liner that loads the real chunk.
  *
- * Chunks use a `_chunks/` subdirectory so Mintlify doesn't inline them
- * (it only processes top-level .js files). The absolute path ensures the
- * import resolves correctly regardless of the current page URL.
+ * Chunks use .mjs extension to avoid Mintlify inlining them. On deployed
+ * Mintlify, .mjs files can't be served as static assets (the Next.js
+ * catch-all returns text/html), so the entry loads them from jsdelivr CDN
+ * using the npm package version. Local dev uses local paths directly.
  */
 export function rewriteEntryLoader(): Plugin {
   return {
@@ -21,18 +27,24 @@ export function rewriteEntryLoader(): Plugin {
       if (!entry || entry.type !== "chunk") return;
 
       // Find the chunk path from the static import in the generated entry.
-      // Vite generates: import { m as o } from "./_chunks/embed-HASH.js";
       const match = entry.code.match(/from\s+["'](\.\/_chunks\/[^"']+)['"]/);
       if (!match) return;
 
-      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.js").
+      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
       const chunkPath = match[1].replace(/^\.\//, "");
 
-      // Use an absolute path so the import resolves correctly regardless of
-      // the current page URL. Mintlify inlines renderer.js as a non-module
-      // <script> where dynamic import() resolves relative to the page URL
-      // (e.g. /components/button). An absolute path avoids this problem.
-      entry.code = `window.__prefabReady=import("/${chunkPath}");\n`;
+      // Read package.json to construct the CDN URL.
+      const pkg = JSON.parse(
+        readFileSync(resolve(__dirname, "package.json"), "utf-8"),
+      );
+      const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/`;
+
+      entry.code = [
+        `(function(){`,
+        `var base=window.location.hostname==="localhost"?"/":"${cdnBase}";`,
+        `window.__prefabReady=import(base+"${chunkPath}");`,
+        `})();\n`,
+      ].join("");
     },
   };
 }
@@ -50,10 +62,6 @@ export function tailwindShadowDom(): Plugin {
     transform(code, id) {
       if (!/\.css($|\?)/.test(id)) return;
 
-      // At enforce:"post", CSS is already wrapped in JS by Vite's CSS handler.
-      // The @property blocks are inside a JS string literal with escaped newlines.
-
-      // First pass: extract initial-value from blocks that have one.
       const defaults: string[] = [];
       let stripped = code.replace(
         /@property\s+(--[\w-]+)\s*\{[^}]*?initial-value:\s*([^;\\n}]+)[^}]*?\}/g,
@@ -64,15 +72,12 @@ export function tailwindShadowDom(): Plugin {
         },
       );
 
-      // Second pass: strip remaining @property blocks (no initial-value).
-      // These are document-level constructs that are inert inside shadow DOM.
       stripped = stripped.replace(/@property\s+--[\w-]+\s*\{[^}]*?\}/g, "");
 
       if (stripped === code) return;
 
       if (defaults.length === 0) return stripped;
 
-      // Prepend the :root, :host block into the CSS string inside the JS module.
       const prefix = `:root, :host {\\n${defaults.join("\\n")}\\n}\\n`;
       return stripped.replace(
         /(const __vite__css = "|export default ")/,

@@ -35,7 +35,10 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        chunkFileNames: "_chunks/[name]-[hash].js",
+        // Chunks use .mjs so Mintlify doesn't inline them as <script> tags
+        // (it only inlines .js files). On deployed Mintlify the entry loader
+        // imports these from CDN; local dev serves them directly.
+        chunkFileNames: "_chunks/[name]-[hash].mjs",
         manualChunks(id) {
           // The full lucide-react icon barrel (~500-800KB) is lazy-loaded
           // via icons-barrel.ts. Force it into its own chunk so the barrel

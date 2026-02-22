@@ -1,7 +1,7 @@
 var CC = Object.defineProperty;
 var _C = (e, n, r) => n in e ? CC(e, n, { enumerable: !0, configurable: !0, writable: !0, value: r }) : e[n] = r;
 var Fc = (e, n, r) => _C(e, typeof n != "symbol" ? n + "" : n, r);
-import { r as Bb, g as RC, R as K, a as w, b as $g, X as Ib, U as EC, T as zC, L as Ub, I as TC, C as AC, c as Fb, d as Zb, e as Gb, f as NC, h as OC, i as zs, j as Ts, k as DC } from "./icons-xEV2Rqfo.js";
+import { r as Bb, g as RC, R as K, a as w, b as $g, X as Ib, U as EC, T as zC, L as Ub, I as TC, C as AC, c as Fb, d as Zb, e as Gb, f as NC, h as OC, i as zs, j as Ts, k as DC } from "./icons-xEV2Rqfo.mjs";
 var zf = { exports: {} }, il = {};
 /**
  * @license React
@@ -20140,7 +20140,7 @@ const T4 = {
 };
 let Gf = null, ei = null;
 function A4() {
-  return Gf || (Gf = import("./icons-xEV2Rqfo.js").then((e) => e.m).then((e) => (ei = e.icons, ei))), Gf;
+  return Gf || (Gf = import("./icons-xEV2Rqfo.mjs").then((e) => e.m).then((e) => (ei = e.icons, ei))), Gf;
 }
 function M1(e) {
   return e.split("-").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join("");
@@ -24185,7 +24185,7 @@ function la(e, n) {
     }))
   );
 }
-const di = () => import("./charts-ChXGqs92.js"), RO = la(di, "PrefabBarChart"), EO = la(di, "PrefabLineChart"), zO = la(di, "PrefabAreaChart"), TO = la(di, "PrefabPieChart"), AO = la(di, "PrefabRadarChart"), NO = la(di, "PrefabRadialChart"), vS = () => import("./content-vdQQZqN2.js"), OO = la(vS, "Code"), DO = la(vS, "Markdown"), hS = () => import("./compound-calendar-Xe1hYJDB.js"), MO = la(hS, "PrefabCalendar"), jO = la(hS, "PrefabDatePicker"), $O = {
+const di = () => import("./charts-B9pxPib5.mjs"), RO = la(di, "PrefabBarChart"), EO = la(di, "PrefabLineChart"), zO = la(di, "PrefabAreaChart"), TO = la(di, "PrefabPieChart"), AO = la(di, "PrefabRadarChart"), NO = la(di, "PrefabRadialChart"), vS = () => import("./content-DK71iMl_.mjs"), OO = la(vS, "Code"), DO = la(vS, "Markdown"), hS = () => import("./compound-calendar-DOC33V6C.mjs"), MO = la(hS, "PrefabCalendar"), jO = la(hS, "PrefabDatePicker"), $O = {
   // shadcn (direct — APIs match)
   Button: O4,
   Badge: M4,
