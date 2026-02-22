@@ -6,7 +6,7 @@
  */
 
 import { cn } from "@/lib/utils";
-import { resolveIcon } from "@/lib/icons";
+import { useIcon } from "@/lib/icons";
 
 const SIZE_CLASSES = {
   sm: "size-3.5",
@@ -25,7 +25,7 @@ export function PrefabIcon({
   size = "default",
   className,
 }: PrefabIconProps) {
-  const IconComponent = resolveIcon(name);
+  const IconComponent = useIcon(name);
   if (!IconComponent) return null;
 
   return <IconComponent className={cn(SIZE_CLASSES[size], className)} />;

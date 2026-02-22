@@ -31,15 +31,20 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
       mount();
     } else {
       if (!window.__prefabLoading) {
-        window.__prefabLoading = new Promise(function (resolve, reject) {
+        if (!window.__prefabReady) {
           var s = document.createElement("script");
-          var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-          s.src = isLocal
-            ? "/renderer.js"
-            : "https://unpkg.com/@prefecthq/prefab-ui@latest/dist/renderer.js";
-          s.onload = resolve;
-          s.onerror = reject;
+          s.src = "/renderer.js";
           document.head.appendChild(s);
+        }
+        window.__prefabLoading = new Promise(function (resolve) {
+          function check() {
+            if (window.__prefabReady) {
+              window.__prefabReady.then(resolve);
+            } else {
+              setTimeout(check, 10);
+            }
+          }
+          check();
         });
       }
       window.__prefabLoading.then(mount);

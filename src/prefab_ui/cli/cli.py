@@ -501,10 +501,18 @@ def build_docs() -> None:
             raise SystemExit(result.returncode)
 
     if copy_renderer:
+        for stale in (repo_root / "docs").glob("renderer*.js"):
+            stale.unlink()
+        stale_chunks = repo_root / "docs" / "_chunks"
+        if stale_chunks.exists():
+            shutil.rmtree(stale_chunks)
         shutil.copy2(
             renderer_dir / "dist" / "renderer.js",
             repo_root / "docs" / "renderer.js",
         )
+        dist_chunks = renderer_dir / "dist" / "_chunks"
+        if dist_chunks.exists():
+            shutil.copytree(dist_chunks, stale_chunks)
 
     if rebuild_playground:
         shutil.copy2(

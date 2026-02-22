@@ -8,7 +8,7 @@
 
 import type { ReactNode } from "react";
 import { Alert, type AlertVariant } from "@/ui/alert";
-import { resolveIcon } from "@/lib/icons";
+import { useIcon } from "@/lib/icons";
 
 interface PrefabAlertProps {
   icon?: string;
@@ -23,7 +23,7 @@ export function PrefabAlert({
   className,
   children,
 }: PrefabAlertProps) {
-  const IconComponent = icon ? resolveIcon(icon) : undefined;
+  const IconComponent = useIcon(icon);
 
   return (
     <Alert variant={variant} className={className}>
