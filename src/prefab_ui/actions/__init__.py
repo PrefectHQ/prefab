@@ -31,6 +31,7 @@ from prefab_ui.actions.file import FileUpload, OpenFilePicker
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
+from prefab_ui.actions.timing import SetInterval
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
 
 # Deprecated alias — use CallTool instead
@@ -48,6 +49,7 @@ __all__ = [
     "OpenLink",
     "PopState",
     "SendMessage",
+    "SetInterval",
     "SetState",
     "ShowToast",
     "ToggleState",
@@ -68,4 +70,5 @@ Action = (
     | ShowToast
     | CloseOverlay
     | OpenFilePicker
+    | SetInterval
 )

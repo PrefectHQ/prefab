@@ -1,0 +1,53 @@
+---
+title: SetInterval
+description: JSON Schema for the SetInterval action.
+---
+
+Execute actions on a repeating schedule.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "setInterval",
+      "default": "setInterval",
+      "type": "string"
+    },
+    "duration": {
+      "description": "Interval between ticks, in milliseconds.",
+      "type": "integer"
+    },
+    "while": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Condition expression re-evaluated each tick. When falsy, the interval stops."
+    },
+    "count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Maximum number of ticks. The interval stops after this many."
+    },
+    "onTick": {
+      "$ref": "Action",
+      "description": "Action(s) to run each tick. $event is the tick number (1, 2, \u2026).",
+      "default": null
+    },
+    "onComplete": {
+      "$ref": "Action",
+      "description": "Action(s) to run when the interval finishes.",
+      "default": null
+    }
+  },
+  "required": [
+    "action",
+    "duration"
+  ]
+}
+```

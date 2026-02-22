@@ -24,6 +24,7 @@ from prefab_ui.actions.file import OpenFilePicker
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
+from prefab_ui.actions.timing import SetInterval
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
 from prefab_ui.components import __all__ as component_names
 from prefab_ui.components.base import Component, ContainerComponent
@@ -46,6 +47,7 @@ ALL_ACTION_CLASSES: list[type[ActionBase]] = [
     CloseOverlay,
     OpenFilePicker,
     Fetch,
+    SetInterval,
 ]
 
 

@@ -180,6 +180,12 @@ When a sole template references an undefined key, the original template string i
 
 In mixed templates, undefined values resolve to empty strings: `"Hi {{ missing }}!"` produces `"Hi !"`.
 
+<Warning>
+  **Gotcha with boolean props.** A raw template string like `"{{ waiting }}"` is a non-empty string, which is truthy. If `waiting` hasn't been set yet, `disabled="{{ waiting }}"` evaluates to the string `{{ waiting }}` — and since that string is truthy, the component starts disabled.
+
+  Use the default-value pipe to handle this: `disabled="{{ waiting | false }}"` returns `false` when `waiting` is undefined, so the component starts enabled.
+</Warning>
+
 ## Live Binding
 
 State keys and template variables are the same thing, which means form inputs can drive templates directly. When you give an `Input` a `name` attribute, the renderer writes the input's current value to that key in state on every keystroke. Any `{{ }}` template referencing that key re-renders instantly.

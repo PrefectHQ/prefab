@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export interface StateStore {
   get(key: string): unknown;
@@ -114,34 +114,55 @@ export function setByPath(
 // ── React state store ────────────────────────────────────────────────
 
 /**
- * Reactive state store backed by React useState.
- * Mutations trigger re-renders of the component tree.
+ * Reactive state store backed by React useState + a mutable ref.
+ *
+ * The ref (`stateRef`) is the source of truth for reads (`get`, `getAll`).
+ * Mutations update the ref immediately and then call React's setState to
+ * trigger re-renders. This ensures that sequential actions in the same
+ * event handler see each other's writes without waiting for a React
+ * render cycle — critical for patterns like:
+ *
+ *   [SetState("seconds", 10), SetInterval(while_="{{ seconds > 0 }}", ...)]
+ *
+ * Without the ref, the setInterval action would read stale state and see
+ * `seconds` as undefined.
  */
 export function useStateStore(initial?: Record<string, unknown>): StateStore {
   const [state, setState] = useState<Record<string, unknown>>(initial ?? {});
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const get = useCallback(
     (key: string): unknown =>
-      key.includes(".") ? getByPath(state, key) : state[key],
-    [state],
+      key.includes(".")
+        ? getByPath(stateRef.current, key)
+        : stateRef.current[key],
+    [],
   );
 
-  const getAll = useCallback((): Record<string, unknown> => state, [state]);
+  const getAll = useCallback(
+    (): Record<string, unknown> => stateRef.current,
+    [],
+  );
 
   const set = useCallback((key: string, value: unknown) => {
-    setState((prev) =>
-      key.includes(".")
-        ? setByPath(prev, key, value)
-        : { ...prev, [key]: value },
-    );
+    const next = key.includes(".")
+      ? setByPath(stateRef.current, key, value)
+      : { ...stateRef.current, [key]: value };
+    stateRef.current = next;
+    setState(next);
   }, []);
 
   const merge = useCallback((values: Record<string, unknown>) => {
-    setState((prev) => ({ ...prev, ...values }));
+    const next = { ...stateRef.current, ...values };
+    stateRef.current = next;
+    setState(next);
   }, []);
 
-  const reset = useCallback((initial?: Record<string, unknown>) => {
-    setState(initial ?? {});
+  const reset = useCallback((init?: Record<string, unknown>) => {
+    const next = init ?? {};
+    stateRef.current = next;
+    setState(next);
   }, []);
 
   return { get, getAll, set, merge, reset };
