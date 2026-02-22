@@ -12,7 +12,18 @@ Container components support `children` (array). Wire format uses camelCase.
 
 **Row** [container] — Horizontal flex. `cssClass`: `"gap-2 justify-between"`.
 
-**Grid** [container] — CSS grid. `cssClass`: `"grid-cols-3 gap-4"`.
+**Grid** [container] — Auto-flow CSS grid. `cssClass`: `"grid-cols-3 gap-4"`.
+
+**DashboardGrid** [container] — Explicit-placement grid. `columns` (default 12), `rowHeight` (default 120), `rows`, `cssClass` for gap. Children must be DashboardItem.
+
+**DashboardItem** [container] — Positioned cell in DashboardGrid. `col`, `row` (1-indexed start), `colSpan`, `rowSpan` (size), `zIndex`.
+
+```json
+{"type": "DashboardGrid", "columns": 12, "rowHeight": 100, "cssClass": "gap-4", "children": [
+  {"type": "DashboardItem", "col": 1, "row": 1, "colSpan": 8, "rowSpan": 3, "children": [...]},
+  {"type": "DashboardItem", "col": 9, "row": 1, "colSpan": 4, "rowSpan": 1, "children": [...]}
+]}
+```
 
 **Div** [container] — Generic block container.
 
