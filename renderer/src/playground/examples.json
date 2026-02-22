@@ -1525,14 +1525,44 @@
     "code": "\"/api/items\",\n    body={\"name\": \"{{ new_name }}\"},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", result_key=\"items\"),\n    ],\n)"
   },
   {
-    "title": "Component Tree",
+    "title": "from fastmcp import FastMCP",
     "category": "Running",
-    "code": "from prefab_ui import FastMCP\nfrom prefab_ui.components import Card, CardContent, Column, H3, Input, Button\nfrom prefab_ui.actions import CallTool\n\nmcp = FastMCP(\"My Server\")\n\n@mcp.tool(app=True)\nasync def search(query: str = \"\") -> Card:\n    results = find_items(query) if query else []\n    with Card() as view:\n        with CardContent():\n            with Column(gap=3):\n                Input(name=\"q\", placeholder=\"Search...\")\n                Button(\n                    \"Go\",\n                    on_click=CallTool(\"search\", arguments={\"query\": \"{{ q }}\"}),\n                )\n    return view"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, ForEach, Heading, Text\nfrom prefab_ui.actions import CallTool\n\nmcp = FastMCP(\"My Server\")\n\nITEMS = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"Show all items.\"\"\"\n    with Column(gap=4) as view:\n        Heading(\"Items\")\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": ITEMS})"
   },
   {
     "title": "PrefabApp",
     "category": "Running",
-    "code": "from prefab_ui import FastMCP\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Card, CardContent, Column, H3, Muted, Input\n\nmcp = FastMCP(\"My Server\")\n\n@mcp.tool(app=True)\nasync def greeting() -> PrefabApp:\n    with Card() as view:\n        with CardContent():\n            with Column(gap=3):\n                H3(\"Hello, {{ name }}!\")\n                Muted(\"Type below and watch this update.\")\n                Input(name=\"name\", placeholder=\"Your name...\")\n    return PrefabApp(view=view, state={\"name\": \"world\"})"
+    "code": "@mcp.tool(app=True)\ndef dashboard() -> PrefabApp:\n    with Column(gap=4) as view:\n        Heading(\"Dashboard\")\n        Text(\"Welcome, {{ name }}\")\n    return PrefabApp(\n        title=\"Dashboard\",\n        view=view,\n        state={\"name\": \"Alice\"},\n    )"
+  },
+  {
+    "title": "Bare Component",
+    "category": "Running",
+    "code": "@mcp.tool(app=True)\ndef dashboard() -> Column:\n    with Column(gap=4) as view:\n        Heading(\"Dashboard\")\n        Text(\"Hello!\")\n    return view"
+  },
+  {
+    "title": "@mcp.tool(app=True)",
+    "category": "Running",
+    "code": "def browse() -> PrefabApp:\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}, result_key=\"results\"),\n            ],\n        )\n        Slot(\"results\")\n    return PrefabApp(view=view, state={\"q\": \"\", \"results\": None})\n\n@mcp.tool\ndef search(q: str = \"\") -> PrefabApp:\n    matches = [i for i in ITEMS if q.lower() in i[\"name\"].lower()] if q else ITEMS\n    with ForEach(\"items\") as view:\n        Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": matches})"
+  },
+  {
+    "title": "{5,11}",
+    "category": "Running",
+    "code": "# In the main view\nwith Slot(\"detail\"):\n    Text(\"Select an item\", css_class=\"text-muted-foreground\")\n\n# A tool that returns component content for the slot\n@mcp.tool\ndef get_detail(id: str) -> PrefabApp:\n    item = lookup(id)\n    with Card() as view:\n        CardTitle(item[\"name\"])\n        Text(item[\"description\"])\n    return PrefabApp(view=view, state={\"item\": item})"
+  },
+  {
+    "title": "CallTool(",
+    "category": "Running",
+    "code": "\"add_entry\",\n    arguments={\"title\": \"{{ new_title }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+  },
+  {
+    "title": "@mcp.tool",
+    "category": "Running",
+    "code": "def add_entry(title: str) -> PrefabApp:\n    if not title.strip():\n        raise ValueError(\"Title is required\")\n    # ..."
+  },
+  {
+    "title": "{10-14}",
+    "category": "Running",
+    "code": "with Dialog(title=\"New Item\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=CallTool(\n            \"add_item\",\n            arguments={\"name\": \"{{ new_name }}\"},\n            result_key=\"items\",\n            on_success=[\n                ShowToast(\"Added!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        Input(name=\"new_name\", placeholder=\"Name\")\n        Button(\"Add\")"
   },
   {
     "title": "app.py",
