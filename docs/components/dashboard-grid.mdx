@@ -375,7 +375,7 @@ with DashboardGrid(columns=12, row_height=100, gap=4):
 
 ## Row Height
 
-Each row in the grid has a fixed height set by `row_height`. An item with `row_span=2` gets twice that height (plus one gap). Toggle between the tabs below to see the same layout at different row heights — the items stay in the same positions, only the vertical scale changes.
+By default, every row in the grid is the same height — set by `row_height` in pixels. An item with `row_span=2` gets twice that height (plus one gap). The tabs below show the same layout at 80px and 150px row heights: same positions, different vertical scale.
 
 <Tabs>
 <Tab title="80px rows">
@@ -515,6 +515,117 @@ with DashboardGrid(columns=3, row_height=150, gap=3):
 </ComponentPreview>
 </Tab>
 </Tabs>
+
+### Content-sized rows
+
+Pass a string instead of an integer for CSS values. `row_height="auto"` makes each row size to its tallest item — so a row with a paragraph of text will be taller than a row with a single line. This is useful when your dashboard items have varying content and you want the grid to adapt rather than forcing fixed cells.
+
+You can also use `row_height="minmax(80px, auto)"` to set a minimum height while still allowing rows to expand for taller content.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"DashboardGrid","columns":3,"rowHeight":"auto","children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":2,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"This card has a paragraph of content, so the first row expands to fit. The green cell to the right stretches to match, even though its own content is short.","type":"P"}]}]}]},{"type":"DashboardItem","col":3,"row":1,"colSpan":1,"rowSpan":1,"children":[{"cssClass":"bg-emerald-500 rounded-md h-full flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Stretches","type":"Text"}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-full p-3 flex items-center","type":"Div","children":[{"cssClass":"text-white","content":"Row 2 has less content, so it's shorter.","type":"Text"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card, CardContent,
+    DashboardGrid, DashboardItem,
+    Div, P, Text,
+)
+
+with DashboardGrid(columns=3, row_height="auto", gap=3):
+    # Row 1 — the card's paragraph makes this row tall
+    with DashboardItem(col=1, row=1, col_span=2):
+        with Card(css_class="h-full"):
+            with CardContent():
+                P("This card has a paragraph of content, so the first row "
+                  "expands to fit. The green cell to the right stretches "
+                  "to match, even though its own content is short.")
+    with DashboardItem(col=3, row=1):
+        with Div(css_class="bg-emerald-500 rounded-md h-full flex items-center justify-center"):
+            Text("Stretches", css_class="text-white font-semibold")
+
+    # Row 2 — short content, so this row is smaller
+    with DashboardItem(col=1, row=2, col_span=3):
+        with Div(css_class="bg-purple-500 rounded-md h-full p-3 flex items-center"):
+            Text("Row 2 has less content, so it's shorter.", css_class="text-white")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "DashboardGrid",
+    "columns": 3,
+    "rowHeight": "auto",
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "content": "This card has a paragraph of content, so the first row expands to fit. The green cell to the right stretches to match, even though its own content is short.",
+                    "type": "P"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 3,
+        "row": 1,
+        "colSpan": 1,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-emerald-500 rounded-md h-full flex items-center justify-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white font-semibold",
+                "content": "Stretches",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "bg-purple-500 rounded-md h-full p-3 flex items-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "text-white",
+                "content": "Row 2 has less content, so it's shorter.",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ## Layering
 
