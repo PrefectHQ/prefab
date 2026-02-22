@@ -27,6 +27,10 @@ src/prefab_ui/actions/state.py      →  tests/actions/test_state.py
 
 The renderer validates JSON against the **schema registry** before rendering. A component missing from `SCHEMA_REGISTRY` will show "Unknown component" even if it's in the component `REGISTRY`. When adding a new component, create a schema file in `renderer/src/schemas/` and register it in both places.
 
+## Developer Docs
+
+`dev-docs/` contains internal reference documentation for build processes, architecture decisions, and operational knowledge. Check there before asking questions about how things work.
+
 ## Component Documentation
 
 Doc conventions are encoded as agent skills in `.claude/skills/`:
