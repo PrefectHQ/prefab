@@ -1,1 +1,1 @@
-(function(){var base=window.location.hostname==="localhost"?"/":"https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.3.0-alpha.1/dist/";window.__prefabReady=import(base+"_chunks/embed-CQ69ppdm.mjs");})();
+(function(){var base=window.location.hostname==="localhost"?"/":"https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@0.3.0-alpha.1/dist/";window.__prefabReady=import(base+"_chunks/embed-DNN8TWNC.mjs");})();
