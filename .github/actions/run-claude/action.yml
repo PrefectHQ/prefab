@@ -1,0 +1,83 @@
+# Composite Action for running Claude Code Action
+#
+# Wraps anthropics/claude-code-action with shared configuration.
+#
+# Usage:
+#   - uses: ./.github/actions/run-claude
+#     with:
+#       prompt: "Your prompt here"
+#       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY_FOR_CI }}
+#       github-token: ${{ steps.marvin-token.outputs.token }}
+#       allowed-tools: "Edit,Read,Write,Bash(*)"
+#
+name: "Run Claude"
+description: "Run Claude Code with shared configuration"
+
+inputs:
+  prompt:
+    description: "Prompt to pass to Claude"
+    required: true
+
+  anthropic-api-key:
+    description: "Anthropic API key for authentication"
+    required: true
+
+  github-token:
+    description: "GitHub token for Claude to operate with"
+    required: true
+
+  allowed-tools:
+    description: "Comma-separated list of allowed tools (e.g. Edit,Write,Bash(npm test))"
+    required: false
+    default: ""
+
+  model:
+    description: "Model to use for Claude"
+    required: false
+    default: "claude-opus-4-6"
+
+  allowed-bots:
+    description: "Allowed bot usernames, or '*' for all bots"
+    required: false
+    default: ""
+
+  track-progress:
+    description: "Whether Claude should track progress"
+    required: false
+    default: "true"
+
+  trigger-phrase:
+    description: "Trigger phrase (for mention workflows)"
+    required: false
+    default: "/marvin"
+
+outputs:
+  conclusion:
+    description: "The conclusion of the Claude Code run"
+    value: ${{ steps.claude.outputs.conclusion }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Clean up stale Claude locks
+      shell: bash
+      run: rm -rf ~/.claude/.locks ~/.local/state/claude/locks || true
+
+    - name: Run Claude Code
+      id: claude
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      uses: anthropics/claude-code-action@v1
+      with:
+        github_token: ${{ inputs.github-token }}
+        anthropic_api_key: ${{ inputs.anthropic-api-key }}
+        bot_name: "Marvin Context Protocol"
+        trigger_phrase: ${{ inputs.trigger-phrase }}
+        allowed_bots: ${{ inputs.allowed-bots }}
+        track_progress: ${{ inputs.track-progress }}
+        prompt: ${{ inputs.prompt }}
+        claude_args: |
+          ${{ inputs.allowed-tools != '' && format('--allowedTools {0}', inputs.allowed-tools) || '' }}
+          --model ${{ inputs.model }}
+        settings: |
+          {"model": "${{ inputs.model }}"}
