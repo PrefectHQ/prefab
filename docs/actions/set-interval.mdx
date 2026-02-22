@@ -12,7 +12,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Set `count=1` to fire once after a pause — no separate "delay" action needed. Put your logic in `on_complete` and it runs when the timer finishes. The button below swaps to a waiting state so the user knows something is happening.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}","variant":"default","size":"default","disabled":"{{ waiting | false }}","onClick":[{"action":"setState","key":"waiting","value":true},{"action":"setInterval","duration":3000,"count":1,"onComplete":[{"action":"showToast","message":"Plot twist: the timer was watching YOU the whole time.","variant":"info"},{"action":"setState","key":"waiting","value":false}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}","variant":"default","size":"default","disabled":"{{ waiting | false }}","onClick":[{"action":"setState","key":"waiting","value":true},{"action":"setInterval","duration":3000,"count":1,"onComplete":[{"action":"showToast","message":"Three seconds. An eternity for a brain the size of a planet.","variant":"info"},{"action":"setState","key":"waiting","value":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -28,8 +28,8 @@ Button(
             count=1,
             on_complete=[
                 ShowToast(
-                    "Plot twist: the timer was watching"
-                    " YOU the whole time.",
+                    "Three seconds. An eternity for"
+                    " a brain the size of a planet.",
                     variant="info",
                 ),
                 SetState("waiting", False),
@@ -59,7 +59,7 @@ Button(
         "onComplete": [
           {
             "action": "showToast",
-            "message": "Plot twist: the timer was watching YOU the whole time.",
+            "message": "Three seconds. An eternity for a brain the size of a planet.",
             "variant": "info"
           },
           {
