@@ -1,5 +1,6 @@
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
 import { readFileSync } from "fs";
+import { execSync } from "child_process";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -33,11 +34,24 @@ export function rewriteEntryLoader(): Plugin {
       // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
       const chunkPath = match[1].replace(/^\.\//, "");
 
-      // Read package.json to construct the CDN URL.
+      // Derive version from git tag (same source as CI publish), falling
+      // back to package.json for local builds without tags.
       const pkg = JSON.parse(
         readFileSync(resolve(__dirname, "package.json"), "utf-8"),
       );
-      const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/`;
+      let version = pkg.version;
+      try {
+        const tag = execSync("git describe --tags --abbrev=0", {
+          encoding: "utf-8",
+          stdio: ["pipe", "pipe", "pipe"],
+        }).trim();
+        // Strip "v" prefix and PEP 440 suffixes (a1, b2, rc1) to match
+        // the npm version that publish-renderer.yml produces.
+        version = tag.replace(/^v/, "").replace(/(a|b|rc)\d+$/, "");
+      } catch {
+        // No git tags — use package.json version as-is.
+      }
+      const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@${version}/dist/`;
 
       entry.code = [
         `(function(){`,
