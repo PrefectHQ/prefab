@@ -1,4 +1,9 @@
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Rewrite the renderer entry to use dynamic import() instead of static import.
@@ -6,14 +11,15 @@ import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
  * Mintlify inlines all .js files from the docs directory as non-module
  * <script> tags. Static `import`/`export` statements fail in that context.
  * Dynamic `import()` works in both module and non-module scripts, so we
- * rewrite the thin entry to:
+ * rewrite the thin entry to a one-liner that loads the real code from a CDN.
  *
- *   import("./_chunks/embed-HASH.mjs").then(function(m) {
- *     window.__prefab = { mountPreview: m.mountPreview };
- *   });
+ * Mintlify's deployed hosting routes all URLs through its Next.js catch-all,
+ * so .mjs chunk files can't be served as static assets — they're returned as
+ * HTML pages. Loading chunks from jsdelivr avoids this: the npm package
+ * includes dist/_chunks/ and jsdelivr serves them with correct MIME types.
  *
- * The entry is also loaded separately as <script type="module"> by
- * component-preview.mdx, where this dynamic import works identically.
+ * For local dev, set PREFAB_RENDERER_BASE to override the CDN URL
+ * (e.g. PREFAB_RENDERER_BASE=/ to use local paths).
  */
 export function rewriteEntryLoader(): Plugin {
   return {
@@ -31,14 +37,21 @@ export function rewriteEntryLoader(): Plugin {
       // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
       const chunkPath = match[1].replace(/^\.\//, "");
 
-      // Use an absolute path so the import resolves correctly regardless of
-      // the current page URL. Mintlify inlines renderer.js as a non-module
-      // <script> where dynamic import() resolves relative to the page URL
-      // (e.g. /components/button). An absolute path avoids this problem.
-      //
-      // For CDN/npm consumers, the package exports the real ESM entry in
-      // package.json "module" field — they don't use this loader script.
-      entry.code = `window.__prefabReady=import("/${chunkPath}");\n`;
+      // Read package.json to construct the CDN URL.
+      const pkg = JSON.parse(
+        readFileSync(resolve(__dirname, "package.json"), "utf-8"),
+      );
+      const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/`;
+
+      // The entry uses a CDN URL so it works on Mintlify's deployed hosting
+      // (which doesn't serve static .mjs files). Local dev can override via
+      // the __prefabBase variable set by component-preview.mdx.
+      entry.code = [
+        `(function(){`,
+        `var base=window.location.hostname==="localhost"?"/":"${cdnBase}";`,
+        `window.__prefabReady=import(base+"${chunkPath}");`,
+        `})();\n`,
+      ].join("");
     },
   };
 }
