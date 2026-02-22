@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -196,6 +197,18 @@ class ContainerComponent(Component):
         default=None,
         description="Scoped bindings available to children. Values are template strings.",
     )
+
+    def model_post_init(self, __context: Any) -> None:
+        # When children= is passed explicitly, those children were already
+        # auto-attached to the *outer* stack parent during their own __init__.
+        # Remove them from that parent so they only belong to this component.
+        stack = _component_stack.get() or []
+        if stack and self.children:
+            parent_children = stack[-1].children
+            for child in self.children:
+                with contextlib.suppress(ValueError):
+                    parent_children.remove(child)
+        super().model_post_init(__context)
 
     def __enter__(self) -> Self:
         stack = _component_stack.get() or []
