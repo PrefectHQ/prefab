@@ -1,8 +1,8 @@
-"""Tests for context manager nesting."""
+"""Tests for context manager nesting and detached."""
 
 from __future__ import annotations
 
-from prefab_ui.components import Column, Heading, Row, Text
+from prefab_ui.components import Column, Heading, Row, Text, detached
 
 
 class TestContextManagerNesting:
@@ -52,3 +52,61 @@ class TestContextManagerNesting:
         col = Column()
         Text(content="orphan")
         assert len(col.children) == 0
+
+
+class TestDetached:
+    def test_prevents_auto_attach(self):
+        with Column() as col:
+            Text(content="attached")
+            with detached():
+                orphan = Text(content="detached")
+        assert len(col.children) == 1
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+        assert orphan.content == "detached"
+
+    def test_allows_explicit_context_managers(self):
+        with Column() as outer:
+            Text(content="outer-child")
+            with detached():
+                sidebar = Column()
+                with sidebar:
+                    Text(content="sidebar-child")
+        assert len(outer.children) == 1
+        assert len(sidebar.children) == 1
+        assert sidebar.children[0].content == "sidebar-child"  # type: ignore[attr-defined]
+
+    def test_restores_stack(self):
+        with Column() as col:
+            Text(content="before")
+            with detached():
+                Text(content="ignored")
+            Text(content="after")
+        assert len(col.children) == 2
+        assert col.children[0].content == "before"  # type: ignore[attr-defined]
+        assert col.children[1].content == "after"  # type: ignore[attr-defined]
+
+    def test_nested(self):
+        with Column() as col:
+            with detached():
+                with detached():
+                    Text(content="double-detached")
+                Text(content="single-detached")
+            Text(content="attached")
+        assert len(col.children) == 1
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+
+    def test_at_top_level(self):
+        with detached():
+            t = Text(content="orphan")
+        assert t.content == "orphan"
+
+    def test_restores_on_exception(self):
+        with Column() as col:
+            try:
+                with detached():
+                    raise ValueError("boom")
+            except ValueError:
+                pass
+            Text(content="after-error")
+        assert len(col.children) == 1
+        assert col.children[0].content == "after-error"  # type: ignore[attr-defined]

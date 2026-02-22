@@ -1,0 +1,256 @@
+---
+title: Building UIs
+sidebarTitle: Building UIs
+description: How the Python DSL works — context managers, component trees, and programmatic construction.
+icon: hammer
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Prefab UIs are declarative. You describe *what* to render — a tree of components with properties — and the renderer handles the rest. The Python DSL compiles `with` statements into that component tree, which serializes to JSON, which a React renderer paints as a live interface. Your Python code runs once at build time to produce the tree; all interactivity after that happens client-side through [expressions](/expressions/overview) and [actions](/actions).
+
+This distinction between build time and render time matters throughout this page.
+
+## Context managers and auto-attachment
+
+The fundamental rule: when you create a component inside a `with` block, it becomes a child of that container.
+
+<ComponentPreview json={{"view":{"type":"Column","children":[{"content":"first","type":"Text"},{"content":"second","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Text
+
+with Column() as col:
+    Text("first")
+    Text("second")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Column",
+    "children": [
+      {
+        "content": "first",
+        "type": "Text"
+      },
+      {
+        "content": "second",
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Every component's `__init__` checks whether there's an active container on an internal stack. If there is, the new component appends itself to that container's `children` list. The `with` statement pushes a container onto the stack on entry and pops it on exit.
+
+Nesting composes naturally — each component attaches to whichever container is currently on top of the stack:
+
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Row","children":[{"content":"left","type":"Text"},{"content":"right","type":"Text"}]},{"content":"below the row","type":"Text"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Card, CardContent, Column, Row, Text
+
+with Card():
+    with CardContent():
+        with Column(gap=3):
+            with Row():
+                Text("left")
+                Text("right")
+            Text("below the row")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {
+                "type": "Row",
+                "children": [
+                  {
+                    "content": "left",
+                    "type": "Text"
+                  },
+                  {
+                    "content": "right",
+                    "type": "Text"
+                  }
+                ]
+              },
+              {
+                "content": "below the row",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The stack is thread-safe (it uses a `ContextVar`), so concurrent requests in a server don't interfere with each other.
+
+## Capturing the root
+
+Use `as` to grab a reference to the top-level component. This is how you pass the tree to `PrefabApp` or return it from a tool:
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Heading, Text
+
+with Column(gap=4) as view:
+    Heading("Dashboard")
+    Text("Welcome back.")
+
+app = PrefabApp(view=view)
+```
+
+## Programmatic construction
+
+The DSL is plain Python, so you can use loops, conditionals, and any other logic to build your tree. This is *build-time* logic — it runs once when the component tree is constructed, and the result is baked into the JSON. The renderer never sees the loop; it just sees the components that were produced.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"api-server","variant":"default"},{"type":"Badge","label":"worker","variant":"destructive"},{"type":"Badge","label":"scheduler","variant":"default"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Badge
+
+statuses = [
+    {"name": "api-server", "healthy": True},
+    {"name": "worker", "healthy": False},
+    {"name": "scheduler", "healthy": True},
+]
+
+with Column(gap=2) as view:
+    for svc in statuses:
+        variant = "default" if svc["healthy"] else "destructive"
+        Badge(svc["name"], variant=variant)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Badge",
+        "label": "api-server",
+        "variant": "default"
+      },
+      {
+        "type": "Badge",
+        "label": "worker",
+        "variant": "destructive"
+      },
+      {
+        "type": "Badge",
+        "label": "scheduler",
+        "variant": "default"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+For *render-time* iteration over client-side state that can change, use [`ForEach`](/components/foreach). For render-time conditionals, use [`If`/`Elif`/`Else`](/components/conditional). These produce special protocol nodes that the renderer evaluates dynamically.
+
+## Creating components outside context managers
+
+Components created outside any `with` block have no parent — they're standalone roots:
+
+```python
+from prefab_ui.components import Text
+
+t = Text("I have no parent")
+```
+
+This is useful when building a tree to pass to `PrefabApp` without nesting, or when constructing components to assign to specific properties.
+
+## Detached construction
+
+Sometimes you're *inside* a context manager but need to build a component without it becoming a child. The `detached()` context manager temporarily pauses auto-attachment:
+
+```python
+from prefab_ui.components import Column, Text, detached
+
+with Column() as page:
+    Text("child of page")
+
+    with detached():
+        sidebar = Column()
+        with sidebar:
+            Text("child of sidebar, not page")
+
+# page has 1 child; sidebar has 1 child
+```
+
+Components inside `detached()` can still use their own context managers to collect children — they just won't be added to whatever container was active before the `detached()` block. After the block exits, the original stack is restored and auto-attachment resumes.
+
+## PrefabApp
+
+`PrefabApp` is the envelope that wraps a component tree into a complete application. It holds the view, initial state, reusable definitions, and external assets. See the [Local Preview](/serve) page for the full API.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, H3, Input
+
+with Column(gap=3) as view:
+    H3("Hello, {{ name }}!")
+    Input(name="name", placeholder="Your name...")
+
+app = PrefabApp(view=view, state={"name": "world"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "content": "Hello, {{ name }}!",
+        "type": "H3"
+      },
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Your name...",
+        "name": "name",
+        "disabled": false,
+        "required": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`set_initial_state()` is a convenience for declaring state alongside your component construction. It accumulates values and gets consumed when `PrefabApp` is created:
+
+```python
+from prefab_ui.app import set_initial_state
+
+set_initial_state(name="world")
+
+# ... build components ...
+
+app = PrefabApp(view=view)  # state is picked up automatically
+```
+
+You can also pass `state=` directly to `PrefabApp`. If you use both, explicit `state=` keys take precedence.

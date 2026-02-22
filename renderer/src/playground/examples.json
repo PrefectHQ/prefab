@@ -107,6 +107,21 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetInterval, SetState, ShowToast\n\nButton(\n    \"{{ waiting ? 'Waiting…' : 'Start 3 second timer' }}\",\n    disabled=\"{{ waiting | false }}\",\n    on_click=[\n        SetState(\"waiting\", True),\n        SetInterval(\n            3000,\n            count=1,\n            on_complete=[\n                ShowToast(\n                    \"Three seconds. An eternity for\"\n                    \" a brain the size of a planet.\",\n                    variant=\"info\",\n                ),\n                SetState(\"waiting\", False),\n            ],\n        ),\n    ],\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button, Column, Text\nfrom prefab_ui.actions import SetInterval, SetState\n\nwith Column(gap=4, css_class=\"items-center\"):\n    Text(\n        \"{{ seconds > 0 ? \"\n        \"'T-minus ' + seconds + '…' \"\n        \": 'Ready for launch' }}\",\n        css_class=\"text-2xl font-mono\",\n    )\n    Button(\n        \"{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}\",\n        disabled=\"{{ seconds > 0 }}\",\n        on_click=[\n            SetState(\"seconds\", 10),\n            SetInterval(\n                1000,\n                while_=\"{{ seconds > 0 }}\",\n                on_tick=SetState(\n                    \"seconds\", \"{{ seconds - 1 }}\"\n                ),\n            ),\n        ],\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetInterval, SetState\n\nwith Row(gap=4, css_class=\"items-center\"):\n    Button(\n        \"Start\",\n        disabled=\"{{ running | false }}\",\n        on_click=[\n            SetState(\"running\", True),\n            SetState(\"ticks\", 0),\n            SetInterval(\n                1000,\n                while_=\"{{ running }}\",\n                on_tick=SetState(\n                    \"ticks\", \"{{ ticks + 1 }}\"\n                ),\n            ),\n        ],\n    )\n    Text(\n        \"{{ ticks | 0 }}\",\n        css_class=\"text-2xl font-mono tabular-nums\",\n    )\n    Button(\n        \"Stop\",\n        variant=\"outline\",\n        disabled=\"{{ !running }}\",\n        on_click=SetState(\"running\", False),\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Slider, Muted, Column\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(\"Brightness: {{ brightness }}%\")"
   },
   {
@@ -193,6 +208,46 @@
     "title": "from prefab_ui.components import Button",
     "category": "General",
     "code": "from prefab_ui.actions import SetState, CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "General",
+    "code": "from prefab_ui.components import Column, Text\n\nwith Column() as col:\n    Text(\"first\")\n    Text(\"second\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "General",
+    "code": "from prefab_ui.components import Card, CardContent, Column, Row, Text\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            with Row():\n                Text(\"left\")\n                Text(\"right\")\n            Text(\"below the row\")"
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "General",
+    "code": "from prefab_ui.components import Column, Heading, Text\n\nwith Column(gap=4) as view:\n    Heading(\"Dashboard\")\n    Text(\"Welcome back.\")\n\napp = PrefabApp(view=view)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "General",
+    "code": "from prefab_ui.components import Column, Badge\n\nstatuses = [\n    {\"name\": \"api-server\", \"healthy\": True},\n    {\"name\": \"worker\", \"healthy\": False},\n    {\"name\": \"scheduler\", \"healthy\": True},\n]\n\nwith Column(gap=2) as view:\n    for svc in statuses:\n        variant = \"default\" if svc[\"healthy\"] else \"destructive\"\n        Badge(svc[\"name\"], variant=variant)"
+  },
+  {
+    "title": "from prefab_ui.components import Text",
+    "category": "General",
+    "code": "t = Text(\"I have no parent\")"
+  },
+  {
+    "title": "from prefab_ui.components import Column, Text, detached",
+    "category": "General",
+    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with detached():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n# page has 1 child; sidebar has 1 child"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "General",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, H3, Input\n\nwith Column(gap=3) as view:\n    H3(\"Hello, {{ name }}!\")\n    Input(name=\"name\", placeholder=\"Your name...\")\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+  },
+  {
+    "title": "from prefab_ui.app import set_initial_state",
+    "category": "General",
+    "code": "set_initial_state(name=\"world\")\n\n# ... build components ...\n\napp = PrefabApp(view=view)  # state is picked up automatically"
   },
   {
     "title": "Python icon=\"python\"",

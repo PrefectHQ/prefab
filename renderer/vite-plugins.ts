@@ -17,13 +17,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * Mintlify, .mjs files can't be served as static assets (the Next.js
  * catch-all returns text/html), so the entry loads them from jsdelivr CDN.
  *
- * The CDN path uses `@latest` with a stable chunk name (`_chunks/embed.mjs`)
- * so that `renderer.js` never needs updating when a new version is published.
- * A stable re-export shim is emitted alongside the hashed chunk to make this
- * work — internal imports from the shim use relative paths, so all files
- * resolve within the same CDN version.
- *
- * Local dev uses the hashed chunk path directly (served from `docs/_chunks/`).
+ * Both local dev and the CDN use a stable chunk name (`_renderer/embed.mjs`)
+ * so that `renderer.js` never needs updating when a new version is published
+ * or the renderer is rebuilt locally. A stable re-export shim is emitted
+ * alongside the hashed chunk — internal imports from the shim use relative
+ * paths, so all files resolve correctly in both contexts.
  */
 export function rewriteEntryLoader(): Plugin {
   const pkg = JSON.parse(
@@ -39,10 +37,10 @@ export function rewriteEntryLoader(): Plugin {
       if (!entry || entry.type !== "chunk") return;
 
       // Find the chunk path from the static import in the generated entry.
-      const match = entry.code.match(/from\s+["'](\.\/_chunks\/[^"']+)['"]/);
+      const match = entry.code.match(/from\s+["'](\.\/_renderer\/[^"']+)['"]/);
       if (!match) return;
 
-      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
+      // Strip leading "./" to get the chunk subpath (e.g. "_renderer/embed-HASH.mjs").
       const chunkPath = match[1].replace(/^\.\//, "");
 
       // Emit a stable (unhashed) re-export so the CDN path never changes.
@@ -51,17 +49,14 @@ export function rewriteEntryLoader(): Plugin {
       const hashedFilename = chunkPath.split("/").pop()!;
       this.emitFile({
         type: "asset",
-        fileName: "_chunks/embed.mjs",
+        fileName: "_renderer/embed.mjs",
         source: `export * from "./${hashedFilename}";\n`,
       });
 
       entry.code = [
         `(function(){`,
         `var base=window.location.hostname==="localhost"?"/":"${cdnBase}";`,
-        // Local dev: use hashed chunk (served from docs/_chunks/).
-        // CDN: use stable embed.mjs shim that re-exports the hashed chunk.
-        `var chunk=window.location.hostname==="localhost"?"${chunkPath}":"_chunks/embed.mjs";`,
-        `window.__prefabReady=import(base+chunk);`,
+        `window.__prefabReady=import(base+"_renderer/embed.mjs");`,
         `})();\n`,
       ].join("");
     },
