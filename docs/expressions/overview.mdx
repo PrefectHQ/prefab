@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Prefab UIs aren't static. When a user clicks a button, drags a slider, or types into an input, the interface can respond instantly — updating text, toggling visibility, reformatting values, computing totals — all without waiting for a server call.
 
-This client-side interactivity is powered by a small expression language that runs inside the renderer. Expressions evaluate against the current [state](/components/state), and the UI re-renders whenever that state changes. Combined with [actions](/actions) that modify state in response to user interaction, this covers the common cases for reactive UIs: counters, toggles, conditional displays, formatted output, and form-driven content.
+This client-side interactivity is powered by a small expression language that runs inside the renderer. Expressions evaluate against the current [state](/components/state), and the UI re-renders whenever that state changes. Combined with [actions](/actions/overview) that modify state in response to user interaction, this covers the common cases for reactive UIs: counters, toggles, conditional displays, formatted output, and form-driven content.
 
 Try clicking the buttons in this counter — it works entirely in the browser, with no server involved:
 
@@ -100,7 +100,7 @@ Prefab splits interactive behavior into three layers, each with a clear scope:
 | Layer | Scope | Examples |
 |------|---------|----------|
 | **Expressions** | Compute display values | Arithmetic, formatting, conditional text, comparisons |
-| **[Actions](/actions)** | Mutate client state | SetState, ToggleState, ShowToast |
+| **[Actions](/actions/overview)** | Mutate client state | SetState, ToggleState, ShowToast |
 | **[CallTool](/actions/call-tool)** | Run server logic | Data fetching, business logic, complex transformations |
 
 If you find yourself wanting to write application logic inside a `{{ }}` template, that computation belongs in a CallTool instead.
