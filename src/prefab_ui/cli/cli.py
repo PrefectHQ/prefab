@@ -500,19 +500,22 @@ def build_docs() -> None:
             )
             raise SystemExit(result.returncode)
 
-    if copy_renderer:
+    # Always ensure docs/ has the renderer files, even when the source
+    # hasn't changed.  The chunks are gitignored, so a fresh clone or
+    # `rm -rf docs/_renderer` would leave docs/renderer.js pointing at
+    # files that don't exist.
+    dist_entry = renderer_dir / "dist" / "renderer.js"
+    dist_renderer_chunks = renderer_dir / "dist" / "_renderer"
+    docs_renderer_chunks = repo_root / "docs" / "_renderer"
+
+    if dist_entry.exists() and (copy_renderer or not docs_renderer_chunks.exists()):
         for stale in (repo_root / "docs").glob("renderer*.js"):
             stale.unlink()
-        stale_chunks = repo_root / "docs" / "_chunks"
-        if stale_chunks.exists():
-            shutil.rmtree(stale_chunks)
-        shutil.copy2(
-            renderer_dir / "dist" / "renderer.js",
-            repo_root / "docs" / "renderer.js",
-        )
-        dist_chunks = renderer_dir / "dist" / "_chunks"
-        if dist_chunks.exists():
-            shutil.copytree(dist_chunks, stale_chunks)
+        if docs_renderer_chunks.exists():
+            shutil.rmtree(docs_renderer_chunks)
+        shutil.copy2(dist_entry, repo_root / "docs" / "renderer.js")
+        if dist_renderer_chunks.exists():
+            shutil.copytree(dist_renderer_chunks, docs_renderer_chunks)
 
     if rebuild_playground:
         shutil.copy2(
