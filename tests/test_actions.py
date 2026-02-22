@@ -11,6 +11,7 @@ from prefab_ui.actions import (
     OpenFilePicker,
     OpenLink,
     PopState,
+    SetInterval,
     SetState,
     ShowToast,
     ToggleState,
@@ -476,3 +477,97 @@ class TestDropZoneOnChange:
         dz = DropZone(label="Upload")
         j = dz.to_json()
         assert "onChange" not in j
+
+
+# ---------------------------------------------------------------------------
+# SetInterval
+# ---------------------------------------------------------------------------
+
+
+class TestSetIntervalSerialization:
+    def test_basic(self):
+        a = SetInterval(1000)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["action"] == "setInterval"
+        assert d["duration"] == 1000
+        assert "while" not in d
+        assert "count" not in d
+
+    def test_positional_duration(self):
+        a = SetInterval(500)
+        assert a.duration == 500
+
+    def test_with_while(self):
+        a = SetInterval(1000, while_="{{ seconds > 0 }}")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["while"] == "{{ seconds > 0 }}"
+
+    def test_with_count(self):
+        a = SetInterval(3000, count=1)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["count"] == 1
+
+    def test_on_tick_serializes(self):
+        a = SetInterval(1000, on_tick=SetState("ticks", "{{ $event }}"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["onTick"]["action"] == "setState"
+
+    def test_on_complete_serializes(self):
+        a = SetInterval(1000, count=5, on_complete=ShowToast("Done!"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["onComplete"]["action"] == "showToast"
+
+    def test_on_tick_list(self):
+        a = SetInterval(
+            1000,
+            on_tick=[SetState("count", "{{ count - 1 }}"), ShowToast("Tick")],
+        )
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert isinstance(d["onTick"], list)
+        assert len(d["onTick"]) == 2
+
+    def test_callbacks_excluded_when_none(self):
+        a = SetInterval(1000)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert "onTick" not in d
+        assert "onComplete" not in d
+        assert "onSuccess" not in d
+        assert "onError" not in d
+
+    def test_one_shot_delay_pattern(self):
+        a = SetInterval(3000, count=1, on_complete=ShowToast("Still there?"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["duration"] == 3000
+        assert d["count"] == 1
+        assert d["onComplete"]["action"] == "showToast"
+
+    def test_on_button(self):
+        b = Button(
+            label="Start",
+            on_click=SetInterval(
+                1000,
+                count=10,
+                on_tick=SetState("seconds", "{{ seconds - 1 }}"),
+            ),
+        )
+        j = b.to_json()
+        assert j["onClick"]["action"] == "setInterval"
+
+    def test_inherits_action_base_callbacks(self):
+        a = SetInterval(1000, on_success=ShowToast("Started"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["onSuccess"]["action"] == "showToast"
+
+    def test_while_and_count_together(self):
+        a = SetInterval(
+            500,
+            while_="{{ active }}",
+            count=20,
+            on_tick=SetState("t", "{{ $event }}"),
+            on_complete=SetState("done", True),
+        )
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["while"] == "{{ active }}"
+        assert d["count"] == 20
+        assert d["onTick"]["action"] == "setState"
+        assert d["onComplete"]["action"] == "setState"

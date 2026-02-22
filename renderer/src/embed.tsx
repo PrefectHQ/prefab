@@ -12,6 +12,7 @@ import { Toaster } from "sonner";
 import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
+import { clearAllIntervals } from "./actions";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
@@ -186,6 +187,7 @@ export function mountPreview(
 
   return {
     unmount() {
+      clearAllIntervals();
       root?.unmount();
       root = null;
       document.getElementById(portalId)?.remove();

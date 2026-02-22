@@ -33,6 +33,7 @@ import type {
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { earlyBridge } from "./early-bridge";
+import { clearAllIntervals } from "./actions";
 
 /** Protocol versions this renderer understands. */
 const SUPPORTED_VERSIONS = new Set(["0.2"]);
@@ -113,6 +114,7 @@ export function App() {
       const stateData = (structured.state ?? {}) as Record<string, unknown>;
 
       // Full state reset — host is providing a fresh view + state
+      clearAllIntervals();
       state.reset(stateData);
       setDefs(extractedDefs);
 

@@ -1,0 +1,273 @@
+---
+title: Set Interval
+description: Run actions on a repeating schedule with optional stop conditions.
+icon: timer
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`SetInterval` runs actions on a repeating timer. Each tick fires `on_tick`, and the timer stops automatically when a `while_` condition becomes false, a `count` limit is reached, or both. When it stops, `on_complete` fires one final time.
+
+## One-Shot Delay
+
+Set `count=1` to fire once after a pause — no separate "delay" action needed. Put your logic in `on_complete` and it runs when the timer finishes. The button below swaps to a waiting state so the user knows something is happening.
+
+<ComponentPreview json={{"view":{"type":"Button","label":"{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}","variant":"default","size":"default","disabled":"{{ waiting | false }}","onClick":[{"action":"setState","key":"waiting","value":true},{"action":"setInterval","duration":3000,"count":1,"onComplete":[{"action":"showToast","message":"Plot twist: the timer was watching YOU the whole time.","variant":"info"},{"action":"setState","key":"waiting","value":false}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions import SetInterval, SetState, ShowToast
+
+Button(
+    "{{ waiting ? 'Waiting…' : 'Start 3 second timer' }}",
+    disabled="{{ waiting | false }}",
+    on_click=[
+        SetState("waiting", True),
+        SetInterval(
+            3000,
+            count=1,
+            on_complete=[
+                ShowToast(
+                    "Plot twist: the timer was watching"
+                    " YOU the whole time.",
+                    variant="info",
+                ),
+                SetState("waiting", False),
+            ],
+        ),
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}",
+    "variant": "default",
+    "size": "default",
+    "disabled": "{{ waiting | false }}",
+    "onClick": [
+      {
+        "action": "setState",
+        "key": "waiting",
+        "value": true
+      },
+      {
+        "action": "setInterval",
+        "duration": 3000,
+        "count": 1,
+        "onComplete": [
+          {
+            "action": "showToast",
+            "message": "Plot twist: the timer was watching YOU the whole time.",
+            "variant": "info"
+          },
+          {
+            "action": "setState",
+            "key": "waiting",
+            "value": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Countdown
+
+Each tick decrements `seconds` in state, and the display reflects the current value through a template expression. When `seconds` reaches zero, the `while_` condition becomes false and the interval stops on its own.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Column","children":[{"cssClass":"text-2xl font-mono","content":"{{ seconds > 0 ? 'T-minus ' + seconds + '\u2026' : 'Ready for launch' }}","type":"Text"},{"type":"Button","label":"{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}","variant":"default","size":"default","disabled":"{{ seconds > 0 }}","onClick":[{"action":"setState","key":"seconds","value":10},{"action":"setInterval","duration":1000,"while":"{{ seconds > 0 }}","onTick":{"action":"setState","key":"seconds","value":"{{ seconds - 1 }}"}}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Column, Text
+from prefab_ui.actions import SetInterval, SetState
+
+with Column(gap=4, css_class="items-center"):
+    Text(
+        "{{ seconds > 0 ? "
+        "'T-minus ' + seconds + '…' "
+        ": 'Ready for launch' }}",
+        css_class="text-2xl font-mono",
+    )
+    Button(
+        "{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}",
+        disabled="{{ seconds > 0 }}",
+        on_click=[
+            SetState("seconds", 10),
+            SetInterval(
+                1000,
+                while_="{{ seconds > 0 }}",
+                on_tick=SetState(
+                    "seconds", "{{ seconds - 1 }}"
+                ),
+            ),
+        ],
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "text-2xl font-mono",
+        "content": "{{ seconds > 0 ? 'T-minus ' + seconds + '\u2026' : 'Ready for launch' }}",
+        "type": "Text"
+      },
+      {
+        "type": "Button",
+        "label": "{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}",
+        "variant": "default",
+        "size": "default",
+        "disabled": "{{ seconds > 0 }}",
+        "onClick": [
+          {
+            "action": "setState",
+            "key": "seconds",
+            "value": 10
+          },
+          {
+            "action": "setInterval",
+            "duration": 1000,
+            "while": "{{ seconds > 0 }}",
+            "onTick": {
+              "action": "setState",
+              "key": "seconds",
+              "value": "{{ seconds - 1 }}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Start and Stop
+
+Store a boolean flag in state and reference it in `while_`. Any action can flip the flag — the interval checks it on the next tick and stops. Here, one button starts an incrementing counter and another stops it. The same pattern works for periodic server polling with `CallTool` in `on_tick`.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Button","label":"Start","variant":"default","size":"default","disabled":"{{ running | false }}","onClick":[{"action":"setState","key":"running","value":true},{"action":"setState","key":"ticks","value":0},{"action":"setInterval","duration":1000,"while":"{{ running }}","onTick":{"action":"setState","key":"ticks","value":"{{ ticks + 1 }}"}}]},{"cssClass":"text-2xl font-mono tabular-nums","content":"{{ ticks | 0 }}","type":"Text"},{"type":"Button","label":"Stop","variant":"outline","size":"default","disabled":"{{ !running }}","onClick":{"action":"setState","key":"running","value":false}}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Row, Text
+from prefab_ui.actions import SetInterval, SetState
+
+with Row(gap=4, css_class="items-center"):
+    Button(
+        "Start",
+        disabled="{{ running | false }}",
+        on_click=[
+            SetState("running", True),
+            SetState("ticks", 0),
+            SetInterval(
+                1000,
+                while_="{{ running }}",
+                on_tick=SetState(
+                    "ticks", "{{ ticks + 1 }}"
+                ),
+            ),
+        ],
+    )
+    Text(
+        "{{ ticks | 0 }}",
+        css_class="text-2xl font-mono tabular-nums",
+    )
+    Button(
+        "Stop",
+        variant="outline",
+        disabled="{{ !running }}",
+        on_click=SetState("running", False),
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Start",
+        "variant": "default",
+        "size": "default",
+        "disabled": "{{ running | false }}",
+        "onClick": [
+          {
+            "action": "setState",
+            "key": "running",
+            "value": true
+          },
+          {
+            "action": "setState",
+            "key": "ticks",
+            "value": 0
+          },
+          {
+            "action": "setInterval",
+            "duration": 1000,
+            "while": "{{ running }}",
+            "onTick": {
+              "action": "setState",
+              "key": "ticks",
+              "value": "{{ ticks + 1 }}"
+            }
+          }
+        ]
+      },
+      {
+        "cssClass": "text-2xl font-mono tabular-nums",
+        "content": "{{ ticks | 0 }}",
+        "type": "Text"
+      },
+      {
+        "type": "Button",
+        "label": "Stop",
+        "variant": "outline",
+        "size": "default",
+        "disabled": "{{ !running }}",
+        "onClick": {
+          "action": "setState",
+          "key": "running",
+          "value": false
+        }
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+If neither `while_` nor `count` is set, the interval runs indefinitely until the component tree is replaced.
+
+## API Reference
+
+<Card icon="code" title="SetInterval Parameters">
+<ParamField body="duration" type="int" required>
+  Milliseconds between ticks. Passed as a positional argument.
+</ParamField>
+<ParamField body="while_" type="str | None" default="None">
+  Condition expression re-evaluated each tick against current state. When
+  it evaluates to falsy, the interval stops and `on_complete` fires. Serializes
+  as `"while"` on the wire.
+</ParamField>
+<ParamField body="count" type="int | None" default="None">
+  Maximum number of ticks. The interval stops after this many.
+</ParamField>
+<ParamField body="on_tick" type="Action | list[Action] | None" default="None">
+  Action(s) to run each tick. `$event` is the tick number (1, 2, 3, ...).
+</ParamField>
+<ParamField body="on_complete" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the interval finishes.
+</ParamField>
+</Card>
+
+## Protocol Reference

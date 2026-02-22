@@ -111,6 +111,19 @@ export const fetchSchema = z.object({
   ...actionCallbacks,
 });
 
+export const setIntervalSchema = z.object({
+  action: z.literal("setInterval"),
+  duration: z.number().int().positive(),
+  // After interpolation, a template like "{{ flag }}" resolves to a boolean,
+  // so the post-interpolation schema accepts both. The renderer reads the
+  // raw (pre-interpolation) string for re-evaluation each tick.
+  while: z.union([z.string(), z.boolean()]).optional(),
+  count: z.number().int().positive().optional(),
+  onTick: z.union([lazyAction, z.array(lazyAction)]).optional(),
+  onComplete: z.union([lazyAction, z.array(lazyAction)]).optional(),
+  ...actionCallbacks,
+});
+
 // ── Union + helpers ─────────────────────────────────────────────────
 
 export const actionSchema = z.discriminatedUnion("action", [
@@ -126,6 +139,7 @@ export const actionSchema = z.discriminatedUnion("action", [
   closeOverlaySchema,
   openFilePickerSchema,
   fetchSchema,
+  setIntervalSchema,
 ]);
 
 /** Single action or array of actions — the shape of onClick / onChange / etc. */
@@ -145,6 +159,7 @@ export const HANDLED_ACTIONS = new Set([
   "closeOverlay",
   "openFilePicker",
   "fetch",
+  "setInterval",
 ] as const);
 
 /**
@@ -164,6 +179,7 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   closeOverlay: closeOverlaySchema,
   openFilePicker: openFilePickerSchema,
   fetch: fetchSchema,
+  setInterval: setIntervalSchema,
 };
 
 export type ToolCallWire = z.infer<typeof toolCallSchema>;
@@ -178,5 +194,6 @@ export type ShowToastWire = z.infer<typeof showToastSchema>;
 export type CloseOverlayWire = z.infer<typeof closeOverlaySchema>;
 export type OpenFilePickerWire = z.infer<typeof openFilePickerSchema>;
 export type FetchWire = z.infer<typeof fetchSchema>;
+export type SetIntervalWire = z.infer<typeof setIntervalSchema>;
 export type ActionWire = z.infer<typeof actionSchema>;
 export type ActionOrListWire = z.infer<typeof actionOrList>;

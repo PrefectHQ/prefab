@@ -31,6 +31,7 @@ import type { OverlayCloseFn } from "./overlay-context";
 import { interpolateProps } from "./interpolation";
 import { validateAction } from "./validation";
 import { readFiles, filterByAccept } from "./file-utils";
+import { evaluateCondition } from "./conditions";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -42,6 +43,17 @@ export interface ActionSpec {
 
 /** Maximum callback nesting depth to prevent runaway recursion. */
 const MAX_DEPTH = 10;
+
+/** Active interval IDs for cleanup on unmount / tree replacement. */
+const activeIntervals = new Set<ReturnType<typeof setInterval>>();
+
+/** Clear all active intervals. Call when the component tree is replaced. */
+export function clearAllIntervals(): void {
+  for (const id of activeIntervals) {
+    globalThis.clearInterval(id);
+  }
+  activeIntervals.clear();
+}
 
 /**
  * Extract a human-readable error message from a failed action result.
@@ -362,6 +374,92 @@ export async function executeAction(
         }
         // Skip the generic onSuccess handling below
         return true;
+      }
+
+      case "setInterval": {
+        const duration = resolved.duration as number;
+        // Use the raw (uninterpolated) while expression — it must be
+        // re-evaluated each tick against the live state, not resolved once.
+        const whileExpr = action.while as string | undefined;
+        const maxCount = resolved.count as number | undefined;
+        // Keep onTick/onComplete as raw specs — they get interpolated
+        // at execution time inside executeActions.
+        const onTick = action.onTick as ActionSpec | ActionSpec[] | undefined;
+        const onComplete = action.onComplete as
+          | ActionSpec
+          | ActionSpec[]
+          | undefined;
+
+        let tickCount = 0;
+
+        const shouldContinue = (): boolean => {
+          if (maxCount != null && tickCount >= maxCount) return false;
+          if (whileExpr != null) {
+            const ctx: Record<string, unknown> = {
+              ...state.getAll(),
+              ...(scope ?? {}),
+            };
+            return evaluateCondition(whileExpr, ctx);
+          }
+          return true;
+        };
+
+        // If condition is already false, fire onComplete immediately
+        if (!shouldContinue()) {
+          if (onComplete) {
+            await executeActions(
+              onComplete,
+              app,
+              state,
+              undefined,
+              depth + 1,
+              undefined,
+              scope,
+              overlayClose,
+            );
+          }
+          break;
+        }
+
+        const intervalId = globalThis.setInterval(async () => {
+          tickCount++;
+
+          if (onTick) {
+            await executeActions(
+              onTick,
+              app,
+              state,
+              tickCount,
+              depth + 1,
+              undefined,
+              scope,
+              overlayClose,
+            );
+          }
+
+          if (!shouldContinue()) {
+            globalThis.clearInterval(intervalId);
+            activeIntervals.delete(intervalId);
+
+            if (onComplete) {
+              await executeActions(
+                onComplete,
+                app,
+                state,
+                undefined,
+                depth + 1,
+                undefined,
+                scope,
+                overlayClose,
+              );
+            }
+          }
+        }, duration);
+
+        activeIntervals.add(intervalId);
+
+        // Fire-and-forget: return immediately
+        break;
       }
     }
   } catch (e: unknown) {
