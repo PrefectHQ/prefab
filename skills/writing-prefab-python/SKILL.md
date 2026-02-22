@@ -70,7 +70,7 @@ from prefab_ui import Code, Image, State, Define, Use
 
 # Components — import what you need
 from prefab_ui.components import (
-    Grid, Div, Span,
+    Grid, Dashboard, DashboardItem, Div, Span,
     H1, H2, H3, H4, P, Lead, Large, Small, Muted,
     BlockQuote, InlineCode, Label,
     Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
@@ -171,6 +171,18 @@ Grid(columns=3, gap=4)               # grid-cols-3 gap-4
 ```
 
 Or use `css_class` directly: `Column(css_class="gap-4 max-w-2xl mx-auto")`.
+
+Dashboard places children at explicit grid coordinates (unlike Grid's
+auto-flow). Use DashboardItem wrappers with `col`, `row`, `col_span`,
+`row_span`:
+
+```python
+with Dashboard(columns=12, row_height=100, gap=4):
+    with DashboardItem(col=1, row=1, col_span=8, row_span=3):
+        LineChart(...)
+    with DashboardItem(col=9, row=1, col_span=4):
+        Text("$42M")
+```
 
 ## Form.from_model
 

@@ -78,7 +78,17 @@ import {
 import { PrefabDropZone } from "./drop-zone";
 
 // Custom components
-import { Row, Column, Container, Grid, Div, Span, PrefabForm } from "./layout";
+import {
+  Row,
+  Column,
+  Container,
+  Grid,
+  Dashboard,
+  DashboardItem,
+  Div,
+  Span,
+  PrefabForm,
+} from "./layout";
 import {
   Text,
   Heading,
@@ -196,6 +206,8 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Container,
   Form: PrefabForm,
   Grid,
+  Dashboard,
+  DashboardItem,
   Div,
   Span,
 

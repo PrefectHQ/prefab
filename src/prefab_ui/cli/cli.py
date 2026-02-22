@@ -347,19 +347,31 @@ def _should_install_node_deps(renderer_dir: Path) -> bool:
     return False
 
 
+def _source_content_hash(src_dir: Path, exclude: Path | None = None) -> str:
+    """SHA-256 over sorted file paths + contents under *src_dir*."""
+    import hashlib
+
+    h = hashlib.sha256()
+    for f in sorted(src_dir.rglob("*")):
+        if not f.is_file():
+            continue
+        if exclude and f.is_relative_to(exclude):
+            continue
+        h.update(str(f.relative_to(src_dir)).encode())
+        h.update(f.read_bytes())
+    return h.hexdigest()
+
+
 def _should_rebuild_renderer(repo_root: Path) -> bool:
     """Check whether the renderer bundle needs rebuilding."""
     renderer_js = repo_root / "docs" / "renderer.js"
     if not renderer_js.exists():
         return True
-    renderer_mtime = renderer_js.stat().st_mtime
+    hash_file = repo_root / "renderer" / ".renderer-hash"
     renderer_src = repo_root / "renderer" / "src"
     playground_dir = renderer_src / "playground"
-    return any(
-        f.stat().st_mtime > renderer_mtime
-        for f in renderer_src.rglob("*")
-        if f.is_file() and not f.is_relative_to(playground_dir)
-    )
+    current_hash = _source_content_hash(renderer_src, exclude=playground_dir)
+    return not (hash_file.exists() and hash_file.read_text().strip() == current_hash)
 
 
 def _should_rebuild_playground(repo_root: Path) -> bool:
@@ -367,13 +379,10 @@ def _should_rebuild_playground(repo_root: Path) -> bool:
     playground_html = repo_root / "docs" / "playground.html"
     if not playground_html.exists():
         return True
-    output_mtime = playground_html.stat().st_mtime
+    hash_file = repo_root / "renderer" / ".playground-hash"
     playground_src = repo_root / "renderer" / "src" / "playground"
-    return any(
-        f.stat().st_mtime > output_mtime
-        for f in playground_src.rglob("*")
-        if f.is_file()
-    )
+    current_hash = _source_content_hash(playground_src)
+    return not (hash_file.exists() and hash_file.read_text().strip() == current_hash)
 
 
 @dev_app.command(name="build-docs")
@@ -517,11 +526,20 @@ def build_docs() -> None:
         if dist_renderer_chunks.exists():
             shutil.copytree(dist_renderer_chunks, docs_renderer_chunks)
 
+    if copy_renderer:
+        renderer_src = repo_root / "renderer" / "src"
+        playground_dir = renderer_src / "playground"
+        hash_file = repo_root / "renderer" / ".renderer-hash"
+        hash_file.write_text(_source_content_hash(renderer_src, exclude=playground_dir))
+
     if rebuild_playground:
         shutil.copy2(
             renderer_dir / "dist" / "playground.html",
             repo_root / "docs" / "playground.html",
         )
+        playground_src = repo_root / "renderer" / "src" / "playground"
+        hash_file = repo_root / "renderer" / ".playground-hash"
+        hash_file.write_text(_source_content_hash(playground_src))
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
