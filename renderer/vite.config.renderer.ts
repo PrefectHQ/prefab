@@ -11,9 +11,8 @@ import { tailwindShadowDom, rewriteEntryLoader } from "./vite-plugins";
  * heavy features (charts, code highlighting, calendar, icons). The entry
  * assigns `window.__prefab = { mountPreview }` on load.
  *
- * Published to npm as part of @prefecthq/prefab-ui; loaded from CDN in docs.
- * Chunks use relative imports so they resolve from whatever origin serves
- * the entry script — CDN, local dev server, or same-origin static files.
+ * Published to npm as part of @prefecthq/prefab-ui. Chunks use relative
+ * imports so they resolve from whatever origin serves the entry script.
  */
 export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom(), rewriteEntryLoader()],
@@ -36,10 +35,7 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        // Mintlify inlines all .js files from docs/ into its RSC payload
-        // as non-module scripts, breaking ESM chunks. Using .mjs extension
-        // avoids this — Mintlify only processes .js files.
-        chunkFileNames: "_chunks/[name]-[hash].mjs",
+        chunkFileNames: "_chunks/[name]-[hash].js",
         manualChunks(id) {
           // The full lucide-react icon barrel (~500-800KB) is lazy-loaded
           // via icons-barrel.ts. Force it into its own chunk so the barrel

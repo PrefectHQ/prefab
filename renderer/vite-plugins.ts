@@ -1,9 +1,4 @@
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from "vite";
-import { readFileSync } from "fs";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Rewrite the renderer entry to use dynamic import() instead of static import.
@@ -11,15 +6,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * Mintlify inlines all .js files from the docs directory as non-module
  * <script> tags. Static `import`/`export` statements fail in that context.
  * Dynamic `import()` works in both module and non-module scripts, so we
- * rewrite the thin entry to a one-liner that loads the real code from a CDN.
+ * rewrite the thin entry to a one-liner that loads the real chunk.
  *
- * Mintlify's deployed hosting routes all URLs through its Next.js catch-all,
- * so .mjs chunk files can't be served as static assets — they're returned as
- * HTML pages. Loading chunks from jsdelivr avoids this: the npm package
- * includes dist/_chunks/ and jsdelivr serves them with correct MIME types.
- *
- * For local dev, set PREFAB_RENDERER_BASE to override the CDN URL
- * (e.g. PREFAB_RENDERER_BASE=/ to use local paths).
+ * Chunks use a `_chunks/` subdirectory so Mintlify doesn't inline them
+ * (it only processes top-level .js files). The absolute path ensures the
+ * import resolves correctly regardless of the current page URL.
  */
 export function rewriteEntryLoader(): Plugin {
   return {
@@ -30,28 +21,18 @@ export function rewriteEntryLoader(): Plugin {
       if (!entry || entry.type !== "chunk") return;
 
       // Find the chunk path from the static import in the generated entry.
-      // Vite generates: import { m as o } from "./_chunks/embed-HASH.mjs";
+      // Vite generates: import { m as o } from "./_chunks/embed-HASH.js";
       const match = entry.code.match(/from\s+["'](\.\/_chunks\/[^"']+)['"]/);
       if (!match) return;
 
-      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.mjs").
+      // Strip leading "./" to get the chunk subpath (e.g. "_chunks/embed-HASH.js").
       const chunkPath = match[1].replace(/^\.\//, "");
 
-      // Read package.json to construct the CDN URL.
-      const pkg = JSON.parse(
-        readFileSync(resolve(__dirname, "package.json"), "utf-8"),
-      );
-      const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@${pkg.version}/dist/`;
-
-      // The entry uses a CDN URL so it works on Mintlify's deployed hosting
-      // (which doesn't serve static .mjs files). Local dev can override via
-      // the __prefabBase variable set by component-preview.mdx.
-      entry.code = [
-        `(function(){`,
-        `var base=window.location.hostname==="localhost"?"/":"${cdnBase}";`,
-        `window.__prefabReady=import(base+"${chunkPath}");`,
-        `})();\n`,
-      ].join("");
+      // Use an absolute path so the import resolves correctly regardless of
+      // the current page URL. Mintlify inlines renderer.js as a non-module
+      // <script> where dynamic import() resolves relative to the page URL
+      // (e.g. /components/button). An absolute path avoids this problem.
+      entry.code = `window.__prefabReady=import("/${chunkPath}");\n`;
     },
   };
 }
