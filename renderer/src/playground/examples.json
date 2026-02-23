@@ -211,46 +211,6 @@
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "General",
-    "code": "from prefab_ui.components import Column, Text\n\nwith Column() as col:\n    Text(\"first\")\n    Text(\"second\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "General",
-    "code": "from prefab_ui.components import Card, CardContent, Column, Row, Text\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            with Row():\n                Text(\"left\")\n                Text(\"right\")\n            Text(\"below the row\")"
-  },
-  {
-    "title": "from prefab_ui.app import PrefabApp",
-    "category": "General",
-    "code": "from prefab_ui.components import Column, Heading, Text\n\nwith Column(gap=4) as view:\n    Heading(\"Dashboard\")\n    Text(\"Welcome back.\")\n\napp = PrefabApp(view=view)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "General",
-    "code": "from prefab_ui.components import Column, Badge\n\nstatuses = [\n    {\"name\": \"api-server\", \"healthy\": True},\n    {\"name\": \"worker\", \"healthy\": False},\n    {\"name\": \"scheduler\", \"healthy\": True},\n]\n\nwith Column(gap=2) as view:\n    for svc in statuses:\n        variant = \"default\" if svc[\"healthy\"] else \"destructive\"\n        Badge(svc[\"name\"], variant=variant)"
-  },
-  {
-    "title": "from prefab_ui.components import Text",
-    "category": "General",
-    "code": "t = Text(\"I have no parent\")"
-  },
-  {
-    "title": "from prefab_ui.components import Column, Text, detached",
-    "category": "General",
-    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with detached():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n# page has 1 child; sidebar has 1 child"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "General",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, H3, Input\n\nwith Column(gap=3) as view:\n    H3(\"Hello, {{ name }}!\")\n    Input(name=\"name\", placeholder=\"Your name...\")\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
-  },
-  {
-    "title": "from prefab_ui.app import set_initial_state",
-    "category": "General",
-    "code": "set_initial_state(name=\"world\")\n\n# ... build components ...\n\napp = PrefabApp(view=view)  # state is picked up automatically"
-  },
-  {
-    "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Accordion, AccordionItem, Text\n\nwith Accordion():\n    with AccordionItem(\"What is the Answer?\"):\n        Text(\n            \"Forty-two. The Answer to the Ultimate \"\n            \"Question of Life, the Universe, and \"\n            \"Everything.\"\n        )\n    with AccordionItem(\"What is the Heart of Gold?\"):\n        Text(\n            \"A starship powered by the Infinite \"\n            \"Improbability Drive. It can pass through \"\n            \"every conceivable point in every \"\n            \"conceivable universe almost simultaneously.\"\n        )\n    with AccordionItem(\"What is Deep Thought?\"):\n        Text(\n            \"A supercomputer designed to find the \"\n            \"Answer to the Ultimate Question. It took \"\n            \"7.5 million years to compute: 42.\"\n        )"
   },
@@ -1610,6 +1570,51 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    first_input = Input(name=\"first\", placeholder=\"First name\")\n    last_input = Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"{{ first + ' ' + last }}\")"
   },
   {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import Div, Row\n\nwith Row(gap=4):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import Column, Div\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import Column, Div, Row\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    with Row(gap=4):\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-purple-500 rounded-md h-10\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import Badge, Column, H3, Muted, Progress, Row\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    with Row(gap=3, align=\"center\"):\n        H3(\"API Server\")\n        Badge(\"Healthy\", variant=\"success\")\n    Muted(\"Uptime: 99.97%\")\n    Progress(value=99.97)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import (\n    Badge,\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    Muted,\n    Progress,\n    Row,\n)\n\nwith Card(css_class=\"w-72\"):\n    with CardHeader():\n        with Row(gap=3, align=\"center\"):\n            CardTitle(\"API Server\")\n            Badge(\"Healthy\", variant=\"success\")\n    with CardContent():\n        with Column(gap=3):\n            Muted(\"Uptime: 99.97%\")\n            Progress(value=99.97)\n    with CardFooter():\n        Button(\"View Logs\", variant=\"outline\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Grid,\n    Large,\n    Muted,\n    Progress,\n)\n\nservices = [\n    {\"name\": \"API Server\", \"uptime\": 99.97},\n    {\"name\": \"Worker\", \"uptime\": 94.2},\n    {\"name\": \"Scheduler\", \"uptime\": 99.8},\n]\n\nwith Grid(columns=3, gap=4):\n    for svc in services:\n        with Card():\n            with CardHeader():\n                CardTitle(svc[\"name\"])\n            with CardContent():\n                with Column(gap=2):\n                    Large(f\"{svc['uptime']}%\")\n                    Muted(\"uptime\")\n                    Progress(value=svc[\"uptime\"])"
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "Getting Started",
+    "code": "from prefab_ui.components import Column, H3, Text\n\nwith Column(gap=4) as view:\n    H3(\"Dashboard\")\n    Text(\"Welcome back.\")\n\napp = PrefabApp(view=view)"
+  },
+  {
+    "title": "from prefab_ui.components import Column, Text, detached",
+    "category": "Getting Started",
+    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with detached():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n# page has 1 child; sidebar has 1 child"
+  },
+  {
+    "title": "app.py",
+    "category": "Getting Started",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+  },
+  {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
     "code": "from prefab_ui.components import Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def hello(name: str) -> Text:\n    return Text(f\"Hello, {name}!\")"
@@ -1633,11 +1638,6 @@
     "title": "Python icon=\"python\"",
     "category": "General",
     "code": "from prefab_ui.components import Button, Card, CardContent, Column, Input\n\nwith Card() as view:\n    with CardContent():\n        with Column(gap=3):\n            Input(placeholder=\"you@example.com\")\n            Button(\"Subscribe\")"
-  },
-  {
-    "title": "app.py",
-    "category": "General",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
   },
   {
     "title": "from fastapi import FastAPI",
