@@ -162,7 +162,8 @@ with Column(gap=4):
   {
     title: "Toggle Visibility",
     category: "Patterns",
-    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription, If
+    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription
+from prefab_ui.components.control_flow import If
 from prefab_ui import ToggleState
 
 set_initial_state(show_alert=False)

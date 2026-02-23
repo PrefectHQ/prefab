@@ -1,9 +1,13 @@
 """Prefab component library.
 
-All components — structural, styled, and control-flow — are importable
-from this single package::
+UI and layout components are importable from this package directly::
 
-    from prefab_ui.components import Card, Badge, H1, Grid, ForEach
+    from prefab_ui.components import Card, Badge, H1, Grid
+
+Charts and control flow have dedicated submodules::
+
+    from prefab_ui.components.charts import BarChart, ChartSeries
+    from prefab_ui.components.control_flow import ForEach, If, Else
 """
 
 from prefab_ui.components.alert import Alert, AlertDescription, AlertTitle
@@ -15,15 +19,6 @@ from prefab_ui.components.base import (
 )
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
-from prefab_ui.components.chart import (
-    AreaChart,
-    BarChart,
-    ChartSeries,
-    LineChart,
-    PieChart,
-    RadarChart,
-    RadialChart,
-)
 from prefab_ui.components.button_group import ButtonGroup
 from prefab_ui.components.card import (
     Card,
@@ -36,7 +31,6 @@ from prefab_ui.components.card import (
 from prefab_ui.components.checkbox import Checkbox
 from prefab_ui.components.combobox import Combobox, ComboboxOption
 from prefab_ui.components.code import Code
-from prefab_ui.components.conditional import Elif, Else, If
 from prefab_ui.components.column import Column
 from prefab_ui.components.container import Container
 from prefab_ui.components.dashboard import Dashboard, DashboardItem
@@ -47,7 +41,6 @@ from prefab_ui.components.div import Div, Span
 from prefab_ui.components.drop_zone import DropZone
 from prefab_ui.components.accordion import Accordion, AccordionItem
 from prefab_ui.components.field import Field
-from prefab_ui.components.foreach import ForEach
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
 from prefab_ui.components.heading import Heading
@@ -106,9 +99,7 @@ __all__ = [
     "Alert",
     "AlertDescription",
     "AlertTitle",
-    "AreaChart",
     "Badge",
-    "BarChart",
     "BlockQuote",
     "Button",
     "ButtonGroup",
@@ -119,7 +110,6 @@ __all__ = [
     "CardFooter",
     "CardHeader",
     "CardTitle",
-    "ChartSeries",
     "Checkbox",
     "Code",
     "Column",
@@ -136,34 +126,26 @@ __all__ = [
     "Dialog",
     "Div",
     "DropZone",
-    "Elif",
-    "Else",
     "Field",
-    "ForEach",
     "Form",
     "Grid",
     "Heading",
     "HoverCard",
     "Icon",
-    "If",
     "Image",
     "InlineCode",
     "Input",
     "Label",
     "Large",
     "Lead",
-    "LineChart",
     "Loader",
     "Markdown",
     "Muted",
     "P",
     "Page",
     "Pages",
-    "PieChart",
     "Popover",
     "Progress",
-    "RadarChart",
-    "RadialChart",
     "Radio",
     "RadioGroup",
     "Row",

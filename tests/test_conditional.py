@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from prefab_ui.components import Badge, Column, Elif, Else, If, Text
+from prefab_ui.components import Badge, Column, Text
+from prefab_ui.components.control_flow import Elif, Else, If
 
 
 class TestConditionalSerialization:
