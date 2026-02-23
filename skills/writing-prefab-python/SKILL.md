@@ -27,7 +27,8 @@ or read the source in `src/prefab_ui/components/`.
 
 ```python
 from prefab_ui import UIResponse, Column, Heading, Text
-from prefab_ui.components import Button, Input, DataTable, DataTableColumn, If, Muted
+from prefab_ui.components import Button, Input, DataTable, DataTableColumn, Muted
+from prefab_ui.components.control_flow import If
 from prefab_ui.actions import ShowToast
 from prefab_ui.actions.mcp import CallTool
 
@@ -84,9 +85,11 @@ from prefab_ui.components import (
     Progress, Separator, Spinner, Icon,
     Button, ButtonGroup, Tabs, Tab, Accordion, AccordionItem,
     Dialog, Popover, Tooltip, Pages, Page,
-    BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ChartSeries,
-    ForEach, If, Elif, Else,
 )
+from prefab_ui.components.charts import (
+    BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ChartSeries,
+)
+from prefab_ui.components.control_flow import ForEach, If, Elif, Else
 
 # Actions
 from prefab_ui.actions import SetState, ToggleState, ShowToast, OpenLink

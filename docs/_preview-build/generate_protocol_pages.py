@@ -19,6 +19,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 import prefab_ui.actions as actions_mod
 import prefab_ui.components as components_mod
+from prefab_ui.components.charts import (
+    AreaChart,
+    BarChart,
+    LineChart,
+    PieChart,
+    RadarChart,
+    RadialChart,
+)
+from prefab_ui.components.control_flow import ForEach
 
 PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "protocol"
 
@@ -47,6 +56,11 @@ for name in components_mod.__all__:
         wire_name = type_field.default
     else:
         wire_name = name
+    COMPONENT_CLASSES[wire_name] = cls
+
+# Submodule components (not in __all__)
+for cls in [AreaChart, BarChart, LineChart, PieChart, RadarChart, RadialChart, ForEach]:
+    wire_name = cls.model_fields["type"].default
     COMPONENT_CLASSES[wire_name] = cls
 
 # Action subclasses

@@ -10,9 +10,9 @@ from prefab_ui.components import (
     Card,
     Column,
     Heading,
-    If,
     Text,
 )
+from prefab_ui.components.control_flow import If
 from prefab_ui.define import Define
 from prefab_ui.use import Use
 

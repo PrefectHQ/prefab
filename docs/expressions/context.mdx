@@ -135,7 +135,8 @@ Button(
 Available inside [ForEach](/components/foreach) iterations. The zero-based index of the current item.
 
 ```python
-from prefab_ui.components import ForEach, Text
+from prefab_ui.components import Text
+from prefab_ui.components.control_flow import ForEach
 
 with ForEach("items"):
     Text("{{ $index + 1 }}. {{ name }}")
@@ -149,7 +150,8 @@ with ForEach("items"):
 Available inside [ForEach](/components/foreach) iterations. A reference to the entire current item object. Individual fields are also available directly (`{{ name }}` instead of `{{ $item.name }}`), but `$item` is useful when you need to pass the whole object to an action:
 
 ```python
-from prefab_ui.components import ForEach, Button, Text
+from prefab_ui.components import Button, Text
+from prefab_ui.components.control_flow import ForEach
 from prefab_ui.actions.mcp import CallTool
 
 with ForEach("users"):
@@ -175,11 +177,10 @@ from prefab_ui.components import (
     Alert,
     AlertDescription,
     Column,
-    Elif,
-    If,
     Slider,
     Text,
 )
+from prefab_ui.components.control_flow import Elif, If
 set_initial_state(inventory=15)
 
 with Column(gap=3):
