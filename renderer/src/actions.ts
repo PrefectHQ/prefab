@@ -171,14 +171,19 @@ export async function executeAction(
         break;
       }
       case "updateContext": {
-        await app?.updateModelContext({
-          content: resolved.content
-            ? [{ type: "text", text: resolved.content as string }]
-            : undefined,
-          structuredContent: resolved.structuredContent as
-            | Record<string, unknown>
-            | undefined,
-        });
+        try {
+          await app?.updateModelContext({
+            content: resolved.content
+              ? [{ type: "text", text: resolved.content as string }]
+              : undefined,
+            structuredContent: resolved.structuredContent as
+              | Record<string, unknown>
+              | undefined,
+          });
+        } catch (e) {
+          success = false;
+          errorMessage = e instanceof Error ? e.message : String(e);
+        }
         break;
       }
       case "openLink": {
