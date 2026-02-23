@@ -38,6 +38,7 @@ from prefab_ui.components.charts import (
     PieChart,
     RadarChart,
     RadialChart,
+    ScatterChart,
 )
 from prefab_ui.components.control_flow import ForEach
 
@@ -159,6 +160,7 @@ def discover_components() -> dict[str, type[Component]]:
         PieChart,
         RadarChart,
         RadialChart,
+        ScatterChart,
         ForEach,
     ]
     for cls in _SUBMODULE_COMPONENTS:
