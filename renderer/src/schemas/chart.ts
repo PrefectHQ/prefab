@@ -17,6 +17,8 @@ const cartesianBase = componentBase.extend({
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   showGrid: z.boolean().optional(),
+  showYAxis: z.boolean().optional(),
+  yAxisFormat: z.enum(["auto", "compact"]).optional(),
 });
 
 export const barChartSchema = cartesianBase.extend({

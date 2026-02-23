@@ -10,7 +10,7 @@ LineChart connects data points with lines, making it ideal for showing trends ov
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"linear","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}}}>
+<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"linear","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components.charts import LineChart, ChartSeries
@@ -86,7 +86,9 @@ LineChart(
     "showDots": false,
     "showLegend": true,
     "showTooltip": true,
-    "showGrid": true
+    "showGrid": true,
+    "showYAxis": true,
+    "yAxisFormat": "auto"
   }
 }
 ```
@@ -97,7 +99,7 @@ LineChart(
 
 Turn off the grid for a cleaner look.
 
-<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"value","label":"Requests"}],"xAxis":"month","height":300,"curve":"linear","showDots":false,"showLegend":false,"showTooltip":true,"showGrid":false}}}>
+<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"value","label":"Requests"}],"xAxis":"month","height":300,"curve":"linear","showDots":false,"showLegend":false,"showTooltip":true,"showGrid":false,"showYAxis":true,"yAxisFormat":"auto"}}}>
 <CodeGroup>
 ```python Python {5} icon="python"
 LineChart(
@@ -155,7 +157,9 @@ LineChart(
     "showDots": false,
     "showLegend": false,
     "showTooltip": true,
-    "showGrid": false
+    "showGrid": false,
+    "showYAxis": true,
+    "yAxisFormat": "auto"
   }
 }
 ```
@@ -166,7 +170,7 @@ LineChart(
 
 Set `curve="smooth"` for gently curved lines between data points.
 
-<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"smooth","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}}}>
+<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"smooth","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}}}>
 <CodeGroup>
 ```python Python {8} icon="python"
 LineChart(
@@ -232,7 +236,9 @@ LineChart(
     "showDots": false,
     "showLegend": true,
     "showTooltip": true,
-    "showGrid": true
+    "showGrid": true,
+    "showYAxis": true,
+    "yAxisFormat": "auto"
   }
 }
 ```
@@ -243,7 +249,7 @@ LineChart(
 
 Set `curve="step"` to connect points with step-shaped lines. This is useful for data that changes in discrete jumps.
 
-<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"step","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true}}}>
+<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"step","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}}}>
 <CodeGroup>
 ```python Python {8} icon="python"
 LineChart(
@@ -309,7 +315,9 @@ LineChart(
     "showDots": false,
     "showLegend": true,
     "showTooltip": true,
-    "showGrid": true
+    "showGrid": true,
+    "showYAxis": true,
+    "yAxisFormat": "auto"
   }
 }
 ```
@@ -320,7 +328,7 @@ LineChart(
 
 Set `show_dots=True` to render a dot at each data point along the lines.
 
-<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"linear","showDots":true,"showLegend":true,"showTooltip":true,"showGrid":true}}}>
+<ComponentPreview json={{"view":{"type":"LineChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"curve":"linear","showDots":true,"showLegend":true,"showTooltip":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}}}>
 <CodeGroup>
 ```python Python {8} icon="python"
 LineChart(
@@ -386,7 +394,9 @@ LineChart(
     "showDots": true,
     "showLegend": true,
     "showTooltip": true,
-    "showGrid": true
+    "showGrid": true,
+    "showYAxis": true,
+    "yAxisFormat": "auto"
   }
 }
 ```

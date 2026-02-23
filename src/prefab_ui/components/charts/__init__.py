@@ -78,6 +78,14 @@ class BarChart(Component):
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
+    show_y_axis: bool = Field(
+        default=True, alias="showYAxis", description="Show y-axis with tick labels"
+    )
+    y_axis_format: Literal["auto", "compact"] = Field(
+        default="auto",
+        alias="yAxisFormat",
+        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
+    )
 
 
 class LineChart(Component):
@@ -115,6 +123,14 @@ class LineChart(Component):
     )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
+    )
+    show_y_axis: bool = Field(
+        default=True, alias="showYAxis", description="Show y-axis with tick labels"
+    )
+    y_axis_format: Literal["auto", "compact"] = Field(
+        default="auto",
+        alias="yAxisFormat",
+        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
     )
 
 
@@ -155,6 +171,14 @@ class AreaChart(Component):
     )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
+    )
+    show_y_axis: bool = Field(
+        default=True, alias="showYAxis", description="Show y-axis with tick labels"
+    )
+    y_axis_format: Literal["auto", "compact"] = Field(
+        default="auto",
+        alias="yAxisFormat",
+        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
     )
 
 
