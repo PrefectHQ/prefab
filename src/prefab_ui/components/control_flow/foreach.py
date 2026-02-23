@@ -5,7 +5,7 @@ data context for interpolation.
 
 Example::
 
-    from prefab_ui.components import ForEach
+    from prefab_ui.components.control_flow import ForEach
     from prefab_ui.components import Card, CardTitle, Badge
 
     with ForEach("users"):

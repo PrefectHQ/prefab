@@ -15,7 +15,8 @@ The simplest case: show something only when a condition is true. Toggle the swit
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"content":"Out of stock","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Alert, AlertTitle, Column, If, Row, Switch, Text
+from prefab_ui.components import Alert, AlertTitle, Column, Row, Switch, Text
+from prefab_ui.components.control_flow import If
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
@@ -93,12 +94,11 @@ from prefab_ui.components import (
     CardHeader,
     CardTitle,
     Column,
-    Else,
-    If,
     Row,
     Switch,
     Text,
 )
+from prefab_ui.components.control_flow import Else, If
 set_initial_state(showDetails=True)
 
 with Column(gap=3):
@@ -199,12 +199,10 @@ from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Badge,
     Column,
-    Elif,
-    Else,
-    If,
     Select,
     SelectOption,
 )
+from prefab_ui.components.control_flow import Elif, Else, If
 set_initial_state(status="active")
 
 with Column(gap=3):

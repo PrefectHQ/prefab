@@ -15,7 +15,6 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
-    ForEach,
     Card,
     CardHeader,
     CardTitle,
@@ -24,6 +23,7 @@ from prefab_ui.components import (
     Column,
     Row,
 )
+from prefab_ui.components.control_flow import ForEach
 
 set_initial_state(crew=[
     {"name": "Arthur Dent", "designation": "Sandwich Maker", "email": "arthur@heart-of-gold.ship"},
@@ -117,11 +117,8 @@ The `key` argument (passed positionally or as a keyword) names the field in the 
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
-from prefab_ui.components import (
-    ForEach,
-    Badge,
-    Row,
-)
+from prefab_ui.components import Badge, Row
+from prefab_ui.components.control_flow import ForEach
 
 set_initial_state(tags=["earth", "magrathea", "vogon poetry", "42"])
 
@@ -171,7 +168,8 @@ Beyond the item's own fields, every iteration exposes two special variables: `$i
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
-from prefab_ui.components import Column, ForEach, Text
+from prefab_ui.components import Column, Text
+from prefab_ui.components.control_flow import ForEach
 
 set_initial_state(steps=["Collect underpants", "?", "Profit"])
 
@@ -220,13 +218,13 @@ Since each item becomes the full interpolation context for that iteration, you c
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
-    ForEach,
     Card,
     CardHeader,
     CardTitle,
     CardDescription,
     Column,
 )
+from prefab_ui.components.control_flow import ForEach
 
 set_initial_state(projects=[
     {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},

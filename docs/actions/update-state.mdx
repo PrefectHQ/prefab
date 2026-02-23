@@ -261,7 +261,8 @@ If an intermediate path segment is missing or the wrong type (e.g. an integer se
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Toggle Details","variant":"outline","size":"default","disabled":false,"onClick":{"action":"toggleState","key":"showDetails"}},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertTitle","content":"Here are the details!"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Alert, AlertTitle, Button, Column, If
+from prefab_ui.components import Alert, AlertTitle, Button, Column
+from prefab_ui.components.control_flow import If
 from prefab_ui.actions import ToggleState
 
 with Column(gap=2):

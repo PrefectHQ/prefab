@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from prefab_ui.components import Column, ForEach, Text
+from prefab_ui.components import Column, Text
+from prefab_ui.components.control_flow import ForEach
 
 
 class TestForEachSerialization:

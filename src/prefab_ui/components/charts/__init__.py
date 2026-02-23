@@ -4,7 +4,7 @@ Built on Recharts + shadcn ChartContainer in the renderer.
 
 Example::
 
-    from prefab_ui.components import BarChart, ChartSeries
+    from prefab_ui.components.charts import BarChart, ChartSeries
 
     BarChart(
         data=[
