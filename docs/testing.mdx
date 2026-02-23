@@ -129,12 +129,12 @@ USERS = [
 
 def build_search_ui() -> UIResponse:
     with Column(gap=4) as view:
-        Input(name="query", placeholder="Search...")
+        query_input = Input(placeholder="Search...")
         Button(
             "Search",
             on_click=CallTool(
                 "search_users",
-                arguments={"q": "{{ query }}"},
+                arguments={"q": query_input.rx},
                 result_key="results",
                 on_error=ShowToast("{{ $error }}", variant="error"),
             ),

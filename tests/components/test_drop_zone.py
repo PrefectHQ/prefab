@@ -9,7 +9,7 @@ class TestDropZone:
     def test_minimal_excludes_none_fields(self):
         j = DropZone().to_json()
         assert j["type"] == "DropZone"
-        for key in ("label", "description", "accept", "maxSize", "name", "onChange"):
+        for key in ("label", "description", "accept", "maxSize", "onChange"):
             assert key not in j
 
     def test_with_all_props(self):

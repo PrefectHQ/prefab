@@ -10,7 +10,7 @@ Inputs collect text, email, passwords, and other single-line data from users.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Enter your email...","name":"input-7","disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -23,6 +23,7 @@ Input(placeholder="Enter your email...")
     "type": "Input",
     "inputType": "text",
     "placeholder": "Enter your email...",
+    "name": "input-7",
     "disabled": false,
     "required": false
   }
@@ -35,7 +36,7 @@ Input(placeholder="Enter your email...")
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Input","inputType":"email","placeholder":"Email","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Input","inputType":"email","placeholder":"Email","name":"input-8","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","name":"input-9","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","name":"input-10","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","name":"input-11","disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -59,6 +60,7 @@ with Column(gap=4):
         "type": "Input",
         "inputType": "email",
         "placeholder": "Email",
+        "name": "input-8",
         "disabled": false,
         "required": false
       },
@@ -66,6 +68,7 @@ with Column(gap=4):
         "type": "Input",
         "inputType": "password",
         "placeholder": "Password",
+        "name": "input-9",
         "disabled": false,
         "required": false
       },
@@ -73,6 +76,7 @@ with Column(gap=4):
         "type": "Input",
         "inputType": "number",
         "placeholder": "Age",
+        "name": "input-10",
         "disabled": false,
         "required": false
       },
@@ -80,6 +84,7 @@ with Column(gap=4):
         "type": "Input",
         "inputType": "tel",
         "placeholder": "Phone",
+        "name": "input-11",
         "disabled": false,
         "required": false
       }
@@ -94,7 +99,7 @@ with Column(gap=4):
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"required":true}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"input-12","disabled":false,"required":true}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -121,6 +126,7 @@ with Column(gap=2):
         "type": "Input",
         "inputType": "email",
         "placeholder": "you@example.com",
+        "name": "input-12",
         "disabled": false,
         "required": true
       }
@@ -222,7 +228,7 @@ with Row(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Disabled input","name":"input-13","disabled":true,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -235,6 +241,7 @@ Input(placeholder="Disabled input", disabled=True)
     "type": "Input",
     "inputType": "text",
     "placeholder": "Disabled input",
+    "name": "input-13",
     "disabled": true,
     "required": false
   }
@@ -260,7 +267,7 @@ Input(placeholder="Disabled input", disabled=True)
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  Form field name for submission.
+  State key for the input's current value. Auto-generated if not provided. Set this to bind the input to a known key, or use `.rx` to reference the auto-generated key without knowing it.
 </ParamField>
 
 <ParamField body="disabled" type="bool" default="False">

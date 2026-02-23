@@ -101,7 +101,7 @@ Fetch.get("/api/search", params={"q": "{{ search_input }}", "page": "1"})
 
 `Fetch.post` sends a JSON body to your API. Wrap inputs in a `Form` so that pressing Enter triggers submission.
 
-Reference named inputs with `{{ key }}` — make sure each key is initialized in your `PrefabApp(state=...)`, otherwise unset values render as literal template strings.
+Reference named inputs by assigning the component to a variable and using `.rx`, or with `{{ key }}` directly — make sure each key is initialized in your `PrefabApp(state=...)`, otherwise unset values render as literal template strings.
 
 ```python
 from prefab_ui.actions import Fetch, ShowToast

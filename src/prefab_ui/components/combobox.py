@@ -12,16 +12,20 @@ Example::
         ComboboxOption("Remix", value="remix")
         ComboboxOption("Astro", value="astro")
         ComboboxOption("SvelteKit", value="sveltekit")
+
+    # Access reactive value
+    combo = Combobox(placeholder="Choose framework...")
+    Text(f"Selected: {combo.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal, overload
+from typing import Any, ClassVar, Literal, overload
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
 
 
 class ComboboxOption(Component):
@@ -51,7 +55,7 @@ class ComboboxOption(Component):
         super().__init__(**kwargs)
 
 
-class Combobox(ContainerComponent):
+class Combobox(StatefulMixin, ContainerComponent):
     """Searchable select dropdown.
 
     Children must be ``ComboboxOption`` components.
@@ -70,6 +74,7 @@ class Combobox(ContainerComponent):
             ComboboxOption("Rust", value="rust")
     """
 
+    _auto_name: ClassVar[str] = "combobox"
     type: Literal["Combobox"] = "Combobox"
     placeholder: str | None = Field(
         default=None,
@@ -82,7 +87,7 @@ class Combobox(ContainerComponent):
     )
     name: str | None = Field(
         default=None,
-        description="State key for the selected value",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )
     disabled: bool = Field(default=False, description="Whether combobox is disabled")
     on_change: Action | list[Action] | None = Field(

@@ -14,19 +14,23 @@ Example::
         multiple=True,
         on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
     )
+
+    # Access reactive value
+    zone = DropZone(label="Drop files", accept="image/*")
+    Text(f"Files: {zone.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class DropZone(Component):
+class DropZone(StatefulMixin, Component):
     """Drag-and-drop file upload area.
 
     Fires ``onChange`` with file data as ``$event``:
@@ -44,6 +48,7 @@ class DropZone(Component):
         on_change: Action(s) to execute when files are selected.
     """
 
+    _auto_name: ClassVar[str] = "dropzone"
     type: Literal["DropZone"] = "DropZone"
     icon: str | None = Field(
         default=None,
@@ -77,7 +82,7 @@ class DropZone(Component):
     )
     name: str | None = Field(
         default=None,
-        description="State key for auto-state binding",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,

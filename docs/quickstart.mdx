@@ -28,11 +28,11 @@ with Column(css_class="max-w-md mx-auto") as view:
     with Card():
         with CardContent():
             with Column(gap=3):
-                H3("Hello, {{ name }}!")
+                name_input = Input(name="name", placeholder="Your name...")
+                H3(f"Hello, {name_input.rx}!")
                 Muted("Type your name and watch the heading update in real time.")
-                Input(name="name", placeholder="Your name...")
         with CardFooter():
-            Button("Say hi", on_click=ShowToast("Hey there, {{ name }}!"))
+            Button("Say hi", on_click=ShowToast(f"Hey there, {name_input.rx}!"))
 
 app = PrefabApp(view=view, state={"name": "world"})
 ```
@@ -61,7 +61,7 @@ Three things worth understanding:
 
 **Component trees.** Prefab components nest using Python's `with` statement. `Card`, `Column`, `Input` — they compose into a tree that compiles to JSON, which a bundled React renderer turns into real HTML.
 
-**Client-side state.** Every named form control (`Input(name="name")`) automatically syncs its value to client-side state. The `{{ name }}` syntax reads from that state and updates the UI reactively — no server round-trip needed. You seed initial values with `PrefabApp(state={"name": "world"})`.
+**Client-side state.** Every form control syncs its value to a state key. The `.rx` property returns a reactive reference to that key — `name_input.rx` in an f-string becomes `{{ name }}` in the protocol, and any component containing it re-renders whenever the input changes. No server round-trip needed. You seed initial values with `PrefabApp(state={"name": "world"})`.
 
 **Actions.** `ShowToast` is a client-side action — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
 
@@ -69,8 +69,8 @@ Three things worth understanding:
 
 **Explore components.** Browse all 35+ components in the [Playground](/playground), or dive into the [component reference](/components/button).
 
-**Add client interactivity.** The `{{ }}` syntax supports [operators, conditionals, and pipes](/expressions/overview) — enough to build surprisingly rich UIs without a server.
+**Add client interactivity.** The `.rx` property generates reactive references to component state. The underlying `{{ }}` expression language supports [operators, conditionals, and pipes](/expressions/overview) — enough to build surprisingly rich UIs without a server.
 
 **Wire up a backend.** When you need server logic, Prefab works with [API servers](/running/api) and [FastMCP](/running/fastmcp). Server actions like `CallTool` let your UI make round-trips for real data.
 
-**Add expressions.** [Templates, operators, and pipes](/expressions/overview) let you build reactive UIs with `{{ }}` syntax.
+**Add expressions.** [Templates, operators, and pipes](/expressions/overview) let you build reactive UIs. Use `.rx` for Python-authored references, or write `{{ }}` directly when working with runtime variables.

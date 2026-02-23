@@ -10,7 +10,7 @@ Select dropdowns let users pick one option from a list.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}}>
+<ComponentPreview json={{"view":{"type":"Select","placeholder":"Choose size...","name":"select-2","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -28,6 +28,7 @@ with Select(placeholder="Choose size..."):
   "view": {
     "type": "Select",
     "placeholder": "Choose size...",
+    "name": "select-2",
     "size": "default",
     "disabled": false,
     "required": false,
@@ -62,7 +63,7 @@ with Select(placeholder="Choose size..."):
 
 ## With Selected Value
 
-<ComponentPreview json={{"view":{"type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}}>
+<ComponentPreview json={{"view":{"type":"Select","placeholder":"Select country","name":"select-3","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -80,6 +81,7 @@ with Select(placeholder="Select country"):
   "view": {
     "type": "Select",
     "placeholder": "Select country",
+    "name": "select-3",
     "size": "default",
     "disabled": false,
     "required": false,
@@ -114,7 +116,7 @@ with Select(placeholder="Select country"):
 
 ## Sizes
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Default size","name":"select-4","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"type":"Select","placeholder":"Small size","name":"select-5","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -141,6 +143,7 @@ with Column(gap=4):
       {
         "type": "Select",
         "placeholder": "Default size",
+        "name": "select-4",
         "size": "default",
         "disabled": false,
         "required": false,
@@ -164,6 +167,7 @@ with Column(gap=4):
       {
         "type": "Select",
         "placeholder": "Small size",
+        "name": "select-5",
         "size": "sm",
         "disabled": false,
         "required": false,
@@ -193,7 +197,7 @@ with Column(gap=4):
 
 ## With Label
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"type":"Select","placeholder":"Choose language","name":"select-6","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -223,6 +227,7 @@ with Column(gap=2):
       {
         "type": "Select",
         "placeholder": "Choose language",
+        "name": "select-6",
         "size": "default",
         "disabled": false,
         "required": false,
@@ -261,7 +266,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the selection changes. `$event` is the `value` string of the selected option:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | 'Make a selection' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","name":"select-7","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | 'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -289,6 +294,7 @@ with Column(gap=4):
       {
         "type": "Select",
         "placeholder": "Pick a color...",
+        "name": "select-7",
         "size": "default",
         "disabled": false,
         "required": false,
@@ -341,7 +347,7 @@ with Column(gap=4):
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  Form field name for submission.
+  State key for the selected value. Auto-generated if not provided. Use `.rx` to reference the current selection in other components without specifying the key explicitly.
 </ParamField>
 
 <ParamField body="size" type="str" default="default">

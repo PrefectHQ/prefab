@@ -14,15 +14,19 @@ Example::
         with Page("Settings"):
             Text("Settings go here.")
             Button("Back", on_click=SetState("page", "home"))
+
+    # Access reactive value
+    pages = Pages()
+    Text(f"Current page: {pages.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal, overload
+from typing import Any, ClassVar, Literal, overload
 
 from pydantic import Field
 
-from prefab_ui.components.base import ContainerComponent
+from prefab_ui.components.base import ContainerComponent, StatefulMixin
 
 
 class Page(ContainerComponent):
@@ -53,7 +57,7 @@ class Page(ContainerComponent):
         super().__init__(**kwargs)
 
 
-class Pages(ContainerComponent):
+class Pages(StatefulMixin, ContainerComponent):
     """Multi-page layout — only the active Page renders.
 
     Control which page shows via the state key matching ``name``.
@@ -67,6 +71,7 @@ class Pages(ContainerComponent):
                 Text("Settings content")
     """
 
+    _auto_name: ClassVar[str] = "pages"
     type: Literal["Pages"] = "Pages"
     default_value: str | None = Field(
         default=None,
@@ -75,5 +80,5 @@ class Pages(ContainerComponent):
     )
     name: str | None = Field(
         default=None,
-        description="State key for tracking the active page",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )

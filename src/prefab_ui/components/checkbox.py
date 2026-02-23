@@ -8,19 +8,23 @@ Example::
 
     Checkbox(checked=True, label="Accept terms")
     Checkbox(label="Subscribe to newsletter")
+
+    # Access reactive value
+    agree = Checkbox(label="I agree")
+    Text(f"Agreed: {agree.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class Checkbox(Component):
+class Checkbox(StatefulMixin, Component):
     """Checkbox input component.
 
     Args:
@@ -39,10 +43,14 @@ class Checkbox(Component):
         Checkbox(label="Enable {{ feature_name }}", checked="{{ is_enabled }}")
     """
 
+    _auto_name: ClassVar[str] = "checkbox"
     type: Literal["Checkbox"] = "Checkbox"
     label: str | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether checkbox is checked")
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     value: str | None = Field(default=None, description="Form value")
     disabled: bool = Field(default=False, description="Whether checkbox is disabled")
     required: bool = Field(default=False, description="Whether checkbox is required")

@@ -52,8 +52,8 @@ mcp = FastMCP("Demo")
 async def search(query: str = "") -> AppResult:
     results = find_items(query) if query else []
     with Column(gap=3) as view:
-        Input(name="q", placeholder="Search...")
-        Button("Search", on_click=CallTool("search", arguments={"query": "{{ q }}"}))
+        search_input = Input(placeholder="Search...")
+        Button("Search", on_click=CallTool("search", arguments={"query": search_input.rx}))
         for r in results:
             Text(r["title"])
     return AppResult(view=view, state={"results": results})
@@ -63,9 +63,9 @@ When the user types a query and clicks "Search", the `CallTool` action calls the
 
 ## State
 
-Every named form control automatically syncs its value to client-side state. When a user types in `Input(name="city")`, the key `city` is updated on every keystroke. No explicit wiring needed.
+Every form control automatically syncs its value to client-side state. When a user types in an `Input`, the renderer writes its current value to a state key on every keystroke. No explicit wiring needed.
 
-You can reference state values in actions and component props using `{{ key }}` interpolation:
+The `.rx` property on any stateful component returns a reactive reference to that state key. Use it in f-strings or pass it directly to any string prop — it serializes to `{{ key }}` at build time and re-evaluates at render time as the user interacts.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
 <CodeGroup>
@@ -74,12 +74,12 @@ from prefab_ui.components import Button, Column, Input
 from prefab_ui.actions.mcp import CallTool
 
 with Column(gap=3):
-    Input(name="city", placeholder="Enter a city...")
+    city_input = Input(name="city", placeholder="Enter a city...")
     Button(
         "Get Weather",
         on_click=CallTool(
             "get_weather",
-            arguments={"location": "{{ city }}"},
+            arguments={"location": city_input.rx},
         ),
     )
 ```
@@ -118,7 +118,7 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-For state that does not come from a form control, use `AppResult(state={...})` to seed initial values, and `SetState` or `ToggleState` to mutate them from interactions.
+For state that does not come from a form control, use `AppResult(state={...})` to seed initial values, and `SetState` or `ToggleState` to mutate them from interactions. Reference those state keys with `{{ key }}` directly in component props, or construct an `Rx("key")` instance explicitly.
 
 ## Actions
 
@@ -195,7 +195,7 @@ Actions execute in order. This pattern lets you show a loading indicator before 
 
 FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"you@example.com","name":"email","disabled":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"you@example.com","name":"input-20","disabled":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Card, CardContent, Column, Input
@@ -203,7 +203,7 @@ from prefab_ui.components import Button, Card, CardContent, Column, Input
 with Card() as view:
     with CardContent():
         with Column(gap=3):
-            Input(name="email", placeholder="you@example.com")
+            Input(placeholder="you@example.com")
             Button("Subscribe")
 ```
 ```json Protocol icon="brackets-curly"
@@ -222,7 +222,7 @@ with Card() as view:
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "you@example.com",
-                "name": "email",
+                "name": "input-20",
                 "disabled": false,
                 "required": false
               },

@@ -17,7 +17,11 @@ as a list, the first error short-circuits the chain — the failing action's
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, SerializeAsAny
+from typing import Any
+
+from pydantic import BaseModel, Field, SerializeAsAny, model_validator
+
+from prefab_ui.rx import _coerce_rx
 
 
 class Action(BaseModel):
@@ -33,6 +37,14 @@ class Action(BaseModel):
     """
 
     model_config = {"populate_by_name": True}
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_rx_values(cls, data: Any) -> Any:
+        """Recursively convert any Rx values in the input dict to strings."""
+        if isinstance(data, dict):
+            return {k: _coerce_rx(v) for k, v in data.items()}
+        return data
 
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,

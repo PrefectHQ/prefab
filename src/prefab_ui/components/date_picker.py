@@ -5,19 +5,23 @@ Example::
     from prefab_ui.components import DatePicker
 
     DatePicker(placeholder="Select deadline", name="deadline")
+
+    # Access reactive value
+    picker = DatePicker(placeholder="Choose date...")
+    Text(f"Date: {picker.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class DatePicker(Component):
+class DatePicker(StatefulMixin, Component):
     """Date picker with a popover calendar.
 
     A button trigger shows the selected date; clicking opens a calendar.
@@ -27,6 +31,7 @@ class DatePicker(Component):
         DatePicker(placeholder="Pick a date", name="deadline")
     """
 
+    _auto_name: ClassVar[str] = "datepicker"
     type: Literal["DatePicker"] = "DatePicker"
     placeholder: str = Field(
         default="Pick a date",
@@ -34,7 +39,7 @@ class DatePicker(Component):
     )
     name: str | None = Field(
         default=None,
-        description="State key for the selected date (ISO string)",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,

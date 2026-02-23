@@ -6,19 +6,23 @@ Example::
 
     Calendar(name="selectedDate")
     Calendar(mode="range", name="dateRange")
+
+    # Access reactive value
+    cal = Calendar()
+    Text(f"Selected: {cal.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class Calendar(Component):
+class Calendar(StatefulMixin, Component):
     """Date picker calendar.
 
     Selected date(s) stored in state as ISO strings.
@@ -29,6 +33,7 @@ class Calendar(Component):
         Calendar(mode="range", name="dateRange")
     """
 
+    _auto_name: ClassVar[str] = "calendar"
     type: Literal["Calendar"] = "Calendar"
     mode: Literal["single", "multiple", "range"] = Field(
         default="single",
@@ -36,7 +41,7 @@ class Calendar(Component):
     )
     name: str | None = Field(
         default=None,
-        description="State key for storing the selected date (ISO string)",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,

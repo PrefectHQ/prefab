@@ -10,19 +10,23 @@ Example::
         Radio(value="sm", label="Small")
         Radio(value="md", label="Medium", checked=True)
         Radio(value="lg", label="Large")
+
+    # Access reactive value
+    group = RadioGroup()
+    Text(f"Selected: {group.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
 
 
-class RadioGroup(ContainerComponent):
+class RadioGroup(StatefulMixin, ContainerComponent):
     """Container for radio button options.
 
     Args:
@@ -36,8 +40,12 @@ class RadioGroup(ContainerComponent):
             Radio(value="dark", label="Dark")
     """
 
+    _auto_name: ClassVar[str] = "radiogroup"
     type: Literal["RadioGroup"] = "RadioGroup"
-    name: str | None = Field(default=None, description="Form field name for all radios")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     on_change: Action | list[Action] | None = Field(
         default=None,
         alias="onChange",
@@ -45,7 +53,7 @@ class RadioGroup(ContainerComponent):
     )
 
 
-class Radio(Component):
+class Radio(StatefulMixin, Component):
     """Radio button input component.
 
     Args:
@@ -63,10 +71,14 @@ class Radio(Component):
         Radio(value="no", label="No", checked=True)
     """
 
+    _auto_name: ClassVar[str] = "radio"
     type: Literal["Radio"] = "Radio"
     value: str = Field(description="Form value")
     label: str | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether radio is selected")
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     disabled: bool = Field(default=False, description="Whether radio is disabled")
     required: bool = Field(default=False, description="Whether radio is required")

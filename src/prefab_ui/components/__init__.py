@@ -15,8 +15,10 @@ from prefab_ui.components.badge import Badge
 from prefab_ui.components.base import (
     Component,
     ContainerComponent,
+    StatefulMixin,
     detached,
 )
+from prefab_ui.rx import Rx
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
 from prefab_ui.components.button_group import ButtonGroup
@@ -153,6 +155,7 @@ __all__ = [
     "Radio",
     "RadioGroup",
     "Row",
+    "Rx",
     "Select",
     "SelectOption",
     "Separator",
@@ -160,6 +163,7 @@ __all__ = [
     "Slot",
     "Small",
     "Span",
+    "StatefulMixin",
     "Switch",
     "Tab",
     "Table",

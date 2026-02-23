@@ -10,7 +10,7 @@ Textareas provide multi-line text input for comments, descriptions, and other lo
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"Enter your message...","name":"textarea-1","disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -22,6 +22,7 @@ Textarea(placeholder="Enter your message...")
   "view": {
     "type": "Textarea",
     "placeholder": "Enter your message...",
+    "name": "textarea-1",
     "disabled": false,
     "required": false
   }
@@ -32,7 +33,7 @@ Textarea(placeholder="Enter your message...")
 
 ## With Labels
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","name":"textarea-2","rows":5,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -61,6 +62,7 @@ with Column(gap=2):
       {
         "type": "Textarea",
         "placeholder": "Tell us what you think...",
+        "name": "textarea-2",
         "rows": 5,
         "disabled": false,
         "required": false
@@ -74,7 +76,7 @@ with Column(gap=2):
 
 ## With Initial Value
 
-<ComponentPreview json={{"view":{"type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Textarea","value":"This is some initial content that can be edited.","name":"textarea-3","rows":4,"disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -89,6 +91,7 @@ Textarea(
   "view": {
     "type": "Textarea",
     "value": "This is some initial content that can be edited.",
+    "name": "textarea-3",
     "rows": 4,
     "disabled": false,
     "required": false
@@ -100,7 +103,7 @@ Textarea(
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"This textarea is disabled","name":"textarea-4","disabled":true,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -112,6 +115,7 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
   "view": {
     "type": "Textarea",
     "placeholder": "This textarea is disabled",
+    "name": "textarea-4",
     "disabled": true,
     "required": false
   }
@@ -133,7 +137,7 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  Form field name for submission.
+  State key for the textarea's current value. Auto-generated if not provided. Use `.rx` to reference the textarea's content in other components without specifying the key explicitly.
 </ParamField>
 
 <ParamField body="rows" type="int | None" default="None">

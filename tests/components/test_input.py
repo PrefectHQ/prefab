@@ -16,9 +16,10 @@ def test_input_serializes():
 def test_input_none_fields_excluded():
     j = Input(placeholder="Search").to_json()
     assert "value" not in j
-    assert "name" not in j
     assert "onChange" not in j
     assert j["type"] == "Input"
+    # name is now auto-generated
+    assert j["name"] == "input-1"
 
 
 class TestInputConstraintProps:

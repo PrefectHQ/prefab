@@ -117,15 +117,15 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"input-3","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ input-3 }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions.mcp import SendMessage
 
 with Column(gap=3):
-    Input(name="question", placeholder="Ask a follow-up question...")
-    Button("Ask", on_click=SendMessage("{{ question }}"))
+    question_input = Input(placeholder="Ask a follow-up question...")
+    Button("Ask", on_click=SendMessage(question_input.rx))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -137,7 +137,7 @@ with Column(gap=3):
         "type": "Input",
         "inputType": "text",
         "placeholder": "Ask a follow-up question...",
-        "name": "question",
+        "name": "input-3",
         "disabled": false,
         "required": false
       },
@@ -149,7 +149,7 @@ with Column(gap=3):
         "disabled": false,
         "onClick": {
           "action": "sendMessage",
-          "content": "{{ question }}"
+          "content": "{{ input-3 }}"
         }
       }
     ]

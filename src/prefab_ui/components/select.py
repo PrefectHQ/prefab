@@ -10,21 +10,25 @@ Example::
         SelectOption(value="sm", label="Small")
         SelectOption(value="md", label="Medium")
         SelectOption(value="lg", label="Large")
+
+    # Access reactive value
+    size_select = Select(placeholder="Pick size...")
+    Text(f"Selected: {size_select.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal, overload
+from typing import Any, ClassVar, Literal, overload
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
 
 SelectSize = Literal["sm", "default"]
 
 
-class Select(ContainerComponent):
+class Select(StatefulMixin, ContainerComponent):
     """Select dropdown container.
 
     Args:
@@ -42,12 +46,16 @@ class Select(ContainerComponent):
             SelectOption(value="b", label="Option B")
     """
 
+    _auto_name: ClassVar[str] = "select"
     type: Literal["Select"] = "Select"
     placeholder: str | None = Field(
         default=None,
         description="Placeholder text",
     )
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     size: SelectSize = Field(default="default", description="Select size (sm, default)")
     disabled: bool = Field(default=False, description="Whether select is disabled")
     required: bool = Field(default=False, description="Whether select is required")

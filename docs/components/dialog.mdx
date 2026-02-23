@@ -10,7 +10,7 @@ Dialogs display content in a modal overlay that focuses user attention. Like Pop
 
 ## Basic Usage
 
-<ComponentPreview height="400px" json={{"view":{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Arthur Dent","name":"crewName","disabled":false,"required":false},{"type":"Label","text":"Designation"},{"type":"Input","inputType":"text","placeholder":"Sandwich Maker","name":"crewDesignation","disabled":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}}]}]}}}>
+<ComponentPreview height="400px" json={{"view":{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Arthur Dent","name":"input-5","disabled":false,"required":false},{"type":"Label","text":"Designation"},{"type":"Input","inputType":"text","placeholder":"Sandwich Maker","name":"input-6","disabled":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -30,9 +30,9 @@ with Dialog(
     Button("Edit Profile", variant="outline")
     with Column(gap=3):
         Label("Name")
-        Input(name="crewName", placeholder="Arthur Dent")
+        Input(placeholder="Arthur Dent")
         Label("Designation")
-        Input(name="crewDesignation", placeholder="Sandwich Maker")
+        Input(placeholder="Sandwich Maker")
     with Row(gap=2, css_class="justify-end"):
         Button("Save changes", on_click=CloseOverlay())
 ```
@@ -62,7 +62,7 @@ with Dialog(
             "type": "Input",
             "inputType": "text",
             "placeholder": "Arthur Dent",
-            "name": "crewName",
+            "name": "input-5",
             "disabled": false,
             "required": false
           },
@@ -74,7 +74,7 @@ with Dialog(
             "type": "Input",
             "inputType": "text",
             "placeholder": "Sandwich Maker",
-            "name": "crewDesignation",
+            "name": "input-6",
             "disabled": false,
             "required": false
           }

@@ -200,19 +200,40 @@ with Column() as page:
 
 Components inside `detached()` can still use their own context managers to collect children — they just won't be added to whatever container was active before the `detached()` block. After the block exits, the original stack is restored and auto-attachment resumes.
 
+## Reactive Bindings
+
+Form controls automatically bind their value to client-side state. The `.rx` property on any stateful component returns an `Rx` reference — an object that serializes to `{{ key }}` in the protocol. Use it in f-strings to mix reactive values with literal text, or pass it bare when a prop should be entirely reactive.
+
+```python
+from prefab_ui.components import Input, Text
+
+name_input = Input(placeholder="Your name...")
+Text(f"Hello, {name_input.rx}!")    # f-string: "Hello, {{ input-1 }}!"
+Text(name_input.rx)                 # bare ref: "{{ input-1 }}"
+```
+
+Each stateful component gets a unique auto-generated name (e.g., `input-1`, `slider-2`) when you don't supply one explicitly. You can also set `name=` to use a fixed key:
+
+```python
+name_input = Input(name="username", placeholder="Your name...")
+# name_input.rx  →  {{ username }}
+```
+
+For `ForEach` loops and other contexts where the state variable is a runtime value like `$item`, write `{{ }}` directly — `.rx` is for Python-authored references to components you've already constructed.
+
 ## PrefabApp
 
 `PrefabApp` is the envelope that wraps a component tree into a complete application. It holds the view, initial state, reusable definitions, and external assets. See the [Local Preview](/serve) page for the full API.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false},{"content":"Hello, {{ name }}!","type":"H3"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, H3, Input
 
 with Column(gap=3) as view:
-    H3("Hello, {{ name }}!")
-    Input(name="name", placeholder="Your name...")
+    name_input = Input(name="name", placeholder="Your name...")
+    H3(f"Hello, {name_input.rx}!")
 
 app = PrefabApp(view=view, state={"name": "world"})
 ```
@@ -223,16 +244,16 @@ app = PrefabApp(view=view, state={"name": "world"})
     "type": "Column",
     "children": [
       {
-        "content": "Hello, {{ name }}!",
-        "type": "H3"
-      },
-      {
         "type": "Input",
         "inputType": "text",
         "placeholder": "Your name...",
         "name": "name",
         "disabled": false,
         "required": false
+      },
+      {
+        "content": "Hello, {{ name }}!",
+        "type": "H3"
       }
     ]
   }

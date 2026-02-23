@@ -20,6 +20,7 @@ import { useOverlayClose } from "./overlay-context";
 import { evaluateCondition } from "./conditions";
 import { validateNode } from "./validation";
 import { ValidationError } from "./components/validation-error";
+import { autoAssignName, resetAutoNameCounter } from "./auto-name";
 
 /** Shape of a node in the JSON component tree. */
 export interface ComponentNode {
@@ -368,6 +369,11 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Filter internal props before passing to component
   const finalProps = filterInternalProps(mapped);
 
+  // Auto-assign name to stateful components when missing.
+  // This mirrors Python's eager name generation so protocol/JSON authors
+  // don't need to supply names manually.
+  autoAssignName(type, finalProps);
+
   // --- Custom child handling: composite components ---
   // Select and RadioGroup consume their children as data items
   // rather than rendering them as nested React components.
@@ -695,6 +701,8 @@ export function RenderTree({
   state: StateStore;
   app: App | null;
 }) {
+  // Reset auto-name counter so names are deterministic per render pass.
+  resetAutoNameCounter();
   const scope: Record<string, unknown> = defs ? { $defs: defs } : {};
   return <RenderNode node={tree} scope={scope} state={state} app={app} />;
 }
