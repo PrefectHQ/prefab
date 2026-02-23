@@ -83,7 +83,7 @@ Pydantic models generate forms automatically — constraints like `min_length` a
 ```python
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 class SignupForm(BaseModel):
     email: str = Field(description="Your email address")
@@ -99,7 +99,8 @@ Actions define what happens on interaction — state updates, server calls, navi
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, CallTool, ShowToast
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 Button("Save", on_click=[
     SetState("saving", True),

@@ -1,6 +1,6 @@
 """Base class for all Prefab actions.
 
-Every action type inherits from ``ActionBase``, which provides the
+Every action type inherits from ``Action``, which provides the
 ``on_success`` and ``on_error`` lifecycle callbacks. These let you chain
 reactions to action outcomes without writing custom logic:
 
@@ -20,7 +20,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field, SerializeAsAny
 
 
-class ActionBase(BaseModel):
+class Action(BaseModel):
     """Base for all action types — provides lifecycle callbacks.
 
     Subclasses add an ``action`` literal discriminator and their own fields.
@@ -29,22 +29,18 @@ class ActionBase(BaseModel):
 
     Uses ``SerializeAsAny`` so that Pydantic serializes callback values
     using the concrete runtime type (e.g. ShowToast) rather than the
-    declared base type (ActionBase), which would strip subclass fields.
+    declared base type (Action), which would strip subclass fields.
     """
 
     model_config = {"populate_by_name": True}
 
-    on_success: SerializeAsAny[ActionBase] | list[SerializeAsAny[ActionBase]] | None = (
-        Field(
-            default=None,
-            alias="onSuccess",
-            description="Action(s) to run when this action succeeds",
-        )
+    on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
+        default=None,
+        alias="onSuccess",
+        description="Action(s) to run when this action succeeds",
     )
-    on_error: SerializeAsAny[ActionBase] | list[SerializeAsAny[ActionBase]] | None = (
-        Field(
-            default=None,
-            alias="onError",
-            description="Action(s) to run when this action fails",
-        )
+    on_error: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
+        default=None,
+        alias="onError",
+        description="Action(s) to run when this action fails",
     )

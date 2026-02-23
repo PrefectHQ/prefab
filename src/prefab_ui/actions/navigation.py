@@ -6,10 +6,10 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 
-class OpenLink(ActionBase):
+class OpenLink(Action):
     """Open a URL via the host."""
 
     action: Literal["openLink"] = "openLink"

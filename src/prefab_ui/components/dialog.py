@@ -5,7 +5,7 @@ The first child becomes the trigger; remaining children become the dialog body.
 Example::
 
     from prefab_ui.components import Dialog, Button, Text, Row
-    from prefab_ui.actions import CallTool
+    from prefab_ui.actions.mcp import CallTool
 
     with Dialog(title="Confirm Delete", description="This action cannot be undone."):
         Button("Delete", variant="destructive")  # trigger

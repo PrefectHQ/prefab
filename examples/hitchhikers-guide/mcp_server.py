@@ -15,10 +15,12 @@ from __future__ import annotations
 
 from data import ENTRIES, add_entry, delete_entry, search_entries
 from fastmcp import FastMCP
+from fastmcp.server.apps import AppConfig
 from starlette.middleware import Middleware
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from prefab_ui.actions import CallTool, CloseOverlay, SetState, ShowToast
+from prefab_ui.actions import CloseOverlay, SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import (
     H3,
@@ -35,6 +37,7 @@ from prefab_ui.components import (
     Input,
     Row,
     Text,
+    Tooltip,
 )
 
 
@@ -142,18 +145,51 @@ def browse() -> PrefabApp:
                             with Row(gap=2, align="center"):
                                 CardTitle("{{ title }}")
                                 Badge("{{ category }}", variant="success")
-                            Button(
-                                "Delete",
-                                icon="trash-2",
-                                size="icon-xs",
-                                variant="ghost",
-                                on_click=CallTool(
-                                    "delete_entry_tool",
-                                    arguments={"title": "{{ title }}"},
-                                    result_key="entries",
-                                    on_error=ShowToast("{{ $error }}", variant="error"),
-                                ),
-                            )
+                            with Row(gap=1):
+                                with Tooltip("Ask the AI about this entry", delay=0):
+                                    Button(
+                                        "Ask AI",
+                                        icon="message-circle",
+                                        size="icon-xs",
+                                        variant="ghost",
+                                        on_click=SendMessage(
+                                            "Tell me more about '{{ title }}' from the Hitchhiker's Guide"
+                                        ),
+                                    )
+                                with Tooltip(
+                                    "Add this entry to the AI's context", delay=0
+                                ):
+                                    Button(
+                                        "Send to Chat",
+                                        icon="send",
+                                        size="icon-xs",
+                                        variant="ghost",
+                                        on_click=[
+                                            UpdateContext(
+                                                content="Guide entry — {{ title }} ({{ category }}): {{ description }}"
+                                            ),
+                                            ShowToast(
+                                                "Sent to chat context",
+                                                variant="success",
+                                            ),
+                                        ],
+                                    )
+                                with Tooltip("Delete this entry", delay=0):
+                                    Button(
+                                        "Delete",
+                                        icon="trash-2",
+                                        size="icon-xs",
+                                        variant="ghost",
+                                        on_click=CallTool(
+                                            "delete_entry_tool",
+                                            arguments={"title": "{{ title }}"},
+                                            result_key="entries",
+                                            on_error=ShowToast(
+                                                "{{ $error }}",
+                                                variant="error",
+                                            ),
+                                        ),
+                                    )
                     with CardContent():
                         Text("{{ description }}")
 
@@ -170,7 +206,10 @@ def browse() -> PrefabApp:
     )
 
 
-@mcp.tool
+app_only = AppConfig(visibility=["app"])
+
+
+@mcp.tool(app=app_only)
 def search(q: str = "") -> PrefabApp:
     """Search the Guide by keyword."""
     matches = search_entries(q)
@@ -178,7 +217,7 @@ def search(q: str = "") -> PrefabApp:
     return PrefabApp(state={"entries": matches})
 
 
-@mcp.tool
+@mcp.tool(app=app_only)
 def add_entry_tool(
     title: str, category: str = "Uncategorized", description: str = ""
 ) -> PrefabApp:
@@ -187,7 +226,7 @@ def add_entry_tool(
     return PrefabApp(state={"entries": ENTRIES})
 
 
-@mcp.tool
+@mcp.tool(app=app_only)
 def delete_entry_tool(title: str) -> PrefabApp:
     """Remove an entry from the Guide."""
     delete_entry(title)

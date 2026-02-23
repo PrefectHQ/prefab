@@ -6,10 +6,10 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 
-class ShowToast(ActionBase):
+class ShowToast(Action):
     """Display a toast notification. Client-side only, no server trip."""
 
     action: Literal["showToast"] = "showToast"
@@ -27,7 +27,7 @@ class ShowToast(ActionBase):
         super().__init__(**kwargs)
 
 
-class CloseOverlay(ActionBase):
+class CloseOverlay(Action):
     """Close the nearest ancestor overlay (Dialog or Popover)."""
 
     action: Literal["closeOverlay"] = "closeOverlay"

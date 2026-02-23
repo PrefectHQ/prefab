@@ -2,17 +2,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import CallTool\n\nButton(\"Refresh Data\", on_click=CallTool(\"get_latest_data\"))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Refresh Data\", on_click=CallTool(\"get_latest_data\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "Combined Actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import CallTool, SetState\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"run_analysis\", arguments={\"data\": \"{{ dataset }}\"}),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"run_analysis\", arguments={\"data\": \"{{ dataset }}\"}),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -57,22 +57,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker, CallTool\n\nButton(\n    \"Upload CSV\",\n    icon=\"upload\",\n    variant=\"outline\",\n    on_click=OpenFilePicker(\n        accept=\".csv\",\n        on_success=CallTool(\n            \"process_csv\",\n            arguments={\"file\": \"{{ $event }}\"},\n        ),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Upload CSV\",\n    icon=\"upload\",\n    variant=\"outline\",\n    on_click=OpenFilePicker(\n        accept=\".csv\",\n        on_success=CallTool(\n            \"process_csv\",\n            arguments={\"file\": \"{{ $event }}\"},\n        ),\n    ),\n)"
   },
   {
     "title": "Multiple file upload",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker, CallTool\n\nButton(\n    \"Upload Images\",\n    on_click=OpenFilePicker(\n        accept=\"image/*\",\n        multiple=True,\n        on_success=CallTool(\n            \"process_images\",\n            arguments={\"images\": \"{{ $event }}\"},\n        ),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Upload Images\",\n    on_click=OpenFilePicker(\n        accept=\"image/*\",\n        multiple=True,\n        on_success=CallTool(\n            \"process_images\",\n            arguments={\"images\": \"{{ $event }}\"},\n        ),\n    ),\n)"
   },
   {
     "title": "With size limit",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker, CallTool\n\nButton(\n    \"Upload (max 5MB)\",\n    on_click=OpenFilePicker(\n        max_size=5_000_000,\n        on_success=CallTool(\"upload\", arguments={\"file\": \"{{ $event }}\"}),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Upload (max 5MB)\",\n    on_click=OpenFilePicker(\n        max_size=5_000_000,\n        on_success=CallTool(\"upload\", arguments={\"file\": \"{{ $event }}\"}),\n    ),\n)"
   },
   {
     "title": "With error handling",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker, CallTool, ShowToast\n\nButton(\n    \"Upload\",\n    on_click=OpenFilePicker(\n        accept=\".csv\",\n        on_success=CallTool(\n            \"process_csv\",\n            arguments={\"file\": \"{{ $event }}\"},\n            on_success=ShowToast(\"File processed!\", variant=\"success\"),\n            on_error=ShowToast(\n                \"Processing failed: {{ $error }}\",\n                variant=\"error\",\n            ),\n        ),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import OpenFilePicker, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Upload\",\n    on_click=OpenFilePicker(\n        accept=\".csv\",\n        on_success=CallTool(\n            \"process_csv\",\n            arguments={\"file\": \"{{ $event }}\"},\n            on_success=ShowToast(\"File processed!\", variant=\"success\"),\n            on_error=ShowToast(\n                \"Processing failed: {{ $error }}\",\n                variant=\"error\",\n            ),\n        ),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -92,32 +92,32 @@
   {
     "title": "from prefab_ui.components import Button",
     "category": "Actions",
-    "code": "from prefab_ui.actions import CallTool, SetState\n\nButton(\"Run Analysis\", on_click=CallTool(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Run Analysis\", on_click=CallTool(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
   },
   {
     "title": "from prefab_ui.components import Input, Button, Column",
     "category": "Actions",
-    "code": "from prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+    "code": "from prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "from prefab_ui.components import Button",
     "category": "Actions",
-    "code": "from prefab_ui.actions import SetState, CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row, H3, Column\nfrom prefab_ui.actions import SendMessage\n\nwith Column(gap=3):\n    H3(\"Quick Actions\")\n    with Row(gap=2):\n        Button(\"Summarize\", variant=\"outline\",\n               on_click=SendMessage(\"Summarize these results.\"))\n        Button(\"Explain Further\", variant=\"outline\",\n               on_click=SendMessage(\"Explain these results in more detail.\"))\n        Button(\"Compare Options\", variant=\"outline\",\n               on_click=SendMessage(\"Compare the top options and recommend one.\"))"
+    "code": "from prefab_ui.components import Button, Row, H3, Column\nfrom prefab_ui.actions.mcp import SendMessage\n\nwith Column(gap=3):\n    H3(\"Quick Actions\")\n    with Row(gap=2):\n        Button(\"Summarize\", variant=\"outline\",\n               on_click=SendMessage(\"Summarize these results.\"))\n        Button(\"Explain Further\", variant=\"outline\",\n               on_click=SendMessage(\"Explain these results in more detail.\"))\n        Button(\"Compare Options\", variant=\"outline\",\n               on_click=SendMessage(\"Compare the top options and recommend one.\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import SendMessage\n\nwith Column(gap=3):\n    Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import SendMessage\n\nwith Column(gap=3):\n    Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
   },
   {
     "title": "Python icon=\"python\"",
@@ -167,12 +167,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import UpdateContext\n\nButton(\n    \"Use Advanced Mode\",\n    on_click=UpdateContext(\n        content=\"User has selected advanced mode. Provide detailed technical responses.\"\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import UpdateContext\n\nButton(\n    \"Use Advanced Mode\",\n    on_click=UpdateContext(\n        content=\"User has selected advanced mode. Provide detailed technical responses.\"\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n        ),\n    )"
+    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions.mcp import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -662,12 +662,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay, CallTool\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=[\n                CallTool(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
+    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=[\n                CallTool(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "from prefab_ui.components import Button, Dialog, Row, Text",
     "category": "Components",
-    "code": "from prefab_ui.actions import CloseOverlay, ShowToast, CallTool\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=CallTool(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
+    "code": "from prefab_ui.actions import CloseOverlay, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=CallTool(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -707,12 +707,12 @@
   {
     "title": "DropZone with CallTool",
     "category": "Components",
-    "code": "from prefab_ui.components import DropZone\nfrom prefab_ui.actions import CallTool\n\nDropZone(\n    label=\"Upload CSV\",\n    accept=\".csv\",\n    on_change=CallTool(\n        \"process_csv\",\n        arguments={\"file\": \"{{ $event }}\"},\n    ),\n)"
+    "code": "from prefab_ui.components import DropZone\nfrom prefab_ui.actions.mcp import CallTool\n\nDropZone(\n    label=\"Upload CSV\",\n    accept=\".csv\",\n    on_change=CallTool(\n        \"process_csv\",\n        arguments={\"file\": \"{{ $event }}\"},\n    ),\n)"
   },
   {
     "title": "DropZone with chained actions",
     "category": "Components",
-    "code": "from prefab_ui.components import DropZone\nfrom prefab_ui.actions import SetState, CallTool\n\nDropZone(\n    label=\"Upload data file\",\n    on_change=[\n        SetState(\"uploading\", True),\n        CallTool(\"upload_file\", arguments={\"file\": \"{{ $event }}\"}),\n        SetState(\"uploading\", False),\n    ],\n)"
+    "code": "from prefab_ui.components import DropZone\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nDropZone(\n    label=\"Upload data file\",\n    on_change=[\n        SetState(\"uploading\", True),\n        CallTool(\"upload_file\", arguments={\"file\": \"{{ $event }}\"}),\n        SetState(\"uploading\", False),\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -767,17 +767,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardDescription, CardFooter,\n    CardHeader, CardTitle, Column, Form, Grid, Input, Label,\n)\nfrom prefab_ui.actions import CallTool\n\nsubmit = CallTool(\"create_user\", arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})\n\nwith Grid(columns=2, gap=6):\n    with Form(on_submit=submit):\n        with Column(gap=2):\n            Label(\"Name\")\n            Input(name=\"name\", placeholder=\"Your name\")\n        with Column(gap=2):\n            Label(\"Email\")\n            Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n        Button(\"Submit\")\n\n    with Card():\n        with Form(on_submit=submit):\n            with CardHeader():\n                CardTitle(\"Create Account\")\n                CardDescription(\"Enter your information to get started.\")\n            with CardContent():\n                with Column(gap=4):\n                    with Column(gap=2):\n                        Label(\"Name\")\n                        Input(name=\"name\", placeholder=\"Your name\")\n                    with Column(gap=2):\n                        Label(\"Email\")\n                        Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n            with CardFooter(css_class=\"justify-end\"):\n                Button(\"Submit\")"
+    "code": "from prefab_ui.components import (\n    Button, Card, CardContent, CardDescription, CardFooter,\n    CardHeader, CardTitle, Column, Form, Grid, Input, Label,\n)\nfrom prefab_ui.actions.mcp import CallTool\n\nsubmit = CallTool(\"create_user\", arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})\n\nwith Grid(columns=2, gap=6):\n    with Form(on_submit=submit):\n        with Column(gap=2):\n            Label(\"Name\")\n            Input(name=\"name\", placeholder=\"Your name\")\n        with Column(gap=2):\n            Label(\"Email\")\n            Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n        Button(\"Submit\")\n\n    with Card():\n        with Form(on_submit=submit):\n            with CardHeader():\n                CardTitle(\"Create Account\")\n                CardDescription(\"Enter your information to get started.\")\n            with CardContent():\n                with Column(gap=4):\n                    with Column(gap=2):\n                        Label(\"Name\")\n                        Input(name=\"name\", placeholder=\"Your name\")\n                    with Column(gap=2):\n                        Label(\"Email\")\n                        Input(name=\"email\", input_type=\"email\", placeholder=\"you@example.com\")\n            with CardFooter(css_class=\"justify-end\"):\n                Button(\"Submit\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import CallTool\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=CallTool(\"submit_contact\"))"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions.mcp import CallTool\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nForm.from_model(ContactInfo, on_submit=CallTool(\"submit_contact\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import CallTool, ShowToast\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=CallTool(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\")\n            Button(\"Send Message\")"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=CallTool(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\")\n            Button(\"Send Message\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -792,7 +792,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import CallTool, ShowToast\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=CallTool(\n        \"create_contact\",\n        on_success=ShowToast(\"Contact saved!\", variant=\"success\"),\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=CallTool(\n        \"create_contact\",\n        on_success=ShowToast(\"Contact saved!\", variant=\"success\"),\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1032,7 +1032,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import CloseOverlay, CallTool\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=[\n                CallTool(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
+    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=[\n                CallTool(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1425,7 +1425,7 @@
     "code": "# gi holds the outer index; $index inside a nested ForEach refers to the inner loop\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
   },
   {
-    "title": "from prefab_ui.actions import CallTool, ShowToast",
+    "title": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool",
     "category": "Expressions",
     "code": "Button(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
@@ -1437,7 +1437,7 @@
   {
     "title": "from prefab_ui.components import ForEach, Button, Text",
     "category": "Expressions",
-    "code": "from prefab_ui.actions import CallTool\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\n        \"Edit\",\n        on_click=CallTool(\n            \"edit_user\",\n            arguments={\"user\": \"{{ $item }}\"},\n        ),\n    )"
+    "code": "from prefab_ui.actions.mcp import CallTool\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\n        \"Edit\",\n        on_click=CallTool(\n            \"edit_user\",\n            arguments={\"user\": \"{{ $item }}\"},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1537,17 +1537,17 @@
   {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
-    "code": "from prefab_ui import AppResult\nfrom prefab_ui.actions import CallTool\nfrom prefab_ui.components import Button, Column, Input, Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def search(query: str = \"\") -> AppResult:\n    results = find_items(query) if query else []\n    with Column(gap=3) as view:\n        Input(name=\"q\", placeholder=\"Search...\")\n        Button(\"Search\", on_click=CallTool(\"search\", arguments={\"query\": \"{{ q }}\"}))\n        for r in results:\n            Text(r[\"title\"])\n    return AppResult(view=view, state={\"results\": results})"
+    "code": "from prefab_ui import AppResult\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.components import Button, Column, Input, Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def search(query: str = \"\") -> AppResult:\n    results = find_items(query) if query else []\n    with Column(gap=3) as view:\n        Input(name=\"q\", placeholder=\"Search...\")\n        Button(\"Search\", on_click=CallTool(\"search\", arguments={\"query\": \"{{ q }}\"}))\n        for r in results:\n            Text(r[\"title\"])\n    return AppResult(view=view, state={\"results\": results})"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui.actions import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+    "code": "from prefab_ui.components import Button, Column, Input\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState, CallTool\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    CallTool(\"save_data\", arguments={\"item\": \"{{ item }}\"}),\n    SetState(\"saving\", False),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    CallTool(\"save_data\", arguments={\"item\": \"{{ item }}\"}),\n    SetState(\"saving\", False),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1612,7 +1612,7 @@
   {
     "title": "from fastmcp import FastMCP",
     "category": "Running",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, ForEach, Heading, Text\nfrom prefab_ui.actions import CallTool\n\nmcp = FastMCP(\"My Server\")\n\nITEMS = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"Show all items.\"\"\"\n    with Column(gap=4) as view:\n        Heading(\"Items\")\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": ITEMS})"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, ForEach, Heading, Text\nfrom prefab_ui.actions.mcp import CallTool\n\nmcp = FastMCP(\"My Server\")\n\nITEMS = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"Show all items.\"\"\"\n    with Column(gap=4) as view:\n        Heading(\"Items\")\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": ITEMS})"
   },
   {
     "title": "PrefabApp",
@@ -1645,9 +1645,19 @@
     "code": "def add_entry(title: str) -> PrefabApp:\n    if not title.strip():\n        raise ValueError(\"Title is required\")\n    # ..."
   },
   {
-    "title": "{10-14}",
+    "title": "from prefab_ui.actions.mcp import SendMessage",
     "category": "Running",
-    "code": "with Dialog(title=\"New Item\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=CallTool(\n            \"add_item\",\n            arguments={\"name\": \"{{ new_name }}\"},\n            result_key=\"items\",\n            on_success=[\n                ShowToast(\"Added!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        Input(name=\"new_name\", placeholder=\"Name\")\n        Button(\"Add\")"
+    "code": "Button(\"Explain this\",\n       on_click=SendMessage(\"Explain {{ title }} in more detail.\"))"
+  },
+  {
+    "title": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import UpdateContext",
+    "category": "Running",
+    "code": "Button(\n    \"Send to Chat\",\n    on_click=[\n        UpdateContext(\n            content=\"Selected item: {{ name }} ({{ category }})\"\n        ),\n        ShowToast(\"Added to context\", variant=\"success\"),\n    ],\n)"
+  },
+  {
+    "title": "{1,8}",
+    "category": "Running",
+    "code": "from fastmcp.server.apps import AppConfig\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"The entry point — visible to the model.\"\"\"\n    ...\n\n@mcp.tool(app=AppConfig(visibility=[\"app\"]))\ndef search(q: str = \"\") -> PrefabApp:\n    \"\"\"Called from the UI only — hidden from the model.\"\"\"\n    ..."
   },
   {
     "title": "app.py",
@@ -1692,7 +1702,7 @@
   {
     "title": "import pytest",
     "category": "General",
-    "code": "from prefab_ui.response import UIResponse\nfrom prefab_ui.components import Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import CallTool, ShowToast\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=CallTool(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
+    "code": "from prefab_ui.response import UIResponse\nfrom prefab_ui.components import Column\nfrom prefab_ui.components import Button, DataTable, DataTableColumn, Input\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.testing import Simulator, ActionResult\n\nUSERS = [\n    {\"name\": \"Alice\", \"email\": \"alice@co.com\"},\n    {\"name\": \"Bob\", \"email\": \"bob@co.com\"},\n]\n\n\ndef build_search_ui() -> UIResponse:\n    with Column(gap=4) as view:\n        Input(name=\"query\", placeholder=\"Search...\")\n        Button(\n            \"Search\",\n            on_click=CallTool(\n                \"search_users\",\n                arguments={\"q\": \"{{ query }}\"},\n                result_key=\"results\",\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )\n        DataTable(\n            columns=[DataTableColumn(key=\"name\", header=\"Name\")],\n            rows=\"{{ results }}\",\n        )\n    return UIResponse(view=view, state={\"query\": \"\", \"results\": []})\n\n\nasync def handler(name: str, arguments: dict) -> ActionResult:\n    if name == \"build_search_ui\":\n        return ActionResult(content=build_search_ui().to_json())\n    if name == \"search_users\":\n        q = arguments.get(\"q\", \"\").lower()\n        results = [u for u in USERS if q in u[\"name\"].lower()]\n        return ActionResult(content={\"state\": {\"results\": results}})\n    return ActionResult(is_error=True, error_text=f\"Unknown: {name}\")\n\n\nasync def test_search_flow():\n    sim = Simulator(handler)\n    await sim.invoke(\"build_search_ui\", {})\n\n    # Initial state is empty\n    assert sim.state[\"results\"] == []\n\n    # Type a query and search\n    input_field = sim.find(\"Input\", name=\"query\")\n    await sim.set_value(input_field, \"alice\")\n    assert sim.state[\"query\"] == \"alice\"\n\n    button = sim.find(\"Button\", label=\"Search\")\n    await sim.click(button)\n\n    # Results populated via resultKey\n    assert len(sim.state[\"results\"]) == 1\n    assert sim.state[\"results\"][0][\"name\"] == \"Alice\"\n\n    # No error toasts\n    assert len(sim.toasts) == 0"
   },
   {
     "title": "Python icon=\"python\"",

@@ -13,7 +13,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import SendMessage
+from prefab_ui.actions.mcp import SendMessage
 
 Button("Summarize", on_click=SendMessage("Please summarize the data above."))
 ```
@@ -45,7 +45,7 @@ Build a row of follow-up actions that save the user from typing:
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row, H3, Column
-from prefab_ui.actions import SendMessage
+from prefab_ui.actions.mcp import SendMessage
 
 with Column(gap=3):
     H3("Quick Actions")
@@ -121,7 +121,7 @@ Combine with state interpolation to include UI context in the message:
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
-from prefab_ui.actions import SendMessage
+from prefab_ui.actions.mcp import SendMessage
 
 with Column(gap=3):
     Input(name="question", placeholder="Ask a follow-up question...")

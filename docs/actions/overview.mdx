@@ -10,7 +10,8 @@ Every component that supports interaction accepts action props like `on_click`, 
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import CallTool, SetState
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
 
 Button("Run Analysis", on_click=CallTool("analyze"))
 Button("Reset", on_click=SetState("count", 0))
@@ -24,7 +25,7 @@ Every form control with a `name` prop automatically syncs its value to `$state`.
 
 ```python
 from prefab_ui.components import Input, Button, Column
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
@@ -51,7 +52,8 @@ Pass a list to execute multiple actions from a single interaction:
 
 ```python
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, CallTool
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
 
 Button("Submit", on_click=[
     SetState("status", "analyzing..."),

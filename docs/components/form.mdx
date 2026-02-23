@@ -19,7 +19,7 @@ from prefab_ui.components import (
     Button, Card, CardContent, CardDescription, CardFooter,
     CardHeader, CardTitle, Column, Form, Grid, Input, Label,
 )
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 submit = CallTool("create_user", arguments={"name": "{{ name }}", "email": "{{ email }}"})
 
@@ -222,7 +222,7 @@ Building forms by hand gives full control over layout and behavior, but requires
 ```python Python icon="python"
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 class ContactInfo(BaseModel):
     name: str = Field(title="Full Name", min_length=1)
@@ -357,7 +357,8 @@ from prefab_ui.components import (
     Button, Card, CardContent, CardFooter, CardTitle,
     Column, Form,
 )
-from prefab_ui.actions import CallTool, ShowToast
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 class ContactInfo(BaseModel):
     name: str = Field(title="Full Name", min_length=1)
@@ -738,7 +739,8 @@ When `on_submit` is a `CallTool` with no explicit `on_error`, `from_model()` add
 ```python Python icon="python"
 from pydantic import BaseModel, Field
 from prefab_ui.components import Form
-from prefab_ui.actions import CallTool, ShowToast
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 class Contact(BaseModel):
     name: str = Field(min_length=1)

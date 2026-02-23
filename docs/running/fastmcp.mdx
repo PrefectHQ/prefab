@@ -15,8 +15,6 @@ MCP App support requires a development branch of FastMCP that has not been relea
 from fastmcp import FastMCP
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, ForEach, Heading, Text
-from prefab_ui.actions import CallTool
-
 mcp = FastMCP("My Server")
 
 ITEMS = [{"name": "Widget"}, {"name": "Gadget"}, {"name": "Gizmo"}]
@@ -104,7 +102,7 @@ def search(q: str = "") -> PrefabApp:
 The first tool (`browse`) defines the layout with a `Slot`. The second tool (`search`) returns a component tree that fills that slot. This is the core MCP Apps pattern: the initial tool sets up the shell, and subsequent tool calls swap content in and out.
 
 <Note>
-`search` and `add_entry` don't need `app=True` — they're helper tools called from within the UI, not entry points that a host would show directly. FastMCP still auto-wires them because their return type is `PrefabApp`.
+`search` doesn't need `app=True` — it's a helper tool called from within the UI, not an entry point that a host would show directly. FastMCP still auto-wires it because its return type is `PrefabApp`.
 </Note>
 
 ### Dynamic Component Results with Slot
@@ -150,29 +148,65 @@ def add_entry(title: str) -> PrefabApp:
     # ...
 ```
 
-### Forms in Dialogs
+### Communicating with the Host
 
-Same pattern as the [API Server guide](/running/api#forms-in-dialogs) — use `Dialog` + `Form` + `CloseOverlay`:
+Beyond `CallTool`, MCP Apps can interact with the host conversation using [`SendMessage`](/actions/send-message) and [`UpdateContext`](/actions/update-context).
 
-```python {10-14}
-with Dialog(title="New Item"):
-    Button("+ Add", size="sm")
-    with Form(
-        on_submit=CallTool(
-            "add_item",
-            arguments={"name": "{{ new_name }}"},
-            result_key="items",
-            on_success=[
-                ShowToast("Added!", variant="success"),
-                SetState("new_name", ""),
-                CloseOverlay(),
-            ],
-            on_error=ShowToast("{{ $error }}", variant="error"),
-        ),
-    ):
-        Input(name="new_name", placeholder="Name")
-        Button("Add")
+[`SendMessage`](/actions/send-message) sends a message to the conversation as if the user typed it — useful for quick-action buttons that trigger follow-up questions:
+
+```python
+from prefab_ui.actions.mcp import SendMessage
+
+Button("Explain this",
+       on_click=SendMessage("Explain {{ title }} in more detail."))
 ```
+
+[`UpdateContext`](/actions/update-context) silently updates what the model knows without creating a visible message. The context is attached to the next conversation turn, so the model can reference it without the user needing to re-explain:
+
+```python
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import UpdateContext
+
+Button(
+    "Send to Chat",
+    on_click=[
+        UpdateContext(
+            content="Selected item: {{ name }} ({{ category }})"
+        ),
+        ShowToast("Added to context", variant="success"),
+    ],
+)
+```
+
+<Note>
+`UpdateContext` depends on host support. The context is delivered to the host, but whether the model sees it depends on the host's implementation of the MCP Apps `ui/update-model-context` method.
+</Note>
+
+### Tool Visibility
+
+By default, all tools registered on your server are visible to the model — including helper tools meant only for UI interactions. When the model can see tools like `search` or `delete_item`, it may call them directly instead of letting the user interact through the UI.
+
+Use `AppConfig(visibility=["app"])` to mark tools as app-only. These tools remain callable via `CallTool` from the UI, but the host should exclude them when presenting tools to the model:
+
+```python {1,8}
+from fastmcp.server.apps import AppConfig
+
+@mcp.tool(app=True)
+def browse() -> PrefabApp:
+    """The entry point — visible to the model."""
+    ...
+
+@mcp.tool(app=AppConfig(visibility=["app"]))
+def search(q: str = "") -> PrefabApp:
+    """Called from the UI only — hidden from the model."""
+    ...
+```
+
+The entry point tool uses `app=True` so the model can invoke it. Helper tools use `AppConfig(visibility=["app"])` so they're accessible to `CallTool` but won't appear in the model's tool list.
+
+<Note>
+Tool visibility is metadata that the host is responsible for enforcing. The server returns all tools from `tools/list` regardless of visibility — the host filters based on the `visibility` field in the tool's app metadata.
+</Note>
 
 ## API Server vs FastMCP
 
@@ -182,10 +216,11 @@ Both use the same components and state model. The difference is transport:
 |---|---|---|
 | **Transport** | MCP protocol | HTTP (fetch) |
 | **Server action** | `CallTool` | `Fetch` |
+| **Host actions** | `SendMessage`, `UpdateContext` | — |
 | **Hosting** | Inside Claude Desktop, ChatGPT, etc. | Standalone web page |
 | **Renderer** | Provided by the MCP host | Bundled in `PrefabApp.html()` |
 
-If you're building an MCP server, use `CallTool`. If you're building a web app, use `Fetch`. The component tree and client-side actions are identical either way.
+If you're building an MCP server, use `CallTool`. If you're building a web app, use `Fetch`. `SendMessage` and `UpdateContext` are MCP-only — they communicate with the host's conversation, which doesn't exist in standalone mode. The component tree and client-side actions are identical either way.
 
 ## Example App
 

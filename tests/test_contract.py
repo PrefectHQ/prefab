@@ -18,7 +18,7 @@ from pydantic import BaseModel
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from prefab_ui.actions import ActionBase
+from prefab_ui.actions import Action
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
@@ -34,7 +34,7 @@ FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
 COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"
 
-ALL_ACTION_CLASSES: list[type[ActionBase]] = [
+ALL_ACTION_CLASSES: list[type[Action]] = [
     CallTool,
     SendMessage,
     UpdateContext,
@@ -147,9 +147,9 @@ def _all_concrete_components() -> list[type[Component]]:
     return result
 
 
-def _discover_actions() -> dict[str, type[ActionBase]]:
+def _discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
-    result: dict[str, type[ActionBase]] = {}
+    result: dict[str, type[Action]] = {}
     for cls in ALL_ACTION_CLASSES:
         instance = _minimal_instance(cls)
         discriminator = instance.model_dump(by_alias=True).get("action", "")
@@ -165,7 +165,7 @@ def _generate_component_fixture(cls: type[Component]) -> dict[str, Any]:
         return instance.to_json()
 
 
-def _generate_action_fixture(cls: type[ActionBase]) -> dict[str, Any]:
+def _generate_action_fixture(cls: type[Action]) -> dict[str, Any]:
     """Generate a JSON fixture for an action."""
     instance = _minimal_instance(cls)
     with warnings.catch_warnings():
@@ -199,7 +199,7 @@ def test_component_json_validates_against_own_schema(cls: type[Component]) -> No
     ALL_ACTION_CLASSES,
     ids=lambda c: c.__name__,
 )
-def test_action_json_validates_against_own_schema(cls: type[ActionBase]) -> None:
+def test_action_json_validates_against_own_schema(cls: type[Action]) -> None:
     """Each action's serialized output should validate against its JSON Schema."""
     instance = _minimal_instance(cls)
     with warnings.catch_warnings():

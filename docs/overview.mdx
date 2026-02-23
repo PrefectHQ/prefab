@@ -43,7 +43,7 @@ For tools that need client-side state, return an `AppResult` instead:
 ```python
 from prefab_ui import FastMCP
 from prefab_ui import AppResult
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 from prefab_ui.components import Button, Column, Input, Text
 
 mcp = FastMCP("Demo")
@@ -71,7 +71,7 @@ You can reference state values in actions and component props using `{{ key }}` 
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 with Column(gap=3):
     Input(name="city", placeholder="Enter a city...")
@@ -147,7 +147,8 @@ Pass a list to compose multiple actions from a single interaction:
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import SetState, CallTool
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
 
 Button("Save", on_click=[
     SetState("saving", True),

@@ -132,7 +132,7 @@ Files stay in the browser until you do something with them. The `on_change` para
 
 ```python DropZone with CallTool
 from prefab_ui.components import DropZone
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 DropZone(
     label="Upload CSV",
@@ -148,7 +148,8 @@ Since `on_change` accepts a list, you can chain actions for UI feedback — show
 
 ```python DropZone with chained actions
 from prefab_ui.components import DropZone
-from prefab_ui.actions import SetState, CallTool
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
 
 DropZone(
     label="Upload data file",

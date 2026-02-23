@@ -28,7 +28,8 @@ or read the source in `src/prefab_ui/components/`.
 ```python
 from prefab_ui import UIResponse, Column, Heading, Text
 from prefab_ui.components import Button, Input, DataTable, DataTableColumn, If, Muted
-from prefab_ui.actions import CallTool, ShowToast
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 with Column(gap=4) as view:
     Heading("User Search")
@@ -88,10 +89,8 @@ from prefab_ui.components import (
 )
 
 # Actions
-from prefab_ui.actions import (
-    SetState, ToggleState, ShowToast, OpenLink,
-    CallTool, SendMessage, UpdateContext,
-)
+from prefab_ui.actions import SetState, ToggleState, ShowToast, OpenLink
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 
 # Testing
 from prefab_ui.testing import Simulator, ActionResult

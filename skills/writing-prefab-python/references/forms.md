@@ -6,7 +6,7 @@ Generate a complete form from a Pydantic model:
 from typing import Literal
 from pydantic import BaseModel, Field, SecretStr
 from prefab_ui.components import Form
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 class UserProfile(BaseModel):
     name: str = Field(min_length=1, title="Full Name")
