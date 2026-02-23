@@ -6,9 +6,11 @@ icon: brackets-curly
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Templates let you embed live values in any string prop on any component. Wrap an expression in `{{ }}` and the renderer evaluates it against the current state and substitutes the result.
+Templates are the wire format that drives live values in component props. Wrap an expression in `{{ }}` and the renderer evaluates it against the current state and substitutes the result.
 
 The key idea: **state keys become template variables.** When you set `name="Arthur Dent"` in your state (via `set_initial_state`, `let` bindings, or a form input with a `name` attribute), the key `name` is available inside any `{{ }}` expression in that component's subtree. Write `{{ name }}` and it resolves to `"Arthur Dent"`.
+
+When authoring in Python, the `.rx` property on stateful components generates these expressions automatically. `input.rx` in an f-string produces `{{ input-1 }}` in the protocol — you rarely need to write `{{ }}` by hand for component state. Use `{{ }}` directly when working with runtime variables like `$item` inside `ForEach`, or when building expressions that combine arithmetic, conditionals, or pipes.
 
 ## Basic Usage
 
@@ -109,7 +111,7 @@ This distinction is important when passing values to props like `value`, `min`, 
 
 Templates aren't restricted to `content` or `label` — they work in any string prop anywhere in the component tree. Placeholders, CSS classes, URLs, titles, descriptions, action arguments — if it's a string, you can put `{{ }}` in it.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"{{ name }}","type":"Text"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"{{ name }}","type":"Text"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","name":"input-19","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -149,6 +151,7 @@ with Column(gap=2):
         "type": "Input",
         "inputType": "text",
         "placeholder": "Message {{ name }}...",
+        "name": "input-19",
         "disabled": false,
         "required": false
       }
@@ -188,7 +191,9 @@ In mixed templates, undefined values resolve to empty strings: `"Hi {{ missing }
 
 ## Live Binding
 
-State keys and template variables are the same thing, which means form inputs can drive templates directly. When you give an `Input` a `name` attribute, the renderer writes the input's current value to that key in state on every keystroke. Any `{{ }}` template referencing that key re-renders instantly.
+State keys and template variables are the same thing, which means form inputs drive templates directly. Every `Input` writes its current value to its state key on every keystroke. Any `{{ }}` template referencing that key re-renders instantly.
+
+Assign an input to a variable and use `.rx` to bind to its value without repeating the key name. When you need to combine two reactive values in a single expression — like `first + ' ' + last` — write the `{{ }}` directly.
 
 Try typing in these inputs — the text below updates as you type:
 
@@ -201,8 +206,8 @@ from prefab_ui.components import Column, Input, Text
 set_initial_state(first="Arthur", last="Dent")
 
 with Column(gap=3):
-    Input(name="first", placeholder="First name")
-    Input(name="last", placeholder="Last name")
+    first_input = Input(name="first", placeholder="First name")
+    last_input = Input(name="last", placeholder="Last name")
     Text("{{ first + ' ' + last }}")
 ```
 ```json Protocol icon="brackets-curly"

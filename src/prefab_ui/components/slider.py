@@ -10,19 +10,23 @@ Example::
     Slider(min=0, max=100, value=50)
     Slider(min=0, max=10, step=0.5, value=5)
     Slider(min=0, max=100, value=[20, 80], range=True)
+
+    # Access reactive value
+    slider = Slider(min=0, max=100, value=50)
+    Text(f"Value: {slider.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class Slider(Component):
+class Slider(StatefulMixin, Component):
     """Range slider input component.
 
     When ``range=True``, renders two thumbs for selecting a range. The
@@ -46,6 +50,7 @@ class Slider(Component):
         Slider(min=0, max=100, value=[20, 80], range=True)
     """
 
+    _auto_name: ClassVar[str] = "slider"
     type: Literal["Slider"] = "Slider"
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")
@@ -55,7 +60,10 @@ class Slider(Component):
     )
     step: float | None = Field(default=None, description="Step increment")
     range: bool = Field(default=False, description="Enable two-thumb range selection")
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     disabled: bool = Field(default=False, description="Whether slider is disabled")
     on_change: Action | list[Action] | None = Field(
         default=None,

@@ -10,7 +10,7 @@ Checkboxes let users select one or more options from a set.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Checkbox","label":"Accept terms and conditions","checked":false,"name":"checkbox-1","disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -23,6 +23,7 @@ Checkbox(label="Accept terms and conditions")
     "type": "Checkbox",
     "label": "Accept terms and conditions",
     "checked": false,
+    "name": "checkbox-1",
     "disabled": false,
     "required": false
   }
@@ -33,7 +34,7 @@ Checkbox(label="Accept terms and conditions")
 
 ## Checked State
 
-<ComponentPreview json={{"view":{"type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Checkbox","label":"Subscribe to newsletter","checked":true,"name":"checkbox-2","disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -46,6 +47,7 @@ Checkbox(label="Subscribe to newsletter", checked=True)
     "type": "Checkbox",
     "label": "Subscribe to newsletter",
     "checked": true,
+    "name": "checkbox-2",
     "disabled": false,
     "required": false
   }
@@ -56,7 +58,7 @@ Checkbox(label="Subscribe to newsletter", checked=True)
 
 ## Multiple Checkboxes
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Email notifications","checked":true,"name":"checkbox-3","disabled":false,"required":false},{"type":"Checkbox","label":"SMS notifications","checked":false,"name":"checkbox-4","disabled":false,"required":false},{"type":"Checkbox","label":"Push notifications","checked":true,"name":"checkbox-5","disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -79,6 +81,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "Email notifications",
         "checked": true,
+        "name": "checkbox-3",
         "disabled": false,
         "required": false
       },
@@ -86,6 +89,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "SMS notifications",
         "checked": false,
+        "name": "checkbox-4",
         "disabled": false,
         "required": false
       },
@@ -93,6 +97,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "Push notifications",
         "checked": true,
+        "name": "checkbox-5",
         "disabled": false,
         "required": false
       }
@@ -160,7 +165,7 @@ with Column(gap=4):
 
 ## With Disabled State
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"type":"Checkbox","label":"Enabled option","checked":false,"name":"checkbox-6","disabled":false,"required":false},{"type":"Checkbox","label":"Disabled option","checked":false,"name":"checkbox-7","disabled":true,"required":false},{"type":"Checkbox","label":"Disabled & checked","checked":true,"name":"checkbox-8","disabled":true,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -183,6 +188,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "Enabled option",
         "checked": false,
+        "name": "checkbox-6",
         "disabled": false,
         "required": false
       },
@@ -190,6 +196,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "Disabled option",
         "checked": false,
+        "name": "checkbox-7",
         "disabled": true,
         "required": false
       },
@@ -197,6 +204,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
         "type": "Checkbox",
         "label": "Disabled & checked",
         "checked": true,
+        "name": "checkbox-8",
         "disabled": true,
         "required": false
       }
@@ -220,7 +228,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  Form field name for submission.
+  State key for the checkbox's checked state. Auto-generated if not provided. Use `.rx` to reference the checkbox's boolean value in other components.
 </ParamField>
 
 <ParamField body="value" type="str | None" default="None">

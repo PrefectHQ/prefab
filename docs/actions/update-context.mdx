@@ -52,21 +52,21 @@ Button(
 
 For richer data, pass a dict instead of plain text:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Thinking level...","name":"thinking","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ thinking }}"}}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Select","placeholder":"Thinking level...","name":"select-1","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":false,"disabled":false}]},{"type":"Button","label":"Set Preference","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","structuredContent":{"preference":{"thinking":"{{ select-1 }}"}}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Select, SelectOption, Column
 from prefab_ui.actions.mcp import UpdateContext
 
 with Column(gap=3):
-    with Select(name="thinking", placeholder="Thinking level..."):
+    with Select(placeholder="Thinking level...") as thinking_select:
         SelectOption(value="low", label="Low")
         SelectOption(value="medium", label="Medium")
         SelectOption(value="high", label="High")
     Button(
         "Set Preference",
         on_click=UpdateContext(
-            structured_content={"preference": {"thinking": "{{ thinking }}"}},
+            structured_content={"preference": {"thinking": thinking_select.rx}},
         ),
     )
 ```
@@ -79,7 +79,7 @@ with Column(gap=3):
       {
         "type": "Select",
         "placeholder": "Thinking level...",
-        "name": "thinking",
+        "name": "select-1",
         "size": "default",
         "disabled": false,
         "required": false,
@@ -117,7 +117,7 @@ with Column(gap=3):
           "action": "updateContext",
           "structuredContent": {
             "preference": {
-              "thinking": "{{ thinking }}"
+              "thinking": "{{ select-1 }}"
             }
           }
         }

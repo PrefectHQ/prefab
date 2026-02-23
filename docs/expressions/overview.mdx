@@ -1,5 +1,6 @@
 ---
-title: Overview
+title: Reactive Expressions
+sidebarTitle: Reactive Expressions
 description: How Prefab enables client-side interactivity without a server round-trip.
 icon: bolt
 ---
@@ -111,8 +112,14 @@ The same expression language is used in three places, each with a slightly diffe
 
 **[Templates](/expressions/templates)** embed expressions inside string props using `{{ }}` delimiters. The renderer evaluates the expression and substitutes the result. Every string prop on every component supports this — labels, placeholders, URLs, CSS classes, action arguments, anything.
 
+When authoring in Python, use the `.rx` property on stateful components to generate these expressions automatically rather than writing `{{ }}` by hand. `input.rx` in an f-string becomes `{{ input-1 }}` in the protocol. Write `{{ }}` directly for runtime variables like `$item` or for expressions that combine multiple state keys.
+
 ```python
-Text("{{ price * quantity | currency }}")
+from prefab_ui.components import Badge, Input, Text
+
+amount = Input()
+Text(f"Total: {amount.rx}")                    # uses .rx — cleaner Python
+Text("{{ price * quantity | currency }}")      # expression combining two keys
 Badge("{{ status | upper }}", variant="secondary")
 ```
 

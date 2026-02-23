@@ -90,17 +90,17 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"input-2","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ input-2 }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions import OpenLink
 
 with Column(gap=3):
-    Input(name="repo", placeholder="owner/repo")
+    repo_input = Input(placeholder="owner/repo")
     Button(
         "Open on GitHub",
-        on_click=OpenLink("https://github.com/{{ repo }}"),
+        on_click=OpenLink(f"https://github.com/{repo_input.rx}"),
     )
 ```
 ```json Protocol icon="brackets-curly"
@@ -113,7 +113,7 @@ with Column(gap=3):
         "type": "Input",
         "inputType": "text",
         "placeholder": "owner/repo",
-        "name": "repo",
+        "name": "input-2",
         "disabled": false,
         "required": false
       },
@@ -125,7 +125,7 @@ with Column(gap=3):
         "disabled": false,
         "onClick": {
           "action": "openLink",
-          "url": "https://github.com/{{ repo }}"
+          "url": "https://github.com/{{ input-2 }}"
         }
       }
     ]

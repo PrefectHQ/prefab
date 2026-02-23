@@ -8,19 +8,23 @@ Example::
 
     Textarea(placeholder="Enter your message...")
     Textarea(rows=5, placeholder="Feedback")
+
+    # Access reactive value
+    textarea = Textarea(placeholder="Your feedback...")
+    Text(f"Comment: {textarea.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 
-class Textarea(Component):
+class Textarea(StatefulMixin, Component):
     """Multi-line text input component.
 
     Args:
@@ -38,13 +42,17 @@ class Textarea(Component):
         Textarea(rows=10, value="{{ comment_text }}")
     """
 
+    _auto_name: ClassVar[str] = "textarea"
     type: Literal["Textarea"] = "Textarea"
     placeholder: str | None = Field(
         default=None,
         description="Placeholder text",
     )
     value: str | None = Field(default=None, description="Textarea value")
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     rows: int | None = Field(default=None, description="Number of visible text rows")
     disabled: bool = Field(default=False, description="Whether textarea is disabled")
     required: bool = Field(default=False, description="Whether textarea is required")

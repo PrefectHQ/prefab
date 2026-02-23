@@ -12,7 +12,7 @@ Sliders let users select a numeric value by dragging a handle along a track. The
 
 At minimum, pass a `value` to set the initial position. The slider renders with a track, a filled region up to the current value, and a draggable thumb. Without a `name` or `on_change`, the slider is interactive in the browser but doesn't communicate its value back to your application state -- you'll want one of those for anything beyond a visual demo.
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"disabled":false}}}>
+<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-2","disabled":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -26,6 +26,7 @@ Slider(value=50)
     "min": 0,
     "max": 100,
     "value": 50.0,
+    "name": "slider-2",
     "disabled": false
   }
 }
@@ -35,11 +36,11 @@ Slider(value=50)
 
 ## Displaying the Value
 
-Give the slider a `name` to automatically bind its current value to state, then reference that state with `{{ }}` interpolation. As the user drags the handle, the bound state updates in real time and any components referencing it re-render instantly. This is the simplest way to show the current slider value -- no action wiring required.
+Give the slider a `name` (or let one be auto-generated) and use `.rx` to reference its current value in other components. As the user drags the handle, the bound state updates in real time and any components referencing it re-render instantly. This is the simplest way to show the current slider value — no action wiring required.
 
-The `| number` pipe strips trailing decimals so the display stays clean. This pattern works with any component that supports interpolation.
+The `| number` pipe strips trailing decimals so the display stays clean. When you need a pipe or to mix the value with other expressions, write `{{ }}` directly using the slider's named key.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ volume | number }}%","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"volume","disabled":false}]},"state":{"volume":75}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":75.0,"name":"volume","disabled":false},{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ volume | number }}%","bold":true,"type":"Text"}]}]},"state":{"volume":75}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -54,10 +55,10 @@ from prefab_ui.components import (
 set_initial_state(volume=75)
 
 with Column(gap=2):
+    slider = Slider(value=75, name="volume")
     with Row(css_class="justify-between"):
         Label("Volume")
         Text("{{ volume | number }}%", bold=True)
-    Slider(value=75, name="volume")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -65,6 +66,14 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
+      {
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 75.0,
+        "name": "volume",
+        "disabled": false
+      },
       {
         "cssClass": "justify-between",
         "type": "Row",
@@ -79,14 +88,6 @@ with Column(gap=2):
             "type": "Text"
           }
         ]
-      },
-      {
-        "type": "Slider",
-        "min": 0,
-        "max": 100,
-        "value": 75.0,
-        "name": "volume",
-        "disabled": false
       }
     ]
   },
@@ -102,7 +103,7 @@ with Column(gap=2):
 
 Use `min`, `max`, and `step` to constrain the slider to a specific domain. The `step` parameter snaps the thumb to fixed increments as it moves -- here the slider covers 0--10 with 0.5 increments, so the user can only land on values like 3.0, 3.5, 4.0. This is useful for ratings, discrete scales, or any input where arbitrary precision would be confusing.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"rating","disabled":false}]},"state":{"rating":5}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"rating","disabled":false},{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]}]},"state":{"rating":5}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -117,10 +118,10 @@ from prefab_ui.components import (
 set_initial_state(rating=5)
 
 with Column(gap=2):
+    slider = Slider(value=5, name="rating", min=0, max=10, step=0.5)
     with Row(css_class="justify-between"):
         Label("Rating")
-        Text("{{ rating }}", bold=True)
-    Slider(value=5, name="rating", min=0, max=10, step=0.5)
+        Text(slider.rx, bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -128,6 +129,15 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 10.0,
+        "value": 5.0,
+        "step": 0.5,
+        "name": "rating",
+        "disabled": false
+      },
       {
         "cssClass": "justify-between",
         "type": "Row",
@@ -142,15 +152,6 @@ with Column(gap=2):
             "type": "Text"
           }
         ]
-      },
-      {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 10.0,
-        "value": 5.0,
-        "step": 0.5,
-        "name": "rating",
-        "disabled": false
       }
     ]
   },
@@ -166,7 +167,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. Use `$event` to reference the current numeric value within the action. This gives you full control over what happens when the slider moves -- update multiple state keys, trigger a tool call, or chain several actions together.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | 'Drag the slider' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-3","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | 'Drag the slider' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Slider, Text
@@ -193,6 +194,7 @@ with Column(gap=4):
         "min": 0,
         "max": 100,
         "value": 50.0,
+        "name": "slider-3",
         "disabled": false,
         "onChange": {
           "action": "setState",
@@ -220,7 +222,7 @@ For simply displaying the slider's current value, [auto-binding with `name`](#di
 
 Set `disabled=True` to render the slider in a non-interactive state. The thumb is visible but cannot be dragged. This is useful for showing a value that the user can see but not change -- for example, a computed result or a setting that requires a higher permission level.
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"disabled":true}}}>
+<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider-4","disabled":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -234,6 +236,7 @@ Slider(value=30, disabled=True)
     "min": 0,
     "max": 100,
     "value": 30.0,
+    "name": "slider-4",
     "disabled": true
   }
 }
@@ -245,7 +248,7 @@ Slider(value=30, disabled=True)
 
 Set `range=True` to render two thumbs for selecting a low/high range. Pass `value` as a `[low, high]` list to set the initial bounds. This is the natural choice for filter controls -- price ranges, date spans, or any input where the user is defining a window rather than a single point.
 
-Give the slider a `name` to bind the range to state as an array, then use dot-path interpolation to display the individual values. For a slider named `price_range`, the state value is `[20, 80]`, and you can access the low end with `{{ price_range.0 }}` and the high end with `{{ price_range.1 }}`. Both labels update live as either thumb is dragged.
+Give the slider a `name` to bind the range to state as an array. For a slider named `price_range`, the state value is `[20, 80]`. Use `{{ price_range.0 }}` and `{{ price_range.1 }}` to access the individual bounds — numeric index dot-paths combined with pipe transforms are expressed directly in `{{ }}`. Both labels update live as either thumb is dragged.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"content":"Min: ${{ price_range.0 | number }}","bold":true,"type":"Text"},{"content":"Max: ${{ price_range.1 | number }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":[20.0,80.0],"range":true,"name":"price_range","disabled":false}]},"state":{"price_range":[20,80]}}}>
 <CodeGroup>
@@ -312,7 +315,7 @@ with Column(gap=2):
 
 Combine `range=True` with `step` to snap both thumbs to fixed increments. This prevents users from selecting awkward fractional values and keeps the range boundaries clean. Here both thumbs snap to multiples of 5.
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":[25.0,75.0],"step":5.0,"range":true,"disabled":false}}}>
+<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":[25.0,75.0],"step":5.0,"range":true,"name":"slider-5","disabled":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -331,6 +334,7 @@ Slider(value=[25, 75], step=5, range=True)
     ],
     "step": 5.0,
     "range": true,
+    "name": "slider-5",
     "disabled": false
   }
 }
@@ -347,7 +351,7 @@ Slider(value=[25, 75], step=5, range=True)
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  State key for the slider's current value. Set this to bind the slider to state for display or form submission.
+  State key for the slider's current value. Auto-generated if not provided. Set this to use a known key name, or use `.rx` to reference the auto-generated key in other components.
 </ParamField>
 
 <ParamField body="min" type="float" default="0">

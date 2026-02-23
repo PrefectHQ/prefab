@@ -41,6 +41,7 @@ from prefab_ui.components.charts import (
     ScatterChart,
 )
 from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import reset_counter
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
@@ -217,6 +218,7 @@ def generate_action_fixture(cls: type[Action]) -> dict[str, Any]:
 
 def generate_all() -> dict[str, Any]:
     """Generate all fixtures and return the manifest."""
+    reset_counter()
     components = discover_components()
     actions = discover_actions()
 
@@ -254,6 +256,7 @@ def generate_all() -> dict[str, Any]:
 
 def check_freshness() -> bool:
     """Check whether fixtures are up-to-date. Returns True if fresh."""
+    reset_counter()
     manifest_path = SCHEMAS_DIR / "manifest.json"
     if not manifest_path.exists():
         print("manifest.json does not exist — run generate first")

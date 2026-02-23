@@ -14,14 +14,14 @@ with Grid(min_column_width="240px", gap=4):
                 CardDescription("The most important item in the galaxy")
             with CardContent():
                 with Column(gap=3):
-                    Input(name="towel_name", placeholder="Towel name...")
-                    Input(name="owner", placeholder="Owner name...")
-                    with Select(placeholder="Type...", name="towel_type"):
+                    Input(placeholder="Towel name...")
+                    owner_input = Input(placeholder="Owner name...")
+                    with Select(placeholder="Type..."):
                         SelectOption(value="bath", label="Bath")
                         SelectOption(value="beach", label="Beach")
                         SelectOption(value="interstellar", label="Interstellar")
                         SelectOption(value="micro", label="Microfiber")
-                    Checkbox(label="Panic-proof certified", name="panic_proof", checked=True)
+                    Checkbox(label="Panic-proof certified", checked=True)
             with CardFooter():
                 with Row(gap=2):
                     with Dialog(
@@ -29,8 +29,8 @@ with Grid(min_column_width="240px", gap=4):
                         description="Your towel has been added to the galactic registry.",
                     ):
                         Button("Register")
-                        with If("owner"):
-                            Text("Thanks, {{ owner }}. Don't forget to bring it.")
+                        with If("{{ owner }}"):
+                            Text(f"Thanks, {owner_input.rx}. Don't forget to bring it.")
                         with Else():
                             Text("Anonymous, I see? Don't forget to bring it.")
                     Button("Cancel", variant="outline")
@@ -303,7 +303,7 @@ with Grid(min_column_width="240px", gap=4):
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Towel name...",
-                        "name": "towel_name",
+                        "name": "input-21",
                         "disabled": false,
                         "required": false
                       },
@@ -311,14 +311,14 @@ with Grid(min_column_width="240px", gap=4):
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Owner name...",
-                        "name": "owner",
+                        "name": "input-22",
                         "disabled": false,
                         "required": false
                       },
                       {
                         "type": "Select",
                         "placeholder": "Type...",
-                        "name": "towel_type",
+                        "name": "select-8",
                         "size": "default",
                         "disabled": false,
                         "required": false,
@@ -357,7 +357,7 @@ with Grid(min_column_width="240px", gap=4):
                         "type": "Checkbox",
                         "label": "Panic-proof certified",
                         "checked": true,
-                        "name": "panic_proof",
+                        "name": "checkbox-11",
                         "disabled": false,
                         "required": false
                       }
@@ -391,7 +391,7 @@ with Grid(min_column_width="240px", gap=4):
                                 "when": "{{ owner }}",
                                 "children": [
                                   {
-                                    "content": "Thanks, {{ owner }}. Don't forget to bring it.",
+                                    "content": "Thanks, {{ input-22 }}. Don't forget to bring it.",
                                     "type": "Text"
                                   }
                                 ]
@@ -1320,6 +1320,7 @@ with Grid(min_column_width="240px", gap=4):
                         "value": "economy",
                         "label": "Economy",
                         "checked": false,
+                        "name": "radio-10",
                         "disabled": false,
                         "required": false
                       },
@@ -1328,6 +1329,7 @@ with Grid(min_column_width="240px", gap=4):
                         "value": "business",
                         "label": "Business Class",
                         "checked": false,
+                        "name": "radio-11",
                         "disabled": false,
                         "required": false
                       },
@@ -1336,6 +1338,7 @@ with Grid(min_column_width="240px", gap=4):
                         "value": "improbability",
                         "label": "Infinite Improbability",
                         "checked": true,
+                        "name": "radio-12",
                         "disabled": false,
                         "required": false
                       }

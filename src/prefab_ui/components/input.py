@@ -9,16 +9,20 @@ Example::
     Input(placeholder="Enter your name")
     Input(input_type="email", placeholder="you@example.com")
     Input(input_type="password", placeholder="••••••••")
+
+    # Access reactive value
+    input_field = Input(placeholder="Type something...")
+    Text(f"Value: {input_field.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, StatefulMixin
 
 InputType = Literal[
     "text",
@@ -35,7 +39,7 @@ InputType = Literal[
 ]
 
 
-class Input(Component):
+class Input(StatefulMixin, Component):
     """Text input field component.
 
     Args:
@@ -54,6 +58,7 @@ class Input(Component):
         Input(input_type="password", value="{{ user_password }}")
     """
 
+    _auto_name: ClassVar[str] = "input"
     type: Literal["Input"] = "Input"
     input_type: InputType = Field(
         default="text",
@@ -65,7 +70,10 @@ class Input(Component):
         description="Placeholder text",
     )
     value: str | None = Field(default=None, description="Input value")
-    name: str | None = Field(default=None, description="Form field name")
+    name: str | None = Field(
+        default=None,
+        description="State key for reactive binding. Auto-generated if omitted.",
+    )
     disabled: bool = Field(default=False, description="Whether input is disabled")
     required: bool = Field(default=False, description="Whether input is required")
     min_length: int | None = Field(

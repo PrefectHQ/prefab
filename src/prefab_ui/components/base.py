@@ -6,12 +6,13 @@ import contextlib
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, ClassVar, Literal
 
-from pydantic import BaseModel, BeforeValidator, Field
+from pydantic import BaseModel, BeforeValidator, Field, model_validator
 from typing_extensions import Self
 
 from prefab_ui.css import Responsive
+from prefab_ui.rx import Rx, _coerce_rx, _generate_key
 
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
@@ -152,6 +153,32 @@ def _coerce_css_class(v: Any) -> str | None:
     return str(v)
 
 
+class StatefulMixin:
+    """Mixin for components that support reactive state binding via ``.rx``.
+
+    Stateful components (Slider, Input, Checkbox, etc.) inherit from this
+    mixin to gain the ``.rx`` property, which returns an ``Rx`` object
+    serializing to ``{{ name }}`` for template expressions.
+    """
+
+    _auto_name: ClassVar[str]
+
+    @property
+    def rx(self) -> Rx:
+        """Reactive reference to this component's state value.
+
+        Returns an ``Rx`` object that serializes to ``{{ key }}`` and can
+        be passed to any string-typed component field or used in f-strings.
+        """
+        name: str | None = getattr(self, "name", None)
+        if name is None:
+            raise ValueError(
+                f"{type(self).__name__}.rx requires a name — "
+                f"set _auto_name on the class or pass name= explicitly"
+            )
+        return Rx(name)
+
+
 class Component(BaseModel):
     """Base class for all UI components.
 
@@ -162,13 +189,31 @@ class Component(BaseModel):
 
     model_config = {"populate_by_name": True, "arbitrary_types_allowed": True}
 
+    _auto_name: ClassVar[str | None] = None
+    """Subclasses set this to a prefix string (e.g. ``"slider"``) to opt in
+    to automatic name generation.  When set, components without an explicit
+    ``name`` receive a deterministic sequential key like ``slider-1``."""
+
     css_class: Annotated[str | None, BeforeValidator(_coerce_css_class)] = Field(
         default=None,
         alias="cssClass",
         description="CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes.",
     )
 
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_rx_values(cls, data: Any) -> Any:
+        """Recursively convert any Rx values in the input dict to strings."""
+        if isinstance(data, dict):
+            return {k: _coerce_rx(v) for k, v in data.items()}
+        return data
+
     def model_post_init(self, __context: Any) -> None:
+        # Auto-generate name for stateful components when not provided
+        if self._auto_name is not None and "name" in type(self).model_fields:
+            if getattr(self, "name", None) is None:
+                object.__setattr__(self, "name", _generate_key(self._auto_name))
+
         stack = _component_stack.get() or []
         if stack:
             stack[-1].children.append(self)

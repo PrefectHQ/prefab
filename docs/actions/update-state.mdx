@@ -12,7 +12,7 @@ State is client-side data that your UI can read and write. Components display st
 
 Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"slider-1","disabled":false},{"content":"Brightness: {{ slider-1 }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -21,8 +21,8 @@ from prefab_ui.components import Slider, Muted, Column
 set_initial_state(brightness=50)
 
 with Column(gap=3):
-    Slider(name="brightness", min=0, max=100)
-    Muted("Brightness: {{ brightness }}%")
+    brightness_slider = Slider(min=0, max=100)
+    Muted(f"Brightness: {brightness_slider.rx}%")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -34,11 +34,11 @@ with Column(gap=3):
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "name": "brightness",
+        "name": "slider-1",
         "disabled": false
       },
       {
-        "content": "Brightness: {{ brightness }}%",
+        "content": "Brightness: {{ slider-1 }}%",
         "type": "Muted"
       }
     ]
@@ -51,7 +51,7 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-Drag the slider — the text updates instantly. The Slider has `name="brightness"`, which means it automatically reads from and writes to the `brightness` state key. Most form controls (Input, Checkbox, Switch, Select, etc.) support this `name` prop for automatic state binding.
+Drag the slider — the text updates instantly. The slider auto-generates a state key, and `brightness_slider.rx` gives the `Muted` component a reactive reference to it. Most form controls (Input, Checkbox, Switch, Select, etc.) work the same way — assign to a variable and use `.rx` to reference the current value anywhere in your UI.
 
 For MCP tools, you can also provide initial state through `AppResult.state`:
 
@@ -346,9 +346,9 @@ with Column(gap=3):
                 on_click=PopState("crew", "{{ $index }}"),
             )
     with Row(gap=2):
-        Input(name="new_member", placeholder="Crew member name...")
+        new_member_input = Input(name="new_member", placeholder="Crew member name...")
         Button("Add", on_click=[
-            AppendState("crew", "{{ new_member }}"),
+            AppendState("crew", new_member_input.rx),
             SetState("new_member", ""),
         ])
     Muted("{{ crew | length }} crew members")

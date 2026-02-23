@@ -9,16 +9,20 @@ Example::
             Text("General settings here.")
         with Tab("Advanced"):
             Text("Advanced settings here.")
+
+    # Access reactive value
+    tabs = Tabs()
+    Text(f"Active tab: {tabs.rx}")
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal, overload
+from typing import Any, ClassVar, Literal, overload
 
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import ContainerComponent
+from prefab_ui.components.base import ContainerComponent, StatefulMixin
 
 TabsVariant = Literal["default", "line"]
 
@@ -54,7 +58,7 @@ class Tab(ContainerComponent):
         super().__init__(**kwargs)
 
 
-class Tabs(ContainerComponent):
+class Tabs(StatefulMixin, ContainerComponent):
     """Tab container — children must be ``Tab`` components.
 
     Example::
@@ -66,6 +70,7 @@ class Tabs(ContainerComponent):
                 Text("Advanced settings")
     """
 
+    _auto_name: ClassVar[str] = "tabs"
     type: Literal["Tabs"] = "Tabs"
     variant: TabsVariant = Field(
         default="default",
@@ -78,7 +83,7 @@ class Tabs(ContainerComponent):
     )
     name: str | None = Field(
         default=None,
-        description="State key for tracking the active tab",
+        description="State key for reactive binding. Auto-generated if omitted.",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,
