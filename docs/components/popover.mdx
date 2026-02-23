@@ -10,7 +10,7 @@ Popovers display rich content in a floating panel when users click a trigger ele
 
 ## Basic Usage
 
-<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language"},{"type":"Input","inputType":"text","placeholder":"Vogon","name":"input-14","disabled":false,"required":false},{"type":"Label","text":"Target Language"},{"type":"Input","inputType":"text","placeholder":"Galactic Standard","name":"input-15","disabled":false,"required":false}]}]}}}>
+<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language"},{"type":"Input","inputType":"text","placeholder":"Vogon","name":"input-10","disabled":false,"required":false},{"type":"Label","text":"Target Language"},{"type":"Input","inputType":"text","placeholder":"Galactic Standard","name":"input-11","disabled":false,"required":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -47,27 +47,21 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
         "cssClass": "gap-3",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Source Language"
-          },
+          {"type": "Label", "text": "Source Language"},
           {
             "type": "Input",
             "inputType": "text",
             "placeholder": "Vogon",
-            "name": "input-14",
+            "name": "input-10",
             "disabled": false,
             "required": false
           },
-          {
-            "type": "Label",
-            "text": "Target Language"
-          },
+          {"type": "Label", "text": "Target Language"},
           {
             "type": "Input",
             "inputType": "text",
             "placeholder": "Galactic Standard",
-            "name": "input-15",
+            "name": "input-11",
             "disabled": false,
             "required": false
           }
@@ -117,10 +111,7 @@ with Popover():
         "cssClass": "gap-3",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Improbability Factor"
-          },
+          {"type": "Label", "text": "Improbability Factor"},
           {
             "type": "Slider",
             "min": 0.0,
@@ -191,10 +182,7 @@ with Popover():
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "content": "Archive this item?",
-            "type": "Text"
-          },
+          {"content": "Archive this item?", "type": "Text"},
           {
             "type": "Button",
             "label": "Confirm",
@@ -205,13 +193,9 @@ with Popover():
               {
                 "action": "toolCall",
                 "tool": "archive_item",
-                "arguments": {
-                  "id": "{{ item_id }}"
-                }
+                "arguments": {"id": "{{ item_id }}"}
               },
-              {
-                "action": "closeOverlay"
-              }
+              {"action": "closeOverlay"}
             ]
           }
         ]

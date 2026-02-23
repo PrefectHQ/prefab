@@ -85,7 +85,7 @@ __all__ = [
 
 ### 3. Add to Content Generator
 
-**File**: `docs/_preview-build/generate_content.py`
+**File**: `docs-build/generate_content.py`
 
 Import and render all variants:
 
@@ -269,7 +269,7 @@ just generate-preview-css  # Regenerates both playground.js and preview.css
 
 - **Missing import**: Code blocks run in isolation — add `from prefab-ui.apps.components import ...` to every block
 - **No positional arg**: Component must support `Component("content")` syntax via `__init__` overloads
-- **Render script error**: Check `uv run docs/_preview-build/render_previews.py` output for exceptions
+- **Render script error**: Check `uv run docs-build/render_previews.py` output for exceptions
 
 ### CSS classes not working
 

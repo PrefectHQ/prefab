@@ -395,7 +395,7 @@ def build_docs() -> None:
         prefab dev build-docs
     """
     repo_root = _find_repo_root()
-    build_dir = repo_root / "docs" / "_preview-build"
+    build_dir = repo_root / "docs-build"
 
     if not shutil.which("npx"):
         console.print(
@@ -553,8 +553,8 @@ def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
         (repo_root / "src" / "prefab_ui", "**/*.py"),
         (repo_root / "renderer" / "src", "**/*.ts"),
         (repo_root / "renderer" / "src", "**/*.tsx"),
-        (repo_root / "docs" / "_preview-build", "*.py"),
-        (repo_root / "docs" / "_preview-build", "*.css"),
+        (repo_root / "docs-build", "*.py"),
+        (repo_root / "docs-build", "*.css"),
     ]
 
     # Exclude generated outputs so they don't re-trigger builds.

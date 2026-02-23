@@ -25,10 +25,7 @@ Button("Summarize", on_click=SendMessage("Please summarize the data above."))
     "variant": "default",
     "size": "default",
     "disabled": false,
-    "onClick": {
-      "action": "sendMessage",
-      "content": "Please summarize the data above."
-    }
+    "onClick": {"action": "sendMessage", "content": "Please summarize the data above."}
   }
 }
 ```
@@ -63,10 +60,7 @@ with Column(gap=3):
     "cssClass": "gap-3",
     "type": "Column",
     "children": [
-      {
-        "content": "Quick Actions",
-        "type": "H3"
-      },
+      {"content": "Quick Actions", "type": "H3"},
       {
         "cssClass": "gap-2",
         "type": "Row",
@@ -77,10 +71,7 @@ with Column(gap=3):
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "sendMessage",
-              "content": "Summarize these results."
-            }
+            "onClick": {"action": "sendMessage", "content": "Summarize these results."}
           },
           {
             "type": "Button",
@@ -88,10 +79,7 @@ with Column(gap=3):
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "sendMessage",
-              "content": "Explain these results in more detail."
-            }
+            "onClick": {"action": "sendMessage", "content": "Explain these results in more detail."}
           },
           {
             "type": "Button",
@@ -117,15 +105,15 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"input-3","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ input-3 }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions.mcp import SendMessage
 
 with Column(gap=3):
-    question_input = Input(placeholder="Ask a follow-up question...")
-    Button("Ask", on_click=SendMessage(question_input.rx))
+    Input(name="question", placeholder="Ask a follow-up question...")
+    Button("Ask", on_click=SendMessage("{{ question }}"))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -137,7 +125,7 @@ with Column(gap=3):
         "type": "Input",
         "inputType": "text",
         "placeholder": "Ask a follow-up question...",
-        "name": "input-3",
+        "name": "question",
         "disabled": false,
         "required": false
       },
@@ -147,10 +135,7 @@ with Column(gap=3):
         "variant": "default",
         "size": "default",
         "disabled": false,
-        "onClick": {
-          "action": "sendMessage",
-          "content": "{{ input-3 }}"
-        }
+        "onClick": {"action": "sendMessage", "content": "{{ question }}"}
       }
     ]
   }

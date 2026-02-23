@@ -16,11 +16,11 @@ lint:
 
 # Rebuild component previews, CSS, and playground bundle
 generate-preview-css:
-    uv run docs/_preview-build/render_previews.py
-    uv run docs/_preview-build/generate_content.py
-    NODE_PATH=renderer/node_modules npx --yes @tailwindcss/cli@4 -i docs/_preview-build/input.css -o /tmp/prefab-preview-raw.css --minify
-    uv run docs/_preview-build/scope_css.py
-    uv run docs/_preview-build/generate_playground_bundle.py
+    uv run docs-build/render_previews.py
+    uv run docs-build/generate_content.py
+    NODE_PATH=renderer/node_modules npx --yes @tailwindcss/cli@4 -i docs-build/input.css -o /tmp/prefab-preview-raw.css --minify
+    uv run docs-build/scope_css.py
+    uv run docs-build/generate_playground_bundle.py
 
 # Start the renderer dev server
 renderer:
@@ -32,12 +32,12 @@ docs renderer-port="3333" docs-port="3000":
 
 # Regenerate playground bundle.json and examples.json
 playground:
-    uv run docs/_preview-build/generate_playground_bundle.py
-    uv run docs/_preview-build/extract_examples.py
+    uv run docs-build/generate_playground_bundle.py
+    uv run docs-build/extract_examples.py
 
 # Generate per-component protocol reference pages from Pydantic models
 generate-protocol-ref:
-    uv run docs/_preview-build/generate_protocol_pages.py
+    uv run docs-build/generate_protocol_pages.py
 
 # Check for broken links in documentation
 docs-broken-links:

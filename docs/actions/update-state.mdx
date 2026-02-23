@@ -12,7 +12,7 @@ State is client-side data that your UI can read and write. Components display st
 
 Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"slider-1","disabled":false},{"content":"Brightness: {{ slider-1 }}%","type":"Muted"}]},"state":{"brightness":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -21,8 +21,8 @@ from prefab_ui.components import Slider, Muted, Column
 set_initial_state(brightness=50)
 
 with Column(gap=3):
-    brightness_slider = Slider(min=0, max=100)
-    Muted(f"Brightness: {brightness_slider.rx}%")
+    Slider(name="brightness", min=0, max=100)
+    Muted("Brightness: {{ brightness }}%")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -34,24 +34,19 @@ with Column(gap=3):
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "name": "slider-1",
+        "name": "brightness",
         "disabled": false
       },
-      {
-        "content": "Brightness: {{ slider-1 }}%",
-        "type": "Muted"
-      }
+      {"content": "Brightness: {{ brightness }}%", "type": "Muted"}
     ]
   },
-  "state": {
-    "brightness": 50
-  }
+  "state": {"brightness": 50}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-Drag the slider — the text updates instantly. The slider auto-generates a state key, and `brightness_slider.rx` gives the `Muted` component a reactive reference to it. Most form controls (Input, Checkbox, Switch, Select, etc.) work the same way — assign to a variable and use `.rx` to reference the current value anywhere in your UI.
+Drag the slider — the text updates instantly. The Slider has `name="brightness"`, which means it automatically reads from and writes to the `brightness` state key. Most form controls (Input, Checkbox, Switch, Select, etc.) support this `name` prop for automatic state binding.
 
 For MCP tools, you can also provide initial state through `AppResult.state`:
 
@@ -107,11 +102,7 @@ with Column(gap=3):
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "drive",
-              "value": "improbability"
-            }
+            "onClick": {"action": "setState", "key": "drive", "value": "improbability"}
           },
           {
             "type": "Button",
@@ -119,11 +110,7 @@ with Column(gap=3):
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "drive",
-              "value": "conventional"
-            }
+            "onClick": {"action": "setState", "key": "drive", "value": "conventional"}
           },
           {
             "type": "Button",
@@ -131,24 +118,14 @@ with Column(gap=3):
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "drive",
-              "value": "bistromath"
-            }
+            "onClick": {"action": "setState", "key": "drive", "value": "bistromath"}
           }
         ]
       },
-      {
-        "type": "Badge",
-        "label": "Active drive: {{ drive }}",
-        "variant": "default"
-      }
+      {"type": "Badge", "label": "Active drive: {{ drive }}", "variant": "default"}
     ]
   },
-  "state": {
-    "drive": "improbability"
-  }
+  "state": {"drive": "improbability"}
 }
 ```
 </CodeGroup>
@@ -194,14 +171,8 @@ with Column(gap=3):
           {
             "type": "CardHeader",
             "children": [
-              {
-                "type": "CardTitle",
-                "content": "{{ profile.name }}"
-              },
-              {
-                "type": "CardDescription",
-                "content": "{{ profile.title }}"
-              }
+              {"type": "CardTitle", "content": "{{ profile.name }}"},
+              {"type": "CardDescription", "content": "{{ profile.title }}"}
             ]
           }
         ]
@@ -224,12 +195,7 @@ with Column(gap=3):
       }
     ]
   },
-  "state": {
-    "profile": {
-      "name": "Arthur Dent",
-      "title": "Sandwich Maker, Lamuella"
-    }
-  }
+  "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}
 }
 ```
 </CodeGroup>
@@ -284,10 +250,7 @@ with Column(gap=2):
         "variant": "outline",
         "size": "default",
         "disabled": false,
-        "onClick": {
-          "action": "toggleState",
-          "key": "showDetails"
-        }
+        "onClick": {"action": "toggleState", "key": "showDetails"}
       },
       {
         "type": "Condition",
@@ -298,12 +261,7 @@ with Column(gap=2):
               {
                 "type": "Alert",
                 "variant": "default",
-                "children": [
-                  {
-                    "type": "AlertTitle",
-                    "content": "Here are the details!"
-                  }
-                ]
+                "children": [{"type": "AlertTitle", "content": "Here are the details!"}]
               }
             ]
           }
@@ -327,9 +285,8 @@ Type a name and click Add to see it appear in the list. Click × to remove a row
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
-    Button, Column, Input, Muted, Row, Text,
+    Button, Column, ForEach, Input, Muted, Row, Text,
 )
-from prefab_ui.components.control_flow import ForEach
 from prefab_ui.actions import AppendState, PopState, SetState
 
 set_initial_state(
@@ -346,9 +303,9 @@ with Column(gap=3):
                 on_click=PopState("crew", "{{ $index }}"),
             )
     with Row(gap=2):
-        new_member_input = Input(name="new_member", placeholder="Crew member name...")
+        Input(name="new_member", placeholder="Crew member name...")
         Button("Add", on_click=[
-            AppendState("crew", new_member_input.rx),
+            AppendState("crew", "{{ new_member }}"),
             SetState("new_member", ""),
         ])
     Muted("{{ crew | length }} crew members")

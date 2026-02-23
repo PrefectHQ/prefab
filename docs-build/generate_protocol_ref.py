@@ -3,7 +3,7 @@
 Produces compact pseudocode JSON blocks that show the wire format at a glance,
 plus links to the full JSON Schema protocol pages.
 
-Run via: uv run docs/_preview-build/generate_protocol_ref.py
+Run via: uv run docs-build/generate_protocol_ref.py
 """
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "protocol"
+PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "docs" / "protocol"
 
 # Fields we always skip (internal, redundant, or handled specially)
 _SKIP_FIELDS = {"onSuccess", "onError"}
@@ -255,7 +255,7 @@ def process_file(path: Path) -> bool:
 
 
 def main() -> None:
-    docs_dir = Path(__file__).resolve().parents[1]
+    docs_dir = Path(__file__).resolve().parents[1] / "docs"
     mdx_files = sorted(docs_dir.rglob("*.mdx"))
 
     modified = 0

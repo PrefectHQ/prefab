@@ -8,7 +8,7 @@ live preview.
 The authored Python code block stays as-is inside the tag — the build only
 touches the opening ``<ComponentPreview ...>`` line and manages imports.
 
-Run via: uv run docs/_preview-build/render_previews.py
+Run via: uv run docs-build/render_previews.py
 """
 
 from __future__ import annotations
@@ -20,7 +20,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+from compact_json import compact_json
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 # ---------------------------------------------------------------------------
 # Regex patterns
@@ -229,18 +231,18 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
             continue
 
         # Compact JSON for the inline prop
-        compact_json = json.dumps(envelope, separators=(",", ":"))
+        inline_json = json.dumps(envelope, separators=(",", ":"))
 
         # Build new opening tag with inline JSON
         attrs = _extract_attrs(opening_tag)
-        new_opening = _build_opening_tag(attrs, compact_json)
+        new_opening = _build_opening_tag(attrs, inline_json)
 
         # Ensure icon attribute on the Python fence line
         if "icon=" not in python_fence_open:
             python_fence_open = python_fence_open.rstrip("\n") + ' icon="python"\n'
 
         # Build interior: CodeGroup with Python + Protocol tabs
-        pretty_json = json.dumps(envelope, indent=2)
+        pretty_json = compact_json(envelope)
         python_block = f"{python_fence_open}{python_source}{python_fence_close}"
         if attrs["hide_json"]:
             new_interior = f"\n{python_block}\n"
@@ -256,7 +258,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         block_id = attrs["block_id"]
         if block_id:
             python_block = python_fence_open + python_source + python_fence_close
-            pretty_json = json.dumps(envelope, indent=2)
+            pretty_json = compact_json(envelope)
             code_registry[block_id] = (python_block, pretty_json)
 
     # ------------------------------------------------------------------
@@ -328,7 +330,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
 
 
 def main() -> None:
-    docs_dir = Path(__file__).resolve().parents[1]
+    docs_dir = Path(__file__).resolve().parents[1] / "docs"
 
     # Clean generated directories so stale files are removed
     for name in ("gen", "_gen"):

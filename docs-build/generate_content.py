@@ -1,9 +1,9 @@
 """Generate an HTML file containing all component classes for Tailwind to scan.
 
-Run via: uv run docs/_preview-build/generate_content.py
+Run via: uv run docs-build/generate_content.py
 
 This renders every component variant to HTML and writes the output to
-_preview-build/content.html. The Tailwind CLI then scans this file (along
+docs-build/content.html. The Tailwind CLI then scans this file (along
 with the MDX docs) to know which utility classes to include in preview.css.
 """
 
@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 # Ensure the source tree and local modules are importable
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from html_renderer import render_json

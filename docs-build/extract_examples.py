@@ -1,6 +1,6 @@
 """Extract Python examples from MDX docs for the playground.
 
-Run via: uv run docs/_preview-build/extract_examples.py
+Run via: uv run docs-build/extract_examples.py
 
 Scans docs/apps/**/*.mdx for Python code blocks, extracts the title
 (from the code fence info string) and category (from the file path),
@@ -13,7 +13,7 @@ import json
 import re
 from pathlib import Path
 
-root = Path(__file__).resolve().parents[2]
+root = Path(__file__).resolve().parents[1]
 docs_dir = root / "docs"
 output = root / "renderer" / "src" / "playground" / "examples.json"
 

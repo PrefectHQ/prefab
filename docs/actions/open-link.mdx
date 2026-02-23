@@ -25,10 +25,7 @@ Button("View Documentation", variant="link",
     "variant": "link",
     "size": "default",
     "disabled": false,
-    "onClick": {
-      "action": "openLink",
-      "url": "https://prefab-ui.dev"
-    }
+    "onClick": {"action": "openLink", "url": "https://prefab-ui.dev"}
   }
 }
 ```
@@ -63,10 +60,7 @@ with Row(gap=4):
         "variant": "link",
         "size": "default",
         "disabled": false,
-        "onClick": {
-          "action": "openLink",
-          "url": "https://github.com/prefecthq/prefab"
-        }
+        "onClick": {"action": "openLink", "url": "https://github.com/prefecthq/prefab"}
       },
       {
         "type": "Button",
@@ -74,10 +68,7 @@ with Row(gap=4):
         "variant": "link",
         "size": "default",
         "disabled": false,
-        "onClick": {
-          "action": "openLink",
-          "url": "https://pypi.org/project/prefab-ui"
-        }
+        "onClick": {"action": "openLink", "url": "https://pypi.org/project/prefab-ui"}
       }
     ]
   }
@@ -90,17 +81,17 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"input-2","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ input-2 }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions import OpenLink
 
 with Column(gap=3):
-    repo_input = Input(placeholder="owner/repo")
+    Input(name="repo", placeholder="owner/repo")
     Button(
         "Open on GitHub",
-        on_click=OpenLink(f"https://github.com/{repo_input.rx}"),
+        on_click=OpenLink("https://github.com/{{ repo }}"),
     )
 ```
 ```json Protocol icon="brackets-curly"
@@ -113,7 +104,7 @@ with Column(gap=3):
         "type": "Input",
         "inputType": "text",
         "placeholder": "owner/repo",
-        "name": "input-2",
+        "name": "repo",
         "disabled": false,
         "required": false
       },
@@ -123,10 +114,7 @@ with Column(gap=3):
         "variant": "default",
         "size": "default",
         "disabled": false,
-        "onClick": {
-          "action": "openLink",
-          "url": "https://github.com/{{ input-2 }}"
-        }
+        "onClick": {"action": "openLink", "url": "https://github.com/{{ repo }}"}
       }
     ]
   }

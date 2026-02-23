@@ -46,12 +46,7 @@ with Card():
     "children": [
       {
         "type": "CardHeader",
-        "children": [
-          {
-            "type": "CardTitle",
-            "content": "{{ name }}"
-          }
-        ]
+        "children": [{"type": "CardTitle", "content": "{{ name }}"}]
       },
       {
         "type": "CardContent",
@@ -60,25 +55,15 @@ with Card():
             "cssClass": "gap-1",
             "type": "Column",
             "children": [
-              {
-                "content": "Role: {{ role }}",
-                "type": "Text"
-              },
-              {
-                "content": "The Answer to Everything: {{ answer }}",
-                "type": "Text"
-              }
+              {"content": "Role: {{ role }}", "type": "Text"},
+              {"content": "The Answer to Everything: {{ answer }}", "type": "Text"}
             ]
           }
         ]
       }
     ]
   },
-  "state": {
-    "name": "Arthur Dent",
-    "role": "Reluctant Adventurer",
-    "answer": 42
-  }
+  "state": {"name": "Arthur Dent", "role": "Reluctant Adventurer", "answer": 42}
 }
 ```
 </CodeGroup>
@@ -111,7 +96,7 @@ This distinction is important when passing values to props like `value`, `min`, 
 
 Templates aren't restricted to `content` or `label` — they work in any string prop anywhere in the component tree. Placeholders, CSS classes, URLs, titles, descriptions, action arguments — if it's a string, you can put `{{ }}` in it.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"{{ name }}","type":"Text"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","name":"input-19","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"{{ name }}","type":"Text"},{"type":"Badge","label":"{{ role }}","variant":"secondary"},{"type":"Input","inputType":"text","placeholder":"Message {{ name }}...","name":"input-15","disabled":false,"required":false}]},"state":{"name":"Zaphod Beeblebrox","role":"President of the Galaxy"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -138,29 +123,19 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {
-        "content": "{{ name }}",
-        "type": "Text"
-      },
-      {
-        "type": "Badge",
-        "label": "{{ role }}",
-        "variant": "secondary"
-      },
+      {"content": "{{ name }}", "type": "Text"},
+      {"type": "Badge", "label": "{{ role }}", "variant": "secondary"},
       {
         "type": "Input",
         "inputType": "text",
         "placeholder": "Message {{ name }}...",
-        "name": "input-19",
+        "name": "input-15",
         "disabled": false,
         "required": false
       }
     ]
   },
-  "state": {
-    "name": "Zaphod Beeblebrox",
-    "role": "President of the Galaxy"
-  }
+  "state": {"name": "Zaphod Beeblebrox", "role": "President of the Galaxy"}
 }
 ```
 </CodeGroup>
@@ -232,16 +207,10 @@ with Column(gap=3):
         "disabled": false,
         "required": false
       },
-      {
-        "content": "{{ first + ' ' + last }}",
-        "type": "Text"
-      }
+      {"content": "{{ first + ' ' + last }}", "type": "Text"}
     ]
   },
-  "state": {
-    "first": "Arthur",
-    "last": "Dent"
-  }
+  "state": {"first": "Arthur", "last": "Dent"}
 }
 ```
 </CodeGroup>

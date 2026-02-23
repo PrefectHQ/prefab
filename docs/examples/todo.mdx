@@ -107,10 +107,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
     "minColumnWidth": "12rem",
     "children": [
       {
-        "let": {
-          "gi": "{{ $index }}",
-          "show_done": "{{ $item.show_done }}"
-        },
+        "let": {"gi": "{{ $index }}", "show_done": "{{ $item.show_done }}"},
         "type": "ForEach",
         "key": "groups",
         "children": [
@@ -139,11 +136,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                         "variant": "ghost",
                         "size": "sm",
                         "disabled": false,
-                        "onClick": {
-                          "action": "popState",
-                          "key": "groups",
-                          "index": "{{ gi }}"
-                        }
+                        "onClick": {"action": "popState", "key": "groups", "index": "{{ gi }}"}
                       }
                     ]
                   }
@@ -163,16 +156,9 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                           {
                             "action": "appendState",
                             "key": "groups.{{ gi }}.todos",
-                            "value": {
-                              "text": "{{ $item.new_todo }}",
-                              "done": false
-                            }
+                            "value": {"text": "{{ $item.new_todo }}", "done": false}
                           },
-                          {
-                            "action": "setState",
-                            "key": "groups.{{ gi }}.new_todo",
-                            "value": ""
-                          }
+                          {"action": "setState", "key": "groups.{{ gi }}.new_todo", "value": ""}
                         ],
                         "children": [
                           {
@@ -207,13 +193,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                             "cases": [
                               {
                                 "when": "{{ $item.todos | length }}",
-                                "children": [
-                                  {
-                                    "cssClass": "my-3",
-                                    "type": "Separator",
-                                    "orientation": "horizontal"
-                                  }
-                                ]
+                                "children": [{"cssClass": "my-3", "type": "Separator", "orientation": "horizontal"}]
                               }
                             ]
                           },
@@ -253,11 +233,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                                             "variant": "ghost",
                                             "size": "sm",
                                             "disabled": false,
-                                            "onClick": {
-                                              "action": "popState",
-                                              "key": "groups.{{ gi }}.todos",
-                                              "index": "{{ $index }}"
-                                            }
+                                            "onClick": {"action": "popState", "key": "groups.{{ gi }}.todos", "index": "{{ $index }}"}
                                           }
                                         ]
                                       }
@@ -280,10 +256,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                     "cssClass": "gap-2 items-center w-full justify-between",
                     "type": "Row",
                     "children": [
-                      {
-                        "content": "{{ $item.todos | length }} items",
-                        "type": "Muted"
-                      },
+                      {"content": "{{ $item.todos | length }} items", "type": "Muted"},
                       {
                         "cssClass": "gap-1 items-center",
                         "type": "Row",
@@ -296,10 +269,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
                             "disabled": false,
                             "required": false
                           },
-                          {
-                            "content": "Show done",
-                            "type": "Muted"
-                          }
+                          {"content": "Show done", "type": "Muted"}
                         ]
                       }
                     ]
@@ -324,12 +294,7 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
             "onClick": {
               "action": "appendState",
               "key": "groups",
-              "value": {
-                "name": "New List",
-                "todos": [],
-                "new_todo": "",
-                "show_done": true
-              }
+              "value": {"name": "New List", "todos": [], "new_todo": "", "show_done": true}
             }
           }
         ]
@@ -341,14 +306,8 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
       {
         "name": "Work",
         "todos": [
-          {
-            "text": "Find Magrathea",
-            "done": false
-          },
-          {
-            "text": "Escape Vogons",
-            "done": false
-          }
+          {"text": "Find Magrathea", "done": false},
+          {"text": "Escape Vogons", "done": false}
         ],
         "new_todo": "",
         "show_done": true
@@ -356,14 +315,8 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
       {
         "name": "Personal",
         "todos": [
-          {
-            "text": "Have lunch at Milliways",
-            "done": true
-          },
-          {
-            "text": "Buy towel",
-            "done": false
-          }
+          {"text": "Have lunch at Milliways", "done": true},
+          {"text": "Buy towel", "done": false}
         ],
         "new_todo": "",
         "show_done": true
