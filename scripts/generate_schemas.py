@@ -48,7 +48,8 @@ ACTIONS_DIR = FIXTURES_DIR / "actions"
 
 # Python-only authoring constructs that never appear on the wire.
 # Excluded from manifest/fixtures (no corresponding Zod schema needed).
-_AUTHORING_ONLY = {"If", "Elif", "Else"}
+# Histogram is excluded because it serializes as BarChart (type="BarChart").
+_AUTHORING_ONLY = {"If", "Elif", "Else", "Histogram"}
 
 # Wire-only types produced by serialization transforms.
 # Added to manifest with hand-crafted fixtures (no Python class).

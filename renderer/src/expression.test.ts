@@ -478,6 +478,8 @@ describe("evaluate", () => {
       expect(evaluate("val | abs", { val: 42 })).toBe(42);
     });
 
+    // round pipe tests in expression-pipes.test.ts
+
     it("unknown pipe passes through", () => {
       expect(evaluate("val | nonexistent", { val: 42 })).toBe(42);
     });
@@ -651,50 +653,7 @@ describe("evaluate", () => {
     });
   });
 
-  // ── Date/Time pipes ──────────────────────────────────────────────
-
-  describe("date/time pipes", () => {
-    const iso = "2025-01-15T14:30:00Z";
-
-    it("date default (medium)", () => {
-      const result = evaluate("d | date", { d: iso });
-      expect(typeof result).toBe("string");
-      expect(String(result)).toContain("2025");
-    });
-
-    it("date short", () => {
-      const result = evaluate("d | date:short", { d: iso });
-      expect(typeof result).toBe("string");
-      expect(String(result)).toContain("2025");
-    });
-
-    it("date long", () => {
-      const result = evaluate("d | date:long", { d: iso });
-      expect(typeof result).toBe("string");
-      expect(String(result)).toContain("January");
-    });
-
-    it("time", () => {
-      const result = evaluate("d | time", { d: iso });
-      expect(typeof result).toBe("string");
-    });
-
-    it("time from time-only string", () => {
-      const result = evaluate("t | time", { t: "14:30" });
-      expect(typeof result).toBe("string");
-      expect(String(result)).toContain("30");
-    });
-
-    it("datetime", () => {
-      const result = evaluate("d | datetime", { d: iso });
-      expect(typeof result).toBe("string");
-      expect(String(result)).toContain("2025");
-    });
-
-    it("date pipe with invalid date returns string", () => {
-      expect(evaluate("d | date", { d: "not-a-date" })).toBe("not-a-date");
-    });
-  });
+  // ── Date/Time pipe tests in expression-pipes.test.ts ─────────────
 
   // ── Edge cases ────────────────────────────────────────────────────
 

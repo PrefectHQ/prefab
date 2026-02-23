@@ -44,12 +44,14 @@ from prefab_ui.components.field import Field
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
 from prefab_ui.components.heading import Heading
+from prefab_ui.components.histogram import Histogram
 from prefab_ui.components.hover_card import HoverCard
 from prefab_ui.components.icon import Icon
 from prefab_ui.components.image import Image
 from prefab_ui.components.input import Input
 from prefab_ui.components.label import Label
 from prefab_ui.components.markdown import Markdown
+from prefab_ui.components.metric import Metric
 from prefab_ui.components.pages import Page, Pages
 from prefab_ui.components.popover import Popover
 from prefab_ui.components.progress import Progress
@@ -130,6 +132,7 @@ __all__ = [
     "Form",
     "Grid",
     "Heading",
+    "Histogram",
     "HoverCard",
     "Icon",
     "Image",
@@ -140,6 +143,7 @@ __all__ = [
     "Lead",
     "Loader",
     "Markdown",
+    "Metric",
     "Muted",
     "P",
     "Page",

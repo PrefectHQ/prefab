@@ -16,8 +16,11 @@ import {
   RadarChart,
   RadialBar,
   RadialBarChart,
+  Scatter,
+  ScatterChart,
   XAxis,
   YAxis,
+  ZAxis,
   CartesianGrid,
   PolarGrid,
   PolarAngleAxis,
@@ -37,6 +40,7 @@ import type {
   PieChartWire,
   RadarChartWire,
   RadialChartWire,
+  ScatterChartWire,
 } from "@/schemas/chart";
 
 // Auto-assign chart CSS variable colors to series by index
@@ -388,6 +392,76 @@ export function PrefabRadialChart({
         )}
         <RadialBar dataKey={dataKey} />
       </RadialBarChart>
+    </ChartContainer>
+  );
+}
+
+// -- ScatterChart --
+
+export function PrefabScatterChart({
+  data = [],
+  series,
+  xAxis,
+  yAxis,
+  zAxis,
+  height = 300,
+  showLegend = false,
+  showTooltip = true,
+  showGrid = true,
+  className,
+}: ScatterChartWire & { className?: string }) {
+  if (typeof data === "string") return null;
+  const config = buildConfig(series);
+
+  return (
+    <ChartContainer
+      config={config}
+      className={className}
+      style={{ height, aspectRatio: "auto" }}
+    >
+      <ScatterChart>
+        {showGrid && <CartesianGrid />}
+        <XAxis
+          dataKey={xAxis}
+          type="number"
+          name={xAxis}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+        />
+        <YAxis
+          dataKey={yAxis}
+          type="number"
+          name={yAxis}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+        />
+        {zAxis && (
+          <ZAxis dataKey={zAxis} type="number" name={zAxis} range={[40, 400]} />
+        )}
+        {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+        {showLegend && <ChartLegend content={<ChartLegendContent />} />}
+        {series.map((s) => {
+          // Filter data for this series: include points where the
+          // series dataKey field is truthy, or all data when there's
+          // only one series (single-series mode).
+          const seriesData =
+            series.length === 1
+              ? data
+              : data.filter(
+                  (d) => (d as Record<string, unknown>)._series === s.dataKey,
+                );
+          return (
+            <Scatter
+              key={s.dataKey}
+              name={s.label ?? s.dataKey}
+              data={seriesData}
+              fill={`var(--color-${s.dataKey})`}
+            />
+          );
+        })}
+      </ScatterChart>
     </ChartContainer>
   );
 }

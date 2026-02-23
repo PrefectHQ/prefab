@@ -46,6 +46,7 @@ import {
   pieChartSchema,
   radarChartSchema,
   radialChartSchema,
+  scatterChartSchema,
 } from "./chart.ts";
 import {
   cardSchema,
@@ -78,6 +79,7 @@ import { imageSchema } from "./image.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
 import { markdownSchema } from "./markdown.ts";
+import { metricSchema } from "./metric.ts";
 import { pageSchema, pagesSchema } from "./pages.ts";
 import { popoverSchema } from "./popover.ts";
 import { progressSchema } from "./progress.ts";
@@ -175,6 +177,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Lead: leadSchema,
   LineChart: lineChartSchema,
   Markdown: markdownSchema,
+  Metric: metricSchema,
   Muted: mutedSchema,
   P: pSchema,
   Page: pageSchema,
@@ -187,6 +190,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Radio: radioSchema,
   RadioGroup: radioGroupSchema,
   Row: rowSchema,
+  ScatterChart: scatterChartSchema,
   Select: selectSchema,
   SelectOption: selectOptionSchema,
   Separator: separatorSchema,

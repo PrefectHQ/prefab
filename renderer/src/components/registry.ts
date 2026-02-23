@@ -105,6 +105,7 @@ import {
   BlockQuote,
 } from "./typography";
 import { Image } from "./image";
+import { PrefabMetric } from "./metric";
 import { Condition, ForEach, Slot } from "./control-flow";
 import { PrefabDataTable } from "./data-display";
 import {
@@ -127,6 +128,7 @@ const LazyAreaChart = lazyNamed(chartsModule, "PrefabAreaChart");
 const LazyPieChart = lazyNamed(chartsModule, "PrefabPieChart");
 const LazyRadarChart = lazyNamed(chartsModule, "PrefabRadarChart");
 const LazyRadialChart = lazyNamed(chartsModule, "PrefabRadialChart");
+const LazyScatterChart = lazyNamed(chartsModule, "PrefabScatterChart");
 
 // Code + Markdown — highlight.js (~167 KB), react-markdown (~70 KB)
 const contentModule = () => import("./content");
@@ -190,9 +192,13 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   PieChart: LazyPieChart,
   RadarChart: LazyRadarChart,
   RadialChart: LazyRadialChart,
+  ScatterChart: LazyScatterChart,
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
+
+  // Metric/KPI display
+  Metric: PrefabMetric,
 
   // File upload
   DropZone: PrefabDropZone,

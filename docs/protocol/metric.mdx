@@ -1,0 +1,102 @@
+---
+title: Metric
+description: JSON Schema for the Metric component.
+---
+
+A metric/KPI display showing a headline number with optional change indicator.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Metric",
+      "default": "Metric",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "label": {
+      "description": "The metric name",
+      "type": "string"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "description": "The headline number"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Optional description text"
+    },
+    "delta": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Change indicator (e.g. '+23.4%', -15)"
+    },
+    "trend": {
+      "enum": [
+        "up",
+        "down",
+        "neutral"
+      ],
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Arrow direction: 'up', 'down', or 'neutral'. Inferred from delta if None."
+    },
+    "trendSentiment": {
+      "enum": [
+        "positive",
+        "negative",
+        "neutral"
+      ],
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Color: 'positive' (green), 'negative' (red), 'neutral' (muted). Inferred from trend if None."
+    }
+  },
+  "required": [
+    "type",
+    "label",
+    "value"
+  ]
+}
+```

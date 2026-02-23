@@ -1,4 +1,4 @@
-"""Chart components — BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart.
+"""Chart components — BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ScatterChart.
 
 Built on Recharts + shadcn ChartContainer in the renderer.
 
@@ -195,6 +195,50 @@ class PieChart(Component):
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
+    )
+
+
+class ScatterChart(Component):
+    """Scatter (or bubble) chart plotting points from shared data.
+
+    Each series references the same dataset and plots (x_axis, y_axis) pairs.
+    Optionally set ``z_axis`` to size dots proportionally (bubble chart).
+
+    Example::
+
+        ScatterChart(
+            data=[
+                {"height": 170, "weight": 65, "age": 25},
+                {"height": 180, "weight": 80, "age": 30},
+            ],
+            series=[ChartSeries(data_key="group1", label="Group 1")],
+            x_axis="height",
+            y_axis="weight",
+            z_axis="age",
+        )
+    """
+
+    type: Literal["ScatterChart"] = "ScatterChart"
+    data: list[dict[str, Any]] | str = Field(
+        description="Row data or {{ interpolation }} reference"
+    )
+    series: list[ChartSeries] = Field(description="Series to render as scatter groups")
+    x_axis: str = Field(alias="xAxis", description="Data key for x-axis values")
+    y_axis: str = Field(alias="yAxis", description="Data key for y-axis values")
+    z_axis: str | None = Field(
+        default=None,
+        alias="zAxis",
+        description="Data key for bubble size (optional)",
+    )
+    height: int = Field(default=300, description="Chart height in pixels")
+    show_legend: bool = Field(
+        default=False, alias="showLegend", description="Show legend"
+    )
+    show_tooltip: bool = Field(
+        default=True, alias="showTooltip", description="Show tooltip on hover"
+    )
+    show_grid: bool = Field(
+        default=True, alias="showGrid", description="Show cartesian grid"
     )
 
 
