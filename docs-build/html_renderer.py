@@ -114,7 +114,6 @@ _BUTTON_SIZES: dict[str, str] = {
     "icon-lg": "size-9",
 }
 
-
 # Badge --------------------------------------------------------------------
 
 _BADGE_BASE = (
@@ -145,7 +144,6 @@ _BADGE_VARIANTS: dict[str, str] = {
     "warning": "bg-[var(--warning)]/10 text-[var(--warning)] dark:bg-[var(--warning)]/20",
     "info": "bg-[var(--info)]/10 text-[var(--info)] dark:bg-[var(--info)]/20",
 }
-
 
 # Card ---------------------------------------------------------------------
 
