@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from prefab_ui.actions import (
-    ActionBase,
+    Action,
     AppendState,
     CloseOverlay,
     OpenFilePicker,
@@ -15,9 +15,8 @@ from prefab_ui.actions import (
     SetState,
     ShowToast,
     ToggleState,
-    UpdateContext,
 )
-from prefab_ui.actions.mcp import CallTool, SendMessage
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
 
 
@@ -198,7 +197,7 @@ class TestActionCallbacks:
             OpenFilePicker(),
         ]
         for action in action_types:
-            assert isinstance(action, ActionBase), f"{type(action)} is not ActionBase"
+            assert isinstance(action, Action), f"{type(action)} is not Action"
             with_callback = type(action).model_validate(
                 {
                     **action.model_dump(),

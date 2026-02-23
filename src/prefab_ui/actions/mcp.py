@@ -13,10 +13,10 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 
-class CallTool(ActionBase):
+class CallTool(Action):
     """Call an MCP server tool via ``app.callServerTool()``.
 
     If ``result_key`` is set, the tool's return value is written into
@@ -41,7 +41,7 @@ class CallTool(ActionBase):
         super().__init__(**kwargs)
 
 
-class SendMessage(ActionBase):
+class SendMessage(Action):
     """Send a message to the chat via ``app.sendMessage()``."""
 
     action: Literal["sendMessage"] = "sendMessage"
@@ -52,7 +52,7 @@ class SendMessage(ActionBase):
         super().__init__(**kwargs)
 
 
-class UpdateContext(ActionBase):
+class UpdateContext(Action):
     """Update model context without triggering a response."""
 
     action: Literal["updateContext"] = "updateContext"

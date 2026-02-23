@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 from pydantic import Field, field_validator
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 _KEY_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
@@ -31,7 +31,7 @@ def _validate_path(path: str) -> str:
     return path
 
 
-class SetState(ActionBase):
+class SetState(Action):
     """Set a client-side state variable. No server round-trip.
 
     The default ``value`` of ``{{ $event }}`` captures the event value
@@ -60,7 +60,7 @@ class SetState(ActionBase):
         super().__init__(**kwargs)
 
 
-class ToggleState(ActionBase):
+class ToggleState(Action):
     """Flip a boolean state variable. No server round-trip."""
 
     action: Literal["toggleState"] = "toggleState"
@@ -76,7 +76,7 @@ class ToggleState(ActionBase):
         super().__init__(**kwargs)
 
 
-class AppendState(ActionBase):
+class AppendState(Action):
     """Append a value to a state array.
 
     Appends to the end by default. Pass ``index`` to insert at a specific
@@ -115,7 +115,7 @@ class AppendState(ActionBase):
         super().__init__(**kwargs)
 
 
-class PopState(ActionBase):
+class PopState(Action):
     """Remove an item by index from a state array.
 
     Supports negative indices (e.g. ``-1`` for the last element).

@@ -7,7 +7,8 @@ picker from any clickable element) and the :class:`FileUpload` data type
 Example::
 
     from prefab_ui.components import Button
-    from prefab_ui.actions import OpenFilePicker, CallTool
+    from prefab_ui.actions import OpenFilePicker
+    from prefab_ui.actions.mcp import CallTool
 
     Button("Upload CSV", on_click=OpenFilePicker(
         accept=".csv",
@@ -21,7 +22,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 
 class FileUpload(BaseModel):
@@ -47,7 +48,7 @@ class FileUpload(BaseModel):
     data: str = Field(description="Base64-encoded file content (no data: URL prefix)")
 
 
-class OpenFilePicker(ActionBase):
+class OpenFilePicker(Action):
     """Open the browser file picker and read selected files to base64.
 
     Fires ``onSuccess`` with the file data as ``$event``:

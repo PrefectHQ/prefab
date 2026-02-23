@@ -23,13 +23,13 @@ from urllib.parse import quote
 
 from pydantic import Field, field_validator
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 from prefab_ui.actions.state import _validate_path
 
 Method = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 
-class Fetch(ActionBase):
+class Fetch(Action):
     """Make an HTTP request from the browser.
 
     Fires ``onSuccess`` with the parsed response body as ``$event``.

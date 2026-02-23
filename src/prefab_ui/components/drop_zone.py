@@ -6,7 +6,7 @@ Reads selected files to base64 and fires ``onChange`` with structured file data.
 Example::
 
     from prefab_ui.components import DropZone
-    from prefab_ui.actions import CallTool
+    from prefab_ui.actions.mcp import CallTool
 
     DropZone(
         label="Drop files here",

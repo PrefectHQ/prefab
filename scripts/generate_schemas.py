@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from prefab_ui.actions import ActionBase
+from prefab_ui.actions import Action
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
@@ -143,7 +143,7 @@ def discover_components() -> dict[str, type[Component]]:
     return result
 
 
-def discover_actions() -> dict[str, type[ActionBase]]:
+def discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
         CallTool,
@@ -160,7 +160,7 @@ def discover_actions() -> dict[str, type[ActionBase]]:
         Fetch,
         SetInterval,
     ]
-    result: dict[str, type[ActionBase]] = {}
+    result: dict[str, type[Action]] = {}
     for cls in actions:
         instance = _minimal_instance(cls)
         discriminator = instance.model_dump(by_alias=True).get("action", "")
@@ -178,7 +178,7 @@ def generate_component_fixture(cls: type[Component]) -> dict[str, Any]:
         return instance.to_json()
 
 
-def generate_action_fixture(cls: type[ActionBase]) -> dict[str, Any]:
+def generate_action_fixture(cls: type[Action]) -> dict[str, Any]:
     """Generate a JSON fixture for an action."""
     import warnings
 

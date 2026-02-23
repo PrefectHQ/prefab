@@ -12,6 +12,8 @@ client-side renderer.
 
 **MCP transport actions** — communicate with an MCP server:
 
+    from prefab_ui.actions.mcp import CallTool, SendMessage
+
     Button("Refresh", on_click=CallTool("get_data"))
     Button("Ask AI", on_click=SendMessage("Summarize this"))
 
@@ -25,50 +27,25 @@ Actions compose — pass a list for sequential execution::
 
 from __future__ import annotations
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import FileUpload, OpenFilePicker
-from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
 from prefab_ui.actions.timing import SetInterval
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
 
-# Deprecated alias — use CallTool instead
-ToolCall = CallTool
-
 __all__ = [
     "Action",
-    "ActionBase",
     "AppendState",
-    "CallTool",
     "CloseOverlay",
     "Fetch",
     "FileUpload",
     "OpenFilePicker",
     "OpenLink",
     "PopState",
-    "SendMessage",
     "SetInterval",
     "SetState",
     "ShowToast",
     "ToggleState",
-    "ToolCall",
-    "UpdateContext",
 ]
-
-Action = (
-    CallTool
-    | SendMessage
-    | UpdateContext
-    | Fetch
-    | OpenLink
-    | SetState
-    | ToggleState
-    | AppendState
-    | PopState
-    | ShowToast
-    | CloseOverlay
-    | OpenFilePicker
-    | SetInterval
-)

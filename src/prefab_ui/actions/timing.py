@@ -6,10 +6,10 @@ from typing import Any, Literal
 
 from pydantic import Field, SerializeAsAny
 
-from prefab_ui.actions.base import ActionBase
+from prefab_ui.actions.base import Action
 
 
-class SetInterval(ActionBase):
+class SetInterval(Action):
     """Execute actions on a repeating schedule.
 
     Starts a client-side timer that fires ``on_tick`` every ``duration``
@@ -36,16 +36,12 @@ class SetInterval(ActionBase):
         default=None,
         description="Maximum number of ticks. The interval stops after this many.",
     )
-    on_tick: SerializeAsAny[ActionBase] | list[SerializeAsAny[ActionBase]] | None = (
-        Field(
-            default=None,
-            alias="onTick",
-            description="Action(s) to run each tick. $event is the tick number (1, 2, …).",
-        )
+    on_tick: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
+        default=None,
+        alias="onTick",
+        description="Action(s) to run each tick. $event is the tick number (1, 2, …).",
     )
-    on_complete: (
-        SerializeAsAny[ActionBase] | list[SerializeAsAny[ActionBase]] | None
-    ) = Field(
+    on_complete: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,
         alias="onComplete",
         description="Action(s) to run when the interval finishes.",
