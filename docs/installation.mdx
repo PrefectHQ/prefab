@@ -1,0 +1,73 @@
+---
+title: Installation
+description: Install Prefab and pin to a stable version.
+icon: arrow-down-to-line
+---
+
+## Install Prefab
+
+We recommend using [uv](https://docs.astral.sh/uv/getting-started/installation/) to install and manage Prefab.
+
+```bash
+pip install prefab-ui
+```
+
+Or with uv:
+
+```bash
+uv add prefab-ui
+```
+
+Prefab requires Python 3.10+.
+
+### Verify Installation
+
+```bash
+prefab version
+```
+
+## Versioning Policy
+
+Prefab is pre-1.0 software under active development. The API surface is evolving quickly as the project discovers what patterns work best for building agent-native UIs.
+
+### What This Means in Practice
+
+**Minor versions (0.x.0) may include breaking changes.** Prefab follows semantic versioning with the standard pre-1.0 caveat: while the major version is `0`, any minor version bump can change the public API. A bump from `0.5.0` to `0.6.0` might rename components, change default behaviors, or restructure modules.
+
+**Patch versions (0.0.x) are safe updates.** Patch releases contain only bug fixes without breaking changes.
+
+### Pin Your Version
+
+For any use beyond experimentation, pin to an exact version:
+
+```
+prefab-ui==0.5.0  # Good
+prefab-ui>=0.5.0  # Bad — may install breaking changes
+```
+
+Or pin to a minor range if you want patch fixes:
+
+```
+prefab-ui>=0.5,<0.6  # OK — gets patches, not breaking changes
+```
+
+### Breaking Change Philosophy
+
+Prefab is young, and that means being willing to fix API mistakes early rather than carrying them forever. Each breaking change is a deliberate decision to keep the framework simple and consistent rather than accumulating design debt.
+
+When breaking changes occur:
+- They only happen in minor versions (e.g., 0.5.x to 0.6.0)
+- Release notes explain what changed and how to migrate
+- Changes must substantially benefit users to justify disruption
+
+### Public API
+
+The public API — what's covered by compatibility guarantees within a minor version — consists of:
+- All classes exported from `prefab_ui.components` and `prefab_ui.actions`
+- `PrefabApp` and related app-level utilities
+- The `prefab` CLI commands
+- The JSON wire protocol schema
+
+Everything else (internal modules, private methods, renderer internals) may change without notice.
+
+Pin your dependencies and check release notes before upgrading.
