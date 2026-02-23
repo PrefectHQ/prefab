@@ -43,6 +43,12 @@ import type {
   ScatterChartWire,
 } from "@/schemas/chart";
 
+const compactFormatter = (value: number) =>
+  new Intl.NumberFormat("en", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+
 // Auto-assign chart CSS variable colors to series by index
 const CHART_COLORS = [
   "var(--color-chart-1)",
@@ -98,6 +104,8 @@ export function PrefabBarChart({
   showLegend = false,
   showTooltip = true,
   showGrid = true,
+  showYAxis = true,
+  yAxisFormat = "auto",
   className,
 }: BarChartWire & { className?: string }) {
   if (typeof data === "string") return null;
@@ -129,6 +137,16 @@ export function PrefabBarChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+          />
+        )}
+        {!horizontal && showYAxis && (
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={
+              yAxisFormat === "compact" ? compactFormatter : undefined
+            }
           />
         )}
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
@@ -166,6 +184,8 @@ export function PrefabLineChart({
   showLegend = false,
   showTooltip = true,
   showGrid = true,
+  showYAxis = true,
+  yAxisFormat = "auto",
   className,
 }: LineChartWire & { className?: string }) {
   if (typeof data === "string") return null;
@@ -185,6 +205,16 @@ export function PrefabLineChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+          />
+        )}
+        {showYAxis && (
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={
+              yAxisFormat === "compact" ? compactFormatter : undefined
+            }
           />
         )}
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
@@ -217,6 +247,8 @@ export function PrefabAreaChart({
   showLegend = false,
   showTooltip = true,
   showGrid = true,
+  showYAxis = true,
+  yAxisFormat = "auto",
   className,
 }: AreaChartWire & { className?: string }) {
   if (typeof data === "string") return null;
@@ -236,6 +268,16 @@ export function PrefabAreaChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+          />
+        )}
+        {showYAxis && (
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={
+              yAxisFormat === "compact" ? compactFormatter : undefined
+            }
           />
         )}
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
@@ -280,29 +322,71 @@ export function PrefabPieChart({
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
 
+  // Use percentage-based outer radius so the chart adapts to container size.
+  // When labels are shown, shrink further to leave room for label text.
+  const outerPct = showLabel ? "60%" : "80%";
+  // Preserve the visual ratio between inner and outer radius.
+  // Default outer is ~100px at 300px height, so scale innerRadius relative to that.
+  const innerPct =
+    innerRadius > 0
+      ? `${Math.round((innerRadius / 100) * (showLabel ? 60 : 80))}%`
+      : 0;
+
+  // Reduce chart height to leave room for external legend
+  const chartHeight = showLegend ? height - 36 : height;
+
   return (
-    <ChartContainer
-      config={config}
-      className={className}
-      style={{ height, aspectRatio: "auto" }}
-    >
-      <PieChart>
-        {showTooltip && (
-          <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
-        )}
-        {showLegend && (
-          <ChartLegend content={<ChartLegendContent nameKey={nameKey} />} />
-        )}
-        <Pie
-          data={coloredData}
-          dataKey={dataKey}
-          nameKey={nameKey}
-          innerRadius={innerRadius}
-          label={showLabel}
-          paddingAngle={paddingAngle}
-        />
-      </PieChart>
-    </ChartContainer>
+    <div className={className}>
+      <ChartContainer
+        config={config}
+        style={{ height: chartHeight, aspectRatio: "auto" }}
+      >
+        <PieChart>
+          {showTooltip && (
+            <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
+          )}
+          <Pie
+            data={coloredData}
+            dataKey={dataKey}
+            nameKey={nameKey}
+            innerRadius={innerPct}
+            outerRadius={outerPct}
+            label={showLabel}
+            paddingAngle={paddingAngle}
+          />
+        </PieChart>
+      </ChartContainer>
+      {showLegend && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "12px",
+            paddingTop: "8px",
+            fontSize: "12px",
+          }}
+        >
+          {coloredData.map((d, i) => (
+            <div
+              key={i}
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+              <div
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "2px",
+                  backgroundColor: d.fill,
+                  flexShrink: 0,
+                }}
+              />
+              {String(d[nameKey as keyof typeof d] ?? "")}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

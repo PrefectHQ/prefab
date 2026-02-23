@@ -1,0 +1,548 @@
+---
+title: Sales Dashboard
+description: A complete analytics dashboard with metrics, charts, and a sortable data table.
+icon: chart-bar
+mode: wide
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A full analytics dashboard built entirely client-side. Four KPI metrics across the top, a revenue trend chart alongside a category breakdown donut, and a searchable orders table at the bottom — all composed in a single Python script using the [Dashboard](/components/dashboard-grid) grid.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Dashboard","columns":12,"rowHeight":"auto","children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":3,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Revenue","value":"$284,750","delta":"+12.5%","trend":"up","trendSentiment":"positive"}]}]}]},{"type":"DashboardItem","col":4,"row":1,"colSpan":3,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Orders","value":"1,842","delta":"+8.2%","trend":"up","trendSentiment":"positive"}]}]}]},{"type":"DashboardItem","col":7,"row":1,"colSpan":3,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Avg Order","value":"$154.59","delta":"-3.1%","trend":"down","trendSentiment":"negative"}]}]}]},{"type":"DashboardItem","col":10,"row":1,"colSpan":3,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Growth","value":"12.5%","delta":"+2.4pp","trend":"up","trendSentiment":"positive"}]}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":8,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Revenue Over Time"}]},{"type":"CardContent","children":[{"type":"AreaChart","data":[{"month":"Sep","revenue":38200,"costs":22100},{"month":"Oct","revenue":41500,"costs":23400},{"month":"Nov","revenue":45800,"costs":24800},{"month":"Dec","revenue":52100,"costs":27200},{"month":"Jan","revenue":48900,"costs":25600},{"month":"Feb","revenue":58250,"costs":28900}],"series":[{"dataKey":"revenue","label":"Revenue","color":"#2563eb"},{"dataKey":"costs","label":"Costs","color":"#e76e50"}],"xAxis":"month","height":250,"stacked":false,"curve":"smooth","showDots":false,"showLegend":true,"showTooltip":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"compact"}]}]}]},{"type":"DashboardItem","col":9,"row":2,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Revenue by Category"}]},{"type":"CardContent","children":[{"type":"PieChart","data":[{"category":"Electronics","revenue":98600},{"category":"Clothing","revenue":67200},{"category":"Home","revenue":54300},{"category":"Books","revenue":38400},{"category":"Sports","revenue":26250}],"dataKey":"revenue","nameKey":"category","height":250,"innerRadius":60,"showLabel":false,"paddingAngle":0,"showLegend":true,"showTooltip":true}]}]}]},{"type":"DashboardItem","col":1,"row":3,"colSpan":12,"rowSpan":1,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"type":"CardTitle","content":"Recent Orders"},{"content":"Last 7 days","type":"Muted"}]}]},{"type":"CardContent","children":[{"type":"DataTable","columns":[{"key":"id","header":"Order ID","sortable":true},{"key":"customer","header":"Customer","sortable":true},{"key":"product","header":"Product","sortable":false},{"key":"total","header":"Total","sortable":true},{"key":"status","header":"Status","sortable":false},{"key":"date","header":"Date","sortable":true}],"rows":[{"id":"ORD-7842","customer":"Acme Corp","product":"Laptop Pro","total":"$1,249.99","status":"Shipped","date":"Feb 18"},{"id":"ORD-7841","customer":"Globex Inc","product":"Wireless Mouse","total":"$42.00","status":"Delivered","date":"Feb 17"},{"id":"ORD-7840","customer":"Initech","product":"Standing Desk","total":"$599.00","status":"Processing","date":"Feb 17"},{"id":"ORD-7839","customer":"Umbrella LLC","product":"Monitor 27\"","total":"$389.99","status":"Shipped","date":"Feb 16"},{"id":"ORD-7838","customer":"Stark Industries","product":"Keyboard MX","total":"$179.00","status":"Delivered","date":"Feb 16"},{"id":"ORD-7837","customer":"Wayne Enterprises","product":"Webcam HD","total":"$89.99","status":"Delivered","date":"Feb 15"},{"id":"ORD-7836","customer":"Cyberdyne","product":"USB Hub","total":"$34.99","status":"Shipped","date":"Feb 15"},{"id":"ORD-7835","customer":"Oscorp","product":"Headphones Pro","total":"$299.00","status":"Processing","date":"Feb 14"}],"searchable":true,"paginated":true,"pageSize":5}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python" expandable
+from prefab_ui.components import (
+    Card, CardContent, CardHeader, CardTitle,
+    Dashboard, DashboardItem,
+    DataTable, DataTableColumn,
+    Muted, Row,
+)
+from prefab_ui.components.charts import AreaChart, ChartSeries, PieChart
+from prefab_ui.components.metric import Metric
+
+monthly = [
+    {"month": "Sep", "revenue": 38200, "costs": 22100},
+    {"month": "Oct", "revenue": 41500, "costs": 23400},
+    {"month": "Nov", "revenue": 45800, "costs": 24800},
+    {"month": "Dec", "revenue": 52100, "costs": 27200},
+    {"month": "Jan", "revenue": 48900, "costs": 25600},
+    {"month": "Feb", "revenue": 58250, "costs": 28900},
+]
+
+categories = [
+    {"category": "Electronics", "revenue": 98600},
+    {"category": "Clothing", "revenue": 67200},
+    {"category": "Home", "revenue": 54300},
+    {"category": "Books", "revenue": 38400},
+    {"category": "Sports", "revenue": 26250},
+]
+
+orders = [
+    {"id": "ORD-7842", "customer": "Acme Corp", "product": "Laptop Pro", "total": "$1,249.99", "status": "Shipped", "date": "Feb 18"},
+    {"id": "ORD-7841", "customer": "Globex Inc", "product": "Wireless Mouse", "total": "$42.00", "status": "Delivered", "date": "Feb 17"},
+    {"id": "ORD-7840", "customer": "Initech", "product": "Standing Desk", "total": "$599.00", "status": "Processing", "date": "Feb 17"},
+    {"id": "ORD-7839", "customer": "Umbrella LLC", "product": "Monitor 27\"", "total": "$389.99", "status": "Shipped", "date": "Feb 16"},
+    {"id": "ORD-7838", "customer": "Stark Industries", "product": "Keyboard MX", "total": "$179.00", "status": "Delivered", "date": "Feb 16"},
+    {"id": "ORD-7837", "customer": "Wayne Enterprises", "product": "Webcam HD", "total": "$89.99", "status": "Delivered", "date": "Feb 15"},
+    {"id": "ORD-7836", "customer": "Cyberdyne", "product": "USB Hub", "total": "$34.99", "status": "Shipped", "date": "Feb 15"},
+    {"id": "ORD-7835", "customer": "Oscorp", "product": "Headphones Pro", "total": "$299.00", "status": "Processing", "date": "Feb 14"},
+]
+
+with Dashboard(columns=12, row_height="auto", gap=4):
+    # Row 1: KPI metrics in cards
+    with DashboardItem(col=1, row=1, col_span=3):
+        with Card():
+            with CardContent():
+                Metric(label="Revenue", value="$284,750", delta="+12.5%", trend="up", trend_sentiment="positive")
+    with DashboardItem(col=4, row=1, col_span=3):
+        with Card():
+            with CardContent():
+                Metric(label="Orders", value="1,842", delta="+8.2%", trend="up", trend_sentiment="positive")
+    with DashboardItem(col=7, row=1, col_span=3):
+        with Card():
+            with CardContent():
+                Metric(label="Avg Order", value="$154.59", delta="-3.1%", trend="down", trend_sentiment="negative")
+    with DashboardItem(col=10, row=1, col_span=3):
+        with Card():
+            with CardContent():
+                Metric(label="Growth", value="12.5%", delta="+2.4pp", trend="up", trend_sentiment="positive")
+
+    # Row 2: Revenue trend + category breakdown
+    with DashboardItem(col=1, row=2, col_span=8):
+        with Card(css_class="h-full"):
+            with CardHeader():
+                CardTitle("Revenue Over Time")
+            with CardContent():
+                AreaChart(
+                    data=monthly,
+                    series=[
+                        ChartSeries(data_key="revenue", label="Revenue", color="#2563eb"),
+                        ChartSeries(data_key="costs", label="Costs", color="#e76e50"),
+                    ],
+                    x_axis="month",
+                    curve="smooth",
+                    show_legend=True,
+                    y_axis_format="compact",
+                    height=250,
+                )
+
+    with DashboardItem(col=9, row=2, col_span=4):
+        with Card(css_class="h-full"):
+            with CardHeader():
+                CardTitle("Revenue by Category")
+            with CardContent():
+                PieChart(
+                    data=categories,
+                    data_key="revenue",
+                    name_key="category",
+                    inner_radius=60,
+                    show_legend=True,
+                    height=250,
+                )
+
+    # Row 3: Orders table
+    with DashboardItem(col=1, row=3, col_span=12):
+        with Card():
+            with CardHeader():
+                with Row(align="center", css_class="justify-between"):
+                    CardTitle("Recent Orders")
+                    Muted("Last 7 days")
+            with CardContent():
+                DataTable(
+                    columns=[
+                        DataTableColumn(key="id", header="Order ID", sortable=True),
+                        DataTableColumn(key="customer", header="Customer", sortable=True),
+                        DataTableColumn(key="product", header="Product"),
+                        DataTableColumn(key="total", header="Total", sortable=True),
+                        DataTableColumn(key="status", header="Status"),
+                        DataTableColumn(key="date", header="Date", sortable=True),
+                    ],
+                    rows=orders,
+                    searchable=True,
+                    paginated=True,
+                    page_size=5,
+                )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Dashboard",
+    "columns": 12,
+    "rowHeight": "auto",
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Revenue",
+                    "value": "$284,750",
+                    "delta": "+12.5%",
+                    "trend": "up",
+                    "trendSentiment": "positive"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 4,
+        "row": 1,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Orders",
+                    "value": "1,842",
+                    "delta": "+8.2%",
+                    "trend": "up",
+                    "trendSentiment": "positive"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 7,
+        "row": 1,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Avg Order",
+                    "value": "$154.59",
+                    "delta": "-3.1%",
+                    "trend": "down",
+                    "trendSentiment": "negative"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 10,
+        "row": 1,
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Growth",
+                    "value": "12.5%",
+                    "delta": "+2.4pp",
+                    "trend": "up",
+                    "trendSentiment": "positive"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 8,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Revenue Over Time"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "AreaChart",
+                    "data": [
+                      {
+                        "month": "Sep",
+                        "revenue": 38200,
+                        "costs": 22100
+                      },
+                      {
+                        "month": "Oct",
+                        "revenue": 41500,
+                        "costs": 23400
+                      },
+                      {
+                        "month": "Nov",
+                        "revenue": 45800,
+                        "costs": 24800
+                      },
+                      {
+                        "month": "Dec",
+                        "revenue": 52100,
+                        "costs": 27200
+                      },
+                      {
+                        "month": "Jan",
+                        "revenue": 48900,
+                        "costs": 25600
+                      },
+                      {
+                        "month": "Feb",
+                        "revenue": 58250,
+                        "costs": 28900
+                      }
+                    ],
+                    "series": [
+                      {
+                        "dataKey": "revenue",
+                        "label": "Revenue",
+                        "color": "#2563eb"
+                      },
+                      {
+                        "dataKey": "costs",
+                        "label": "Costs",
+                        "color": "#e76e50"
+                      }
+                    ],
+                    "xAxis": "month",
+                    "height": 250,
+                    "stacked": false,
+                    "curve": "smooth",
+                    "showDots": false,
+                    "showLegend": true,
+                    "showTooltip": true,
+                    "showGrid": true,
+                    "showYAxis": true,
+                    "yAxisFormat": "compact"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 9,
+        "row": 2,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Revenue by Category"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "PieChart",
+                    "data": [
+                      {
+                        "category": "Electronics",
+                        "revenue": 98600
+                      },
+                      {
+                        "category": "Clothing",
+                        "revenue": 67200
+                      },
+                      {
+                        "category": "Home",
+                        "revenue": 54300
+                      },
+                      {
+                        "category": "Books",
+                        "revenue": 38400
+                      },
+                      {
+                        "category": "Sports",
+                        "revenue": 26250
+                      }
+                    ],
+                    "dataKey": "revenue",
+                    "nameKey": "category",
+                    "height": 250,
+                    "innerRadius": 60,
+                    "showLabel": false,
+                    "paddingAngle": 0,
+                    "showLegend": true,
+                    "showTooltip": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 3,
+        "colSpan": 12,
+        "rowSpan": 1,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "cssClass": "items-center justify-between",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "type": "CardTitle",
+                        "content": "Recent Orders"
+                      },
+                      {
+                        "content": "Last 7 days",
+                        "type": "Muted"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "DataTable",
+                    "columns": [
+                      {
+                        "key": "id",
+                        "header": "Order ID",
+                        "sortable": true
+                      },
+                      {
+                        "key": "customer",
+                        "header": "Customer",
+                        "sortable": true
+                      },
+                      {
+                        "key": "product",
+                        "header": "Product",
+                        "sortable": false
+                      },
+                      {
+                        "key": "total",
+                        "header": "Total",
+                        "sortable": true
+                      },
+                      {
+                        "key": "status",
+                        "header": "Status",
+                        "sortable": false
+                      },
+                      {
+                        "key": "date",
+                        "header": "Date",
+                        "sortable": true
+                      }
+                    ],
+                    "rows": [
+                      {
+                        "id": "ORD-7842",
+                        "customer": "Acme Corp",
+                        "product": "Laptop Pro",
+                        "total": "$1,249.99",
+                        "status": "Shipped",
+                        "date": "Feb 18"
+                      },
+                      {
+                        "id": "ORD-7841",
+                        "customer": "Globex Inc",
+                        "product": "Wireless Mouse",
+                        "total": "$42.00",
+                        "status": "Delivered",
+                        "date": "Feb 17"
+                      },
+                      {
+                        "id": "ORD-7840",
+                        "customer": "Initech",
+                        "product": "Standing Desk",
+                        "total": "$599.00",
+                        "status": "Processing",
+                        "date": "Feb 17"
+                      },
+                      {
+                        "id": "ORD-7839",
+                        "customer": "Umbrella LLC",
+                        "product": "Monitor 27\"",
+                        "total": "$389.99",
+                        "status": "Shipped",
+                        "date": "Feb 16"
+                      },
+                      {
+                        "id": "ORD-7838",
+                        "customer": "Stark Industries",
+                        "product": "Keyboard MX",
+                        "total": "$179.00",
+                        "status": "Delivered",
+                        "date": "Feb 16"
+                      },
+                      {
+                        "id": "ORD-7837",
+                        "customer": "Wayne Enterprises",
+                        "product": "Webcam HD",
+                        "total": "$89.99",
+                        "status": "Delivered",
+                        "date": "Feb 15"
+                      },
+                      {
+                        "id": "ORD-7836",
+                        "customer": "Cyberdyne",
+                        "product": "USB Hub",
+                        "total": "$34.99",
+                        "status": "Shipped",
+                        "date": "Feb 15"
+                      },
+                      {
+                        "id": "ORD-7835",
+                        "customer": "Oscorp",
+                        "product": "Headphones Pro",
+                        "total": "$299.00",
+                        "status": "Processing",
+                        "date": "Feb 14"
+                      }
+                    ],
+                    "searchable": true,
+                    "paginated": true,
+                    "pageSize": 5
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## How It Works
+
+The entire layout is a 12-column [Dashboard](/components/dashboard-grid) grid with `row_height="auto"` so each row sizes to its content. The top row splits evenly into four [Metric](/components/metric) cards, each spanning 3 columns. The `trend` and `trend_sentiment` props add colored arrows and delta badges — green for positive metrics, red for the declining average order value.
+
+The middle row pairs an [AreaChart](/components/area-chart) (8 columns) with a [PieChart](/components/pie-chart) donut (4 columns). The area chart uses `curve="smooth"` for a polished look and overlays revenue against costs with two series. The donut chart uses `inner_radius=60` to create the hole and `show_legend=True` so categories are labeled.
+
+The bottom row is a full-width [DataTable](/components/data-table) with sortable columns, a search bar, and pagination at 5 rows per page. Click any sortable column header to reorder, or type in the search box to filter across all fields.
+
+Every piece of data here is embedded directly in the Python script — no server, no API calls. The renderer handles all interactivity (sorting, searching, pagination, tooltips) client-side.
