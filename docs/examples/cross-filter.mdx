@@ -225,10 +225,7 @@ with Column(let={
                         "cssClass": "gap-4 items-center",
                         "type": "Row",
                         "children": [
-                          {
-                            "content": "Region",
-                            "type": "Muted"
-                          },
+                          {"content": "Region", "type": "Muted"},
                           {
                             "cssClass": "w-48",
                             "type": "Select",
@@ -288,13 +285,7 @@ with Column(let={
             "row": 2,
             "colSpan": 3,
             "rowSpan": 1,
-            "children": [
-              {
-                "type": "Metric",
-                "label": "Revenue",
-                "value": "{{ m.revenue | currency }}"
-              }
-            ]
+            "children": [{"type": "Metric", "label": "Revenue", "value": "{{ m.revenue | currency }}"}]
           },
           {
             "type": "DashboardItem",
@@ -302,13 +293,7 @@ with Column(let={
             "row": 2,
             "colSpan": 3,
             "rowSpan": 1,
-            "children": [
-              {
-                "type": "Metric",
-                "label": "Units Sold",
-                "value": "{{ m.units | number }}"
-              }
-            ]
+            "children": [{"type": "Metric", "label": "Units Sold", "value": "{{ m.units | number }}"}]
           },
           {
             "type": "DashboardItem",
@@ -330,13 +315,7 @@ with Column(let={
             "row": 2,
             "colSpan": 3,
             "rowSpan": 1,
-            "children": [
-              {
-                "type": "Metric",
-                "label": "Stores",
-                "value": "{{ m.stores }}"
-              }
-            ]
+            "children": [{"type": "Metric", "label": "Stores", "value": "{{ m.stores }}"}]
           },
           {
             "type": "DashboardItem",
@@ -351,12 +330,7 @@ with Column(let={
                 "children": [
                   {
                     "type": "CardHeader",
-                    "children": [
-                      {
-                        "type": "CardTitle",
-                        "content": "Monthly Sales"
-                      }
-                    ]
+                    "children": [{"type": "CardTitle", "content": "Monthly Sales"}]
                   },
                   {
                     "type": "CardContent",
@@ -365,16 +339,8 @@ with Column(let={
                         "type": "BarChart",
                         "data": "{{ chart }}",
                         "series": [
-                          {
-                            "dataKey": "sales",
-                            "label": "Sales",
-                            "color": "#2563eb"
-                          },
-                          {
-                            "dataKey": "returns",
-                            "label": "Returns",
-                            "color": "#e76e50"
-                          }
+                          {"dataKey": "sales", "label": "Sales", "color": "#2563eb"},
+                          {"dataKey": "returns", "label": "Returns", "color": "#e76e50"}
                         ],
                         "xAxis": "month",
                         "height": 250,
@@ -406,12 +372,7 @@ with Column(let={
                 "children": [
                   {
                     "type": "CardHeader",
-                    "children": [
-                      {
-                        "type": "CardTitle",
-                        "content": "Category Performance"
-                      }
-                    ]
+                    "children": [{"type": "CardTitle", "content": "Category Performance"}]
                   },
                   {
                     "type": "CardContent",
@@ -419,12 +380,7 @@ with Column(let={
                       {
                         "type": "RadarChart",
                         "data": "{{ cat }}",
-                        "series": [
-                          {
-                            "dataKey": "score",
-                            "label": "Score"
-                          }
-                        ],
+                        "series": [{"dataKey": "score", "label": "Score"}],
                         "axisKey": "category",
                         "height": 250,
                         "filled": true,
@@ -451,12 +407,7 @@ with Column(let={
                 "children": [
                   {
                     "type": "CardHeader",
-                    "children": [
-                      {
-                        "type": "CardTitle",
-                        "content": "Revenue Trend (12 months)"
-                      }
-                    ]
+                    "children": [{"type": "CardTitle", "content": "Revenue Trend (12 months)"}]
                   },
                   {
                     "type": "CardContent",
@@ -464,13 +415,7 @@ with Column(let={
                       {
                         "type": "LineChart",
                         "data": "{{ t }}",
-                        "series": [
-                          {
-                            "dataKey": "revenue",
-                            "label": "Revenue",
-                            "color": "#2563eb"
-                          }
-                        ],
+                        "series": [{"dataKey": "revenue", "label": "Revenue", "color": "#2563eb"}],
                         "xAxis": "month",
                         "height": 200,
                         "curve": "smooth",
@@ -493,555 +438,155 @@ with Column(let={
   },
   "state": {
     "region": "all",
-    "metrics_all": {
-      "revenue": 284750,
-      "units": 12450,
-      "avg_price": 22.87,
-      "stores": 48
-    },
-    "metrics_north": {
-      "revenue": 142800,
-      "units": 4200,
-      "avg_price": 34.0,
-      "stores": 8
-    },
-    "metrics_south": {
-      "revenue": 38900,
-      "units": 3850,
-      "avg_price": 10.1,
-      "stores": 18
-    },
-    "metrics_east": {
-      "revenue": 67200,
-      "units": 1680,
-      "avg_price": 40.0,
-      "stores": 6
-    },
-    "metrics_west": {
-      "revenue": 35850,
-      "units": 2720,
-      "avg_price": 13.18,
-      "stores": 16
-    },
+    "metrics_all": {"revenue": 284750, "units": 12450, "avg_price": 22.87, "stores": 48},
+    "metrics_north": {"revenue": 142800, "units": 4200, "avg_price": 34.0, "stores": 8},
+    "metrics_south": {"revenue": 38900, "units": 3850, "avg_price": 10.1, "stores": 18},
+    "metrics_east": {"revenue": 67200, "units": 1680, "avg_price": 40.0, "stores": 6},
+    "metrics_west": {"revenue": 35850, "units": 2720, "avg_price": 13.18, "stores": 16},
     "monthly_all": [
-      {
-        "month": "Jan",
-        "sales": 42000,
-        "returns": 3200
-      },
-      {
-        "month": "Feb",
-        "sales": 48500,
-        "returns": 3800
-      },
-      {
-        "month": "Mar",
-        "sales": 45200,
-        "returns": 3400
-      },
-      {
-        "month": "Apr",
-        "sales": 51800,
-        "returns": 4100
-      },
-      {
-        "month": "May",
-        "sales": 47600,
-        "returns": 3600
-      },
-      {
-        "month": "Jun",
-        "sales": 53200,
-        "returns": 4200
-      }
+      {"month": "Jan", "sales": 42000, "returns": 3200},
+      {"month": "Feb", "sales": 48500, "returns": 3800},
+      {"month": "Mar", "sales": 45200, "returns": 3400},
+      {"month": "Apr", "sales": 51800, "returns": 4100},
+      {"month": "May", "sales": 47600, "returns": 3600},
+      {"month": "Jun", "sales": 53200, "returns": 4200}
     ],
     "monthly_north": [
-      {
-        "month": "Jan",
-        "sales": 22000,
-        "returns": 800
-      },
-      {
-        "month": "Feb",
-        "sales": 25500,
-        "returns": 900
-      },
-      {
-        "month": "Mar",
-        "sales": 24200,
-        "returns": 850
-      },
-      {
-        "month": "Apr",
-        "sales": 27800,
-        "returns": 1000
-      },
-      {
-        "month": "May",
-        "sales": 23100,
-        "returns": 750
-      },
-      {
-        "month": "Jun",
-        "sales": 29200,
-        "returns": 1100
-      }
+      {"month": "Jan", "sales": 22000, "returns": 800},
+      {"month": "Feb", "sales": 25500, "returns": 900},
+      {"month": "Mar", "sales": 24200, "returns": 850},
+      {"month": "Apr", "sales": 27800, "returns": 1000},
+      {"month": "May", "sales": 23100, "returns": 750},
+      {"month": "Jun", "sales": 29200, "returns": 1100}
     ],
     "monthly_south": [
-      {
-        "month": "Jan",
-        "sales": 5800,
-        "returns": 1200
-      },
-      {
-        "month": "Feb",
-        "sales": 6400,
-        "returns": 1400
-      },
-      {
-        "month": "Mar",
-        "sales": 5600,
-        "returns": 1100
-      },
-      {
-        "month": "Apr",
-        "sales": 7200,
-        "returns": 1600
-      },
-      {
-        "month": "May",
-        "sales": 6100,
-        "returns": 1300
-      },
-      {
-        "month": "Jun",
-        "sales": 7800,
-        "returns": 1700
-      }
+      {"month": "Jan", "sales": 5800, "returns": 1200},
+      {"month": "Feb", "sales": 6400, "returns": 1400},
+      {"month": "Mar", "sales": 5600, "returns": 1100},
+      {"month": "Apr", "sales": 7200, "returns": 1600},
+      {"month": "May", "sales": 6100, "returns": 1300},
+      {"month": "Jun", "sales": 7800, "returns": 1700}
     ],
     "monthly_east": [
-      {
-        "month": "Jan",
-        "sales": 8200,
-        "returns": 400
-      },
-      {
-        "month": "Feb",
-        "sales": 10600,
-        "returns": 500
-      },
-      {
-        "month": "Mar",
-        "sales": 9800,
-        "returns": 450
-      },
-      {
-        "month": "Apr",
-        "sales": 11800,
-        "returns": 550
-      },
-      {
-        "month": "May",
-        "sales": 12400,
-        "returns": 500
-      },
-      {
-        "month": "Jun",
-        "sales": 14200,
-        "returns": 600
-      }
+      {"month": "Jan", "sales": 8200, "returns": 400},
+      {"month": "Feb", "sales": 10600, "returns": 500},
+      {"month": "Mar", "sales": 9800, "returns": 450},
+      {"month": "Apr", "sales": 11800, "returns": 550},
+      {"month": "May", "sales": 12400, "returns": 500},
+      {"month": "Jun", "sales": 14200, "returns": 600}
     ],
     "monthly_west": [
-      {
-        "month": "Jan",
-        "sales": 6000,
-        "returns": 800
-      },
-      {
-        "month": "Feb",
-        "sales": 6000,
-        "returns": 1000
-      },
-      {
-        "month": "Mar",
-        "sales": 5600,
-        "returns": 1000
-      },
-      {
-        "month": "Apr",
-        "sales": 5000,
-        "returns": 950
-      },
-      {
-        "month": "May",
-        "sales": 6000,
-        "returns": 1050
-      },
-      {
-        "month": "Jun",
-        "sales": 2000,
-        "returns": 800
-      }
+      {"month": "Jan", "sales": 6000, "returns": 800},
+      {"month": "Feb", "sales": 6000, "returns": 1000},
+      {"month": "Mar", "sales": 5600, "returns": 1000},
+      {"month": "Apr", "sales": 5000, "returns": 950},
+      {"month": "May", "sales": 6000, "returns": 1050},
+      {"month": "Jun", "sales": 2000, "returns": 800}
     ],
     "categories_all": [
-      {
-        "category": "Electronics",
-        "score": 82
-      },
-      {
-        "category": "Clothing",
-        "score": 75
-      },
-      {
-        "category": "Home",
-        "score": 80
-      },
-      {
-        "category": "Books",
-        "score": 65
-      },
-      {
-        "category": "Sports",
-        "score": 70
-      }
+      {"category": "Electronics", "score": 82},
+      {"category": "Clothing", "score": 75},
+      {"category": "Home", "score": 80},
+      {"category": "Books", "score": 65},
+      {"category": "Sports", "score": 70}
     ],
     "categories_north": [
-      {
-        "category": "Electronics",
-        "score": 98
-      },
-      {
-        "category": "Clothing",
-        "score": 40
-      },
-      {
-        "category": "Home",
-        "score": 92
-      },
-      {
-        "category": "Books",
-        "score": 35
-      },
-      {
-        "category": "Sports",
-        "score": 45
-      }
+      {"category": "Electronics", "score": 98},
+      {"category": "Clothing", "score": 40},
+      {"category": "Home", "score": 92},
+      {"category": "Books", "score": 35},
+      {"category": "Sports", "score": 45}
     ],
     "categories_south": [
-      {
-        "category": "Electronics",
-        "score": 45
-      },
-      {
-        "category": "Clothing",
-        "score": 95
-      },
-      {
-        "category": "Home",
-        "score": 50
-      },
-      {
-        "category": "Books",
-        "score": 90
-      },
-      {
-        "category": "Sports",
-        "score": 88
-      }
+      {"category": "Electronics", "score": 45},
+      {"category": "Clothing", "score": 95},
+      {"category": "Home", "score": 50},
+      {"category": "Books", "score": 90},
+      {"category": "Sports", "score": 88}
     ],
     "categories_east": [
-      {
-        "category": "Electronics",
-        "score": 95
-      },
-      {
-        "category": "Clothing",
-        "score": 60
-      },
-      {
-        "category": "Home",
-        "score": 90
-      },
-      {
-        "category": "Books",
-        "score": 55
-      },
-      {
-        "category": "Sports",
-        "score": 40
-      }
+      {"category": "Electronics", "score": 95},
+      {"category": "Clothing", "score": 60},
+      {"category": "Home", "score": 90},
+      {"category": "Books", "score": 55},
+      {"category": "Sports", "score": 40}
     ],
     "categories_west": [
-      {
-        "category": "Electronics",
-        "score": 50
-      },
-      {
-        "category": "Clothing",
-        "score": 88
-      },
-      {
-        "category": "Home",
-        "score": 55
-      },
-      {
-        "category": "Books",
-        "score": 82
-      },
-      {
-        "category": "Sports",
-        "score": 92
-      }
+      {"category": "Electronics", "score": 50},
+      {"category": "Clothing", "score": 88},
+      {"category": "Home", "score": 55},
+      {"category": "Books", "score": 82},
+      {"category": "Sports", "score": 92}
     ],
     "trend_all": [
-      {
-        "month": "Mar",
-        "revenue": 32000
-      },
-      {
-        "month": "Apr",
-        "revenue": 35000
-      },
-      {
-        "month": "May",
-        "revenue": 33500
-      },
-      {
-        "month": "Jun",
-        "revenue": 38000
-      },
-      {
-        "month": "Jul",
-        "revenue": 41000
-      },
-      {
-        "month": "Aug",
-        "revenue": 39500
-      },
-      {
-        "month": "Sep",
-        "revenue": 43000
-      },
-      {
-        "month": "Oct",
-        "revenue": 45500
-      },
-      {
-        "month": "Nov",
-        "revenue": 48000
-      },
-      {
-        "month": "Dec",
-        "revenue": 52000
-      },
-      {
-        "month": "Jan",
-        "revenue": 49000
-      },
-      {
-        "month": "Feb",
-        "revenue": 54000
-      }
+      {"month": "Mar", "revenue": 32000},
+      {"month": "Apr", "revenue": 35000},
+      {"month": "May", "revenue": 33500},
+      {"month": "Jun", "revenue": 38000},
+      {"month": "Jul", "revenue": 41000},
+      {"month": "Aug", "revenue": 39500},
+      {"month": "Sep", "revenue": 43000},
+      {"month": "Oct", "revenue": 45500},
+      {"month": "Nov", "revenue": 48000},
+      {"month": "Dec", "revenue": 52000},
+      {"month": "Jan", "revenue": 49000},
+      {"month": "Feb", "revenue": 54000}
     ],
     "trend_north": [
-      {
-        "month": "Mar",
-        "revenue": 18000
-      },
-      {
-        "month": "Apr",
-        "revenue": 20500
-      },
-      {
-        "month": "May",
-        "revenue": 19000
-      },
-      {
-        "month": "Jun",
-        "revenue": 22000
-      },
-      {
-        "month": "Jul",
-        "revenue": 24500
-      },
-      {
-        "month": "Aug",
-        "revenue": 23000
-      },
-      {
-        "month": "Sep",
-        "revenue": 26000
-      },
-      {
-        "month": "Oct",
-        "revenue": 28000
-      },
-      {
-        "month": "Nov",
-        "revenue": 30000
-      },
-      {
-        "month": "Dec",
-        "revenue": 35000
-      },
-      {
-        "month": "Jan",
-        "revenue": 32000
-      },
-      {
-        "month": "Feb",
-        "revenue": 38000
-      }
+      {"month": "Mar", "revenue": 18000},
+      {"month": "Apr", "revenue": 20500},
+      {"month": "May", "revenue": 19000},
+      {"month": "Jun", "revenue": 22000},
+      {"month": "Jul", "revenue": 24500},
+      {"month": "Aug", "revenue": 23000},
+      {"month": "Sep", "revenue": 26000},
+      {"month": "Oct", "revenue": 28000},
+      {"month": "Nov", "revenue": 30000},
+      {"month": "Dec", "revenue": 35000},
+      {"month": "Jan", "revenue": 32000},
+      {"month": "Feb", "revenue": 38000}
     ],
     "trend_south": [
-      {
-        "month": "Mar",
-        "revenue": 4200
-      },
-      {
-        "month": "Apr",
-        "revenue": 4800
-      },
-      {
-        "month": "May",
-        "revenue": 5100
-      },
-      {
-        "month": "Jun",
-        "revenue": 5500
-      },
-      {
-        "month": "Jul",
-        "revenue": 5200
-      },
-      {
-        "month": "Aug",
-        "revenue": 5800
-      },
-      {
-        "month": "Sep",
-        "revenue": 5500
-      },
-      {
-        "month": "Oct",
-        "revenue": 6000
-      },
-      {
-        "month": "Nov",
-        "revenue": 5800
-      },
-      {
-        "month": "Dec",
-        "revenue": 6200
-      },
-      {
-        "month": "Jan",
-        "revenue": 6000
-      },
-      {
-        "month": "Feb",
-        "revenue": 6500
-      }
+      {"month": "Mar", "revenue": 4200},
+      {"month": "Apr", "revenue": 4800},
+      {"month": "May", "revenue": 5100},
+      {"month": "Jun", "revenue": 5500},
+      {"month": "Jul", "revenue": 5200},
+      {"month": "Aug", "revenue": 5800},
+      {"month": "Sep", "revenue": 5500},
+      {"month": "Oct", "revenue": 6000},
+      {"month": "Nov", "revenue": 5800},
+      {"month": "Dec", "revenue": 6200},
+      {"month": "Jan", "revenue": 6000},
+      {"month": "Feb", "revenue": 6500}
     ],
     "trend_east": [
-      {
-        "month": "Mar",
-        "revenue": 5500
-      },
-      {
-        "month": "Apr",
-        "revenue": 6200
-      },
-      {
-        "month": "May",
-        "revenue": 7000
-      },
-      {
-        "month": "Jun",
-        "revenue": 7800
-      },
-      {
-        "month": "Jul",
-        "revenue": 8800
-      },
-      {
-        "month": "Aug",
-        "revenue": 9500
-      },
-      {
-        "month": "Sep",
-        "revenue": 10500
-      },
-      {
-        "month": "Oct",
-        "revenue": 11500
-      },
-      {
-        "month": "Nov",
-        "revenue": 12800
-      },
-      {
-        "month": "Dec",
-        "revenue": 14000
-      },
-      {
-        "month": "Jan",
-        "revenue": 15500
-      },
-      {
-        "month": "Feb",
-        "revenue": 17000
-      }
+      {"month": "Mar", "revenue": 5500},
+      {"month": "Apr", "revenue": 6200},
+      {"month": "May", "revenue": 7000},
+      {"month": "Jun", "revenue": 7800},
+      {"month": "Jul", "revenue": 8800},
+      {"month": "Aug", "revenue": 9500},
+      {"month": "Sep", "revenue": 10500},
+      {"month": "Oct", "revenue": 11500},
+      {"month": "Nov", "revenue": 12800},
+      {"month": "Dec", "revenue": 14000},
+      {"month": "Jan", "revenue": 15500},
+      {"month": "Feb", "revenue": 17000}
     ],
     "trend_west": [
-      {
-        "month": "Mar",
-        "revenue": 8500
-      },
-      {
-        "month": "Apr",
-        "revenue": 8200
-      },
-      {
-        "month": "May",
-        "revenue": 7800
-      },
-      {
-        "month": "Jun",
-        "revenue": 7200
-      },
-      {
-        "month": "Jul",
-        "revenue": 6800
-      },
-      {
-        "month": "Aug",
-        "revenue": 6500
-      },
-      {
-        "month": "Sep",
-        "revenue": 6000
-      },
-      {
-        "month": "Oct",
-        "revenue": 5500
-      },
-      {
-        "month": "Nov",
-        "revenue": 5200
-      },
-      {
-        "month": "Dec",
-        "revenue": 4800
-      },
-      {
-        "month": "Jan",
-        "revenue": 4200
-      },
-      {
-        "month": "Feb",
-        "revenue": 3500
-      }
+      {"month": "Mar", "revenue": 8500},
+      {"month": "Apr", "revenue": 8200},
+      {"month": "May", "revenue": 7800},
+      {"month": "Jun", "revenue": 7200},
+      {"month": "Jul", "revenue": 6800},
+      {"month": "Aug", "revenue": 6500},
+      {"month": "Sep", "revenue": 6000},
+      {"month": "Oct", "revenue": 5500},
+      {"month": "Nov", "revenue": 5200},
+      {"month": "Dec", "revenue": 4800},
+      {"month": "Jan", "revenue": 4200},
+      {"month": "Feb", "revenue": 3500}
     ]
   }
 }

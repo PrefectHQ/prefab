@@ -18,13 +18,7 @@ from prefab_ui.components import Calendar
 Calendar(name="selectedDate")
 ```
 ```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "type": "Calendar",
-    "mode": "single",
-    "name": "selectedDate"
-  }
-}
+{"view": {"type": "Calendar", "mode": "single", "name": "selectedDate"}}
 ```
 </CodeGroup>
 </ComponentPreview>
@@ -51,11 +45,7 @@ Calendar(mode="range", name="dateRange")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "type": "Calendar",
-    "mode": "range",
-    "name": "dateRange"
-  },
+  "view": {"type": "Calendar", "mode": "range", "name": "dateRange"},
   "state": {
     "dateRange": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
   }
@@ -87,11 +77,7 @@ Calendar(mode="multiple", name="selectedDates")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "type": "Calendar",
-    "mode": "multiple",
-    "name": "selectedDates"
-  },
+  "view": {"type": "Calendar", "mode": "multiple", "name": "selectedDates"},
   "state": {
     "selectedDates": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
   }
@@ -131,35 +117,19 @@ with Row(gap=6):
     "cssClass": "gap-6",
     "type": "Row",
     "children": [
-      {
-        "type": "Calendar",
-        "mode": "single",
-        "name": "selectedDate"
-      },
+      {"type": "Calendar", "mode": "single", "name": "selectedDate"},
       {
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "content": "Selected date:",
-            "type": "Text"
-          },
-          {
-            "content": "{{ selectedDate | date:long }}",
-            "bold": true,
-            "type": "Text"
-          },
-          {
-            "content": "Raw: {{ selectedDate }}",
-            "type": "Muted"
-          }
+          {"content": "Selected date:", "type": "Text"},
+          {"content": "{{ selectedDate | date:long }}", "bold": true, "type": "Text"},
+          {"content": "Raw: {{ selectedDate }}", "type": "Muted"}
         ]
       }
     ]
   },
-  "state": {
-    "selectedDate": "2025-06-15T12:00:00.000Z"
-  }
+  "state": {"selectedDate": "2025-06-15T12:00:00.000Z"}
 }
 ```
 </CodeGroup>

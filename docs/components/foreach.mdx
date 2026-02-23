@@ -60,21 +60,11 @@ with Column(gap=2):
                     "cssClass": "gap-2 items-center",
                     "type": "Row",
                     "children": [
-                      {
-                        "type": "CardTitle",
-                        "content": "{{ name }}"
-                      },
-                      {
-                        "type": "Badge",
-                        "label": "{{ designation }}",
-                        "variant": "secondary"
-                      }
+                      {"type": "CardTitle", "content": "{{ name }}"},
+                      {"type": "Badge", "label": "{{ designation }}", "variant": "secondary"}
                     ]
                   },
-                  {
-                    "type": "CardDescription",
-                    "content": "{{ email }}"
-                  }
+                  {"type": "CardDescription", "content": "{{ email }}"}
                 ]
               }
             ]
@@ -135,24 +125,11 @@ with Row(gap=2):
       {
         "type": "ForEach",
         "key": "tags",
-        "children": [
-          {
-            "type": "Badge",
-            "label": "{{ $item }}",
-            "variant": "secondary"
-          }
-        ]
+        "children": [{"type": "Badge", "label": "{{ $item }}", "variant": "secondary"}]
       }
     ]
   },
-  "state": {
-    "tags": [
-      "earth",
-      "magrathea",
-      "vogon poetry",
-      "42"
-    ]
-  }
+  "state": {"tags": ["earth", "magrathea", "vogon poetry", "42"]}
 }
 ```
 </CodeGroup>
@@ -186,22 +163,11 @@ with Column(gap=1):
       {
         "type": "ForEach",
         "key": "steps",
-        "children": [
-          {
-            "content": "{{ $index + 1 }}. {{ $item }}",
-            "type": "Text"
-          }
-        ]
+        "children": [{"content": "{{ $index + 1 }}. {{ $item }}", "type": "Text"}]
       }
     ]
   },
-  "state": {
-    "steps": [
-      "Collect underpants",
-      "?",
-      "Profit"
-    ]
-  }
+  "state": {"steps": ["Collect underpants", "?", "Profit"]}
 }
 ```
 </CodeGroup>
@@ -254,14 +220,8 @@ with Column(gap=2):
               {
                 "type": "CardHeader",
                 "children": [
-                  {
-                    "type": "CardTitle",
-                    "content": "{{ name }}"
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "Owner: {{ owner.name }}"
-                  }
+                  {"type": "CardTitle", "content": "{{ name }}"},
+                  {"type": "CardDescription", "content": "Owner: {{ owner.name }}"}
                 ]
               }
             ]
@@ -272,18 +232,8 @@ with Column(gap=2):
   },
   "state": {
     "projects": [
-      {
-        "name": "Heart of Gold",
-        "owner": {
-          "name": "Zaphod Beeblebrox"
-        }
-      },
-      {
-        "name": "Hitchhiker's Guide",
-        "owner": {
-          "name": "Ford Prefect"
-        }
-      }
+      {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},
+      {"name": "Hitchhiker's Guide", "owner": {"name": "Ford Prefect"}}
     ]
   }
 }

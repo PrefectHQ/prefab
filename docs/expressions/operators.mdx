@@ -62,50 +62,30 @@ with Column(gap=3):
         "cssClass": "gap-2 items-center",
         "type": "Row",
         "children": [
-          {
-            "content": "Quantity:",
-            "type": "Text"
-          },
+          {"content": "Quantity:", "type": "Text"},
           {
             "type": "Button",
             "label": "-",
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "quantity",
-              "value": "{{ quantity - 1 }}"
-            }
+            "onClick": {"action": "setState", "key": "quantity", "value": "{{ quantity - 1 }}"}
           },
-          {
-            "content": "{{ quantity }}",
-            "type": "Text"
-          },
+          {"content": "{{ quantity }}", "type": "Text"},
           {
             "type": "Button",
             "label": "+",
             "variant": "outline",
             "size": "default",
             "disabled": false,
-            "onClick": {
-              "action": "setState",
-              "key": "quantity",
-              "value": "{{ quantity + 1 }}"
-            }
+            "onClick": {"action": "setState", "key": "quantity", "value": "{{ quantity + 1 }}"}
           }
         ]
       },
-      {
-        "content": "Total: {{ price * quantity | currency }}",
-        "type": "Text"
-      }
+      {"content": "Total: {{ price * quantity | currency }}", "type": "Text"}
     ]
   },
-  "state": {
-    "price": 42,
-    "quantity": 1
-  }
+  "state": {"price": 42, "quantity": 1}
 }
 ```
 </CodeGroup>
@@ -174,16 +154,10 @@ with Column(gap=3):
           }
         ]
       },
-      {
-        "content": "Hello, {{ first + ' ' + last }}!",
-        "type": "Text"
-      }
+      {"content": "Hello, {{ first + ' ' + last }}!", "type": "Text"}
     ]
   },
-  "state": {
-    "first": "Arthur",
-    "last": "Dent"
-  }
+  "state": {"first": "Arthur", "last": "Dent"}
 }
 ```
 </CodeGroup>
@@ -273,17 +247,12 @@ with Column(gap=2):
             "disabled": false,
             "required": false
           },
-          {
-            "content": "{{ active ? 'Online' : 'Offline' }}",
-            "type": "Text"
-          }
+          {"content": "{{ active ? 'Online' : 'Offline' }}", "type": "Text"}
         ]
       }
     ]
   },
-  "state": {
-    "active": true
-  }
+  "state": {"active": true}
 }
 ```
 </CodeGroup>

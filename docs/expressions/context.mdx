@@ -19,7 +19,7 @@ from prefab_ui import AppResult
 AppResult(state={"count": 0, "name": "Arthur"}, view=...)
 ```
 
-**Form controls** — any component with a `name` prop (or the auto-generated one) syncs its current value to state automatically. Assign the component to a variable and use `.rx` to reference that state key from other components and actions.
+**Named form controls** — any component with a `name` prop syncs its current value to state automatically. `Input(name="city")` updates `{{ city }}` on every keystroke.
 
 **Actions** — [SetState](/actions/set-state) and [CallTool](/actions/call-tool) (via `result_key`) write to global state when they fire.
 
@@ -41,27 +41,14 @@ with Column(gap=2, let={"greeting": "Don't Panic", "name": "Arthur"}):
 {
   "view": {
     "cssClass": "gap-2",
-    "let": {
-      "greeting": "Don't Panic",
-      "name": "Arthur"
-    },
+    "let": {"greeting": "Don't Panic", "name": "Arthur"},
     "type": "Column",
     "children": [
+      {"content": "{{ greeting }}, {{ name }}", "type": "Text"},
       {
-        "content": "{{ greeting }}, {{ name }}",
-        "type": "Text"
-      },
-      {
-        "let": {
-          "name": "Ford"
-        },
+        "let": {"name": "Ford"},
         "type": "Column",
-        "children": [
-          {
-            "content": "{{ greeting }}, {{ name }}",
-            "type": "Text"
-          }
-        ]
+        "children": [{"content": "{{ greeting }}, {{ name }}", "type": "Text"}]
       }
     ]
   }
@@ -169,7 +156,7 @@ with ForEach("users"):
 
 [If/Elif/Else](/components/conditional) blocks use expressions to control which components render. The expression evaluates to a truthy or falsy value, and the first matching branch renders. This is one of the most practical uses of expression context — combining state from different sources to determine what the user sees:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"content":"Inventory: {{ inventory }}","type":"Text"},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Inventory: {{ inventory }}","type":"Text"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -184,13 +171,13 @@ from prefab_ui.components.control_flow import Elif, If
 set_initial_state(inventory=15)
 
 with Column(gap=3):
-    inventory_slider = Slider(
+    Text("Inventory: {{ inventory }}")
+    Slider(
         name="inventory",
         min=0,
         max=30,
         step=1,
     )
-    Text(f"Inventory: {inventory_slider.rx}")
     with If("{{ inventory == 0 }}"):
         with Alert(variant="destructive"):
             AlertDescription("Out of stock!")
@@ -204,6 +191,7 @@ with Column(gap=3):
     "cssClass": "gap-3",
     "type": "Column",
     "children": [
+      {"content": "Inventory: {{ inventory }}", "type": "Text"},
       {
         "type": "Slider",
         "min": 0.0,
@@ -211,10 +199,6 @@ with Column(gap=3):
         "step": 1.0,
         "name": "inventory",
         "disabled": false
-      },
-      {
-        "content": "Inventory: {{ inventory }}",
-        "type": "Text"
       },
       {
         "type": "Condition",
@@ -225,12 +209,7 @@ with Column(gap=3):
               {
                 "type": "Alert",
                 "variant": "destructive",
-                "children": [
-                  {
-                    "type": "AlertDescription",
-                    "content": "Out of stock!"
-                  }
-                ]
+                "children": [{"type": "AlertDescription", "content": "Out of stock!"}]
               }
             ]
           },
@@ -240,12 +219,7 @@ with Column(gap=3):
               {
                 "type": "Alert",
                 "variant": "default",
-                "children": [
-                  {
-                    "type": "AlertDescription",
-                    "content": "Low stock warning"
-                  }
-                ]
+                "children": [{"type": "AlertDescription", "content": "Low stock warning"}]
               }
             ]
           }
@@ -253,9 +227,7 @@ with Column(gap=3):
       }
     ]
   },
-  "state": {
-    "inventory": 15
-  }
+  "state": {"inventory": 15}
 }
 ```
 </CodeGroup>

@@ -61,20 +61,14 @@ with Grid(columns=2, gap=6):
         "onSubmit": {
           "action": "toolCall",
           "tool": "create_user",
-          "arguments": {
-            "name": "{{ name }}",
-            "email": "{{ email }}"
-          }
+          "arguments": {"name": "{{ name }}", "email": "{{ email }}"}
         },
         "children": [
           {
             "cssClass": "gap-2",
             "type": "Column",
             "children": [
-              {
-                "type": "Label",
-                "text": "Name"
-              },
+              {"type": "Label", "text": "Name"},
               {
                 "type": "Input",
                 "inputType": "text",
@@ -89,10 +83,7 @@ with Grid(columns=2, gap=6):
             "cssClass": "gap-2",
             "type": "Column",
             "children": [
-              {
-                "type": "Label",
-                "text": "Email"
-              },
+              {"type": "Label", "text": "Email"},
               {
                 "type": "Input",
                 "inputType": "email",
@@ -121,23 +112,14 @@ with Grid(columns=2, gap=6):
             "onSubmit": {
               "action": "toolCall",
               "tool": "create_user",
-              "arguments": {
-                "name": "{{ name }}",
-                "email": "{{ email }}"
-              }
+              "arguments": {"name": "{{ name }}", "email": "{{ email }}"}
             },
             "children": [
               {
                 "type": "CardHeader",
                 "children": [
-                  {
-                    "type": "CardTitle",
-                    "content": "Create Account"
-                  },
-                  {
-                    "type": "CardDescription",
-                    "content": "Enter your information to get started."
-                  }
+                  {"type": "CardTitle", "content": "Create Account"},
+                  {"type": "CardDescription", "content": "Enter your information to get started."}
                 ]
               },
               {
@@ -151,10 +133,7 @@ with Grid(columns=2, gap=6):
                         "cssClass": "gap-2",
                         "type": "Column",
                         "children": [
-                          {
-                            "type": "Label",
-                            "text": "Name"
-                          },
+                          {"type": "Label", "text": "Name"},
                           {
                             "type": "Input",
                             "inputType": "text",
@@ -169,10 +148,7 @@ with Grid(columns=2, gap=6):
                         "cssClass": "gap-2",
                         "type": "Column",
                         "children": [
-                          {
-                            "type": "Label",
-                            "text": "Email"
-                          },
+                          {"type": "Label", "text": "Email"},
                           {
                             "type": "Input",
                             "inputType": "email",
@@ -240,19 +216,11 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
     "cssClass": "gap-4",
     "type": "Form",
     "onSubmit": {
-      "onError": {
-        "action": "showToast",
-        "message": "{{ $error }}",
-        "variant": "error"
-      },
+      "onError": {"action": "showToast", "message": "{{ $error }}", "variant": "error"},
       "action": "toolCall",
       "tool": "submit_contact",
       "arguments": {
-        "data": {
-          "name": "{{ name }}",
-          "email": "{{ email }}",
-          "message": "{{ message }}"
-        }
+        "data": {"name": "{{ name }}", "email": "{{ email }}", "message": "{{ message }}"}
       }
     },
     "children": [
@@ -260,10 +228,7 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Full Name"
-          },
+          {"type": "Label", "text": "Full Name"},
           {
             "type": "Input",
             "inputType": "text",
@@ -279,10 +244,7 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Email"
-          },
+          {"type": "Label", "text": "Email"},
           {
             "type": "Input",
             "inputType": "email",
@@ -297,10 +259,7 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Message"
-          },
+          {"type": "Label", "text": "Message"},
           {
             "type": "Textarea",
             "placeholder": "Your message",
@@ -318,19 +277,11 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "size": "default",
         "disabled": false,
         "onClick": {
-          "onError": {
-            "action": "showToast",
-            "message": "{{ $error }}",
-            "variant": "error"
-          },
+          "onError": {"action": "showToast", "message": "{{ $error }}", "variant": "error"},
           "action": "toolCall",
           "tool": "submit_contact",
           "arguments": {
-            "data": {
-              "name": "{{ name }}",
-              "email": "{{ email }}",
-              "message": "{{ message }}"
-            }
+            "data": {"name": "{{ name }}", "email": "{{ email }}", "message": "{{ message }}"}
           }
         }
       }
@@ -394,33 +345,17 @@ with Card(css_class="w-full max-w-lg"):
         "cssClass": "gap-4",
         "type": "Form",
         "onSubmit": {
-          "onSuccess": {
-            "action": "showToast",
-            "message": "Message sent!",
-            "variant": "success"
-          },
-          "onError": {
-            "action": "showToast",
-            "message": "{{ $error }}",
-            "variant": "error"
-          },
+          "onSuccess": {"action": "showToast", "message": "Message sent!", "variant": "success"},
+          "onError": {"action": "showToast", "message": "{{ $error }}", "variant": "error"},
           "action": "toolCall",
           "tool": "submit_contact",
-          "arguments": {
-            "name": "{{ name }}",
-            "email": "{{ email }}",
-            "message": "{{ message }}"
-          }
+          "arguments": {"name": "{{ name }}", "email": "{{ email }}", "message": "{{ message }}"}
         },
         "children": [
           {
             "type": "CardContent",
             "children": [
-              {
-                "cssClass": "mb-2",
-                "type": "CardTitle",
-                "content": "Contact Us"
-              },
+              {"cssClass": "mb-2", "type": "CardTitle", "content": "Contact Us"},
               {
                 "cssClass": "gap-4",
                 "type": "Column",
@@ -429,10 +364,7 @@ with Card(css_class="w-full max-w-lg"):
                     "cssClass": "gap-2",
                     "type": "Column",
                     "children": [
-                      {
-                        "type": "Label",
-                        "text": "Full Name"
-                      },
+                      {"type": "Label", "text": "Full Name"},
                       {
                         "type": "Input",
                         "inputType": "text",
@@ -448,10 +380,7 @@ with Card(css_class="w-full max-w-lg"):
                     "cssClass": "gap-2",
                     "type": "Column",
                     "children": [
-                      {
-                        "type": "Label",
-                        "text": "Email"
-                      },
+                      {"type": "Label", "text": "Email"},
                       {
                         "type": "Input",
                         "inputType": "email",
@@ -466,10 +395,7 @@ with Card(css_class="w-full max-w-lg"):
                     "cssClass": "gap-2",
                     "type": "Column",
                     "children": [
-                      {
-                        "type": "Label",
-                        "text": "Message"
-                      },
+                      {"type": "Label", "text": "Message"},
                       {
                         "type": "Textarea",
                         "placeholder": "Your message",
@@ -544,10 +470,7 @@ Form.from_model(UserProfile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Username"
-          },
+          {"type": "Label", "text": "Username"},
           {
             "type": "Input",
             "inputType": "text",
@@ -562,10 +485,7 @@ Form.from_model(UserProfile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Email"
-          },
+          {"type": "Label", "text": "Email"},
           {
             "type": "Input",
             "inputType": "email",
@@ -580,10 +500,7 @@ Form.from_model(UserProfile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Age"
-          },
+          {"type": "Label", "text": "Age"},
           {
             "type": "Input",
             "inputType": "number",
@@ -600,10 +517,7 @@ Form.from_model(UserProfile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Password"
-          },
+          {"type": "Label", "text": "Password"},
           {
             "type": "Input",
             "inputType": "password",
@@ -677,10 +591,7 @@ Form.from_model(Profile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Your Name"
-          },
+          {"type": "Label", "text": "Your Name"},
           {
             "type": "Input",
             "inputType": "text",
@@ -697,10 +608,7 @@ Form.from_model(Profile)
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Bio"
-          },
+          {"type": "Label", "text": "Bio"},
           {
             "type": "Textarea",
             "placeholder": "Tell us about yourself",
@@ -761,11 +669,7 @@ Form.from_model(
     "cssClass": "gap-4",
     "type": "Form",
     "onSubmit": {
-      "onSuccess": {
-        "action": "showToast",
-        "message": "Contact saved!",
-        "variant": "success"
-      },
+      "onSuccess": {"action": "showToast", "message": "Contact saved!", "variant": "success"},
       "onError": {
         "action": "showToast",
         "message": "Could not save: {{ $error }}",
@@ -773,22 +677,14 @@ Form.from_model(
       },
       "action": "toolCall",
       "tool": "create_contact",
-      "arguments": {
-        "data": {
-          "name": "{{ name }}",
-          "email": "{{ email }}"
-        }
-      }
+      "arguments": {"data": {"name": "{{ name }}", "email": "{{ email }}"}}
     },
     "children": [
       {
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Name"
-          },
+          {"type": "Label", "text": "Name"},
           {
             "type": "Input",
             "inputType": "text",
@@ -804,10 +700,7 @@ Form.from_model(
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Email"
-          },
+          {"type": "Label", "text": "Email"},
           {
             "type": "Input",
             "inputType": "email",
@@ -825,11 +718,7 @@ Form.from_model(
         "size": "default",
         "disabled": false,
         "onClick": {
-          "onSuccess": {
-            "action": "showToast",
-            "message": "Contact saved!",
-            "variant": "success"
-          },
+          "onSuccess": {"action": "showToast", "message": "Contact saved!", "variant": "success"},
           "onError": {
             "action": "showToast",
             "message": "Could not save: {{ $error }}",
@@ -837,12 +726,7 @@ Form.from_model(
           },
           "action": "toolCall",
           "tool": "create_contact",
-          "arguments": {
-            "data": {
-              "name": "{{ name }}",
-              "email": "{{ email }}"
-            }
-          }
+          "arguments": {"data": {"name": "{{ name }}", "email": "{{ email }}"}}
         }
       }
     ]

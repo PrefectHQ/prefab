@@ -92,22 +92,13 @@ with Card():
             "cssClass": "items-center justify-between",
             "type": "Row",
             "children": [
-              {
-                "type": "CardTitle",
-                "content": "The Button"
-              },
+              {"type": "CardTitle", "content": "The Button"},
               {
                 "type": "Condition",
                 "cases": [
                   {
                     "when": "{{ presses > 0 }}",
-                    "children": [
-                      {
-                        "type": "Badge",
-                        "label": "{{ presses }}",
-                        "variant": "secondary"
-                      }
-                    ]
+                    "children": [{"type": "Badge", "label": "{{ presses }}", "variant": "secondary"}]
                   }
                 ]
               }
@@ -134,11 +125,7 @@ with Card():
                         "variant": "info",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {
-                          "action": "setState",
-                          "key": "presses",
-                          "value": "{{ presses + 1 }}"
-                        }
+                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
                       }
                     ]
                   },
@@ -150,10 +137,7 @@ with Card():
                         "variant": "info",
                         "icon": "info",
                         "children": [
-                          {
-                            "type": "AlertTitle",
-                            "content": "Thank you!"
-                          },
+                          {"type": "AlertTitle", "content": "Thank you!"},
                           {
                             "type": "AlertDescription",
                             "content": "Your cooperation has been noted and will be reported."
@@ -166,11 +150,7 @@ with Card():
                         "variant": "outline",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {
-                          "action": "setState",
-                          "key": "presses",
-                          "value": "{{ presses + 1 }}"
-                        }
+                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
                       }
                     ]
                   },
@@ -182,14 +162,8 @@ with Card():
                         "variant": "warning",
                         "icon": "alert-triangle",
                         "children": [
-                          {
-                            "type": "AlertTitle",
-                            "content": "We did ask nicely"
-                          },
-                          {
-                            "type": "AlertDescription",
-                            "content": "Management has been informed."
-                          }
+                          {"type": "AlertTitle", "content": "We did ask nicely"},
+                          {"type": "AlertDescription", "content": "Management has been informed."}
                         ]
                       },
                       {
@@ -198,21 +172,14 @@ with Card():
                         "max": 100.0,
                         "indicatorClass": "bg-yellow-500"
                       },
-                      {
-                        "content": "Patience remaining: 34%",
-                        "type": "Muted"
-                      },
+                      {"content": "Patience remaining: 34%", "type": "Muted"},
                       {
                         "type": "Button",
                         "label": "Please do not press this button again",
                         "variant": "destructive",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {
-                          "action": "setState",
-                          "key": "presses",
-                          "value": "{{ presses + 1 }}"
-                        }
+                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
                       }
                     ]
                   },
@@ -224,10 +191,7 @@ with Card():
                         "variant": "destructive",
                         "icon": "alert-triangle",
                         "children": [
-                          {
-                            "type": "AlertTitle",
-                            "content": "Now look what you've done"
-                          },
+                          {"type": "AlertTitle", "content": "Now look what you've done"},
                           {
                             "type": "AlertDescription",
                             "content": "The improbability drive has been activated."
@@ -244,11 +208,7 @@ with Card():
                         "cssClass": "gap-2 items-center",
                         "type": "Row",
                         "children": [
-                          {
-                            "type": "Loader",
-                            "variant": "spin",
-                            "size": "sm"
-                          },
+                          {"type": "Loader", "variant": "spin", "size": "sm"},
                           {
                             "content": "Recalculating the probability of your existence...",
                             "type": "Muted"
@@ -261,21 +221,12 @@ with Card():
                         "variant": "ghost",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {
-                          "action": "setState",
-                          "key": "presses",
-                          "value": 0
-                        }
+                        "onClick": {"action": "setState", "key": "presses", "value": 0}
                       }
                     ]
                   }
                 ],
-                "else": [
-                  {
-                    "content": "This should not happen.",
-                    "type": "Text"
-                  }
-                ]
+                "else": [{"content": "This should not happen.", "type": "Text"}]
               }
             ]
           }
@@ -289,12 +240,7 @@ with Card():
             "cases": [
               {
                 "when": "{{ presses > 0 }}",
-                "children": [
-                  {
-                    "content": "Share and Enjoy!",
-                    "type": "Muted"
-                  }
-                ]
+                "children": [{"content": "Share and Enjoy!", "type": "Muted"}]
               }
             ]
           }
@@ -302,9 +248,7 @@ with Card():
       }
     ]
   },
-  "state": {
-    "presses": 0
-  }
+  "state": {"presses": 0}
 }
 ```
 </CodeGroup>

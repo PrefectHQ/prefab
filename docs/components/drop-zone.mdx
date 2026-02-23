@@ -27,12 +27,7 @@ DropZone()
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {
-    "type": "DropZone",
-    "multiple": false,
-    "disabled": false,
-    "name": "dropzone-1"
-  }
+  "view": {"type": "DropZone", "multiple": false, "disabled": false, "name": "dropzone-1"}
 }
 ```
 </CodeGroup>
@@ -173,10 +168,9 @@ Give a DropZone a `name` and it stores file data in client state automatically â
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
-    Badge, Button, Column, DropZone,
-    Muted, Row, Small,
+    Badge, Button, Column, DropZone, ForEach,
+    If, Else, Muted, Row, Small,
 )
-from prefab_ui.components.control_flow import Else, ForEach, If
 from prefab_ui.actions import SetState
 
 with Column(gap=3) as view:
@@ -378,7 +372,7 @@ DropZone(label="Uploads disabled", disabled=True)
   "description?": "string",
   "accept?": "string",
   "multiple?": false,
-  "maxSize?": "number",
+  "maxSize?": "integer",
   "disabled?": false,
   "name?": "string",
   "onChange?": "Action | Action[]",

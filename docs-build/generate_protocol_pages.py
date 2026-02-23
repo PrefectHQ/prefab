@@ -4,7 +4,7 @@ Introspects all Component and Action subclasses, calls model_json_schema(),
 cleans up the output, and writes one MDX page per class into
 docs/apps/protocol/.
 
-Run via: uv run docs/_preview-build/generate_protocol_pages.py
+Run via: uv run docs-build/generate_protocol_pages.py
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import prefab_ui.actions as actions_mod
 import prefab_ui.components as components_mod
@@ -29,7 +29,7 @@ from prefab_ui.components.charts import (
 )
 from prefab_ui.components.control_flow import ForEach
 
-PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "protocol"
+PROTOCOL_DIR = Path(__file__).resolve().parents[1] / "docs" / "protocol"
 
 # ---------------------------------------------------------------------------
 # Component / Action class registry

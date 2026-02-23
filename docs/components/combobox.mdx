@@ -59,12 +59,7 @@ with Combobox(
         "label": "SvelteKit",
         "disabled": false
       },
-      {
-        "type": "ComboboxOption",
-        "value": "nuxt",
-        "label": "Nuxt",
-        "disabled": false
-      }
+      {"type": "ComboboxOption", "value": "nuxt", "label": "Nuxt", "disabled": false}
     ]
   }
 }
@@ -74,9 +69,9 @@ with Combobox(
 
 ## Reading the Selection
 
-Assign the combobox to a variable and use `.rx` to reference its current value in other components. The `.rx` property serializes to `{{ key }}` at build time and re-evaluates as the user interacts.
+The `name` prop creates a state key that holds the selected option's `value`. Use `{{ key }}` interpolation to display it anywhere, or reference it in actions and visibility conditions.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"combobox-1","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"content":"Selected: {{ combobox-1 }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Combobox","placeholder":"Select a planet...","name":"planet","disabled":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"content":"Selected: {{ planet }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -87,12 +82,15 @@ from prefab_ui.components import (
 )
 
 with Column(gap=3):
-    with Combobox(placeholder="Select a planet...") as planet_combobox:
+    with Combobox(
+        placeholder="Select a planet...",
+        name="planet",
+    ):
         ComboboxOption("Magrathea", value="magrathea")
         ComboboxOption("Betelgeuse", value="betelgeuse")
         ComboboxOption("Vogsphere", value="vogsphere")
 
-    Text(f"Selected: {planet_combobox.rx}")
+    Text("Selected: {{ planet }}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -103,7 +101,7 @@ with Column(gap=3):
       {
         "type": "Combobox",
         "placeholder": "Select a planet...",
-        "name": "combobox-1",
+        "name": "planet",
         "disabled": false,
         "children": [
           {
@@ -126,10 +124,7 @@ with Column(gap=3):
           }
         ]
       },
-      {
-        "content": "Selected: {{ combobox-1 }}",
-        "type": "Text"
-      }
+      {"content": "Selected: {{ planet }}", "type": "Text"}
     ]
   }
 }
@@ -177,18 +172,8 @@ with Combobox(
         "label": "TypeScript",
         "disabled": false
       },
-      {
-        "type": "ComboboxOption",
-        "value": "rust",
-        "label": "Rust",
-        "disabled": false
-      },
-      {
-        "type": "ComboboxOption",
-        "value": "go",
-        "label": "Go",
-        "disabled": false
-      }
+      {"type": "ComboboxOption", "value": "rust", "label": "Rust", "disabled": false},
+      {"type": "ComboboxOption", "value": "go", "label": "Go", "disabled": false}
     ]
   }
 }
@@ -232,12 +217,7 @@ with Combobox(
         "label": "Magrathea",
         "disabled": false
       },
-      {
-        "type": "ComboboxOption",
-        "value": "earth",
-        "label": "Earth",
-        "disabled": true
-      },
+      {"type": "ComboboxOption", "value": "earth", "label": "Earth", "disabled": true},
       {
         "type": "ComboboxOption",
         "value": "betelgeuse",

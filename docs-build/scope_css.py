@@ -1,6 +1,6 @@
 """Scope Tailwind v4 output under .prefab-preview using CSS nesting.
 
-Run via: uv run docs/_preview-build/scope_css.py
+Run via: uv run docs-build/scope_css.py
 
 Reads the raw Tailwind output from /tmp/prefab-preview-raw.css (kept outside
 docs/ so Mintlify's dev server never auto-includes it), wraps all rules inside
@@ -13,7 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 
 # Read canonical design tokens from theme.css
-_theme_css_path = Path(__file__).resolve().parents[2] / "renderer" / "src" / "theme.css"
+_theme_css_path = Path(__file__).resolve().parents[1] / "renderer" / "src" / "theme.css"
 _THEME_CSS_RAW = _theme_css_path.read_text()
 # Scope theme tokens to .prefab-preview so they don't overwrite the host page's
 # own custom properties (e.g. Mintlify's --primary which uses space-separated RGB).
@@ -84,7 +84,7 @@ scoped_css = f".prefab-preview {{\n{raw_css}\n}}"
 final = f"{_THEME_CSS}\n{_INFRASTRUCTURE_CSS}\n/* ── Scoped Tailwind v4 utilities ─────────────────────────── */\n{scoped_css}\n"
 
 build_dir = Path(__file__).parent
-out = build_dir.parent / "css" / "preview.css"
+out = build_dir.parent / "docs" / "css" / "preview.css"
 out.parent.mkdir(parents=True, exist_ok=True)
 if out.exists() and out.read_text() == final:
     print(f"CSS unchanged ({len(final)} bytes)")

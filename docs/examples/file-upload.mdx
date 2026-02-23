@@ -98,22 +98,13 @@ with Card(css_class="w-full max-w-2xl") as view:
             "cssClass": "gap-2 items-center",
             "type": "Row",
             "children": [
-              {
-                "content": "File Inbox",
-                "type": "H3"
-              },
+              {"content": "File Inbox", "type": "H3"},
               {
                 "type": "Condition",
                 "cases": [
                   {
                     "when": "{{ files | length }}",
-                    "children": [
-                      {
-                        "type": "Badge",
-                        "label": "{{ files | length }}",
-                        "variant": "secondary"
-                      }
-                    ]
+                    "children": [{"type": "Badge", "label": "{{ files | length }}", "variant": "secondary"}]
                   }
                 ]
               }
@@ -160,14 +151,8 @@ with Card(css_class="w-full max-w-2xl") as view:
                                     "cssClass": "gap-0",
                                     "type": "Column",
                                     "children": [
-                                      {
-                                        "content": "{{ $item.name }}",
-                                        "type": "Small"
-                                      },
-                                      {
-                                        "content": "{{ $item.type }} \u00b7 {{ $item.size }} bytes",
-                                        "type": "Muted"
-                                      }
+                                      {"content": "{{ $item.name }}", "type": "Small"},
+                                      {"content": "{{ $item.type }} \u00b7 {{ $item.size }} bytes", "type": "Muted"}
                                     ]
                                   },
                                   {
@@ -177,11 +162,7 @@ with Card(css_class="w-full max-w-2xl") as view:
                                     "variant": "ghost",
                                     "size": "sm",
                                     "disabled": false,
-                                    "onClick": {
-                                      "action": "popState",
-                                      "key": "files",
-                                      "index": "{{ $index }}"
-                                    }
+                                    "onClick": {"action": "popState", "key": "files", "index": "{{ $index }}"}
                                   }
                                 ]
                               }
@@ -217,12 +198,7 @@ with Card(css_class="w-full max-w-2xl") as view:
                     ]
                   }
                 ],
-                "else": [
-                  {
-                    "content": "No files uploaded",
-                    "type": "Muted"
-                  }
-                ]
+                "else": [{"content": "No files uploaded", "type": "Muted"}]
               },
               {
                 "type": "Condition",
@@ -237,11 +213,7 @@ with Card(css_class="w-full max-w-2xl") as view:
                         "variant": "outline",
                         "size": "sm",
                         "disabled": false,
-                        "onClick": {
-                          "action": "setState",
-                          "key": "files",
-                          "value": []
-                        }
+                        "onClick": {"action": "setState", "key": "files", "value": []}
                       }
                     ]
                   }
@@ -253,9 +225,7 @@ with Card(css_class="w-full max-w-2xl") as view:
       }
     ]
   },
-  "state": {
-    "files": []
-  }
+  "state": {"files": []}
 }
 ```
 </CodeGroup>

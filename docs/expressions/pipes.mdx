@@ -59,14 +59,8 @@ with Card():
       {
         "type": "CardHeader",
         "children": [
-          {
-            "type": "CardTitle",
-            "content": "Q4 Revenue"
-          },
-          {
-            "type": "CardDescription",
-            "content": "{{ revenue | currency }}"
-          }
+          {"type": "CardTitle", "content": "Q4 Revenue"},
+          {"type": "CardDescription", "content": "{{ revenue | currency }}"}
         ]
       },
       {
@@ -76,19 +70,12 @@ with Card():
             "cssClass": "gap-2",
             "type": "Column",
             "children": [
-              {
-                "type": "Progress",
-                "value": "{{ revenue / target * 100 }}",
-                "max": 100.0
-              },
+              {"type": "Progress", "value": "{{ revenue / target * 100 }}", "max": 100.0},
               {
                 "cssClass": "gap-2 items-center",
                 "type": "Row",
                 "children": [
-                  {
-                    "content": "{{ revenue / target | percent:1 }} of target",
-                    "type": "Text"
-                  },
+                  {"content": "{{ revenue / target | percent:1 }} of target", "type": "Text"},
                   {
                     "type": "Badge",
                     "label": "{{ growth | percent:1 }} YoY",
@@ -102,11 +89,7 @@ with Card():
       }
     ]
   },
-  "state": {
-    "revenue": 2847500,
-    "target": 3000000,
-    "growth": 0.124
-  }
+  "state": {"revenue": 2847500, "target": 3000000, "growth": 0.124}
 }
 ```
 </CodeGroup>
@@ -160,14 +143,8 @@ with Card():
       {
         "type": "CardHeader",
         "children": [
-          {
-            "type": "CardTitle",
-            "content": "Team Standup"
-          },
-          {
-            "type": "CardDescription",
-            "content": "{{ starts | date:long }}"
-          }
+          {"type": "CardTitle", "content": "Team Standup"},
+          {"type": "CardDescription", "content": "{{ starts | date:long }}"}
         ]
       },
       {
@@ -177,24 +154,15 @@ with Card():
             "cssClass": "gap-2 items-center",
             "type": "Row",
             "children": [
-              {
-                "type": "Badge",
-                "label": "{{ starts | time }}",
-                "variant": "outline"
-              },
-              {
-                "content": "{{ starts | datetime }}",
-                "type": "Text"
-              }
+              {"type": "Badge", "label": "{{ starts | time }}", "variant": "outline"},
+              {"content": "{{ starts | datetime }}", "type": "Text"}
             ]
           }
         ]
       }
     ]
   },
-  "state": {
-    "starts": "2025-01-15T14:30:00Z"
-  }
+  "state": {"starts": "2025-01-15T14:30:00Z"}
 }
 ```
 </CodeGroup>
@@ -248,12 +216,7 @@ with Card():
     "children": [
       {
         "type": "CardHeader",
-        "children": [
-          {
-            "type": "CardTitle",
-            "content": "{{ name | upper }}"
-          }
-        ]
+        "children": [{"type": "CardTitle", "content": "{{ name | upper }}"}]
       },
       {
         "type": "CardContent",
@@ -262,15 +225,8 @@ with Card():
             "cssClass": "gap-2",
             "type": "Column",
             "children": [
-              {
-                "type": "Badge",
-                "label": "{{ name | lower }}",
-                "variant": "secondary"
-              },
-              {
-                "content": "{{ bio | truncate:80 }}",
-                "type": "Text"
-              }
+              {"type": "Badge", "label": "{{ name | lower }}", "variant": "secondary"},
+              {"content": "{{ bio | truncate:80 }}", "type": "Text"}
             ]
           }
         ]
@@ -329,36 +285,15 @@ with Column(gap=2):
         "cssClass": "gap-2 items-center",
         "type": "Row",
         "children": [
-          {
-            "type": "Badge",
-            "label": "{{ skills | first }}",
-            "variant": "default"
-          },
-          {
-            "type": "Badge",
-            "label": "{{ skills | last }}",
-            "variant": "outline"
-          }
+          {"type": "Badge", "label": "{{ skills | first }}", "variant": "default"},
+          {"type": "Badge", "label": "{{ skills | last }}", "variant": "outline"}
         ]
       },
-      {
-        "content": "{{ skills | join }}",
-        "type": "Text"
-      },
-      {
-        "content": "{{ skills | length }} skills listed",
-        "type": "Text"
-      }
+      {"content": "{{ skills | join }}", "type": "Text"},
+      {"content": "{{ skills | length }} skills listed", "type": "Text"}
     ]
   },
-  "state": {
-    "skills": [
-      "Python",
-      "TypeScript",
-      "Rust",
-      "Go"
-    ]
-  }
+  "state": {"skills": ["Python", "TypeScript", "Rust", "Go"]}
 }
 ```
 </CodeGroup>

@@ -18,13 +18,7 @@ from prefab_ui.components import Progress
 Progress(value=60)
 ```
 ```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "type": "Progress",
-    "value": 60.0,
-    "max": 100
-  }
-}
+{"view": {"type": "Progress", "value": 60.0, "max": 100}}
 ```
 </CodeGroup>
 </ComponentPreview>
@@ -56,30 +50,16 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "3 of 5 steps"
-          },
-          {
-            "type": "Progress",
-            "value": 3.0,
-            "max": 5.0
-          }
+          {"type": "Label", "text": "3 of 5 steps"},
+          {"type": "Progress", "value": 3.0, "max": 5.0}
         ]
       },
       {
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "75%"
-          },
-          {
-            "type": "Progress",
-            "value": 75.0,
-            "max": 100
-          }
+          {"type": "Label", "text": "75%"},
+          {"type": "Progress", "value": 75.0, "max": 100}
         ]
       }
     ]
@@ -119,42 +99,23 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Storage Used"
-          },
-          {
-            "type": "Progress",
-            "value": 85.0,
-            "max": 100,
-            "indicatorClass": "bg-red-500"
-          }
+          {"type": "Label", "text": "Storage Used"},
+          {"type": "Progress", "value": 85.0, "max": 100, "indicatorClass": "bg-red-500"}
         ]
       },
       {
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Upload Progress"
-          },
-          {
-            "type": "Progress",
-            "value": 45.0,
-            "max": 100,
-            "indicatorClass": "bg-blue-500"
-          }
+          {"type": "Label", "text": "Upload Progress"},
+          {"type": "Progress", "value": 45.0, "max": 100, "indicatorClass": "bg-blue-500"}
         ]
       },
       {
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {
-            "type": "Label",
-            "text": "Tasks Complete"
-          },
+          {"type": "Label", "text": "Tasks Complete"},
           {
             "type": "Progress",
             "value": 100.0,
@@ -172,9 +133,9 @@ with Column(gap=4):
 
 ## Dynamic Progress with Labels
 
-Bind a slider to a progress bar so the label reflects the actual value. Use `.rx` to pass the slider's current value directly to `Progress`. The `percent` format specifier turns a raw fraction into a readable percentage — pipe expressions still use `{{ }}` syntax:
+Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false},{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ progress | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ progress }}","max":1.0}]},"state":{"progress":0.65}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ progress | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"state":{"progress":0.65}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -189,11 +150,11 @@ from prefab_ui.components import (
 set_initial_state(progress=0.65)
 
 with Column(gap=3):
-    slider = Slider(name="progress", min=0, max=1, step=0.01, value=0.65)
     with Row(css_class="justify-between items-center"):
         Text("Upload progress")
         Text("{{ progress | percent }}", bold=True)
-    Progress(value=slider.rx, max=1)
+    Progress(value="{{ progress }}", max=1)
+    Slider(name="progress", min=0, max=1, step=0.01, value=0.65)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -202,6 +163,15 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "cssClass": "justify-between items-center",
+        "type": "Row",
+        "children": [
+          {"content": "Upload progress", "type": "Text"},
+          {"content": "{{ progress | percent }}", "bold": true, "type": "Text"}
+        ]
+      },
+      {"type": "Progress", "value": "{{ progress }}", "max": 1.0},
+      {
         "type": "Slider",
         "min": 0.0,
         "max": 1.0,
@@ -209,32 +179,10 @@ with Column(gap=3):
         "step": 0.01,
         "name": "progress",
         "disabled": false
-      },
-      {
-        "cssClass": "justify-between items-center",
-        "type": "Row",
-        "children": [
-          {
-            "content": "Upload progress",
-            "type": "Text"
-          },
-          {
-            "content": "{{ progress | percent }}",
-            "bold": true,
-            "type": "Text"
-          }
-        ]
-      },
-      {
-        "type": "Progress",
-        "value": "{{ progress }}",
-        "max": 1.0
       }
     ]
   },
-  "state": {
-    "progress": 0.65
-  }
+  "state": {"progress": 0.65}
 }
 ```
 </CodeGroup>

@@ -47,11 +47,7 @@ Button(
     "size": "default",
     "disabled": "{{ waiting | false }}",
     "onClick": [
-      {
-        "action": "setState",
-        "key": "waiting",
-        "value": true
-      },
+      {"action": "setState", "key": "waiting", "value": true},
       {
         "action": "setInterval",
         "duration": 3000,
@@ -62,11 +58,7 @@ Button(
             "message": "Three seconds. An eternity for a brain the size of a planet.",
             "variant": "info"
           },
-          {
-            "action": "setState",
-            "key": "waiting",
-            "value": false
-          }
+          {"action": "setState", "key": "waiting", "value": false}
         ]
       }
     ]
@@ -126,20 +118,12 @@ with Column(gap=4, css_class="items-center"):
         "size": "default",
         "disabled": "{{ seconds > 0 }}",
         "onClick": [
-          {
-            "action": "setState",
-            "key": "seconds",
-            "value": 10
-          },
+          {"action": "setState", "key": "seconds", "value": 10},
           {
             "action": "setInterval",
             "duration": 1000,
             "while": "{{ seconds > 0 }}",
-            "onTick": {
-              "action": "setState",
-              "key": "seconds",
-              "value": "{{ seconds - 1 }}"
-            }
+            "onTick": {"action": "setState", "key": "seconds", "value": "{{ seconds - 1 }}"}
           }
         ]
       }
@@ -200,25 +184,13 @@ with Row(gap=4, css_class="items-center"):
         "size": "default",
         "disabled": "{{ running | false }}",
         "onClick": [
-          {
-            "action": "setState",
-            "key": "running",
-            "value": true
-          },
-          {
-            "action": "setState",
-            "key": "ticks",
-            "value": 0
-          },
+          {"action": "setState", "key": "running", "value": true},
+          {"action": "setState", "key": "ticks", "value": 0},
           {
             "action": "setInterval",
             "duration": 1000,
             "while": "{{ running }}",
-            "onTick": {
-              "action": "setState",
-              "key": "ticks",
-              "value": "{{ ticks + 1 }}"
-            }
+            "onTick": {"action": "setState", "key": "ticks", "value": "{{ ticks + 1 }}"}
           }
         ]
       },
@@ -233,11 +205,7 @@ with Row(gap=4, css_class="items-center"):
         "variant": "outline",
         "size": "default",
         "disabled": "{{ !running }}",
-        "onClick": {
-          "action": "setState",
-          "key": "running",
-          "value": false
-        }
+        "onClick": {"action": "setState", "key": "running", "value": false}
       }
     ]
   }
