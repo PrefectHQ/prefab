@@ -62,13 +62,15 @@ def load_data(rows: list[dict] | None = None):
             change = (cur - prev) / prev * 100
         else:
             change = None
-        table_rows.append({
-            "package": r["package"],
-            "prev": f"{prev:,}" if prev is not None else "N/A",
-            "downloads": f"{cur:,}",
-            "change": f"{change:+.1f}%" if change is not None else "N/A",
-            "_change_sort": change if change is not None else 0,
-        })
+        table_rows.append(
+            {
+                "package": r["package"],
+                "prev": f"{prev:,}" if prev is not None else "N/A",
+                "downloads": f"{cur:,}",
+                "change": f"{change:+.1f}%" if change is not None else "N/A",
+                "_change_sort": change if change is not None else 0,
+            }
+        )
 
     sorted_by_change = sorted(
         [r for r in table_rows if r["_change_sort"] is not None],

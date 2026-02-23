@@ -73,8 +73,16 @@ def _change_card(title: str, items: list, max_value: float, color: str):
                         with Row(justify="between"):
                             Text(r["package"], css_class="font-medium text-sm")
                             Text(r["change"], css_class="text-sm")
-                        Text(f"{r['prev']} -> {r['downloads']}", css_class="text-xs text-muted-foreground")
-                        Progress(value=abs(r["_change_sort"]), max=max_value, indicator_class=color, css_class="h-1.5")
+                        Text(
+                            f"{r['prev']} -> {r['downloads']}",
+                            css_class="text-xs text-muted-foreground",
+                        )
+                        Progress(
+                            value=abs(r["_change_sort"]),
+                            max=max_value,
+                            indicator_class=color,
+                            css_class="h-1.5",
+                        )
     return card
 
 
@@ -99,7 +107,9 @@ def gainers_losers(top_gainers: list, top_losers: list):
     return row
 
 
-def downloads_table(table_rows, latest_week: str, prev_week: str | None, **data_table_kwargs):
+def downloads_table(
+    table_rows, latest_week: str, prev_week: str | None, **data_table_kwargs
+):
     """Render a sortable data table of download counts.
 
     Args:
@@ -119,8 +129,14 @@ def downloads_table(table_rows, latest_week: str, prev_week: str | None, **data_
             DataTable(
                 columns=[
                     DataTableColumn(key="package", header="Package"),
-                    DataTableColumn(key="prev", header=f"Downloads ({prev_week})", sortable=True),
-                    DataTableColumn(key="downloads", header=f"Downloads ({latest_week})", sortable=True),
+                    DataTableColumn(
+                        key="prev", header=f"Downloads ({prev_week})", sortable=True
+                    ),
+                    DataTableColumn(
+                        key="downloads",
+                        header=f"Downloads ({latest_week})",
+                        sortable=True,
+                    ),
                     DataTableColumn(key="change", header="Change", sortable=True),
                 ],
                 rows=table_rows,
