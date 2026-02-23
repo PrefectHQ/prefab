@@ -150,6 +150,14 @@ const pipes: Record<string, PipeFn> = {
     return Math.abs(num);
   },
 
+  round(value, arg) {
+    const num = Number(value);
+    if (isNaN(num)) return value;
+    const decimals = arg ? parseInt(arg) : 0;
+    const factor = Math.pow(10, decimals);
+    return Math.round(num * factor) / factor;
+  },
+
   selectattr(value, arg) {
     if (!Array.isArray(value) || !arg) return value;
     return value.filter(

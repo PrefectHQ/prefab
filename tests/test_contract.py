@@ -35,6 +35,7 @@ from prefab_ui.components.charts import (
     PieChart,
     RadarChart,
     RadialChart,
+    ScatterChart,
 )
 from prefab_ui.components.control_flow import ForEach
 
@@ -127,8 +128,9 @@ def _minimal_instance(cls: type[_M]) -> _M:
     return cls(**kwargs)
 
 
-# Python-only authoring constructs — excluded from wire format contract tests
-_AUTHORING_ONLY = {"If", "Elif", "Else"}
+# Python-only authoring constructs — excluded from wire format contract tests.
+# Histogram is excluded because it serializes as BarChart (type="BarChart").
+_AUTHORING_ONLY = {"If", "Elif", "Else", "Histogram"}
 
 # Wire-only types produced by serialization transforms (no Python class)
 _WIRE_ONLY = {"Condition"}
@@ -163,6 +165,7 @@ def _all_concrete_components() -> list[type[Component]]:
             PieChart,
             RadarChart,
             RadialChart,
+            ScatterChart,
             ForEach,
         ]
     )

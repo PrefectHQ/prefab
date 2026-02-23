@@ -1,0 +1,334 @@
+---
+title: Histogram
+description: Visualize the distribution of numeric data with automatic binning.
+icon: chart-bar
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Histogram takes a list of raw numeric values, groups them into bins, and renders the result as a bar chart. Where a bar chart compares named categories, a histogram answers a different question: "how is this data distributed?" You give it numbers, it figures out the ranges and counts. All the binning math happens in Python at construction time -- the renderer receives a standard BarChart payload, so there's no new component to learn on the wire.
+
+## Basic Usage
+
+Pass a list of numbers and Histogram divides them into 10 equal-width bins by default. Each bar represents a range, and its height shows how many values fall within that range. The shape of the resulting chart immediately reveals the distribution: a tall cluster on the left with a long tail to the right suggests most values are fast, but some outliers are significantly slower.
+
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"bin":"50\u201395","count":6},{"bin":"95\u2013140","count":16},{"bin":"140\u2013185","count":10},{"bin":"185\u2013230","count":6},{"bin":"230\u2013275","count":2},{"bin":"275\u2013320","count":2},{"bin":"320\u2013365","count":2},{"bin":"365\u2013410","count":2},{"bin":"410\u2013455","count":2},{"bin":"455\u2013500","count":2}],"series":[{"dataKey":"count"}],"xAxis":"bin","height":300,"showTooltip":true,"showLegend":false,"showGrid":true,"barRadius":4}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Histogram
+
+response_times = [
+    50, 65, 75, 80, 85, 90, 95, 98,
+    100, 105, 108, 110, 112, 115, 118, 120, 122, 125,
+    128, 130, 132, 135, 140, 145, 148, 150, 155, 160,
+    165, 170, 175, 180, 185, 190, 195, 200, 210, 220,
+    230, 250, 275, 300, 320, 350, 380, 400, 425, 450,
+    475, 500,
+]
+
+Histogram(values=response_times)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "BarChart",
+    "data": [
+      {
+        "bin": "50\u201395",
+        "count": 6
+      },
+      {
+        "bin": "95\u2013140",
+        "count": 16
+      },
+      {
+        "bin": "140\u2013185",
+        "count": 10
+      },
+      {
+        "bin": "185\u2013230",
+        "count": 6
+      },
+      {
+        "bin": "230\u2013275",
+        "count": 2
+      },
+      {
+        "bin": "275\u2013320",
+        "count": 2
+      },
+      {
+        "bin": "320\u2013365",
+        "count": 2
+      },
+      {
+        "bin": "365\u2013410",
+        "count": 2
+      },
+      {
+        "bin": "410\u2013455",
+        "count": 2
+      },
+      {
+        "bin": "455\u2013500",
+        "count": 2
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "count"
+      }
+    ],
+    "xAxis": "bin",
+    "height": 300,
+    "showTooltip": true,
+    "showLegend": false,
+    "showGrid": true,
+    "barRadius": 4
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Bin Count
+
+Set `bins` to control how many equal-width buckets the data is split into. Fewer bins give a coarser, smoother view of the distribution that emphasizes the overall shape. More bins reveal finer detail -- individual peaks and valleys -- but can make the chart noisy if your dataset is small. A good rule of thumb: start with the default 10 and adjust based on what story the data is telling.
+
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"bin":"50\u2013140","count":22},{"bin":"140\u2013230","count":16},{"bin":"230\u2013320","count":4},{"bin":"320\u2013410","count":4},{"bin":"410\u2013500","count":4}],"series":[{"dataKey":"count"}],"xAxis":"bin","height":300,"showTooltip":true,"showLegend":false,"showGrid":true,"barRadius":4}}}>
+<CodeGroup>
+```python Python {3} icon="python"
+from prefab_ui.components import Histogram
+
+Histogram(values=response_times, bins=5)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "BarChart",
+    "data": [
+      {
+        "bin": "50\u2013140",
+        "count": 22
+      },
+      {
+        "bin": "140\u2013230",
+        "count": 16
+      },
+      {
+        "bin": "230\u2013320",
+        "count": 4
+      },
+      {
+        "bin": "320\u2013410",
+        "count": 4
+      },
+      {
+        "bin": "410\u2013500",
+        "count": 4
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "count"
+      }
+    ],
+    "xAxis": "bin",
+    "height": 300,
+    "showTooltip": true,
+    "showLegend": false,
+    "showGrid": true,
+    "barRadius": 4
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Explicit Bin Edges
+
+When you need precise control over where bins start and end, pass `bin_edges` instead. The list defines the boundaries between bins -- three edges produce two bins, four edges produce three, and so on. Values outside the edge range are excluded.
+
+This is useful when your domain has meaningful thresholds. For API response times, you might define bins around SLA boundaries: "under 100ms" (fast), "100-200ms" (acceptable), "200-300ms" (slow), and "over 300ms" (investigate). The unequal bin widths tell a story that equal-width bins would miss.
+
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"bin":"50\u2013100","count":8},{"bin":"100\u2013150","count":17},{"bin":"150\u2013200","count":10},{"bin":"200\u2013300","count":6},{"bin":"300\u2013500","count":9}],"series":[{"dataKey":"count"}],"xAxis":"bin","height":300,"showTooltip":true,"showLegend":false,"showGrid":true,"barRadius":4}}}>
+<CodeGroup>
+```python Python {3} icon="python"
+from prefab_ui.components import Histogram
+
+Histogram(
+    values=response_times,
+    bin_edges=[50, 100, 150, 200, 300, 500],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "BarChart",
+    "data": [
+      {
+        "bin": "50\u2013100",
+        "count": 8
+      },
+      {
+        "bin": "100\u2013150",
+        "count": 17
+      },
+      {
+        "bin": "150\u2013200",
+        "count": 10
+      },
+      {
+        "bin": "200\u2013300",
+        "count": 6
+      },
+      {
+        "bin": "300\u2013500",
+        "count": 9
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "count"
+      }
+    ],
+    "xAxis": "bin",
+    "height": 300,
+    "showTooltip": true,
+    "showLegend": false,
+    "showGrid": true,
+    "barRadius": 4
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Styled
+
+Customize the bar color with any CSS color string and adjust the chart height. The `color` parameter applies to all bars uniformly -- since histograms represent a single variable's distribution, one color is the norm.
+
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"bin":"50\u2013125","count":17},{"bin":"125\u2013200","count":18},{"bin":"200\u2013275","count":5},{"bin":"275\u2013350","count":3},{"bin":"350\u2013425","count":3},{"bin":"425\u2013500","count":4}],"series":[{"dataKey":"count","color":"#6d28d9"}],"xAxis":"bin","height":250,"showTooltip":true,"showLegend":false,"showGrid":true,"barRadius":4}}}>
+<CodeGroup>
+```python Python {3-5} icon="python"
+from prefab_ui.components import Histogram
+
+Histogram(
+    values=response_times,
+    bins=6,
+    color="#6d28d9",
+    height=250,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "BarChart",
+    "data": [
+      {
+        "bin": "50\u2013125",
+        "count": 17
+      },
+      {
+        "bin": "125\u2013200",
+        "count": 18
+      },
+      {
+        "bin": "200\u2013275",
+        "count": 5
+      },
+      {
+        "bin": "275\u2013350",
+        "count": 3
+      },
+      {
+        "bin": "350\u2013425",
+        "count": 3
+      },
+      {
+        "bin": "425\u2013500",
+        "count": 4
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "count",
+        "color": "#6d28d9"
+      }
+    ],
+    "xAxis": "bin",
+    "height": 250,
+    "showTooltip": true,
+    "showLegend": false,
+    "showGrid": true,
+    "barRadius": 4
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Histogram Parameters">
+<ParamField body="values" type="list[int | float]" required>
+  Raw numeric values to bin.
+</ParamField>
+
+<ParamField body="bins" type="int" default="10">
+  Number of equal-width bins. Ignored when `bin_edges` is set.
+</ParamField>
+
+<ParamField body="bin_edges" type="list[float] | None" default="None">
+  Explicit bin boundaries. Overrides `bins` when provided.
+</ParamField>
+
+<ParamField body="color" type="str | None" default="None">
+  Bar fill color as a CSS color string.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="bar_radius" type="int" default="4">
+  Corner radius of each bar in pixels.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_grid" type="bool" default="True">
+  Show horizontal grid lines.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+Histogram computes bins in Python and serializes as a standard [BarChart](/protocol/bar-chart) -- the renderer never sees a "Histogram" type. The wire format is identical to a BarChart with bin labels on the x-axis and counts on the y-axis.
+
+```json BarChart
+{
+  "type": "BarChart",
+  "data": [{"bin": "50\u201395", "count": 6}, "..."],
+  "series": [{"dataKey": "count"}],
+  "xAxis": "bin",
+  "height?": 300,
+  "showTooltip?": true,
+  "showLegend?": false,
+  "showGrid?": true,
+  "barRadius?": 4,
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [BarChart](/protocol/bar-chart).

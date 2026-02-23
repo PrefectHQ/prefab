@@ -1,7 +1,5 @@
 /**
- * Tests for selectattr/rejectattr pipes.
- *
- * Split from expression.test.ts to stay under loq line limits.
+ * Additional pipe tests split from expression.test.ts to stay under loq line limits.
  */
 
 import { describe, expect, it } from "vitest";
@@ -75,5 +73,66 @@ describe("pluralize pipe", () => {
     expect(evaluate("files | length | pluralize:'file'", { files })).toBe(
       "file",
     );
+  });
+});
+
+describe("round pipe", () => {
+  it("default (0 decimals)", () => {
+    expect(evaluate("val | round", { val: 3.7 })).toBe(4);
+  });
+
+  it("with decimals", () => {
+    expect(evaluate("val | round:2", { val: 3.14159 })).toBe(3.14);
+  });
+
+  it("integer unchanged", () => {
+    expect(evaluate("val | round", { val: 42 })).toBe(42);
+  });
+
+  it("non-number passes through", () => {
+    expect(evaluate("val | round", { val: "hello" })).toBe("hello");
+  });
+});
+
+describe("date/time pipes", () => {
+  const iso = "2025-01-15T14:30:00Z";
+
+  it("date default (medium)", () => {
+    const result = evaluate("d | date", { d: iso });
+    expect(typeof result).toBe("string");
+    expect(String(result)).toContain("2025");
+  });
+
+  it("date short", () => {
+    const result = evaluate("d | date:short", { d: iso });
+    expect(typeof result).toBe("string");
+    expect(String(result)).toContain("2025");
+  });
+
+  it("date long", () => {
+    const result = evaluate("d | date:long", { d: iso });
+    expect(typeof result).toBe("string");
+    expect(String(result)).toContain("January");
+  });
+
+  it("time", () => {
+    const result = evaluate("d | time", { d: iso });
+    expect(typeof result).toBe("string");
+  });
+
+  it("time from time-only string", () => {
+    const result = evaluate("t | time", { t: "14:30" });
+    expect(typeof result).toBe("string");
+    expect(String(result)).toContain("30");
+  });
+
+  it("datetime", () => {
+    const result = evaluate("d | datetime", { d: iso });
+    expect(typeof result).toBe("string");
+    expect(String(result)).toContain("2025");
+  });
+
+  it("date pipe with invalid date returns string", () => {
+    expect(evaluate("d | date", { d: "not-a-date" })).toBe("not-a-date");
   });
 });

@@ -86,9 +86,10 @@ function bindActions(
           eventValue = target.value;
         }
       }
-      // Slider returns an array
+      // Slider returns an array — unwrap single-thumb to scalar,
+      // keep array for range mode (two thumbs)
       if (Array.isArray(event) && typeof event[0] === "number") {
-        eventValue = event[0];
+        eventValue = props.range ? event : event[0];
       }
       await executeActions(
         actionSpec,
@@ -193,11 +194,16 @@ function mapProps(
       mapped.onValueChange = mapped.onChange;
       delete mapped.onChange;
     }
-    if ("value" in mapped && typeof mapped.value === "number") {
+    // Normalize value to array for shadcn's array API.
+    // Range mode already provides [low, high]; single mode wraps to [value].
+    if ("value" in mapped && mapped.value != null) {
+      const arrayValue = Array.isArray(mapped.value)
+        ? mapped.value
+        : [mapped.value];
       if (mapped.onValueChange) {
-        mapped.value = [mapped.value];
+        mapped.value = arrayValue;
       } else {
-        mapped.defaultValue = [mapped.value];
+        mapped.defaultValue = arrayValue;
         delete mapped.value;
       }
     }
@@ -208,6 +214,8 @@ function mapProps(
     if ("min" in mapped) mapped.min = Number(mapped.min);
     if ("max" in mapped) mapped.max = Number(mapped.max);
     if ("step" in mapped) mapped.step = Number(mapped.step);
+    // Remove range prop — only used for event handling, not passed to shadcn
+    delete mapped.range;
   }
 
   // Progress: normalize value to 0-100 percentage if max differs,
@@ -417,12 +425,15 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         };
       }
     } else if (type === "Slider") {
+      const isRange = Boolean(finalProps.range);
       if (stateValue !== undefined) {
-        finalProps.value = [Number(stateValue)];
+        finalProps.value = isRange
+          ? (stateValue as number[])
+          : [Number(stateValue)];
       }
       if (!finalProps.onValueChange) {
         finalProps.onValueChange = (values: number[]) => {
-          state.set(name, values[0]);
+          state.set(name, isRange ? values : values[0]);
         };
       }
     } else if (type === "Calendar" || type === "DatePicker") {

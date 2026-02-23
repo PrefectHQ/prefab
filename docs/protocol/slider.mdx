@@ -33,12 +33,22 @@ Range slider input component.
       "type": "number"
     },
     "value": {
-      "type": [
-        "number",
-        "null"
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
       ],
       "default": null,
-      "description": "Initial value"
+      "description": "Initial value (number, or [low, high] list when range=True)"
     },
     "step": {
       "type": [
@@ -47,6 +57,11 @@ Range slider input component.
       ],
       "default": null,
       "description": "Step increment"
+    },
+    "range": {
+      "default": false,
+      "description": "Enable two-thumb range selection",
+      "type": "boolean"
     },
     "name": {
       "type": [

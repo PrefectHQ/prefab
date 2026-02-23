@@ -768,10 +768,12 @@ with Dashboard(columns=6, row_height=80, gap=2):
 ```json Dashboard
 {
   "type": "Dashboard",
-  "children?": "[DashboardItem]",
-  "columns?": "number",
+  "children?": "[Component]",
+  "let?": "object",
+  "columns?": 12,
   "rowHeight?": "number | string",
   "rows?": "number",
+  "gap?": "number | Action[]",
   "cssClass?": "string"
 }
 ```
@@ -780,13 +782,14 @@ with Dashboard(columns=6, row_height=80, gap=2):
 {
   "type": "DashboardItem",
   "children?": "[Component]",
-  "col?": "number",
-  "row?": "number",
-  "colSpan?": "number",
-  "rowSpan?": "number",
+  "let?": "object",
+  "col?": 1,
+  "row?": 1,
+  "colSpan?": 1,
+  "rowSpan?": 1,
   "zIndex?": "number",
   "cssClass?": "string"
 }
 ```
 
-For complete protocol schemas, see [Dashboard](/protocol/dashboard) and [DashboardItem](/protocol/dashboard-item).
+For the complete protocol schema, see [Dashboard](/protocol/dashboard), [DashboardItem](/protocol/dashboard-item).

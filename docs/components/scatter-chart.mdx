@@ -1,0 +1,404 @@
+---
+title: ScatterChart
+description: Plot data points by two numeric axes to reveal correlations.
+icon: chart-scatter
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+ScatterChart plots data as individual points on a cartesian plane, positioned by their `x_axis` and `y_axis` values. Where bar charts compare categories and line charts show change over time, scatter charts reveal relationships between two continuous variables -- whether they're correlated, clustered, or independent.
+
+## Basic Usage
+
+Every scatter chart needs three things: the data, a series definition, and the two axis mappings. The `data` is a list of dicts where each dict is a point. `x_axis` and `y_axis` name the fields that position each point on the chart. The `data_key` on `ChartSeries` is an identifier for the series -- it controls color and legend display.
+
+<ComponentPreview json={{"view":{"type":"ScatterChart","data":[{"hours":2,"score":45},{"hours":4,"score":62},{"hours":5,"score":58},{"hours":6,"score":71},{"hours":8,"score":78},{"hours":10,"score":85},{"hours":12,"score":82},{"hours":14,"score":91},{"hours":16,"score":88},{"hours":18,"score":95}],"series":[{"dataKey":"students","label":"Students"}],"xAxis":"hours","yAxis":"score","height":300,"showLegend":false,"showTooltip":true,"showGrid":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components.charts import ScatterChart, ChartSeries
+
+data = [
+    {"hours": 2, "score": 45},
+    {"hours": 4, "score": 62},
+    {"hours": 5, "score": 58},
+    {"hours": 6, "score": 71},
+    {"hours": 8, "score": 78},
+    {"hours": 10, "score": 85},
+    {"hours": 12, "score": 82},
+    {"hours": 14, "score": 91},
+    {"hours": 16, "score": 88},
+    {"hours": 18, "score": 95},
+]
+
+ScatterChart(
+    data=data,
+    series=[ChartSeries(data_key="students", label="Students")],
+    x_axis="hours",
+    y_axis="score",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "ScatterChart",
+    "data": [
+      {
+        "hours": 2,
+        "score": 45
+      },
+      {
+        "hours": 4,
+        "score": 62
+      },
+      {
+        "hours": 5,
+        "score": 58
+      },
+      {
+        "hours": 6,
+        "score": 71
+      },
+      {
+        "hours": 8,
+        "score": 78
+      },
+      {
+        "hours": 10,
+        "score": 85
+      },
+      {
+        "hours": 12,
+        "score": 82
+      },
+      {
+        "hours": 14,
+        "score": 91
+      },
+      {
+        "hours": 16,
+        "score": 88
+      },
+      {
+        "hours": 18,
+        "score": 95
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "students",
+        "label": "Students"
+      }
+    ],
+    "xAxis": "hours",
+    "yAxis": "score",
+    "height": 300,
+    "showLegend": false,
+    "showTooltip": true,
+    "showGrid": true
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Multiple Series
+
+To plot multiple groups on the same axes, add a `_series` field to each data point that matches the `data_key` of its series. Each series gets its own color from the theme palette and appears as a separate entry in the legend. This is useful for comparing distributions across categories -- here, two classes of students plotted by study hours vs. test scores.
+
+<ComponentPreview json={{"view":{"type":"ScatterChart","data":[{"hours":2,"score":45,"_series":"morning"},{"hours":5,"score":58,"_series":"morning"},{"hours":8,"score":78,"_series":"morning"},{"hours":10,"score":85,"_series":"morning"},{"hours":14,"score":91,"_series":"morning"},{"hours":18,"score":95,"_series":"morning"},{"hours":3,"score":52,"_series":"evening"},{"hours":6,"score":60,"_series":"evening"},{"hours":9,"score":68,"_series":"evening"},{"hours":11,"score":72,"_series":"evening"},{"hours":15,"score":80,"_series":"evening"},{"hours":17,"score":84,"_series":"evening"}],"series":[{"dataKey":"morning","label":"Morning Class","color":"#2563eb"},{"dataKey":"evening","label":"Evening Class","color":"#e76e50"}],"xAxis":"hours","yAxis":"score","height":300,"showLegend":true,"showTooltip":true,"showGrid":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components.charts import ScatterChart, ChartSeries
+
+data = [
+    {"hours": 2, "score": 45, "_series": "morning"},
+    {"hours": 5, "score": 58, "_series": "morning"},
+    {"hours": 8, "score": 78, "_series": "morning"},
+    {"hours": 10, "score": 85, "_series": "morning"},
+    {"hours": 14, "score": 91, "_series": "morning"},
+    {"hours": 18, "score": 95, "_series": "morning"},
+    {"hours": 3, "score": 52, "_series": "evening"},
+    {"hours": 6, "score": 60, "_series": "evening"},
+    {"hours": 9, "score": 68, "_series": "evening"},
+    {"hours": 11, "score": 72, "_series": "evening"},
+    {"hours": 15, "score": 80, "_series": "evening"},
+    {"hours": 17, "score": 84, "_series": "evening"},
+]
+
+ScatterChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="morning", label="Morning Class", color="#2563eb"),
+        ChartSeries(data_key="evening", label="Evening Class", color="#e76e50"),
+    ],
+    x_axis="hours",
+    y_axis="score",
+    show_legend=True,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "ScatterChart",
+    "data": [
+      {
+        "hours": 2,
+        "score": 45,
+        "_series": "morning"
+      },
+      {
+        "hours": 5,
+        "score": 58,
+        "_series": "morning"
+      },
+      {
+        "hours": 8,
+        "score": 78,
+        "_series": "morning"
+      },
+      {
+        "hours": 10,
+        "score": 85,
+        "_series": "morning"
+      },
+      {
+        "hours": 14,
+        "score": 91,
+        "_series": "morning"
+      },
+      {
+        "hours": 18,
+        "score": 95,
+        "_series": "morning"
+      },
+      {
+        "hours": 3,
+        "score": 52,
+        "_series": "evening"
+      },
+      {
+        "hours": 6,
+        "score": 60,
+        "_series": "evening"
+      },
+      {
+        "hours": 9,
+        "score": 68,
+        "_series": "evening"
+      },
+      {
+        "hours": 11,
+        "score": 72,
+        "_series": "evening"
+      },
+      {
+        "hours": 15,
+        "score": 80,
+        "_series": "evening"
+      },
+      {
+        "hours": 17,
+        "score": 84,
+        "_series": "evening"
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "morning",
+        "label": "Morning Class",
+        "color": "#2563eb"
+      },
+      {
+        "dataKey": "evening",
+        "label": "Evening Class",
+        "color": "#e76e50"
+      }
+    ],
+    "xAxis": "hours",
+    "yAxis": "score",
+    "height": 300,
+    "showLegend": true,
+    "showTooltip": true,
+    "showGrid": true
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Bubble Chart
+
+Set `z_axis` to a numeric field to scale each point's size proportionally, turning the scatter into a bubble chart. This encodes a third dimension directly in the visualization -- larger bubbles represent higher values of the z-axis field. Useful for comparing entities that have three measurable attributes.
+
+<ComponentPreview json={{"view":{"type":"ScatterChart","data":[{"revenue":120,"growth":8,"employees":50},{"revenue":340,"growth":12,"employees":150},{"revenue":210,"growth":5,"employees":80},{"revenue":580,"growth":18,"employees":300},{"revenue":90,"growth":25,"employees":20},{"revenue":450,"growth":10,"employees":200},{"revenue":160,"growth":30,"employees":35},{"revenue":720,"growth":7,"employees":400}],"series":[{"dataKey":"companies","label":"Companies"}],"xAxis":"revenue","yAxis":"growth","zAxis":"employees","height":300,"showLegend":false,"showTooltip":true,"showGrid":true}}}>
+<CodeGroup>
+```python Python {14} icon="python"
+from prefab_ui.components.charts import ScatterChart, ChartSeries
+
+ScatterChart(
+    data=[
+        {"revenue": 120, "growth": 8, "employees": 50},
+        {"revenue": 340, "growth": 12, "employees": 150},
+        {"revenue": 210, "growth": 5, "employees": 80},
+        {"revenue": 580, "growth": 18, "employees": 300},
+        {"revenue": 90, "growth": 25, "employees": 20},
+        {"revenue": 450, "growth": 10, "employees": 200},
+        {"revenue": 160, "growth": 30, "employees": 35},
+        {"revenue": 720, "growth": 7, "employees": 400},
+    ],
+    series=[ChartSeries(data_key="companies", label="Companies")],
+    x_axis="revenue",
+    y_axis="growth",
+    z_axis="employees",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "ScatterChart",
+    "data": [
+      {
+        "revenue": 120,
+        "growth": 8,
+        "employees": 50
+      },
+      {
+        "revenue": 340,
+        "growth": 12,
+        "employees": 150
+      },
+      {
+        "revenue": 210,
+        "growth": 5,
+        "employees": 80
+      },
+      {
+        "revenue": 580,
+        "growth": 18,
+        "employees": 300
+      },
+      {
+        "revenue": 90,
+        "growth": 25,
+        "employees": 20
+      },
+      {
+        "revenue": 450,
+        "growth": 10,
+        "employees": 200
+      },
+      {
+        "revenue": 160,
+        "growth": 30,
+        "employees": 35
+      },
+      {
+        "revenue": 720,
+        "growth": 7,
+        "employees": 400
+      }
+    ],
+    "series": [
+      {
+        "dataKey": "companies",
+        "label": "Companies"
+      }
+    ],
+    "xAxis": "revenue",
+    "yAxis": "growth",
+    "zAxis": "employees",
+    "height": 300,
+    "showLegend": false,
+    "showTooltip": true,
+    "showGrid": true
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="ScatterChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference. For multiple series, include a `_series` field in each dict matching the series `data_key`.
+</ParamField>
+
+<ParamField body="series" type="list[ChartSeries]" required>
+  Series definitions -- each becomes a group of scatter points on the chart.
+</ParamField>
+
+<ParamField body="x_axis" type="str" required>
+  Data key for x-axis numeric values.
+</ParamField>
+
+<ParamField body="y_axis" type="str" required>
+  Data key for y-axis numeric values.
+</ParamField>
+
+<ParamField body="z_axis" type="str | None" default="None">
+  Data key for bubble size. When set, point radii scale proportionally to this field's values.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="False">
+  Show a legend below the chart.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="show_grid" type="bool" default="True">
+  Show cartesian grid lines.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="ChartSeries Parameters">
+<ParamField body="data_key" type="str" required>
+  Identifier for the series -- used for color mapping and legend display. For multi-series scatter charts, this must match the `_series` values in the data.
+</ParamField>
+
+<ParamField body="label" type="str | None" default="None">
+  Display label for legends and tooltips. Defaults to the `data_key` value.
+</ParamField>
+
+<ParamField body="color" type="str | None" default="None">
+  CSS color override. By default, colors cycle through the theme's chart palette (`--chart-1` through `--chart-5`).
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json ScatterChart
+{
+  "type": "ScatterChart",
+  "data": "dict[] | string (required)",
+  "series": "[ChartSeries] (required)",
+  "xAxis": "string (required)",
+  "yAxis": "string (required)",
+  "zAxis?": "string",
+  "height?": "300",
+  "showLegend?": false,
+  "showTooltip?": true,
+  "showGrid?": true,
+  "cssClass?": "string"
+}
+```
+
+```json ChartSeries
+{
+  "dataKey": "string (required)",
+  "label?": "string",
+  "color?": "string"
+}
+```
+
+For the complete protocol schema, see [ScatterChart](/protocol/scatter-chart), [ChartSeries](/protocol/chart-series).

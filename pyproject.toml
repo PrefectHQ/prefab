@@ -45,7 +45,7 @@ dev = [
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.6.1",
     "ruff>=0.12.8",
-    "ty>=0.0.7",
+    "ty>=0.0.18",
     "prek>=0.1.0",
     "loq>=0.1.0a3",
     "jsonschema>=4.26.0",
@@ -91,6 +91,16 @@ python-version = "3.10"
 
 [tool.ty.terminal]
 error-on-warning = true
+
+# ty doesn't understand Pydantic's populate_by_name=True, so aliased
+# fields (data_key→dataKey, etc.) produce false positives in tests.
+[[tool.ty.overrides]]
+include = ["tests/**"]
+
+[tool.ty.overrides.rules]
+unknown-argument = "ignore"
+missing-argument = "ignore"
+invalid-argument-type = "ignore"
 
 [tool.ruff.lint]
 fixable = ["ALL"]

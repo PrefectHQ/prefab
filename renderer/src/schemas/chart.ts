@@ -84,9 +84,25 @@ export const radialChartSchema = componentBase.extend({
   showTooltip: z.boolean().optional(),
 });
 
+export const scatterChartSchema = componentBase.extend({
+  type: z.literal("ScatterChart"),
+  data: z
+    .union([z.array(z.record(z.string(), z.unknown())), z.string()])
+    .optional(),
+  series: z.array(chartSeriesSchema),
+  xAxis: z.string(),
+  yAxis: z.string(),
+  zAxis: z.string().optional(),
+  height: z.number().int().optional(),
+  showLegend: z.boolean().optional(),
+  showTooltip: z.boolean().optional(),
+  showGrid: z.boolean().optional(),
+});
+
 export type BarChartWire = z.infer<typeof barChartSchema>;
 export type LineChartWire = z.infer<typeof lineChartSchema>;
 export type AreaChartWire = z.infer<typeof areaChartSchema>;
 export type PieChartWire = z.infer<typeof pieChartSchema>;
 export type RadarChartWire = z.infer<typeof radarChartSchema>;
 export type RadialChartWire = z.infer<typeof radialChartSchema>;
+export type ScatterChartWire = z.infer<typeof scatterChartSchema>;

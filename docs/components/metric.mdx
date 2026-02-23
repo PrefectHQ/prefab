@@ -1,0 +1,614 @@
+---
+title: Metric
+description: Display a headline number with optional trend indicator for KPI dashboards.
+icon: hashtag
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Metric is the dashboard primitive -- a big number with a label, and optionally a delta that shows how that number is trending. It handles the visual logic of trend arrows and sentiment colors automatically, so you can feed it raw data and get a polished KPI card without fiddling with icons or color classes. You provide the data; Metric provides the opinion about how it should look.
+
+## Basic Usage
+
+At minimum, a Metric needs a `label` and a `value`. The label names the statistic, and the value is the headline number that catches the eye. Values can be strings or raw numbers -- strings are displayed as-is, so you have full control over formatting.
+
+When the value comes from state, use a template expression with [pipes](/expressions/pipes) to format it at display time. Here the raw number `42000000` becomes `$42M` by dividing, rounding, and wrapping in literal `$` and `M` characters -- no Python formatting needed.
+
+<ComponentPreview json={{"view":{"type":"Metric","label":"Revenue","value":"${{ revenue / 1000000 | round }}M"},"state":{"revenue":42000000}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Metric
+
+set_initial_state(revenue=42_000_000)
+
+Metric(label="Revenue", value="${{ revenue / 1000000 | round }}M")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Metric",
+    "label": "Revenue",
+    "value": "${{ revenue / 1000000 | round }}M"
+  },
+  "state": {
+    "revenue": 42000000
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Description
+
+Add a `description` for extra context below the headline number. This is the right place for time ranges, data sources, percentile qualifiers, or any caveat that helps readers interpret the number correctly. Without it, a value like "142ms" could mean anything -- with it, the reader knows exactly what they're looking at.
+
+<ComponentPreview json={{"view":{"type":"Metric","label":"Response Time","value":"142ms","description":"p95 over the last 24 hours"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Metric
+
+Metric(
+    label="Response Time",
+    value="142ms",
+    description="p95 over the last 24 hours",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Metric",
+    "label": "Response Time",
+    "value": "142ms",
+    "description": "p95 over the last 24 hours"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Trend Indicator
+
+Pass a `delta` to show a change indicator alongside the value. Metric automatically infers the trend direction and color from the delta's sign: positive deltas get a green up arrow, negative deltas get a red down arrow.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Revenue","value":"$1.2M","delta":"+12%"}]}]},{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Units Sold","value":"8,430","delta":"-340"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Card, CardContent, Metric, Row
+
+with Row(gap=6):
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(label="Revenue", value="$1.2M", delta="+12%")
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(label="Units Sold", value="8,430", delta="-340")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Revenue",
+                "value": "$1.2M",
+                "delta": "+12%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Units Sold",
+                "value": "8,430",
+                "delta": "-340"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Inverted Sentiment
+
+The auto-inference assumes "up is good, down is bad," which works for most metrics but breaks for things like response time, error rates, or costs -- anything where going up is bad news. Override the automatic coloring by setting `trend_sentiment` explicitly. The arrow still points in the direction the number moved, but the color reflects whether that movement is good or bad.
+
+Here response time increased by 18ms. Without the override, a positive delta would get a green arrow. Setting `trend_sentiment="negative"` makes it red, correctly signaling that slower is worse.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Revenue","value":"$1.2M","delta":"+12%"}]}]},{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Response Time","value":"284ms","delta":"+18ms","trend":"up","trendSentiment":"negative"}]}]}]}}}>
+<CodeGroup>
+```python Python {10-11} icon="python"
+from prefab_ui.components import Card, CardContent, Metric, Row
+
+with Row(gap=6):
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(label="Revenue", value="$1.2M", delta="+12%")
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(
+                label="Response Time",
+                value="284ms",
+                delta="+18ms",
+                trend="up",
+                trend_sentiment="negative",
+            )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Revenue",
+                "value": "$1.2M",
+                "delta": "+12%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Response Time",
+                "value": "284ms",
+                "delta": "+18ms",
+                "trend": "up",
+                "trendSentiment": "negative"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## KPI Row
+
+The classic dashboard header: a row of Metric cards spanning the top of a page. Wrap each Metric in a Card for visual separation and use a Grid to give every card equal width. This pattern scales naturally -- add or remove cards and the grid reflows without manual width calculations.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Revenue","value":"$42M","description":"Year to date","delta":"+12%"}]}]},{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Conversion","value":"3.2%","description":"Last 30 days","delta":"+0.4%"}]}]},{"type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Avg. Order","value":"$128","description":"Per transaction","delta":"-$3","trend":"down","trendSentiment":"negative"}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Card, CardContent, Grid, Metric
+
+with Grid(columns=3, gap=4):
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(
+                label="Revenue",
+                value="$42M",
+                description="Year to date",
+                delta="+12%",
+            )
+
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(
+                label="Conversion",
+                value="3.2%",
+                description="Last 30 days",
+                delta="+0.4%",
+            )
+
+    with Card():
+        with CardContent(css_class="p-6"):
+            Metric(
+                label="Avg. Order",
+                value="$128",
+                description="Per transaction",
+                delta="-$3",
+                trend="down",
+                trend_sentiment="negative",
+            )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 grid-cols-3",
+    "type": "Grid",
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Revenue",
+                "value": "$42M",
+                "description": "Year to date",
+                "delta": "+12%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Conversion",
+                "value": "3.2%",
+                "description": "Last 30 days",
+                "delta": "+0.4%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "cssClass": "p-6",
+            "type": "CardContent",
+            "children": [
+              {
+                "type": "Metric",
+                "label": "Avg. Order",
+                "value": "$128",
+                "description": "Per transaction",
+                "delta": "-$3",
+                "trend": "down",
+                "trendSentiment": "negative"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Dashboard Layout
+
+Metrics shine as the top row of a full dashboard, giving users an at-a-glance summary before they dive into the detail below. Use a [Dashboard](/components/dashboard-grid) grid to place Metric cards across the first row, then put a chart below that spans the full width. Each `DashboardItem` controls its position and size on the 12-column grid, so you can mix metric widths and chart spans freely.
+
+The `h-full` class on each Card ensures they stretch to fill their grid cell, keeping the row visually aligned even if some metrics have longer descriptions than others.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Dashboard","columns":12,"rowHeight":140,"children":[{"type":"DashboardItem","col":1,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Revenue","value":"$1.52M","description":"Q2 2025 total","delta":"+12%"}]}]}]},{"type":"DashboardItem","col":5,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Active Users","value":"26,104","description":"Monthly active","delta":"+4.3%"}]}]}]},{"type":"DashboardItem","col":9,"row":1,"colSpan":4,"rowSpan":1,"children":[{"cssClass":"h-full","type":"Card","children":[{"cssClass":"p-6","type":"CardContent","children":[{"type":"Metric","label":"Infra Costs","value":"$48K","description":"vs. last month","delta":"-15%","trend":"down","trendSentiment":"positive"}]}]}]},{"type":"DashboardItem","col":1,"row":2,"colSpan":12,"rowSpan":3,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Monthly Revenue"}]},{"type":"CardContent","children":[{"type":"BarChart","data":[{"month":"Jan","revenue":186000},{"month":"Feb","revenue":305000},{"month":"Mar","revenue":237000},{"month":"Apr","revenue":273000},{"month":"May","revenue":209000},{"month":"Jun","revenue":314000}],"series":[{"dataKey":"revenue","label":"Revenue"}],"xAxis":"month","height":280,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":false,"showTooltip":true,"showGrid":true}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Dashboard,
+    DashboardItem,
+    Metric,
+)
+from prefab_ui.components.charts import BarChart, ChartSeries
+
+data = [
+    {"month": "Jan", "revenue": 186000},
+    {"month": "Feb", "revenue": 305000},
+    {"month": "Mar", "revenue": 237000},
+    {"month": "Apr", "revenue": 273000},
+    {"month": "May", "revenue": 209000},
+    {"month": "Jun", "revenue": 314000},
+]
+
+with Dashboard(columns=12, row_height=140, gap=4):
+    with DashboardItem(col=1, row=1, col_span=4):
+        with Card(css_class="h-full"):
+            with CardContent(css_class="p-6"):
+                Metric(
+                    label="Revenue",
+                    value="$1.52M",
+                    description="Q2 2025 total",
+                    delta="+12%",
+                )
+
+    with DashboardItem(col=5, row=1, col_span=4):
+        with Card(css_class="h-full"):
+            with CardContent(css_class="p-6"):
+                Metric(
+                    label="Active Users",
+                    value="26,104",
+                    description="Monthly active",
+                    delta="+4.3%",
+                )
+
+    with DashboardItem(col=9, row=1, col_span=4):
+        with Card(css_class="h-full"):
+            with CardContent(css_class="p-6"):
+                Metric(
+                    label="Infra Costs",
+                    value="$48K",
+                    description="vs. last month",
+                    delta="-15%",
+                    trend="down",
+                    trend_sentiment="positive",
+                )
+
+    with DashboardItem(col=1, row=2, col_span=12, row_span=3):
+        with Card():
+            with CardHeader():
+                CardTitle("Monthly Revenue")
+            with CardContent():
+                BarChart(
+                    data=data,
+                    series=[
+                        ChartSeries(
+                            data_key="revenue",
+                            label="Revenue",
+                        ),
+                    ],
+                    x_axis="month",
+                    height=280,
+                )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Dashboard",
+    "columns": 12,
+    "rowHeight": 140,
+    "children": [
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "p-6",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Revenue",
+                    "value": "$1.52M",
+                    "description": "Q2 2025 total",
+                    "delta": "+12%"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 5,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "p-6",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Active Users",
+                    "value": "26,104",
+                    "description": "Monthly active",
+                    "delta": "+4.3%"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 9,
+        "row": 1,
+        "colSpan": 4,
+        "rowSpan": 1,
+        "children": [
+          {
+            "cssClass": "h-full",
+            "type": "Card",
+            "children": [
+              {
+                "cssClass": "p-6",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Infra Costs",
+                    "value": "$48K",
+                    "description": "vs. last month",
+                    "delta": "-15%",
+                    "trend": "down",
+                    "trendSentiment": "positive"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "DashboardItem",
+        "col": 1,
+        "row": 2,
+        "colSpan": 12,
+        "rowSpan": 3,
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "type": "CardTitle",
+                    "content": "Monthly Revenue"
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "BarChart",
+                    "data": [
+                      {
+                        "month": "Jan",
+                        "revenue": 186000
+                      },
+                      {
+                        "month": "Feb",
+                        "revenue": 305000
+                      },
+                      {
+                        "month": "Mar",
+                        "revenue": 237000
+                      },
+                      {
+                        "month": "Apr",
+                        "revenue": 273000
+                      },
+                      {
+                        "month": "May",
+                        "revenue": 209000
+                      },
+                      {
+                        "month": "Jun",
+                        "revenue": 314000
+                      }
+                    ],
+                    "series": [
+                      {
+                        "dataKey": "revenue",
+                        "label": "Revenue"
+                      }
+                    ],
+                    "xAxis": "month",
+                    "height": 280,
+                    "stacked": false,
+                    "horizontal": false,
+                    "barRadius": 4,
+                    "showLegend": false,
+                    "showTooltip": true,
+                    "showGrid": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Metric Parameters">
+<ParamField body="label" type="str" required>
+  The metric name displayed above the value (e.g. `"Revenue"`, `"Active Users"`).
+</ParamField>
+
+<ParamField body="value" type="str | int | float" required>
+  The headline number. Strings are displayed as-is, so pre-format with currency symbols, commas, or units as needed.
+</ParamField>
+
+<ParamField body="description" type="str | None" default="None">
+  Optional text below the value for additional context like time ranges or data sources.
+</ParamField>
+
+<ParamField body="delta" type="str | int | float | None" default="None">
+  Change indicator shown next to the value (e.g. `"+23.4%"`, `"-15"`, `"+$2.3M"`). When present, an arrow icon and sentiment color are automatically inferred from the sign.
+</ParamField>
+
+<ParamField body="trend" type="str | None" default="None">
+  Arrow direction: `"up"`, `"down"`, or `"neutral"`. Inferred from `delta` when omitted -- positive deltas point up, negative point down.
+</ParamField>
+
+<ParamField body="trend_sentiment" type="str | None" default="None">
+  Color control: `"positive"` (green), `"negative"` (red), or `"neutral"` (muted). Inferred from `trend` when omitted -- up is positive, down is negative. Override this for inverted metrics where down is good (e.g. costs decreasing).
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Metric
+{
+  "type": "Metric",
+  "label": "string (required)",
+  "value": "string | number (required)",
+  "description?": "string",
+  "delta?": "string | number",
+  "trend?": "up | down | neutral",
+  "trendSentiment?": "positive | negative | neutral",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Metric](/protocol/metric).
