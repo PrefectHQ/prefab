@@ -48,7 +48,8 @@ Files are read client-side, but they don't go anywhere until you tell them to. T
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, CallTool
+from prefab_ui.actions import OpenFilePicker
+from prefab_ui.actions.mcp import CallTool
 
 Button(
     "Upload CSV",
@@ -96,7 +97,8 @@ Set `multiple=True` to let users select several files at once. `$event` becomes 
 
 ```python Multiple file upload
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, CallTool
+from prefab_ui.actions import OpenFilePicker
+from prefab_ui.actions.mcp import CallTool
 
 Button(
     "Upload Images",
@@ -117,7 +119,8 @@ The `max_size` parameter rejects files that exceed a byte limit before they ever
 
 ```python With size limit
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, CallTool
+from prefab_ui.actions import OpenFilePicker
+from prefab_ui.actions.mcp import CallTool
 
 Button(
     "Upload (max 5MB)",
@@ -134,7 +137,8 @@ The `on_error` callback on the nested `CallTool` fires if the server-side proces
 
 ```python With error handling
 from prefab_ui.components import Button
-from prefab_ui.actions import OpenFilePicker, CallTool, ShowToast
+from prefab_ui.actions import OpenFilePicker, ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 Button(
     "Upload",

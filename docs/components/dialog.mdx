@@ -111,7 +111,8 @@ Dialogs work well for destructive actions that need explicit confirmation before
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Dialog, Row, Text
-from prefab_ui.actions import CloseOverlay, CallTool
+from prefab_ui.actions import CloseOverlay
+from prefab_ui.actions.mcp import CallTool
 
 with Dialog(title="Delete Item", description="This action cannot be undone."):
     Button("Delete", variant="destructive")
@@ -193,7 +194,8 @@ Wire `ShowToast` callbacks onto a `CallTool` to give feedback after the server r
 
 ```python
 from prefab_ui.components import Button, Dialog, Row, Text
-from prefab_ui.actions import CloseOverlay, ShowToast, CallTool
+from prefab_ui.actions import CloseOverlay, ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 with Dialog(title="Remove User", description="This will revoke all access."):
     Button("Remove", variant="destructive")

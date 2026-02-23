@@ -51,7 +51,7 @@ for name in components_mod.__all__:
 
 # Action subclasses
 ACTION_CLASSES: dict[str, type] = {}
-_SKIP_ACTIONS = {"ActionBase", "Action"}
+_SKIP_ACTIONS = {"Action", "Action"}
 
 for name in actions_mod.__all__:
     if name in _SKIP_ACTIONS:
@@ -87,7 +87,7 @@ COMPONENT_TYPES = set(COMPONENT_CLASSES.keys()) - LAYOUT_TYPES
 
 # Names of $defs entries that represent the action union or base types.
 _ACTION_DEF_NAMES = {
-    "ActionBase",
+    "Action",
     "CallTool",
     "Fetch",
     "SendMessage",

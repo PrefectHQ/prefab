@@ -118,7 +118,8 @@ Available inside action specs. Contains the value from the triggering interactio
 Available inside `on_error` callbacks. Contains the error message string from the failed action.
 
 ```python
-from prefab_ui.actions import CallTool, ShowToast
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import CallTool
 
 Button(
     "Save",
@@ -149,7 +150,7 @@ Available inside [ForEach](/components/foreach) iterations. A reference to the e
 
 ```python
 from prefab_ui.components import ForEach, Button, Text
-from prefab_ui.actions import CallTool
+from prefab_ui.actions.mcp import CallTool
 
 with ForEach("users"):
     Text("{{ name }}")
