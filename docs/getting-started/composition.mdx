@@ -1,0 +1,412 @@
+---
+title: Composing Interfaces
+sidebarTitle: Composition
+description: How components nest into layouts, layouts into cards, and cards into complete interfaces.
+icon: compass-drafting
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Prefab UIs are trees of components. You compose them with Python's `with` statement — nesting in code mirrors nesting on screen. This page builds up from simple layout primitives to a complete interface, one layer at a time.
+
+## Rows and columns
+
+Every interface needs a way to arrange things on screen. Prefab provides two fundamental layout containers: `Row` arranges children horizontally, and `Column` stacks them vertically. Both accept a `gap` parameter that controls the spacing between children — the number maps to [Tailwind's spacing scale](/css), so `gap=4` means `1rem`.
+
+To place components inside a container, use Python's `with` statement. Any component created inside a `with` block automatically becomes a child of that container. 
+
+Here's a row of three green divs:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Div, Row
+
+with Row(gap=4):
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Row",
+    "children": [
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+And here's a column:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10 w-24","type":"Div"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Div
+
+with Column(gap=4, css_class="w-auto"):
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+    Div(css_class="bg-emerald-500 rounded-md h-10 w-24")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 w-auto",
+    "type": "Column",
+    "children": [
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10 w-24", "type": "Div"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Nesting
+
+Containers nest inside each other, and there's no limit to how deep you can go. The structure of your Python code directly mirrors the structure of the rendered UI — each level of indentation corresponds to a level of visual nesting. This makes it easy to read code and know exactly what the output will look like.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-4","type":"Row","children":[{"cssClass":"bg-blue-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-blue-500 rounded-md h-10 w-24","type":"Div"},{"cssClass":"bg-blue-500 rounded-md h-10 w-24","type":"Div"}]},{"cssClass":"bg-purple-500 rounded-md h-10","type":"Div"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Div, Row
+
+with Column(gap=4, css_class="w-auto"):
+    with Row(gap=4):
+        Div(css_class="bg-blue-500 rounded-md h-10 w-24")
+        Div(css_class="bg-blue-500 rounded-md h-10 w-24")
+        Div(css_class="bg-blue-500 rounded-md h-10 w-24")
+    Div(css_class="bg-purple-500 rounded-md h-10")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 w-auto",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-4",
+        "type": "Row",
+        "children": [
+          {"cssClass": "bg-blue-500 rounded-md h-10 w-24", "type": "Div"},
+          {"cssClass": "bg-blue-500 rounded-md h-10 w-24", "type": "Div"},
+          {"cssClass": "bg-blue-500 rounded-md h-10 w-24", "type": "Div"}
+        ]
+      },
+      {"cssClass": "bg-purple-500 rounded-md h-10", "type": "Div"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The blue divs sit in a horizontal row because they're inside the `Row` block. The purple div sits below them because it's a direct child of the outer `Column`. Each component attaches to whichever container is currently open — the innermost `with` block wins.
+
+This is the core idea of Prefab composition: nesting containers. Every Prefab interface, from a simple form to a full dashboard, is built by nesting components inside other components.
+
+## Adding content
+
+The layout patterns above work with any component, not just colored divs. Prefab ships with a large library of prebuilt components — [typography](/components/typography), [badges](/components/badge), [progress bars](/components/progress), [inputs](/components/input), [charts](/components/bar-chart), [data tables](/components/data-table), and [many more](/playground). You can browse them all in the [Playground](/playground).
+
+These components compose with Row, Column, and Grid exactly the way the colored placeholders did. Here's the same Column and Row pattern, but with real content:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"content":"API Server","type":"H3"},{"type":"Badge","label":"Healthy","variant":"success"}]},{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Badge, Column, H3, Muted, Progress, Row
+
+with Column(gap=4, css_class="w-auto"):
+    with Row(gap=3, align="center"):
+        H3("API Server")
+        Badge("Healthy", variant="success")
+    Muted("Uptime: 99.97%")
+    Progress(value=99.97)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 w-auto",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-3 items-center",
+        "type": "Row",
+        "children": [
+          {"content": "API Server", "type": "H3"},
+          {"type": "Badge", "label": "Healthy", "variant": "success"}
+        ]
+      },
+      {"content": "Uptime: 99.97%", "type": "Muted"},
+      {"type": "Progress", "value": 99.97, "max": 100}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Cards
+
+Most real interfaces group related content into visual sections. [Cards](/components/card) are the most common way to do this in Prefab — they wrap content in a bordered container with optional header, content, and footer sections. Each section is itself a container, so you nest components inside them the same way you nest divs inside a Row.
+
+The card below wraps the same status content from the previous example. Notice how `CardHeader`, `CardContent`, and `CardFooter` each open their own `with` block — they're containers like any other.
+
+<ComponentPreview json={{"view":{"cssClass":"w-72","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"View Logs","variant":"outline","size":"default","disabled":false}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge,
+    Button,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+    Column,
+    Muted,
+    Progress,
+    Row,
+)
+
+with Card(css_class="w-72"):
+    with CardHeader():
+        with Row(gap=3, align="center"):
+            CardTitle("API Server")
+            Badge("Healthy", variant="success")
+    with CardContent():
+        with Column(gap=3):
+            Muted("Uptime: 99.97%")
+            Progress(value=99.97)
+    with CardFooter():
+        Button("View Logs", variant="outline")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-72",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {
+            "cssClass": "gap-3 items-center",
+            "type": "Row",
+            "children": [
+              {"type": "CardTitle", "content": "API Server"},
+              {"type": "Badge", "label": "Healthy", "variant": "success"}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {"content": "Uptime: 99.97%", "type": "Muted"},
+              {"type": "Progress", "value": 99.97, "max": 100}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardFooter",
+        "children": [
+          {
+            "type": "Button",
+            "label": "View Logs",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The nesting is deeper, but the principle hasn't changed: every `with` block opens a container, and components created inside it become children.
+
+## Grids and loops
+
+When you need to arrange multiple items in a uniform layout, [Grid](/components/grid) places children in equal-width columns that wrap automatically. Pass `columns=3` for a three-column grid, or use `min_column_width` for responsive layouts that adapt to the available space.
+
+Since the DSL is plain Python, you can use a `for` loop to produce components from data. The loop runs once when the component tree is constructed, and the result is baked into the output — the renderer never sees the loop, just the components it produced.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"API Server"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.97%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Worker"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"94.2%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":94.2,"max":100}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Scheduler"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.8%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.8,"max":100}]}]}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Column,
+    Grid,
+    Large,
+    Muted,
+    Progress,
+)
+
+services = [
+    {"name": "API Server", "uptime": 99.97},
+    {"name": "Worker", "uptime": 94.2},
+    {"name": "Scheduler", "uptime": 99.8},
+]
+
+with Grid(columns=3, gap=4):
+    for svc in services:
+        with Card():
+            with CardHeader():
+                CardTitle(svc["name"])
+            with CardContent():
+                with Column(gap=2):
+                    Large(f"{svc['uptime']}%")
+                    Muted("uptime")
+                    Progress(value=svc["uptime"])
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 grid-cols-3",
+    "type": "Grid",
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [{"type": "CardTitle", "content": "API Server"}]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {"content": "99.97%", "type": "Large"},
+                  {"content": "uptime", "type": "Muted"},
+                  {"type": "Progress", "value": 99.97, "max": 100}
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {"type": "CardHeader", "children": [{"type": "CardTitle", "content": "Worker"}]},
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {"content": "94.2%", "type": "Large"},
+                  {"content": "uptime", "type": "Muted"},
+                  {"type": "Progress", "value": 94.2, "max": 100}
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [{"type": "CardTitle", "content": "Scheduler"}]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {"content": "99.8%", "type": "Large"},
+                  {"content": "uptime", "type": "Muted"},
+                  {"type": "Progress", "value": 99.8, "max": 100}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+This distinction between *build-time* and *render-time* logic matters. Python loops, conditionals, and data transformations run once to produce a static component tree. For iteration over client-side state that can change dynamically — like a list of items the user can add to — use [`ForEach`](/components/foreach). For render-time conditionals, use [`If`/`Elif`/`Else`](/components/conditional).
+
+## Running it
+
+Once you've composed a component tree, you need to wrap it in `PrefabApp` to make it a running application. Use `as` on your outermost container to capture a reference to the root, then pass it to `PrefabApp`.
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, H3, Text
+
+with Column(gap=4) as view:
+    H3("Dashboard")
+    Text("Welcome back.")
+
+app = PrefabApp(view=view)
+```
+
+`PrefabApp` is the envelope that holds a component tree along with initial [state](/expressions/overview) and configuration. You can pass initial state values with `PrefabApp(view=view, state={"name": "world"})` to seed reactive variables that your components reference.
+
+Run it with `prefab serve app.py` to see it in your browser. See the [Local Preview](/serve) page for the full API, or the [Quickstart](/quickstart) for a complete working example.
+
+## Under the hood
+
+<Expandable title="How auto-attachment works">
+Every component's `__init__` checks whether there's an active container on an internal stack. If there is, the new component appends itself to that container's `children` list. The `with` statement pushes a container onto the stack on entry and pops it on exit.
+
+The stack uses a `ContextVar`, so concurrent requests in a server don't interfere with each other.
+
+Components created *outside* any `with` block have no parent — they're standalone roots. This is useful when building a tree to pass directly to `PrefabApp` or when constructing components to assign to specific properties.
+</Expandable>
+
+<Expandable title="Building outside the current context">
+Sometimes you're inside a context manager but need to build a component without it becoming a child. The `detached()` context manager temporarily pauses auto-attachment:
+
+```python
+from prefab_ui.components import Column, Text, detached
+
+with Column() as page:
+    Text("child of page")
+
+    with detached():
+        sidebar = Column()
+        with sidebar:
+            Text("child of sidebar, not page")
+
+# page has 1 child; sidebar has 1 child
+```
+
+Components inside `detached()` can still use their own `with` blocks to collect children — they just won't attach to whatever container was active before. After the block exits, the original stack resumes.
+</Expandable>
