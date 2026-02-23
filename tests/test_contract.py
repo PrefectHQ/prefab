@@ -28,6 +28,15 @@ from prefab_ui.actions.timing import SetInterval
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
 from prefab_ui.components import __all__ as component_names
 from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.charts import (
+    AreaChart,
+    BarChart,
+    LineChart,
+    PieChart,
+    RadarChart,
+    RadialChart,
+)
+from prefab_ui.components.control_flow import ForEach
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
@@ -144,6 +153,19 @@ def _all_concrete_components() -> list[type[Component]]:
             )
         ):
             result.append(cls)
+
+    # Submodule components (not re-exported from the flat namespace)
+    result.extend(
+        [
+            AreaChart,
+            BarChart,
+            LineChart,
+            PieChart,
+            RadarChart,
+            RadialChart,
+            ForEach,
+        ]
+    )
     return result
 
 

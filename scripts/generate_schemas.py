@@ -31,6 +31,15 @@ from prefab_ui.actions.timing import SetInterval
 from prefab_ui.actions.ui import CloseOverlay, ShowToast
 from prefab_ui.components import __all__ as component_names
 from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.charts import (
+    AreaChart,
+    BarChart,
+    LineChart,
+    PieChart,
+    RadarChart,
+    RadialChart,
+)
+from prefab_ui.components.control_flow import ForEach
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
@@ -125,7 +134,7 @@ def _minimal_instance(cls: type[BaseModel]) -> BaseModel:
 
 
 def discover_components() -> dict[str, type[Component]]:
-    """Discover all concrete Component subclasses from __all__."""
+    """Discover all concrete Component subclasses from __all__ and submodules."""
     import prefab_ui.components as mod
 
     result: dict[str, type[Component]] = {}
@@ -140,6 +149,21 @@ def discover_components() -> dict[str, type[Component]]:
         if cls in (Component, ContainerComponent):
             continue
         result[name] = cls
+
+    # Submodule components (not re-exported from the flat namespace)
+    _SUBMODULE_COMPONENTS: list[type[Component]] = [
+        AreaChart,
+        BarChart,
+        LineChart,
+        PieChart,
+        RadarChart,
+        RadialChart,
+        ForEach,
+    ]
+    for cls in _SUBMODULE_COMPONENTS:
+        wire_name = cls.model_fields["type"].default
+        result[wire_name] = cls
+
     return result
 
 
