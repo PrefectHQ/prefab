@@ -219,21 +219,21 @@ Histogram(
 
 ## Protocol Reference
 
-Histogram computes bins in Python and serializes as a standard [BarChart](/protocol/bar-chart) -- the renderer never sees a "Histogram" type. The wire format is identical to a BarChart with bin labels on the x-axis and counts on the y-axis.
-
-```json BarChart
+```json Histogram
 {
   "type": "BarChart",
-  "data": [{"bin": "50\u201395", "count": 6}, "..."],
-  "series": [{"dataKey": "count"}],
-  "xAxis": "bin",
-  "height?": 300,
+  "values": "array (required)",
+  "bins?": 10,
+  "bin_edges?": "Action[]",
+  "data?": "array",
+  "series?": "[ChartSeries]",
+  "xAxis?": "string",
+  "height?": "300",
   "showTooltip?": true,
   "showLegend?": false,
   "showGrid?": true,
+  "color?": "string",
   "barRadius?": 4,
   "cssClass?": "string"
 }
 ```
-
-For the complete protocol schema, see [BarChart](/protocol/bar-chart).
