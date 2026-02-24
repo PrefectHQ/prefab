@@ -294,25 +294,27 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Column",
                     "children": [
                       {
+                        "name": "input_18",
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Towel name...",
-                        "name": "input_16",
                         "disabled": false,
+                        "readOnly": false,
                         "required": false
                       },
                       {
+                        "name": "input_19",
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Owner name...",
-                        "name": "input_17",
                         "disabled": false,
+                        "readOnly": false,
                         "required": false
                       },
                       {
+                        "name": "select_7",
                         "type": "Select",
                         "placeholder": "Type...",
-                        "name": "select_7",
                         "size": "default",
                         "disabled": false,
                         "required": false,
@@ -348,10 +350,10 @@ with Grid(min_column_width="240px", gap=4):
                         ]
                       },
                       {
+                        "name": "checkbox_11",
                         "type": "Checkbox",
                         "label": "Panic-proof certified",
                         "checked": true,
-                        "name": "checkbox_11",
                         "disabled": false,
                         "required": false
                       }
@@ -384,7 +386,7 @@ with Grid(min_column_width="240px", gap=4):
                               {
                                 "when": "{{ owner }}",
                                 "children": [
-                                  {"content": "Thanks, {{ input_17 }}. Don't forget to bring it.", "type": "Text"}
+                                  {"content": "Thanks, {{ input_19 }}. Don't forget to bring it.", "type": "Text"}
                                 ]
                               }
                             ],
@@ -593,9 +595,9 @@ with Grid(min_column_width="240px", gap=4):
                     "children": [
                       {"type": "CardTitle", "content": "Agent Queries"},
                       {
+                        "name": "period",
                         "type": "Select",
                         "placeholder": "6 months",
-                        "name": "period",
                         "size": "default",
                         "disabled": false,
                         "required": false,
@@ -800,11 +802,11 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Column",
                     "children": [
                       {
+                        "name": "improbability",
                         "type": "Slider",
                         "min": 0.0,
                         "max": 100.0,
                         "value": 42.0,
-                        "name": "improbability",
                         "disabled": false
                       },
                       {
@@ -836,31 +838,31 @@ with Grid(min_column_width="240px", gap=4):
                     "type": "Column",
                     "children": [
                       {
+                        "name": "autoscale",
                         "type": "Switch",
                         "label": "Auto-scale agents",
                         "checked": true,
                         "size": "default",
-                        "name": "autoscale",
                         "disabled": false,
                         "required": false
                       },
                       {"type": "Separator", "orientation": "horizontal"},
                       {
+                        "name": "cache",
                         "type": "Switch",
                         "label": "Tool call caching",
                         "checked": false,
                         "size": "default",
-                        "name": "cache",
                         "disabled": false,
                         "required": false
                       },
                       {"type": "Separator", "orientation": "horizontal"},
                       {
+                        "name": "fail_notifs",
                         "type": "Switch",
                         "label": "Failure notifications",
                         "checked": true,
                         "size": "default",
-                        "name": "fail_notifs",
                         "disabled": false,
                         "required": false
                       }
@@ -1033,9 +1035,9 @@ with Grid(min_column_width="240px", gap=4):
                         ]
                       },
                       {
+                        "name": "feedback",
                         "type": "Textarea",
                         "placeholder": "Brain the size of a planet...",
-                        "name": "feedback",
                         "disabled": false,
                         "required": false
                       },
@@ -1098,33 +1100,33 @@ with Grid(min_column_width="240px", gap=4):
                 "type": "CardContent",
                 "children": [
                   {
-                    "type": "RadioGroup",
                     "name": "travel_class",
+                    "type": "RadioGroup",
                     "children": [
                       {
+                        "name": "radio_10",
                         "type": "Radio",
                         "value": "economy",
                         "label": "Economy",
                         "checked": false,
-                        "name": "radio_10",
                         "disabled": false,
                         "required": false
                       },
                       {
+                        "name": "radio_11",
                         "type": "Radio",
                         "value": "business",
                         "label": "Business Class",
                         "checked": false,
-                        "name": "radio_11",
                         "disabled": false,
                         "required": false
                       },
                       {
+                        "name": "radio_12",
                         "type": "Radio",
                         "value": "improbability",
                         "label": "Infinite Improbability",
                         "checked": true,
-                        "name": "radio_12",
                         "disabled": false,
                         "required": false
                       }
@@ -1224,10 +1226,7 @@ with Grid(min_column_width="240px", gap=4):
     "improbability": 42.0,
     "autoscale": true,
     "cache": false,
-    "fail_notifs": true,
-    "radio_10": "economy",
-    "radio_11": "business",
-    "radio_12": "improbability"
+    "fail_notifs": true
   }
 }
 ```

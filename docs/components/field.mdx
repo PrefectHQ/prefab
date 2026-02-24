@@ -12,7 +12,7 @@ Field wraps a form control in a bordered card with a title and optional descript
 
 Wrap any toggle-like control (Switch, Checkbox) inside a Field to get the choice card layout.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Marketing emails","description":"Receive emails about new products and features.","disabled":false,"children":[{"type":"Switch","checked":false,"size":"default","name":"switch_1","disabled":false,"required":false}]},{"type":"Field","title":"Security emails","description":"Receive emails about your account activity.","disabled":false,"children":[{"type":"Switch","checked":true,"size":"default","name":"switch_2","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Marketing emails","description":"Receive emails about new products and features.","disabled":false,"children":[{"name":"switch_1","type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Security emails","description":"Receive emails about your account activity.","disabled":false,"children":[{"name":"switch_2","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Field, Switch
@@ -45,10 +45,10 @@ with Column(gap=4):
         "disabled": false,
         "children": [
           {
+            "name": "switch_1",
             "type": "Switch",
             "checked": false,
             "size": "default",
-            "name": "switch_1",
             "disabled": false,
             "required": false
           }
@@ -61,10 +61,10 @@ with Column(gap=4):
         "disabled": false,
         "children": [
           {
+            "name": "switch_2",
             "type": "Switch",
             "checked": true,
             "size": "default",
-            "name": "switch_2",
             "disabled": false,
             "required": false
           }
@@ -82,7 +82,7 @@ with Column(gap=4):
 
 Field works with any toggle control.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Accept terms","description":"You agree to our Terms of Service and Privacy Policy.","disabled":false,"children":[{"type":"Checkbox","checked":false,"name":"checkbox_9","disabled":false,"required":false}]},{"type":"Field","title":"Subscribe to newsletter","description":"Get weekly updates on new features.","disabled":false,"children":[{"type":"Checkbox","checked":true,"name":"checkbox_10","disabled":false,"required":false}]}]},"state":{"checkbox_9":false,"checkbox_10":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Accept terms","description":"You agree to our Terms of Service and Privacy Policy.","disabled":false,"children":[{"name":"checkbox_9","type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"Field","title":"Subscribe to newsletter","description":"Get weekly updates on new features.","disabled":false,"children":[{"name":"checkbox_10","type":"Checkbox","checked":true,"disabled":false,"required":false}]}]},"state":{"checkbox_9":false,"checkbox_10":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Field
@@ -114,9 +114,9 @@ with Column(gap=4):
         "disabled": false,
         "children": [
           {
+            "name": "checkbox_9",
             "type": "Checkbox",
             "checked": false,
-            "name": "checkbox_9",
             "disabled": false,
             "required": false
           }
@@ -129,9 +129,9 @@ with Column(gap=4):
         "disabled": false,
         "children": [
           {
+            "name": "checkbox_10",
             "type": "Checkbox",
             "checked": true,
-            "name": "checkbox_10",
             "disabled": false,
             "required": false
           }
@@ -149,7 +149,7 @@ with Column(gap=4):
 
 A disabled Field dims the card and prevents interaction.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Enabled option","description":"You can toggle this.","disabled":false,"children":[{"type":"Switch","checked":true,"size":"default","name":"switch_3","disabled":false,"required":false}]},{"type":"Field","title":"Disabled option","description":"This cannot be changed.","disabled":true,"children":[{"type":"Switch","checked":false,"size":"default","name":"switch_4","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Enabled option","description":"You can toggle this.","disabled":false,"children":[{"name":"switch_3","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Disabled option","description":"This cannot be changed.","disabled":true,"children":[{"name":"switch_4","type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Field, Switch
@@ -181,10 +181,10 @@ with Column(gap=4):
         "disabled": false,
         "children": [
           {
+            "name": "switch_3",
             "type": "Switch",
             "checked": true,
             "size": "default",
-            "name": "switch_3",
             "disabled": false,
             "required": false
           }
@@ -197,10 +197,10 @@ with Column(gap=4):
         "disabled": true,
         "children": [
           {
+            "name": "switch_4",
             "type": "Switch",
             "checked": false,
             "size": "default",
-            "name": "switch_4",
             "disabled": true,
             "required": false
           }

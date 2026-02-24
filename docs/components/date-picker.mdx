@@ -10,7 +10,7 @@ DatePicker combines a trigger button with a popover calendar. The button display
 
 ## Basic Usage
 
-<ComponentPreview height="400px" json={{"view":{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"}}}>
+<ComponentPreview height="400px" json={{"view":{"name":"deadline","type":"DatePicker","placeholder":"Select deadline"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DatePicker
@@ -19,7 +19,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {"type": "DatePicker", "placeholder": "Select deadline", "name": "deadline"}
+  "view": {"name": "deadline", "type": "DatePicker", "placeholder": "Select deadline"}
 }
 ```
 </CodeGroup>
@@ -29,7 +29,7 @@ DatePicker(placeholder="Select deadline", name="deadline")
 
 Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
 
-<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"DatePicker","placeholder":"Select deadline","name":"deadline"},{"content":"{{ deadline | date:long }}","bold":true,"type":"Text"}]}]},"state":{"deadline":"2025-06-15T12:00:00.000Z"}}}>
+<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"deadline","type":"DatePicker","placeholder":"Select deadline"},{"content":"{{ deadline | date:long }}","bold":true,"type":"Text"}]}]},"state":{"deadline":"2025-06-15T12:00:00.000Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -57,7 +57,7 @@ with Column(gap=3):
         "cssClass": "gap-4 items-center",
         "type": "Row",
         "children": [
-          {"type": "DatePicker", "placeholder": "Select deadline", "name": "deadline"},
+          {"name": "deadline", "type": "DatePicker", "placeholder": "Select deadline"},
           {"content": "{{ deadline | date:long }}", "bold": true, "type": "Text"}
         ]
       }
@@ -73,7 +73,7 @@ with Column(gap=3):
 
 DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"type":"Input","inputType":"text","placeholder":"Team standup","name":"eventName","disabled":false,"required":false},{"type":"Label","text":"Date"},{"type":"DatePicker","placeholder":"Pick a date","name":"eventDate"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"eventName","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"eventDate","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -119,15 +119,16 @@ with Card():
             "children": [
               {"type": "Label", "text": "Event Name"},
               {
+                "name": "eventName",
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "Team standup",
-                "name": "eventName",
                 "disabled": false,
+                "readOnly": false,
                 "required": false
               },
               {"type": "Label", "text": "Date"},
-              {"type": "DatePicker", "placeholder": "Pick a date", "name": "eventDate"}
+              {"name": "eventDate", "type": "DatePicker", "placeholder": "Pick a date"}
             ]
           }
         ]

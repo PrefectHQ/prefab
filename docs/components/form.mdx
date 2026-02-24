@@ -12,7 +12,7 @@ Forms collect structured data from users. You can build them by hand with indivi
 
 A `Form` groups labeled inputs with a submit action. Named inputs automatically sync their values to client state, so `{{ name }}` always reflects the current value of `Input(name="name")`. Wrap in a `Card` for visual structure.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]},{"type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create Account"},{"type":"CardDescription","content":"Enter your information to get started."}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"email","disabled":false,"required":false}]}]}]},{"cssClass":"justify-end","type":"CardFooter","children":[{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]},{"type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"action":"toolCall","tool":"create_user","arguments":{"name":"{{ name }}","email":"{{ email }}"}},"children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Create Account"},{"type":"CardDescription","content":"Enter your information to get started."}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false}]}]}]},{"cssClass":"justify-end","type":"CardFooter","children":[{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -70,11 +70,12 @@ with Grid(columns=2, gap=6):
             "children": [
               {"type": "Label", "text": "Name"},
               {
+                "name": "name",
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "Your name",
-                "name": "name",
                 "disabled": false,
+                "readOnly": false,
                 "required": false
               }
             ]
@@ -85,11 +86,12 @@ with Grid(columns=2, gap=6):
             "children": [
               {"type": "Label", "text": "Email"},
               {
+                "name": "email",
                 "type": "Input",
                 "inputType": "email",
                 "placeholder": "you@example.com",
-                "name": "email",
                 "disabled": false,
+                "readOnly": false,
                 "required": false
               }
             ]
@@ -135,11 +137,12 @@ with Grid(columns=2, gap=6):
                         "children": [
                           {"type": "Label", "text": "Name"},
                           {
+                            "name": "name",
                             "type": "Input",
                             "inputType": "text",
                             "placeholder": "Your name",
-                            "name": "name",
                             "disabled": false,
+                            "readOnly": false,
                             "required": false
                           }
                         ]
@@ -150,11 +153,12 @@ with Grid(columns=2, gap=6):
                         "children": [
                           {"type": "Label", "text": "Email"},
                           {
+                            "name": "email",
                             "type": "Input",
                             "inputType": "email",
                             "placeholder": "you@example.com",
-                            "name": "email",
                             "disabled": false,
+                            "readOnly": false,
                             "required": false
                           }
                         ]
@@ -193,7 +197,7 @@ Building forms by hand gives full control over layout and behavior, but requires
 
 `Form.from_model()` introspects a Pydantic model and generates a complete form — labels, typed inputs, validation constraints, and a submit button — from the model's field definitions. Pass a `CallTool` as the submit action, and `from_model()` automatically wires up the arguments from the model's fields so you don't have to write `{{ template }}` expressions for every field.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"Full Name","disabled":false,"readOnly":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"name":"message","type":"Textarea","placeholder":"Your message","rows":4,"disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field
@@ -230,11 +234,12 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "children": [
           {"type": "Label", "text": "Full Name"},
           {
+            "name": "name",
             "type": "Input",
             "inputType": "text",
             "placeholder": "Full Name",
-            "name": "name",
             "disabled": false,
+            "readOnly": false,
             "required": true,
             "minLength": 1
           }
@@ -246,11 +251,12 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "children": [
           {"type": "Label", "text": "Email"},
           {
+            "name": "email",
             "type": "Input",
             "inputType": "email",
             "placeholder": "Email",
-            "name": "email",
             "disabled": false,
+            "readOnly": false,
             "required": true
           }
         ]
@@ -261,9 +267,9 @@ Form.from_model(ContactInfo, on_submit=CallTool("submit_contact"))
         "children": [
           {"type": "Label", "text": "Message"},
           {
+            "name": "message",
             "type": "Textarea",
             "placeholder": "Your message",
-            "name": "message",
             "rows": 4,
             "disabled": false,
             "required": true
@@ -300,7 +306,7 @@ The turnkey `from_model()` handles everything: the `Form` wrapper, the submit bu
 
 With `fields_only`, three things that were automatic become your responsibility. You create the `Form` yourself and provide `on_submit` with explicit `arguments` (the turnkey version auto-generates these from the model, but `fields_only` doesn't touch your `CallTool`). You add your own submit button wherever it belongs in the layout. And you handle spacing — wrap the fields in a `Column(gap=4)` since they're no longer inside a Form that provides gap for you.
 
-<ComponentPreview json={{"view":{"cssClass":"w-full max-w-lg","type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Message sent!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}},"children":[{"type":"CardContent","children":[{"cssClass":"mb-2","type":"CardTitle","content":"Contact Us"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"type":"Input","inputType":"text","placeholder":"Full Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"type":"Textarea","placeholder":"Your message","name":"message","rows":4,"disabled":false,"required":true}]}]}]},{"cssClass":"justify-end gap-2","type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Send Message","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-lg","type":"Card","children":[{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Message sent!","variant":"success"},"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"submit_contact","arguments":{"name":"{{ name }}","email":"{{ email }}","message":"{{ message }}"}},"children":[{"type":"CardContent","children":[{"cssClass":"mb-2","type":"CardTitle","content":"Contact Us"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Full Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"Full Name","disabled":false,"readOnly":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Message"},{"name":"message","type":"Textarea","placeholder":"Your message","rows":4,"disabled":false,"required":true}]}]}]},{"cssClass":"justify-end gap-2","type":"CardFooter","children":[{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Send Message","variant":"default","size":"default","disabled":false}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field
@@ -366,11 +372,12 @@ with Card(css_class="w-full max-w-lg"):
                     "children": [
                       {"type": "Label", "text": "Full Name"},
                       {
+                        "name": "name",
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Full Name",
-                        "name": "name",
                         "disabled": false,
+                        "readOnly": false,
                         "required": true,
                         "minLength": 1
                       }
@@ -382,11 +389,12 @@ with Card(css_class="w-full max-w-lg"):
                     "children": [
                       {"type": "Label", "text": "Email"},
                       {
+                        "name": "email",
                         "type": "Input",
                         "inputType": "email",
                         "placeholder": "Email",
-                        "name": "email",
                         "disabled": false,
+                        "readOnly": false,
                         "required": true
                       }
                     ]
@@ -397,9 +405,9 @@ with Card(css_class="w-full max-w-lg"):
                     "children": [
                       {"type": "Label", "text": "Message"},
                       {
+                        "name": "message",
                         "type": "Textarea",
                         "placeholder": "Your message",
-                        "name": "message",
                         "rows": 4,
                         "disabled": false,
                         "required": true
@@ -445,7 +453,7 @@ Compare this to the turnkey version above: the `CallTool` now has explicit `argu
 
 Each field's Python type determines which input component is rendered. A field named `email` gets an email input automatically, a `bool` becomes a checkbox, number types get number inputs with constraints, and so on.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"type":"Input","inputType":"text","placeholder":"Username","name":"username","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"type":"Input","inputType":"number","placeholder":"Age","name":"age","disabled":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"type":"Input","inputType":"password","placeholder":"Password","name":"password","disabled":false,"required":true}]},{"type":"Checkbox","label":"Active","checked":true,"name":"active","disabled":false,"required":false}]},"state":{"active":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Username","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"name":"age","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"name":"password","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":true}]},{"name":"active","type":"Checkbox","label":"Active","checked":true,"disabled":false,"required":false}]},"state":{"active":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field, SecretStr
@@ -472,11 +480,12 @@ Form.from_model(UserProfile)
         "children": [
           {"type": "Label", "text": "Username"},
           {
+            "name": "username",
             "type": "Input",
             "inputType": "text",
             "placeholder": "Username",
-            "name": "username",
             "disabled": false,
+            "readOnly": false,
             "required": true
           }
         ]
@@ -487,11 +496,12 @@ Form.from_model(UserProfile)
         "children": [
           {"type": "Label", "text": "Email"},
           {
+            "name": "email",
             "type": "Input",
             "inputType": "email",
             "placeholder": "Email",
-            "name": "email",
             "disabled": false,
+            "readOnly": false,
             "required": true
           }
         ]
@@ -502,11 +512,12 @@ Form.from_model(UserProfile)
         "children": [
           {"type": "Label", "text": "Age"},
           {
+            "name": "age",
             "type": "Input",
             "inputType": "number",
             "placeholder": "Age",
-            "name": "age",
             "disabled": false,
+            "readOnly": false,
             "required": true,
             "min": 0.0,
             "max": 150.0
@@ -519,20 +530,21 @@ Form.from_model(UserProfile)
         "children": [
           {"type": "Label", "text": "Password"},
           {
+            "name": "password",
             "type": "Input",
             "inputType": "password",
             "placeholder": "Password",
-            "name": "password",
             "disabled": false,
+            "readOnly": false,
             "required": true
           }
         ]
       },
       {
+        "name": "active",
         "type": "Checkbox",
         "label": "Active",
         "checked": true,
-        "name": "active",
         "disabled": false,
         "required": false
       }
@@ -561,7 +573,7 @@ The full type mapping:
 
 Pydantic `Field()` parameters control labels, placeholders, and HTML validation constraints. In this example, `title` sets the label, `description` sets the placeholder, `min_length` enforces a minimum, and the `ui` hint overrides the default text input with a textarea.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Your Name"},{"type":"Input","inputType":"text","placeholder":"How should we address you?","name":"name","disabled":false,"required":true,"minLength":2,"maxLength":50}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bio"},{"type":"Textarea","placeholder":"Tell us about yourself","value":"","name":"bio","rows":3,"disabled":false,"required":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Your Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"How should we address you?","disabled":false,"readOnly":false,"required":true,"minLength":2,"maxLength":50}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bio"},{"name":"bio","type":"Textarea","placeholder":"Tell us about yourself","value":"","rows":3,"disabled":false,"required":false}]}]},"state":{"bio":""}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field
@@ -594,11 +606,12 @@ Form.from_model(Profile)
         "children": [
           {"type": "Label", "text": "Your Name"},
           {
+            "name": "name",
             "type": "Input",
             "inputType": "text",
             "placeholder": "How should we address you?",
-            "name": "name",
             "disabled": false,
+            "readOnly": false,
             "required": true,
             "minLength": 2,
             "maxLength": 50
@@ -611,10 +624,10 @@ Form.from_model(Profile)
         "children": [
           {"type": "Label", "text": "Bio"},
           {
+            "name": "bio",
             "type": "Textarea",
             "placeholder": "Tell us about yourself",
             "value": "",
-            "name": "bio",
             "rows": 3,
             "disabled": false,
             "required": false
@@ -622,7 +635,8 @@ Form.from_model(Profile)
         ]
       }
     ]
-  }
+  },
+  "state": {"bio": ""}
 }
 ```
 </CodeGroup>
@@ -643,7 +657,7 @@ The full metadata mapping:
 
 When `on_submit` is a `CallTool` with no explicit `on_error`, `from_model()` adds a default error toast that displays the server's error message. You can override it with your own feedback.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"type":"Input","inputType":"text","placeholder":"Name","name":"name","disabled":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":true,"minLength":1}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Contact saved!","variant":"success"},"onError":{"action":"showToast","message":"Could not save: {{ $error }}","variant":"error"},"action":"toolCall","tool":"create_contact","arguments":{"data":{"name":"{{ name }}","email":"{{ email }}"}}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field
@@ -687,11 +701,12 @@ Form.from_model(
         "children": [
           {"type": "Label", "text": "Name"},
           {
+            "name": "name",
             "type": "Input",
             "inputType": "text",
             "placeholder": "Name",
-            "name": "name",
             "disabled": false,
+            "readOnly": false,
             "required": true,
             "minLength": 1
           }
@@ -703,11 +718,12 @@ Form.from_model(
         "children": [
           {"type": "Label", "text": "Email"},
           {
+            "name": "email",
             "type": "Input",
             "inputType": "email",
             "placeholder": "Email",
-            "name": "email",
             "disabled": false,
+            "readOnly": false,
             "required": true
           }
         ]

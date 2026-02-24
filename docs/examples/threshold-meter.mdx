@@ -9,7 +9,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 A slider drives a progress bar. The bar color changes at each threshold — all evaluated client-side through a `{{ }}` expression in `indicator_class`.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ val }}%","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ val }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"name":"val","disabled":false}]}]},"state":{"val":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ val }}%","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ val }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"},{"name":"val","type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"disabled":false}]}]},"state":{"val":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -68,12 +68,12 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
             "indicatorClass": "{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"
           },
           {
+            "name": "val",
             "type": "Slider",
             "min": 0.0,
             "max": 100.0,
             "value": 50.0,
             "step": 1.0,
-            "name": "val",
             "disabled": false
           }
         ]

@@ -10,7 +10,7 @@ Radio buttons let users select exactly one option from a set of choices.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"RadioGroup","name":"size","children":[{"type":"Radio","value":"sm","label":"Small","checked":false,"name":"radio_1","disabled":false,"required":false},{"type":"Radio","value":"md","label":"Medium","checked":true,"name":"radio_2","disabled":false,"required":false},{"type":"Radio","value":"lg","label":"Large","checked":false,"name":"radio_3","disabled":false,"required":false}]},"state":{"radio_1":"sm","radio_2":"md","radio_3":"lg"}}}>
+<ComponentPreview json={{"view":{"name":"size","type":"RadioGroup","children":[{"name":"radio_1","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_2","type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"name":"radio_3","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -26,39 +26,38 @@ with RadioGroup(name="size"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "RadioGroup",
     "name": "size",
+    "type": "RadioGroup",
     "children": [
       {
+        "name": "radio_1",
         "type": "Radio",
         "value": "sm",
         "label": "Small",
         "checked": false,
-        "name": "radio_1",
         "disabled": false,
         "required": false
       },
       {
+        "name": "radio_2",
         "type": "Radio",
         "value": "md",
         "label": "Medium",
         "checked": true,
-        "name": "radio_2",
         "disabled": false,
         "required": false
       },
       {
+        "name": "radio_3",
         "type": "Radio",
         "value": "lg",
         "label": "Large",
         "checked": false,
-        "name": "radio_3",
         "disabled": false,
         "required": false
       }
     ]
-  },
-  "state": {"radio_1": "sm", "radio_2": "md", "radio_3": "lg"}
+  }
 }
 ```
 </CodeGroup>
@@ -68,7 +67,7 @@ with RadioGroup(name="size"):
 
 Individual radio buttons can be used independently:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Radio","value":"yes","label":"Yes","checked":false,"name":"answer","disabled":false,"required":false},{"type":"Radio","value":"no","label":"No","checked":true,"name":"answer","disabled":false,"required":false}]},"state":{"answer":"no"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"answer","type":"Radio","value":"yes","label":"Yes","checked":false,"disabled":false,"required":false},{"name":"answer","type":"Radio","value":"no","label":"No","checked":true,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -87,26 +86,25 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "answer",
         "type": "Radio",
         "value": "yes",
         "label": "Yes",
         "checked": false,
-        "name": "answer",
         "disabled": false,
         "required": false
       },
       {
+        "name": "answer",
         "type": "Radio",
         "value": "no",
         "label": "No",
         "checked": true,
-        "name": "answer",
         "disabled": false,
         "required": false
       }
     ]
-  },
-  "state": {"answer": "no"}
+  }
 }
 ```
 </CodeGroup>
@@ -116,7 +114,7 @@ with Column(gap=3):
 
 The `on_change` parameter on `RadioGroup` runs actions when the selection changes. `$event` is the `value` string of the selected radio:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"name":"radio_4","disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"name":"radio_5","disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"name":"radio_6","disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]},"state":{"radio_4":"light","radio_5":"dark","radio_6":"system"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"theme","type":"RadioGroup","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"name":"radio_4","type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"name":"radio_5","type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"name":"radio_6","type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Radio, RadioGroup, Text
@@ -145,34 +143,34 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "type": "RadioGroup",
         "name": "theme",
+        "type": "RadioGroup",
         "onChange": {"action": "setState", "key": "choice", "value": "You picked: {{ $event }}"},
         "children": [
           {
+            "name": "radio_4",
             "type": "Radio",
             "value": "light",
             "label": "Light",
             "checked": false,
-            "name": "radio_4",
             "disabled": false,
             "required": false
           },
           {
+            "name": "radio_5",
             "type": "Radio",
             "value": "dark",
             "label": "Dark",
             "checked": false,
-            "name": "radio_5",
             "disabled": false,
             "required": false
           },
           {
+            "name": "radio_6",
             "type": "Radio",
             "value": "system",
             "label": "System",
             "checked": true,
-            "name": "radio_6",
             "disabled": false,
             "required": false
           }
@@ -184,8 +182,7 @@ with Column(gap=4):
         "type": "Text"
       }
     ]
-  },
-  "state": {"radio_4": "light", "radio_5": "dark", "radio_6": "system"}
+  }
 }
 ```
 </CodeGroup>
@@ -193,7 +190,7 @@ with Column(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"RadioGroup","name":"plan","children":[{"type":"Radio","value":"free","label":"Free","checked":true,"name":"radio_7","disabled":false,"required":false},{"type":"Radio","value":"pro","label":"Pro","checked":false,"name":"radio_8","disabled":false,"required":false},{"type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"name":"radio_9","disabled":true,"required":false}]},"state":{"radio_7":"free","radio_8":"pro","radio_9":"enterprise"}}}>
+<ComponentPreview json={{"view":{"name":"plan","type":"RadioGroup","children":[{"name":"radio_7","type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"name":"radio_8","type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"name":"radio_9","type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -209,39 +206,38 @@ with RadioGroup(name="plan"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "RadioGroup",
     "name": "plan",
+    "type": "RadioGroup",
     "children": [
       {
+        "name": "radio_7",
         "type": "Radio",
         "value": "free",
         "label": "Free",
         "checked": true,
-        "name": "radio_7",
         "disabled": false,
         "required": false
       },
       {
+        "name": "radio_8",
         "type": "Radio",
         "value": "pro",
         "label": "Pro",
         "checked": false,
-        "name": "radio_8",
         "disabled": false,
         "required": false
       },
       {
+        "name": "radio_9",
         "type": "Radio",
         "value": "enterprise",
         "label": "Enterprise",
         "checked": false,
-        "name": "radio_9",
         "disabled": true,
         "required": false
       }
     ]
-  },
-  "state": {"radio_7": "free", "radio_8": "pro", "radio_9": "enterprise"}
+  }
 }
 ```
 </CodeGroup>

@@ -111,6 +111,9 @@ class Slider(StatefulMixin, Component):
         description="Action(s) to execute when value changes",
     )
 
+    def _get_initial_value(self) -> float | list[float] | None:
+        return self.value
+
     def model_post_init(self, __context: Any) -> None:
         if self.step is not None and self.value is not None:
             if isinstance(self.value, list):

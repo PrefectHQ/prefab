@@ -105,7 +105,7 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","name":"question","disabled":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"question","type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -122,11 +122,12 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "question",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Ask a follow-up question...",
-        "name": "question",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {

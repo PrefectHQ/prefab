@@ -70,7 +70,7 @@ That's the complete model: state holds values, expressions read them, actions ch
 
 The counter above creates state explicitly with `set_initial_state()`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -89,11 +89,12 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "name",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Your name",
-        "name": "name",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {"content": "Hello, {{ name }}!", "type": "Text"}
@@ -154,7 +155,7 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"slider_19","disabled":false},{"content":"Volume: {{ slider_19 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_19":50.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_19","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_19 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_19":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text
@@ -171,11 +172,11 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "slider_19",
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
         "value": 50.0,
-        "name": "slider_19",
         "disabled": false
       },
       {"content": "Volume: {{ slider_19 }}%", "type": "Text"},

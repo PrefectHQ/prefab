@@ -12,7 +12,7 @@ State is client-side data that your UI can read and write. Components display st
 
 Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `.rx` or `Rx()` references:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -34,10 +34,10 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "brightness",
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "name": "brightness",
         "disabled": false
       },
       {"content": "Brightness: {{ brightness }}%", "type": "Muted"}
@@ -143,7 +143,7 @@ State keys can contain dots to reach into nested objects. `profile.name` means "
 
 The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Input","inputType":"text","placeholder":"Name","name":"profile.name","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Title","name":"profile.title","disabled":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -187,19 +187,21 @@ with Column(gap=3):
         ]
       },
       {
+        "name": "profile.name",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Name",
-        "name": "profile.name",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {
+        "name": "profile.title",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Title",
-        "name": "profile.title",
         "disabled": false,
+        "readOnly": false,
         "required": false
       }
     ]
@@ -292,7 +294,7 @@ with Column(gap=2):
 
 Type a name and click Add to see it appear in the list. Click × to remove a row.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"Crew member name...","name":"new_member","disabled":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -358,11 +360,12 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {
+            "name": "new_member",
             "type": "Input",
             "inputType": "text",
             "placeholder": "Crew member name...",
-            "name": "new_member",
             "disabled": false,
+            "readOnly": false,
             "required": false
           },
           {

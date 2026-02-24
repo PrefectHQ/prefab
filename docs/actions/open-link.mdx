@@ -81,7 +81,7 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"owner/repo","name":"repo","disabled":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"repo","type":"Input","inputType":"text","placeholder":"owner/repo","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -101,11 +101,12 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "repo",
         "type": "Input",
         "inputType": "text",
         "placeholder": "owner/repo",
-        "name": "repo",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {

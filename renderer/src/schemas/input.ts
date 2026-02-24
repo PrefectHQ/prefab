@@ -23,6 +23,7 @@ export const inputSchema = componentBase.extend({
   value: z.string().optional(),
   name: z.string().optional(),
   disabled: z.boolean().optional(),
+  readOnly: z.boolean().optional(),
   required: z.boolean().optional(),
   minLength: z.number().int().optional(),
   maxLength: z.number().int().optional(),

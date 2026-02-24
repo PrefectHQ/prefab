@@ -125,9 +125,9 @@ def _execute_and_serialize(
     # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
     state: dict[str, Any] = {}
     for c in created:
-        if isinstance(c, StatefulMixin) and hasattr(c, "name") and c.name:
-            val = getattr(c, "value", None) or getattr(c, "checked", None)
-            if val is not None:
+        if isinstance(c, StatefulMixin):
+            val = c._get_initial_value()
+            if val is not None and not (isinstance(val, str) and "{{" in val):
                 state[c.name] = val
     # Explicit set_initial_state() wins over component defaults.
     explicit = get_initial_state()

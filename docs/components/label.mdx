@@ -29,7 +29,7 @@ Label("Email address")
 
 Labels are typically paired with inputs and other form controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username","forId":"username"},{"type":"Input","inputType":"text","placeholder":"Enter username","name":"username","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username","forId":"username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Enter username","disabled":false,"readOnly":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -50,11 +50,12 @@ with Column(gap=2):
     "children": [
       {"type": "Label", "text": "Username", "forId": "username"},
       {
+        "name": "username",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Enter username",
-        "name": "username",
         "disabled": false,
+        "readOnly": false,
         "required": false
       }
     ]
