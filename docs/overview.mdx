@@ -147,10 +147,11 @@ Pass a list to compose multiple actions from a single interaction:
 from prefab_ui.components import Button
 from prefab_ui.actions import SetState
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
 
 Button("Save", on_click=[
     SetState("saving", True),
-    CallTool("save_data", arguments={"item": "{{ item }}"}),
+    CallTool("save_data", arguments={"item": Rx("item")}),
     SetState("saving", False),
 ])
 ```

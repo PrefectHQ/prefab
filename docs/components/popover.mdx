@@ -153,6 +153,9 @@ For lighter-weight confirmations that don't need a full modal overlay, a Popover
 from prefab_ui.components import Button, Column, Popover, Text
 from prefab_ui.actions import CloseOverlay
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+item_id = Rx("item_id")
 
 with Popover():
     Button("Archive", variant="outline")
@@ -161,7 +164,7 @@ with Popover():
         Button(
             "Confirm",
             on_click=[
-                CallTool("archive_item", arguments={"id": "{{ item_id }}"}),
+                CallTool("archive_item", arguments={"id": item_id}),
                 CloseOverlay(),
             ],
         )

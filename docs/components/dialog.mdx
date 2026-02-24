@@ -105,6 +105,9 @@ Dialogs work well for destructive actions that need explicit confirmation before
 from prefab_ui.components import Button, Dialog, Row, Text
 from prefab_ui.actions import CloseOverlay
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+item_id = Rx("item_id")
 
 with Dialog(title="Delete Item", description="This action cannot be undone."):
     Button("Delete", variant="destructive")
@@ -115,7 +118,7 @@ with Dialog(title="Delete Item", description="This action cannot be undone."):
             "Confirm Delete",
             variant="destructive",
             on_click=[
-                CallTool("delete_item", arguments={"id": "{{ item_id }}"}),
+                CallTool("delete_item", arguments={"id": item_id}),
                 CloseOverlay(),
             ],
         )
@@ -182,10 +185,14 @@ Wire `ShowToast` callbacks onto a `CallTool` to give feedback after the server r
 from prefab_ui.components import Button, Dialog, Row, Text
 from prefab_ui.actions import CloseOverlay, ShowToast
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+user_name = Rx("user_name")
+user_id = Rx("user_id")
 
 with Dialog(title="Remove User", description="This will revoke all access."):
     Button("Remove", variant="destructive")
-    Text("User {{ user_name }} will lose access to all projects.")
+    Text(f"User {user_name} will lose access to all projects.")
     with Row(gap=2, css_class="justify-end"):
         Button("Cancel", variant="outline", on_click=CloseOverlay())
         Button(
@@ -193,7 +200,7 @@ with Dialog(title="Remove User", description="This will revoke all access."):
             variant="destructive",
             on_click=CallTool(
                 "remove_user",
-                arguments={"user_id": "{{ user_id }}"},
+                arguments={"user_id": user_id},
                 on_success=[
                     ShowToast("User removed", variant="success"),
                     CloseOverlay(),

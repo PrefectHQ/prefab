@@ -77,12 +77,14 @@ with Column(gap=3):
 
 ## Dynamic Content
 
-Code content supports [interpolation](/expressions/templates), so you can display server-generated output:
+Code content supports [expression interpolation](/expressions/overview), so you can display server-generated output:
 
 ```python
 from prefab_ui.components import Code
+from prefab_ui.rx import Rx
 
-Code("{{ query_result }}", language="sql")
+query_result = Rx("query_result")
+Code(query_result, language="sql")
 ```
 
 ## API Reference
