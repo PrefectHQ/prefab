@@ -37,7 +37,7 @@ Slider(value=50)
 
 Create the slider with `defer=True` to get a reference to it, then use `.rx` to bind its value into a label. Call `insert()` to place the slider in the tree:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | number }}%","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_3":75.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false}]},"state":{"slider_3":0.75}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -49,12 +49,12 @@ from prefab_ui.components import (
     insert,
 )
 
-volume = Slider(value=75, defer=True)
+volume = Slider(value=0.75, min=0, max=1, defer=True)
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Volume")
-        Text(f"{volume.rx.number()}%", bold=True)
+        Text(f"{volume.rx.percent()}", bold=True)
     insert(volume)
 ```
 ```json Protocol icon="brackets-curly"
@@ -68,20 +68,20 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider_3 | number }}%", "bold": true, "type": "Text"}
+          {"content": "{{ slider_3 | percent }}", "bold": true, "type": "Text"}
         ]
       },
       {
         "name": "slider_3",
         "type": "Slider",
-        "min": 0,
-        "max": 100,
-        "value": 75.0,
+        "min": 0.0,
+        "max": 1.0,
+        "value": 0.75,
         "disabled": false
       }
     ]
   },
-  "state": {"slider_3": 75.0}
+  "state": {"slider_3": 0.75}
 }
 ```
 </CodeGroup>
@@ -549,6 +549,53 @@ with Column(gap=4):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the slider's current numeric value. For a standard slider, `.rx` holds a single number; for a range slider (`range=True`), it holds a `[low, high]` array. The `.number()` pipe formats the value for clean display:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_19 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_19":0.42}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
+
+with Column(gap=4):
+    s = Slider(value=0.42, min=0, max=1, defer=True)
+    with Row(css_class="justify-between"):
+        Label("Brightness")
+        Text(f"{s.rx.percent()}", bold=True)
+    Progress(value=s.rx)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "justify-between",
+        "type": "Row",
+        "children": [
+          {"type": "Label", "text": "Brightness"},
+          {"content": "{{ slider_19 | percent }}", "bold": true, "type": "Text"}
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ slider_19 }}",
+        "min": 0,
+        "max": 100,
+        "variant": "default"
+      }
+    ]
+  },
+  "state": {"slider_19": 0.42}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag the handle and both the percentage text and the progress bar update to reflect the slider's current position.
 
 ## API Reference
 
