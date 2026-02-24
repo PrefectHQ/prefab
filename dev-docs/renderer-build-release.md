@@ -57,8 +57,9 @@ Releases happen ONLY via the GitHub release flow. Never publish to npm manually.
    - Publishes `@prefecthq/prefab-ui` to npm
 
 3. `update-published-docs.yml` workflow also runs automatically:
-   - Fast-forwards the `published-docs` branch to the tagged commit
+   - Force-pushes the `published-docs` branch to the tagged commit
    - Mintlify builds docs from this branch, so published docs only show released components
+   - Uses force-push so cherry-picks between releases (e.g. typo fixes) don't block it
 
 Because the entry loader uses `@latest` and the stable `embed.mjs` shim, there's no need to rebuild `docs/renderer.js` after publishing. The CDN resolves `@latest` to the new version, and the stable shim name doesn't change.
 
