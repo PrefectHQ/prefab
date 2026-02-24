@@ -111,6 +111,19 @@ class Slider(StatefulMixin, Component):
         description="Action(s) to execute when value changes",
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if self.step is not None and self.value is not None:
+            if isinstance(self.value, list):
+                self.value = [self._snap(v) for v in self.value]
+            else:
+                self.value = self._snap(self.value)
+        super().model_post_init(__context)
+
+    def _snap(self, v: float) -> float:
+        assert self.step is not None
+        snapped = round((v - self.min) / self.step) * self.step + self.min
+        return max(self.min, min(self.max, snapped))
+
     def to_json(self) -> dict[str, Any]:
         d = super().to_json()
         if not self.range:

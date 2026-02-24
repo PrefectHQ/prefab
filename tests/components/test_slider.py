@@ -94,3 +94,23 @@ def test_slider_all_new_props():
     assert j["indicatorClass"] == "rounded"
     assert j["orientation"] == "vertical"
     assert j["handleStyle"] == "bar"
+
+
+def test_slider_snaps_off_step_initial_value():
+    s = Slider(min=0, max=10, step=1, value=1.2)
+    assert s.value == 1
+
+
+def test_slider_snaps_off_step_range_values():
+    s = Slider(min=0, max=100, step=10, value=[12, 87], range=True)
+    assert s.value == [10, 90]
+
+
+def test_slider_on_step_value_unchanged():
+    s = Slider(min=0, max=10, step=2, value=4)
+    assert s.value == 4
+
+
+def test_slider_snap_clamps_to_max():
+    s = Slider(min=0, max=10, step=3, value=10.5)
+    assert s.value == 10  # round(10.5/3)*3 = round(3.5)*3 = 4*3 = 12, clamped to max=10
