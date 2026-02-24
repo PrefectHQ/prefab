@@ -40,37 +40,28 @@ app = PrefabApp(view=view, state={"name": "world"})
 ## Run it
 
 ```bash
-prefab serve app.py
+prefab serve app.py --reload
 ```
 
-Your browser opens to `http://127.0.0.1:5175`. Here's what you'll see:
+Your browser opens to `http://127.0.0.1:5175`. The `--reload` flag watches your file for changes — every time you save `app.py`, the UI regenerates automatically. Here's what you'll see:
 
 <ComponentPreview json={{"view":{"type":"Column","cssClass":"max-w-md mx-auto","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type your name and watch the heading update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Say hi","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Hey there, {{ name }}!"}}]}]}]},"state":{"name":"world"}}} />
 
 Type in the input — the heading updates instantly. Click the button — toast notification. That's reactive state, event handling, and a production component library, all from a dozen lines of Python.
 
-Pass `--reload` to regenerate on save while you iterate:
-
-```bash
-prefab serve app.py --reload
-```
+Try editing `app.py` while the server is running. Change the heading text, swap the button variant to `"destructive"`, or add another `Input` — save the file and the browser updates immediately. This is the development loop: write Python, save, see it live.
 
 ## What just happened
 
-Three things worth understanding:
+Prefab components nest using Python's `with` statement — `Card`, `Column`, `Input` compose into a tree that compiles to JSON, which a bundled React renderer turns into real HTML. The [Composition](/getting-started/composition) page walks through this in detail.
 
-**Component trees.** Prefab components nest using Python's `with` statement. `Card`, `Column`, `Input` — they compose into a tree that compiles to JSON, which a bundled React renderer turns into real HTML.
+Every form control syncs its value to a client-side state key. The `.rx` property returns a reactive reference — `name_input.rx` in an f-string becomes `{{ name }}` in the protocol, and any component containing it re-renders whenever the input changes. No server round-trip needed. Read more about [reactive expressions](/expressions/overview).
 
-**Client-side state.** Every form control syncs its value to a state key. The `.rx` property returns a reactive reference to that key — `name_input.rx` in an f-string becomes `{{ name }}` in the protocol, and any component containing it re-renders whenever the input changes. No server round-trip needed. You seed initial values with `PrefabApp(state={"name": "world"})`.
-
-**Actions.** `ShowToast` is a client-side action — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
+`ShowToast` is a client-side [action](/actions/overview) — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
 
 ## Where to go from here
 
-**Explore components.** Browse all 35+ components in the [Playground](/playground), or dive into the [component reference](/components/button).
-
-**Add client interactivity.** The `.rx` property generates reactive references to component state. The underlying `{{ }}` expression language supports [operators, conditionals, and pipes](/expressions/overview) — enough to build surprisingly rich UIs without a server.
-
-**Wire up a backend.** When you need server logic, Prefab works with [API servers](/running/api) and [FastMCP](/running/fastmcp). Server actions like `CallTool` let your UI make round-trips for real data.
-
-**Add expressions.** [Templates, operators, and pipes](/expressions/overview) let you build reactive UIs. Use `.rx` for Python-authored references, or write `{{ }}` directly when working with runtime variables.
+- [**Composition**](/getting-started/composition) — learn how to build any interface by nesting components
+- [**Playground**](/playground) — browse all 35+ components interactively
+- [**Reactive Expressions**](/expressions/overview) — operators, conditionals, and pipes for client-side logic
+- [**API Server**](/running/api) and [**FastMCP**](/running/fastmcp) — wire up a backend when you need server logic
