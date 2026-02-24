@@ -114,22 +114,25 @@ with Column(gap=3):
 
 The `on_change` parameter on `RadioGroup` runs actions when the selection changes. `$event` is the `value` string of the selected radio:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"name":"radio-4","disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"name":"radio-5","disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"name":"radio-6","disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | 'Make a selection' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"RadioGroup","name":"theme","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"type":"Radio","value":"light","label":"Light","checked":false,"name":"radio-4","disabled":false,"required":false},{"type":"Radio","value":"dark","label":"Dark","checked":false,"name":"radio-5","disabled":false,"required":false},{"type":"Radio","value":"system","label":"System","checked":true,"name":"radio-6","disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Radio, RadioGroup, Text
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+choice = Rx("choice")
 
 with Column(gap=4):
     with RadioGroup(
         name="theme",
-        on_change=SetState("choice", "You picked: {{ $event }}"),
+        on_change=SetState("choice", f"You picked: {Rx('$event')}"),
     ):
         Radio(value="light", label="Light")
         Radio(value="dark", label="Dark")
         Radio(value="system", label="System", checked=True)
     Text(
-        "{{ choice | 'Make a selection' }}",
+        choice.default("Make a selection"),
         css_class="text-muted-foreground",
     )
 ```
@@ -175,7 +178,7 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "content": "{{ choice | 'Make a selection' }}",
+        "content": "{{ choice | default:'Make a selection' }}",
         "type": "Text"
       }
     ]

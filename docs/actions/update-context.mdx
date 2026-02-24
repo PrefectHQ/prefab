@@ -59,14 +59,14 @@ from prefab_ui.components import Button, Select, SelectOption, Column
 from prefab_ui.actions.mcp import UpdateContext
 
 with Column(gap=3):
-    with Select(name="thinking", placeholder="Thinking level..."):
+    with Select(name="thinking", placeholder="Thinking level...") as thinking:
         SelectOption(value="low", label="Low")
         SelectOption(value="medium", label="Medium")
         SelectOption(value="high", label="High")
     Button(
         "Set Preference",
         on_click=UpdateContext(
-            structured_content={"preference": {"thinking": "{{ thinking }}"}},
+            structured_content={"preference": {"thinking": thinking.rx}},
         ),
     )
 ```

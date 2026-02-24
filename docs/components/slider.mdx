@@ -34,7 +34,7 @@ Slider(value=50)
 
 ## Displaying the Value
 
-Give the slider a `name` to store its current value in state, then reference it with `{{ }}` interpolation. Drag the slider and the label updates instantly:
+Give the slider a `name` to store its current value in state, then reference it with `.rx`. Drag the slider and the label updates instantly:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ volume | number }}%","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"volume","disabled":false}]},"state":{"volume":75}}}>
 <CodeGroup>
@@ -47,13 +47,16 @@ from prefab_ui.components import (
     Slider,
     Text,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(volume=75)
+
+volume = Rx("volume")
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Volume")
-        Text("{{ volume | number }}%", bold=True)
+        Text(f"{volume.number()}%", bold=True)
     Slider(value=75, name="volume")
 ```
 ```json Protocol icon="brackets-curly"
@@ -103,13 +106,16 @@ from prefab_ui.components import (
     Slider,
     Text,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(rating=5)
+
+rating = Rx("rating")
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Rating")
-        Text("{{ rating }}", bold=True)
+        Text(rating, bold=True)
     Slider(value=5, name="rating", min=0, max=10, step=0.5)
 ```
 ```json Protocol icon="brackets-curly"
@@ -147,11 +153,14 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-2","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | 'Drag the slider' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-2","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Slider, Text
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+level = Rx("level")
 
 with Column(gap=4):
     Slider(
@@ -159,7 +168,7 @@ with Column(gap=4):
         on_change=SetState("level", "{{ $event }}"),
     )
     Text(
-        "{{ level | 'Drag the slider' }}",
+        level.default("Drag the slider"),
         css_class="text-muted-foreground",
     )
 ```
@@ -180,7 +189,7 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "content": "{{ level | 'Drag the slider' }}",
+        "content": "{{ level | default:'Drag the slider' }}",
         "type": "Text"
       }
     ]

@@ -110,21 +110,22 @@ Reference named inputs by assigning the component to a variable and using `.rx`,
 ```python
 from prefab_ui.actions import Fetch, ShowToast
 from prefab_ui.components import Button, Column, Form, Input
+from prefab_ui.rx import Rx
 
-item_name = Input(name="item_name", placeholder="Name")
-item_category = Input(name="item_category", placeholder="Category")
+item_name = Rx("item_name")
+item_category = Rx("item_category")
 
 with Form(
     on_submit=Fetch.post(
         "/api/items",
-        body={"name": item_name.rx, "category": item_category.rx},
+        body={"name": item_name, "category": item_category},
         on_success=ShowToast("Item created!", variant="success"),
         on_error=ShowToast("{{ $error }}", variant="error"),
     ),
 ):
     with Column(gap=3):
-        item_name
-        item_category
+        Input(name="item_name", placeholder="Name")
+        Input(name="item_category", placeholder="Category")
         Button("Add Item")
 ```
 
@@ -135,15 +136,16 @@ For forms that shouldn't clutter the main layout, put them inside a `Dialog`. Us
 ```python {10-14}
 from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast
 from prefab_ui.components import Button, Column, Dialog, Form, Input
+from prefab_ui.rx import Rx
 
-name_input = Input(name="new_name", placeholder="Name")
+new_name = Rx("new_name")
 
 with Dialog(title="New Item", description="Add an item to the catalog."):
     Button("+ Add", size="sm")
     with Form(
         on_submit=Fetch.post(
             "/api/items",
-            body={"name": name_input.rx},
+            body={"name": new_name},
             on_success=[
                 ShowToast("Created!", variant="success"),
                 SetState("new_name", ""),
@@ -154,7 +156,7 @@ with Dialog(title="New Item", description="Add an item to the catalog."):
         ),
     ):
         with Column(gap=3):
-            name_input
+            Input(name="new_name", placeholder="Name")
             Button("Add Item")
 ```
 

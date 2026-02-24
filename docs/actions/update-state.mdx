@@ -10,19 +10,22 @@ State is client-side data that your UI can read and write. Components display st
 
 ## Setting Up State
 
-Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `{{ }}` expressions:
+Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `.rx` or `Rx()` references:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"brightness","disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import Slider, Muted, Column
+from prefab_ui.rx import Rx
 
 set_initial_state(brightness=50)
 
+brightness = Rx("brightness")
+
 with Column(gap=3):
     Slider(name="brightness", min=0, max=100)
-    Muted("Brightness: {{ brightness }}%")
+    Muted(f"Brightness: {brightness}%")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -73,8 +76,11 @@ For non-form elements like buttons, pass an explicit value as the second argumen
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import Badge, Button, Column, Row
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
 
 set_initial_state(drive="improbability")
+
+drive = Rx("drive")
 
 with Column(gap=3):
     with Row(gap=2):
@@ -84,7 +90,7 @@ with Column(gap=3):
                on_click=SetState("drive", "conventional"))
         Button("Bistromath", variant="outline",
                on_click=SetState("drive", "bistromath"))
-    Badge("Active drive: {{ drive }}")
+    Badge(f"Active drive: {drive}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -145,17 +151,20 @@ from prefab_ui.components import (
     Card, CardDescription, CardHeader, CardTitle,
     Column, Input,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(profile={
     "name": "Arthur Dent",
     "title": "Sandwich Maker, Lamuella",
 })
 
+profile = Rx("profile")
+
 with Column(gap=3):
     with Card():
         with CardHeader():
-            CardTitle("{{ profile.name }}")
-            CardDescription("{{ profile.title }}")
+            CardTitle(profile.name)
+            CardDescription(profile.title)
     Input(name="profile.name", placeholder="Name")
     Input(name="profile.title", placeholder="Title")
 ```
@@ -230,11 +239,14 @@ If an intermediate path segment is missing or the wrong type (e.g. an integer se
 from prefab_ui.components import Alert, AlertTitle, Button, Column
 from prefab_ui.components.control_flow import If
 from prefab_ui.actions import ToggleState
+from prefab_ui.rx import Rx
+
+showDetails = Rx("showDetails")
 
 with Column(gap=2):
     Button("Toggle Details", variant="outline",
            on_click=ToggleState("showDetails"))
-    with If("{{ showDetails }}"):
+    with If(showDetails):
         with Alert():
             AlertTitle("Here are the details!")
 ```
@@ -288,11 +300,15 @@ from prefab_ui.components import (
     Button, Column, ForEach, Input, Muted, Row, Text,
 )
 from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.rx import Rx
 
 set_initial_state(
     crew=["Arthur Dent", "Ford Prefect", "Trillian"],
     new_member="",
 )
+
+crew = Rx("crew")
+new_member = Rx("new_member")
 
 with Column(gap=3):
     with ForEach("crew"):
@@ -305,10 +321,10 @@ with Column(gap=3):
     with Row(gap=2):
         Input(name="new_member", placeholder="Crew member name...")
         Button("Add", on_click=[
-            AppendState("crew", "{{ new_member }}"),
+            AppendState("crew", new_member),
             SetState("new_member", ""),
         ])
-    Muted("{{ crew | length }} crew members")
+    Muted(f"{crew.length()} crew members")
 ```
 ```json Protocol icon="brackets-curly"
 {

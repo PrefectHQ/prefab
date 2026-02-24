@@ -263,22 +263,25 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the selection changes. `$event` is the `value` string of the selected option:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","name":"select-6","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | 'Make a selection' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Select","placeholder":"Pick a color...","name":"select-6","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | default:'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+picked = Rx("picked")
 
 with Column(gap=4):
     with Select(
         placeholder="Pick a color...",
-        on_change=SetState("picked", "You chose: {{ $event }}"),
+        on_change=SetState("picked", f"You chose: {Rx('$event')}"),
     ):
         SelectOption(value="red", label="Red")
         SelectOption(value="green", label="Green")
         SelectOption(value="blue", label="Blue")
     Text(
-        "{{ picked | 'Make a selection' }}",
+        picked.default("Make a selection"),
         css_class="text-muted-foreground",
     )
 ```
@@ -322,7 +325,7 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "content": "{{ picked | 'Make a selection' }}",
+        "content": "{{ picked | default:'Make a selection' }}",
         "type": "Text"
       }
     ]

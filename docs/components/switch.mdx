@@ -109,11 +109,15 @@ with Column(gap=4):
 
 The `on_change` parameter runs actions when the switch is toggled. The `$event` variable is `true` when switched on, `false` when off. Here, toggling the switch updates a separate status message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"notifications","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | 'Toggle the switch' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"notifications","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Switch, Text
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+event = Rx("$event")
+status = Rx("status")
 
 with Column(gap=4):
     Switch(
@@ -121,11 +125,11 @@ with Column(gap=4):
         name="notifications",
         on_change=SetState(
             "status",
-            "{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}",
+            event.then("Notifications enabled", "Notifications disabled"),
         ),
     )
     Text(
-        "{{ status | 'Toggle the switch' }}",
+        status.default("Toggle the switch"),
         css_class="text-muted-foreground",
     )
 ```
@@ -151,7 +155,7 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "content": "{{ status | 'Toggle the switch' }}",
+        "content": "{{ status | default:'Toggle the switch' }}",
         "type": "Text"
       }
     ]
