@@ -13,6 +13,7 @@ import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
+import { resolveTheme, buildThemeCss } from "./themes";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
@@ -168,12 +169,24 @@ export function mountPreview(
   // Parse JSON — envelope uses view/state keys
   const parsed = JSON.parse(json);
   const tree: ComponentNode = parsed.view ?? parsed;
-  const reserved = new Set(["view", "state"]);
+  const reserved = new Set(["view", "state", "theme"]);
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
     if (!reserved.has(k)) userData[k] = v;
   }
   const initialState = { ...userData, ...(parsed.state ?? {}) };
+
+  // Apply theme overrides inside shadow DOM
+  if (parsed.theme) {
+    const resolved = resolveTheme(
+      parsed.theme as string | Record<string, string>,
+    );
+    if (resolved) {
+      const themeStyle = document.createElement("style");
+      themeStyle.textContent = buildThemeCss(resolved, true);
+      shadow.appendChild(themeStyle);
+    }
+  }
 
   // Mount React
   let root: Root | null = createRoot(mount);
