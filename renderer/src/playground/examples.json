@@ -1057,6 +1057,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Default\")\n        Progress(value=60)\n    with Column(gap=2):\n        Label(\"Success\")\n        Progress(value=100, variant=\"success\")\n    with Column(gap=2):\n        Label(\"Warning\")\n        Progress(value=72, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"Destructive\")\n        Progress(value=90, variant=\"destructive\")\n    with Column(gap=2):\n        Label(\"Info\")\n        Progress(value=45, variant=\"info\")\n    with Column(gap=2):\n        Label(\"Muted\")\n        Progress(value=30, variant=\"muted\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Temperature: 72°F (range 60–100)\")\n        Progress(value=72, min=60, max=100, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"3 of 5 steps\")\n        Progress(value=3, max=5, variant=\"info\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Progress(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Progress(value=45, indicator_class=\"bg-blue-500\")\n    with Column(gap=2):\n        Label(\"Tasks Complete\")\n        Progress(value=100, indicator_class=\"bg-green-500\")"
   },
   {

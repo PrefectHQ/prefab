@@ -219,14 +219,17 @@ function mapProps(
     delete mapped.range;
   }
 
-  // Progress: normalize value to 0-100 percentage if max differs,
+  // Progress: normalize value to 0-100 percentage from min/max range,
   // and map indicatorClass → indicatorClassName
   if (type === "Progress") {
+    const min = (mapped.min as number) ?? 0;
     const max = (mapped.max as number) ?? 100;
     const val = (mapped.value as number) ?? 0;
-    if (max !== 100 && max > 0) {
-      mapped.value = (val / max) * 100;
+    const range = max - min;
+    if (range > 0) {
+      mapped.value = ((val - min) / range) * 100;
     }
+    delete mapped.min;
     delete mapped.max;
     if ("indicatorClass" in mapped) {
       mapped.indicatorClassName = mapped.indicatorClass;

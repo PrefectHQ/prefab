@@ -10,7 +10,7 @@ Progress bars show how far along a process is. They fill from left to right as `
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Progress","value":60.0,"max":100}}}>
+<ComponentPreview json={{"view":{"type":"Progress","value":60.0,"min":0,"max":100,"variant":"default"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Progress
@@ -18,7 +18,9 @@ from prefab_ui.components import Progress
 Progress(value=60)
 ```
 ```json Protocol icon="brackets-curly"
-{"view": {"type": "Progress", "value": 60.0, "max": 100}}
+{
+  "view": {"type": "Progress", "value": 60.0, "min": 0, "max": 100, "variant": "default"}
+}
 ```
 </CodeGroup>
 </ComponentPreview>
@@ -27,7 +29,7 @@ Progress(value=60)
 
 By default `max` is 100, but you can set it to any positive number. The renderer normalizes the value to a percentage automatically.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"max":100}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"min":0,"max":5.0,"variant":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"min":0,"max":100,"variant":"default"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -51,7 +53,7 @@ with Column(gap=4):
         "type": "Column",
         "children": [
           {"type": "Label", "text": "3 of 5 steps"},
-          {"type": "Progress", "value": 3.0, "max": 5.0}
+          {"type": "Progress", "value": 3.0, "min": 0, "max": 5.0, "variant": "default"}
         ]
       },
       {
@@ -59,7 +61,155 @@ with Column(gap=4):
         "type": "Column",
         "children": [
           {"type": "Label", "text": "75%"},
-          {"type": "Progress", "value": 75.0, "max": 100}
+          {"type": "Progress", "value": 75.0, "min": 0, "max": 100, "variant": "default"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Variants
+
+Semantic variants color the progress bar to communicate meaning at a glance:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"type":"Progress","value":60.0,"min":0,"max":100,"variant":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"type":"Progress","value":100.0,"min":0,"max":100,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"type":"Progress","value":72.0,"min":0,"max":100,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"type":"Progress","value":90.0,"min":0,"max":100,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"type":"Progress","value":45.0,"min":0,"max":100,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"type":"Progress","value":30.0,"min":0,"max":100,"variant":"muted"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Progress
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Default")
+        Progress(value=60)
+    with Column(gap=2):
+        Label("Success")
+        Progress(value=100, variant="success")
+    with Column(gap=2):
+        Label("Warning")
+        Progress(value=72, variant="warning")
+    with Column(gap=2):
+        Label("Destructive")
+        Progress(value=90, variant="destructive")
+    with Column(gap=2):
+        Label("Info")
+        Progress(value=45, variant="info")
+    with Column(gap=2):
+        Label("Muted")
+        Progress(value=30, variant="muted")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Default"},
+          {"type": "Progress", "value": 60.0, "min": 0, "max": 100, "variant": "default"}
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Success"},
+          {"type": "Progress", "value": 100.0, "min": 0, "max": 100, "variant": "success"}
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Warning"},
+          {"type": "Progress", "value": 72.0, "min": 0, "max": 100, "variant": "warning"}
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Destructive"},
+          {
+            "type": "Progress",
+            "value": 90.0,
+            "min": 0,
+            "max": 100,
+            "variant": "destructive"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Info"},
+          {"type": "Progress", "value": 45.0, "min": 0, "max": 100, "variant": "info"}
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Muted"},
+          {"type": "Progress", "value": 30.0, "min": 0, "max": 100, "variant": "muted"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Min and Max
+
+Set `min` and `max` to define a custom range. The renderer normalizes the value to a percentage automatically.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature: 72\u00b0F (range 60\u2013100)"},{"type":"Progress","value":72.0,"min":60.0,"max":100.0,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"min":0,"max":5.0,"variant":"info"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Progress
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Temperature: 72°F (range 60–100)")
+        Progress(value=72, min=60, max=100, variant="warning")
+    with Column(gap=2):
+        Label("3 of 5 steps")
+        Progress(value=3, max=5, variant="info")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Temperature: 72\u00b0F (range 60\u2013100)"},
+          {
+            "type": "Progress",
+            "value": 72.0,
+            "min": 60.0,
+            "max": 100.0,
+            "variant": "warning"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "3 of 5 steps"},
+          {"type": "Progress", "value": 3.0, "min": 0, "max": 5.0, "variant": "info"}
         ]
       }
     ]
@@ -71,9 +221,9 @@ with Column(gap=4):
 
 ## Custom Colors
 
-Use `indicator_class` to change the progress bar color:
+Use `indicator_class` for arbitrary colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"max":100,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"max":100,"indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"max":100,"indicatorClass":"bg-green-500"}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Progress","value":85.0,"min":0,"max":100,"variant":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Progress","value":45.0,"min":0,"max":100,"variant":"default","indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"type":"Progress","value":100.0,"min":0,"max":100,"variant":"default","indicatorClass":"bg-green-500"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -100,7 +250,14 @@ with Column(gap=4):
         "type": "Column",
         "children": [
           {"type": "Label", "text": "Storage Used"},
-          {"type": "Progress", "value": 85.0, "max": 100, "indicatorClass": "bg-red-500"}
+          {
+            "type": "Progress",
+            "value": 85.0,
+            "min": 0,
+            "max": 100,
+            "variant": "default",
+            "indicatorClass": "bg-red-500"
+          }
         ]
       },
       {
@@ -108,7 +265,14 @@ with Column(gap=4):
         "type": "Column",
         "children": [
           {"type": "Label", "text": "Upload Progress"},
-          {"type": "Progress", "value": 45.0, "max": 100, "indicatorClass": "bg-blue-500"}
+          {
+            "type": "Progress",
+            "value": 45.0,
+            "min": 0,
+            "max": 100,
+            "variant": "default",
+            "indicatorClass": "bg-blue-500"
+          }
         ]
       },
       {
@@ -119,7 +283,9 @@ with Column(gap=4):
           {
             "type": "Progress",
             "value": 100.0,
+            "min": 0,
             "max": 100,
+            "variant": "default",
             "indicatorClass": "bg-green-500"
           }
         ]
@@ -135,7 +301,7 @@ with Column(gap=4):
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ progress | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ progress }}","max":1.0},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"state":{"progress":0.65}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ progress | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ progress }}","min":0,"max":1.0,"variant":"default"},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"state":{"progress":0.65}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -170,7 +336,13 @@ with Column(gap=3):
           {"content": "{{ progress | percent }}", "bold": true, "type": "Text"}
         ]
       },
-      {"type": "Progress", "value": "{{ progress }}", "max": 1.0},
+      {
+        "type": "Progress",
+        "value": "{{ progress }}",
+        "min": 0,
+        "max": 1.0,
+        "variant": "default"
+      },
       {
         "type": "Slider",
         "min": 0.0,
@@ -191,20 +363,28 @@ with Column(gap=3):
 ## API Reference
 
 <Card icon="code" title="Progress Parameters">
-<ParamField body="value" type="float" default="0">
-  Current progress value.
+<ParamField body="value" type="float | str" default="0">
+  Current progress value. Can be a template expression for dynamic binding.
+</ParamField>
+
+<ParamField body="min" type="float" default="0">
+  Minimum value. The renderer normalizes `(value - min) / (max - min)` to a 0–100 percentage.
 </ParamField>
 
 <ParamField body="max" type="float" default="100">
-  Maximum value. The renderer normalizes `value / max` to a 0–100 percentage.
+  Maximum value.
+</ParamField>
+
+<ParamField body="variant" type="str" default="default">
+  Visual variant: `"default"`, `"success"`, `"warning"`, `"destructive"`, `"info"`, `"muted"`.
 </ParamField>
 
 <ParamField body="indicator_class" type="str | None" default="None">
-  Tailwind classes for the indicator bar (e.g. `"bg-green-500"`). Overrides the default primary color.
+  Tailwind classes for the indicator fill bar. Overrides variant coloring.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
+  Tailwind classes for the track (outer container).
 </ParamField>
 </Card>
 
@@ -214,7 +394,9 @@ with Column(gap=3):
 {
   "type": "Progress",
   "value?": "number | string",
+  "min?": 0,
   "max?": 100,
+  "variant?": "default | success | warning | destructive | info | muted",
   "indicatorClass?": "string",
   "cssClass?": "string"
 }
