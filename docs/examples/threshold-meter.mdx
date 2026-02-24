@@ -1,0 +1,91 @@
+---
+title: Threshold Meter
+description: A progress bar whose color changes reactively based on value thresholds.
+icon: gauge-high
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A slider drives a progress bar. The bar color changes at each threshold — all evaluated client-side through a `{{ }}` expression in `indicator_class`.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ val }}%","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ val }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"},{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"name":"val","disabled":false}]}]},"state":{"val":50}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text
+
+set_initial_state(val=50)
+
+with Column(gap=6, css_class="max-w-sm mx-auto"):
+    H3("Health Monitor")
+    Muted("Drag the slider — the bar color changes at each threshold.")
+
+    with Column(gap=4):
+        with Row(css_class="justify-between items-center"):
+            Text("CPU Usage")
+            Text("{{ val }}%", bold=True)
+        Progress(
+            value="{{ val }}",
+            indicator_class=(
+                "{{ val < 20 ? 'bg-red-500'"
+                " : val < 60 ? 'bg-primary'"
+                " : val < 75 ? 'bg-amber-500'"
+                " : 'bg-green-500' }}"
+            ),
+        )
+        Slider(name="val", min=0, max=100, step=1, value=50)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 max-w-sm mx-auto",
+    "type": "Column",
+    "children": [
+      {"content": "Health Monitor", "type": "H3"},
+      {
+        "content": "Drag the slider \u2014 the bar color changes at each threshold.",
+        "type": "Muted"
+      },
+      {
+        "cssClass": "gap-4",
+        "type": "Column",
+        "children": [
+          {
+            "cssClass": "justify-between items-center",
+            "type": "Row",
+            "children": [
+              {"content": "CPU Usage", "type": "Text"},
+              {"content": "{{ val }}%", "bold": true, "type": "Text"}
+            ]
+          },
+          {
+            "type": "Progress",
+            "value": "{{ val }}",
+            "min": 0,
+            "max": 100,
+            "variant": "default",
+            "indicatorClass": "{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"
+          },
+          {
+            "type": "Slider",
+            "min": 0.0,
+            "max": 100.0,
+            "value": 50.0,
+            "step": 1.0,
+            "name": "val",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"val": 50}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The expression `{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : ... }}` evaluates on every state change. Template expressions work in any string prop — `indicator_class`, `css_class`, `variant` (at the protocol level), or content fields. The renderer re-evaluates them on each render pass, so the color transitions are instant.
+
+This pattern generalizes: any prop that accepts a string can contain a `{{ }}` expression that reacts to state changes.
