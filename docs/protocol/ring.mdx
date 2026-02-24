@@ -1,0 +1,103 @@
+---
+title: Ring
+description: JSON Schema for the Ring component.
+---
+
+A circular progress indicator with an optional centered label.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Ring",
+      "default": "Ring",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": 0,
+      "description": "Current value (number or template expression)"
+    },
+    "min": {
+      "default": 0,
+      "description": "Minimum value",
+      "type": "number"
+    },
+    "max": {
+      "default": 100,
+      "description": "Maximum value",
+      "type": "number"
+    },
+    "label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Text displayed in the center of the ring"
+    },
+    "variant": {
+      "default": "default",
+      "description": "Visual variant: default, success, warning, destructive, info, muted",
+      "enum": [
+        "default",
+        "success",
+        "warning",
+        "destructive",
+        "info",
+        "muted"
+      ],
+      "type": "string"
+    },
+    "size": {
+      "default": "default",
+      "description": "Ring size: sm (64px), default (96px), lg (128px)",
+      "enum": [
+        "sm",
+        "default",
+        "lg"
+      ],
+      "type": "string"
+    },
+    "thickness": {
+      "default": 6,
+      "description": "Stroke width of the ring in pixels",
+      "type": "number"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

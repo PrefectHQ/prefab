@@ -237,6 +237,19 @@ function mapProps(
     }
   }
 
+  // Ring: normalize value to 0-100 percentage from min/max range
+  if (type === "Ring") {
+    const min = (mapped.min as number) ?? 0;
+    const max = (mapped.max as number) ?? 100;
+    const val = (mapped.value as number) ?? 0;
+    const range = max - min;
+    if (range > 0) {
+      mapped.value = ((val - min) / range) * 100;
+    }
+    delete mapped.min;
+    delete mapped.max;
+  }
+
   // Select/RadioGroup: onChange → onValueChange
   if ((type === "Select" || type === "RadioGroup") && "onChange" in mapped) {
     mapped.onValueChange = mapped.onChange;
