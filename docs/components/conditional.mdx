@@ -12,17 +12,20 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 The simplest case: show something only when a condition is true. Toggle the switch to see the alert appear and disappear.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"content":"Out of stock","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"outOfStock","disabled":false,"required":false},{"content":"Out of stock","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ outOfStock }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"This item is unavailable"}]}]}]}]},"state":{"outOfStock":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Alert, AlertTitle, Column, Row, Switch, Text
 from prefab_ui.components.control_flow import If
+from prefab_ui.rx import Rx
+
+outOfStock = Rx("outOfStock")
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
         Switch(name="outOfStock")
         Text("Out of stock")
-    with If("{{ outOfStock }}"):
+    with If(outOfStock):
         with Alert(variant="destructive"):
             AlertTitle("This item is unavailable")
 ```
@@ -63,7 +66,8 @@ with Column(gap=3):
         ]
       }
     ]
-  }
+  },
+  "state": {"outOfStock": false}
 }
 ```
 </CodeGroup>
@@ -91,13 +95,16 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.components.control_flow import Else, If
+from prefab_ui.rx import Rx
+
 set_initial_state(showDetails=True)
+showDetails = Rx("showDetails")
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
         Switch(name="showDetails")
         Text("Show details")
-    with If("{{ showDetails }}"):
+    with If(showDetails):
         with Card():
             with CardHeader():
                 CardTitle("Project Details")
@@ -176,7 +183,10 @@ from prefab_ui.components import (
     SelectOption,
 )
 from prefab_ui.components.control_flow import Elif, Else, If
+from prefab_ui.rx import Rx
+
 set_initial_state(status="active")
+status = Rx("status")
 
 with Column(gap=3):
     with Select(name="status", placeholder="Choose a status..."):
@@ -184,14 +194,14 @@ with Column(gap=3):
         SelectOption("Warning", value="warning")
         SelectOption("Error", value="error")
         SelectOption("Something else", value="other")
-    with If("{{ status == 'error' }}"):
+    with If(status == "error"):
         Badge("Error — system down", variant="destructive")
-    with Elif("{{ status == 'warning' }}"):
+    with Elif(status == "warning"):
         Badge("Warning — degraded", variant="warning")
-    with Elif("{{ status == 'active' }}"):
+    with Elif(status == "active"):
         Badge("Active — all systems go", variant="success")
     with Else():
-        Badge("Unknown status: {{ status }}", variant="secondary")
+        Badge(f"Unknown status: {status}", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -275,19 +285,25 @@ with Column(gap=3):
 
 Select "Error" or "Something else" to see different branches render. The `Else` catches anything that doesn't match the explicit conditions.
 
-## Conditions Are Template Expressions
+## Conditions Are Expressions
 
-The first argument to `If` and `Elif` is a `{{ }}` [template expression](/expressions/templates), consistent with every other expression in the system:
+The first argument to `If` and `Elif` is a [reactive expression](/expressions/overview). With `Rx`, you can use Python operators directly:
 
 ```python
-with If("{{ status == 'active' }}"):
+from prefab_ui.rx import Rx
+
+status = Rx("status")
+count = Rx("count")
+items = Rx("items")
+
+with If(status == "active"):
     ...
 
-with If("{{ count > 0 && items | length }}"):
+with If((count > 0) & items.length()):
     ...
 ```
 
-Any [expression](/expressions/overview) the language supports — comparisons, boolean logic, pipes — works inside the `{{ }}`.
+Any expression the language supports — comparisons, boolean logic, [pipes](/expressions/pipes) — works as a condition.
 
 ## Chain Rules
 
@@ -299,11 +315,17 @@ Consecutive `If/Elif/Else` siblings in the same parent form a single conditional
 - Any non-conditional sibling breaks the chain — including another `If`, which starts a new independent chain
 
 ```python
+from prefab_ui.rx import Rx
+
+status = Rx("status")
+showDetails = Rx("showDetails")
+showFooter = Rx("showFooter")
+
 with Column():
     # Chain 1: If / Elif / Else → one Condition node
-    with If("{{ status == 'error' }}"):
+    with If(status == "error"):
         Badge("Error", variant="destructive")
-    with Elif("{{ status == 'warning' }}"):
+    with Elif(status == "warning"):
         Badge("Warning", variant="secondary")
     with Else():
         Badge("OK")
@@ -311,11 +333,11 @@ with Column():
     Text("---")  # breaks the chain
 
     # Chain 2: standalone If → separate Condition node
-    with If("{{ showDetails }}"):
+    with If(showDetails):
         Text("Details here...")
 
     # Chain 3: another If starts a new chain (not an Elif!)
-    with If("{{ showFooter }}"):
+    with If(showFooter):
         Text("Footer content")
 ```
 

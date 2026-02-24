@@ -154,16 +154,13 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}%","type":"Text"},{"type":"Progress","value":"{{ volume }}","min":0,"max":100,"variant":"default"}]},"state":{"volume":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"slider_19","disabled":false},{"content":"Volume: {{ slider_19 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_19":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Progress, Slider, Text
 
-set_initial_state(volume=50)
-
 with Column(gap=3):
-    slider = Slider(name="volume", min=0, max=100)
+    slider = Slider(value=50, min=0, max=100)
     Text(f"Volume: {slider.rx}%")
     Progress(value=slider.rx)
 ```
@@ -177,26 +174,37 @@ with Column(gap=3):
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "name": "volume",
+        "value": 50.0,
+        "name": "slider_19",
         "disabled": false
       },
-      {"content": "Volume: {{ volume }}%", "type": "Text"},
+      {"content": "Volume: {{ slider_19 }}%", "type": "Text"},
       {
         "type": "Progress",
-        "value": "{{ volume }}",
+        "value": "{{ slider_19 }}",
         "min": 0,
         "max": 100,
         "variant": "default"
       }
     ]
   },
-  "state": {"volume": 50}
+  "state": {"slider_19": 50.0}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
 Drag the slider — the text and progress bar update together. The Python code reads naturally: create a slider, show its value as a percentage, feed it to a progress bar. Under the hood, `slider.rx` compiles to `{{ volume }}`, and the reactive model you learned in the counter example handles the rest.
+
+When you need to reference `.rx` *before* the component appears in the tree — say, a label above the slider — use `defer=True` to create the component without placing it, then call `insert()` later:
+
+```python
+slider = Slider(value=50, defer=True)
+
+with Column():
+    Text(f"Volume: {slider.rx}%")  # reference .rx first
+    insert(slider)                 # place the slider below
+```
 
 Use `.rx` when you have a component variable in scope. Use `Rx("key")` when you're working with keys from `set_initial_state()`, with [ForEach](/components/foreach) iteration variables, or when the component that created the state is defined far away from where you need its value.
 

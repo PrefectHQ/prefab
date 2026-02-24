@@ -36,7 +36,7 @@ The renderer proxies the call through the Prefab SDK, so the tool executes serve
 
 ## Passing Arguments
 
-Use `{{ key }}` interpolation in the `arguments` dict to pass client state to the tool. Form controls with a `name` automatically sync to state — `Input(name="city")` updates `city` on every keystroke, no `SetState` needed.
+Use `.rx` or `Rx("key")` to pass client state to the tool. Form controls with a `name` automatically sync to state — `Input(name="city")` updates `city` on every keystroke, no `SetState` needed.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
 <CodeGroup>
@@ -45,12 +45,12 @@ from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions.mcp import CallTool
 
 with Column(gap=3):
-    Input(name="city", placeholder="Enter a city...")
+    city = Input(name="city", placeholder="Enter a city...")
     Button(
         "Get Weather",
         on_click=CallTool(
             "get_weather",
-            arguments={"location": "{{ city }}"},
+            arguments={"location": city.rx},
         ),
     )
 ```
@@ -97,10 +97,13 @@ Pass a list to execute multiple actions from a single interaction. A common patt
 from prefab_ui.components import Button
 from prefab_ui.actions import SetState
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+dataset = Rx("dataset")
 
 Button("Analyze", on_click=[
     SetState("status", "analyzing..."),
-    CallTool("run_analysis", arguments={"data": "{{ dataset }}"}),
+    CallTool("run_analysis", arguments={"data": dataset}),
 ])
 ```
 

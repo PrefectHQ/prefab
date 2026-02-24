@@ -37,7 +37,6 @@ from prefab_ui.components.charts import (
     RadialChart,
     ScatterChart,
 )
-from prefab_ui.components.control_flow import ForEach
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
@@ -166,7 +165,6 @@ def _all_concrete_components() -> list[type[Component]]:
             RadarChart,
             RadialChart,
             ScatterChart,
-            ForEach,
         ]
     )
     return result

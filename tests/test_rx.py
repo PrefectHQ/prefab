@@ -417,17 +417,17 @@ class TestValueFormatting:
 
 class TestGenerateKey:
     def test_sequential(self) -> None:
-        assert _generate_key("slider") == "slider-1"
-        assert _generate_key("slider") == "slider-2"
-        assert _generate_key("slider") == "slider-3"
+        assert _generate_key("slider") == "slider_1"
+        assert _generate_key("slider") == "slider_2"
+        assert _generate_key("slider") == "slider_3"
 
     def test_separate_prefixes(self) -> None:
-        assert _generate_key("slider") == "slider-1"
-        assert _generate_key("input") == "input-1"
-        assert _generate_key("slider") == "slider-2"
-        assert _generate_key("input") == "input-2"
+        assert _generate_key("slider") == "slider_1"
+        assert _generate_key("input") == "input_1"
+        assert _generate_key("slider") == "slider_2"
+        assert _generate_key("input") == "input_2"
 
     def test_reset(self) -> None:
-        assert _generate_key("slider") == "slider-1"
+        assert _generate_key("slider") == "slider_1"
         reset_counter()
-        assert _generate_key("slider") == "slider-1"
+        assert _generate_key("slider") == "slider_1"

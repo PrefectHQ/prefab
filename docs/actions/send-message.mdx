@@ -112,8 +112,8 @@ from prefab_ui.components import Input, Button, Column
 from prefab_ui.actions.mcp import SendMessage
 
 with Column(gap=3):
-    Input(name="question", placeholder="Ask a follow-up question...")
-    Button("Ask", on_click=SendMessage("{{ question }}"))
+    question = Input(name="question", placeholder="Ask a follow-up question...")
+    Button("Ask", on_click=SendMessage(question.rx))
 ```
 ```json Protocol icon="brackets-curly"
 {

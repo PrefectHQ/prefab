@@ -147,10 +147,11 @@ Pass a list to compose multiple actions from a single interaction:
 from prefab_ui.components import Button
 from prefab_ui.actions import SetState
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
 
 Button("Save", on_click=[
     SetState("saving", True),
-    CallTool("save_data", arguments={"item": "{{ item }}"}),
+    CallTool("save_data", arguments={"item": Rx("item")}),
     SetState("saving", False),
 ])
 ```
@@ -179,7 +180,7 @@ Actions execute in order. This pattern lets you show a loading indicator before 
 
 FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"you@example.com","name":"input-15","disabled":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"you@example.com","name":"input_15","disabled":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Card, CardContent, Column, Input
@@ -206,7 +207,7 @@ with Card() as view:
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "you@example.com",
-                "name": "input-15",
+                "name": "input_15",
                 "disabled": false,
                 "required": false
               },

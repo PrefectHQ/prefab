@@ -91,26 +91,34 @@ Button(
 )
 ```
 
-Pass query parameters with `params` — values support `{{ key }}` interpolation:
+Pass query parameters with `params` — values support expression interpolation:
 
 ```python
-Fetch.get("/api/search", params={"q": "{{ search_input }}", "page": "1"})
+from prefab_ui.rx import Rx
+
+search_input = Rx("search_input")
+
+Fetch.get("/api/search", params={"q": search_input, "page": "1"})
 ```
 
 ### Submitting Data
 
 `Fetch.post` sends a JSON body to your API. Wrap inputs in a `Form` so that pressing Enter triggers submission.
 
-Reference named inputs by assigning the component to a variable and using `.rx`, or with `{{ key }}` directly — make sure each key is initialized in your `PrefabApp(state=...)`, otherwise unset values render as literal template strings.
+Reference named inputs by assigning the component to a variable and using `.rx`, or create an `Rx` reference directly — make sure each key is initialized in your `PrefabApp(state=...)`, otherwise unset values render as literal template strings.
 
 ```python
 from prefab_ui.actions import Fetch, ShowToast
 from prefab_ui.components import Button, Column, Form, Input
+from prefab_ui.rx import Rx
+
+item_name = Rx("item_name")
+item_category = Rx("item_category")
 
 with Form(
     on_submit=Fetch.post(
         "/api/items",
-        body={"name": "{{ item_name }}", "category": "{{ item_category }}"},
+        body={"name": item_name, "category": item_category},
         on_success=ShowToast("Item created!", variant="success"),
         on_error=ShowToast("{{ $error }}", variant="error"),
     ),
@@ -128,13 +136,16 @@ For forms that shouldn't clutter the main layout, put them inside a `Dialog`. Us
 ```python {10-14}
 from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast
 from prefab_ui.components import Button, Column, Dialog, Form, Input
+from prefab_ui.rx import Rx
+
+new_name = Rx("new_name")
 
 with Dialog(title="New Item", description="Add an item to the catalog."):
     Button("+ Add", size="sm")
     with Form(
         on_submit=Fetch.post(
             "/api/items",
-            body={"name": "{{ new_name }}"},
+            body={"name": new_name},
             on_success=[
                 ShowToast("Created!", variant="success"),
                 SetState("new_name", ""),
@@ -215,9 +226,13 @@ The `Slot` shows its fallback children until a Fetch writes a component tree int
 Non-2xx responses trigger `on_error`. The `$error` variable contains the status line (e.g., "400 Bad Request"), which you can surface with a toast or write to state for inline display:
 
 ```python
+from prefab_ui.rx import Rx
+
+form_data = Rx("form_data")
+
 Fetch.post(
     "/api/save",
-    body={"data": "{{ form_data }}"},
+    body={"data": form_data},
     on_error=ShowToast("{{ $error }}", variant="error"),
 )
 ```
@@ -239,13 +254,17 @@ def create_item(item: dict):
 Action chains execute sequentially and short-circuit on failure. Wrap a `Fetch` with `SetState` calls to show and hide a loading indicator:
 
 ```python {4,10}
+from prefab_ui.rx import Rx
+
+item = Rx("item")
+
 Button(
     "Save",
     on_click=[
         SetState("saving", True),
         Fetch.post(
             "/api/save",
-            body={"item": "{{ item }}"},
+            body={"item": item},
             on_error=ShowToast("{{ $error }}", variant="error"),
         ),
         SetState("saving", False),
@@ -260,9 +279,13 @@ If the request fails, the chain stops — `SetState("saving", False)` never runs
 After a successful POST or DELETE, you often want to reload the data list. Chain a `Fetch.get` inside `on_success`:
 
 ```python
+from prefab_ui.rx import Rx
+
+new_name = Rx("new_name")
+
 Fetch.post(
     "/api/items",
-    body={"name": "{{ new_name }}"},
+    body={"name": new_name},
     on_success=[
         ShowToast("Created!", variant="success"),
         Fetch.get("/api/items", result_key="items"),

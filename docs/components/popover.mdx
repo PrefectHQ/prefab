@@ -10,7 +10,7 @@ Popovers display rich content in a floating panel when users click a trigger ele
 
 ## Basic Usage
 
-<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language"},{"type":"Input","inputType":"text","placeholder":"Vogon","name":"input-10","disabled":false,"required":false},{"type":"Label","text":"Target Language"},{"type":"Input","inputType":"text","placeholder":"Galactic Standard","name":"input-11","disabled":false,"required":false}]}]}}}>
+<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language"},{"type":"Input","inputType":"text","placeholder":"Vogon","name":"input_10","disabled":false,"required":false},{"type":"Label","text":"Target Language"},{"type":"Input","inputType":"text","placeholder":"Galactic Standard","name":"input_11","disabled":false,"required":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -52,7 +52,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
             "type": "Input",
             "inputType": "text",
             "placeholder": "Vogon",
-            "name": "input-10",
+            "name": "input_10",
             "disabled": false,
             "required": false
           },
@@ -61,7 +61,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
             "type": "Input",
             "inputType": "text",
             "placeholder": "Galactic Standard",
-            "name": "input-11",
+            "name": "input_11",
             "disabled": false,
             "required": false
           }
@@ -78,7 +78,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
 
 Skip the `title` and `description` to render content directly in the panel.
 
-<ComponentPreview height="260px" json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Improbability Factor"},{"type":"Slider","min":0.0,"max":100.0,"value":42.0,"name":"improbability","disabled":false}]}]}}}>
+<ComponentPreview height="260px" json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Improbability Factor"},{"type":"Slider","min":0.0,"max":100.0,"value":42.0,"name":"improbability","disabled":false}]}]},"state":{"improbability":42.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -123,7 +123,8 @@ with Popover():
         ]
       }
     ]
-  }
+  },
+  "state": {"improbability": 42.0}
 }
 ```
 </CodeGroup>
@@ -153,6 +154,9 @@ For lighter-weight confirmations that don't need a full modal overlay, a Popover
 from prefab_ui.components import Button, Column, Popover, Text
 from prefab_ui.actions import CloseOverlay
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+item_id = Rx("item_id")
 
 with Popover():
     Button("Archive", variant="outline")
@@ -161,7 +165,7 @@ with Popover():
         Button(
             "Confirm",
             on_click=[
-                CallTool("archive_item", arguments={"id": "{{ item_id }}"}),
+                CallTool("archive_item", arguments={"id": item_id}),
                 CloseOverlay(),
             ],
         )

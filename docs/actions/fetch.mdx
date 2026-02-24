@@ -51,25 +51,38 @@ The response is parsed automatically — JSON becomes an object, everything else
 Each HTTP method has a dedicated classmethod with a tailored signature. `GET` accepts query `params`, while `POST`/`PUT`/`PATCH` accept a `body`.
 
 ```python GET with query params
-Fetch.get("/api/search", params={"q": "{{ query }}", "page": "1"})
+from prefab_ui.rx import Rx
+
+query = Rx("query")
+Fetch.get("/api/search", params={"q": query, "page": "1"})
 ```
 
 ```python POST with JSON body
-Fetch.post("/api/users", body={"name": "{{ name }}", "email": "{{ email }}"})
+from prefab_ui.rx import Rx
+
+name, email = Rx("name"), Rx("email")
+Fetch.post("/api/users", body={"name": name, "email": email})
 ```
 
 ```python DELETE
-Fetch.delete("/api/users/{{ user_id }}")
+from prefab_ui.rx import Rx
+
+user_id = Rx("user_id")
+Fetch.delete(f"/api/users/{user_id}")
 ```
 
 You can also construct a `Fetch` directly for full control:
 
 ```python Full form
+from prefab_ui.rx import Rx
+
+form_data = Rx("form_data")
+
 Fetch(
     "/api/submit",
     method="POST",
     headers={"X-Custom": "value"},
-    body={"data": "{{ form_data }}"},
+    body={"data": form_data},
     result_key="response",
 )
 ```
@@ -80,10 +93,13 @@ Non-2xx responses trigger `on_error` with the status line as `$error`. This foll
 
 ```python Error handling
 from prefab_ui.actions import Fetch, ShowToast
+from prefab_ui.rx import Rx
+
+item = Rx("item")
 
 Fetch.post(
     "/api/save",
-    body={"item": "{{ item }}"},
+    body={"item": item},
     on_success=ShowToast("Saved!", variant="success"),
     on_error=ShowToast("{{ $error }}", variant="error"),
 )
@@ -102,6 +118,9 @@ Like any action, `Fetch` composes in a list. A common pattern: show a loading st
 ```python Combined actions
 from prefab_ui.components import Button
 from prefab_ui.actions import Fetch, SetState
+from prefab_ui.rx import Rx
+
+query = Rx("query")
 
 Button(
     "Submit",
@@ -109,7 +128,7 @@ Button(
         SetState("loading", True),
         Fetch.post(
             "/api/submit",
-            body={"q": "{{ query }}"},
+            body={"q": query},
             result_key="result",
         ),
         SetState("loading", False),

@@ -48,11 +48,15 @@ You can return either a `PrefabApp` or a bare component. Returning a component i
 
 <CodeGroup>
 ```python PrefabApp
+from prefab_ui.rx import Rx
+
+name = Rx("name")
+
 @mcp.tool(app=True)
 def dashboard() -> PrefabApp:
     with Column(gap=4) as view:
         Heading("Dashboard")
-        Text("Welcome, {{ name }}")
+        Text(f"Welcome, {name}")
     return PrefabApp(
         title="Dashboard",
         view=view,
@@ -132,9 +136,13 @@ The `Slot` shows its fallback children until a `CallTool` populates the state ke
 If a tool raises an exception, the MCP protocol surfaces it as an error. Use `on_error` to display it:
 
 ```python
+from prefab_ui.rx import Rx
+
+new_title = Rx("new_title")
+
 CallTool(
     "add_entry",
-    arguments={"title": "{{ new_title }}"},
+    arguments={"title": new_title},
     on_error=ShowToast("{{ $error }}", variant="error"),
 )
 ```

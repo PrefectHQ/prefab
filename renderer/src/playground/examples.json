@@ -7,12 +7,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": \"{{ city }}\"},\n        ),\n    )"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    city = Input(name=\"city\", placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": city.rx},\n        ),\n    )"
   },
   {
     "title": "Combined Actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"run_analysis\", arguments={\"data\": \"{{ dataset }}\"}),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\ndataset = Rx(\"dataset\")\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"run_analysis\", arguments={\"data\": dataset}),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -22,32 +22,32 @@
   {
     "title": "GET with query params",
     "category": "Actions",
-    "code": "Fetch.get(\"/api/search\", params={\"q\": \"{{ query }}\", \"page\": \"1\"})"
+    "code": "from prefab_ui.rx import Rx\n\nquery = Rx(\"query\")\nFetch.get(\"/api/search\", params={\"q\": query, \"page\": \"1\"})"
   },
   {
     "title": "POST with JSON body",
     "category": "Actions",
-    "code": "Fetch.post(\"/api/users\", body={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\"})"
+    "code": "from prefab_ui.rx import Rx\n\nname, email = Rx(\"name\"), Rx(\"email\")\nFetch.post(\"/api/users\", body={\"name\": name, \"email\": email})"
   },
   {
     "title": "DELETE",
     "category": "Actions",
-    "code": "Fetch.delete(\"/api/users/{{ user_id }}\")"
+    "code": "from prefab_ui.rx import Rx\n\nuser_id = Rx(\"user_id\")\nFetch.delete(f\"/api/users/{user_id}\")"
   },
   {
     "title": "Full form",
     "category": "Actions",
-    "code": "Fetch(\n    \"/api/submit\",\n    method=\"POST\",\n    headers={\"X-Custom\": \"value\"},\n    body={\"data\": \"{{ form_data }}\"},\n    result_key=\"response\",\n)"
+    "code": "from prefab_ui.rx import Rx\n\nform_data = Rx(\"form_data\")\n\nFetch(\n    \"/api/submit\",\n    method=\"POST\",\n    headers={\"X-Custom\": \"value\"},\n    body={\"data\": form_data},\n    result_key=\"response\",\n)"
   },
   {
     "title": "Error handling",
     "category": "Actions",
-    "code": "from prefab_ui.actions import Fetch, ShowToast\n\nFetch.post(\n    \"/api/save\",\n    body={\"item\": \"{{ item }}\"},\n    on_success=ShowToast(\"Saved!\", variant=\"success\"),\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+    "code": "from prefab_ui.actions import Fetch, ShowToast\nfrom prefab_ui.rx import Rx\n\nitem = Rx(\"item\")\n\nFetch.post(\n    \"/api/save\",\n    body={\"item\": item},\n    on_success=ShowToast(\"Saved!\", variant=\"success\"),\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
   },
   {
     "title": "Combined actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\n\nButton(\n    \"Submit\",\n    on_click=[\n        SetState(\"loading\", True),\n        Fetch.post(\n            \"/api/submit\",\n            body={\"q\": \"{{ query }}\"},\n            result_key=\"result\",\n        ),\n        SetState(\"loading\", False),\n    ],\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.rx import Rx\n\nquery = Rx(\"query\")\n\nButton(\n    \"Submit\",\n    on_click=[\n        SetState(\"loading\", True),\n        Fetch.post(\n            \"/api/submit\",\n            body={\"q\": query},\n            result_key=\"result\",\n        ),\n        SetState(\"loading\", False),\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -87,7 +87,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\n        \"Open on GitHub\",\n        on_click=OpenLink(\"https://github.com/{{ repo }}\"),\n    )"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    repo = Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\n        \"Open on GitHub\",\n        on_click=OpenLink(f\"https://github.com/{repo.rx}\"),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -102,7 +102,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import SendMessage\n\nwith Column(gap=3):\n    Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(\"{{ question }}\"))"
+    "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions.mcp import SendMessage\n\nwith Column(gap=3):\n    question = Input(name=\"question\", placeholder=\"Ask a follow-up question...\")\n    Button(\"Ask\", on_click=SendMessage(question.rx))"
   },
   {
     "title": "Python icon=\"python\"",
@@ -145,9 +145,9 @@
     "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions import ShowToast\n\nwith Row(gap=2):\n    Button(\"Success callback\", variant=\"success\",\n           on_click=ShowToast(\"Saved successfully!\", variant=\"success\"))\n    Button(\"Error callback\", variant=\"destructive\",\n           on_click=ShowToast(\"Could not save: connection timed out\", variant=\"error\"))"
   },
   {
-    "title": "Button(",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Actions",
-    "code": "\"Save\",\n    on_click=CallTool(\n        \"save_item\",\n        arguments={\"data\": \"{{ item }}\"},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "item = Rx(\"item\")\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_item\",\n        arguments={\"data\": item},\n        on_success=ShowToast(\"Saved successfully!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -157,12 +157,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions.mcp import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\"):\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": \"{{ thinking }}\"}},\n        ),\n    )"
+    "code": "from prefab_ui.components import Button, Select, SelectOption, Column\nfrom prefab_ui.actions.mcp import UpdateContext\n\nwith Column(gap=3):\n    with Select(name=\"thinking\", placeholder=\"Thinking level...\") as thinking:\n        SelectOption(value=\"low\", label=\"Low\")\n        SelectOption(value=\"medium\", label=\"Medium\")\n        SelectOption(value=\"high\", label=\"High\")\n    Button(\n        \"Set Preference\",\n        on_click=UpdateContext(\n            structured_content={\"preference\": {\"thinking\": thinking.rx}},\n        ),\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Slider, Muted, Column\n\nset_initial_state(brightness=50)\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(\"Brightness: {{ brightness }}%\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Slider, Muted, Column\nfrom prefab_ui.rx import Rx\n\nset_initial_state(brightness=50)\n\nbrightness = Rx(\"brightness\")\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", min=0, max=100)\n    Muted(f\"Brightness: {brightness}%\")"
   },
   {
     "title": "AppResult State",
@@ -172,12 +172,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui.actions import SetState\n\nset_initial_state(drive=\"improbability\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(\"Active drive: {{ drive }}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Button, Column, Row\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nset_initial_state(drive=\"improbability\")\n\ndrive = Rx(\"drive\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Button(\"Improbability\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"improbability\"))\n        Button(\"Conventional\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"conventional\"))\n        Button(\"Bistromath\", variant=\"outline\",\n               on_click=SetState(\"drive\", \"bistromath\"))\n    Badge(f\"Active drive: {drive}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Input,\n)\n\nset_initial_state(profile={\n    \"name\": \"Arthur Dent\",\n    \"title\": \"Sandwich Maker, Lamuella\",\n})\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    Input(name=\"profile.name\", placeholder=\"Name\")\n    Input(name=\"profile.title\", placeholder=\"Title\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Input,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(profile={\n    \"name\": \"Arthur Dent\",\n    \"title\": \"Sandwich Maker, Lamuella\",\n})\n\nprofile = Rx(\"profile\")\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(profile.name)\n            CardDescription(profile.title)\n    Input(name=\"profile.name\", placeholder=\"Name\")\n    Input(name=\"profile.title\", placeholder=\"Title\")"
   },
   {
     "title": "Array Paths",
@@ -187,12 +187,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column\nfrom prefab_ui.components.control_flow import If\nfrom prefab_ui.actions import ToggleState\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(\"{{ showDetails }}\"):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Button, Column\nfrom prefab_ui.components.control_flow import If\nfrom prefab_ui.actions import ToggleState\nfrom prefab_ui.rx import Rx\n\nshowDetails = Rx(\"showDetails\")\n\nwith Column(gap=2):\n    Button(\"Toggle Details\", variant=\"outline\",\n           on_click=ToggleState(\"showDetails\"))\n    with If(showDetails):\n        with Alert():\n            AlertTitle(\"Here are the details!\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", \"{{ new_member }}\"),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(\"{{ crew | length }} crew members\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button, Column, ForEach, Input, Muted, Row, Text,\n)\nfrom prefab_ui.actions import AppendState, PopState, SetState\nfrom prefab_ui.rx import Rx\n\nset_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\ncrew = Rx(\"crew\")\nnew_member = Rx(\"new_member\")\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", variant=\"ghost\", size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\"),\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\"Add\", on_click=[\n            AppendState(\"crew\", new_member),\n            SetState(\"new_member\", \"\"),\n        ])\n    Muted(f\"{crew.length()} crew members\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -412,7 +412,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            \"{{ $event ? 'Thank you!' : 'Please accept to continue' }}\",\n        ),\n    )\n    Text(\n        \"{{ message | 'Check the box' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nmessage = Rx(\"message\")\n\nwith Column(gap=4):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            event.then(\"Thank you!\", \"Please accept to continue\"),\n        ),\n    )\n    Text(\n        message.default(\"Check the box\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -432,7 +432,7 @@
   {
     "title": "from prefab_ui.components import Code",
     "category": "Components",
-    "code": "Code(\"{{ query_result }}\", language=\"sql\")"
+    "code": "from prefab_ui.rx import Rx\n\nquery_result = Rx(\"query_result\")\nCode(query_result, language=\"sql\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -492,27 +492,27 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Alert, AlertTitle, Column, Row, Switch, Text\nfrom prefab_ui.components.control_flow import If\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(\"{{ outOfStock }}\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
+    "code": "from prefab_ui.components import Alert, AlertTitle, Column, Row, Switch, Text\nfrom prefab_ui.components.control_flow import If\nfrom prefab_ui.rx import Rx\n\noutOfStock = Rx(\"outOfStock\")\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(outOfStock):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Row,\n    Switch,\n    Text,\n)\nfrom prefab_ui.components.control_flow import Else, If\nset_initial_state(showDetails=True)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\")\n        Text(\"Show details\")\n    with If(\"{{ showDetails }}\"):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Row,\n    Switch,\n    Text,\n)\nfrom prefab_ui.components.control_flow import Else, If\nfrom prefab_ui.rx import Rx\n\nset_initial_state(showDetails=True)\nshowDetails = Rx(\"showDetails\")\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"showDetails\")\n        Text(\"Show details\")\n    with If(showDetails):\n        with Card():\n            with CardHeader():\n                CardTitle(\"Project Details\")\n            with CardContent():\n                Text(\"Heart of Gold — Infinite Improbability Drive\")\n    with Else():\n        Badge(\"Details hidden\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Column,\n    Select,\n    SelectOption,\n)\nfrom prefab_ui.components.control_flow import Elif, Else, If\nset_initial_state(status=\"active\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(\"{{ status == 'error' }}\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(\"{{ status == 'warning' }}\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(\"{{ status == 'active' }}\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(\"Unknown status: {{ status }}\", variant=\"secondary\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Column,\n    Select,\n    SelectOption,\n)\nfrom prefab_ui.components.control_flow import Elif, Else, If\nfrom prefab_ui.rx import Rx\n\nset_initial_state(status=\"active\")\nstatus = Rx(\"status\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Choose a status...\"):\n        SelectOption(\"Active\", value=\"active\")\n        SelectOption(\"Warning\", value=\"warning\")\n        SelectOption(\"Error\", value=\"error\")\n        SelectOption(\"Something else\", value=\"other\")\n    with If(status == \"error\"):\n        Badge(\"Error — system down\", variant=\"destructive\")\n    with Elif(status == \"warning\"):\n        Badge(\"Warning — degraded\", variant=\"warning\")\n    with Elif(status == \"active\"):\n        Badge(\"Active — all systems go\", variant=\"success\")\n    with Else():\n        Badge(f\"Unknown status: {status}\", variant=\"secondary\")"
   },
   {
-    "title": "with If(\"{{ status == 'active' }}\"):",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Components",
-    "code": "...\n\nwith If(\"{{ count > 0 && items | length }}\"):\n    ..."
+    "code": "status = Rx(\"status\")\ncount = Rx(\"count\")\nitems = Rx(\"items\")\n\nwith If(status == \"active\"):\n    ...\n\nwith If((count > 0) & items.length()):\n    ..."
   },
   {
-    "title": "with Column():",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Components",
-    "code": "# Chain 1: If / Elif / Else → one Condition node\n    with If(\"{{ status == 'error' }}\"):\n        Badge(\"Error\", variant=\"destructive\")\n    with Elif(\"{{ status == 'warning' }}\"):\n        Badge(\"Warning\", variant=\"secondary\")\n    with Else():\n        Badge(\"OK\")\n\n    Text(\"---\")  # breaks the chain\n\n    # Chain 2: standalone If → separate Condition node\n    with If(\"{{ showDetails }}\"):\n        Text(\"Details here...\")\n\n    # Chain 3: another If starts a new chain (not an Elif!)\n    with If(\"{{ showFooter }}\"):\n        Text(\"Footer content\")"
+    "code": "status = Rx(\"status\")\nshowDetails = Rx(\"showDetails\")\nshowFooter = Rx(\"showFooter\")\n\nwith Column():\n    # Chain 1: If / Elif / Else → one Condition node\n    with If(status == \"error\"):\n        Badge(\"Error\", variant=\"destructive\")\n    with Elif(status == \"warning\"):\n        Badge(\"Warning\", variant=\"secondary\")\n    with Else():\n        Badge(\"OK\")\n\n    Text(\"---\")  # breaks the chain\n\n    # Chain 2: standalone If → separate Condition node\n    with If(showDetails):\n        Text(\"Details here...\")\n\n    # Chain 3: another If starts a new chain (not an Elif!)\n    with If(showFooter):\n        Text(\"Footer content\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -607,12 +607,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=[\n                CallTool(\"delete_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
+    "code": "from prefab_ui.components import Button, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\nitem_id = Rx(\"item_id\")\n\nwith Dialog(title=\"Delete Item\", description=\"This action cannot be undone.\"):\n    Button(\"Delete\", variant=\"destructive\")\n    Text(\"Are you sure you want to permanently delete this item?\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Confirm Delete\",\n            variant=\"destructive\",\n            on_click=[\n                CallTool(\"delete_item\", arguments={\"id\": item_id}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "from prefab_ui.components import Button, Dialog, Row, Text",
     "category": "Components",
-    "code": "from prefab_ui.actions import CloseOverlay, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(\"User {{ user_name }} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=CallTool(\n                \"remove_user\",\n                arguments={\"user_id\": \"{{ user_id }}\"},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
+    "code": "from prefab_ui.actions import CloseOverlay, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\nuser_name = Rx(\"user_name\")\nuser_id = Rx(\"user_id\")\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(f\"User {user_name} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=CallTool(\n                \"remove_user\",\n                arguments={\"user_id\": user_id},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1027,7 +1027,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=[\n                CallTool(\"archive_item\", arguments={\"id\": \"{{ item_id }}\"}),\n                CloseOverlay(),\n            ],\n        )"
+    "code": "from prefab_ui.components import Button, Column, Popover, Text\nfrom prefab_ui.actions import CloseOverlay\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\nitem_id = Rx(\"item_id\")\n\nwith Popover():\n    Button(\"Archive\", variant=\"outline\")\n    with Column(gap=2):\n        Text(\"Archive this item?\")\n        Button(\n            \"Confirm\",\n            on_click=[\n                CallTool(\"archive_item\", arguments={\"id\": item_id}),\n                CloseOverlay(),\n            ],\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1062,7 +1062,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Progress,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(progress=0.65)\n\nwith Column(gap=3):\n    with Row(css_class=\"justify-between items-center\"):\n        Text(\"Upload progress\")\n        Text(\"{{ progress | percent }}\", bold=True)\n    Progress(value=\"{{ progress }}\", max=1)\n    Slider(name=\"progress\", min=0, max=1, step=0.01, value=0.65)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Progress,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nslider = Slider(min=0, max=1, step=0.01, value=0.65, defer=True)\n\nwith Column(gap=3):\n    with Row(css_class=\"justify-between items-center\"):\n        Text(\"Upload progress\")\n        Text(slider.rx.percent(), bold=True)\n    Progress(value=slider.rx, max=1)\n    insert(slider)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1107,7 +1107,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with RadioGroup(\n        name=\"theme\",\n        on_change=SetState(\"choice\", \"You picked: {{ $event }}\"),\n    ):\n        Radio(value=\"light\", label=\"Light\")\n        Radio(value=\"dark\", label=\"Dark\")\n        Radio(value=\"system\", label=\"System\", checked=True)\n    Text(\n        \"{{ choice | 'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nchoice = Rx(\"choice\")\n\nwith Column(gap=4):\n    with RadioGroup(\n        name=\"theme\",\n        on_change=SetState(\"choice\", f\"You picked: {Rx('$event')}\"),\n    ):\n        Radio(value=\"light\", label=\"Light\")\n        Radio(value=\"dark\", label=\"Dark\")\n        Radio(value=\"system\", label=\"System\", checked=True)\n    Text(\n        choice.default(\"Make a selection\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1252,7 +1252,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", \"You chose: {{ $event }}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        \"{{ picked | 'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\npicked = Rx(\"picked\")\n\nwith Column(gap=4):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", f\"You chose: {Rx('$event')}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        picked.default(\"Make a selection\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1277,17 +1277,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(volume=75)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(\"{{ volume | number }}%\", bold=True)\n    Slider(value=75, name=\"volume\")"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nvolume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(rating=4)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(\"{{ rating }}\", bold=True)\n    Slider(value=4, name=\"rating\", min=0, max=5, step=0.5)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nrating = Slider(value=4, name=\"rating\", min=0, max=5, step=0.5, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(rating.rx, bold=True)\n    insert(rating)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Slider, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Slider(\n        value=50,\n        on_change=SetState(\"level\", \"{{ $event }}\"),\n    )\n    Text(\n        \"{{ level | 'Drag the slider' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Rx, Slider, Text\n\nlevel = Rx(\"level\")\n\nwith Column(gap=4):\n    Slider(\n        value=50,\n        on_change=SetState(\"level\", Rx(\"$event\")),\n    )\n    Text(\n        level.default(\"Drag the slider\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1342,7 +1342,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            \"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}\",\n        ),\n    )\n    Text(\n        \"{{ status | 'Toggle the switch' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nstatus = Rx(\"status\")\n\nwith Column(gap=4):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            event.then(\"Notifications enabled\", \"Notifications disabled\"),\n        ),\n    )\n    Text(\n        status.default(\"Toggle the switch\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1472,7 +1472,7 @@
   {
     "title": "Python icon=\"python\" expandable",
     "category": "Examples",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardContent, CardHeader, CardTitle,\n    Column, Dashboard, DashboardItem,\n    Muted, Row, Select, SelectOption,\n)\nfrom prefab_ui.components.charts import BarChart, ChartSeries, LineChart, RadarChart\nfrom prefab_ui.components.metric import Metric\n\n# Pre-segmented data for each region. The Select writes to `region` in state,\n# and a `let` binding picks the right dataset via a ternary chain.\n\nREGIONS = [\"all\", \"north\", \"south\", \"east\", \"west\"]\n\nmetrics = {\n    \"all\":   {\"revenue\": 284750, \"units\": 12450, \"avg_price\": 22.87, \"stores\": 48},\n    \"north\": {\"revenue\": 142800, \"units\": 4200,  \"avg_price\": 34.00, \"stores\": 8},\n    \"south\": {\"revenue\": 38900,  \"units\": 3850,  \"avg_price\": 10.10, \"stores\": 18},\n    \"east\":  {\"revenue\": 67200,  \"units\": 1680,  \"avg_price\": 40.00, \"stores\": 6},\n    \"west\":  {\"revenue\": 35850,  \"units\": 2720,  \"avg_price\": 13.18, \"stores\": 16},\n}\n\nmonthly = {\n    \"all\": [\n        {\"month\": \"Jan\", \"sales\": 42000, \"returns\": 3200},\n        {\"month\": \"Feb\", \"sales\": 48500, \"returns\": 3800},\n        {\"month\": \"Mar\", \"sales\": 45200, \"returns\": 3400},\n        {\"month\": \"Apr\", \"sales\": 51800, \"returns\": 4100},\n        {\"month\": \"May\", \"sales\": 47600, \"returns\": 3600},\n        {\"month\": \"Jun\", \"sales\": 53200, \"returns\": 4200},\n    ],\n    \"north\": [\n        {\"month\": \"Jan\", \"sales\": 22000, \"returns\": 800},\n        {\"month\": \"Feb\", \"sales\": 25500, \"returns\": 900},\n        {\"month\": \"Mar\", \"sales\": 24200, \"returns\": 850},\n        {\"month\": \"Apr\", \"sales\": 27800, \"returns\": 1000},\n        {\"month\": \"May\", \"sales\": 23100, \"returns\": 750},\n        {\"month\": \"Jun\", \"sales\": 29200, \"returns\": 1100},\n    ],\n    \"south\": [\n        {\"month\": \"Jan\", \"sales\": 5800,  \"returns\": 1200},\n        {\"month\": \"Feb\", \"sales\": 6400,  \"returns\": 1400},\n        {\"month\": \"Mar\", \"sales\": 5600,  \"returns\": 1100},\n        {\"month\": \"Apr\", \"sales\": 7200,  \"returns\": 1600},\n        {\"month\": \"May\", \"sales\": 6100,  \"returns\": 1300},\n        {\"month\": \"Jun\", \"sales\": 7800,  \"returns\": 1700},\n    ],\n    \"east\": [\n        {\"month\": \"Jan\", \"sales\": 8200,  \"returns\": 400},\n        {\"month\": \"Feb\", \"sales\": 10600, \"returns\": 500},\n        {\"month\": \"Mar\", \"sales\": 9800,  \"returns\": 450},\n        {\"month\": \"Apr\", \"sales\": 11800, \"returns\": 550},\n        {\"month\": \"May\", \"sales\": 12400, \"returns\": 500},\n        {\"month\": \"Jun\", \"sales\": 14200, \"returns\": 600},\n    ],\n    \"west\": [\n        {\"month\": \"Jan\", \"sales\": 6000,  \"returns\": 800},\n        {\"month\": \"Feb\", \"sales\": 6000,  \"returns\": 1000},\n        {\"month\": \"Mar\", \"sales\": 5600,  \"returns\": 1000},\n        {\"month\": \"Apr\", \"sales\": 5000,  \"returns\": 950},\n        {\"month\": \"May\", \"sales\": 6000,  \"returns\": 1050},\n        {\"month\": \"Jun\", \"sales\": 2000,  \"returns\": 800},\n    ],\n}\n\ncategories = {\n    \"all\":   [{\"category\": \"Electronics\", \"score\": 82}, {\"category\": \"Clothing\", \"score\": 75}, {\"category\": \"Home\", \"score\": 80}, {\"category\": \"Books\", \"score\": 65}, {\"category\": \"Sports\", \"score\": 70}],\n    \"north\": [{\"category\": \"Electronics\", \"score\": 98}, {\"category\": \"Clothing\", \"score\": 40}, {\"category\": \"Home\", \"score\": 92}, {\"category\": \"Books\", \"score\": 35}, {\"category\": \"Sports\", \"score\": 45}],\n    \"south\": [{\"category\": \"Electronics\", \"score\": 45}, {\"category\": \"Clothing\", \"score\": 95}, {\"category\": \"Home\", \"score\": 50}, {\"category\": \"Books\", \"score\": 90}, {\"category\": \"Sports\", \"score\": 88}],\n    \"east\":  [{\"category\": \"Electronics\", \"score\": 95}, {\"category\": \"Clothing\", \"score\": 60}, {\"category\": \"Home\", \"score\": 90}, {\"category\": \"Books\", \"score\": 55}, {\"category\": \"Sports\", \"score\": 40}],\n    \"west\":  [{\"category\": \"Electronics\", \"score\": 50}, {\"category\": \"Clothing\", \"score\": 88}, {\"category\": \"Home\", \"score\": 55}, {\"category\": \"Books\", \"score\": 82}, {\"category\": \"Sports\", \"score\": 92}],\n}\n\ntrend = {\n    \"all\":   [{\"month\": \"Mar\", \"revenue\": 32000}, {\"month\": \"Apr\", \"revenue\": 35000}, {\"month\": \"May\", \"revenue\": 33500}, {\"month\": \"Jun\", \"revenue\": 38000}, {\"month\": \"Jul\", \"revenue\": 41000}, {\"month\": \"Aug\", \"revenue\": 39500}, {\"month\": \"Sep\", \"revenue\": 43000}, {\"month\": \"Oct\", \"revenue\": 45500}, {\"month\": \"Nov\", \"revenue\": 48000}, {\"month\": \"Dec\", \"revenue\": 52000}, {\"month\": \"Jan\", \"revenue\": 49000}, {\"month\": \"Feb\", \"revenue\": 54000}],\n    \"north\": [{\"month\": \"Mar\", \"revenue\": 18000}, {\"month\": \"Apr\", \"revenue\": 20500}, {\"month\": \"May\", \"revenue\": 19000}, {\"month\": \"Jun\", \"revenue\": 22000}, {\"month\": \"Jul\", \"revenue\": 24500}, {\"month\": \"Aug\", \"revenue\": 23000}, {\"month\": \"Sep\", \"revenue\": 26000}, {\"month\": \"Oct\", \"revenue\": 28000}, {\"month\": \"Nov\", \"revenue\": 30000}, {\"month\": \"Dec\", \"revenue\": 35000}, {\"month\": \"Jan\", \"revenue\": 32000}, {\"month\": \"Feb\", \"revenue\": 38000}],\n    \"south\": [{\"month\": \"Mar\", \"revenue\": 4200},  {\"month\": \"Apr\", \"revenue\": 4800},  {\"month\": \"May\", \"revenue\": 5100},  {\"month\": \"Jun\", \"revenue\": 5500},  {\"month\": \"Jul\", \"revenue\": 5200},  {\"month\": \"Aug\", \"revenue\": 5800},  {\"month\": \"Sep\", \"revenue\": 5500},  {\"month\": \"Oct\", \"revenue\": 6000},  {\"month\": \"Nov\", \"revenue\": 5800},  {\"month\": \"Dec\", \"revenue\": 6200},  {\"month\": \"Jan\", \"revenue\": 6000},  {\"month\": \"Feb\", \"revenue\": 6500}],\n    \"east\":  [{\"month\": \"Mar\", \"revenue\": 5500},  {\"month\": \"Apr\", \"revenue\": 6200},  {\"month\": \"May\", \"revenue\": 7000},  {\"month\": \"Jun\", \"revenue\": 7800},  {\"month\": \"Jul\", \"revenue\": 8800},  {\"month\": \"Aug\", \"revenue\": 9500},  {\"month\": \"Sep\", \"revenue\": 10500}, {\"month\": \"Oct\", \"revenue\": 11500}, {\"month\": \"Nov\", \"revenue\": 12800}, {\"month\": \"Dec\", \"revenue\": 14000}, {\"month\": \"Jan\", \"revenue\": 15500}, {\"month\": \"Feb\", \"revenue\": 17000}],\n    \"west\":  [{\"month\": \"Mar\", \"revenue\": 8500},  {\"month\": \"Apr\", \"revenue\": 8200},  {\"month\": \"May\", \"revenue\": 7800},  {\"month\": \"Jun\", \"revenue\": 7200},  {\"month\": \"Jul\", \"revenue\": 6800},  {\"month\": \"Aug\", \"revenue\": 6500},  {\"month\": \"Sep\", \"revenue\": 6000},  {\"month\": \"Oct\", \"revenue\": 5500},  {\"month\": \"Nov\", \"revenue\": 5200},  {\"month\": \"Dec\", \"revenue\": 4800},  {\"month\": \"Jan\", \"revenue\": 4200},  {\"month\": \"Feb\", \"revenue\": 3500}],\n}\n\n# Helper: build a ternary expression that picks the right dataset by region\ndef pick(prefix):\n    return (\n        f\"{{{{ region == 'north' ? {prefix}_north\"\n        f\" : region == 'south' ? {prefix}_south\"\n        f\" : region == 'east' ? {prefix}_east\"\n        f\" : region == 'west' ? {prefix}_west\"\n        f\" : {prefix}_all }}}}\"\n    )\n\nset_initial_state(\n    region=\"all\",\n    **{f\"metrics_{r}\": metrics[r] for r in REGIONS},\n    **{f\"monthly_{r}\": monthly[r] for r in REGIONS},\n    **{f\"categories_{r}\": categories[r] for r in REGIONS},\n    **{f\"trend_{r}\": trend[r] for r in REGIONS},\n)\n\n# A `let` on the outer Column computes intermediate values once.\n# Everything inside references `m`, `chart`, `cat`, `t` instead\n# of repeating the ternary chain for every prop.\nwith Column(let={\n    \"m\": pick(\"metrics\"),\n    \"chart\": pick(\"monthly\"),\n    \"cat\": pick(\"categories\"),\n    \"t\": pick(\"trend\"),\n}):\n    with Dashboard(columns=12, row_height=\"auto\", gap=4):\n        # Row 1: Region filter\n        with DashboardItem(col=1, row=1, col_span=12):\n            with Card():\n                with CardContent():\n                    with Row(align=\"center\", gap=4):\n                        Muted(\"Region\")\n                        with Select(name=\"region\", css_class=\"w-48\"):\n                            SelectOption(value=\"all\", label=\"All Regions\")\n                            SelectOption(value=\"north\", label=\"North\")\n                            SelectOption(value=\"south\", label=\"South\")\n                            SelectOption(value=\"east\", label=\"East\")\n                            SelectOption(value=\"west\", label=\"West\")\n\n        # Row 2: Metrics — all driven by `m` from the let binding\n        with DashboardItem(col=1, row=2, col_span=3):\n            Metric(label=\"Revenue\", value=\"{{ m.revenue | currency }}\")\n        with DashboardItem(col=4, row=2, col_span=3):\n            Metric(label=\"Units Sold\", value=\"{{ m.units | number }}\")\n        with DashboardItem(col=7, row=2, col_span=3):\n            Metric(label=\"Avg Price\", value=\"{{ m.avg_price | currency }}\")\n        with DashboardItem(col=10, row=2, col_span=3):\n            Metric(label=\"Stores\", value=\"{{ m.stores }}\")\n\n        # Row 3: Bar chart + radar chart\n        with DashboardItem(col=1, row=3, col_span=7):\n            with Card(css_class=\"h-full\"):\n                with CardHeader():\n                    CardTitle(\"Monthly Sales\")\n                with CardContent():\n                    BarChart(\n                        data=\"{{ chart }}\",\n                        series=[\n                            ChartSeries(data_key=\"sales\", label=\"Sales\", color=\"#2563eb\"),\n                            ChartSeries(data_key=\"returns\", label=\"Returns\", color=\"#e76e50\"),\n                        ],\n                        x_axis=\"month\",\n                        stacked=True,\n                        bar_radius=0,\n                        show_legend=True,\n                        height=250,\n                    )\n\n        with DashboardItem(col=8, row=3, col_span=5):\n            with Card(css_class=\"h-full\"):\n                with CardHeader():\n                    CardTitle(\"Category Performance\")\n                with CardContent():\n                    RadarChart(\n                        data=\"{{ cat }}\",\n                        series=[ChartSeries(data_key=\"score\", label=\"Score\")],\n                        axis_key=\"category\",\n                        show_dots=True,\n                        height=250,\n                    )\n\n        # Row 4: 12-month trend\n        with DashboardItem(col=1, row=4, col_span=12):\n            with Card():\n                with CardHeader():\n                    CardTitle(\"Revenue Trend (12 months)\")\n                with CardContent():\n                    LineChart(\n                        data=\"{{ t }}\",\n                        series=[ChartSeries(data_key=\"revenue\", label=\"Revenue\", color=\"#2563eb\")],\n                        x_axis=\"month\",\n                        curve=\"smooth\",\n                        show_dots=True,\n                        height=200,\n                    )"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardContent, CardHeader, CardTitle,\n    Column, Dashboard, DashboardItem,\n    Muted, Row, Select, SelectOption,\n)\nfrom prefab_ui.components.charts import BarChart, ChartSeries, LineChart, RadarChart\nfrom prefab_ui.components.metric import Metric\nfrom prefab_ui.rx import Rx\n\n# Pre-segmented data for each region. The Select writes to `region` in state,\n# and a `let` binding picks the right dataset via a ternary chain.\n\nREGIONS = [\"all\", \"north\", \"south\", \"east\", \"west\"]\n\nmetrics = {\n    \"all\":   {\"revenue\": 284750, \"units\": 12450, \"avg_price\": 22.87, \"stores\": 48},\n    \"north\": {\"revenue\": 142800, \"units\": 4200,  \"avg_price\": 34.00, \"stores\": 8},\n    \"south\": {\"revenue\": 38900,  \"units\": 3850,  \"avg_price\": 10.10, \"stores\": 18},\n    \"east\":  {\"revenue\": 67200,  \"units\": 1680,  \"avg_price\": 40.00, \"stores\": 6},\n    \"west\":  {\"revenue\": 35850,  \"units\": 2720,  \"avg_price\": 13.18, \"stores\": 16},\n}\n\nmonthly = {\n    \"all\": [\n        {\"month\": \"Jan\", \"sales\": 42000, \"returns\": 3200},\n        {\"month\": \"Feb\", \"sales\": 48500, \"returns\": 3800},\n        {\"month\": \"Mar\", \"sales\": 45200, \"returns\": 3400},\n        {\"month\": \"Apr\", \"sales\": 51800, \"returns\": 4100},\n        {\"month\": \"May\", \"sales\": 47600, \"returns\": 3600},\n        {\"month\": \"Jun\", \"sales\": 53200, \"returns\": 4200},\n    ],\n    \"north\": [\n        {\"month\": \"Jan\", \"sales\": 22000, \"returns\": 800},\n        {\"month\": \"Feb\", \"sales\": 25500, \"returns\": 900},\n        {\"month\": \"Mar\", \"sales\": 24200, \"returns\": 850},\n        {\"month\": \"Apr\", \"sales\": 27800, \"returns\": 1000},\n        {\"month\": \"May\", \"sales\": 23100, \"returns\": 750},\n        {\"month\": \"Jun\", \"sales\": 29200, \"returns\": 1100},\n    ],\n    \"south\": [\n        {\"month\": \"Jan\", \"sales\": 5800,  \"returns\": 1200},\n        {\"month\": \"Feb\", \"sales\": 6400,  \"returns\": 1400},\n        {\"month\": \"Mar\", \"sales\": 5600,  \"returns\": 1100},\n        {\"month\": \"Apr\", \"sales\": 7200,  \"returns\": 1600},\n        {\"month\": \"May\", \"sales\": 6100,  \"returns\": 1300},\n        {\"month\": \"Jun\", \"sales\": 7800,  \"returns\": 1700},\n    ],\n    \"east\": [\n        {\"month\": \"Jan\", \"sales\": 8200,  \"returns\": 400},\n        {\"month\": \"Feb\", \"sales\": 10600, \"returns\": 500},\n        {\"month\": \"Mar\", \"sales\": 9800,  \"returns\": 450},\n        {\"month\": \"Apr\", \"sales\": 11800, \"returns\": 550},\n        {\"month\": \"May\", \"sales\": 12400, \"returns\": 500},\n        {\"month\": \"Jun\", \"sales\": 14200, \"returns\": 600},\n    ],\n    \"west\": [\n        {\"month\": \"Jan\", \"sales\": 6000,  \"returns\": 800},\n        {\"month\": \"Feb\", \"sales\": 6000,  \"returns\": 1000},\n        {\"month\": \"Mar\", \"sales\": 5600,  \"returns\": 1000},\n        {\"month\": \"Apr\", \"sales\": 5000,  \"returns\": 950},\n        {\"month\": \"May\", \"sales\": 6000,  \"returns\": 1050},\n        {\"month\": \"Jun\", \"sales\": 2000,  \"returns\": 800},\n    ],\n}\n\ncategories = {\n    \"all\":   [{\"category\": \"Electronics\", \"score\": 82}, {\"category\": \"Clothing\", \"score\": 75}, {\"category\": \"Home\", \"score\": 80}, {\"category\": \"Books\", \"score\": 65}, {\"category\": \"Sports\", \"score\": 70}],\n    \"north\": [{\"category\": \"Electronics\", \"score\": 98}, {\"category\": \"Clothing\", \"score\": 40}, {\"category\": \"Home\", \"score\": 92}, {\"category\": \"Books\", \"score\": 35}, {\"category\": \"Sports\", \"score\": 45}],\n    \"south\": [{\"category\": \"Electronics\", \"score\": 45}, {\"category\": \"Clothing\", \"score\": 95}, {\"category\": \"Home\", \"score\": 50}, {\"category\": \"Books\", \"score\": 90}, {\"category\": \"Sports\", \"score\": 88}],\n    \"east\":  [{\"category\": \"Electronics\", \"score\": 95}, {\"category\": \"Clothing\", \"score\": 60}, {\"category\": \"Home\", \"score\": 90}, {\"category\": \"Books\", \"score\": 55}, {\"category\": \"Sports\", \"score\": 40}],\n    \"west\":  [{\"category\": \"Electronics\", \"score\": 50}, {\"category\": \"Clothing\", \"score\": 88}, {\"category\": \"Home\", \"score\": 55}, {\"category\": \"Books\", \"score\": 82}, {\"category\": \"Sports\", \"score\": 92}],\n}\n\ntrend = {\n    \"all\":   [{\"month\": \"Mar\", \"revenue\": 32000}, {\"month\": \"Apr\", \"revenue\": 35000}, {\"month\": \"May\", \"revenue\": 33500}, {\"month\": \"Jun\", \"revenue\": 38000}, {\"month\": \"Jul\", \"revenue\": 41000}, {\"month\": \"Aug\", \"revenue\": 39500}, {\"month\": \"Sep\", \"revenue\": 43000}, {\"month\": \"Oct\", \"revenue\": 45500}, {\"month\": \"Nov\", \"revenue\": 48000}, {\"month\": \"Dec\", \"revenue\": 52000}, {\"month\": \"Jan\", \"revenue\": 49000}, {\"month\": \"Feb\", \"revenue\": 54000}],\n    \"north\": [{\"month\": \"Mar\", \"revenue\": 18000}, {\"month\": \"Apr\", \"revenue\": 20500}, {\"month\": \"May\", \"revenue\": 19000}, {\"month\": \"Jun\", \"revenue\": 22000}, {\"month\": \"Jul\", \"revenue\": 24500}, {\"month\": \"Aug\", \"revenue\": 23000}, {\"month\": \"Sep\", \"revenue\": 26000}, {\"month\": \"Oct\", \"revenue\": 28000}, {\"month\": \"Nov\", \"revenue\": 30000}, {\"month\": \"Dec\", \"revenue\": 35000}, {\"month\": \"Jan\", \"revenue\": 32000}, {\"month\": \"Feb\", \"revenue\": 38000}],\n    \"south\": [{\"month\": \"Mar\", \"revenue\": 4200},  {\"month\": \"Apr\", \"revenue\": 4800},  {\"month\": \"May\", \"revenue\": 5100},  {\"month\": \"Jun\", \"revenue\": 5500},  {\"month\": \"Jul\", \"revenue\": 5200},  {\"month\": \"Aug\", \"revenue\": 5800},  {\"month\": \"Sep\", \"revenue\": 5500},  {\"month\": \"Oct\", \"revenue\": 6000},  {\"month\": \"Nov\", \"revenue\": 5800},  {\"month\": \"Dec\", \"revenue\": 6200},  {\"month\": \"Jan\", \"revenue\": 6000},  {\"month\": \"Feb\", \"revenue\": 6500}],\n    \"east\":  [{\"month\": \"Mar\", \"revenue\": 5500},  {\"month\": \"Apr\", \"revenue\": 6200},  {\"month\": \"May\", \"revenue\": 7000},  {\"month\": \"Jun\", \"revenue\": 7800},  {\"month\": \"Jul\", \"revenue\": 8800},  {\"month\": \"Aug\", \"revenue\": 9500},  {\"month\": \"Sep\", \"revenue\": 10500}, {\"month\": \"Oct\", \"revenue\": 11500}, {\"month\": \"Nov\", \"revenue\": 12800}, {\"month\": \"Dec\", \"revenue\": 14000}, {\"month\": \"Jan\", \"revenue\": 15500}, {\"month\": \"Feb\", \"revenue\": 17000}],\n    \"west\":  [{\"month\": \"Mar\", \"revenue\": 8500},  {\"month\": \"Apr\", \"revenue\": 8200},  {\"month\": \"May\", \"revenue\": 7800},  {\"month\": \"Jun\", \"revenue\": 7200},  {\"month\": \"Jul\", \"revenue\": 6800},  {\"month\": \"Aug\", \"revenue\": 6500},  {\"month\": \"Sep\", \"revenue\": 6000},  {\"month\": \"Oct\", \"revenue\": 5500},  {\"month\": \"Nov\", \"revenue\": 5200},  {\"month\": \"Dec\", \"revenue\": 4800},  {\"month\": \"Jan\", \"revenue\": 4200},  {\"month\": \"Feb\", \"revenue\": 3500}],\n}\n\n# Helper: build a ternary expression that picks the right dataset by region\ndef pick(prefix):\n    return (\n        f\"{{{{ region == 'north' ? {prefix}_north\"\n        f\" : region == 'south' ? {prefix}_south\"\n        f\" : region == 'east' ? {prefix}_east\"\n        f\" : region == 'west' ? {prefix}_west\"\n        f\" : {prefix}_all }}}}\"\n    )\n\nset_initial_state(\n    region=\"all\",\n    **{f\"metrics_{r}\": metrics[r] for r in REGIONS},\n    **{f\"monthly_{r}\": monthly[r] for r in REGIONS},\n    **{f\"categories_{r}\": categories[r] for r in REGIONS},\n    **{f\"trend_{r}\": trend[r] for r in REGIONS},\n)\n\n# A `let` on the outer Column computes intermediate values once.\n# Everything inside references `m`, `chart`, `cat`, `t` instead\n# of repeating the ternary chain for every prop.\nwith Column(let={\n    \"m\": pick(\"metrics\"),\n    \"chart\": pick(\"monthly\"),\n    \"cat\": pick(\"categories\"),\n    \"t\": pick(\"trend\"),\n}):\n    with Dashboard(columns=12, row_height=\"auto\", gap=4):\n        # Row 1: Region filter\n        with DashboardItem(col=1, row=1, col_span=12):\n            with Card():\n                with CardContent():\n                    with Row(align=\"center\", gap=4):\n                        Muted(\"Region\")\n                        with Select(name=\"region\", css_class=\"w-48\"):\n                            SelectOption(value=\"all\", label=\"All Regions\")\n                            SelectOption(value=\"north\", label=\"North\")\n                            SelectOption(value=\"south\", label=\"South\")\n                            SelectOption(value=\"east\", label=\"East\")\n                            SelectOption(value=\"west\", label=\"West\")\n\n        # Row 2: Metrics — all driven by `m` from the let binding\n        m = Rx(\"m\")\n        with DashboardItem(col=1, row=2, col_span=3):\n            Metric(label=\"Revenue\", value=m.revenue.currency())\n        with DashboardItem(col=4, row=2, col_span=3):\n            Metric(label=\"Units Sold\", value=m.units.number())\n        with DashboardItem(col=7, row=2, col_span=3):\n            Metric(label=\"Avg Price\", value=m.avg_price.currency())\n        with DashboardItem(col=10, row=2, col_span=3):\n            Metric(label=\"Stores\", value=m.stores)\n\n        # Row 3: Bar chart + radar chart\n        chart = Rx(\"chart\")\n        cat = Rx(\"cat\")\n        t = Rx(\"t\")\n        with DashboardItem(col=1, row=3, col_span=7):\n            with Card(css_class=\"h-full\"):\n                with CardHeader():\n                    CardTitle(\"Monthly Sales\")\n                with CardContent():\n                    BarChart(\n                        data=chart,\n                        series=[\n                            ChartSeries(data_key=\"sales\", label=\"Sales\", color=\"#2563eb\"),\n                            ChartSeries(data_key=\"returns\", label=\"Returns\", color=\"#e76e50\"),\n                        ],\n                        x_axis=\"month\",\n                        stacked=True,\n                        bar_radius=0,\n                        show_legend=True,\n                        height=250,\n                    )\n\n        with DashboardItem(col=8, row=3, col_span=5):\n            with Card(css_class=\"h-full\"):\n                with CardHeader():\n                    CardTitle(\"Category Performance\")\n                with CardContent():\n                    RadarChart(\n                        data=cat,\n                        series=[ChartSeries(data_key=\"score\", label=\"Score\")],\n                        axis_key=\"category\",\n                        show_dots=True,\n                        height=250,\n                    )\n\n        # Row 4: 12-month trend\n        with DashboardItem(col=1, row=4, col_span=12):\n            with Card():\n                with CardHeader():\n                    CardTitle(\"Revenue Trend (12 months)\")\n                with CardContent():\n                    LineChart(\n                        data=t,\n                        series=[ChartSeries(data_key=\"revenue\", label=\"Revenue\", color=\"#2563eb\")],\n                        x_axis=\"month\",\n                        curve=\"smooth\",\n                        show_dots=True,\n                        height=200,\n                    )"
   },
   {
     "title": "with Column(let={",
@@ -1607,7 +1607,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Progress, Slider, Text\n\nset_initial_state(volume=50)\n\nwith Column(gap=3):\n    slider = Slider(name=\"volume\", min=0, max=100)\n    Text(f\"Volume: {slider.rx}%\")\n    Progress(value=slider.rx)"
+    "code": "from prefab_ui.components import Column, Progress, Slider, Text\n\nwith Column(gap=3):\n    slider = Slider(value=50, min=0, max=100)\n    Text(f\"Volume: {slider.rx}%\")\n    Progress(value=slider.rx)"
+  },
+  {
+    "title": "slider = Slider(value=50, defer=True)",
+    "category": "Expressions",
+    "code": "with Column():\n    Text(f\"Volume: {slider.rx}%\")  # reference .rx first\n    insert(slider)                 # place the slider below"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1665,9 +1670,14 @@
     "code": "from prefab_ui.components import Column, H3, Text\n\nwith Column(gap=4) as view:\n    H3(\"Dashboard\")\n    Text(\"Welcome back.\")\n\napp = PrefabApp(view=view)"
   },
   {
-    "title": "from prefab_ui.components import Column, Text, detached",
+    "title": "from prefab_ui.components import Column, Label, Row, Slider, Text, insert",
     "category": "Getting Started",
-    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with detached():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n# page has 1 child; sidebar has 1 child"
+    "code": "volume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
+  },
+  {
+    "title": "from prefab_ui.components import Column, Text, defer, insert",
+    "category": "Getting Started",
+    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with defer():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n    insert(sidebar)\n\n# page has 2 children; sidebar has 1 child"
   },
   {
     "title": "app.py",
@@ -1692,7 +1702,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    CallTool(\"save_data\", arguments={\"item\": \"{{ item }}\"}),\n    SetState(\"saving\", False),\n])"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\nButton(\"Save\", on_click=[\n    SetState(\"saving\", True),\n    CallTool(\"save_data\", arguments={\"item\": Rx(\"item\")}),\n    SetState(\"saving\", False),\n])"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1710,14 +1720,19 @@
     "code": "\"Load Users\",\n    on_click=Fetch.get(\"/api/users\", result_key=\"users\"),\n)"
   },
   {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Running",
+    "code": "search_input = Rx(\"search_input\")\n\nFetch.get(\"/api/search\", params={\"q\": search_input, \"page\": \"1\"})"
+  },
+  {
     "title": "from prefab_ui.actions import Fetch, ShowToast",
     "category": "Running",
-    "code": "from prefab_ui.components import Button, Column, Form, Input\n\nwith Form(\n    on_submit=Fetch.post(\n        \"/api/items\",\n        body={\"name\": \"{{ item_name }}\", \"category\": \"{{ item_category }}\"},\n        on_success=ShowToast(\"Item created!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n):\n    with Column(gap=3):\n        Input(name=\"item_name\", placeholder=\"Name\")\n        Input(name=\"item_category\", placeholder=\"Category\")\n        Button(\"Add Item\")"
+    "code": "from prefab_ui.components import Button, Column, Form, Input\nfrom prefab_ui.rx import Rx\n\nitem_name = Rx(\"item_name\")\nitem_category = Rx(\"item_category\")\n\nwith Form(\n    on_submit=Fetch.post(\n        \"/api/items\",\n        body={\"name\": item_name, \"category\": item_category},\n        on_success=ShowToast(\"Item created!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n):\n    with Column(gap=3):\n        Input(name=\"item_name\", placeholder=\"Name\")\n        Input(name=\"item_category\", placeholder=\"Category\")\n        Button(\"Add Item\")"
   },
   {
     "title": "{10-14}",
     "category": "Running",
-    "code": "from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast\nfrom prefab_ui.components import Button, Column, Dialog, Form, Input\n\nwith Dialog(title=\"New Item\", description=\"Add an item to the catalog.\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=Fetch.post(\n            \"/api/items\",\n            body={\"name\": \"{{ new_name }}\"},\n            on_success=[\n                ShowToast(\"Created!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                Fetch.get(\"/api/items\", result_key=\"items\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        with Column(gap=3):\n            Input(name=\"new_name\", placeholder=\"Name\")\n            Button(\"Add Item\")"
+    "code": "from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast\nfrom prefab_ui.components import Button, Column, Dialog, Form, Input\nfrom prefab_ui.rx import Rx\n\nnew_name = Rx(\"new_name\")\n\nwith Dialog(title=\"New Item\", description=\"Add an item to the catalog.\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=Fetch.post(\n            \"/api/items\",\n            body={\"name\": new_name},\n            on_success=[\n                ShowToast(\"Created!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                Fetch.get(\"/api/items\", result_key=\"items\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        with Column(gap=3):\n            Input(name=\"new_name\", placeholder=\"Name\")\n            Button(\"Add Item\")"
   },
   {
     "title": "Button(",
@@ -1730,9 +1745,9 @@
     "code": "from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text\n\n@app.get(\"/api/items/{id}/detail\")\ndef item_detail(id: str):\n    item = get_item(id)\n    with Card() as detail:\n        with CardHeader():\n            CardTitle(item[\"name\"])\n        with CardContent():\n            Text(item[\"description\"])\n    return detail.to_json()\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        with ForEach(\"items\"):\n            Button(\n                \"{{ name }}\",\n                on_click=Fetch.get(\n                    \"/api/items/{{ id }}/detail\",\n                    result_key=\"detail\",\n                ),\n            )\n        with Slot(\"detail\"):\n            Text(\"Select an item to see details\", css_class=\"text-muted-foreground\")\n\n    return HTMLResponse(\n        PrefabApp(view=view, state={\"items\": items, \"detail\": None}).html()\n    )"
   },
   {
-    "title": "Fetch.post(",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Running",
-    "code": "\"/api/save\",\n    body={\"data\": \"{{ form_data }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+    "code": "form_data = Rx(\"form_data\")\n\nFetch.post(\n    \"/api/save\",\n    body={\"data\": form_data},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
   },
   {
     "title": "from fastapi import HTTPException",
@@ -1742,12 +1757,12 @@
   {
     "title": "{4,10}",
     "category": "Running",
-    "code": "Button(\n    \"Save\",\n    on_click=[\n        SetState(\"saving\", True),\n        Fetch.post(\n            \"/api/save\",\n            body={\"item\": \"{{ item }}\"},\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n        SetState(\"saving\", False),\n    ],\n)"
+    "code": "from prefab_ui.rx import Rx\n\nitem = Rx(\"item\")\n\nButton(\n    \"Save\",\n    on_click=[\n        SetState(\"saving\", True),\n        Fetch.post(\n            \"/api/save\",\n            body={\"item\": item},\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n        SetState(\"saving\", False),\n    ],\n)"
   },
   {
-    "title": "Fetch.post(",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Running",
-    "code": "\"/api/items\",\n    body={\"name\": \"{{ new_name }}\"},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", result_key=\"items\"),\n    ],\n)"
+    "code": "new_name = Rx(\"new_name\")\n\nFetch.post(\n    \"/api/items\",\n    body={\"name\": new_name},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", result_key=\"items\"),\n    ],\n)"
   },
   {
     "title": "from fastmcp import FastMCP",
@@ -1757,7 +1772,7 @@
   {
     "title": "PrefabApp",
     "category": "Running",
-    "code": "@mcp.tool(app=True)\ndef dashboard() -> PrefabApp:\n    with Column(gap=4) as view:\n        Heading(\"Dashboard\")\n        Text(\"Welcome, {{ name }}\")\n    return PrefabApp(\n        title=\"Dashboard\",\n        view=view,\n        state={\"name\": \"Alice\"},\n    )"
+    "code": "from prefab_ui.rx import Rx\n\nname = Rx(\"name\")\n\n@mcp.tool(app=True)\ndef dashboard() -> PrefabApp:\n    with Column(gap=4) as view:\n        Heading(\"Dashboard\")\n        Text(f\"Welcome, {name}\")\n    return PrefabApp(\n        title=\"Dashboard\",\n        view=view,\n        state={\"name\": \"Alice\"},\n    )"
   },
   {
     "title": "Bare Component",
@@ -1775,9 +1790,9 @@
     "code": "# In the main view\nwith Slot(\"detail\"):\n    Text(\"Select an item\", css_class=\"text-muted-foreground\")\n\n# A tool that returns component content for the slot\n@mcp.tool\ndef get_detail(id: str) -> PrefabApp:\n    item = lookup(id)\n    with Card() as view:\n        CardTitle(item[\"name\"])\n        Text(item[\"description\"])\n    return PrefabApp(view=view, state={\"item\": item})"
   },
   {
-    "title": "CallTool(",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Running",
-    "code": "\"add_entry\",\n    arguments={\"title\": \"{{ new_title }}\"},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
+    "code": "new_title = Rx(\"new_title\")\n\nCallTool(\n    \"add_entry\",\n    arguments={\"title\": new_title},\n    on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n)"
   },
   {
     "title": "@mcp.tool",

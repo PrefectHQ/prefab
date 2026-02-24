@@ -10,7 +10,7 @@ Switches provide a visual toggle for binary states, offering an alternative to c
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"switch-5","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"switch_5","disabled":false,"required":false},"state":{"switch_5":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -24,10 +24,11 @@ Switch(label="Enable notifications")
     "label": "Enable notifications",
     "checked": false,
     "size": "default",
-    "name": "switch-5",
+    "name": "switch_5",
     "disabled": false,
     "required": false
-  }
+  },
+  "state": {"switch_5": false}
 }
 ```
 </CodeGroup>
@@ -35,7 +36,7 @@ Switch(label="Enable notifications")
 
 ## Checked State
 
-<ComponentPreview json={{"view":{"type":"Switch","label":"Dark mode","checked":true,"size":"default","name":"switch-6","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"type":"Switch","label":"Dark mode","checked":true,"size":"default","name":"switch_6","disabled":false,"required":false},"state":{"switch_6":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -49,10 +50,11 @@ Switch(label="Dark mode", checked=True)
     "label": "Dark mode",
     "checked": true,
     "size": "default",
-    "name": "switch-6",
+    "name": "switch_6",
     "disabled": false,
     "required": false
-  }
+  },
+  "state": {"switch_6": true}
 }
 ```
 </CodeGroup>
@@ -62,7 +64,7 @@ Switch(label="Dark mode", checked=True)
 
 Switches come in two sizes:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","name":"switch-7","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","name":"switch-8","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Default size","checked":true,"size":"default","name":"switch_7","disabled":false,"required":false},{"type":"Switch","label":"Small size","checked":true,"size":"sm","name":"switch_8","disabled":false,"required":false}]},"state":{"switch_7":true,"switch_8":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -85,7 +87,7 @@ with Column(gap=4):
         "label": "Default size",
         "checked": true,
         "size": "default",
-        "name": "switch-7",
+        "name": "switch_7",
         "disabled": false,
         "required": false
       },
@@ -94,12 +96,13 @@ with Column(gap=4):
         "label": "Small size",
         "checked": true,
         "size": "sm",
-        "name": "switch-8",
+        "name": "switch_8",
         "disabled": false,
         "required": false
       }
     ]
-  }
+  },
+  "state": {"switch_7": true, "switch_8": true}
 }
 ```
 </CodeGroup>
@@ -109,11 +112,15 @@ with Column(gap=4):
 
 The `on_change` parameter runs actions when the switch is toggled. The `$event` variable is `true` when switched on, `false` when off. Here, toggling the switch updates a separate status message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"notifications","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | 'Toggle the switch' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Switch","label":"Enable notifications","checked":false,"size":"default","name":"notifications","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]},"state":{"notifications":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Switch, Text
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+event = Rx("$event")
+status = Rx("status")
 
 with Column(gap=4):
     Switch(
@@ -121,11 +128,11 @@ with Column(gap=4):
         name="notifications",
         on_change=SetState(
             "status",
-            "{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}",
+            event.then("Notifications enabled", "Notifications disabled"),
         ),
     )
     Text(
-        "{{ status | 'Toggle the switch' }}",
+        status.default("Toggle the switch"),
         css_class="text-muted-foreground",
     )
 ```
@@ -151,11 +158,12 @@ with Column(gap=4):
       },
       {
         "cssClass": "text-muted-foreground",
-        "content": "{{ status | 'Toggle the switch' }}",
+        "content": "{{ status | default:'Toggle the switch' }}",
         "type": "Text"
       }
     ]
-  }
+  },
+  "state": {"notifications": false}
 }
 ```
 </CodeGroup>
@@ -163,7 +171,7 @@ with Column(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","name":"switch-9","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","name":"switch-10","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","name":"switch-11","disabled":true,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Switch","label":"Enabled switch","checked":false,"size":"default","name":"switch_9","disabled":false,"required":false},{"type":"Switch","label":"Disabled off","checked":false,"size":"default","name":"switch_10","disabled":true,"required":false},{"type":"Switch","label":"Disabled on","checked":true,"size":"default","name":"switch_11","disabled":true,"required":false}]},"state":{"switch_9":false,"switch_10":false,"switch_11":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -187,7 +195,7 @@ with Column(gap=3):
         "label": "Enabled switch",
         "checked": false,
         "size": "default",
-        "name": "switch-9",
+        "name": "switch_9",
         "disabled": false,
         "required": false
       },
@@ -196,7 +204,7 @@ with Column(gap=3):
         "label": "Disabled off",
         "checked": false,
         "size": "default",
-        "name": "switch-10",
+        "name": "switch_10",
         "disabled": true,
         "required": false
       },
@@ -205,12 +213,13 @@ with Column(gap=3):
         "label": "Disabled on",
         "checked": true,
         "size": "default",
-        "name": "switch-11",
+        "name": "switch_11",
         "disabled": true,
         "required": false
       }
     ]
-  }
+  },
+  "state": {"switch_9": false, "switch_10": false, "switch_11": true}
 }
 ```
 </CodeGroup>

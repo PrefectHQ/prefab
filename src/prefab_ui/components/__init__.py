@@ -16,7 +16,8 @@ from prefab_ui.components.base import (
     Component,
     ContainerComponent,
     StatefulMixin,
-    detached,
+    defer,
+    insert,
 )
 from prefab_ui.rx import Rx
 from prefab_ui.components.button import Button
@@ -35,6 +36,7 @@ from prefab_ui.components.combobox import Combobox, ComboboxOption
 from prefab_ui.components.code import Code
 from prefab_ui.components.column import Column
 from prefab_ui.components.container import Container
+from prefab_ui.components.control_flow import Elif, Else, ForEach, If
 from prefab_ui.components.dashboard import Dashboard, DashboardItem
 from prefab_ui.components.data_table import DataTable, DataTableColumn
 from prefab_ui.components.date_picker import DatePicker
@@ -131,13 +133,17 @@ __all__ = [
     "Dialog",
     "Div",
     "DropZone",
+    "Elif",
+    "Else",
     "Field",
+    "ForEach",
     "Form",
     "Grid",
     "Heading",
     "Histogram",
     "HoverCard",
     "Icon",
+    "If",
     "Image",
     "InlineCode",
     "Input",
@@ -180,5 +186,6 @@ __all__ = [
     "Text",
     "Textarea",
     "Tooltip",
-    "detached",
+    "defer",
+    "insert",
 ]

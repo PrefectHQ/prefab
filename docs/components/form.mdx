@@ -445,7 +445,7 @@ Compare this to the turnkey version above: the `CallTool` now has explicit `argu
 
 Each field's Python type determines which input component is rendered. A field named `email` gets an email input automatically, a `bool` becomes a checkbox, number types get number inputs with constraints, and so on.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"type":"Input","inputType":"text","placeholder":"Username","name":"username","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"type":"Input","inputType":"number","placeholder":"Age","name":"age","disabled":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"type":"Input","inputType":"password","placeholder":"Password","name":"password","disabled":false,"required":true}]},{"type":"Checkbox","label":"Active","checked":true,"name":"active","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"type":"Input","inputType":"text","placeholder":"Username","name":"username","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"type":"Input","inputType":"email","placeholder":"Email","name":"email","disabled":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"type":"Input","inputType":"number","placeholder":"Age","name":"age","disabled":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"type":"Input","inputType":"password","placeholder":"Password","name":"password","disabled":false,"required":true}]},{"type":"Checkbox","label":"Active","checked":true,"name":"active","disabled":false,"required":false}]},"state":{"active":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field, SecretStr
@@ -537,7 +537,8 @@ Form.from_model(UserProfile)
         "required": false
       }
     ]
-  }
+  },
+  "state": {"active": true}
 }
 ```
 </CodeGroup>

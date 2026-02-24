@@ -11,6 +11,7 @@
  */
 
 import type { App } from "@modelcontextprotocol/ext-apps";
+import { useRef } from "react";
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import { executeActions, type ActionSpec } from "./actions";
@@ -20,7 +21,11 @@ import { useOverlayClose } from "./overlay-context";
 import { evaluateCondition } from "./conditions";
 import { validateNode } from "./validation";
 import { ValidationError } from "./components/validation-error";
-import { autoAssignName, resetAutoNameCounter } from "./auto-name";
+import {
+  collectComponentState,
+  autoAssignName,
+  resetAutoNameCounter,
+} from "./auto-name";
 
 /** Shape of a node in the JSON component tree. */
 export interface ComponentNode {
@@ -724,6 +729,18 @@ export function RenderTree({
 }) {
   // Reset auto-name counter so names are deterministic per render pass.
   resetAutoNameCounter();
+
+  // Seed state from component initial values on first render so
+  // expressions like {{ slider-1 }} resolve before the user interacts.
+  const seeded = useRef(false);
+  if (!seeded.current) {
+    seeded.current = true;
+    const componentState = collectComponentState(tree, state.getAll());
+    if (Object.keys(componentState).length > 0) {
+      state.merge(componentState);
+    }
+  }
+
   const scope: Record<string, unknown> = defs ? { $defs: defs } : {};
   return <RenderNode node={tree} scope={scope} state={state} app={app} />;
 }

@@ -231,11 +231,15 @@ with Row(gap=2):
 Wire these onto a `CallTool` with `on_success` and `on_error`. The `{{ $error }}` variable captures the error message from the server.
 
 ```python
+from prefab_ui.rx import Rx
+
+item = Rx("item")
+
 Button(
     "Save",
     on_click=CallTool(
         "save_item",
-        arguments={"data": "{{ item }}"},
+        arguments={"data": item},
         on_success=ShowToast("Saved successfully!", variant="success"),
         on_error=ShowToast("{{ $error }}", variant="error"),
     ),

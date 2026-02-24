@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import re
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -17,25 +18,27 @@ from prefab_ui.rx import Rx, _coerce_rx, _generate_key
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
 )
+_defer_next_component: ContextVar[bool] = ContextVar(
+    "_defer_next_component", default=False
+)
 
 
 @contextmanager
-def detached() -> Generator[None, None, None]:
-    """Build components detached from the current parent context.
+def defer() -> Generator[None, None, None]:
+    """Create components without attaching them to the current parent.
 
-    Components created inside a ``detached()`` block are **not** automatically
-    appended as children to any enclosing context manager.  They can still be
-    used as context managers themselves to collect their own children::
+    Components created inside a ``defer()`` block are **not** automatically
+    appended as children to any enclosing context manager.  Use
+    :func:`insert` later to place them in the tree::
 
         with Column() as outer:
-            Text("attached to outer")
-
-            with detached():
+            with defer():
                 sidebar = Column()
                 with sidebar:
-                    Text("attached to sidebar, not outer")
+                    Text("child of sidebar, not outer")
+            insert(sidebar)
 
-        assert len(outer.children) == 1  # only the first Text
+        assert len(outer.children) == 2
     """
     saved = _component_stack.get()
     _component_stack.set(None)
@@ -43,6 +46,41 @@ def detached() -> Generator[None, None, None]:
         yield
     finally:
         _component_stack.set(saved)
+
+
+def insert(component: Component) -> Component:
+    """Insert a deferred component into the current parent context.
+
+    Use this to place a component that was created outside the tree
+    (either before any ``with`` block or inside a ``defer()`` block)
+    as a child of the current container::
+
+        volume = Slider(value=75, defer=True)
+
+        with Column():
+            Text(f"{volume.rx.number()}%")
+            insert(volume)  # volume becomes a child of Column here
+
+    Raises :class:`RuntimeError` if called outside a container context
+    or if the component is already a child of another container.
+    """
+    stack = _component_stack.get() or []
+    if not stack:
+        raise RuntimeError(
+            "insert() must be called inside a container context manager "
+            "(e.g. inside a `with Column():` block)"
+        )
+
+    # Check if already attached to a parent
+    for parent in stack:
+        if any(c is component for c in parent.children):
+            raise RuntimeError(
+                "This component is already a child of a container. "
+                "Use model_copy() to create an independent copy."
+            )
+
+    stack[-1].children.append(component)
+    return component
 
 
 # ── Gap / Align / Justify ──────────────────────────────────────────────
@@ -153,6 +191,9 @@ def _coerce_css_class(v: Any) -> str | None:
     return str(v)
 
 
+_VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_.$]*$")
+
+
 class StatefulMixin:
     """Mixin for components that support reactive state binding via ``.rx``.
 
@@ -162,6 +203,21 @@ class StatefulMixin:
     """
 
     _auto_name: ClassVar[str]
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        super().__init_subclass__(**kwargs)
+
+    def _validate_state_key_name(self) -> None:
+        """Raise ValueError if name is not a valid expression identifier."""
+        name: str | None = getattr(self, "name", None)
+        if name is None or "{{" in name:
+            return
+        if not _VALID_STATE_KEY.match(name):
+            raise ValueError(
+                f"Invalid state key name {name!r}: must be a valid identifier "
+                f"(letters, digits, underscores — no hyphens). "
+                f"'{{{{ {name} }}}}' would be parsed as arithmetic."
+            )
 
     @property
     def rx(self) -> Rx:
@@ -203,9 +259,15 @@ class Component(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _coerce_rx_values(cls, data: Any) -> Any:
-        """Recursively convert any Rx values in the input dict to strings."""
+        """Recursively convert any Rx values in the input dict to strings.
+
+        Also extracts the ``defer`` kwarg (not a model field) and stores it
+        in ``_deferred`` for :meth:`model_post_init` to check.
+        """
         if isinstance(data, dict):
-            return {k: _coerce_rx(v) for k, v in data.items()}
+            data = {k: _coerce_rx(v) for k, v in data.items()}
+            if data.pop("defer", False):
+                _defer_next_component.set(True)
         return data
 
     def model_post_init(self, __context: Any) -> None:
@@ -213,6 +275,15 @@ class Component(BaseModel):
         if self._auto_name is not None and "name" in type(self).model_fields:
             if getattr(self, "name", None) is None:
                 object.__setattr__(self, "name", _generate_key(self._auto_name))
+
+        # Validate state key names on stateful components
+        if isinstance(self, StatefulMixin):
+            self._validate_state_key_name()
+
+        # Skip auto-attach when defer=True was passed
+        if _defer_next_component.get():
+            _defer_next_component.set(False)
+            return
 
         stack = _component_stack.get() or []
         if stack:

@@ -20,6 +20,7 @@ from prefab_ui.components import (
 )
 from prefab_ui.components.charts import BarChart, ChartSeries, LineChart, RadarChart
 from prefab_ui.components.metric import Metric
+from prefab_ui.rx import Rx
 
 # Pre-segmented data for each region. The Select writes to `region` in state,
 # and a `let` binding picks the right dataset via a ternary chain.
@@ -135,23 +136,27 @@ with Column(let={
                             SelectOption(value="west", label="West")
 
         # Row 2: Metrics — all driven by `m` from the let binding
+        m = Rx("m")
         with DashboardItem(col=1, row=2, col_span=3):
-            Metric(label="Revenue", value="{{ m.revenue | currency }}")
+            Metric(label="Revenue", value=m.revenue.currency())
         with DashboardItem(col=4, row=2, col_span=3):
-            Metric(label="Units Sold", value="{{ m.units | number }}")
+            Metric(label="Units Sold", value=m.units.number())
         with DashboardItem(col=7, row=2, col_span=3):
-            Metric(label="Avg Price", value="{{ m.avg_price | currency }}")
+            Metric(label="Avg Price", value=m.avg_price.currency())
         with DashboardItem(col=10, row=2, col_span=3):
-            Metric(label="Stores", value="{{ m.stores }}")
+            Metric(label="Stores", value=m.stores)
 
         # Row 3: Bar chart + radar chart
+        chart = Rx("chart")
+        cat = Rx("cat")
+        t = Rx("t")
         with DashboardItem(col=1, row=3, col_span=7):
             with Card(css_class="h-full"):
                 with CardHeader():
                     CardTitle("Monthly Sales")
                 with CardContent():
                     BarChart(
-                        data="{{ chart }}",
+                        data=chart,
                         series=[
                             ChartSeries(data_key="sales", label="Sales", color="#2563eb"),
                             ChartSeries(data_key="returns", label="Returns", color="#e76e50"),
@@ -169,7 +174,7 @@ with Column(let={
                     CardTitle("Category Performance")
                 with CardContent():
                     RadarChart(
-                        data="{{ cat }}",
+                        data=cat,
                         series=[ChartSeries(data_key="score", label="Score")],
                         axis_key="category",
                         show_dots=True,
@@ -183,7 +188,7 @@ with Column(let={
                     CardTitle("Revenue Trend (12 months)")
                 with CardContent():
                     LineChart(
-                        data="{{ t }}",
+                        data=t,
                         series=[ChartSeries(data_key="revenue", label="Revenue", color="#2563eb")],
                         x_axis="month",
                         curve="smooth",

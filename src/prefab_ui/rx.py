@@ -34,14 +34,14 @@ _counter: ContextVar[dict[str, int]] = ContextVar("_rx_counter")
 
 
 def _generate_key(prefix: str) -> str:
-    """Return a deterministic sequential key like ``slider-1``."""
+    """Return a deterministic sequential key like ``slider_1``."""
     counters = _counter.get(None)
     if counters is None:
         counters = {}
         _counter.set(counters)
     n = counters.get(prefix, 0) + 1
     counters[prefix] = n
-    return f"{prefix}-{n}"
+    return f"{prefix}_{n}"
 
 
 def reset_counter() -> None:
