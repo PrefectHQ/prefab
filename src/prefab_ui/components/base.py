@@ -191,7 +191,7 @@ def _coerce_css_class(v: Any) -> str | None:
     return str(v)
 
 
-_VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_$]*$")
+_VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_.$]*$")
 
 
 class StatefulMixin:
@@ -210,7 +210,9 @@ class StatefulMixin:
     def _validate_state_key_name(self) -> None:
         """Raise ValueError if name is not a valid expression identifier."""
         name: str | None = getattr(self, "name", None)
-        if name is not None and not _VALID_STATE_KEY.match(name):
+        if name is None or "{{" in name:
+            return
+        if not _VALID_STATE_KEY.match(name):
             raise ValueError(
                 f"Invalid state key name {name!r}: must be a valid identifier "
                 f"(letters, digits, underscores — no hyphens). "

@@ -227,19 +227,9 @@ with Column(gap=3) as view:
                         "cssClass": "gap-2 items-center",
                         "type": "Row",
                         "children": [
-                          {
-                            "type": "Badge",
-                            "label": "{{ $item.type }}",
-                            "variant": "secondary"
-                          },
-                          {
-                            "content": "{{ $item.name }}",
-                            "type": "Small"
-                          },
-                          {
-                            "content": "{{ $item.size }} bytes",
-                            "type": "Muted"
-                          },
+                          {"type": "Badge", "label": "{{ $item.type }}", "variant": "secondary"},
+                          {"content": "{{ $item.name }}", "type": "Small"},
+                          {"content": "{{ $item.size }} bytes", "type": "Muted"},
                           {
                             "cssClass": "ml-auto h-6 w-6 p-0",
                             "type": "Button",
@@ -247,10 +237,7 @@ with Column(gap=3) as view:
                             "variant": "ghost",
                             "size": "sm",
                             "disabled": false,
-                            "onClick": {
-                              "action": "setState",
-                              "key": "files"
-                            }
+                            "onClick": {"action": "setState", "key": "files"}
                           }
                         ]
                       }
@@ -261,12 +248,7 @@ with Column(gap=3) as view:
             ]
           }
         ],
-        "else": [
-          {
-            "content": "No files selected yet",
-            "type": "Muted"
-          }
-        ]
+        "else": [{"content": "No files selected yet", "type": "Muted"}]
       }
     ]
   }

@@ -340,21 +340,14 @@ with Column(gap=3):
             "cssClass": "gap-2 items-center",
             "type": "Row",
             "children": [
-              {
-                "content": "{{ $item }}",
-                "type": "Text"
-              },
+              {"content": "{{ $item }}", "type": "Text"},
               {
                 "type": "Button",
                 "label": "\u00d7",
                 "variant": "ghost",
                 "size": "sm",
                 "disabled": false,
-                "onClick": {
-                  "action": "popState",
-                  "key": "crew",
-                  "index": "{{ $index }}"
-                }
+                "onClick": {"action": "popState", "key": "crew", "index": "{{ $index }}"}
               }
             ]
           }
@@ -379,34 +372,16 @@ with Column(gap=3):
             "size": "default",
             "disabled": false,
             "onClick": [
-              {
-                "action": "appendState",
-                "key": "crew",
-                "value": "{{ new_member }}"
-              },
-              {
-                "action": "setState",
-                "key": "new_member",
-                "value": ""
-              }
+              {"action": "appendState", "key": "crew", "value": "{{ new_member }}"},
+              {"action": "setState", "key": "new_member", "value": ""}
             ]
           }
         ]
       },
-      {
-        "content": "{{ crew | length }} crew members",
-        "type": "Muted"
-      }
+      {"content": "{{ crew | length }} crew members", "type": "Muted"}
     ]
   },
-  "state": {
-    "crew": [
-      "Arthur Dent",
-      "Ford Prefect",
-      "Trillian"
-    ],
-    "new_member": ""
-  }
+  "state": {"crew": ["Arthur Dent", "Ford Prefect", "Trillian"], "new_member": ""}
 }
 ```
 </CodeGroup>
