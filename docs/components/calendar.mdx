@@ -10,44 +10,48 @@ The Calendar component renders a month view for selecting dates. It supports sin
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Calendar","mode":"single","name":"selectedDate"}}}>
+Pass a `datetime.date` to `value` to pre-select a date:
+
+<ComponentPreview json={{"view":{"name":"calendar_1","type":"Calendar","mode":"single"},"state":{"calendar_1":"2026-07-04T12:00:00.000Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
+import datetime
 from prefab_ui.components import Calendar
 
-Calendar(name="selectedDate")
+Calendar(value=datetime.date(2026, 7, 4))
 ```
 ```json Protocol icon="brackets-curly"
-{"view": {"type": "Calendar", "mode": "single", "name": "selectedDate"}}
+{
+  "view": {"name": "calendar_1", "type": "Calendar", "mode": "single"},
+  "state": {"calendar_1": "2026-07-04T12:00:00.000Z"}
+}
 ```
 </CodeGroup>
 </ComponentPreview>
 
 ## Range Selection
 
-Set `mode="range"` to let users select a start and end date. The selected range is stored as a JSON object with `from` and `to` ISO strings.
+Set `mode="range"` to let users select a start and end date. The value is a dict with `"from"` and `"to"` keys:
 
-<ComponentPreview json={{"view":{"type":"Calendar","mode":"range","name":"dateRange"},"state":{"dateRange":"{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_2","type":"Calendar","mode":"range"},"state":{"calendar_2":"{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"}}}>
 <CodeGroup>
 ```python Python icon="python"
-import json
-from prefab_ui.app import set_initial_state
+import datetime
 from prefab_ui.components import Calendar
 
-set_initial_state(
-    dateRange=json.dumps({
-        "from": "2025-06-10T12:00:00.000Z",
-        "to": "2025-06-20T12:00:00.000Z",
-    })
+Calendar(
+    mode="range",
+    value={
+        "from": datetime.date(2025, 6, 10),
+        "to": datetime.date(2025, 6, 20),
+    },
 )
-
-Calendar(mode="range", name="dateRange")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {"type": "Calendar", "mode": "range", "name": "dateRange"},
+  "view": {"name": "calendar_2", "type": "Calendar", "mode": "range"},
   "state": {
-    "dateRange": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
+    "calendar_2": "{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"
   }
 }
 ```
@@ -56,60 +60,49 @@ Calendar(mode="range", name="dateRange")
 
 ## Multiple Selection
 
-Select multiple individual dates with `mode="multiple"`. Selected dates are stored as a JSON array of ISO strings.
+Select multiple individual dates with `mode="multiple"`. The value is a list of dates:
 
-<ComponentPreview json={{"view":{"type":"Calendar","mode":"multiple","name":"selectedDates"},"state":{"selectedDates":"[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_3","type":"Calendar","mode":"multiple"},"state":{"calendar_3":"[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"}}}>
 <CodeGroup>
 ```python Python icon="python"
-import json
-from prefab_ui.app import set_initial_state
+import datetime
 from prefab_ui.components import Calendar
 
-set_initial_state(
-    selectedDates=json.dumps([
-        "2025-06-10T12:00:00.000Z",
-        "2025-06-15T12:00:00.000Z",
-        "2025-06-22T12:00:00.000Z",
-    ])
+Calendar(
+    mode="multiple",
+    value=[
+        datetime.date(2025, 6, 10),
+        datetime.date(2025, 6, 15),
+        datetime.date(2025, 6, 22),
+    ],
 )
-
-Calendar(mode="multiple", name="selectedDates")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {"type": "Calendar", "mode": "multiple", "name": "selectedDates"},
+  "view": {"name": "calendar_3", "type": "Calendar", "mode": "multiple"},
   "state": {
-    "selectedDates": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
+    "calendar_3": "[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"
   }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-## Displaying the Selection
+## Reading the Value
 
-Bind the calendar's state to a label using `{{ name | date }}` to show a formatted date. Click a date below to see it update:
+Use `.rx` to get a reactive reference to the calendar's current selection. What `.rx` holds depends on the mode: an ISO date string for single mode, a `{"from": ..., "to": ...}` object for range mode, or an array of ISO strings for multiple mode. The `.date()` pipe formats a single ISO string for display:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Calendar","mode":"single","name":"selectedDate"},{"cssClass":"gap-2","type":"Column","children":[{"content":"Selected date:","type":"Text"},{"content":"{{ selectedDate | date:long }}","bold":true,"type":"Text"},{"content":"Raw: {{ selectedDate }}","type":"Muted"}]}]},"state":{"selectedDate":"2025-06-15T12:00:00.000Z"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"name":"calendar_4","type":"Calendar","mode":"single"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"name":"input_1","type":"Input","inputType":"text","value":"{{ calendar_4 | date:long }}","disabled":false,"readOnly":true,"required":false}]}]},"state":{"calendar_4":"2026-07-04T12:00:00.000Z"}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import (
-    Calendar,
-    Column,
-    Muted,
-    Row,
-    Text,
-)
-
-set_initial_state(selectedDate="2025-06-15T12:00:00.000Z")
+import datetime
+from prefab_ui.components import Calendar, Column, Input, Label, Row
 
 with Row(gap=6):
-    Calendar(name="selectedDate")
-    with Column(gap=2):
-        Text("Selected date:")
-        Text("{{ selectedDate | date:long }}", bold=True)
-        Muted("Raw: {{ selectedDate }}")
+    cal = Calendar(value=datetime.date(2026, 7, 4))
+    with Column(gap=2, justify="center"):
+        Label("Selected date")
+        Input(value=cal.rx.date("long"), read_only=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -117,31 +110,42 @@ with Row(gap=6):
     "cssClass": "gap-6",
     "type": "Row",
     "children": [
-      {"type": "Calendar", "mode": "single", "name": "selectedDate"},
+      {"name": "calendar_4", "type": "Calendar", "mode": "single"},
       {
-        "cssClass": "gap-2",
+        "cssClass": "gap-2 justify-center",
         "type": "Column",
         "children": [
-          {"content": "Selected date:", "type": "Text"},
-          {"content": "{{ selectedDate | date:long }}", "bold": true, "type": "Text"},
-          {"content": "Raw: {{ selectedDate }}", "type": "Muted"}
+          {"type": "Label", "text": "Selected date"},
+          {
+            "name": "input_1",
+            "type": "Input",
+            "inputType": "text",
+            "value": "{{ calendar_4 | date:long }}",
+            "disabled": false,
+            "readOnly": true,
+            "required": false
+          }
         ]
       }
     ]
   },
-  "state": {"selectedDate": "2025-06-15T12:00:00.000Z"}
+  "state": {"calendar_4": "2026-07-04T12:00:00.000Z"}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-The label updates instantly when the user clicks a date. The `date:long` format turns an ISO string like `"2025-01-15"` into `"January 15, 2025"`.
+Click a date and the input updates instantly. The `.date("long")` pipe formats an ISO string like `"2025-01-15"` into `"January 15, 2025"`.
 
 ## API Reference
 
 <Card icon="code" title="Calendar Parameters">
 <ParamField body="mode" type="str" default="single">
   Selection mode: `"single"`, `"multiple"`, or `"range"`.
+</ParamField>
+
+<ParamField body="value" type="date | Rx | dict | list[date] | None" default="None">
+  Initial selected date(s). Single: a `datetime.date`. Range: `{"from": date, "to": date}`. Multiple: a list of dates. Any position also accepts an `Rx` for reactive binding.
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">

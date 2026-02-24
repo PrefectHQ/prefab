@@ -67,7 +67,7 @@ Every form control automatically syncs its value to client-side state. When a us
 
 The `.rx` property on any stateful component returns a reactive reference to that state key. Use it in f-strings or pass it directly to any string prop — it serializes to `{{ key }}` at build time and re-evaluates at render time as the user interacts.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input
@@ -90,11 +90,12 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "city",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Enter a city...",
-        "name": "city",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {
@@ -180,7 +181,7 @@ Actions execute in order. This pattern lets you show a loading indicator before 
 
 FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"you@example.com","name":"input_15","disabled":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"input_17","type":"Input","inputType":"text","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Card, CardContent, Column, Input
@@ -204,11 +205,12 @@ with Card() as view:
             "type": "Column",
             "children": [
               {
+                "name": "input_17",
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "you@example.com",
-                "name": "input_15",
                 "disabled": false,
+                "readOnly": false,
                 "required": false
               },
               {

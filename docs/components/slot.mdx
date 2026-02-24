@@ -77,7 +77,7 @@ The layout defines *where* the dynamic content goes. The state (or an action tha
 
 Nest children inside `Slot` to define what shows when the state key is empty. Toggle the switch to see the transition — the ternary expression pulls the `detail_card` component tree from state when on, or `null` when off.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"Item Detail","type":"Heading","level":3},{"type":"Switch","label":"Show details","checked":false,"size":"default","name":"selected_item","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","content":"Toggle the switch to load details","type":"Text"}]}]},"state":{"selected_item":false,"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"Item Detail","type":"Heading","level":3},{"name":"selected_item","type":"Switch","label":"Show details","checked":false,"size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"selected_item","value":"{{ $event ? detail_card : null }}"}},{"type":"Slot","name":"selected_item","children":[{"cssClass":"text-muted-foreground","content":"Toggle the switch to load details","type":"Text"}]}]},"state":{"selected_item":false,"detail_card":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Heart of Gold"},{"type":"CardDescription","content":"Infinite Improbability Drive equipped"}]}]}}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -126,11 +126,11 @@ with Column(gap=4):
     "children": [
       {"content": "Item Detail", "type": "Heading", "level": 3},
       {
+        "name": "selected_item",
         "type": "Switch",
         "label": "Show details",
         "checked": false,
         "size": "default",
-        "name": "selected_item",
         "disabled": false,
         "required": false,
         "onChange": {

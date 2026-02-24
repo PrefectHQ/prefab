@@ -38,7 +38,7 @@ The renderer proxies the call through the Prefab SDK, so the tool executes serve
 
 Use `.rx` or `Rx("key")` to pass client state to the tool. Form controls with a `name` automatically sync to state — `Input(name="city")` updates `city` on every keystroke, no `SetState` needed.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Enter a city...","name":"city","disabled":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column
@@ -61,11 +61,12 @@ with Column(gap=3):
     "type": "Column",
     "children": [
       {
+        "name": "city",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Enter a city...",
-        "name": "city",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {

@@ -10,7 +10,7 @@ Inputs collect text, email, passwords, and other single-line data from users.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Enter your email...","name":"input_3","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"input_4","type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"readOnly":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -20,11 +20,12 @@ Input(placeholder="Enter your email...")
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "input_4",
     "type": "Input",
     "inputType": "text",
     "placeholder": "Enter your email...",
-    "name": "input_3",
     "disabled": false,
+    "readOnly": false,
     "required": false
   }
 }
@@ -36,7 +37,7 @@ Input(placeholder="Enter your email...")
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Input","inputType":"email","placeholder":"Email","name":"input_4","disabled":false,"required":false},{"type":"Input","inputType":"password","placeholder":"Password","name":"input_5","disabled":false,"required":false},{"type":"Input","inputType":"number","placeholder":"Age","name":"input_6","disabled":false,"required":false},{"type":"Input","inputType":"tel","placeholder":"Phone","name":"input_7","disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"input_5","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":false},{"name":"input_6","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":false},{"name":"input_7","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":false},{"name":"input_8","type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"readOnly":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -57,35 +58,39 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
+        "name": "input_5",
         "type": "Input",
         "inputType": "email",
         "placeholder": "Email",
-        "name": "input_4",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {
+        "name": "input_6",
         "type": "Input",
         "inputType": "password",
         "placeholder": "Password",
-        "name": "input_5",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {
+        "name": "input_7",
         "type": "Input",
         "inputType": "number",
         "placeholder": "Age",
-        "name": "input_6",
         "disabled": false,
+        "readOnly": false,
         "required": false
       },
       {
+        "name": "input_8",
         "type": "Input",
         "inputType": "tel",
         "placeholder": "Phone",
-        "name": "input_7",
         "disabled": false,
+        "readOnly": false,
         "required": false
       }
     ]
@@ -99,7 +104,7 @@ with Column(gap=4):
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"type":"Input","inputType":"email","placeholder":"you@example.com","name":"input_8","disabled":false,"required":true}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"name":"input_9","type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":true}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -120,11 +125,12 @@ with Column(gap=2):
     "children": [
       {"type": "Label", "text": "Email address"},
       {
+        "name": "input_9",
         "type": "Input",
         "inputType": "email",
         "placeholder": "you@example.com",
-        "name": "input_8",
         "disabled": false,
+        "readOnly": false,
         "required": true
       }
     ]
@@ -138,7 +144,7 @@ with Column(gap=2):
 
 Native date and time pickers use the browser's built-in UI:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date"},{"type":"Input","inputType":"date","name":"date","disabled":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Time"},{"type":"Input","inputType":"time","name":"time","disabled":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date & Time"},{"type":"Input","inputType":"datetime-local","name":"datetime","disabled":false,"required":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date"},{"name":"date","type":"Input","inputType":"date","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Time"},{"name":"time","type":"Input","inputType":"time","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2 flex-1","type":"Column","children":[{"type":"Label","text":"Date & Time"},{"name":"datetime","type":"Input","inputType":"datetime-local","disabled":false,"readOnly":false,"required":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -171,10 +177,11 @@ with Row(gap=4):
         "children": [
           {"type": "Label", "text": "Date"},
           {
+            "name": "date",
             "type": "Input",
             "inputType": "date",
-            "name": "date",
             "disabled": false,
+            "readOnly": false,
             "required": false
           }
         ]
@@ -185,10 +192,11 @@ with Row(gap=4):
         "children": [
           {"type": "Label", "text": "Time"},
           {
+            "name": "time",
             "type": "Input",
             "inputType": "time",
-            "name": "time",
             "disabled": false,
+            "readOnly": false,
             "required": false
           }
         ]
@@ -199,10 +207,11 @@ with Row(gap=4):
         "children": [
           {"type": "Label", "text": "Date & Time"},
           {
+            "name": "datetime",
             "type": "Input",
             "inputType": "datetime-local",
-            "name": "datetime",
             "disabled": false,
+            "readOnly": false,
             "required": false
           }
         ]
@@ -216,7 +225,7 @@ with Row(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Input","inputType":"text","placeholder":"Disabled input","name":"input_9","disabled":true,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"input_10","type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"readOnly":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -226,13 +235,42 @@ Input(placeholder="Disabled input", disabled=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "input_10",
     "type": "Input",
     "inputType": "text",
     "placeholder": "Disabled input",
-    "name": "input_9",
     "disabled": true,
+    "readOnly": false,
     "required": false
   }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Read-Only
+
+A read-only input displays its value and allows users to select and copy the text, but prevents editing. Unlike `disabled`, the input retains its normal visual appearance -- it doesn't grey out or signal that interaction is blocked.
+
+<ComponentPreview json={{"view":{"name":"input_11","type":"Input","inputType":"text","value":"api_key_91x8z3...","disabled":false,"readOnly":true,"required":false},"state":{"input_11":"api_key_91x8z3..."}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Input
+
+Input(value="api_key_91x8z3...", read_only=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "name": "input_11",
+    "type": "Input",
+    "inputType": "text",
+    "value": "api_key_91x8z3...",
+    "disabled": false,
+    "readOnly": true,
+    "required": false
+  },
+  "state": {"input_11": "api_key_91x8z3..."}
 }
 ```
 </CodeGroup>
@@ -262,6 +300,10 @@ Input(placeholder="Disabled input", disabled=True)
   Whether the input is non-interactive.
 </ParamField>
 
+<ParamField body="read_only" type="bool" default="False">
+  Whether the input is read-only. The value is visible and selectable but cannot be edited.
+</ParamField>
+
 <ParamField body="required" type="bool" default="False">
   Whether the input is required for form submission.
 </ParamField>
@@ -281,6 +323,7 @@ Input(placeholder="Disabled input", disabled=True)
   "value?": "string",
   "name?": "string",
   "disabled?": false,
+  "readOnly?": false,
   "required?": false,
   "minLength?": "number",
   "maxLength?": "number",

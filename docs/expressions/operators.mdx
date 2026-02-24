@@ -89,7 +89,7 @@ Arithmetic expressions can appear anywhere a value is expected — in a `Text` c
 
 The `+` operator does double duty: if either operand is a string, it concatenates instead of adding. But in Python, **f-strings are almost always the better choice** for mixing reactive values with literal text. Each `Rx` reference inside an f-string becomes a separate `{{ }}` interpolation in the output:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Input","inputType":"text","placeholder":"First name","name":"first","disabled":false,"required":false},{"type":"Input","inputType":"text","placeholder":"Last name","name":"last","disabled":false,"required":false}]},{"content":"Hello, {{ first }} {{ last }}!","type":"Text"}]},"state":{"first":"Arthur","last":"Dent"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"name":"first","type":"Input","inputType":"text","placeholder":"First name","disabled":false,"readOnly":false,"required":false},{"name":"last","type":"Input","inputType":"text","placeholder":"Last name","disabled":false,"readOnly":false,"required":false}]},{"content":"Hello, {{ first }} {{ last }}!","type":"Text"}]},"state":{"first":"Arthur","last":"Dent"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -117,19 +117,21 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {
+            "name": "first",
             "type": "Input",
             "inputType": "text",
             "placeholder": "First name",
-            "name": "first",
             "disabled": false,
+            "readOnly": false,
             "required": false
           },
           {
+            "name": "last",
             "type": "Input",
             "inputType": "text",
             "placeholder": "Last name",
-            "name": "last",
             "disabled": false,
+            "readOnly": false,
             "required": false
           }
         ]
@@ -207,7 +209,7 @@ This is a Python quirk, not a Prefab one. The protocol's `{{ }}` expressions don
 
 Sometimes you need to choose between two values based on a condition — "Online" or "Offline", "Pass" or "Fail", one color or another. The `.then(if_true, if_false)` method on `Rx` handles this, compiling to the protocol's `condition ? ifTrue : ifFalse` syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Switch","checked":false,"size":"default","name":"active","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -233,10 +235,10 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {
+            "name": "active",
             "type": "Switch",
             "checked": false,
             "size": "default",
-            "name": "active",
             "disabled": false,
             "required": false
           },

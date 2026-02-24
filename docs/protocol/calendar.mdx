@@ -22,6 +22,14 @@ Date picker calendar.
       "default": null,
       "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
     },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "State key for reactive binding. Auto-generated if omitted."
+    },
     "mode": {
       "default": "single",
       "description": "Selection mode: single date, multiple dates, or date range",
@@ -32,13 +40,35 @@ Date picker calendar.
       ],
       "type": "string"
     },
-    "name": {
-      "type": [
-        "string",
-        "null"
+    "value": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "additionalProperties": {
+            "format": "date",
+            "type": "string"
+          },
+          "type": "object"
+        },
+        {
+          "items": {
+            "format": "date",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
       ],
       "default": null,
-      "description": "State key for reactive binding. Auto-generated if omitted."
+      "description": "Initial selected date(s). Single: a date or Rx. Range: {'from': date, 'to': date}. Multiple: list of dates. Any position accepts an Rx for reactive binding."
     },
     "onChange": {
       "$ref": "Action",

@@ -75,6 +75,11 @@ class Input(StatefulMixin, Component):
         description="State key for reactive binding. Auto-generated if omitted.",
     )
     disabled: bool = Field(default=False, description="Whether input is disabled")
+    read_only: bool = Field(
+        default=False,
+        alias="readOnly",
+        description="Whether input is read-only (visible and selectable but not editable)",
+    )
     required: bool = Field(default=False, description="Whether input is required")
     min_length: int | None = Field(
         default=None,
@@ -103,3 +108,6 @@ class Input(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when value changes",
     )
+
+    def _get_initial_value(self) -> str | None:
+        return self.value

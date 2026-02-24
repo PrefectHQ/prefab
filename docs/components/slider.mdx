@@ -10,7 +10,7 @@ Sliders let users select a numeric value from a range by dragging a handle. The 
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_2","disabled":false},"state":{"slider_2":50.0}}}>
+<ComponentPreview json={{"view":{"name":"slider_2","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false},"state":{"slider_2":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -20,11 +20,11 @@ Slider(value=50)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "slider_2",
     "type": "Slider",
     "min": 0,
     "max": 100,
     "value": 50.0,
-    "name": "slider_2",
     "disabled": false
   },
   "state": {"slider_2": 50.0}
@@ -37,7 +37,7 @@ Slider(value=50)
 
 Create the slider with `defer=True` to get a reference to it, then use `.rx` to bind its value into a label. Call `insert()` to place the slider in the tree:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | number }}%","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"slider_3","disabled":false}]},"state":{"slider_3":75.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | number }}%","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_3":75.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -72,11 +72,11 @@ with Column(gap=2):
         ]
       },
       {
+        "name": "slider_3",
         "type": "Slider",
         "min": 0,
         "max": 100,
         "value": 75.0,
-        "name": "slider_3",
         "disabled": false
       }
     ]
@@ -93,7 +93,7 @@ The `.number()` pipe strips trailing decimals so the display stays clean. `defer
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"name":"rating","disabled":false}]},"state":{"rating":4.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false}]},"state":{"rating":4.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -128,12 +128,12 @@ with Column(gap=2):
         ]
       },
       {
+        "name": "rating",
         "type": "Slider",
         "min": 0.0,
         "max": 5.0,
         "value": 4.0,
         "step": 0.5,
-        "name": "rating",
         "disabled": false
       }
     ]
@@ -148,7 +148,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_4","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_4":50.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"slider_4","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_4":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.actions import SetState
@@ -173,11 +173,11 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
+        "name": "slider_4",
         "type": "Slider",
         "min": 0,
         "max": 100,
         "value": 50.0,
-        "name": "slider_4",
         "disabled": false,
         "onChange": {"action": "setState", "key": "level", "value": "{{ $event }}"}
       },
@@ -200,7 +200,7 @@ For simply displaying the slider's current value, [`.rx` binding](#displaying-th
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider_5","disabled":true},"state":{"slider_5":30.0}}}>
+<ComponentPreview json={{"view":{"name":"slider_5","type":"Slider","min":0,"max":100,"value":30.0,"disabled":true},"state":{"slider_5":30.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -210,11 +210,11 @@ Slider(value=30, disabled=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "slider_5",
     "type": "Slider",
     "min": 0,
     "max": 100,
     "value": 30.0,
-    "name": "slider_5",
     "disabled": true
   },
   "state": {"slider_5": 30.0}
@@ -227,7 +227,7 @@ Slider(value=30, disabled=True)
 
 Semantic variants color the filled track to communicate meaning at a glance — the same palette available on Progress:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"type":"Slider","min":0,"max":100,"value":60.0,"name":"slider_6","disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"type":"Slider","min":0,"max":100,"value":100.0,"name":"slider_7","disabled":false,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"type":"Slider","min":0,"max":100,"value":72.0,"name":"slider_8","disabled":false,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"type":"Slider","min":0,"max":100,"value":90.0,"name":"slider_9","disabled":false,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"type":"Slider","min":0,"max":100,"value":45.0,"name":"slider_10","disabled":false,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider_11","disabled":false,"variant":"muted"}]}]},"state":{"slider_6":60.0,"slider_7":100.0,"slider_8":72.0,"slider_9":90.0,"slider_10":45.0,"slider_11":30.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"name":"slider_6","type":"Slider","min":0,"max":100,"value":60.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"name":"slider_7","type":"Slider","min":0,"max":100,"value":100.0,"disabled":false,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"name":"slider_8","type":"Slider","min":0,"max":100,"value":72.0,"disabled":false,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"name":"slider_9","type":"Slider","min":0,"max":100,"value":90.0,"disabled":false,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"name":"slider_10","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"name":"slider_11","type":"Slider","min":0,"max":100,"value":30.0,"disabled":false,"variant":"muted"}]}]},"state":{"slider_6":60.0,"slider_7":100.0,"slider_8":72.0,"slider_9":90.0,"slider_10":45.0,"slider_11":30.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -264,11 +264,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Default"},
           {
+            "name": "slider_6",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 60.0,
-            "name": "slider_6",
             "disabled": false
           }
         ]
@@ -279,11 +279,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Success"},
           {
+            "name": "slider_7",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 100.0,
-            "name": "slider_7",
             "disabled": false,
             "variant": "success"
           }
@@ -295,11 +295,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Warning"},
           {
+            "name": "slider_8",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 72.0,
-            "name": "slider_8",
             "disabled": false,
             "variant": "warning"
           }
@@ -311,11 +311,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Destructive"},
           {
+            "name": "slider_9",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 90.0,
-            "name": "slider_9",
             "disabled": false,
             "variant": "destructive"
           }
@@ -327,11 +327,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Info"},
           {
+            "name": "slider_10",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 45.0,
-            "name": "slider_10",
             "disabled": false,
             "variant": "info"
           }
@@ -343,11 +343,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Muted"},
           {
+            "name": "slider_11",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 30.0,
-            "name": "slider_11",
             "disabled": false,
             "variant": "muted"
           }
@@ -372,7 +372,7 @@ with Column(gap=4):
 
 Use `indicator_class` for arbitrary track colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Slider","min":0,"max":100,"value":85.0,"name":"slider_12","disabled":false,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Slider","min":0,"max":100,"value":45.0,"name":"slider_13","disabled":false,"indicatorClass":"bg-blue-500"}]}]},"state":{"slider_12":85.0,"slider_13":45.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"name":"slider_12","type":"Slider","min":0,"max":100,"value":85.0,"disabled":false,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"name":"slider_13","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"indicatorClass":"bg-blue-500"}]}]},"state":{"slider_12":85.0,"slider_13":45.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -397,11 +397,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Storage Used"},
           {
+            "name": "slider_12",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 85.0,
-            "name": "slider_12",
             "disabled": false,
             "indicatorClass": "bg-red-500"
           }
@@ -413,11 +413,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Upload Progress"},
           {
+            "name": "slider_13",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 45.0,
-            "name": "slider_13",
             "disabled": false,
             "indicatorClass": "bg-blue-500"
           }
@@ -435,7 +435,7 @@ with Column(gap=4):
 
 Set `orientation="vertical"` for vertical sliders. They fill their container's height, so wrap them in a fixed-height parent:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-center justify-center","type":"Row","children":[{"type":"Slider","min":0,"max":100,"value":75.0,"name":"slider_14","disabled":false,"orientation":"vertical"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_15","disabled":false,"variant":"success","orientation":"vertical"},{"type":"Slider","min":0,"max":100,"value":25.0,"name":"slider_16","disabled":false,"variant":"info","orientation":"vertical"}]},"state":{"slider_14":75.0,"slider_15":50.0,"slider_16":25.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-center justify-center","type":"Row","children":[{"name":"slider_14","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false,"orientation":"vertical"},{"name":"slider_15","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"variant":"success","orientation":"vertical"},{"name":"slider_16","type":"Slider","min":0,"max":100,"value":25.0,"disabled":false,"variant":"info","orientation":"vertical"}]},"state":{"slider_14":75.0,"slider_15":50.0,"slider_16":25.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Row, Slider
@@ -452,30 +452,30 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
     "type": "Row",
     "children": [
       {
+        "name": "slider_14",
         "type": "Slider",
         "min": 0,
         "max": 100,
         "value": 75.0,
-        "name": "slider_14",
         "disabled": false,
         "orientation": "vertical"
       },
       {
+        "name": "slider_15",
         "type": "Slider",
         "min": 0,
         "max": 100,
         "value": 50.0,
-        "name": "slider_15",
         "disabled": false,
         "variant": "success",
         "orientation": "vertical"
       },
       {
+        "name": "slider_16",
         "type": "Slider",
         "min": 0,
         "max": 100,
         "value": 25.0,
-        "name": "slider_16",
         "disabled": false,
         "variant": "info",
         "orientation": "vertical"
@@ -492,7 +492,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
 
 The `handle_style` parameter changes the thumb shape. Use `"bar"` for a tall rounded rectangle instead of the default circle:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_17","disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_18","disabled":false,"handleStyle":"bar"}]}]},"state":{"slider_17":50.0,"slider_18":50.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"name":"slider_17","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"name":"slider_18","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"handleStyle":"bar"}]}]},"state":{"slider_17":50.0,"slider_18":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -517,11 +517,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Circle (default)"},
           {
+            "name": "slider_17",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 50.0,
-            "name": "slider_17",
             "disabled": false
           }
         ]
@@ -532,11 +532,11 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Bar"},
           {
+            "name": "slider_18",
             "type": "Slider",
             "min": 0,
             "max": 100,
             "value": 50.0,
-            "name": "slider_18",
             "disabled": false,
             "handleStyle": "bar"
           }

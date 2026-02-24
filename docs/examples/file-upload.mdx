@@ -9,7 +9,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 MCP servers typically receive files only through the LLM conversation — every byte burns tokens and inflates latency. File upload components let users send files directly to your backend tools via `CallTool`, keeping binary data out of the context window entirely. This example stays fully client-side to demonstrate the UI mechanics, but in practice you'd wire the DropZone's `on_change` (or a button's `on_click`) to a `CallTool` that sends the base64 payload to your server for processing.
 
-<ComponentPreview json={{"view":{"cssClass":"w-full max-w-2xl","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"File Inbox","type":"H3"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"type":"Badge","label":"{{ files | length }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"DropZone","icon":"inbox","label":"Drop files here","description":"Don't worry, files aren't actually uploaded","multiple":true,"maxSize":10000000,"disabled":false,"name":"files"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"files","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"cssClass":"gap-0","type":"Column","children":[{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.type }} \u00b7 {{ $item.size }} bytes","type":"Muted"}]},{"cssClass":"ml-auto h-6 w-6 p-0 text-muted-foreground","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"files","index":"{{ $index }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"items-center w-full","type":"Row","children":[{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"content":"{{ files | length }} {{ files | length | pluralize:'file' }}","type":"Muted"}]}],"else":[{"content":"No files uploaded","type":"Muted"}]},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"ml-auto","type":"Button","label":"Clear all","variant":"outline","size":"sm","disabled":false,"onClick":{"action":"setState","key":"files","value":[]}}]}]}]}]}]},"state":{"files":[]}}}>
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-2xl","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"File Inbox","type":"H3"},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"type":"Badge","label":"{{ files | length }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"name":"files","type":"DropZone","icon":"inbox","label":"Drop files here","description":"Don't worry, files aren't actually uploaded","multiple":true,"maxSize":10000000,"disabled":false},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"files","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"cssClass":"gap-0","type":"Column","children":[{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.type }} \u00b7 {{ $item.size }} bytes","type":"Muted"}]},{"cssClass":"ml-auto h-6 w-6 p-0 text-muted-foreground","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"files","index":"{{ $index }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"items-center w-full","type":"Row","children":[{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"content":"{{ files | length }} {{ files | length | pluralize:'file' }}","type":"Muted"}]}],"else":[{"content":"No files uploaded","type":"Muted"}]},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"ml-auto","type":"Button","label":"Clear all","variant":"outline","size":"sm","disabled":false,"onClick":{"action":"setState","key":"files","value":[]}}]}]}]}]}]},"state":{"files":[]}}}>
 <CodeGroup>
 ```python Python expandable icon="python"
 from prefab_ui.app import set_initial_state
@@ -120,14 +120,14 @@ with Card(css_class="w-full max-w-2xl") as view:
             "type": "Column",
             "children": [
               {
+                "name": "files",
                 "type": "DropZone",
                 "icon": "inbox",
                 "label": "Drop files here",
                 "description": "Don't worry, files aren't actually uploaded",
                 "multiple": true,
                 "maxSize": 10000000,
-                "disabled": false,
-                "name": "files"
+                "disabled": false
               },
               {
                 "type": "Condition",

@@ -60,3 +60,6 @@ class Switch(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when toggled",
     )
+
+    def _get_initial_value(self) -> bool:
+        return self.checked

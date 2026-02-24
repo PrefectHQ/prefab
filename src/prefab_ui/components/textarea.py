@@ -71,3 +71,6 @@ class Textarea(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when value changes",
     )
+
+    def _get_initial_value(self) -> str | None:
+        return self.value

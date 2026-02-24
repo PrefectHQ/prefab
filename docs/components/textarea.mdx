@@ -10,7 +10,7 @@ Textareas provide multi-line text input for comments, descriptions, and other lo
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"Enter your message...","name":"textarea_1","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"textarea_1","type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -20,9 +20,9 @@ Textarea(placeholder="Enter your message...")
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "textarea_1",
     "type": "Textarea",
     "placeholder": "Enter your message...",
-    "name": "textarea_1",
     "disabled": false,
     "required": false
   }
@@ -33,7 +33,7 @@ Textarea(placeholder="Enter your message...")
 
 ## With Labels
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"type":"Textarea","placeholder":"Tell us what you think...","name":"textarea_2","rows":5,"disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"name":"textarea_2","type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -57,9 +57,9 @@ with Column(gap=2):
     "children": [
       {"type": "Label", "text": "Feedback"},
       {
+        "name": "textarea_2",
         "type": "Textarea",
         "placeholder": "Tell us what you think...",
-        "name": "textarea_2",
         "rows": 5,
         "disabled": false,
         "required": false
@@ -73,7 +73,7 @@ with Column(gap=2):
 
 ## With Initial Value
 
-<ComponentPreview json={{"view":{"type":"Textarea","value":"This is some initial content that can be edited.","name":"textarea_3","rows":4,"disabled":false,"required":false},"state":{"textarea_3":"This is some initial content that can be edited."}}}>
+<ComponentPreview json={{"view":{"name":"textarea_3","type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false},"state":{"textarea_3":"This is some initial content that can be edited."}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -86,9 +86,9 @@ Textarea(
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "textarea_3",
     "type": "Textarea",
     "value": "This is some initial content that can be edited.",
-    "name": "textarea_3",
     "rows": 4,
     "disabled": false,
     "required": false
@@ -101,7 +101,7 @@ Textarea(
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Textarea","placeholder":"This textarea is disabled","name":"textarea_4","disabled":true,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"textarea_4","type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -111,9 +111,9 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "name": "textarea_4",
     "type": "Textarea",
     "placeholder": "This textarea is disabled",
-    "name": "textarea_4",
     "disabled": true,
     "required": false
   }

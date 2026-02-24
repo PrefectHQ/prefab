@@ -357,22 +357,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Calendar\n\nCalendar(name=\"selectedDate\")"
+    "code": "import datetime\nfrom prefab_ui.components import Calendar\n\nCalendar(value=datetime.date(2026, 7, 4))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "import json\nfrom prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Calendar\n\nset_initial_state(\n    dateRange=json.dumps({\n        \"from\": \"2025-06-10T12:00:00.000Z\",\n        \"to\": \"2025-06-20T12:00:00.000Z\",\n    })\n)\n\nCalendar(mode=\"range\", name=\"dateRange\")"
+    "code": "import datetime\nfrom prefab_ui.components import Calendar\n\nCalendar(\n    mode=\"range\",\n    value={\n        \"from\": datetime.date(2025, 6, 10),\n        \"to\": datetime.date(2025, 6, 20),\n    },\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "import json\nfrom prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Calendar\n\nset_initial_state(\n    selectedDates=json.dumps([\n        \"2025-06-10T12:00:00.000Z\",\n        \"2025-06-15T12:00:00.000Z\",\n        \"2025-06-22T12:00:00.000Z\",\n    ])\n)\n\nCalendar(mode=\"multiple\", name=\"selectedDates\")"
+    "code": "import datetime\nfrom prefab_ui.components import Calendar\n\nCalendar(\n    mode=\"multiple\",\n    value=[\n        datetime.date(2025, 6, 10),\n        datetime.date(2025, 6, 15),\n        datetime.date(2025, 6, 22),\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Calendar,\n    Column,\n    Muted,\n    Row,\n    Text,\n)\n\nset_initial_state(selectedDate=\"2025-06-15T12:00:00.000Z\")\n\nwith Row(gap=6):\n    Calendar(name=\"selectedDate\")\n    with Column(gap=2):\n        Text(\"Selected date:\")\n        Text(\"{{ selectedDate | date:long }}\", bold=True)\n        Muted(\"Raw: {{ selectedDate }}\")"
+    "code": "import datetime\nfrom prefab_ui.components import Calendar, Column, Input, Label, Row\n\nwith Row(gap=6):\n    cal = Calendar(value=datetime.date(2026, 7, 4))\n    with Column(gap=2, justify=\"center\"):\n        Label(\"Selected date\")\n        Input(value=cal.rx.date(\"long\"), read_only=True)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -863,6 +863,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Input\n\nInput(placeholder=\"Disabled input\", disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Input\n\nInput(value=\"api_key_91x8z3...\", read_only=True)"
   },
   {
     "title": "Python icon=\"python\"",

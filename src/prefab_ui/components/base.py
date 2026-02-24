@@ -200,23 +200,36 @@ class StatefulMixin:
     Stateful components (Slider, Input, Checkbox, etc.) inherit from this
     mixin to gain the ``.rx`` property, which returns an ``Rx`` object
     serializing to ``{{ name }}`` for template expressions.
+
+    Subclasses with initial state values should override
+    ``_get_initial_value`` to return the value that should populate
+    client state on first render.
     """
 
     _auto_name: ClassVar[str]
+    name: str | None
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
 
+    def _get_initial_value(self) -> Any:
+        """Return the initial value for this component's client state.
+
+        Returns ``None`` by default, meaning no state entry is created.
+        Subclasses override this to return their initial state value
+        (e.g. ``self.value`` for Slider, ``self.checked`` for Checkbox).
+        """
+        return None
+
     def _validate_state_key_name(self) -> None:
         """Raise ValueError if name is not a valid expression identifier."""
-        name: str | None = getattr(self, "name", None)
-        if name is None or "{{" in name:
+        if self.name is None or "{{" in self.name:
             return
-        if not _VALID_STATE_KEY.match(name):
+        if not _VALID_STATE_KEY.match(self.name):
             raise ValueError(
-                f"Invalid state key name {name!r}: must be a valid identifier "
+                f"Invalid state key name {self.name!r}: must be a valid identifier "
                 f"(letters, digits, underscores — no hyphens). "
-                f"'{{{{ {name} }}}}' would be parsed as arithmetic."
+                f"'{{{{ {self.name} }}}}' would be parsed as arithmetic."
             )
 
     @property
@@ -226,13 +239,12 @@ class StatefulMixin:
         Returns an ``Rx`` object that serializes to ``{{ key }}`` and can
         be passed to any string-typed component field or used in f-strings.
         """
-        name: str | None = getattr(self, "name", None)
-        if name is None:
+        if self.name is None:
             raise ValueError(
                 f"{type(self).__name__}.rx requires a name — "
                 f"set _auto_name on the class or pass name= explicitly"
             )
-        return Rx(name)
+        return Rx(self.name)
 
 
 class Component(BaseModel):
@@ -271,13 +283,10 @@ class Component(BaseModel):
         return data
 
     def model_post_init(self, __context: Any) -> None:
-        # Auto-generate name for stateful components when not provided
-        if self._auto_name is not None and "name" in type(self).model_fields:
-            if getattr(self, "name", None) is None:
-                object.__setattr__(self, "name", _generate_key(self._auto_name))
-
-        # Validate state key names on stateful components
+        # Auto-generate name and validate for stateful components
         if isinstance(self, StatefulMixin):
+            if self.name is None:
+                object.__setattr__(self, "name", _generate_key(self._auto_name))
             self._validate_state_key_name()
 
         # Skip auto-attach when defer=True was passed

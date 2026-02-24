@@ -22,6 +22,21 @@ def test_input_none_fields_excluded():
     assert j["name"] == "input_1"
 
 
+class TestInputReadOnly:
+    def test_read_only_in_json(self):
+        j = Input(name="x", read_only=True).to_json()
+        assert j["readOnly"] is True
+
+    def test_read_only_defaults_to_false(self):
+        j = Input(name="x").to_json()
+        assert j["readOnly"] is False
+
+    def test_read_only_with_value(self):
+        j = Input(name="display", value="hello", read_only=True).to_json()
+        assert j["readOnly"] is True
+        assert j["value"] == "hello"
+
+
 class TestInputConstraintProps:
     def test_input_min_max_length(self):
         j = Input(name="x", min_length=1, max_length=100).to_json()

@@ -77,7 +77,10 @@ export function collectComponentState(
       !(n.name in existing)
     ) {
       const val = n.value ?? n.checked;
-      if (val !== undefined) {
+      if (
+        val !== undefined &&
+        !(typeof val === "string" && val.includes("{{"))
+      ) {
         result[n.name] = val;
       }
     }
