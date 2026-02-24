@@ -84,6 +84,7 @@ import { pageSchema, pagesSchema } from "./pages.ts";
 import { popoverSchema } from "./popover.ts";
 import { progressSchema } from "./progress.ts";
 import { radioGroupSchema, radioSchema } from "./radio.ts";
+import { ringSchema } from "./ring.ts";
 import { rowSchema } from "./row.ts";
 import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
@@ -189,6 +190,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Progress: progressSchema,
   Radio: radioSchema,
   RadioGroup: radioGroupSchema,
+  Ring: ringSchema,
   Row: rowSchema,
   ScatterChart: scatterChartSchema,
   Select: selectSchema,
