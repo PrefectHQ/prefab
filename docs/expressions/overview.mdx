@@ -1,17 +1,15 @@
 ---
-title: Reactive Expressions
-sidebarTitle: Reactive Expressions
-description: How Prefab enables client-side interactivity without a server round-trip.
+title: Reactivity
+sidebarTitle: Reactivity
+description: How state, expressions, and actions work together to build interactive UIs.
 icon: bolt
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Prefab UIs aren't static. When a user clicks a button, drags a slider, or types into an input, the interface can respond instantly — updating text, toggling visibility, reformatting values, computing totals — all without waiting for a server call.
+Prefab UIs are built around a simple loop: you declare **state**, you write **expressions** that reference it, and when state changes, every expression that depends on it re-evaluates automatically. You never imperatively tell a component to update — you describe what it should display, and Prefab keeps it current.
 
-This client-side interactivity is powered by a small expression language that runs inside the renderer. Expressions evaluate against the current [state](/components/state), and the UI re-renders whenever that state changes. Combined with [actions](/actions/overview) that modify state in response to user interaction, this covers the common cases for reactive UIs: counters, toggles, conditional displays, formatted output, and form-driven content.
-
-Try clicking the buttons in this counter — it works entirely in the browser, with no server involved:
+That might sound abstract, so here's what it looks like in practice:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}}>
 <CodeGroup>
@@ -23,17 +21,9 @@ from prefab_ui.actions import SetState
 set_initial_state(count=0)
 
 with Row(gap=3, align="center"):
-    Button(
-        "-",
-        variant="outline",
-        on_click=SetState("count", "{{ count - 1 }}"),
-    )
+    Button("-", variant="outline", on_click=SetState("count", "{{ count - 1 }}"))
     Text("{{ count }}")
-    Button(
-        "+",
-        variant="outline",
-        on_click=SetState("count", "{{ count + 1 }}"),
-    )
+    Button("+", variant="outline", on_click=SetState("count", "{{ count + 1 }}"))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -66,78 +56,174 @@ with Row(gap=3, align="center"):
 </CodeGroup>
 </ComponentPreview>
 
-Clicking "+" triggers `SetState("count", "{{ count + 1 }}")`. The expression `count + 1` evaluates against the current state, updates the `count` key, and every `{{ count }}` reference in the UI re-renders with the new value.
+Click the buttons. The number updates instantly — no server call, no page refresh, no loading spinner. Let's walk through the three pieces that make this work.
 
-## What Expressions Can Do
+**State** is the data behind your UI. `set_initial_state(count=0)` creates a reactive state key called `count` and sets it to zero. You can think of state as a shared dictionary that every component in your UI can read from and write to.
 
-Expressions handle display-time computation — formatting values, computing derived text, and making rendering decisions:
+**Expressions** are how components read from state. `{{ count }}` is a template expression — wherever it appears in the component tree, the renderer looks up the current value of `count` and displays it. When `count` is `0`, the text shows `0`. When `count` changes to `1`, every `{{ count }}` in the entire UI re-evaluates and updates. You don't subscribe to changes or wire up listeners; the renderer tracks dependencies for you.
 
-- **Arithmetic** — `{{ price * quantity }}`, `{{ count + 1 }}`
-- **Comparisons** — `{{ score > 90 }}`, `{{ status == 'active' }}`
-- **Conditional text** — `{{ active ? 'Online' : 'Offline' }}`
-- **String building** — `{{ first + ' ' + last }}`
-- **Formatting** — `{{ price | currency }}`, `{{ name | upper }}`
-- **Conditional rendering** — `If("{{ inventory > 0 }}")` / `Elif` / `Else`
+**Actions** are how state changes. `SetState("count", "{{ count + 1 }}")` is an action that fires when the button is clicked. It evaluates the expression `{{ count + 1 }}` against the current state — if `count` is `3`, the expression resolves to `4` — and writes the result back to the `count` key. The `-` button does the same thing with `{{ count - 1 }}`.
 
-## What They Can't
+That's the complete model: state holds values, expressions read them, actions change them. Everything else on this page builds on top of that loop.
 
-Expressions are deliberately restricted to evaluating scalar values — numbers, strings, booleans. They cannot construct objects, call functions, make network requests, or produce side effects.
+## Data Binding
 
-Prefab splits interactive behavior into three layers, each with a clear scope:
+The counter above creates state explicitly with `set_initial_state()`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
 
-| Layer | Scope | Examples |
-|------|---------|----------|
-| **Expressions** | Compute display values | Arithmetic, formatting, conditional text, comparisons |
-| **[Actions](/actions/overview)** | Mutate client state | SetState, ToggleState, ShowToast |
-| **[CallTool](/actions/call-tool)** | Run server logic | Data fetching, business logic, complex transformations |
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Input","inputType":"text","placeholder":"Your name","name":"name","disabled":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Input, Text
 
-If you find yourself wanting to write application logic inside a `{{ }}` template, that computation belongs in a CallTool instead.
+set_initial_state(name="Arthur")
 
-## Where Expressions Appear
+with Column(gap=3):
+    Input(name="name", placeholder="Your name")
+    Text("Hello, {{ name }}!")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Your name",
+        "name": "name",
+        "disabled": false,
+        "required": false
+      },
+      {"content": "Hello, {{ name }}!", "type": "Text"}
+    ]
+  },
+  "state": {"name": "Arthur"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
-The same expression language is used in three places, each with a slightly different purpose:
+Type in the input. The greeting updates on every keystroke.
 
-**[Templates](/expressions/templates)** embed expressions inside string props using `{{ }}` delimiters. The renderer evaluates the expression and substitutes the result. Every string prop on every component supports this — labels, placeholders, URLs, CSS classes, action arguments, anything.
+The `name` prop is doing the work here. `Input(name="name")` does two things: it creates a state key called `name`, and it binds the input to that key so that every keystroke writes the current text back to state. The `Text` component references `{{ name }}`, so it re-evaluates whenever the input changes. There's no onChange handler, no callback, no explicit wiring — the `name` prop *is* the connection.
 
-When authoring in Python, use the `.rx` property on stateful components to generate these expressions automatically rather than writing `{{ }}` by hand. `input.rx` in an f-string becomes `{{ input-1 }}` in the protocol. Write `{{ }}` directly for runtime variables like `$item` or for expressions that combine multiple state keys.
+Every form control with a `name` prop works this way. A `Slider(name="volume")` writes its position to `volume` on every drag. A `Checkbox(name="agree")` toggles `true`/`false` on every click. A `Select(name="size")` writes the selected option. Whatever name you choose becomes the state key that the rest of your UI can reference with `{{ }}`.
+
+## Rx
+
+Writing `{{ }}` template strings works — you've just seen it in two examples — but it has real downsides in Python. Your editor can't autocomplete state key names inside a string. A typo like `{{ connt }}` won't be caught until runtime. And you can't use Python operators to compose expressions; you have to write them by hand as string fragments.
+
+The `Rx` class solves all three problems. `Rx("count")` creates a reactive reference to the `count` state key. Under the hood it serializes to `{{ count }}`, but in your Python code it behaves like an object you can pass around, combine with operators, and embed in f-strings.
+
+Here's what that looks like at the simplest level — passing an Rx reference to a component:
 
 ```python
-from prefab_ui.components import Badge, Input, Text
+from prefab_ui.rx import Rx
 
-amount = Input()
-Text(f"Total: {amount.rx}")                    # uses .rx — cleaner Python
-Text("{{ price * quantity | currency }}")      # expression combining two keys
-Badge("{{ status | upper }}", variant="secondary")
+count = Rx("count")
+Text(count)     # equivalent to Text("{{ count }}")
 ```
 
-**[Conditional rendering](/components/conditional)** uses `If`, `Elif`, and `Else` blocks to show or hide components based on expression results. Each condition evaluates to a truthy or falsy value, and the first matching branch renders.
+Where Rx gets interesting is Python's operator overloading. You can do arithmetic, comparisons, and formatting with normal Python syntax, and each operation builds the corresponding template expression:
 
 ```python
-with If("{{ inventory == 0 }}"):
-    Alert("Out of stock", variant="destructive")
-with Elif("{{ inventory < 10 }}"):
-    Alert("Low stock")
-with Else():
-    Badge("In stock")
+price = Rx("price")
+quantity = Rx("quantity")
+
+price * quantity               # → {{ price * quantity }}
+(price * quantity).currency()  # → {{ price * quantity | currency }}
 ```
 
-## Grammar
+And f-strings let you mix Rx references with literal text naturally:
 
-The complete expression grammar, from lowest to highest precedence:
-
-```
-expr       -> pipe
-pipe       -> ternary ( '|' ( ident ( ':' arg )? | literal ) )*
-ternary    -> or ( '?' expr ':' expr )?
-or         -> and ( '||' and )*
-and        -> not ( '&&' not )*
-not        -> '!' not | comp
-comp       -> add ( ( '==' | '!=' | '>' | '<' | '>=' | '<=' ) add )?
-add        -> mul ( ( '+' | '-' ) mul )*
-mul        -> unary ( ( '*' | '/' ) unary )*
-unary      -> ( '-' | '+' ) unary | primary
-primary    -> '(' expr ')' | number | string | 'true' | 'false' | 'null' | ident
-ident      -> name ( '.' name )*
+```python
+Text(f"Total: {(price * quantity).currency()}")
+# → Text("Total: {{ price * quantity | currency }}")
 ```
 
-Strings use single quotes inside expressions: `{{ status == 'active' }}`. Numbers can be integers or floats. Identifiers resolve as dot-paths against the current context.
+Form controls have a shorthand for this. The `.rx` property returns `Rx(component.name)`, so you don't have to repeat the state key:
+
+```python
+slider = Slider(name="volume", min=0, max=100)
+slider.rx              # → Rx("volume") → {{ volume }}
+slider.rx.percent()    # → {{ volume | percent }}
+slider.rx > 80         # → {{ volume > 80 }}
+```
+
+Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}%","type":"Text"},{"type":"Progress","value":"{{ volume }}","max":100}]},"state":{"volume":50}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Progress, Slider, Text
+
+set_initial_state(volume=50)
+
+with Column(gap=3):
+    slider = Slider(name="volume", min=0, max=100)
+    Text(f"Volume: {slider.rx}%")
+    Progress(value=slider.rx)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "name": "volume",
+        "disabled": false
+      },
+      {"content": "Volume: {{ volume }}%", "type": "Text"},
+      {"type": "Progress", "value": "{{ volume }}", "max": 100}
+    ]
+  },
+  "state": {"volume": 50}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag the slider — the text and progress bar update together. The Python code reads naturally: create a slider, show its value as a percentage, feed it to a progress bar. Under the hood, `slider.rx` compiles to `{{ volume }}`, and the reactive model you learned in the counter example handles the rest.
+
+Use `.rx` when you have a component variable in scope. Use `Rx("key")` when you're working with keys from `set_initial_state()`, with [ForEach](/components/foreach) iteration variables, or when the component that created the state is defined far away from where you need its value.
+
+Here's a quick reference for the Rx patterns you'll use most often:
+
+| Python | Compiles to |
+|--------|-------------|
+| `Rx("count")` | `{{ count }}` |
+| `price * quantity` | `{{ price * quantity }}` |
+| `score > 90` | `{{ score > 90 }}` |
+| `active.then("On", "Off")` | `{{ active ? 'On' : 'Off' }}` |
+| `revenue.currency()` | `{{ revenue \| currency }}` |
+
+[Operators](/expressions/operators) covers the full set of arithmetic, comparisons, logic, and conditionals. [Formatting](/expressions/pipes) covers display pipes like `currency`, `percent`, `date`, and `upper`.
+
+## Three Layers
+
+Expressions are deliberately limited. They can compute display values — arithmetic, string formatting, comparisons, conditional text — but they can't make network requests, call functions, or produce side effects. They run entirely in the browser and always resolve to a simple value: a number, a string, or a boolean.
+
+This is a design choice, not a limitation. Prefab splits interactivity into three layers, each with a clear boundary:
+
+| Layer | Where it runs | What it does |
+|-------|---------------|--------------|
+| **Expressions** | Client (browser) | Compute display values — arithmetic, formatting, conditional text |
+| **[Actions](/actions/overview)** | Client (browser) | Mutate state — SetState, ToggleState, ShowToast |
+| **[CallTool](/actions/call-tool)** | Server | Run business logic — data fetching, validation, persistence |
+
+If you find yourself wanting to filter a list by a complex predicate, fetch data from an API, or run business logic — that's not an expression problem, it's a [CallTool](/actions/call-tool) problem. Expressions handle the display; actions and tools handle everything else.
+
+## Type Preservation
+
+One detail worth knowing early: when a `{{ }}` expression is the *entire* value of a prop, the renderer preserves the resolved type. `Progress(value=slider.rx)` serializes to `"{{ volume }}"`, and the renderer resolves it to the number `50`, not the string `"50"`. This matters for props like `value`, `min`, `max`, and `disabled` that expect specific types.
+
+Mixed expressions — where `{{ }}` is embedded in surrounding text — always produce strings. `f"Volume: {slider.rx}%"` compiles to `"Volume: {{ volume }}%"`, which resolves to the string `"Volume: 50%"`. The surrounding text forces string concatenation.
+
+The practical rule: if a prop needs a number or boolean, make sure the Rx reference (or `{{ }}` template) is the *sole* value, not wrapped in an f-string or mixed with other text.

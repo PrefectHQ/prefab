@@ -1,31 +1,50 @@
 ---
 title: Context & Variables
-description: What data expressions can access and where it comes from.
+description: What data expressions can access, and where it comes from.
 icon: database
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Expressions resolve identifiers from a context object. What's in that context depends on where the expression runs — global state is always available, but `let` bindings and [ForEach](/components/foreach) can layer on additional scoped values.
+Every `{{ }}` expression runs within a **scope** — a set of names it can resolve. At the top level, that scope is your global state: the keys from `set_initial_state()`, from form controls, and from action results. But certain components introduce **local variables** that are only visible to their children, not to the rest of the UI.
+
+This page covers where expression data comes from and how scoping works.
 
 ## Global State
 
-Global state is always accessible from any expression. Values enter global state from three sources:
+Global state is the foundation. Every expression in your UI can access it, regardless of where it appears in the component tree. Four sources feed into it:
 
-**`AppResult`** — the initial state set by your server code:
+**Initial state** defines starting values. In Python, call `set_initial_state()` with keyword arguments. These keys are immediately available to any `{{ }}` expression or `Rx` reference:
+
+```python
+from prefab_ui.app import set_initial_state
+
+set_initial_state(count=0, name="Arthur", towel=True)
+```
+
+**AppResult** provides initial state when returning a UI from an MCP tool. This is how server-side data enters the reactive system:
+
 ```python
 from prefab_ui import AppResult
 
 AppResult(state={"count": 0, "name": "Arthur"}, view=...)
 ```
 
-**Named form controls** — any component with a `name` prop syncs its current value to state automatically. `Input(name="city")` updates `{{ city }}` on every keystroke.
+**Form controls** sync to state automatically when they have a `name` prop. An `Input(name="city")` writes its current text to the `city` key on every keystroke; a `Slider(name="volume")` writes its position on every drag. The `.rx` property returns an `Rx` reference to the control's state key, which keeps the binding between a control and its consumers visually obvious:
 
-**Actions** — [SetState](/actions/set-state) and [CallTool](/actions/call-tool) (via `result_key`) write to global state when they fire.
+```python
+from prefab_ui.components import Input, Text
+
+search = Input(name="query", placeholder="Search...")
+Text(f"You typed: {search.rx}")
+# search.rx is Rx("query") → {{ query }}
+```
+
+**Actions** write to state when they fire. [SetState](/actions/update-state) sets a key to an explicit value (or defaults to `$event` — see below). [CallTool](/actions/call-tool) runs server-side logic and writes the result to state via `result_key`. Either way, the new value is immediately available to every expression that references that key.
 
 ## Local Scope (`let`)
 
-Any container component can introduce scoped bindings via `let` — a dict of names to template expressions. These values are available to all children and shadow outer scope for the same key.
+Sometimes you want to pass named values into a section of your UI without putting them in global state. The `let` prop on any container component does this — it introduces scoped bindings that are available to all children of that container, but invisible outside it.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","let":{"greeting":"Don't Panic","name":"Arthur"},"type":"Column","children":[{"content":"{{ greeting }}, {{ name }}","type":"Text"},{"let":{"name":"Ford"},"type":"Column","children":[{"content":"{{ greeting }}, {{ name }}","type":"Text"}]}]}}}>
 <CodeGroup>
@@ -57,37 +76,47 @@ with Column(gap=2, let={"greeting": "Don't Panic", "name": "Arthur"}):
 </CodeGroup>
 </ComponentPreview>
 
-The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `let` shadows `name` but inherits `greeting` from the outer scope.
+The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `let` **shadows** `name` with a new value, but `greeting` is inherited from the outer scope unchanged. This is the same scoping model you'd find in nested function calls or block scoping in most programming languages.
 
-Unlike `set_initial_state()`, `let` bindings are scoped and read-only — they exist only inside the container, and user interactions can't change them. Use `set_initial_state()` for anything interactive (form inputs, toggles, lists the user edits). Use `let` when you're passing fixed data into a section of the UI.
+The rule of thumb: use `set_initial_state()` for anything the user can change (form inputs, toggles, lists that get edited). Use `let` for fixed data you're passing into a section — labels, configuration, computed values that don't change at runtime. `let` bindings are read-only; user interactions cannot modify them.
 
-On [ForEach](/components/foreach), `let` is especially useful for capturing the loop index before it gets shadowed by a nested loop:
+### Capturing Loop Variables
+
+On [ForEach](/components/foreach), `let` has a specific trick worth knowing. When you nest one loop inside another, both loops define `$index` — and the inner one shadows the outer. To preserve the outer index, capture it with `let` before entering the inner loop:
 
 ```python
+from prefab_ui.components import Text
+from prefab_ui.components.control_flow import ForEach
+
 with ForEach("groups", let={"gi": "{{ $index }}"}):
-    # gi holds the outer index; $index inside a nested ForEach refers to the inner loop
     with ForEach("groups.{{ gi }}.todos"):
         Text("Group {{ gi }}, item {{ $index }}")
 ```
 
+The outer `ForEach` captures its `$index` as `gi`. Inside the nested loop, `$index` refers to the inner iteration, but `gi` still holds the outer group index.
+
 ## Dot Paths
 
-Use dot notation to reach into nested objects:
+State values can be nested objects, and you reach into them with dot notation. In Python, attribute access on an `Rx` reference builds the path automatically:
 
-```
-{{ user.address.city }}
-{{ order.items.length }}
+```python
+from prefab_ui.rx import Rx
+
+user = Rx("user")
+user.address.city        # → {{ user.address.city }}
 ```
 
-`.length` works on both arrays and strings. If any segment of the path is null or undefined, the entire expression resolves to undefined.
+In the protocol, write the path directly: `{{ user.address.city }}`. If any segment along the path is null or undefined, the entire expression resolves to undefined (rather than throwing an error).
+
+`.length` works on both arrays and strings — `{{ items.length }}` returns the element count, `{{ name.length }}` returns the character count.
 
 ## Special Variables
 
-Several variables are injected automatically by the framework in specific contexts.
+Several variables are injected by the framework at specific points in the component tree. These are **runtime values** — they don't exist in your global state and there's no Python-side `Rx` reference for them. You access them with raw `{{ }}` template strings.
 
 ### `$event`
 
-Available inside action specs. Contains the value from the triggering interaction — what that means depends on the component:
+Available inside action handlers. It contains the value from the interaction that triggered the action — what that value is depends on the component:
 
 | Component | `$event` value |
 |-----------|---------------|
@@ -98,13 +127,14 @@ Available inside action specs. Contains the value from the triggering interactio
 | RadioGroup | Selected value (string) |
 | Button | `undefined` |
 
-[SetState](/actions/set-state) defaults to `"{{ $event }}"` when no explicit value is provided, which is why `SetState("volume")` on a slider captures the slider position.
+This is why [SetState](/actions/update-state) can be so concise: when you write `SetState("volume")` without a second argument, it defaults to `"{{ $event }}"`, which automatically captures whatever the component emitted. On a slider, that's the position; on an input, that's the text.
 
 ### `$error`
 
-Available inside `on_error` callbacks. Contains the error message string from the failed action.
+Available inside `on_error` callbacks. Contains the error message string when an action fails:
 
 ```python
+from prefab_ui.components import Button
 from prefab_ui.actions import ShowToast
 from prefab_ui.actions.mcp import CallTool
 
@@ -119,7 +149,7 @@ Button(
 
 ### `$index`
 
-Available inside [ForEach](/components/foreach) iterations. The zero-based index of the current item.
+Available inside [ForEach](/components/foreach) iterations. The zero-based index of the current item in the list:
 
 ```python
 from prefab_ui.components import Text
@@ -127,14 +157,13 @@ from prefab_ui.components.control_flow import ForEach
 
 with ForEach("items"):
     Text("{{ $index + 1 }}. {{ name }}")
-    # Renders: "1. First", "2. Second", etc.
 ```
 
-`$index` is how actions target specific list items from inside a loop — `SetState("todos.{{ $index }}.done")` updates the `done` field of the item at the current position.
+`$index` is especially important for actions that need to target a specific item in a list. `SetState("todos.{{ $index }}.done")` updates the `done` field on the item at the current loop position — without `$index`, you'd have no way to know which item was clicked.
 
 ### `$item`
 
-Available inside [ForEach](/components/foreach) iterations. A reference to the entire current item object. Individual fields are also available directly (`{{ name }}` instead of `{{ $item.name }}`), but `$item` is useful when you need to pass the whole object to an action:
+Also available inside [ForEach](/components/foreach). A reference to the entire current item object. You usually don't need it — individual fields are available directly as `{{ name }}` instead of `{{ $item.name }}` — but `$item` is useful when you need to pass the whole object to an action:
 
 ```python
 from prefab_ui.components import Button, Text
@@ -152,85 +181,41 @@ with ForEach("users"):
     )
 ```
 
-## Conditional Rendering
+## Undefined Values
 
-[If/Elif/Else](/components/conditional) blocks use expressions to control which components render. The expression evaluates to a truthy or falsy value, and the first matching branch renders. This is one of the most practical uses of expression context — combining state from different sources to determine what the user sees:
+When a `{{ }}` expression references a key that doesn't exist in the current scope, the behavior depends on context.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Inventory: {{ inventory }}","type":"Text"},{"type":"Slider","min":0.0,"max":30.0,"step":1.0,"name":"inventory","disabled":false},{"type":"Condition","cases":[{"when":"{{ inventory == 0 }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertDescription","content":"Out of stock!"}]}]},{"when":"{{ inventory > 0 && inventory < 10 }}","children":[{"type":"Alert","variant":"default","children":[{"type":"AlertDescription","content":"Low stock warning"}]}]}]}]},"state":{"inventory":15}}}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import (
-    Alert,
-    AlertDescription,
-    Column,
-    Slider,
-    Text,
-)
-from prefab_ui.components.control_flow import Elif, If
-set_initial_state(inventory=15)
+If the template is the *sole* value — like `"{{ missing }}"` — the original template string is returned unchanged as literal text. This means an unresolved expression shows `{{ missing }}` rather than blank or broken content, which helps with debugging and prevents empty-looking UIs when data hasn't loaded yet.
 
-with Column(gap=3):
-    Text("Inventory: {{ inventory }}")
-    Slider(
-        name="inventory",
-        min=0,
-        max=30,
-        step=1,
-    )
-    with If("{{ inventory == 0 }}"):
-        with Alert(variant="destructive"):
-            AlertDescription("Out of stock!")
-    with Elif("{{ inventory > 0 && inventory < 10 }}"):
-        with Alert():
-            AlertDescription("Low stock warning")
+In mixed templates — where `{{ }}` is embedded in surrounding text — undefined values resolve to empty strings: `"Hi {{ missing }}!"` produces `"Hi !"`.
+
+Use the `default` pipe to provide a fallback: `{{ missing | 'N/A' }}` returns `"N/A"` when `missing` is undefined.
+
+<Warning>
+  **Gotcha with boolean props.** A raw template string like `"{{ waiting }}"` is a non-empty string, which JavaScript considers truthy. If `waiting` hasn't been set yet, `disabled="{{ waiting }}"` evaluates to the *string* `{{ waiting }}` — and since that string is truthy, the component starts disabled even though you haven't set `waiting` to `true`.
+
+  Fix this with the default pipe: `disabled="{{ waiting | false }}"` returns `false` when `waiting` is undefined, so the component starts enabled as expected.
+</Warning>
+
+## Grammar
+
+For completeness, here's the full BNF for the expression language inside `{{ }}` delimiters. Most developers won't need this — the `Rx` DSL handles expression construction for you — but it's useful if you're writing protocol JSON directly or building tooling that parses expressions.
+
 ```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {"content": "Inventory: {{ inventory }}", "type": "Text"},
-      {
-        "type": "Slider",
-        "min": 0.0,
-        "max": 30.0,
-        "step": 1.0,
-        "name": "inventory",
-        "disabled": false
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "{{ inventory == 0 }}",
-            "children": [
-              {
-                "type": "Alert",
-                "variant": "destructive",
-                "children": [{"type": "AlertDescription", "content": "Out of stock!"}]
-              }
-            ]
-          },
-          {
-            "when": "{{ inventory > 0 && inventory < 10 }}",
-            "children": [
-              {
-                "type": "Alert",
-                "variant": "default",
-                "children": [{"type": "AlertDescription", "content": "Low stock warning"}]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "state": {"inventory": 15}
-}
+expr       -> pipe
+pipe       -> ternary ( '|' ( ident ( ':' arg )? | literal ) )*
+ternary    -> or ( '?' expr ':' expr )?
+or         -> and ( '||' and )*
+and        -> not ( '&&' not )*
+not        -> '!' not | comp
+comp       -> add ( ( '==' | '!=' | '>' | '<' | '>=' | '<=' ) add )?
+add        -> mul ( ( '+' | '-' ) mul )*
+mul        -> unary ( ( '*' | '/' ) unary )*
+unary      -> ( '-' | '+' ) unary | primary
+primary    -> '(' expr ')' | number | string | 'true' | 'false' | 'null' | ident
+ident      -> name ( '.' name )*
 ```
-</CodeGroup>
-</ComponentPreview>
 
-Drag the slider to zero to see the "Out of stock!" alert appear. Values between 1 and 9 show the "Low stock warning" instead.
+Pipe has the lowest precedence, so `price * quantity | currency` parses as `(price * quantity) | currency`. The ternary operator is next-lowest, meaning `a > 0 ? a : -a | abs` parses as `(a > 0 ? a : -a) | abs`. Use parentheses to override when needed.
+
+Keywords `and`, `or`, and `not` are interchangeable with `&&`, `||`, and `!` respectively. Strings use single quotes inside expressions: `{{ status == 'active' }}`.
