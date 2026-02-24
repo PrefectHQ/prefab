@@ -11,6 +11,12 @@ export const sliderSchema = componentBase.extend({
   range: z.boolean().optional(),
   name: z.string().optional(),
   disabled: z.boolean().optional(),
+  variant: z
+    .enum(["default", "success", "warning", "destructive", "info", "muted"])
+    .optional(),
+  indicatorClass: z.string().optional(),
+  orientation: z.enum(["horizontal", "vertical"]).optional(),
+  handleStyle: z.enum(["circle", "bar"]).optional(),
   onChange: actionOrList.optional(),
 });
 

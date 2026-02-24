@@ -297,6 +297,57 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
+## Vertical Orientation
+
+Set `orientation="vertical"` for vertical progress bars. The default height is set by the theme — wrap in a sized container for custom heights:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-end justify-center","type":"Row","children":[{"type":"Progress","value":75.0,"min":0,"max":100,"variant":"default","orientation":"vertical"},{"type":"Progress","value":50.0,"min":0,"max":100,"variant":"success","orientation":"vertical"},{"type":"Progress","value":25.0,"min":0,"max":100,"variant":"info","orientation":"vertical"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Progress, Row
+
+with Row(css_class="gap-8 h-48 items-end justify-center"):
+    Progress(value=75, orientation="vertical")
+    Progress(value=50, variant="success", orientation="vertical")
+    Progress(value=25, variant="info", orientation="vertical")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-8 h-48 items-end justify-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Progress",
+        "value": 75.0,
+        "min": 0,
+        "max": 100,
+        "variant": "default",
+        "orientation": "vertical"
+      },
+      {
+        "type": "Progress",
+        "value": 50.0,
+        "min": 0,
+        "max": 100,
+        "variant": "success",
+        "orientation": "vertical"
+      },
+      {
+        "type": "Progress",
+        "value": 25.0,
+        "min": 0,
+        "max": 100,
+        "variant": "info",
+        "orientation": "vertical"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Dynamic Progress with Labels
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
@@ -383,6 +434,10 @@ with Column(gap=3):
   Tailwind classes for the indicator fill bar. Overrides variant coloring.
 </ParamField>
 
+<ParamField body="orientation" type="str" default="horizontal">
+  Layout direction: `"horizontal"` or `"vertical"`.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Tailwind classes for the track (outer container).
 </ParamField>
@@ -398,6 +453,7 @@ with Column(gap=3):
   "max?": 100,
   "variant?": "default | success | warning | destructive | info | muted",
   "indicatorClass?": "string",
+  "orientation?": "horizontal | vertical",
   "cssClass?": "string"
 }
 ```

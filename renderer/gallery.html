@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prefab Theme Gallery</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f5; padding: 2rem; }
+  h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+  .subtitle { color: #666; margin-bottom: 1.5rem; }
+  .controls { margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; }
+  .controls label { font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.375rem; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .theme-slot { border-radius: 12px; overflow: hidden; border: 1px solid #ddd; background: white; }
+  .theme-slot h2 {
+    font-size: 0.8rem; font-weight: 600; padding: 0.6rem 1rem;
+    background: #eee; border-bottom: 1px solid #ddd;
+    text-transform: capitalize; letter-spacing: 0.02em;
+  }
+  .preview-host { display: block; width: 100%; }
+</style>
+</head>
+<body>
+<h1>Prefab Theme Gallery</h1>
+<p class="subtitle">Built-in themes. Toggle dark mode to compare variants.</p>
+<div class="controls">
+  <label><input type="checkbox" id="dark-toggle" onchange="toggleDark(this.checked)"> Dark mode</label>
+</div>
+<div class="grid" id="grid"></div>
+<script type="module">
+import { mountPreview } from "./src/embed.tsx";
+
+const THEME_DATA = {"blue":{"light":{"primary":"oklch(0.6 0.24 260)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 260)","chart-1":"oklch(0.6 0.2 260)","chart-2":"oklch(0.6 0.2 332)","chart-3":"oklch(0.6 0.2 44)","chart-4":"oklch(0.6 0.2 116)","chart-5":"oklch(0.6 0.2 188)"},"dark":{"primary":"oklch(0.7 0.18 260)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 260)","chart-1":"oklch(0.7 0.15 260)","chart-2":"oklch(0.7 0.15 332)","chart-3":"oklch(0.7 0.15 44)","chart-4":"oklch(0.7 0.15 116)","chart-5":"oklch(0.7 0.15 188)"}},"green":{"light":{"primary":"oklch(0.6 0.24 155)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 155)","chart-1":"oklch(0.6 0.2 155)","chart-2":"oklch(0.6 0.2 227)","chart-3":"oklch(0.6 0.2 299)","chart-4":"oklch(0.6 0.2 11)","chart-5":"oklch(0.6 0.2 83)"},"dark":{"primary":"oklch(0.7 0.18 155)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 155)","chart-1":"oklch(0.7 0.15 155)","chart-2":"oklch(0.7 0.15 227)","chart-3":"oklch(0.7 0.15 299)","chart-4":"oklch(0.7 0.15 11)","chart-5":"oklch(0.7 0.15 83)"}},"red":{"light":{"primary":"oklch(0.6 0.24 25)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 25)","chart-1":"oklch(0.6 0.2 25)","chart-2":"oklch(0.6 0.2 97)","chart-3":"oklch(0.6 0.2 169)","chart-4":"oklch(0.6 0.2 241)","chart-5":"oklch(0.6 0.2 313)"},"dark":{"primary":"oklch(0.7 0.18 25)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 25)","chart-1":"oklch(0.7 0.15 25)","chart-2":"oklch(0.7 0.15 97)","chart-3":"oklch(0.7 0.15 169)","chart-4":"oklch(0.7 0.15 241)","chart-5":"oklch(0.7 0.15 313)"}},"orange":{"light":{"primary":"oklch(0.6 0.24 55)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 55)","chart-1":"oklch(0.6 0.2 55)","chart-2":"oklch(0.6 0.2 127)","chart-3":"oklch(0.6 0.2 199)","chart-4":"oklch(0.6 0.2 271)","chart-5":"oklch(0.6 0.2 343)"},"dark":{"primary":"oklch(0.7 0.18 55)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 55)","chart-1":"oklch(0.7 0.15 55)","chart-2":"oklch(0.7 0.15 127)","chart-3":"oklch(0.7 0.15 199)","chart-4":"oklch(0.7 0.15 271)","chart-5":"oklch(0.7 0.15 343)"}},"violet":{"light":{"primary":"oklch(0.6 0.24 295)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 295)","chart-1":"oklch(0.6 0.2 295)","chart-2":"oklch(0.6 0.2 7)","chart-3":"oklch(0.6 0.2 79)","chart-4":"oklch(0.6 0.2 151)","chart-5":"oklch(0.6 0.2 223)"},"dark":{"primary":"oklch(0.7 0.18 295)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 295)","chart-1":"oklch(0.7 0.15 295)","chart-2":"oklch(0.7 0.15 7)","chart-3":"oklch(0.7 0.15 79)","chart-4":"oklch(0.7 0.15 151)","chart-5":"oklch(0.7 0.15 223)"}},"rose":{"light":{"primary":"oklch(0.6 0.24 350)","primary-foreground":"oklch(0.985 0 0)","ring":"oklch(0.6 0.24 350)","chart-1":"oklch(0.6 0.2 350)","chart-2":"oklch(0.6 0.2 62)","chart-3":"oklch(0.6 0.2 134)","chart-4":"oklch(0.6 0.2 206)","chart-5":"oklch(0.6 0.2 278)"},"dark":{"primary":"oklch(0.7 0.18 350)","primary-foreground":"oklch(0.205 0 0)","ring":"oklch(0.7 0.18 350)","chart-1":"oklch(0.7 0.15 350)","chart-2":"oklch(0.7 0.15 62)","chart-3":"oklch(0.7 0.15 134)","chart-4":"oklch(0.7 0.15 206)","chart-5":"oklch(0.7 0.15 278)"}}};
+
+const THEME_NAMES = ["default", ...Object.keys(THEME_DATA)];
+
+const view = {"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Primary","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Secondary","variant":"secondary","size":"default","disabled":false},{"type":"Button","label":"Outline","variant":"outline","size":"default","disabled":false},{"type":"Button","label":"Destructive","variant":"destructive","size":"default","disabled":false}]},{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Default","variant":"default"},{"type":"Badge","label":"Success","variant":"success"},{"type":"Badge","label":"Warning","variant":"warning"},{"type":"Badge","label":"Destructive","variant":"destructive"},{"type":"Badge","label":"Info","variant":"info"}]},{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Metric","label":"Revenue","value":"$12.4k","delta":"+12%","trend":"up"},{"type":"Metric","label":"Users","value":"1,234","delta":"-3%","trend":"down"}]},{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Ring","value":75.0,"min":0,"max":100,"label":"75%","variant":"success","size":"sm","thickness":6},{"type":"Ring","value":42.0,"min":0,"max":100,"label":"42%","variant":"default","size":"sm","thickness":6},{"cssClass":"flex-1","type":"Progress","value":65.0,"min":0,"max":100,"variant":"default"}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Sample Card"},{"type":"CardDescription","content":"Cards, text, and separators."}]},{"type":"CardContent","children":[{"content":"The quick brown fox jumps over the lazy dog.","type":"Text"}]}]}]};
+
+const grid = document.getElementById("grid");
+const handles = {};
+
+for (const name of THEME_NAMES) {
+  const slot = document.createElement("div");
+  slot.className = "theme-slot";
+  slot.innerHTML = `<h2>${name}</h2>`;
+  const host = document.createElement("div");
+  host.className = "preview-host";
+  slot.appendChild(host);
+  grid.appendChild(slot);
+
+  const envelope = { version: "0.2", view };
+  if (name !== "default") envelope.theme = THEME_DATA[name];
+  handles[name] = mountPreview(host, JSON.stringify(envelope), { dark: false });
+}
+
+window.toggleDark = function(dark) {
+  for (const h of Object.values(handles)) h.setDark(dark);
+  document.body.style.background = dark ? "#1a1a1a" : "#f5f5f5";
+  document.body.style.color = dark ? "#eee" : "#000";
+  document.querySelectorAll(".theme-slot").forEach(s => {
+    s.style.background = dark ? "#2a2a2a" : "white";
+    s.style.borderColor = dark ? "#444" : "#ddd";
+  });
+  document.querySelectorAll(".theme-slot h2").forEach(h => {
+    h.style.background = dark ? "#333" : "#eee";
+    h.style.borderColor = dark ? "#444" : "#ddd";
+    h.style.color = dark ? "#ddd" : "#000";
+  });
+};
+</script>
+</body>
+</html>

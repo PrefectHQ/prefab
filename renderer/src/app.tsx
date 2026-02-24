@@ -34,6 +34,7 @@ import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { earlyBridge } from "./early-bridge";
 import { clearAllIntervals } from "./actions";
+import { resolveTheme, buildThemeCss } from "./themes";
 
 /** Protocol versions this renderer understands. */
 const SUPPORTED_VERSIONS = new Set(["0.2"]);
@@ -48,6 +49,20 @@ function readInitialData(): {
   if (!el?.textContent) return null;
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
+
+    // Apply theme overrides (string name or custom object)
+    if (data.theme) {
+      const resolved = resolveTheme(
+        data.theme as string | Record<string, string>,
+      );
+      if (resolved) {
+        const style = document.createElement("style");
+        style.id = "prefab-theme";
+        style.textContent = buildThemeCss(resolved, false);
+        document.head.appendChild(style);
+      }
+    }
+
     return {
       view: (data.view as ComponentNode) ?? null,
       defs: (data.defs ?? {}) as Record<string, ComponentNode>,

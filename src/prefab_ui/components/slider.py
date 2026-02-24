@@ -11,6 +11,15 @@ Example::
     Slider(min=0, max=10, step=0.5, value=5)
     Slider(min=0, max=100, value=[20, 80], range=True)
 
+    # Styled slider with variant
+    Slider(min=0, max=100, value=75, variant="success")
+
+    # Vertical slider
+    Slider(min=0, max=100, value=50, orientation="vertical")
+
+    # Bar-style handle
+    Slider(min=0, max=100, value=50, handle_style="bar")
+
     # Access reactive value
     slider = Slider(min=0, max=100, value=50)
     Text(f"Value: {slider.rx}")
@@ -24,6 +33,12 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+
+SliderVariant = Literal["default", "success", "warning", "destructive", "info", "muted"]
+
+SliderHandleStyle = Literal["circle", "bar"]
+
+SliderOrientation = Literal["horizontal", "vertical"]
 
 
 class Slider(StatefulMixin, Component):
@@ -41,6 +56,10 @@ class Slider(StatefulMixin, Component):
         range: Enable two-thumb range selection
         name: Form field name
         disabled: Whether slider is disabled
+        variant: Visual variant for the filled track
+        indicator_class: Custom CSS classes for the filled track
+        orientation: Layout direction (horizontal or vertical)
+        handle_style: Thumb shape (circle or bar)
         css_class: Additional CSS classes
 
     Example::
@@ -48,6 +67,9 @@ class Slider(StatefulMixin, Component):
         Slider(min=0, max=100, value=50)
         Slider(min=0, max=1, step=0.1, value=0.5)
         Slider(min=0, max=100, value=[20, 80], range=True)
+        Slider(min=0, max=100, value=75, variant="success")
+        Slider(min=0, max=100, value=50, orientation="vertical")
+        Slider(min=0, max=100, value=50, handle_style="bar")
     """
 
     _auto_name: ClassVar[str] = "slider"
@@ -65,6 +87,24 @@ class Slider(StatefulMixin, Component):
         description="State key for reactive binding. Auto-generated if omitted.",
     )
     disabled: bool = Field(default=False, description="Whether slider is disabled")
+    variant: SliderVariant = Field(
+        default="default",
+        description="Visual variant for the filled track: default, success, warning, destructive, info, muted",
+    )
+    indicator_class: str | None = Field(
+        default=None,
+        alias="indicatorClass",
+        description="Tailwind classes for the filled track (e.g. 'bg-green-500')",
+    )
+    orientation: SliderOrientation = Field(
+        default="horizontal",
+        description="Layout direction: horizontal or vertical",
+    )
+    handle_style: SliderHandleStyle = Field(
+        default="circle",
+        alias="handleStyle",
+        description="Thumb shape: circle (default round) or bar (tall rounded rectangle)",
+    )
     on_change: Action | list[Action] | None = Field(
         default=None,
         alias="onChange",
@@ -75,4 +115,10 @@ class Slider(StatefulMixin, Component):
         d = super().to_json()
         if not self.range:
             d.pop("range", None)
+        if self.variant == "default":
+            d.pop("variant", None)
+        if self.orientation == "horizontal":
+            d.pop("orientation", None)
+        if self.handle_style == "circle":
+            d.pop("handleStyle", None)
         return d

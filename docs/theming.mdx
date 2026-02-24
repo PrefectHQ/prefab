@@ -1,0 +1,104 @@
+---
+title: Theming
+description: Customize colors with built-in themes or your own palette.
+---
+
+Prefab uses [shadcn/ui](https://ui.shadcn.com/docs/theming) CSS variables for all colors. The default theme is shadcn's zinc palette — achromatic surfaces with neutral accents. Pass a `theme` to `PrefabApp` to override any color variable in the system.
+
+## Built-in Themes
+
+Six color themes shift the primary, ring, and chart colors while keeping surfaces neutral:
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.themes import blue
+
+app = PrefabApp(view=my_view, theme=blue)
+```
+
+Available themes:
+
+| Import | Hue |
+|--------|-----|
+| `blue` | Blue — buttons, focus rings, charts |
+| `green` | Emerald green |
+| `red` | Warm red |
+| `orange` | Bright orange |
+| `violet` | Purple / violet |
+| `rose` | Pink / rose |
+
+All built-in themes are `Theme` instances — you can inspect their `light` and `dark` dicts to see the exact values.
+
+## Custom Themes
+
+A `Theme` is a pair of dictionaries mapping shadcn variable names to CSS color values. The `light` dict applies to light mode, `dark` to dark mode:
+
+```python
+from prefab_ui import Theme
+
+my_theme = Theme(
+    light=dict(
+        primary="oklch(0.72 0.19 149)",
+        background="oklch(0.97 0.01 244)",
+        ring="oklch(0.72 0.19 149)",
+    ),
+    dark=dict(
+        primary="oklch(0.77 0.15 163)",
+        background="oklch(0.21 0.04 265)",
+        ring="oklch(0.77 0.15 163)",
+    ),
+)
+
+app = PrefabApp(view=my_view, theme=my_theme)
+```
+
+If you omit `dark`, the `light` values are used for both modes.
+
+### Variable Names
+
+Keys are the standard [shadcn CSS variable names](https://ui.shadcn.com/docs/theming) without the `--` prefix:
+
+| Key | Controls |
+|-----|----------|
+| `primary` / `primary-foreground` | Primary buttons, active states |
+| `secondary` / `secondary-foreground` | Secondary buttons |
+| `accent` / `accent-foreground` | Highlighted surfaces |
+| `background` / `foreground` | Page background and text |
+| `card` / `card-foreground` | Card surfaces |
+| `muted` / `muted-foreground` | Subdued text and surfaces |
+| `destructive` / `destructive-foreground` | Delete / error actions |
+| `border` | Borders and dividers |
+| `input` | Input field borders |
+| `ring` | Focus rings |
+| `chart-1` through `chart-5` | Chart color palette |
+| `radius` | Border radius (`0.5rem`, etc.) |
+
+Values can be any valid CSS color — `oklch()`, `hsl()`, hex, named colors.
+
+## Using shadcn Theme Generators
+
+The [shadcn themes page](https://ui.shadcn.com/themes) and other community theme generators produce CSS with the same variable names Prefab uses. You can paste their output directly as an inline stylesheet:
+
+```python
+app = PrefabApp(
+    view=my_view,
+    stylesheets=["""
+        :root {
+            --primary: oklch(0.7227 0.1920 149.5793);
+            --primary-foreground: oklch(1.0000 0 0);
+            --ring: oklch(0.7227 0.1920 149.5793);
+        }
+        .dark {
+            --primary: oklch(0.7729 0.1535 163.2231);
+            --primary-foreground: oklch(0.2077 0.0398 265.7549);
+            --ring: oklch(0.7729 0.1535 163.2231);
+        }
+    """],
+)
+```
+
+The `stylesheets` field accepts both URLs and inline CSS strings. Inline CSS (detected by the presence of `{`) is injected as a `<style>` tag; URLs are loaded as `<link>` tags.
+
+<Tip>
+When copying from a shadcn theme generator, you only need the `:root { ... }` and `.dark { ... }` blocks. Strip out `@import`, `@theme inline`, and `@layer base` directives — Prefab's renderer already handles those.
+</Tip>
