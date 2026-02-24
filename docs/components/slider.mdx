@@ -90,9 +90,9 @@ The `| number` pipe strips trailing decimals so the display stays clean. This pa
 
 ## Range and Step
 
-Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–10 with 0.5 increments:
+Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"rating","disabled":false}]},"state":{"rating":5}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"name":"rating","disabled":false}]},"state":{"rating":4}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -104,13 +104,13 @@ from prefab_ui.components import (
     Text,
 )
 
-set_initial_state(rating=5)
+set_initial_state(rating=4)
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Rating")
         Text("{{ rating }}", bold=True)
-    Slider(value=5, name="rating", min=0, max=10, step=0.5)
+    Slider(value=4, name="rating", min=0, max=5, step=0.5)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -129,15 +129,15 @@ with Column(gap=2):
       {
         "type": "Slider",
         "min": 0.0,
-        "max": 10.0,
-        "value": 5.0,
+        "max": 5.0,
+        "value": 4.0,
         "step": 0.5,
         "name": "rating",
         "disabled": false
       }
     ]
   },
-  "state": {"rating": 5}
+  "state": {"rating": 4}
 }
 ```
 </CodeGroup>
@@ -218,6 +218,322 @@ Slider(value=30, disabled=True)
 </CodeGroup>
 </ComponentPreview>
 
+## Variants
+
+Semantic variants color the filled track to communicate meaning at a glance — the same palette available on Progress:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"type":"Slider","min":0,"max":100,"value":60.0,"name":"slider-4","disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"type":"Slider","min":0,"max":100,"value":100.0,"name":"slider-5","disabled":false,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"type":"Slider","min":0,"max":100,"value":72.0,"name":"slider-6","disabled":false,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"type":"Slider","min":0,"max":100,"value":90.0,"name":"slider-7","disabled":false,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"type":"Slider","min":0,"max":100,"value":45.0,"name":"slider-8","disabled":false,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider-9","disabled":false,"variant":"muted"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Slider
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Default")
+        Slider(value=60)
+    with Column(gap=2):
+        Label("Success")
+        Slider(value=100, variant="success")
+    with Column(gap=2):
+        Label("Warning")
+        Slider(value=72, variant="warning")
+    with Column(gap=2):
+        Label("Destructive")
+        Slider(value=90, variant="destructive")
+    with Column(gap=2):
+        Label("Info")
+        Slider(value=45, variant="info")
+    with Column(gap=2):
+        Label("Muted")
+        Slider(value=30, variant="muted")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Default"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 60.0,
+            "name": "slider-4",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Success"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 100.0,
+            "name": "slider-5",
+            "disabled": false,
+            "variant": "success"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Warning"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 72.0,
+            "name": "slider-6",
+            "disabled": false,
+            "variant": "warning"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Destructive"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 90.0,
+            "name": "slider-7",
+            "disabled": false,
+            "variant": "destructive"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Info"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 45.0,
+            "name": "slider-8",
+            "disabled": false,
+            "variant": "info"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Muted"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 30.0,
+            "name": "slider-9",
+            "disabled": false,
+            "variant": "muted"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Colors
+
+Use `indicator_class` for arbitrary track colors beyond the built-in variants:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"type":"Slider","min":0,"max":100,"value":85.0,"name":"slider-10","disabled":false,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"type":"Slider","min":0,"max":100,"value":45.0,"name":"slider-11","disabled":false,"indicatorClass":"bg-blue-500"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Slider
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Storage Used")
+        Slider(value=85, indicator_class="bg-red-500")
+    with Column(gap=2):
+        Label("Upload Progress")
+        Slider(value=45, indicator_class="bg-blue-500")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Storage Used"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 85.0,
+            "name": "slider-10",
+            "disabled": false,
+            "indicatorClass": "bg-red-500"
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Upload Progress"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 45.0,
+            "name": "slider-11",
+            "disabled": false,
+            "indicatorClass": "bg-blue-500"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Vertical Orientation
+
+Set `orientation="vertical"` for vertical sliders. They fill their container's height, so wrap them in a fixed-height parent:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-center justify-center","type":"Row","children":[{"type":"Slider","min":0,"max":100,"value":75.0,"name":"slider-12","disabled":false,"orientation":"vertical"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-13","disabled":false,"variant":"success","orientation":"vertical"},{"type":"Slider","min":0,"max":100,"value":25.0,"name":"slider-14","disabled":false,"variant":"info","orientation":"vertical"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Slider
+
+with Row(css_class="gap-8 h-48 items-center justify-center"):
+    Slider(value=75, orientation="vertical")
+    Slider(value=50, orientation="vertical", variant="success")
+    Slider(value=25, orientation="vertical", variant="info")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-8 h-48 items-center justify-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 75.0,
+        "name": "slider-12",
+        "disabled": false,
+        "orientation": "vertical"
+      },
+      {
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 50.0,
+        "name": "slider-13",
+        "disabled": false,
+        "variant": "success",
+        "orientation": "vertical"
+      },
+      {
+        "type": "Slider",
+        "min": 0,
+        "max": 100,
+        "value": 25.0,
+        "name": "slider-14",
+        "disabled": false,
+        "variant": "info",
+        "orientation": "vertical"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Handle Styles
+
+The `handle_style` parameter changes the thumb shape. Use `"bar"` for a tall rounded rectangle instead of the default circle:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-15","disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-16","disabled":false,"handleStyle":"bar"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Slider
+
+with Column(gap=4):
+    with Column(gap=2):
+        Label("Circle (default)")
+        Slider(value=50)
+    with Column(gap=2):
+        Label("Bar")
+        Slider(value=50, handle_style="bar")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Circle (default)"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 50.0,
+            "name": "slider-15",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Bar"},
+          {
+            "type": "Slider",
+            "min": 0,
+            "max": 100,
+            "value": 50.0,
+            "name": "slider-16",
+            "disabled": false,
+            "handleStyle": "bar"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Slider Parameters">
@@ -246,6 +562,22 @@ Slider(value=30, disabled=True)
   Whether the slider is non-interactive.
 </ParamField>
 
+<ParamField body="variant" type="str" default="default">
+  Visual variant for the filled track: `"default"`, `"success"`, `"warning"`, `"destructive"`, `"info"`, `"muted"`.
+</ParamField>
+
+<ParamField body="indicator_class" type="str | None" default="None">
+  Tailwind classes for the filled track. Overrides variant coloring.
+</ParamField>
+
+<ParamField body="orientation" type="str" default="horizontal">
+  Layout direction: `"horizontal"` or `"vertical"`. Vertical sliders fill their container's height.
+</ParamField>
+
+<ParamField body="handle_style" type="str" default="circle">
+  Thumb shape: `"circle"` (default round) or `"bar"` (tall rounded rectangle).
+</ParamField>
+
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
   Action(s) to execute when the value changes. `$event` is the current numeric value.
 </ParamField>
@@ -262,10 +594,15 @@ Slider(value=30, disabled=True)
   "type": "Slider",
   "min?": 0,
   "max?": 100,
-  "value?": "number",
+  "value?": "number | Action[]",
   "step?": "number",
+  "range?": false,
   "name?": "string",
   "disabled?": false,
+  "variant?": "default | success | warning | destructive | info | muted",
+  "indicatorClass?": "string",
+  "orientation?": "horizontal | vertical",
+  "handleStyle?": "circle | bar",
   "onChange?": "Action | Action[]",
   "cssClass?": "string"
 }

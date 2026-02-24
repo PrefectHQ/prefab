@@ -1057,6 +1057,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Progress, Row\n\nwith Row(css_class=\"gap-8 h-48 items-end justify-center\"):\n    Progress(value=75, orientation=\"vertical\")\n    Progress(value=50, variant=\"success\", orientation=\"vertical\")\n    Progress(value=25, variant=\"info\", orientation=\"vertical\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Progress,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(progress=0.65)\n\nwith Column(gap=3):\n    with Row(css_class=\"justify-between items-center\"):\n        Text(\"Upload progress\")\n        Text(\"{{ progress | percent }}\", bold=True)\n    Progress(value=\"{{ progress }}\", max=1)\n    Slider(name=\"progress\", min=0, max=1, step=0.01, value=0.65)"
   },
   {
@@ -1277,7 +1282,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(rating=5)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(\"{{ rating }}\", bold=True)\n    Slider(value=5, name=\"rating\", min=0, max=10, step=0.5)"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n)\n\nset_initial_state(rating=4)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(\"{{ rating }}\", bold=True)\n    Slider(value=4, name=\"rating\", min=0, max=5, step=0.5)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1288,6 +1293,26 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Slider\n\nSlider(value=30, disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Default\")\n        Slider(value=60)\n    with Column(gap=2):\n        Label(\"Success\")\n        Slider(value=100, variant=\"success\")\n    with Column(gap=2):\n        Label(\"Warning\")\n        Slider(value=72, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"Destructive\")\n        Slider(value=90, variant=\"destructive\")\n    with Column(gap=2):\n        Label(\"Info\")\n        Slider(value=45, variant=\"info\")\n    with Column(gap=2):\n        Label(\"Muted\")\n        Slider(value=30, variant=\"muted\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Slider(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Slider(value=45, indicator_class=\"bg-blue-500\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Row, Slider\n\nwith Row(css_class=\"gap-8 h-48 items-center justify-center\"):\n    Slider(value=75, orientation=\"vertical\")\n    Slider(value=50, orientation=\"vertical\", variant=\"success\")\n    Slider(value=25, orientation=\"vertical\", variant=\"info\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Circle (default)\")\n        Slider(value=50)\n    with Column(gap=2):\n        Label(\"Bar\")\n        Slider(value=50, handle_style=\"bar\")"
   },
   {
     "title": "Python icon=\"python\"",
