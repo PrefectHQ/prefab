@@ -301,29 +301,26 @@ with Column(gap=4):
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ progress | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ progress }}","min":0,"max":1.0,"variant":"default"},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"progress","disabled":false}]},"state":{"progress":0.65}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider-1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider-1 }}","min":0,"max":1.0,"variant":"default"},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"slider-1","disabled":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Column,
     Progress,
     Row,
     Slider,
     Text,
+    insert,
 )
-from prefab_ui.rx import Rx
 
-set_initial_state(progress=0.65)
-
-progress = Rx("progress")
+slider = Slider(min=0, max=1, step=0.01, value=0.65, defer=True)
 
 with Column(gap=3):
     with Row(css_class="justify-between items-center"):
         Text("Upload progress")
-        Text(progress.percent(), bold=True)
-    Progress(value=progress, max=1)
-    Slider(name="progress", min=0, max=1, step=0.01, value=0.65)
+        Text(slider.rx.percent(), bold=True)
+    Progress(value=slider.rx, max=1)
+    insert(slider)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -336,12 +333,12 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {"content": "Upload progress", "type": "Text"},
-          {"content": "{{ progress | percent }}", "bold": true, "type": "Text"}
+          {"content": "{{ slider-1 | percent }}", "bold": true, "type": "Text"}
         ]
       },
       {
         "type": "Progress",
-        "value": "{{ progress }}",
+        "value": "{{ slider-1 }}",
         "min": 0,
         "max": 1.0,
         "variant": "default"
@@ -352,12 +349,11 @@ with Column(gap=3):
         "max": 1.0,
         "value": 0.65,
         "step": 0.01,
-        "name": "progress",
+        "name": "slider-1",
         "disabled": false
       }
     ]
-  },
-  "state": {"progress": 0.65}
+  }
 }
 ```
 </CodeGroup>

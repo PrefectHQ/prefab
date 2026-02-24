@@ -1,8 +1,10 @@
-"""Tests for context manager nesting and detached."""
+"""Tests for context manager nesting, defer, and insert."""
 
 from __future__ import annotations
 
-from prefab_ui.components import Column, Heading, Row, Text, detached
+import pytest
+
+from prefab_ui.components import Column, Heading, Row, Slider, Text, defer, insert
 from prefab_ui.components.base import ContainerComponent
 
 
@@ -99,20 +101,20 @@ class TestExplicitChildren:
         assert len(row.children) == 2
 
 
-class TestDetached:
-    def test_prevents_auto_attach(self):
+class TestDefer:
+    def test_context_prevents_auto_attach(self):
         with Column() as col:
             Text(content="attached")
-            with detached():
-                orphan = Text(content="detached")
+            with defer():
+                orphan = Text(content="deferred")
         assert len(col.children) == 1
         assert col.children[0].content == "attached"  # type: ignore[attr-defined]
-        assert orphan.content == "detached"
+        assert orphan.content == "deferred"
 
-    def test_allows_explicit_context_managers(self):
+    def test_context_allows_explicit_context_managers(self):
         with Column() as outer:
             Text(content="outer-child")
-            with detached():
+            with defer():
                 sidebar = Column()
                 with sidebar:
                     Text(content="sidebar-child")
@@ -120,38 +122,117 @@ class TestDetached:
         assert len(sidebar.children) == 1
         assert sidebar.children[0].content == "sidebar-child"  # type: ignore[attr-defined]
 
-    def test_restores_stack(self):
+    def test_context_restores_stack(self):
         with Column() as col:
             Text(content="before")
-            with detached():
+            with defer():
                 Text(content="ignored")
             Text(content="after")
         assert len(col.children) == 2
         assert col.children[0].content == "before"  # type: ignore[attr-defined]
         assert col.children[1].content == "after"  # type: ignore[attr-defined]
 
-    def test_nested(self):
+    def test_context_nested(self):
         with Column() as col:
-            with detached():
-                with detached():
-                    Text(content="double-detached")
-                Text(content="single-detached")
+            with defer():
+                with defer():
+                    Text(content="double-deferred")
+                Text(content="single-deferred")
             Text(content="attached")
         assert len(col.children) == 1
         assert col.children[0].content == "attached"  # type: ignore[attr-defined]
 
-    def test_at_top_level(self):
-        with detached():
+    def test_context_at_top_level(self):
+        with defer():
             t = Text(content="orphan")
         assert t.content == "orphan"
 
-    def test_restores_on_exception(self):
+    def test_context_restores_on_exception(self):
         with Column() as col:
             try:
-                with detached():
+                with defer():
                     raise ValueError("boom")
             except ValueError:
                 pass
             Text(content="after-error")
         assert len(col.children) == 1
         assert col.children[0].content == "after-error"  # type: ignore[attr-defined]
+
+    def test_kwarg_prevents_auto_attach(self):
+        with Column() as col:
+            Text(content="attached")
+            deferred = Text(content="deferred", defer=True)
+        assert len(col.children) == 1
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+        assert deferred.content == "deferred"
+
+    def test_kwarg_still_generates_name(self):
+        slider = Slider(value=50, defer=True)
+        assert slider.name is not None
+        assert slider.rx is not None
+
+    def test_kwarg_does_not_serialize(self):
+        """defer should not appear in the JSON output."""
+        t = Text(content="hello", defer=True)
+        j = t.to_json()
+        assert "defer" not in j
+
+
+class TestInsert:
+    def test_basic(self):
+        volume = Slider(value=75)
+        with Column() as col:
+            Text(content="label")
+            insert(volume)
+        assert len(col.children) == 2
+        assert col.children[1] is volume
+
+    def test_with_defer_kwarg(self):
+        with Column() as outer:
+            slider = Slider(value=50, defer=True)
+            Text(content="label")
+            insert(slider)
+        assert len(outer.children) == 2
+        assert outer.children[0].content == "label"  # type: ignore[attr-defined]
+        assert outer.children[1] is slider
+
+    def test_with_defer_context(self):
+        with Column() as col:
+            with defer():
+                sidebar = Column()
+                with sidebar:
+                    Text(content="sidebar")
+            Text(content="main")
+            insert(sidebar)
+        assert len(col.children) == 2
+        assert col.children[0].content == "main"  # type: ignore[attr-defined]
+        assert col.children[1] is sidebar
+
+    def test_returns_component(self):
+        t = Text(content="hello")
+        with Column():
+            result = insert(t)
+        assert result is t
+
+    def test_raises_outside_context(self):
+        t = Text(content="orphan")
+        with pytest.raises(RuntimeError, match="inside a container"):
+            insert(t)
+
+    def test_raises_on_double_insert(self):
+        t = Text(content="hello")
+        with Column():
+            insert(t)
+            with pytest.raises(RuntimeError, match="already a child"):
+                insert(t)
+
+    def test_rx_before_insert(self):
+        """The motivating use case: reference .rx before placing the component."""
+        volume = Slider(value=75)
+        with Column() as col:
+            Text(content=f"{volume.rx.number()}%")
+            insert(volume)
+        assert len(col.children) == 2
+        text = col.children[0]
+        assert "{{ " in text.content  # type: ignore[attr-defined]
+        assert col.children[1] is volume

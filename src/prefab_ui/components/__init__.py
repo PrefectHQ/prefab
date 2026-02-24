@@ -16,7 +16,8 @@ from prefab_ui.components.base import (
     Component,
     ContainerComponent,
     StatefulMixin,
-    detached,
+    defer,
+    insert,
 )
 from prefab_ui.rx import Rx
 from prefab_ui.components.button import Button
@@ -180,5 +181,6 @@ __all__ = [
     "Text",
     "Textarea",
     "Tooltip",
-    "detached",
+    "defer",
+    "insert",
 ]

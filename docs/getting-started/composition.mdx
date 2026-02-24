@@ -391,22 +391,42 @@ The stack uses a `ContextVar`, so concurrent requests in a server don't interfer
 Components created *outside* any `with` block have no parent — they're standalone roots. This is useful when building a tree to pass directly to `PrefabApp` or when constructing components to assign to specific properties.
 </Expandable>
 
-<Expandable title="Building outside the current context">
-Sometimes you're inside a context manager but need to build a component without it becoming a child. The `detached()` context manager temporarily pauses auto-attachment:
+<Expandable title="Deferring and inserting components">
+Sometimes you need to create a component before it appears in the tree — for example, to reference its reactive value in a label that sits above it. The `defer` keyword and `insert()` function handle this.
+
+Pass `defer=True` to create a component without attaching it to the current parent. Then call `insert()` to place it where it belongs:
 
 ```python
-from prefab_ui.components import Column, Text, detached
+from prefab_ui.components import Column, Label, Row, Slider, Text, insert
+
+volume = Slider(value=75, defer=True)
+
+with Column(gap=2):
+    with Row(css_class="justify-between"):
+        Label("Volume")
+        Text(f"{volume.rx.number()}%", bold=True)
+    insert(volume)
+```
+
+The slider is created first so its `.rx` can be referenced in the text label. But `defer=True` prevents it from attaching to any parent. The `insert(volume)` call later places it as a child of the `Column`.
+
+For building multiple detached components, use `defer()` as a context manager:
+
+```python
+from prefab_ui.components import Column, Text, defer, insert
 
 with Column() as page:
     Text("child of page")
 
-    with detached():
+    with defer():
         sidebar = Column()
         with sidebar:
             Text("child of sidebar, not page")
 
-# page has 1 child; sidebar has 1 child
+    insert(sidebar)
+
+# page has 2 children; sidebar has 1 child
 ```
 
-Components inside `detached()` can still use their own `with` blocks to collect children — they just won't attach to whatever container was active before. After the block exits, the original stack resumes.
+Components inside `defer()` can still use their own `with` blocks to collect children — they just won't attach to whatever container was active before. After the block exits, the original stack resumes.
 </Expandable>
