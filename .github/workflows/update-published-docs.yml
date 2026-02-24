@@ -1,0 +1,32 @@
+# Fast-forwards the `published-docs` branch to the tagged commit on each release.
+#
+# Mintlify builds docs from `published-docs`, so this keeps published docs in
+# sync with what's actually released. The renderer CDN (`@latest`) updates at
+# the same time via publish-renderer.yml.
+name: Update published-docs branch
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-published-docs:
+    name: "Fast-forward published-docs branch"
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fast-forward published-docs branch to tagged commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout published-docs || git checkout -b published-docs
+          git merge --ff-only "${{ github.ref_name }}"
+          git push origin published-docs
