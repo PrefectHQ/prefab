@@ -1,32 +1,31 @@
 ---
-title: Radio Group
+title: Radio
 description: Radio buttons for mutually exclusive choices.
 icon: circle-dot
 ---
 
 import { ComponentPreview } from "/snippets/component-preview.mdx";
 
-Radio buttons let users select exactly one option from a set of choices.
+Radio buttons let users select exactly one option from a set. Each `Radio` represents a single choice; wrap them in a `RadioGroup` to link them together and track the selected value.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"size","type":"RadioGroup","children":[{"name":"radio_1","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_2","type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"name":"radio_3","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}}}>
+A `RadioGroup` is a container that holds `Radio` children. Each radio needs a `value` (what gets stored when selected) and a `label` (what the user sees). The group tracks which radio is selected and stores its `value` string in state:
+
+<ComponentPreview json={{"view":{"name":"radiogroup_1","type":"RadioGroup","children":[{"name":"radio_1","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_2","type":"Radio","value":"md","label":"Medium","checked":false,"disabled":false,"required":false},{"name":"radio_3","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Radio,
-    RadioGroup,
-)
+from prefab_ui.components import Radio, RadioGroup
 
-with RadioGroup(name="size"):
+with RadioGroup():
     Radio(value="sm", label="Small")
-    Radio(value="md", label="Medium", checked=True)
+    Radio(value="md", label="Medium")
     Radio(value="lg", label="Large")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "size",
+    "name": "radiogroup_1",
     "type": "RadioGroup",
     "children": [
       {
@@ -43,7 +42,7 @@ with RadioGroup(name="size"):
         "type": "Radio",
         "value": "md",
         "label": "Medium",
-        "checked": true,
+        "checked": false,
         "disabled": false,
         "required": false
       },
@@ -63,43 +62,50 @@ with RadioGroup(name="size"):
 </CodeGroup>
 </ComponentPreview>
 
-## Without RadioGroup
+## Pre-selected Option
 
-Individual radio buttons can be used independently:
+Set `checked=True` on a radio to have it selected when the component first renders:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"answer","type":"Radio","value":"yes","label":"Yes","checked":false,"disabled":false,"required":false},{"name":"answer","type":"Radio","value":"no","label":"No","checked":true,"disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"name":"radiogroup_2","type":"RadioGroup","children":[{"name":"radio_4","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_5","type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"name":"radio_6","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column,
-    Radio,
-)
+from prefab_ui.components import Radio, RadioGroup
 
-with Column(gap=3):
-    Radio(value="yes", label="Yes", name="answer")
-    Radio(value="no", label="No", name="answer", checked=True)
+with RadioGroup():
+    Radio(value="sm", label="Small")
+    Radio(value="md", label="Medium", checked=True)
+    Radio(value="lg", label="Large")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
+    "name": "radiogroup_2",
+    "type": "RadioGroup",
     "children": [
       {
-        "name": "answer",
+        "name": "radio_4",
         "type": "Radio",
-        "value": "yes",
-        "label": "Yes",
+        "value": "sm",
+        "label": "Small",
         "checked": false,
         "disabled": false,
         "required": false
       },
       {
-        "name": "answer",
+        "name": "radio_5",
         "type": "Radio",
-        "value": "no",
-        "label": "No",
+        "value": "md",
+        "label": "Medium",
         "checked": true,
+        "disabled": false,
+        "required": false
+      },
+      {
+        "name": "radio_6",
+        "type": "Radio",
+        "value": "lg",
+        "label": "Large",
+        "checked": false,
         "disabled": false,
         "required": false
       }
@@ -110,95 +116,16 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-## With Actions
+## Disabled Options
 
-The `on_change` parameter on `RadioGroup` runs actions when the selection changes. `$event` is the `value` string of the selected radio:
+Individual radios can be disabled while the rest of the group remains interactive. This is useful for options that exist but aren't currently available:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"theme","type":"RadioGroup","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"name":"radio_4","type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"name":"radio_5","type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"name":"radio_6","type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"name":"radiogroup_3","type":"RadioGroup","children":[{"name":"radio_7","type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"name":"radio_8","type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"name":"radio_9","type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Radio, RadioGroup, Text
-from prefab_ui.actions import SetState
-from prefab_ui.rx import Rx
+from prefab_ui.components import Radio, RadioGroup
 
-choice = Rx("choice")
-
-with Column(gap=4):
-    with RadioGroup(
-        name="theme",
-        on_change=SetState("choice", f"You picked: {Rx('$event')}"),
-    ):
-        Radio(value="light", label="Light")
-        Radio(value="dark", label="Dark")
-        Radio(value="system", label="System", checked=True)
-    Text(
-        choice.default("Make a selection"),
-        css_class="text-muted-foreground",
-    )
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "name": "theme",
-        "type": "RadioGroup",
-        "onChange": {"action": "setState", "key": "choice", "value": "You picked: {{ $event }}"},
-        "children": [
-          {
-            "name": "radio_4",
-            "type": "Radio",
-            "value": "light",
-            "label": "Light",
-            "checked": false,
-            "disabled": false,
-            "required": false
-          },
-          {
-            "name": "radio_5",
-            "type": "Radio",
-            "value": "dark",
-            "label": "Dark",
-            "checked": false,
-            "disabled": false,
-            "required": false
-          },
-          {
-            "name": "radio_6",
-            "type": "Radio",
-            "value": "system",
-            "label": "System",
-            "checked": true,
-            "disabled": false,
-            "required": false
-          }
-        ]
-      },
-      {
-        "cssClass": "text-muted-foreground",
-        "content": "{{ choice | default:'Make a selection' }}",
-        "type": "Text"
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Disabled State
-
-<ComponentPreview json={{"view":{"name":"plan","type":"RadioGroup","children":[{"name":"radio_7","type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"name":"radio_8","type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"name":"radio_9","type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]}}}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    Radio,
-    RadioGroup,
-)
-
-with RadioGroup(name="plan"):
+with RadioGroup():
     Radio(value="free", label="Free", checked=True)
     Radio(value="pro", label="Pro")
     Radio(value="enterprise", label="Enterprise", disabled=True)
@@ -206,7 +133,7 @@ with RadioGroup(name="plan"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "plan",
+    "name": "radiogroup_3",
     "type": "RadioGroup",
     "children": [
       {
@@ -243,11 +170,152 @@ with RadioGroup(name="plan"):
 </CodeGroup>
 </ComponentPreview>
 
+## Reading the Value
+
+Use `.rx` on the `RadioGroup` to get a reactive reference to the selected radio's `value` string. When the user clicks a different option, anything bound to `.rx` updates automatically:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"radiogroup_4","type":"RadioGroup","children":[{"name":"radio_10","type":"Radio","value":"heart-of-gold","label":"Heart of Gold","checked":false,"disabled":false,"required":false},{"name":"radio_11","type":"Radio","value":"bistromath","label":"Bistromath","checked":false,"disabled":false,"required":false},{"name":"radio_12","type":"Radio","value":"vogon-cruiser","label":"Vogon Constructor Fleet","checked":false,"disabled":false,"required":false}]},{"content":"Ship: {{ radiogroup_4 }}","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Radio, RadioGroup, Text
+
+with Column(gap=4):
+    with RadioGroup() as group:
+        Radio(value="heart-of-gold", label="Heart of Gold")
+        Radio(value="bistromath", label="Bistromath")
+        Radio(value="vogon-cruiser", label="Vogon Constructor Fleet")
+    Text(f"Ship: {group.rx}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "name": "radiogroup_4",
+        "type": "RadioGroup",
+        "children": [
+          {
+            "name": "radio_10",
+            "type": "Radio",
+            "value": "heart-of-gold",
+            "label": "Heart of Gold",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "name": "radio_11",
+            "type": "Radio",
+            "value": "bistromath",
+            "label": "Bistromath",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "name": "radio_12",
+            "type": "Radio",
+            "value": "vogon-cruiser",
+            "label": "Vogon Constructor Fleet",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {"content": "Ship: {{ radiogroup_4 }}", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Click a radio and the text updates instantly. The `.rx` reference holds the `value` string — `"heart-of-gold"`, `"bistromath"`, etc. — not the label.
+
+## Actions
+
+The `on_change` parameter on `RadioGroup` fires actions when the selection changes. Inside the action, `$event` holds the newly selected `value` string:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"radiogroup_5","type":"RadioGroup","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"name":"radio_13","type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"name":"radio_14","type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"name":"radio_15","type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Radio, RadioGroup, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with RadioGroup(
+        on_change=SetState("choice", "You picked: {{ $event }}"),
+    ):
+        Radio(value="light", label="Light")
+        Radio(value="dark", label="Dark")
+        Radio(value="system", label="System", checked=True)
+    Text(
+        "{{ choice | default:'Make a selection' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "name": "radiogroup_5",
+        "type": "RadioGroup",
+        "onChange": {"action": "setState", "key": "choice", "value": "You picked: {{ $event }}"},
+        "children": [
+          {
+            "name": "radio_13",
+            "type": "Radio",
+            "value": "light",
+            "label": "Light",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "name": "radio_14",
+            "type": "Radio",
+            "value": "dark",
+            "label": "Dark",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          },
+          {
+            "name": "radio_15",
+            "type": "Radio",
+            "value": "system",
+            "label": "System",
+            "checked": true,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "content": "{{ choice | default:'Make a selection' }}",
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+For simple "show the current selection" cases, `.rx` is the better approach. Use `on_change` when you need to transform the value or trigger side effects.
+
 ## API Reference
 
 <Card icon="code" title="RadioGroup Parameters">
 <ParamField body="name" type="str | None" default="None">
-  Form field name shared by all radio buttons in the group.
+  State key for the selected value. Auto-generated if not provided.
 </ParamField>
 
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
@@ -255,13 +323,13 @@ with RadioGroup(name="plan"):
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes appended to the component's built-in styles.
+  Additional Tailwind CSS classes.
 </ParamField>
 </Card>
 
 <Card icon="code" title="Radio Parameters">
 <ParamField body="value" type="str" required>
-  Form value for this option.
+  The value stored in the group's state when this radio is selected.
 </ParamField>
 
 <ParamField body="label" type="str | None" default="None">
@@ -269,15 +337,11 @@ with RadioGroup(name="plan"):
 </ParamField>
 
 <ParamField body="checked" type="bool" default="False">
-  Whether this radio button is initially selected.
-</ParamField>
-
-<ParamField body="name" type="str | None" default="None">
-  Form field name. Usually inherited from RadioGroup.
+  Whether this radio is initially selected.
 </ParamField>
 
 <ParamField body="disabled" type="bool" default="False">
-  Whether the radio button is non-interactive.
+  Whether this radio is non-interactive.
 </ParamField>
 
 <ParamField body="required" type="bool" default="False">
@@ -304,13 +368,15 @@ with RadioGroup(name="plan"):
 
 ```json Radio
 {
-  "type": "RadioGroup",
-  "children?": "[Component]",
-  "let?": "object",
+  "type": "Radio",
+  "value": "string (required)",
+  "label?": "string",
   "name?": "string",
-  "onChange?": "Action | Action[]",
+  "checked?": false,
+  "disabled?": false,
+  "required?": false,
   "cssClass?": "string"
 }
 ```
 
-For the complete protocol schema, see [RadioGroup](/protocol/radio-group), [Radio](/protocol/radio-group).
+For the complete protocol schema, see [RadioGroup](/protocol/radio-group), [Radio](/protocol/radio).
