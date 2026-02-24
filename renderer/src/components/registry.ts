@@ -106,6 +106,7 @@ import {
 } from "./typography";
 import { Image } from "./image";
 import { PrefabMetric } from "./metric";
+import { Ring } from "./ring";
 import { Condition, ForEach, Slot } from "./control-flow";
 import { PrefabDataTable } from "./data-display";
 import {
@@ -199,6 +200,9 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // Metric/KPI display
   Metric: PrefabMetric,
+
+  // Ring (circular progress)
+  Ring,
 
   // File upload
   DropZone: PrefabDropZone,

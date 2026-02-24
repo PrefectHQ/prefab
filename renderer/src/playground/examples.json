@@ -1042,6 +1042,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Default\")\n        Progress(value=60)\n    with Column(gap=2):\n        Label(\"Success\")\n        Progress(value=100, variant=\"success\")\n    with Column(gap=2):\n        Label(\"Warning\")\n        Progress(value=72, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"Destructive\")\n        Progress(value=90, variant=\"destructive\")\n    with Column(gap=2):\n        Label(\"Info\")\n        Progress(value=45, variant=\"info\")\n    with Column(gap=2):\n        Label(\"Muted\")\n        Progress(value=30, variant=\"muted\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Temperature: 72°F (range 60–100)\")\n        Progress(value=72, min=60, max=100, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"3 of 5 steps\")\n        Progress(value=3, max=5, variant=\"info\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Progress(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Progress(value=45, indicator_class=\"bg-blue-500\")\n    with Column(gap=2):\n        Label(\"Tasks Complete\")\n        Progress(value=100, indicator_class=\"bg-green-500\")"
   },
   {
@@ -1098,6 +1108,36 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Radio,\n    RadioGroup,\n)\n\nwith RadioGroup(name=\"plan\"):\n    Radio(value=\"free\", label=\"Free\", checked=True)\n    Radio(value=\"pro\", label=\"Pro\")\n    Radio(value=\"enterprise\", label=\"Enterprise\", disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Ring\n\nRing(value=72, label=\"72%\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Ring, Row\n\nwith Row(css_class=\"gap-6 items-end\"):\n    Ring(value=60, size=\"sm\", label=\"sm\")\n    Ring(value=60, size=\"default\", label=\"default\")\n    Ring(value=60, size=\"lg\", label=\"lg\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Ring, Row\n\nwith Row(css_class=\"gap-4 flex-wrap\"):\n    Ring(value=60, label=\"60%\")\n    Ring(value=100, variant=\"success\", label=\"100%\")\n    Ring(value=72, variant=\"warning\", label=\"72%\")\n    Ring(value=90, variant=\"destructive\", label=\"90%\")\n    Ring(value=45, variant=\"info\", label=\"45%\")\n    Ring(value=30, variant=\"muted\", label=\"30%\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Ring, Row\n\nwith Row(css_class=\"gap-6 items-end\"):\n    Ring(value=75, thickness=3, label=\"3\")\n    Ring(value=75, thickness=6, label=\"6\")\n    Ring(value=75, thickness=12, label=\"12\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Ring, Row\n\nwith Row(css_class=\"gap-6\"):\n    Ring(value=72, min=60, max=100, variant=\"warning\", label=\"72\\u00b0F\")\n    Ring(value=3, max=5, variant=\"info\", label=\"3/5\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Ring, Row, Text\n\nwith Row(css_class=\"gap-6\"):\n    with Ring(value=75, variant=\"success\", size=\"lg\", thickness=8):\n        Text(\"75%\", css_class=\"text-3xl font-bold\")\n    with Ring(value=3, max=5, variant=\"info\", size=\"lg\", thickness=8):\n        with Column(css_class=\"text-center\"):\n            Text(\"3/5\", css_class=\"text-2xl font-bold\")\n            Text(\"steps\", css_class=\"text-xs text-muted-foreground\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1428,6 +1468,11 @@
     "title": "Python icon=\"python\"",
     "category": "Examples",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Alert, AlertDescription, AlertTitle, Badge, Button, Card, CardContent,\n    CardFooter, CardHeader, CardTitle, Column, Loader,\n    Muted, Progress, Row, Text,\n)\nfrom prefab_ui.components.control_flow import Elif, Else, If\nfrom prefab_ui.actions import SetState\n\nset_initial_state(presses=0)\n\nwith Card():\n    with CardHeader():\n        with Row(align=\"center\", css_class=\"justify-between\"):\n            CardTitle(\"The Button\")\n            with If(\"presses > 0\"):\n                Badge(\"{{ presses }}\", variant=\"secondary\")\n    with CardContent():\n        with Column(gap=4):\n            with If(\"presses == 0\"):\n                Button(\n                    \"This is probably the best button to press\",\n                    variant=\"info\",\n                    on_click=SetState(\"presses\", \"{{ presses + 1 }}\"),\n                )\n            with Elif(\"presses == 1\"):\n                with Alert(variant=\"info\", icon=\"info\"):\n                    AlertTitle(\"Thank you!\")\n                    AlertDescription(\n                        \"Your cooperation has been noted and will be reported.\"\n                    )\n                Button(\n                    \"Please do not press this button again\",\n                    variant=\"outline\",\n                    on_click=SetState(\"presses\", \"{{ presses + 1 }}\"),\n                )\n            with Elif(\"presses == 2\"):\n                with Alert(variant=\"warning\", icon=\"alert-triangle\"):\n                    AlertTitle(\"We did ask nicely\")\n                    AlertDescription(\"Management has been informed.\")\n                Progress(value=66, max=100, indicator_class=\"bg-yellow-500\")\n                Muted(\"Patience remaining: 34%\")\n                Button(\n                    \"Please do not press this button again\",\n                    variant=\"destructive\",\n                    on_click=SetState(\"presses\", \"{{ presses + 1 }}\"),\n                )\n            with Elif(\"presses == 3\"):\n                with Alert(variant=\"destructive\", icon=\"alert-triangle\"):\n                    AlertTitle(\"Now look what you've done\")\n                    AlertDescription(\n                        \"The improbability drive has been activated.\"\n                    )\n                Progress(value=100, max=100, indicator_class=\"bg-red-500\")\n                with Row(gap=2, align=\"center\"):\n                    Loader(variant=\"spin\", size=\"sm\")\n                    Muted(\"Recalculating the probability of your existence...\")\n                Button(\n                    \"OK maybe press it one more time\",\n                    variant=\"ghost\",\n                    on_click=SetState(\"presses\", 0),\n                )\n            with Else():\n                Text(\"This should not happen.\")\n    with CardFooter():\n        with If(\"presses > 0\"):\n            Muted(\"Share and Enjoy!\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Examples",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text\n\nset_initial_state(val=50)\n\nwith Column(gap=6, css_class=\"max-w-sm mx-auto\"):\n    H3(\"Health Monitor\")\n    Muted(\"Drag the slider — the bar color changes at each threshold.\")\n\n    with Column(gap=4):\n        with Row(css_class=\"justify-between items-center\"):\n            Text(\"CPU Usage\")\n            Text(\"{{ val }}%\", bold=True)\n        Progress(\n            value=\"{{ val }}\",\n            indicator_class=(\n                \"{{ val < 20 ? 'bg-red-500'\"\n                \" : val < 60 ? 'bg-primary'\"\n                \" : val < 75 ? 'bg-amber-500'\"\n                \" : 'bg-green-500' }}\"\n            ),\n        )\n        Slider(name=\"val\", min=0, max=100, step=1, value=50)"
   },
   {
     "title": "Python icon=\"python\" expandable",

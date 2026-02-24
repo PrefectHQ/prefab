@@ -58,6 +58,7 @@ from prefab_ui.components.pages import Page, Pages
 from prefab_ui.components.popover import Popover
 from prefab_ui.components.progress import Progress
 from prefab_ui.components.radio import Radio, RadioGroup
+from prefab_ui.components.ring import Ring
 from prefab_ui.components.row import Row
 from prefab_ui.components.select import Select, SelectOption
 from prefab_ui.components.separator import Separator
@@ -154,6 +155,7 @@ __all__ = [
     "Progress",
     "Radio",
     "RadioGroup",
+    "Ring",
     "Row",
     "Rx",
     "Select",
