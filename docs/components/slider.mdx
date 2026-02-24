@@ -10,7 +10,7 @@ Sliders let users select a numeric value from a range by dragging a handle. The 
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-2","disabled":false}}}>
+<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_2","disabled":false},"state":{"slider_2":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -24,9 +24,10 @@ Slider(value=50)
     "min": 0,
     "max": 100,
     "value": 50.0,
-    "name": "slider-2",
+    "name": "slider_2",
     "disabled": false
-  }
+  },
+  "state": {"slider_2": 50.0}
 }
 ```
 </CodeGroup>
@@ -36,7 +37,7 @@ Slider(value=50)
 
 Create the slider with `defer=True` to get a reference to it, then use `.rx` to bind its value into a label. Call `insert()` to place the slider in the tree:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider-3 | number }}%","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"slider-3","disabled":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | number }}%","bold":true,"type":"Text"}]},{"type":"Slider","min":0,"max":100,"value":75.0,"name":"slider_3","disabled":false}]},"state":{"slider_3":75.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -67,7 +68,7 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider-3 | number }}%", "bold": true, "type": "Text"}
+          {"content": "{{ slider_3 | number }}%", "bold": true, "type": "Text"}
         ]
       },
       {
@@ -75,11 +76,12 @@ with Column(gap=2):
         "min": 0,
         "max": 100,
         "value": 75.0,
-        "name": "slider-3",
+        "name": "slider_3",
         "disabled": false
       }
     ]
-  }
+  },
+  "state": {"slider_3": 75.0}
 }
 ```
 </CodeGroup>
@@ -91,7 +93,7 @@ The `.number()` pipe strips trailing decimals so the display stays clean. `defer
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–10 with 0.5 increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ slider-4 }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"slider-4","disabled":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ slider_4 }}","bold":true,"type":"Text"}]},{"type":"Slider","min":0.0,"max":10.0,"value":5.0,"step":0.5,"name":"slider_4","disabled":false}]},"state":{"slider_4":5.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -122,7 +124,7 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Rating"},
-          {"content": "{{ slider-4 }}", "bold": true, "type": "Text"}
+          {"content": "{{ slider_4 }}", "bold": true, "type": "Text"}
         ]
       },
       {
@@ -131,11 +133,12 @@ with Column(gap=2):
         "max": 10.0,
         "value": 5.0,
         "step": 0.5,
-        "name": "slider-4",
+        "name": "slider_4",
         "disabled": false
       }
     ]
-  }
+  },
+  "state": {"slider_4": 5.0}
 }
 ```
 </CodeGroup>
@@ -145,7 +148,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider-5","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Slider","min":0,"max":100,"value":50.0,"name":"slider_5","disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_5":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.actions import SetState
@@ -174,7 +177,7 @@ with Column(gap=4):
         "min": 0,
         "max": 100,
         "value": 50.0,
-        "name": "slider-5",
+        "name": "slider_5",
         "disabled": false,
         "onChange": {"action": "setState", "key": "level", "value": "{{ $event }}"}
       },
@@ -184,7 +187,8 @@ with Column(gap=4):
         "type": "Text"
       }
     ]
-  }
+  },
+  "state": {"slider_5": 50.0}
 }
 ```
 </CodeGroup>
@@ -196,7 +200,7 @@ For simply displaying the slider's current value, [`.rx` binding](#displaying-th
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider-6","disabled":true}}}>
+<ComponentPreview json={{"view":{"type":"Slider","min":0,"max":100,"value":30.0,"name":"slider_6","disabled":true},"state":{"slider_6":30.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -210,9 +214,10 @@ Slider(value=30, disabled=True)
     "min": 0,
     "max": 100,
     "value": 30.0,
-    "name": "slider-6",
+    "name": "slider_6",
     "disabled": true
-  }
+  },
+  "state": {"slider_6": 30.0}
 }
 ```
 </CodeGroup>

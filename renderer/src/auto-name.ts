@@ -47,9 +47,44 @@ export function autoAssignName(
   props: Record<string, unknown>,
 ): string | undefined {
   if (STATEFUL_TYPES.has(type) && !("name" in props)) {
-    const name = `${type.toLowerCase()}-${++_autoNameCounter}`;
+    const name = `${type.toLowerCase()}_${++_autoNameCounter}`;
     props.name = name;
     return name;
   }
   return undefined;
+}
+
+/**
+ * Walk a component tree and collect initial values from named stateful
+ * components (e.g. Slider value=0.75 with name="volume" → {volume: 0.75}).
+ * Only collects values for keys not already present in `existing`.
+ */
+export function collectComponentState(
+  node: {
+    type: string;
+    name?: unknown;
+    value?: unknown;
+    checked?: unknown;
+    children?: unknown[];
+  },
+  existing: Record<string, unknown>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  const walk = (n: typeof node) => {
+    if (
+      STATEFUL_TYPES.has(n.type) &&
+      typeof n.name === "string" &&
+      !(n.name in existing)
+    ) {
+      const val = n.value ?? n.checked;
+      if (val !== undefined) {
+        result[n.name] = val;
+      }
+    }
+    if (n.children) {
+      for (const child of n.children as (typeof node)[]) walk(child);
+    }
+  };
+  walk(node);
+  return result;
 }

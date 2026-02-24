@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import re
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -190,6 +191,9 @@ def _coerce_css_class(v: Any) -> str | None:
     return str(v)
 
 
+_VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_$]*$")
+
+
 class StatefulMixin:
     """Mixin for components that support reactive state binding via ``.rx``.
 
@@ -199,6 +203,19 @@ class StatefulMixin:
     """
 
     _auto_name: ClassVar[str]
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        super().__init_subclass__(**kwargs)
+
+    def _validate_state_key_name(self) -> None:
+        """Raise ValueError if name is not a valid expression identifier."""
+        name: str | None = getattr(self, "name", None)
+        if name is not None and not _VALID_STATE_KEY.match(name):
+            raise ValueError(
+                f"Invalid state key name {name!r}: must be a valid identifier "
+                f"(letters, digits, underscores — no hyphens). "
+                f"'{{{{ {name} }}}}' would be parsed as arithmetic."
+            )
 
     @property
     def rx(self) -> Rx:
@@ -256,6 +273,10 @@ class Component(BaseModel):
         if self._auto_name is not None and "name" in type(self).model_fields:
             if getattr(self, "name", None) is None:
                 object.__setattr__(self, "name", _generate_key(self._auto_name))
+
+        # Validate state key names on stateful components
+        if isinstance(self, StatefulMixin):
+            self._validate_state_key_name()
 
         # Skip auto-attach when defer=True was passed
         if _defer_next_component.get():

@@ -154,7 +154,7 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"slider-7","disabled":false},{"content":"Volume: {{ slider-7 }}%","type":"Text"},{"type":"Progress","value":"{{ slider-7 }}","min":0,"max":100,"variant":"default"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"value":50.0,"name":"slider_7","disabled":false},{"content":"Volume: {{ slider_7 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_7 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_7":50.0}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text
@@ -175,19 +175,20 @@ with Column(gap=3):
         "min": 0.0,
         "max": 100.0,
         "value": 50.0,
-        "name": "slider-7",
+        "name": "slider_7",
         "disabled": false
       },
-      {"content": "Volume: {{ slider-7 }}%", "type": "Text"},
+      {"content": "Volume: {{ slider_7 }}%", "type": "Text"},
       {
         "type": "Progress",
-        "value": "{{ slider-7 }}",
+        "value": "{{ slider_7 }}",
         "min": 0,
         "max": 100,
         "variant": "default"
       }
     ]
-  }
+  },
+  "state": {"slider_7": 50.0}
 }
 ```
 </CodeGroup>

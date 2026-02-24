@@ -21,8 +21,8 @@ describe("autoAssignName", () => {
   test("assigns name to stateful component without name", () => {
     const props: Record<string, unknown> = { value: 50, min: 0, max: 100 };
     const name = autoAssignName("Slider", props);
-    expect(name).toBe("slider-1");
-    expect(props.name).toBe("slider-1");
+    expect(name).toBe("slider_1");
+    expect(props.name).toBe("slider_1");
   });
 
   test("preserves explicit name on stateful component", () => {
@@ -44,8 +44,8 @@ describe("autoAssignName", () => {
     const p2: Record<string, unknown> = {};
     autoAssignName("Input", p1);
     autoAssignName("Input", p2);
-    expect(p1.name).toBe("input-1");
-    expect(p2.name).toBe("input-2");
+    expect(p1.name).toBe("input_1");
+    expect(p2.name).toBe("input_2");
   });
 
   test("different types get independent naming", () => {
@@ -53,20 +53,20 @@ describe("autoAssignName", () => {
     const input: Record<string, unknown> = {};
     autoAssignName("Slider", slider);
     autoAssignName("Input", input);
-    expect(slider.name).toBe("slider-1");
-    expect(input.name).toBe("input-2");
+    expect(slider.name).toBe("slider_1");
+    expect(input.name).toBe("input_2");
   });
 
   test("counter resets between render passes", () => {
     const p1: Record<string, unknown> = {};
     autoAssignName("Slider", p1);
-    expect(p1.name).toBe("slider-1");
+    expect(p1.name).toBe("slider_1");
 
     resetAutoNameCounter();
 
     const p2: Record<string, unknown> = {};
     autoAssignName("Slider", p2);
-    expect(p2.name).toBe("slider-1");
+    expect(p2.name).toBe("slider_1");
   });
 });
 

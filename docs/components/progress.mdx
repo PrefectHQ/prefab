@@ -301,7 +301,7 @@ with Column(gap=4):
 
 Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider-1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider-1 }}","min":0,"max":1.0,"variant":"default"},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"slider-1","disabled":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider_1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_1 }}","min":0,"max":1.0,"variant":"default"},{"type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"name":"slider_1","disabled":false}]},"state":{"slider_1":0.65}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -333,12 +333,12 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {"content": "Upload progress", "type": "Text"},
-          {"content": "{{ slider-1 | percent }}", "bold": true, "type": "Text"}
+          {"content": "{{ slider_1 | percent }}", "bold": true, "type": "Text"}
         ]
       },
       {
         "type": "Progress",
-        "value": "{{ slider-1 }}",
+        "value": "{{ slider_1 }}",
         "min": 0,
         "max": 1.0,
         "variant": "default"
@@ -349,11 +349,12 @@ with Column(gap=3):
         "max": 1.0,
         "value": 0.65,
         "step": 0.01,
-        "name": "slider-1",
+        "name": "slider_1",
         "disabled": false
       }
     ]
-  }
+  },
+  "state": {"slider_1": 0.65}
 }
 ```
 </CodeGroup>

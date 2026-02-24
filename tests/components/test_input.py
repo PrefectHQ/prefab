@@ -19,7 +19,7 @@ def test_input_none_fields_excluded():
     assert "onChange" not in j
     assert j["type"] == "Input"
     # name is now auto-generated
-    assert j["name"] == "input-1"
+    assert j["name"] == "input_1"
 
 
 class TestInputConstraintProps:

@@ -79,6 +79,7 @@ def _execute_and_serialize(
     from prefab_ui.components.base import (
         Component,
         ContainerComponent,
+        StatefulMixin,
         _component_stack,
     )
 
@@ -120,10 +121,22 @@ def _execute_and_serialize(
 
     tree = roots[0].to_json()
 
+    # Collect state: explicit set_initial_state() + initial values from
+    # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
+    state: dict[str, Any] = {}
+    for c in created:
+        if isinstance(c, StatefulMixin) and hasattr(c, "name") and c.name:
+            val = getattr(c, "value", None) or getattr(c, "checked", None)
+            if val is not None:
+                state[c.name] = val
+    # Explicit set_initial_state() wins over component defaults.
+    explicit = get_initial_state()
+    if explicit:
+        state.update(explicit)
+
     envelope: dict[str, Any] = {"view": tree}
-    initial_state = get_initial_state()
-    if initial_state:
-        envelope["state"] = initial_state
+    if state:
+        envelope["state"] = state
 
     return envelope
 

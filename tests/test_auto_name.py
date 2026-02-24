@@ -20,7 +20,7 @@ from prefab_ui.rx import Rx
 class TestAutoName:
     def test_slider_auto_generates_name(self) -> None:
         s = Slider(min=0, max=100)
-        assert s.name == "slider-1"
+        assert s.name == "slider_1"
 
     def test_slider_preserves_explicit_name(self) -> None:
         s = Slider(name="custom", min=0, max=100)
@@ -29,30 +29,30 @@ class TestAutoName:
     def test_two_sliders_get_different_names(self) -> None:
         s1 = Slider(min=0, max=100)
         s2 = Slider(min=0, max=100)
-        assert s1.name == "slider-1"
-        assert s2.name == "slider-2"
+        assert s1.name == "slider_1"
+        assert s2.name == "slider_2"
 
     def test_input_auto_generates_name(self) -> None:
         i = Input()
-        assert i.name == "input-1"
+        assert i.name == "input_1"
 
     def test_checkbox_auto_generates_name(self) -> None:
         c = Checkbox()
-        assert c.name == "checkbox-1"
+        assert c.name == "checkbox_1"
 
     def test_switch_auto_generates_name(self) -> None:
         s = Switch()
-        assert s.name == "switch-1"
+        assert s.name == "switch_1"
 
     def test_select_auto_generates_name(self) -> None:
         s = Select()
-        assert s.name == "select-1"
+        assert s.name == "select_1"
 
     def test_different_types_have_independent_counters(self) -> None:
         s = Slider(min=0, max=100)
         i = Input()
-        assert s.name == "slider-1"
-        assert i.name == "input-1"
+        assert s.name == "slider_1"
+        assert i.name == "input_1"
 
     def test_text_has_no_auto_name(self) -> None:
         t = Text("hello")
@@ -63,7 +63,7 @@ class TestAutoNameSerialization:
     def test_auto_name_appears_in_json(self) -> None:
         s = Slider(min=0, max=100)
         j = s.to_json()
-        assert j["name"] == "slider-1"
+        assert j["name"] == "slider_1"
 
     def test_explicit_name_appears_in_json(self) -> None:
         s = Slider(name="my_slider", min=0, max=100)
@@ -75,7 +75,7 @@ class TestRxProperty:
     def test_rx_returns_rx_for_auto_named(self) -> None:
         s = Slider(min=0, max=100)
         assert isinstance(s.rx, Rx)
-        assert str(s.rx) == "{{ slider-1 }}"
+        assert str(s.rx) == "{{ slider_1 }}"
 
     def test_rx_returns_rx_for_explicit_name(self) -> None:
         s = Slider(name="threshold", min=0, max=100)
@@ -108,7 +108,7 @@ class TestRxCoercion:
         slider = Slider(min=0, max=100)
         m = Metric(label="Value", value=slider.rx)
         j = m.to_json()
-        assert j["value"] == "{{ slider-1 }}"
+        assert j["value"] == "{{ slider_1 }}"
 
     def test_rx_passed_to_select_option(self) -> None:
         """Rx objects should coerce in any Component subclass."""
@@ -123,7 +123,7 @@ class TestRxCoercion:
         slider = Slider(min=0, max=100)
         action = CallTool("fetch", arguments={"value": slider.rx})
         j = action.model_dump(by_alias=True, exclude_none=True)
-        assert j["arguments"]["value"] == "{{ slider-1 }}"
+        assert j["arguments"]["value"] == "{{ slider_1 }}"
 
     def test_rx_in_action_field(self) -> None:
         """Rx objects are coerced in Action subclasses too."""
@@ -132,4 +132,4 @@ class TestRxCoercion:
         slider = Slider(min=0, max=100)
         action = ShowToast(message=slider.rx)
         j = action.model_dump(by_alias=True, exclude_none=True)
-        assert j["message"] == "{{ slider-1 }}"
+        assert j["message"] == "{{ slider_1 }}"
