@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from prefab_ui.components import Progress
 
 
@@ -17,3 +19,38 @@ class TestProgressComponent:
         j = p.to_json()
         assert j["value"] == 3
         assert j["max"] == 10
+
+    def test_progress_with_min(self):
+        p = Progress(value=50, min=20, max=80)
+        j = p.to_json()
+        assert j["value"] == 50
+        assert j["min"] == 20
+        assert j["max"] == 80
+
+    def test_progress_defaults(self):
+        p = Progress(value=50)
+        j = p.to_json()
+        assert j["value"] == 50
+        assert j["min"] == 0
+        assert j["max"] == 100
+        assert j["variant"] == "default"
+
+    @pytest.mark.parametrize(
+        "variant",
+        ["default", "success", "warning", "destructive", "info", "muted"],
+    )
+    def test_progress_variant(self, variant: str):
+        p = Progress(value=50, variant=variant)
+        j = p.to_json()
+        assert j["variant"] == variant
+
+    def test_progress_indicator_class(self):
+        p = Progress(value=50, indicator_class="bg-green-500")
+        j = p.to_json()
+        assert j["indicatorClass"] == "bg-green-500"
+
+    def test_progress_variant_with_indicator_class(self):
+        p = Progress(value=50, variant="success", indicator_class="rounded-full")
+        j = p.to_json()
+        assert j["variant"] == "success"
+        assert j["indicatorClass"] == "rounded-full"

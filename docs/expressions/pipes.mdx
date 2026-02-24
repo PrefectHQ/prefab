@@ -21,7 +21,7 @@ Because pipe is the **lowest-precedence** operator, everything to the left evalu
 
 Numbers rarely belong in a UI raw. Prices need currency symbols and decimal alignment, ratios need percent signs, and KPIs need thousands separators. The number pipes handle locale-aware formatting so your expressions produce display-ready values:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0},{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ revenue / target | percent:1 }} of target","type":"Text"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]},"state":{"revenue":2847500,"target":3000000,"growth":0.124}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","min":0,"max":100.0,"variant":"default"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ revenue / target | percent:1 }} of target","type":"Text"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]},"state":{"revenue":2847500,"target":3000000,"growth":0.124}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -70,7 +70,13 @@ with Card():
             "cssClass": "gap-2",
             "type": "Column",
             "children": [
-              {"type": "Progress", "value": "{{ revenue / target * 100 }}", "max": 100.0},
+              {
+                "type": "Progress",
+                "value": "{{ revenue / target * 100 }}",
+                "min": 0,
+                "max": 100.0,
+                "variant": "default"
+              },
               {
                 "cssClass": "gap-2 items-center",
                 "type": "Row",

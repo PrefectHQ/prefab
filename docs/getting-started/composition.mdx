@@ -120,7 +120,7 @@ The layout patterns above work with any component, not just colored divs. Prefab
 
 These components compose with Row, Column, and Grid exactly the way the colored placeholders did. Here's the same Column and Row pattern, but with real content:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"content":"API Server","type":"H3"},{"type":"Badge","label":"Healthy","variant":"success"}]},{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"content":"API Server","type":"H3"},{"type":"Badge","label":"Healthy","variant":"success"}]},{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, Column, H3, Muted, Progress, Row
@@ -147,7 +147,7 @@ with Column(gap=4, css_class="w-auto"):
         ]
       },
       {"content": "Uptime: 99.97%", "type": "Muted"},
-      {"type": "Progress", "value": 99.97, "max": 100}
+      {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
     ]
   }
 }
@@ -161,7 +161,7 @@ Most real interfaces group related content into visual sections. [Cards](/compon
 
 The card below wraps the same status content from the previous example. Notice how `CardHeader`, `CardContent`, and `CardFooter` each open their own `with` block — they're containers like any other.
 
-<ComponentPreview json={{"view":{"cssClass":"w-72","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"View Logs","variant":"outline","size":"default","disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"w-72","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"View Logs","variant":"outline","size":"default","disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -217,7 +217,7 @@ with Card(css_class="w-72"):
             "type": "Column",
             "children": [
               {"content": "Uptime: 99.97%", "type": "Muted"},
-              {"type": "Progress", "value": 99.97, "max": 100}
+              {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
             ]
           }
         ]
@@ -249,7 +249,7 @@ When you need to arrange multiple items in a uniform layout, [Grid](/components/
 
 Since the DSL is plain Python, you can use a `for` loop to produce components from data. The loop runs once when the component tree is constructed, and the result is baked into the output — the renderer never sees the loop, just the components it produced.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"API Server"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.97%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.97,"max":100}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Worker"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"94.2%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":94.2,"max":100}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Scheduler"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.8%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.8,"max":100}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"API Server"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.97%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Worker"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"94.2%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":94.2,"min":0,"max":100,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Scheduler"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.8%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.8,"min":0,"max":100,"variant":"default"}]}]}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -303,7 +303,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "99.97%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 99.97, "max": 100}
+                  {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
                 ]
               }
             ]
@@ -323,7 +323,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "94.2%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 94.2, "max": 100}
+                  {"type": "Progress", "value": 94.2, "min": 0, "max": 100, "variant": "default"}
                 ]
               }
             ]
@@ -346,7 +346,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "99.8%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 99.8, "max": 100}
+                  {"type": "Progress", "value": 99.8, "min": 0, "max": 100, "variant": "default"}
                 ]
               }
             ]
