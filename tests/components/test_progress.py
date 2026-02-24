@@ -54,3 +54,18 @@ class TestProgressComponent:
         j = p.to_json()
         assert j["variant"] == "success"
         assert j["indicatorClass"] == "rounded-full"
+
+    def test_progress_orientation_default_omitted(self):
+        p = Progress(value=50)
+        j = p.to_json()
+        assert "orientation" not in j
+
+    def test_progress_orientation_vertical(self):
+        p = Progress(value=50, orientation="vertical")
+        j = p.to_json()
+        assert j["orientation"] == "vertical"
+
+    def test_progress_orientation_horizontal_omitted(self):
+        p = Progress(value=50, orientation="horizontal")
+        j = p.to_json()
+        assert "orientation" not in j

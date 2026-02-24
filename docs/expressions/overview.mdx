@@ -154,7 +154,7 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}%","type":"Text"},{"type":"Progress","value":"{{ volume }}","max":100}]},"state":{"volume":50}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Slider","min":0.0,"max":100.0,"name":"volume","disabled":false},{"content":"Volume: {{ volume }}%","type":"Text"},{"type":"Progress","value":"{{ volume }}","min":0,"max":100,"variant":"default"}]},"state":{"volume":50}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -181,7 +181,13 @@ with Column(gap=3):
         "disabled": false
       },
       {"content": "Volume: {{ volume }}%", "type": "Text"},
-      {"type": "Progress", "value": "{{ volume }}", "max": 100}
+      {
+        "type": "Progress",
+        "value": "{{ volume }}",
+        "min": 0,
+        "max": 100,
+        "variant": "default"
+      }
     ]
   },
   "state": {"volume": 50}

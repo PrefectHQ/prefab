@@ -28,22 +28,34 @@ const Progress = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> &
     VariantProps<typeof progressVariants> & {
       indicatorClassName?: string;
+      orientation?: "horizontal" | "vertical";
     }
->(({ className, indicatorClassName, variant, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "cn-progress relative w-full overflow-hidden rounded-full",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className={cn(progressVariants({ variant }), indicatorClassName)}
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
+>(({ className, indicatorClassName, variant, value, orientation = "horizontal", ...props }, ref) => {
+  const isVertical = orientation === "vertical";
+
+  return (
+    <ProgressPrimitive.Root
+      ref={ref}
+      className={cn(
+        "cn-progress relative overflow-hidden rounded-full",
+        isVertical
+          ? "cn-progress-vertical flex flex-col-reverse"
+          : "w-full",
+        className
+      )}
+      {...props}
+    >
+      <ProgressPrimitive.Indicator
+        className={cn(progressVariants({ variant }), indicatorClassName)}
+        style={
+          isVertical
+            ? { transform: `translateY(${100 - (value || 0)}%)` }
+            : { transform: `translateX(-${100 - (value || 0)}%)` }
+        }
+      />
+    </ProgressPrimitive.Root>
+  );
+})
 Progress.displayName = ProgressPrimitive.Root.displayName
 
 export { Progress, progressVariants }

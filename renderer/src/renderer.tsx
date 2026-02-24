@@ -217,6 +217,11 @@ function mapProps(
     if ("step" in mapped) mapped.step = Number(mapped.step);
     // Remove range prop — only used for event handling, not passed to shadcn
     delete mapped.range;
+    // Map indicatorClass → indicatorClassName for the React component
+    if ("indicatorClass" in mapped) {
+      mapped.indicatorClassName = mapped.indicatorClass;
+      delete mapped.indicatorClass;
+    }
   }
 
   // Progress: normalize value to 0-100 percentage from min/max range,

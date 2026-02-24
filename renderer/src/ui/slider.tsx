@@ -1,7 +1,27 @@
 import * as React from "react"
 import { Slider as SliderPrimitive } from "radix-ui"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+
+const sliderRangeVariants = cva(
+  "cn-slider-range absolute select-none data-horizontal:h-full data-vertical:w-full",
+  {
+    variants: {
+      variant: {
+        default: "cn-slider-variant-default",
+        success: "cn-slider-variant-success",
+        warning: "cn-slider-variant-warning",
+        destructive: "cn-slider-variant-destructive",
+        info: "cn-slider-variant-info",
+        muted: "cn-slider-variant-muted",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
 function Slider({
   className,
@@ -9,8 +29,15 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  variant,
+  indicatorClassName,
+  handleStyle,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: React.ComponentProps<typeof SliderPrimitive.Root> &
+  VariantProps<typeof sliderRangeVariants> & {
+    indicatorClassName?: string;
+    handleStyle?: "circle" | "bar";
+  }) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -40,18 +67,21 @@ function Slider({
       >
         <SliderPrimitive.Range
           data-slot="slider-range"
-          className="cn-slider-range absolute select-none data-horizontal:h-full data-vertical:w-full"
+          className={cn(sliderRangeVariants({ variant }), indicatorClassName)}
         />
       </SliderPrimitive.Track>
       {Array.from({ length: _values.length }, (_, index) => (
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          className="cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
+          className={cn(
+            "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
+            handleStyle === "bar" && "cn-slider-thumb-bar"
+          )}
         />
       ))}
     </SliderPrimitive.Root>
   )
 }
 
-export { Slider }
+export { Slider, sliderRangeVariants }

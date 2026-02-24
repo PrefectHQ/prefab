@@ -10,6 +10,7 @@ export const progressSchema = componentBase.extend({
     .enum(["default", "success", "warning", "destructive", "info", "muted"])
     .optional(),
   indicatorClass: z.string().optional(),
+  orientation: z.enum(["horizontal", "vertical"]).optional(),
 });
 
 export type ProgressWire = z.infer<typeof progressSchema>;
