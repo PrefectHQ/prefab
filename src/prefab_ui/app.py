@@ -27,6 +27,7 @@ import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
+from prefab_ui.themes import Theme
 
 PROTOCOL_VERSION = "0.2"
 
@@ -99,11 +100,15 @@ class PrefabApp(BaseModel):
     )
     stylesheets: list[str] | None = Field(
         default=None,
-        description="External CSS URLs to load in <head>",
+        description="CSS URLs or inline CSS strings to load in <head>",
     )
     scripts: list[str] | None = Field(
         default=None,
         description="External JS URLs to load in <head>",
+    )
+    theme: Theme | None = Field(
+        default=None,
+        description="Theme object with CSS variable overrides",
     )
     connect_domains: list[str] | None = Field(
         default=None,
@@ -146,6 +151,9 @@ class PrefabApp(BaseModel):
         if self.state is not None:
             result["state"] = pydantic_core.to_jsonable_python(self.state)
 
+        if self.theme is not None:
+            result["theme"] = self.theme.to_json()
+
         return result
 
     def html(self) -> str:
@@ -158,8 +166,11 @@ class PrefabApp(BaseModel):
         head_parts = [get_renderer_head()]
 
         if self.stylesheets:
-            for url in self.stylesheets:
-                head_parts.append(f'  <link rel="stylesheet" href="{url}">')
+            for entry in self.stylesheets:
+                if "{" in entry:
+                    head_parts.append(f"  <style>{entry}</style>")
+                else:
+                    head_parts.append(f'  <link rel="stylesheet" href="{entry}">')
 
         if self.scripts:
             for url in self.scripts:
@@ -187,8 +198,10 @@ class PrefabApp(BaseModel):
             result["connect_domains"] = list(self.connect_domains)
 
         if self.stylesheets:
-            origins = sorted({_get_origin(url) for url in self.stylesheets})
-            result["style_domains"] = origins
+            urls = [s for s in self.stylesheets if "{" not in s]
+            if urls:
+                origins = sorted({_get_origin(url) for url in urls})
+                result["style_domains"] = origins
 
         if self.scripts:
             origins = sorted({_get_origin(url) for url in self.scripts})

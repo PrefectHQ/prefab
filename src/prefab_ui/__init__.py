@@ -29,6 +29,10 @@ from __future__ import annotations
 
 import importlib.metadata
 
+from prefab_ui.themes import Theme, blue, green, orange, red, rose, violet
+
+__all__ = ["Theme", "blue", "green", "orange", "red", "rose", "violet"]
+
 try:
     __version__ = importlib.metadata.version("prefab-ui")
 except importlib.metadata.PackageNotFoundError:
