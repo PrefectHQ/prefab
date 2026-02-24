@@ -5,8 +5,7 @@ description: >
   build React component trees with Python context managers and return them
   as UIResponse from MCP server tools. Use this skill when writing Python
   code that uses the prefab_ui library, building MCP tools that return
-  interactive interfaces, creating forms with Form.from_model, or testing
-  Prefab UIs with the Simulator. For producing Prefab protocol JSON
+  interactive interfaces, or creating forms with Form.from_model. For producing Prefab protocol JSON
   directly (without Python), use the generative-prefab-ui skill.
 ---
 
@@ -95,8 +94,6 @@ from prefab_ui.components.control_flow import ForEach, If, Elif, Else
 from prefab_ui.actions import SetState, ToggleState, ShowToast, OpenLink
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 
-# Testing
-from prefab_ui.testing import Simulator, ActionResult
 ```
 
 ## Context Managers
@@ -197,18 +194,6 @@ class Contact(BaseModel):
     role: Literal["admin", "user"] = "user"
 
 Form.from_model(Contact, on_submit=CallTool("create_contact"))
-```
-
-## Testing
-
-Headless testing with Simulator. See [references/testing.md](references/testing.md).
-
-```python
-sim = Simulator(handler)
-await sim.invoke("my_tool", {"page": "users"})
-button = sim.find("Button", label="Search")
-await sim.click(button)
-assert len(sim.state["results"]) > 0
 ```
 
 ## Conditional Rendering
