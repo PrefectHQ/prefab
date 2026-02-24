@@ -1,25 +1,17 @@
 ---
-title: Pipes
-description: Format and transform values for display.
+title: Formatting
+sidebarTitle: Formatting
+description: Pipes that format numbers, dates, strings, and arrays for display.
 icon: filter
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Pipes transform expression results into display-ready values. The syntax is `expression | pipeName`, where the pipe receives the evaluated expression as input and produces a formatted output. Some pipes accept an argument after a colon — `| pipeName:arg`:
+Raw values make poor display text. A revenue number like `2847500` means nothing without a currency symbol and thousands separators. A decimal like `0.124` needs to be shown as `12.4%`. An ISO date like `2025-01-15T14:30:00Z` should read "January 15, 2025."
 
-```
-{{ price | currency }}            →  "$1,234.00"
-{{ score | percent:1 }}           →  "75.6%"     (1 decimal place)
-{{ price * quantity | currency }} →  "$150.00"
-{{ name | truncate:10 }}          →  "Arthur ..."  (max 10 chars)
-```
+Pipes handle this formatting. They're the `|` in expressions like `{{ revenue | currency }}` — they take the value on the left, transform it, and return a display-ready result. In Python, pipes are method calls on `Rx` objects: `revenue.currency()` compiles to `{{ revenue | currency }}`.
 
-Because pipe is the **lowest-precedence** operator, everything to the left evaluates first. `price * quantity | currency` means "multiply, then format" — not "format quantity, then multiply."
-
-## Number Formatting
-
-Numbers rarely belong in a UI raw. Prices need currency symbols and decimal alignment, ratios need percent signs, and KPIs need thousands separators. The number pipes handle locale-aware formatting so your expressions produce display-ready values:
+Here's a dashboard card that uses several pipes together:
 
 <ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0},{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ revenue / target | percent:1 }} of target","type":"Text"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]},"state":{"revenue":2847500,"target":3000000,"growth":0.124}}}>
 <CodeGroup>
@@ -37,19 +29,24 @@ from prefab_ui.components import (
     Row,
     Text,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(revenue=2847500, target=3000000, growth=0.124)
+
+revenue = Rx("revenue")
+target = Rx("target")
+growth = Rx("growth")
 
 with Card():
     with CardHeader():
         CardTitle("Q4 Revenue")
-        CardDescription("{{ revenue | currency }}")
+        CardDescription(revenue.currency())
     with CardContent():
         with Column(gap=2):
-            Progress(value="{{ revenue / target * 100 }}", max=100)
+            Progress(value=(revenue / target * 100), max=100)
             with Row(gap=2, align="center"):
-                Text("{{ revenue / target | percent:1 }} of target")
-                Badge("{{ growth | percent:1 }} YoY", variant="secondary")
+                Text(f"{(revenue / target).percent(1)} of target")
+                Badge(f"{growth.percent(1)} YoY", variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -95,19 +92,23 @@ with Card():
 </CodeGroup>
 </ComponentPreview>
 
-| Pipe | Argument | Example | Result |
-|------|----------|---------|--------|
-| `percent` | decimal places (default 0) | `{{ 0.756 \| percent:1 }}` | `75.6%` |
-| `number` | decimal places | `{{ 1234 \| number:2 }}` | `1,234.00` |
-| `currency` | currency code (default USD) | `{{ 1234 \| currency }}` | `$1,234.00` |
-| `round` | decimal places (default 0) | `{{ 3.14159 \| round:2 }}` | `3.14` |
-| `abs` | | `{{ -42 \| abs }}` | `42` |
+`revenue.currency()` turns `2847500` into `$2,847,500.00`. `(revenue / target).percent(1)` divides first, then formats the result as a percentage with one decimal place. Each pipe method returns a new `Rx`, so they chain naturally — and the pipe operator has the **lowest precedence** in the expression grammar, so arithmetic always evaluates before formatting.
 
-`percent` multiplies by 100 before formatting. `number` and `currency` use locale-formatted output (en-US).
+## Number Formatting
+
+| Pipe | Python | Protocol | Result |
+|------|--------|----------|--------|
+| `currency` | `.currency()` / `.currency("EUR")` | `{{ x \| currency }}` / `{{ x \| currency:EUR }}` | `$1,234.00` / `€1,234.00` |
+| `percent` | `.percent()` / `.percent(1)` | `{{ x \| percent }}` / `{{ x \| percent:1 }}` | `76%` / `75.6%` |
+| `number` | `.number()` / `.number(2)` | `{{ x \| number }}` / `{{ x \| number:2 }}` | `1,234` / `1,234.00` |
+| `round` | `.round(2)` | `{{ x \| round:2 }}` | `3.14` |
+| `abs` | `.abs()` | `{{ x \| abs }}` | `42` |
+
+One thing to watch for: `percent` multiplies by 100 before formatting. A value of `0.756` becomes `75.6%`, not `0.756%`. This matches how most APIs and databases store percentages (as decimals), so it usually does what you want. `number` and `currency` produce locale-formatted output (en-US by default).
 
 ## Date and Time
 
-Dates arrive from APIs as ISO strings — dense and machine-oriented. The date and time pipes transform them into human-friendly formats at varying levels of detail, from a terse `1/15/2025` to a full `January 15, 2025, 2:30 PM`:
+ISO date strings are precise but unreadable. The date and time pipes turn them into human-friendly formats:
 
 <ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Team Standup"},{"type":"CardDescription","content":"{{ starts | date:long }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ starts | time }}","variant":"outline"},{"content":"{{ starts | datetime }}","type":"Text"}]}]}]},"state":{"starts":"2025-01-15T14:30:00Z"}}}>
 <CodeGroup>
@@ -123,17 +124,20 @@ from prefab_ui.components import (
     Row,
     Text,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(starts="2025-01-15T14:30:00Z")
+
+starts = Rx("starts")
 
 with Card():
     with CardHeader():
         CardTitle("Team Standup")
-        CardDescription("{{ starts | date:long }}")
+        CardDescription(starts.date("long"))
     with CardContent():
         with Row(gap=2, align="center"):
-            Badge("{{ starts | time }}", variant="outline")
-            Text("{{ starts | datetime }}")
+            Badge(starts.time(), variant="outline")
+            Text(starts.datetime())
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -180,8 +184,6 @@ Pass an ISO date string as the input value. The `time` pipe also accepts time-on
 
 ## String Formatting
 
-String pipes adjust casing and length — `upper` and `lower` normalize text for headings or labels, while `truncate` clamps to a maximum character count and appends `...` when the string overflows:
-
 <ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name | upper }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"{{ name | lower }}","variant":"secondary"},{"content":"{{ bio | truncate:80 }}","type":"Text"}]}]}]},"state":{"name":"Arthur Dent","bio":"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."}}}>
 <CodeGroup>
 ```python Python icon="python"
@@ -195,19 +197,25 @@ from prefab_ui.components import (
     Column,
     Text,
 )
+from prefab_ui.rx import Rx
 
 set_initial_state(
     name="Arthur Dent",
-    bio="A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.",
+    bio="A perfectly ordinary man who woke up one Thursday to discover his house"
+    " was about to be demolished, his planet destroyed, and his best friend"
+    " was an alien from Betelgeuse.",
 )
+
+name = Rx("name")
+bio = Rx("bio")
 
 with Card():
     with CardHeader():
-        CardTitle("{{ name | upper }}")
+        CardTitle(name.upper())
     with CardContent():
         with Column(gap=2):
-            Badge("{{ name | lower }}", variant="secondary")
-            Text("{{ bio | truncate:80 }}")
+            Badge(name.lower(), variant="secondary")
+            Text(bio.truncate(80))
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -249,31 +257,35 @@ with Card():
 | `truncate` | max length | Clamp to N characters, append `...` if truncated |
 | `pluralize` | singular word (default `item`) | Returns the word as-is for count 1, appends `s` otherwise |
 
-`pluralize` is especially useful after `length` to label dynamic counts: `{{ items | length }} {{ items | length | pluralize:'item' }}` produces "1 item" or "3 items".
+`pluralize` pairs well with `length` for labeling dynamic counts: `Rx("items").length().pluralize("item")` produces `{{ items | length | pluralize:'item' }}`, which renders as "1 item" or "3 items" depending on the array size.
 
 ## Array Operations
 
-When state contains a list, you often need to summarize it — count the items, pull out the first or last entry, or collapse everything into a single readable string. The array pipes handle these without arithmetic or concatenation:
+When state contains a list of objects, you often need to summarize it — count the elements, extract a subset, or join names into a string. Array pipes handle this without any server logic:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ skills | first }}","variant":"default"},{"type":"Badge","label":"{{ skills | last }}","variant":"outline"}]},{"content":"{{ skills | join }}","type":"Text"},{"content":"{{ skills | length }} skills listed","type":"Text"}]},"state":{"skills":["Python","TypeScript","Rust","Go"]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ todos | rejectattr:done | length }} remaining","type":"Text"},{"type":"Badge","label":"{{ todos | length }} total","variant":"outline"}]},{"content":"First: {{ todos | selectattr:name | first }}","type":"Text"},{"content":"All: {{ todos | selectattr:name | join:', ' }}","type":"Text"}]},"state":{"todos":[{"name":"Learn Prefab","done":true},{"name":"Build dashboard","done":false},{"name":"Deploy to production","done":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
-from prefab_ui.components import (
-    Badge,
-    Column,
-    Row,
-    Text,
+from prefab_ui.components import Badge, Column, Row, Text
+from prefab_ui.rx import Rx
+
+set_initial_state(
+    todos=[
+        {"name": "Learn Prefab", "done": True},
+        {"name": "Build dashboard", "done": False},
+        {"name": "Deploy to production", "done": False},
+    ]
 )
 
-set_initial_state(skills=["Python", "TypeScript", "Rust", "Go"])
+todos = Rx("todos")
 
 with Column(gap=2):
     with Row(gap=2, align="center"):
-        Badge("{{ skills | first }}")
-        Badge("{{ skills | last }}", variant="outline")
-    Text("{{ skills | join }}")
-    Text("{{ skills | length }} skills listed")
+        Text(f"{todos.rejectattr('done').length()} remaining")
+        Badge(f"{todos.length()} total", variant="outline")
+    Text(f"First: {todos.selectattr('name').first()}")
+    Text(f"All: {todos.selectattr('name').join(', ')}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -285,19 +297,27 @@ with Column(gap=2):
         "cssClass": "gap-2 items-center",
         "type": "Row",
         "children": [
-          {"type": "Badge", "label": "{{ skills | first }}", "variant": "default"},
-          {"type": "Badge", "label": "{{ skills | last }}", "variant": "outline"}
+          {"content": "{{ todos | rejectattr:done | length }} remaining", "type": "Text"},
+          {"type": "Badge", "label": "{{ todos | length }} total", "variant": "outline"}
         ]
       },
-      {"content": "{{ skills | join }}", "type": "Text"},
-      {"content": "{{ skills | length }} skills listed", "type": "Text"}
+      {"content": "First: {{ todos | selectattr:name | first }}", "type": "Text"},
+      {"content": "All: {{ todos | selectattr:name | join:', ' }}", "type": "Text"}
     ]
   },
-  "state": {"skills": ["Python", "TypeScript", "Rust", "Go"]}
+  "state": {
+    "todos": [
+      {"name": "Learn Prefab", "done": true},
+      {"name": "Build dashboard", "done": false},
+      {"name": "Deploy to production", "done": false}
+    ]
+  }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
+
+The key line is `todos.rejectattr("done").length()` — it filters out completed items, then counts what's left. The renderer evaluates the entire chain at runtime, so the "remaining" count stays current as items are checked off.
 
 | Pipe | Argument | Description |
 |------|----------|-------------|
@@ -308,45 +328,48 @@ with Column(gap=2):
 | `selectattr` | attribute name | Keep items where the attribute is truthy |
 | `rejectattr` | attribute name | Remove items where the attribute is truthy |
 
-`selectattr` and `rejectattr` filter arrays of objects by a named attribute, inspired by [Jinja's filters](https://jinja.palletsprojects.com/en/stable/templates/#jinja-filters.selectattr). They're especially useful for counting subsets — for example, `{{ todos | rejectattr:'done' | length }}` counts incomplete items without any extra state.
+## Chaining
+
+Pipes chain left to right — each pipe receives the output of the one before it. This is how you compose multiple transformations in sequence:
+
+| Python | Protocol |
+|--------|----------|
+| `name.lower().truncate(20)` | `{{ name \| lower \| truncate:20 }}` |
+| `todos.rejectattr("done").length()` | `{{ todos \| rejectattr:'done' \| length }}` |
+| `revenue.currency().upper()` | `{{ revenue \| currency \| upper }}` |
+
+Each method call returns a new `Rx` object, so you can keep building. The chain reads naturally left-to-right in both Python and the protocol.
 
 ## Pipe Arguments
 
-The argument after `:` is always a simple token — a number, a string, or an identifier. It can't be a sub-expression. A few more examples:
+Some pipes take an argument that modifies their behavior. In the protocol, the argument follows a colon: `{{ score | percent:1 }}`. In Python, it's a method parameter: `.percent(1)`.
+
+The argument is always a simple token — a number, a string, or an identifier. It cannot be a sub-expression.
+
+| Python | Protocol | Effect |
+|--------|----------|--------|
+| `.join(" - ")` | `{{ tags \| join:' - ' }}` | Join with ` - ` separator |
+| `.currency("EUR")` | `{{ price \| currency:EUR }}` | Format as euros |
+| `.default("Anonymous")` | `{{ name \| default:Anonymous }}` | Fallback value |
+| `.truncate(20)` | `{{ bio \| truncate:20 }}` | Limit to 20 characters |
+
+## Default Values
+
+A bare literal after `|` acts as a default value when the left side is null or undefined. In Python, use `.default()`:
+
+| Python | Protocol | Behavior |
+|--------|----------|----------|
+| `name.default("Anonymous")` | `{{ name \| 'Anonymous' }}` | `"Anonymous"` if `name` is undefined |
+| `count.default(0)` | `{{ count \| 0 }}` | `0` if `count` is undefined |
+
+This checks specifically for null/undefined — an empty string `""` or `0` will *not* trigger the default. For broader falsy defaults (including empty strings, zero, and false), use the `||` operator instead:
 
 ```
-{{ tags | join: - }}           → join with " - "
-{{ price | currency:EUR }}     → format as euros
-{{ name | default:Anonymous }} → fallback value
+{{ name || 'Anonymous' }}
 ```
 
-## Chaining
-
-Pipes chain left to right. Each pipe receives the output of the previous one:
-
-```
-{{ name | lower | truncate:20 }}
-```
-
-This lowercases the name first, then truncates the result to 20 characters.
-
-## Default Value Shorthand
-
-A bare literal after `|` acts as a default value when the left side is null or undefined:
-
-```
-{{ name | 'Anonymous' }}   → "Anonymous" if name is undefined
-{{ count | 0 }}            → 0 if count is undefined
-```
-
-This is equivalent to the `default` pipe: `{{ name | default:Anonymous }}`. Both check specifically for null/undefined — an empty string `""` won't trigger the default.
-
-For broader falsy defaults (including empty strings, zero, and false), use the `||` operator instead:
-
-```
-{{ name || 'Anonymous' }}  → "Anonymous" if name is any falsy value
-```
+See the [Context & Variables](/expressions/context) page for more on how undefined values behave.
 
 ## Unknown Pipes
 
-If a pipe name isn't recognized, the value passes through unchanged. This prevents errors from typos or forward-compatible pipe names — the output just won't be formatted.
+If a pipe name isn't recognized by the renderer, the value passes through unchanged — no error, just unformatted output. This prevents typos from crashing your UI, but it also means a misspelled pipe name will silently produce raw values.

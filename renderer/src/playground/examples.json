@@ -90,21 +90,6 @@
     "code": "from prefab_ui.components import Input, Button, Column\nfrom prefab_ui.actions import OpenLink\n\nwith Column(gap=3):\n    Input(name=\"repo\", placeholder=\"owner/repo\")\n    Button(\n        \"Open on GitHub\",\n        on_click=OpenLink(\"https://github.com/{{ repo }}\"),\n    )"
   },
   {
-    "title": "from prefab_ui.components import Button",
-    "category": "Actions",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Run Analysis\", on_click=CallTool(\"analyze\"))\nButton(\"Reset\", on_click=SetState(\"count\", 0))"
-  },
-  {
-    "title": "from prefab_ui.components import Input, Button, Column",
-    "category": "Actions",
-    "code": "from prefab_ui.actions.mcp import CallTool\n\nwith Column(gap=3):\n    city_input = Input(placeholder=\"Enter a city...\")\n    Button(\n        \"Get Weather\",\n        on_click=CallTool(\n            \"get_weather\",\n            arguments={\"location\": city_input.rx},\n        ),\n    )"
-  },
-  {
-    "title": "from prefab_ui.components import Button",
-    "category": "Actions",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Submit\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"process\", arguments={\"query\": \"{{ query }}\"}),\n])"
-  },
-  {
     "title": "Python icon=\"python\"",
     "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
@@ -1450,9 +1435,19 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    Checkbox, Column, Form, Grid, Input, Muted, Row, Separator,\n)\nfrom prefab_ui.components.control_flow import ForEach, If\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\n# Each group has a name, a list of todos, an input buffer, and a visibility flag\nset_initial_state(groups=[\n    {\n        \"name\": \"Work\",\n        \"todos\": [\n            {\"text\": \"Find Magrathea\", \"done\": False},\n            {\"text\": \"Escape Vogons\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n    {\n        \"name\": \"Personal\",\n        \"todos\": [\n            {\"text\": \"Have lunch at Milliways\", \"done\": True},\n            {\"text\": \"Buy towel\", \"done\": False},\n        ],\n        \"new_todo\": \"\",\n        \"show_done\": True,\n    },\n])\n\nwith Grid(min_column_width=\"12rem\", gap=6, align=\"start\"):\n\n    # Iterate groups; `let` captures the group index as `gi` and\n    # the group's show_done flag so they're available in the inner loop\n    with ForEach(\"groups\", let=dict(gi=\"{{ $index }}\", show_done=\"{{ $item.show_done }}\")):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    # Editable group name — borderless input styled as a title\n                    Input(\n                        name=\"groups.{{ gi }}.name\",\n                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0\",\n                    )\n                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups\", \"{{ gi }}\"))\n            with CardContent():\n                with Column(gap=4):\n                    # New todo input + add button — Form makes Enter submit too\n                    with Form(gap=0, on_submit=[\n                        AppendState(\"groups.{{ gi }}.todos\", {\"text\": \"{{ $item.new_todo }}\", \"done\": False}),\n                        SetState(\"groups.{{ gi }}.new_todo\", \"\"),\n                    ]):\n                        with Row(gap=2):\n                            Input(name=\"groups.{{ gi }}.new_todo\", placeholder=\"Add a todo...\")\n                            Button(\"Add\", disabled=\"{{ not $item.new_todo }}\")\n\n                    # Inner loop over todos — gi keeps the outer group index\n                    with Column(gap=2):\n                        with If(\"{{ $item.todos | length }}\"):\n                            Separator(spacing=3)\n                        with ForEach(\"groups.{{ gi }}.todos\"):\n                            with If(\"{{ not $item.done or show_done }}\"):\n                                with Row(gap=2, align=\"center\"):\n                                    Checkbox(name=\"groups.{{ gi }}.todos.{{ $index }}.done\")\n                                    # Borderless input looks like text but is directly editable\n                                    Input(\n                                        name=\"groups.{{ gi }}.todos.{{ $index }}.text\",\n                                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0\",\n                                    )\n                                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups.{{ gi }}.todos\", \"{{ $index }}\"))\n\n            with CardFooter():\n                with Row(gap=2, align=\"center\", css_class=\"w-full justify-between\"):\n                    Muted(\"{{ $item.todos | length }} items\")\n                    with Row(gap=1, align=\"center\"):\n                        Checkbox(name=\"groups.{{ gi }}.show_done\", css_class=\"h-3 w-3\")\n                        Muted(\"Show done\")\n\n    # Dashed card to add a new group\n    with Card(css_class=\"border-dashed p-3\"):\n        Button(\n            \"+\",\n            variant=\"ghost\",\n            size=\"lg\",\n            css_class=\"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md\",\n            on_click=AppendState(\"groups\", {\"name\": \"New List\", \"todos\": [], \"new_todo\": \"\", \"show_done\": True}),\n        )"
   },
   {
+    "title": "from prefab_ui.app import set_initial_state",
+    "category": "Expressions",
+    "code": "set_initial_state(count=0, name=\"Arthur\", towel=True)"
+  },
+  {
     "title": "from prefab_ui import AppResult",
     "category": "Expressions",
     "code": "AppResult(state={\"count\": 0, \"name\": \"Arthur\"}, view=...)"
+  },
+  {
+    "title": "from prefab_ui.components import Input, Text",
+    "category": "Expressions",
+    "code": "search = Input(name=\"query\", placeholder=\"Search...\")\nText(f\"You typed: {search.rx}\")\n# search.rx is Rx(\"query\") → {{ query }}"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1460,19 +1455,24 @@
     "code": "from prefab_ui.components import Column, Text\n\nwith Column(gap=2, let={\"greeting\": \"Don't Panic\", \"name\": \"Arthur\"}):\n    Text(\"{{ greeting }}, {{ name }}\")\n    with Column(let={\"name\": \"Ford\"}):\n        Text(\"{{ greeting }}, {{ name }}\")"
   },
   {
-    "title": "with ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):",
+    "title": "from prefab_ui.components import Text",
     "category": "Expressions",
-    "code": "# gi holds the outer index; $index inside a nested ForEach refers to the inner loop\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
+    "code": "from prefab_ui.components.control_flow import ForEach\n\nwith ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
   },
   {
-    "title": "from prefab_ui.actions import ShowToast",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Expressions",
-    "code": "from prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "user = Rx(\"user\")\nuser.address.city        # → {{ user.address.city }}"
+  },
+  {
+    "title": "from prefab_ui.components import Button",
+    "category": "Expressions",
+    "code": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "from prefab_ui.components import Text",
     "category": "Expressions",
-    "code": "from prefab_ui.components.control_flow import ForEach\n\nwith ForEach(\"items\"):\n    Text(\"{{ $index + 1 }}. {{ name }}\")\n    # Renders: \"1. First\", \"2. Second\", etc."
+    "code": "from prefab_ui.components.control_flow import ForEach\n\nwith ForEach(\"items\"):\n    Text(\"{{ $index + 1 }}. {{ name }}\")"
   },
   {
     "title": "from prefab_ui.components import Button, Text",
@@ -1482,92 +1482,82 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Alert,\n    AlertDescription,\n    Column,\n    Slider,\n    Text,\n)\nfrom prefab_ui.components.control_flow import Elif, If\nset_initial_state(inventory=15)\n\nwith Column(gap=3):\n    Text(\"Inventory: {{ inventory }}\")\n    Slider(\n        name=\"inventory\",\n        min=0,\n        max=30,\n        step=1,\n    )\n    with If(\"{{ inventory == 0 }}\"):\n        with Alert(variant=\"destructive\"):\n            AlertDescription(\"Out of stock!\")\n    with Elif(\"{{ inventory > 0 && inventory < 10 }}\"):\n        with Alert():\n            AlertDescription(\"Low stock warning\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Column, Row, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nset_initial_state(price=42, quantity=1)\nquantity = Rx(\"quantity\")\nprice = Rx(\"price\")\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\"-\", variant=\"outline\", on_click=SetState(\"quantity\", quantity - 1))\n        Text(quantity)\n        Button(\"+\", variant=\"outline\", on_click=SetState(\"quantity\", quantity + 1))\n    Text(f\"Total: {(price * quantity).currency()}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Button,\n    Column,\n    Row,\n    Slider,\n    Text,\n)\nfrom prefab_ui.actions import SetState\n\nset_initial_state(price=42, quantity=1)\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Text(\"Quantity:\")\n        Button(\n            \"-\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity - 1 }}\"),\n        )\n        Text(\"{{ quantity }}\")\n        Button(\n            \"+\",\n            variant=\"outline\",\n            on_click=SetState(\"quantity\", \"{{ quantity + 1 }}\"),\n        )\n    Text(\"Total: {{ price * quantity | currency }}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Row, Text\nfrom prefab_ui.rx import Rx\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\nfirst = Rx(\"first\")\nlast = Rx(\"last\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(f\"Hello, {first} {last}!\")"
+  },
+  {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Expressions",
+    "code": "from prefab_ui.components import Alert\nfrom prefab_ui.components.control_flow import If, Elif\n\ninventory = Rx(\"inventory\")\n\nwith If(inventory == 0):\n    Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif((inventory > 0) & (inventory < 10)):\n    Alert(\"Low stock\")"
+  },
+  {
+    "title": "# Correct",
+    "category": "Expressions",
+    "code": "(score > 0) & (score < 100)\n\n# Wrong — parsed as score > (0 & score) < 100\nscore > 0 & score < 100"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Row, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"Hello, {{ first + ' ' + last }}!\")"
-  },
-  {
-    "title": "with If(\"{{ inventory == 0 }}\"):",
-    "category": "Expressions",
-    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"{{ inventory > 0 && inventory < 10 }}\"):\n    Alert(\"Low stock\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Row, Switch, Text\nfrom prefab_ui.rx import Rx\n\nset_initial_state(active=True)\nactive = Rx(\"active\")\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\")\n        Text(active.then(\"Online\", \"Offline\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Row, Switch, Text\n\nset_initial_state(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\")\n        Text(\"{{ active ? 'Online' : 'Offline' }}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Text(\"{{ count }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\n        \"-\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count - 1 }}\"),\n    )\n    Text(\"{{ count }}\")\n    Button(\n        \"+\",\n        variant=\"outline\",\n        on_click=SetState(\"count\", \"{{ count + 1 }}\"),\n    )"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Text\n\nset_initial_state(name=\"Arthur\")\n\nwith Column(gap=3):\n    Input(name=\"name\", placeholder=\"Your name\")\n    Text(\"Hello, {{ name }}!\")"
   },
   {
-    "title": "from prefab_ui.components import Badge, Input, Text",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Expressions",
-    "code": "amount = Input()\nText(f\"Total: {amount.rx}\")                    # uses .rx — cleaner Python\nText(\"{{ price * quantity | currency }}\")      # expression combining two keys\nBadge(\"{{ status | upper }}\", variant=\"secondary\")"
+    "code": "count = Rx(\"count\")\nText(count)     # equivalent to Text(\"{{ count }}\")"
   },
   {
-    "title": "with If(\"{{ inventory == 0 }}\"):",
+    "title": "price = Rx(\"price\")",
     "category": "Expressions",
-    "code": "Alert(\"Out of stock\", variant=\"destructive\")\nwith Elif(\"{{ inventory < 10 }}\"):\n    Alert(\"Low stock\")\nwith Else():\n    Badge(\"In stock\")"
+    "code": "quantity = Rx(\"quantity\")\n\nprice * quantity               # → {{ price * quantity }}\n(price * quantity).currency()  # → {{ price * quantity | currency }}"
   },
   {
-    "title": "Python icon=\"python\"",
+    "title": "Text(f\"Total: {(price * quantity).currency()}\")",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Progress,\n    Row,\n    Text,\n)\n\nset_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(\"{{ revenue | currency }}\")\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=\"{{ revenue / target * 100 }}\", max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(\"{{ revenue / target | percent:1 }} of target\")\n                Badge(\"{{ growth | percent:1 }} YoY\", variant=\"secondary\")"
+    "code": "# → Text(\"Total: {{ price * quantity | currency }}\")"
   },
   {
-    "title": "Python icon=\"python\"",
+    "title": "slider = Slider(name=\"volume\", min=0, max=100)",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Row,\n    Text,\n)\n\nset_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(\"{{ starts | date:long }}\")\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(\"{{ starts | time }}\", variant=\"outline\")\n            Text(\"{{ starts | datetime }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\n\nset_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse.\",\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"{{ name | upper }}\")\n    with CardContent():\n        with Column(gap=2):\n            Badge(\"{{ name | lower }}\", variant=\"secondary\")\n            Text(\"{{ bio | truncate:80 }}\")"
+    "code": "slider.rx              # → Rx(\"volume\") → {{ volume }}\nslider.rx.percent()    # → {{ volume | percent }}\nslider.rx > 80         # → {{ volume > 80 }}"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Column,\n    Row,\n    Text,\n)\n\nset_initial_state(skills=[\"Python\", \"TypeScript\", \"Rust\", \"Go\"])\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Badge(\"{{ skills | first }}\")\n        Badge(\"{{ skills | last }}\", variant=\"outline\")\n    Text(\"{{ skills | join }}\")\n    Text(\"{{ skills | length }} skills listed\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Progress, Slider, Text\n\nset_initial_state(volume=50)\n\nwith Column(gap=3):\n    slider = Slider(name=\"volume\", min=0, max=100)\n    Text(f\"Volume: {slider.rx}%\")\n    Progress(value=slider.rx)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\n\nset_initial_state(name=\"Arthur Dent\", role=\"Reluctant Adventurer\", answer=42)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"{{ name }}\")\n    with CardContent():\n        with Column(gap=1):\n            Text(\"Role: {{ role }}\")\n            Text(\"The Answer to Everything: {{ answer }}\")"
-  },
-  {
-    "title": "Text(\"{{ price * quantity | currency }}\")",
-    "category": "Expressions",
-    "code": "Text(\"{{ items.length }} item{{ items.length != 1 ? 's' : '' }} in your cart\")\nText(\"{{ first + ' ' + last | upper }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import Progress",
-    "category": "Expressions",
-    "code": "# \"{{ volume }}\" resolves to the number 75, not the string \"75\"\nProgress(value=\"{{ volume }}\", max=100)"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Column,\n    Progress,\n    Row,\n    Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nrevenue = Rx(\"revenue\")\ntarget = Rx(\"target\")\ngrowth = Rx(\"growth\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(revenue.currency())\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=(revenue / target * 100), max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(f\"{(revenue / target).percent(1)} of target\")\n                Badge(f\"{growth.percent(1)} YoY\", variant=\"secondary\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Column,\n    Input,\n    Text,\n)\n\nset_initial_state(\n    name=\"Zaphod Beeblebrox\",\n    role=\"President of the Galaxy\",\n)\n\nwith Column(gap=2):\n    Text(\"{{ name }}\")\n    Badge(\"{{ role }}\", variant=\"secondary\")\n    Input(placeholder=\"Message {{ name }}...\")"
-  },
-  {
-    "title": "Text(\"{{ user.address.city }}\")",
-    "category": "Expressions",
-    "code": "Text(\"{{ order.items.length }} items\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardDescription,\n    CardHeader,\n    CardTitle,\n    Row,\n    Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nstarts = Rx(\"starts\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(starts.date(\"long\"))\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(starts.time(), variant=\"outline\")\n            Text(starts.datetime())"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Text\n\nset_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    first_input = Input(name=\"first\", placeholder=\"First name\")\n    last_input = Input(name=\"last\", placeholder=\"Last name\")\n    Text(\"{{ first + ' ' + last }}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house\"\n    \" was about to be demolished, his planet destroyed, and his best friend\"\n    \" was an alien from Betelgeuse.\",\n)\n\nname = Rx(\"name\")\nbio = Rx(\"bio\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(name.upper())\n    with CardContent():\n        with Column(gap=2):\n            Badge(name.lower(), variant=\"secondary\")\n            Text(bio.truncate(80))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\nfrom prefab_ui.rx import Rx\n\nset_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\ntodos = Rx(\"todos\")\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {todos.selectattr('name').first()}\")\n    Text(f\"All: {todos.selectattr('name').join(', ')}\")"
   },
   {
     "title": "Python icon=\"python\"",
