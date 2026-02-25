@@ -20,7 +20,7 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
     function mount() {
       if (!window.__prefab || !host) return;
       var dark = document.documentElement.classList.contains("dark");
-      handleRef.current = window.__prefab.mountPreview(host, jsonStr, { dark: dark, height: height });
+      handleRef.current = window.__prefab.mountPreview(host, jsonStr, { dark: dark });
       if (bare && host.shadowRoot) {
         var m = host.shadowRoot.querySelector("[data-prefab-mount]");
         if (m) m.style.background = "transparent";
@@ -177,7 +177,7 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
   return (
     <Card>
       <div ref={cardRef} />
-      <div ref={hostRef} style={height ? { minHeight: height } : undefined} />
+      <div ref={hostRef} />
       <div style={{ marginBottom: "-2rem" }}>{children}</div>
     </Card>
   );

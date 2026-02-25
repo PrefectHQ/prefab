@@ -139,7 +139,7 @@ function getOrCreatePortalHost(id: string, dark: boolean): HTMLElement {
 export function mountPreview(
   host: HTMLElement,
   json: string,
-  options?: { dark?: boolean; height?: string },
+  options?: { dark?: boolean },
 ): MountHandle {
   const shadow = host.attachShadow({ mode: "open" });
 
@@ -151,9 +151,6 @@ export function mountPreview(
   // Create mount point inside shadow root
   const mount = document.createElement("div");
   mount.setAttribute("data-prefab-mount", "");
-  if (options?.height) {
-    mount.style.minHeight = options.height;
-  }
   shadow.appendChild(mount);
 
   const isDark = options?.dark ?? false;
@@ -201,8 +198,37 @@ export function mountPreview(
     />,
   );
 
+  // --- Auto-expand preview when floating content overflows ---
+  // Popovers/dropdowns render in a body-level portal shadow root. When they
+  // extend below the preview card, pad the host so page content below is
+  // pushed down instead of being overlapped. Padding (not min-height) avoids
+  // shifting the shadow root's centered content and the trigger position.
+  let heightRAF = 0;
+  function syncOverflowPadding() {
+    cancelAnimationFrame(heightRAF);
+    heightRAF = requestAnimationFrame(() => {
+      const hostRect = host.getBoundingClientRect();
+      let maxBottom = 0;
+      for (const child of Array.from(portalContainer.children)) {
+        const r = (child as HTMLElement).getBoundingClientRect();
+        if (r.height > 0) maxBottom = Math.max(maxBottom, r.bottom);
+      }
+      const overflow = maxBottom - hostRect.bottom;
+      host.style.paddingBottom = overflow > 0 ? `${overflow + 8}px` : "";
+    });
+  }
+  const portalObserver = new MutationObserver(syncOverflowPadding);
+  portalObserver.observe(portalContainer, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["style", "data-state"],
+  });
+
   return {
     unmount() {
+      portalObserver.disconnect();
+      cancelAnimationFrame(heightRAF);
       clearAllIntervals();
       root?.unmount();
       root = null;
