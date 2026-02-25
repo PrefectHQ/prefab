@@ -90,3 +90,6 @@ class Tabs(StatefulMixin, ContainerComponent):
         alias="onChange",
         description="Action(s) when the active tab changes",
     )
+
+    def _get_initial_value(self) -> str | None:
+        return self.default_value
