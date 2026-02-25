@@ -139,7 +139,7 @@ function getOrCreatePortalHost(id: string, dark: boolean): HTMLElement {
 export function mountPreview(
   host: HTMLElement,
   json: string,
-  options?: { dark?: boolean },
+  options?: { dark?: boolean; height?: string },
 ): MountHandle {
   const shadow = host.attachShadow({ mode: "open" });
 
@@ -151,6 +151,9 @@ export function mountPreview(
   // Create mount point inside shadow root
   const mount = document.createElement("div");
   mount.setAttribute("data-prefab-mount", "");
+  if (options?.height) {
+    mount.style.minHeight = options.height;
+  }
   shadow.appendChild(mount);
 
   const isDark = options?.dark ?? false;
