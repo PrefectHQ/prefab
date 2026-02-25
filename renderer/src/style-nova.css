@@ -1374,20 +1374,75 @@
 }
 
 /* MARK: Tabs */
-.cn-tabs {
-  @apply gap-2;
-}
 
+/* --- List --- */
 .cn-tabs-list {
-  @apply rounded-lg p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none data-[variant=line]:bg-transparent data-[variant=line]:p-0 data-[variant=line]:border-b;
+  @apply h-9 items-center justify-center rounded-lg bg-muted p-[3px];
 }
 
+/* vertical: stack triggers in a column */
+.group\/tabs[data-orientation="vertical"] .cn-tabs-list {
+  @apply h-auto flex-col items-stretch;
+}
+
+/* line variant */
+.cn-tabs-list[data-variant="line"] {
+  @apply h-auto rounded-none bg-transparent p-0;
+}
+
+/* --- Trigger --- */
 .cn-tabs-trigger {
-  @apply gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:data-active:shadow-none group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:border-b-2 group-data-[variant=line]/tabs-list:data-active:border-b-primary [&_svg:not([class*='size-'])]:size-4;
+  @apply gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium [&_svg:not([class*='size-'])]:size-4;
 }
 
+.cn-tabs-trigger[data-state="active"] {
+  @apply bg-background shadow-sm;
+}
+
+/* line variant triggers */
+.cn-tabs-list[data-variant="line"] .cn-tabs-trigger {
+  @apply relative rounded-none border-0 bg-transparent shadow-none;
+}
+
+.cn-tabs-list[data-variant="line"] .cn-tabs-trigger::after {
+  @apply absolute bg-primary opacity-0 transition-opacity content-[''];
+}
+
+/* horizontal line: underline below */
+.group\/tabs[data-orientation="horizontal"]
+  .cn-tabs-list[data-variant="line"]
+  .cn-tabs-trigger::after {
+  @apply inset-x-0 bottom-0 h-0.5;
+}
+
+/* vertical line: bar on the right */
+.group\/tabs[data-orientation="vertical"]
+  .cn-tabs-list[data-variant="line"]
+  .cn-tabs-trigger::after {
+  @apply inset-y-0 right-0 w-0.5;
+}
+
+.cn-tabs-list[data-variant="line"] .cn-tabs-trigger[data-state="active"] {
+  @apply bg-transparent shadow-none;
+}
+
+.cn-tabs-list[data-variant="line"]
+  .cn-tabs-trigger[data-state="active"]::after {
+  @apply opacity-100;
+}
+
+/* vertical default: full-width triggers */
+.group\/tabs[data-orientation="vertical"] .cn-tabs-trigger {
+  @apply justify-start;
+}
+
+/* --- Content --- */
 .cn-tabs-content {
-  @apply text-sm;
+  @apply mt-2 text-sm;
+}
+
+.group\/tabs[data-orientation="vertical"] .cn-tabs-content {
+  @apply mt-0 flex-1;
 }
 
 /* MARK: Textarea */

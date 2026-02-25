@@ -10,7 +10,7 @@ Tabs organize content into panels that users switch between by clicking triggers
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"tabs_1","type":"Tabs","variant":"default","defaultValue":"account","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"input_18","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Current Password"},{"name":"input_19","type":"Input","inputType":"password","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"New Password"},{"name":"input_20","type":"Input","inputType":"password","disabled":false,"readOnly":false,"required":false}]}]}]}]}]},"state":{"tabs_1":"account"}}}>
+<ComponentPreview json={{"view":{"name":"tabs_1","type":"Tabs","variant":"default","defaultValue":"account","orientation":"horizontal","children":[{"type":"Tab","title":"Account","value":"account","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Account"},{"type":"CardDescription","content":"Make changes to your account here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"input_18","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false}]}]}]}]},{"type":"Tab","title":"Password","value":"password","disabled":false,"children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Password"},{"type":"CardDescription","content":"Change your password here."}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Current Password"},{"name":"input_19","type":"Input","inputType":"password","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"New Password"},{"name":"input_20","type":"Input","inputType":"password","disabled":false,"readOnly":false,"required":false}]}]}]}]}]},"state":{"tabs_1":"account"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -55,6 +55,7 @@ with Tabs(default_value="account"):
     "type": "Tabs",
     "variant": "default",
     "defaultValue": "account",
+    "orientation": "horizontal",
     "children": [
       {
         "type": "Tab",
@@ -158,28 +159,32 @@ with Tabs(default_value="account"):
 
 The `variant` prop controls the visual style of the tab triggers. The default uses a pill-style background, while `"line"` uses an underline indicator.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"name":"tabs_2","type":"Tabs","variant":"default","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]}]},{"name":"tabs_3","type":"Tabs","variant":"line","defaultValue":"one","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]}]}]},"state":{"tabs_2":"one","tabs_3":"one"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-16 w-fit mx-auto","type":"Column","children":[{"name":"tabs_2","type":"Tabs","variant":"default","defaultValue":"one","orientation":"horizontal","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]},{"type":"Tab","title":"Guide","value":"three","disabled":false,"children":[{"content":"A towel is the most massively useful thing.","type":"Text"}]}]},{"name":"tabs_3","type":"Tabs","variant":"line","defaultValue":"one","orientation":"horizontal","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]},{"type":"Tab","title":"Guide","value":"three","disabled":false,"children":[{"content":"A towel is the most massively useful thing.","type":"Text"}]}]}]},"state":{"tabs_2":"one","tabs_3":"one"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Tab, Tabs, Text
 
-with Column(gap=6):
+with Column(gap=16, css_class="w-fit mx-auto"):
     with Tabs(default_value="one"):
         with Tab("Mostly", value="one"):
             Text("Don't panic.")
         with Tab("Harmless", value="two"):
             Text("It's a wholly remarkable book.")
+        with Tab("Guide", value="three"):
+            Text("A towel is the most massively useful thing.")
 
     with Tabs(variant="line", default_value="one"):
         with Tab("Mostly", value="one"):
             Text("Don't panic.")
         with Tab("Harmless", value="two"):
             Text("It's a wholly remarkable book.")
+        with Tab("Guide", value="three"):
+            Text("A towel is the most massively useful thing.")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-6",
+    "cssClass": "gap-16 w-fit mx-auto",
     "type": "Column",
     "children": [
       {
@@ -187,6 +192,7 @@ with Column(gap=6):
         "type": "Tabs",
         "variant": "default",
         "defaultValue": "one",
+        "orientation": "horizontal",
         "children": [
           {
             "type": "Tab",
@@ -201,6 +207,13 @@ with Column(gap=6):
             "value": "two",
             "disabled": false,
             "children": [{"content": "It's a wholly remarkable book.", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Guide",
+            "value": "three",
+            "disabled": false,
+            "children": [{"content": "A towel is the most massively useful thing.", "type": "Text"}]
           }
         ]
       },
@@ -209,6 +222,7 @@ with Column(gap=6):
         "type": "Tabs",
         "variant": "line",
         "defaultValue": "one",
+        "orientation": "horizontal",
         "children": [
           {
             "type": "Tab",
@@ -223,6 +237,13 @@ with Column(gap=6):
             "value": "two",
             "disabled": false,
             "children": [{"content": "It's a wholly remarkable book.", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Guide",
+            "value": "three",
+            "disabled": false,
+            "children": [{"content": "A towel is the most massively useful thing.", "type": "Text"}]
           }
         ]
       }
@@ -234,141 +255,135 @@ with Column(gap=6):
 </CodeGroup>
 </ComponentPreview>
 
-## Reading the Value
+## Orientation
 
-Use `.rx` to get a reactive reference to the active tab's value string. You can also pass `.rx` to `SetState` to control the active tab from another component — here a Select drives which tab is shown:
+Set `orientation="vertical"` to stack the tab triggers in a column alongside the content.
 
-<ComponentPreview json={{"view":{"cssClass":"justify-around w-full","type":"Row","children":[{"cssClass":"gap-4 w-auto","type":"Column","children":[{"name":"tabs_4","type":"Tabs","variant":"default","defaultValue":"earth","children":[{"type":"Tab","title":"Earth","value":"earth","disabled":false,"children":[{"content":"Mostly harmless.","type":"Text"}]},{"type":"Tab","title":"Magrathea","value":"magrathea","disabled":false,"children":[{"content":"Ancient planet of legend.","type":"Text"}]},{"type":"Tab","title":"Betelgeuse","value":"betelgeuse","disabled":false,"children":[{"content":"Home of Ford Prefect.","type":"Text"}]}]}]},{"cssClass":"gap-4 w-auto","type":"Column","children":[{"name":"select_9","type":"Select","placeholder":"Jump to...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"tabs_4","value":"{{ $event }}"},"children":[{"type":"SelectOption","value":"earth","label":"Earth","selected":false,"disabled":false},{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground text-sm","content":"Viewing: {{ tabs_4 }}","type":"Text"}]}]},"state":{"tabs_4":"earth"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-16 w-48 mx-auto","type":"Column","children":[{"name":"tabs_4","type":"Tabs","variant":"default","defaultValue":"one","orientation":"vertical","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]},{"type":"Tab","title":"Guide","value":"three","disabled":false,"children":[{"content":"A towel is the most massively useful thing.","type":"Text"}]}]},{"name":"tabs_5","type":"Tabs","variant":"line","defaultValue":"one","orientation":"vertical","children":[{"type":"Tab","title":"Mostly","value":"one","disabled":false,"children":[{"content":"Don't panic.","type":"Text"}]},{"type":"Tab","title":"Harmless","value":"two","disabled":false,"children":[{"content":"It's a wholly remarkable book.","type":"Text"}]},{"type":"Tab","title":"Guide","value":"three","disabled":false,"children":[{"content":"A towel is the most massively useful thing.","type":"Text"}]}]}]},"state":{"tabs_4":"one","tabs_5":"one"}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column, Row, Select, SelectOption,
-    Tab, Tabs, Text,
-)
-from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Tab, Tabs, Text
 
-with Row(justify="around", css_class="w-full"):
-    with Column(gap=4, css_class="w-auto"):
-        with Tabs(default_value="earth") as tabs:
-            with Tab("Earth", value="earth"):
-                Text("Mostly harmless.")
-            with Tab("Magrathea", value="magrathea"):
-                Text("Ancient planet of legend.")
-            with Tab("Betelgeuse", value="betelgeuse"):
-                Text("Home of Ford Prefect.")
-      
-    with Column(gap=4, css_class="w-auto"):
-        with Select(
-            placeholder="Jump to...",
-            on_change=SetState(tabs.rx, "{{ $event }}"),
-        ):
-            SelectOption("Earth", value="earth")
-            SelectOption("Magrathea", value="magrathea")
-            SelectOption("Betelgeuse", value="betelgeuse")
-        Text(
-            f"Viewing: {tabs.rx}",
-            css_class="text-muted-foreground text-sm",
-        )
+with Column(gap=16, css_class="w-48 mx-auto"):
+    with Tabs(orientation="vertical", default_value="one"):
+        with Tab("Mostly", value="one"):
+            Text("Don't panic.")
+        with Tab("Harmless", value="two"):
+            Text("It's a wholly remarkable book.")
+        with Tab("Guide", value="three"):
+            Text("A towel is the most massively useful thing.")
+
+    with Tabs(variant="line", orientation="vertical", default_value="one"):
+        with Tab("Mostly", value="one"):
+            Text("Don't panic.")
+        with Tab("Harmless", value="two"):
+            Text("It's a wholly remarkable book.")
+        with Tab("Guide", value="three"):
+            Text("A towel is the most massively useful thing.")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "justify-around w-full",
-    "type": "Row",
+    "cssClass": "gap-16 w-48 mx-auto",
+    "type": "Column",
     "children": [
       {
-        "cssClass": "gap-4 w-auto",
-        "type": "Column",
+        "name": "tabs_4",
+        "type": "Tabs",
+        "variant": "default",
+        "defaultValue": "one",
+        "orientation": "vertical",
         "children": [
           {
-            "name": "tabs_4",
-            "type": "Tabs",
-            "variant": "default",
-            "defaultValue": "earth",
-            "children": [
-              {
-                "type": "Tab",
-                "title": "Earth",
-                "value": "earth",
-                "disabled": false,
-                "children": [{"content": "Mostly harmless.", "type": "Text"}]
-              },
-              {
-                "type": "Tab",
-                "title": "Magrathea",
-                "value": "magrathea",
-                "disabled": false,
-                "children": [{"content": "Ancient planet of legend.", "type": "Text"}]
-              },
-              {
-                "type": "Tab",
-                "title": "Betelgeuse",
-                "value": "betelgeuse",
-                "disabled": false,
-                "children": [{"content": "Home of Ford Prefect.", "type": "Text"}]
-              }
-            ]
+            "type": "Tab",
+            "title": "Mostly",
+            "value": "one",
+            "disabled": false,
+            "children": [{"content": "Don't panic.", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Harmless",
+            "value": "two",
+            "disabled": false,
+            "children": [{"content": "It's a wholly remarkable book.", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Guide",
+            "value": "three",
+            "disabled": false,
+            "children": [{"content": "A towel is the most massively useful thing.", "type": "Text"}]
           }
         ]
       },
       {
-        "cssClass": "gap-4 w-auto",
-        "type": "Column",
+        "name": "tabs_5",
+        "type": "Tabs",
+        "variant": "line",
+        "defaultValue": "one",
+        "orientation": "vertical",
         "children": [
           {
-            "name": "select_9",
-            "type": "Select",
-            "placeholder": "Jump to...",
-            "size": "default",
+            "type": "Tab",
+            "title": "Mostly",
+            "value": "one",
             "disabled": false,
-            "required": false,
-            "onChange": {"action": "setState", "key": "tabs_4", "value": "{{ $event }}"},
-            "children": [
-              {
-                "type": "SelectOption",
-                "value": "earth",
-                "label": "Earth",
-                "selected": false,
-                "disabled": false
-              },
-              {
-                "type": "SelectOption",
-                "value": "magrathea",
-                "label": "Magrathea",
-                "selected": false,
-                "disabled": false
-              },
-              {
-                "type": "SelectOption",
-                "value": "betelgeuse",
-                "label": "Betelgeuse",
-                "selected": false,
-                "disabled": false
-              }
-            ]
+            "children": [{"content": "Don't panic.", "type": "Text"}]
           },
           {
-            "cssClass": "text-muted-foreground text-sm",
-            "content": "Viewing: {{ tabs_4 }}",
-            "type": "Text"
+            "type": "Tab",
+            "title": "Harmless",
+            "value": "two",
+            "disabled": false,
+            "children": [{"content": "It's a wholly remarkable book.", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Guide",
+            "value": "three",
+            "disabled": false,
+            "children": [{"content": "A towel is the most massively useful thing.", "type": "Text"}]
           }
         ]
       }
     ]
   },
-  "state": {"tabs_4": "earth"}
+  "state": {"tabs_4": "one", "tabs_5": "one"}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-The `SetState(tabs.rx, "{{ $event }}")` writes the Select's chosen value into the tabs' state key. `{{ $event }}` is a special variable that holds the value from the triggering component — in this case, the selected option.
+## State Tracking
+
+Give Tabs a `name` to sync the active tab with client state. Other components can then read or change which tab is active — useful for building wizard flows or linking navigation between different parts of the UI.
+
+```python Tabs with State
+from prefab_ui.components import Button, Column, Row, Tab, Tabs, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4):
+    with Tabs(name="activeTab", default_value="general"):
+        with Tab("General", value="general"):
+            Text("General settings here.")
+        with Tab("Advanced", value="advanced"):
+            Text("Advanced settings here.")
+
+    with Row(gap=2):
+        Button("Go to General", on_click=SetState("activeTab", "general"))
+        Button("Go to Advanced", on_click=SetState("activeTab", "advanced"))
+```
 
 ## API Reference
 
 <Card icon="code" title="Tabs Parameters">
 <ParamField body="variant" type="str" default="default">
   Visual style: `"default"` (pill background) or `"line"` (underline indicator).
+</ParamField>
+
+<ParamField body="orientation" type="str" default="horizontal">
+  Layout direction: `"horizontal"` (triggers above content) or `"vertical"` (triggers beside content).
 </ParamField>
 
 <ParamField body="default_value" type="str | None" default="None">
@@ -410,6 +425,7 @@ The `SetState(tabs.rx, "{{ $event }}")` writes the Select's chosen value into th
   "children?": "[Component]",
   "let?": "object",
   "variant?": "default | line",
+  "orientation?": "horizontal | vertical",
   "defaultValue?": "string",
   "name?": "string",
   "onChange?": "Action | Action[]",

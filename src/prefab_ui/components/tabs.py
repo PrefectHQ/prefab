@@ -25,6 +25,7 @@ from prefab_ui.actions import Action
 from prefab_ui.components.base import ContainerComponent, StatefulMixin
 
 TabsVariant = Literal["default", "line"]
+TabsOrientation = Literal["horizontal", "vertical"]
 
 
 class Tab(ContainerComponent):
@@ -84,6 +85,10 @@ class Tabs(StatefulMixin, ContainerComponent):
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
+    )
+    orientation: TabsOrientation = Field(
+        default="horizontal",
+        description="Layout direction — 'horizontal' (default) or 'vertical'",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,

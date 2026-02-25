@@ -86,6 +86,7 @@ interface PrefabTabsProps {
   defaultValue?: string;
   value?: string;
   variant?: "default" | "line";
+  orientation?: "horizontal" | "vertical";
   onValueChange?: (value: string) => void;
   className?: string;
   _panels: ChildPanel[];
@@ -95,6 +96,7 @@ export function PrefabTabs({
   defaultValue,
   value,
   variant,
+  orientation = "horizontal",
   onValueChange,
   className,
   _panels,
@@ -106,6 +108,7 @@ export function PrefabTabs({
     <ShadcnTabs
       defaultValue={!value ? resolvedDefault : undefined}
       value={value}
+      orientation={orientation}
       onValueChange={onValueChange}
       className={className}
     >
