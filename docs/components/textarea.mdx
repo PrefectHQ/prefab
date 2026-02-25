@@ -122,6 +122,43 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 </CodeGroup>
 </ComponentPreview>
 
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the textarea's current text. The `.length()` pipe returns the character count, which is useful for showing a live counter:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"textarea_5","type":"Textarea","placeholder":"Describe your journey through the galaxy...","rows":4,"disabled":false,"required":false},{"content":"Character count: {{ textarea_5 | length }}","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Text, Textarea
+
+with Column(gap=4):
+    ta = Textarea(placeholder="Describe your journey through the galaxy...", rows=4)
+    Text(f"Character count: {ta.rx.length()}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "name": "textarea_5",
+        "type": "Textarea",
+        "placeholder": "Describe your journey through the galaxy...",
+        "rows": 4,
+        "disabled": false,
+        "required": false
+      },
+      {"content": "Character count: {{ textarea_5 | length }}", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Type into the textarea and the character count updates with each keystroke.
+
 ## API Reference
 
 <Card icon="code" title="Textarea Parameters">
