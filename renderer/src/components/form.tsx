@@ -92,6 +92,7 @@ interface RadioItemData {
 interface PrefabSelectProps {
   placeholder?: string;
   name?: string;
+  size?: "sm" | "default";
   disabled?: boolean;
   className?: string;
   value?: string;
@@ -103,6 +104,7 @@ interface PrefabSelectProps {
 export function PrefabSelect({
   placeholder,
   name,
+  size,
   disabled,
   className,
   value,
@@ -119,7 +121,7 @@ export function PrefabSelect({
 
   return (
     <ShadcnSelect {...controlProps} disabled={disabled} name={name}>
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} size={size}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
