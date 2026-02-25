@@ -1,0 +1,30 @@
+# Points the `published-docs` branch at the tagged commit on each release.
+#
+# Mintlify builds docs from `published-docs`, so this keeps published docs in
+# sync with what's actually released. The renderer CDN (`@latest`) updates at
+# the same time via publish-renderer.yml.
+#
+# Uses force-push (not fast-forward) so that cherry-picks to published-docs
+# between releases don't block the next update.
+name: Update published-docs branch
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-published-docs:
+    name: "Update published-docs branch"
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Point published-docs at tagged commit
+        run: git push --force origin "${{ github.ref_name }}:published-docs"
