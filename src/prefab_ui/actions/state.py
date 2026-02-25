@@ -8,6 +8,7 @@ from typing import Any, Literal
 from pydantic import Field, field_validator
 
 from prefab_ui.actions.base import Action
+from prefab_ui.rx import Rx
 
 _KEY_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
 
@@ -17,10 +18,13 @@ def _validate_path(path: str) -> str:
 
     Each segment must be either a valid identifier (``[a-zA-Z_][a-zA-Z0-9_]*``)
     or a pure integer (array index). Periods delimit segments.
+
+    Paths containing ``{{ }}`` template expressions are passed through
+    without validation — the renderer resolves them at runtime.
     """
+    if "{{" in path:
+        return path
     for segment in path.split("."):
-        if "{{" in segment:
-            continue
         if segment.isdigit():
             continue
         if not _KEY_RE.match(segment):
@@ -54,8 +58,10 @@ class SetState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str, value: Any = "{{ $event }}", **kwargs: Any) -> None:
-        kwargs["key"] = key
+    def __init__(
+        self, key: str | Rx, value: Any = "{{ $event }}", **kwargs: Any
+    ) -> None:
+        kwargs["key"] = key.key if isinstance(key, Rx) else key
         kwargs["value"] = value
         super().__init__(**kwargs)
 
@@ -71,8 +77,8 @@ class ToggleState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str, **kwargs: Any) -> None:
-        kwargs["key"] = key
+    def __init__(self, key: str | Rx, **kwargs: Any) -> None:
+        kwargs["key"] = key.key if isinstance(key, Rx) else key
         super().__init__(**kwargs)
 
 
@@ -103,13 +109,13 @@ class AppendState(Action):
 
     def __init__(
         self,
-        key: str,
+        key: str | Rx,
         value: Any = "{{ $event }}",
         *,
         index: int | str | None = None,
         **kwargs: Any,
     ) -> None:
-        kwargs["key"] = key
+        kwargs["key"] = key.key if isinstance(key, Rx) else key
         kwargs["value"] = value
         kwargs["index"] = index
         super().__init__(**kwargs)
@@ -132,7 +138,7 @@ class PopState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str, index: int | str, **kwargs: Any) -> None:
-        kwargs["key"] = key
+    def __init__(self, key: str | Rx, index: int | str, **kwargs: Any) -> None:
+        kwargs["key"] = key.key if isinstance(key, Rx) else key
         kwargs["index"] = index
         super().__init__(**kwargs)
