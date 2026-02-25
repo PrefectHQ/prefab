@@ -12,7 +12,7 @@ Select dropdowns let users pick one option from a collapsible list. The selected
 
 A `Select` is a container — use the `with` block to add `SelectOption` children. Each option needs a `value` (what gets stored) and a `label` (what the user sees):
 
-<ComponentPreview json={{"view":{"name":"select_1","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}}>
+<ComponentPreview json={{"view":{"name":"select_2","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Select, SelectOption
@@ -25,7 +25,7 @@ with Select(placeholder="Choose size..."):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "select_1",
+    "name": "select_2",
     "type": "Select",
     "placeholder": "Choose size...",
     "size": "default",
@@ -64,7 +64,7 @@ with Select(placeholder="Choose size..."):
 
 Mark an option as `selected=True` to have it chosen when the component first renders:
 
-<ComponentPreview json={{"view":{"name":"select_2","type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}}>
+<ComponentPreview json={{"view":{"name":"select_3","type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Select, SelectOption
@@ -77,7 +77,7 @@ with Select(placeholder="Select country"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "select_2",
+    "name": "select_3",
     "type": "Select",
     "placeholder": "Select country",
     "size": "default",
@@ -116,7 +116,7 @@ with Select(placeholder="Select country"):
 
 Selects come in two sizes. The `"sm"` variant is useful when space is tight or when embedding a select alongside other compact controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_3","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_4","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_4","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_5","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption
@@ -137,7 +137,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "select_3",
+        "name": "select_4",
         "type": "Select",
         "placeholder": "Default size",
         "size": "default",
@@ -161,7 +161,7 @@ with Column(gap=4):
         ]
       },
       {
-        "name": "select_4",
+        "name": "select_5",
         "type": "Select",
         "placeholder": "Small size",
         "size": "sm",
@@ -195,7 +195,7 @@ with Column(gap=4):
 
 Pair a `Select` with a `Label` in a `Column` for a standard form field pattern:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"name":"select_5","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"name":"select_6","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Select, SelectOption
@@ -215,7 +215,7 @@ with Column(gap=2):
     "children": [
       {"type": "Label", "text": "Preferred language"},
       {
-        "name": "select_5",
+        "name": "select_6",
         "type": "Select",
         "placeholder": "Choose language",
         "size": "default",
@@ -256,7 +256,7 @@ with Column(gap=2):
 
 Use `.rx` to get a reactive reference to the selected option's `value` string. When the user picks an option, anything bound to `.rx` updates automatically:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_6","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false},{"type":"SelectOption","value":"earth","label":"Earth (Mostly Harmless)","selected":false,"disabled":false}]},{"content":"You chose: {{ select_6 }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_7","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false},{"type":"SelectOption","value":"earth","label":"Earth (Mostly Harmless)","selected":false,"disabled":false}]},{"content":"You chose: {{ select_7 }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -276,7 +276,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "select_6",
+        "name": "select_7",
         "type": "Select",
         "placeholder": "Choose a planet...",
         "size": "default",
@@ -313,7 +313,7 @@ with Column(gap=4):
           }
         ]
       },
-      {"content": "You chose: {{ select_6 }}", "type": "Text"}
+      {"content": "You chose: {{ select_7 }}", "type": "Text"}
     ]
   }
 }
@@ -327,7 +327,7 @@ Pick an option and the text updates instantly. The `.rx` reference holds the `va
 
 The `on_change` parameter fires actions when the selection changes. Inside the action, `$event` holds the newly selected `value` string:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_7","type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | default:'Make a selection' }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"select_8","type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | default:'Make a selection' }}","type":"Text"}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -353,7 +353,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "select_7",
+        "name": "select_8",
         "type": "Select",
         "placeholder": "Pick a color...",
         "size": "default",
