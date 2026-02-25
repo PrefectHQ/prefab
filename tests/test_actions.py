@@ -18,6 +18,7 @@ from prefab_ui.actions import (
 )
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
+from prefab_ui.rx import Rx
 
 
 class TestActionSerialization:
@@ -570,3 +571,146 @@ class TestSetIntervalSerialization:
         assert d["count"] == 20
         assert d["onTick"]["action"] == "setState"
         assert d["onComplete"]["action"] == "setState"
+
+
+# ---------------------------------------------------------------------------
+# Rx objects as action keys
+# ---------------------------------------------------------------------------
+
+
+class TestRxAsKey:
+    """State actions accept Rx objects as keys, extracting the raw key name."""
+
+    # ── SetState ──────────────────────────────────────────────────────
+
+    def test_set_state_rx_key(self):
+        rx = Rx("brightness")
+        a = SetState(rx, 50)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "brightness"
+        assert d["value"] == 50
+
+    def test_set_state_rx_default_event(self):
+        rx = Rx("volume")
+        a = SetState(rx)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "volume"
+        assert d["value"] == "{{ $event }}"
+
+    def test_set_state_rx_with_dot_path(self):
+        rx = Rx("user")
+        a = SetState(rx.name, "Alice")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "user.name"
+
+    def test_set_state_rx_from_component(self):
+        s = Slider(min=0, max=100, defer=True)
+        a = SetState(s.rx, 75)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == s.name
+        assert d["value"] == 75
+
+    def test_set_state_string_key_unchanged(self):
+        """Plain strings still work as before."""
+        a = SetState("count", 1)
+        assert a.key == "count"
+
+    def test_set_state_composite_fstring_key(self):
+        """f-string with multiple Rx produces a composite template key."""
+        outer = Rx("group")
+        inner = Rx("tab")
+        a = SetState(f"{outer}-{inner}", "active")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "{{ group }}-{{ tab }}"
+
+    def test_set_state_fstring_expression_key(self):
+        """f-string Rx expressions work as dynamic keys."""
+        base = Rx("prefix")
+        idx = Rx("index")
+        a = SetState(f"{base}_{idx}", True)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "{{ prefix }}_{{ index }}"
+
+    # ── ToggleState ───────────────────────────────────────────────────
+
+    def test_toggle_state_rx_key(self):
+        rx = Rx("expanded")
+        a = ToggleState(rx)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "expanded"
+
+    def test_toggle_state_rx_dot_path(self):
+        rx = Rx("settings")
+        a = ToggleState(rx.darkMode)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "settings.darkMode"
+
+    def test_toggle_state_rx_from_component(self):
+        cb = Checkbox(defer=True)
+        a = ToggleState(cb.rx)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == cb.name
+
+    def test_toggle_state_string_key_unchanged(self):
+        a = ToggleState("visible")
+        assert a.key == "visible"
+
+    # ── AppendState ───────────────────────────────────────────────────
+
+    def test_append_state_rx_key(self):
+        rx = Rx("items")
+        a = AppendState(rx, "new")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "items"
+        assert d["value"] == "new"
+
+    def test_append_state_rx_with_index(self):
+        rx = Rx("todos")
+        a = AppendState(rx, "task", index=0)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "todos"
+        assert d["index"] == 0
+
+    def test_append_state_rx_default_event(self):
+        rx = Rx("log")
+        a = AppendState(rx)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "log"
+        assert d["value"] == "{{ $event }}"
+
+    def test_append_state_string_key_unchanged(self):
+        a = AppendState("items", "val")
+        assert a.key == "items"
+
+    # ── PopState ──────────────────────────────────────────────────────
+
+    def test_pop_state_rx_key(self):
+        rx = Rx("items")
+        a = PopState(rx, 0)
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "items"
+        assert d["index"] == 0
+
+    def test_pop_state_rx_with_template_index(self):
+        rx = Rx("todos")
+        a = PopState(rx, "{{ $index }}")
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "todos"
+        assert d["index"] == "{{ $index }}"
+
+    def test_pop_state_string_key_unchanged(self):
+        a = PopState("items", -1)
+        assert a.key == "items"
+
+    # ── On components ─────────────────────────────────────────────────
+
+    def test_rx_key_on_button_click(self):
+        rx = Rx("active_tab")
+        b = Button(label="Go", on_click=SetState(rx, "home"))
+        j = b.to_json()
+        assert j["onClick"]["key"] == "active_tab"
+
+    def test_rx_key_on_slider_change(self):
+        s = Slider(min=0, max=100, on_change=SetState(Rx("volume")), defer=True)
+        j = s.to_json()
+        assert j["onChange"]["key"] == "volume"
