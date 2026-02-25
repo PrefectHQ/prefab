@@ -1690,54 +1690,199 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\nfrom prefab_ui.rx import Rx\n\nset_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\ntodos = Rx(\"todos\")\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {todos.selectattr('name').first()}\")\n    Text(f\"All: {todos.selectattr('name').join(', ')}\")"
   },
   {
-    "title": "Python icon=\"python\"",
+    "title": "app.py",
     "category": "Getting Started",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+  },
+  {
+    "title": "from prefab_ui.actions import SetState",
+    "category": "Guides",
+    "code": "from prefab_ui.actions.mcp import CallTool\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(on_change=CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Column, ForEach, Input, Muted, Row, Text\nfrom prefab_ui.actions import AppendState, PopState, SetState\nfrom prefab_ui.rx import Rx\n\nset_initial_state(crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"], new_member=\"\")\n\nwith Column(gap=3):\n    with ForEach(\"crew\"):\n        with Row(gap=2, align=\"center\"):\n            Text(\"{{ $item }}\")\n            Button(\n                \"×\", \n                variant=\"ghost\", \n                size=\"sm\",\n                on_click=PopState(\"crew\", \"{{ $index }}\")\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\n            \"Add\", \n            on_click=[\n                AppendState(\"crew\", Rx(\"new_member\")),\n                SetState(\"new_member\", \"\"),\n            ]\n        )\n    Muted(f\"{Rx('crew').length()} crew members\")"
+  },
+  {
+    "title": "from prefab_ui.actions.mcp import CallTool",
+    "category": "Guides",
+    "code": "from prefab_ui.actions import SetState, ShowToast\n\nButton(\n    \"Save\", \n    on_click=CallTool(\n        \"save_record\",\n        arguments={\"data\": Rx(\"form\")},\n        on_success=ShowToast(\"Saved!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+  },
+  {
+    "title": "CallTool(",
+    "category": "Guides",
+    "code": "\"get_user\",\n    arguments={\"id\": Rx(\"user_id\")},\n    result_key=\"user\",\n    on_success=CallTool(\n        \"get_permissions\",\n        arguments={\"role\": \"{{ user.role }}\"},\n        result_key=\"permissions\",\n    ),\n)"
+  },
+  {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Guides",
+    "code": "saving = Rx(\"saving\")\n\nButton(\n    saving.then(\"Saving...\", \"Save\"),\n    disabled=saving,\n    on_click=[\n        SetState(\"saving\", True),\n        CallTool(\n            \"save\",\n            arguments={\"data\": Rx(\"form\")},\n            on_success=[\n                SetState(\"saving\", False),\n                ShowToast(\"Saved!\", variant=\"success\"),\n            ],\n            on_error=[\n                SetState(\"saving\", False),\n                ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ],\n        ),\n    ],\n)"
+  },
+  {
+    "title": "from prefab_ui.components import Button, Column, ForEach, Input, Text",
+    "category": "Guides",
+    "code": "with Column(gap=3):\n    query = Input(name=\"q\", placeholder=\"Search...\")\n    Button(\n        \"Search\", \n        on_click=CallTool(\n            \"search\",\n            arguments={\"q\": query.rx},\n            result_key=\"results\",\n        ),\n    )\n    with ForEach(\"results\"):\n        Text(\"{{ name }}\")"
+  },
+  {
+    "title": "with ForEach(\"todos\"):",
+    "category": "Guides",
+    "code": "Checkbox(\n        name=\"todos.{{ $index }}.done\",\n        on_change=[\n            SetState(\"todos.{{ $index }}.done\", \"{{ $event }}\"),\n            CallTool(\n                \"persist_todo\",\n                arguments={\"id\": \"{{ $item.id }}\", \"done\": \"{{ $event }}\"},\n                on_error=[\n                    SetState(\"todos.{{ $index }}.done\", \"{{ !$event }}\"),\n                    ShowToast(\"Failed to save\", variant=\"error\"),\n                ],\n            ),\n        ],\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
     "code": "from prefab_ui.components import Div, Row\n\nwith Row(gap=4):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")"
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "Getting Started",
+    "category": "Guides",
     "code": "from prefab_ui.components import Column, Div\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")"
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "Getting Started",
+    "category": "Guides",
     "code": "from prefab_ui.components import Column, Div, Row\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    with Row(gap=4):\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n        Div(css_class=\"bg-blue-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-purple-500 rounded-md h-10\")"
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "Getting Started",
+    "category": "Guides",
     "code": "from prefab_ui.components import Badge, Column, H3, Muted, Progress, Row\n\nwith Column(gap=4, css_class=\"w-auto\"):\n    with Row(gap=3, align=\"center\"):\n        H3(\"API Server\")\n        Badge(\"Healthy\", variant=\"success\")\n    Muted(\"Uptime: 99.97%\")\n    Progress(value=99.97)"
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "Getting Started",
+    "category": "Guides",
     "code": "from prefab_ui.components import (\n    Badge,\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    Muted,\n    Progress,\n    Row,\n)\n\nwith Card(css_class=\"w-72\"):\n    with CardHeader():\n        with Row(gap=3, align=\"center\"):\n            CardTitle(\"API Server\")\n            Badge(\"Healthy\", variant=\"success\")\n    with CardContent():\n        with Column(gap=3):\n            Muted(\"Uptime: 99.97%\")\n            Progress(value=99.97)\n    with CardFooter():\n        Button(\"View Logs\", variant=\"outline\")"
   },
   {
     "title": "Python icon=\"python\"",
-    "category": "Getting Started",
+    "category": "Guides",
     "code": "from prefab_ui.components import (\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Grid,\n    Large,\n    Muted,\n    Progress,\n)\n\nservices = [\n    {\"name\": \"API Server\", \"uptime\": 99.97},\n    {\"name\": \"Worker\", \"uptime\": 94.2},\n    {\"name\": \"Scheduler\", \"uptime\": 99.8},\n]\n\nwith Grid(columns=3, gap=4):\n    for svc in services:\n        with Card():\n            with CardHeader():\n                CardTitle(svc[\"name\"])\n            with CardContent():\n                with Column(gap=2):\n                    Large(f\"{svc['uptime']}%\")\n                    Muted(\"uptime\")\n                    Progress(value=svc[\"uptime\"])"
   },
   {
-    "title": "from prefab_ui.app import PrefabApp",
-    "category": "Getting Started",
-    "code": "from prefab_ui.components import Column, H3, Text\n\nwith Column(gap=4) as view:\n    H3(\"Dashboard\")\n    Text(\"Welcome back.\")\n\napp = PrefabApp(view=view)"
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Text\nfrom prefab_ui.components.control_flow import ForEach\n\nset_initial_state(tasks=[\"Write docs\", \"Fix bug\", \"Ship feature\"])\n\nwith Column(gap=2):\n    with ForEach(\"tasks\"):\n        Text(\"{{ $index + 1 }}. {{ $item }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Alert, AlertTitle, Badge, Column, Select, SelectOption\nfrom prefab_ui.components.control_flow import Elif, Else, If\nfrom prefab_ui.rx import Rx\n\nset_initial_state(status=\"healthy\")\nstatus = Rx(\"status\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Pick a status\"):\n        SelectOption(value=\"healthy\", label=\"Healthy\")\n        SelectOption(value=\"warning\", label=\"Warning\")\n        SelectOption(value=\"error\", label=\"Error\")\n    with If(status == \"error\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"System down\")\n    with Elif(status == \"warning\"):\n        with Alert(variant=\"warning\"):\n            AlertTitle(\"Degraded performance\")\n    with Else():\n        Badge(\"All systems go\", variant=\"success\")"
   },
   {
     "title": "from prefab_ui.components import Column, Label, Row, Slider, Text, insert",
-    "category": "Getting Started",
-    "code": "volume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
+    "category": "Guides",
+    "code": "slider = Slider(value=75, defer=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text, insert\n\nvolume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
   },
   {
     "title": "from prefab_ui.components import Column, Text, defer, insert",
-    "category": "Getting Started",
-    "code": "with Column() as page:\n    Text(\"child of page\")\n\n    with defer():\n        sidebar = Column()\n        with sidebar:\n            Text(\"child of sidebar, not page\")\n\n    insert(sidebar)\n\n# page has 2 children; sidebar has 1 child"
+    "category": "Guides",
+    "code": "with Column() as page:\n    Text(\"Header content\")\n\n    with defer():\n        sidebar = Column()\n        with sidebar:\n            Text(\"Sidebar content\")\n\n    insert(sidebar)"
   },
   {
-    "title": "app.py",
-    "category": "Getting Started",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Row, Text\n\nwith Card(css_class=\"w-48\") as view:\n    with CardHeader():\n        with Row(gap=2):\n            CardTitle(\"API Server\")\n            Badge(\"Healthy\", variant=\"success\")\n    with CardContent():\n        Text(\"Uptime: 99.97%\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Column, Progress, Row, Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nrevenue = Rx(\"revenue\")\ntarget = Rx(\"target\")\ngrowth = Rx(\"growth\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(revenue.currency())\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=(revenue / target * 100), max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(f\"{(revenue / target).percent(1)} of target\")\n                Badge(f\"{growth.percent(1)} YoY\", variant=\"secondary\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Row, Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nstarts = Rx(\"starts\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(starts.date(\"long\"))\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(starts.time(), variant=\"outline\")\n            Text(starts.datetime())"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardHeader, CardTitle, Column, Text,\n)\nfrom prefab_ui.rx import Rx\n\nset_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house\"\n    \" was about to be demolished, his planet destroyed, and his best friend\"\n    \" was an alien from Betelgeuse.\",\n)\n\nname = Rx(\"name\")\nbio = Rx(\"bio\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(name.upper())\n    with CardContent():\n        with Column(gap=2):\n            Badge(name.lower(), variant=\"secondary\")\n            Text(bio.truncate(80))"
+  },
+  {
+    "title": "CallTool(",
+    "category": "Guides",
+    "code": "\"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n)"
+  },
+  {
+    "title": "with ForEach(\"users\"):",
+    "category": "Guides",
+    "code": "Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=CallTool(\"edit_user\", arguments={\"user\": \"{{ $item }}\"}))"
+  },
+  {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Guides",
+    "code": "count = Rx(\"count\")\n\nText(count)                # → Text(\"{{ count }}\")\nText(count + 10)           # → Text(\"{{ count + 10 }}\")\nText(f\"Count: {count}\")    # → Text(\"Count: {{ count }}\")"
+  },
+  {
+    "title": "price = Rx(\"price\")",
+    "category": "Guides",
+    "code": "quantity = Rx(\"quantity\")\n\nText(f\"Total: {(price * quantity).currency()}\")\n# → Text(\"Total: {{ price * quantity | currency }}\")"
+  },
+  {
+    "title": "first = Rx(\"first\")",
+    "category": "Guides",
+    "code": "last = Rx(\"last\")\n\nText(f\"Hello, {first} {last}!\")\n# → Text(\"Hello, {{ first }} {{ last }}!\")"
+  },
+  {
+    "title": "# Correct",
+    "category": "Guides",
+    "code": "(score > 0) & (score < 100)\n\n# Wrong: parsed as score > (0 & score) < 100\nscore > 0 & score < 100"
+  },
+  {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Guides",
+    "code": "revenue = Rx(\"revenue\")   # state value: 2847500\n\nrevenue.currency()         # {{ revenue | currency }}       → $2,847,500.00\nrevenue.currency(\"EUR\")    # {{ revenue | currency:EUR }}   → €2,847,500.00\nrevenue.number()           # {{ revenue | number }}         → 2,847,500\nrevenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0\nrevenue.percent()          # {{ revenue | percent }}        → 284,750,000%\nrevenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%\nrevenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00\nrevenue.abs()              # {{ revenue | abs }}            → absolute value"
+  },
+  {
+    "title": "starts = Rx(\"starts\")      # state value: \"2025-03-15T09:30:00Z\"",
+    "category": "Guides",
+    "code": "starts.date()              # {{ starts | date }}           → Mar 15, 2025\nstarts.date(\"short\")       # {{ starts | date:short }}     → 3/15/25\nstarts.date(\"long\")        # {{ starts | date:long }}      → March 15, 2025\nstarts.time()              # {{ starts | time }}           → 9:30 AM\nstarts.datetime()          # {{ starts | datetime }}       → Mar 15, 2025, 9:30 AM"
+  },
+  {
+    "title": "name = Rx(\"name\")          # state value: \"arthur dent\"",
+    "category": "Guides",
+    "code": "name.upper()               # {{ name | upper }}            → ARTHUR DENT\nname.lower()               # {{ name | lower }}            → arthur dent\nname.truncate(10)          # {{ name | truncate:10 }}      → arthur den…"
+  },
+  {
+    "title": "todos = Rx(\"todos\")        # state value: [{done: true, text: \"...\"}, ...]",
+    "category": "Guides",
+    "code": "todos.length()             # {{ todos | length }}           → 3\ntodos.first()              # {{ todos | first }}            → first item\ntodos.last()               # {{ todos | last }}             → last item\ntodos.join(\", \")           # {{ todos | join:', ' }}        → items as string\ntodos.selectattr(\"done\")   # {{ todos | selectattr:done }}  → truthy items\ntodos.rejectattr(\"done\")   # {{ todos | rejectattr:done }}  → falsy items"
+  },
+  {
+    "title": "todos = Rx(\"todos\")",
+    "category": "Guides",
+    "code": "# Count incomplete items\ntodos.rejectattr(\"done\").length()\n# → {{ todos | rejectattr:done | length }}\n\n# Format with default\nRx(\"score\").default(0).number()\n# → {{ score | default:0 | number }}"
+  },
+  {
+    "title": "from prefab_ui.app import set_initial_state",
+    "category": "Guides",
+    "code": "set_initial_state(count=0, title=\"Dashboard\", items=[])"
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "Guides",
+    "code": "return PrefabApp(view=view, state={\"count\": 0, \"title\": \"Dashboard\"})"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.components import Column, Input, Text\n\nwith Column(gap=3):\n    name_input = Input(name=\"name_input\", placeholder=\"Type your name..\")\n    Text(\"Hello, {{ name_input | 'stranger' }}!\")"
+  },
+  {
+    "title": "from prefab_ui.rx import Rx",
+    "category": "Guides",
+    "code": "count = Rx(\"count\")\nText(count)                                  # {{ count }}\nText(f\"Count: {count}\")                      # Count: {{ count }}\nText(count + 10)                             # {{ count + 10 }}\nText(f\"Items: {count} total\")                # Items: {{ count }} total"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Guides",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input,\n)\n\nset_initial_state(\n    profile={\n        \"name\": \"Arthur Dent\",\n        \"title\": \"Sandwich Maker, Lamuella\",\n    },\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field(title=\"Name\"):\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field(title=\"Title\"):\n        Input(name=\"profile.title\", placeholder=\"Title\")"
   },
   {
     "title": "from prefab_ui import FastMCP",

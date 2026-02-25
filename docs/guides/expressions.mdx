@@ -1,0 +1,421 @@
+---
+title: Expressions
+sidebarTitle: Expressions
+description: Live bindings that keep components in sync with state, plus the Rx DSL for writing them in Python.
+icon: bolt
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Expressions are how components read and compute from state. Every `{{ }}` you write is a live binding: the renderer evaluates it against current state, tracks which keys it depends on, and re-evaluates whenever any of them change. The display stays current automatically, so you write the expression once and the renderer handles the rest.
+
+The expression language is intentionally bounded. Prefab UIs are designed to be safely serializable, so the expression grammar covers arithmetic, comparisons, boolean logic, conditionals, and formatting. That's enough to drive any display while keeping business logic where it belongs: in your Python code or in a [server action](/guides/actions).
+
+## Template expressions
+
+The `{{ }}` syntax is the protocol-level unit of reactivity. Any string prop on any component can contain `{{ }}` expressions, and the renderer treats each one as a live dependency.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Button, Row, Text
+from prefab_ui.actions import SetState
+
+set_initial_state(count=0)
+
+with Row(gap=3, align="center"):
+    Button("-", variant="outline", on_click=SetState("count", "{{ count - 1 }}"))
+    Text("{{ count }}")
+    Button("+", variant="outline", on_click=SetState("count", "{{ count + 1 }}"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "-",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {"action": "setState", "key": "count", "value": "{{ count - 1 }}"}
+      },
+      {"content": "{{ count }}", "type": "Text"},
+      {
+        "type": "Button",
+        "label": "+",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {"action": "setState", "key": "count", "value": "{{ count + 1 }}"}
+      }
+    ]
+  },
+  "state": {"count": 0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`Text("{{ count }}")` displays whatever `count` holds and updates whenever it changes. The `SetState` actions write new values to `count`, and the text responds automatically. The expression `{{ count + 1 }}` computes before writing: the renderer evaluates it against current state each time. The reactivity is built in, so you write the binding once and the renderer keeps everything in sync.
+
+Expressions can appear anywhere a string prop does. `Button(disabled="{{ loading }}")` disables a button based on state. `Badge(label="{{ items | length }}")` shows a count. `Progress(value="{{ percent }}")` drives a progress bar. The renderer re-evaluates each expression whenever any of its referenced keys change.
+
+## The Rx class
+
+The expression language is accepted everywhere in the protocol, but writing `{{ }}` strings by hand in Python means giving up autocomplete, refactoring support, and typo detection. `Rx` lets you write the same expressions as Python code, with full editor support.
+
+`Rx("key")` creates a reactive reference to a state key. The object it returns compiles to `{{ key }}` when serialized, but in your Python code it behaves like a regular value. You can do arithmetic on it, compare it, format it, and embed it in f-strings. Each operation returns a new `Rx` that represents the composed expression:
+
+```python
+from prefab_ui.rx import Rx
+
+count = Rx("count")
+
+Text(count)                # → Text("{{ count }}")
+Text(count + 10)           # → Text("{{ count + 10 }}")
+Text(f"Count: {count}")    # → Text("Count: {{ count }}")
+```
+
+Each operation on an `Rx` returns a new `Rx`, building an expression tree. At serialization time, that tree renders to the correct `{{ }}` protocol syntax. You work in Python; the protocol gets the right strings.
+
+Method calls on `Rx` compile to **pipes** in the protocol, which format and transform values for display. The [Formatting with pipes](#formatting-with-pipes) section below covers them in detail, but here's the basic idea:
+
+```python
+price = Rx("price")
+quantity = Rx("quantity")
+
+Text(f"Total: {(price * quantity).currency()}")
+# → Text("Total: {{ price * quantity | currency }}")
+```
+
+F-strings work naturally with `Rx`. Each `Rx` reference inside an f-string becomes a separate `{{ }}` interpolation in the output. Surrounding text stays as literal strings:
+
+```python
+first = Rx("first")
+last = Rx("last")
+
+Text(f"Hello, {first} {last}!")
+# → Text("Hello, {{ first }} {{ last }}!")
+```
+
+### The .rx shorthand
+
+Every interactive component manages a state key through its `name` prop, and that state can be read by any other component or action that knows the key name. The challenge is that key names are often auto-generated (like `slider_22`) or defined far from where you need them. Passing string key names around is fragile and hard to refactor.
+
+The `.rx` property solves this. It returns `Rx(component.name)`, giving you a reactive reference to that component's state without needing to know or repeat the key name:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_22 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_22":50.0}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Progress, Slider, Text
+
+with Column(gap=3):
+    slider = Slider(value=50, min=0, max=100)
+    Text(f"Volume: {slider.rx}%")
+    Progress(value=slider.rx)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "name": "slider_22",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "value": 50.0,
+        "disabled": false
+      },
+      {"content": "Volume: {{ slider_22 }}%", "type": "Text"},
+      {
+        "type": "Progress",
+        "value": "{{ slider_22 }}",
+        "min": 0,
+        "max": 100,
+        "variant": "default"
+      }
+    ]
+  },
+  "state": {"slider_22": 50.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag the slider and the text and progress bar update together. `slider.rx` compiles to `{{ slider_22 }}` (the auto-generated name), but you never need to know or type that key. The dependency is expressed through the Python variable, which keeps your code readable and refactor-safe.
+
+Because `.rx` returns an `Rx` object, all the same operations work on it. `slider.rx.number()` formats the value. `slider.rx > 50` produces a boolean expression. `slider.rx.then("High", "Low")` creates a conditional.
+
+Use `.rx` when you have a component reference in scope. Use `Rx("key")` when working with keys from `set_initial_state()`, `ForEach` iteration, or state keys that belong to components you don't have a reference to.
+
+Sometimes you need to reference `.rx` on a component that hasn't been placed in the tree yet, for instance a label above a slider that shows its current value. The [Composition](/guides/composition#forward-references) guide covers that pattern with `defer` and `insert`.
+
+## Operators
+
+`Rx` overloads Python's operators so arithmetic, comparisons, and logic compile naturally to their protocol equivalents. Each operation returns a new `Rx` representing the composed expression.
+
+### Arithmetic
+
+Standard math operators work on `Rx` objects: `+`, `-`, `*`, `/`, and unary negation. The result is always a new `Rx` that compiles to the corresponding protocol expression.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Button, Column, Row, Text
+from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
+
+set_initial_state(price=42, quantity=1)
+quantity = Rx("quantity")
+price = Rx("price")
+
+with Column(gap=3):
+    with Row(gap=2, align="center"):
+        Text("Quantity:")
+        Button("-", variant="outline", on_click=SetState("quantity", quantity - 1))
+        Text(quantity)
+        Button("+", variant="outline", on_click=SetState("quantity", quantity + 1))
+    Text(f"Total: {(price * quantity).currency()}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"content": "Quantity:", "type": "Text"},
+          {
+            "type": "Button",
+            "label": "-",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {"action": "setState", "key": "quantity", "value": "{{ quantity - 1 }}"}
+          },
+          {"content": "{{ quantity }}", "type": "Text"},
+          {
+            "type": "Button",
+            "label": "+",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {"action": "setState", "key": "quantity", "value": "{{ quantity + 1 }}"}
+          }
+        ]
+      },
+      {"content": "Total: {{ price * quantity | currency }}", "type": "Text"}
+    ]
+  },
+  "state": {"price": 42, "quantity": 1}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`price * quantity` compiles to `{{ price * quantity }}`, and `.currency()` formats the result for display. The [Expression Reference](/guides/expression-reference) has the complete operator table.
+
+### String concatenation
+
+F-strings are the cleanest way to mix reactive values with literal text. Each `Rx` reference becomes a separate `{{ }}` interpolation:
+
+```python
+first = Rx("first")
+last = Rx("last")
+
+Text(f"Hello, {first} {last}!")
+# → Text("Hello, {{ first }} {{ last }}!")
+```
+
+The `+` operator also concatenates when either operand is a string: `{{ 'Hello, ' + name }}`. F-strings are almost always more readable.
+
+### Comparisons
+
+Six comparison operators (`==`, `!=`, `>`, `>=`, `<`, `<=`) return boolean expressions. Comparisons are the foundation for conditional rendering with [If/Elif/Else](/components/conditional) and conditional values with `.then()`:
+
+```python
+from prefab_ui.rx import Rx
+from prefab_ui.components import Alert
+from prefab_ui.components.control_flow import If, Elif
+
+inventory = Rx("inventory")
+
+with If(inventory == 0):
+    Alert("Out of stock", variant="destructive")
+with Elif((inventory > 0) & (inventory < 10)):
+    Alert("Low stock")
+```
+
+The `If` component receives a boolean expression and only renders its children when the expression is true. When `inventory` changes, the conditions re-evaluate and the display updates.
+
+### Logical operators
+
+Python reserves `and`, `or`, and `not` as keywords, so `Rx` uses the bitwise operators `&`, `|`, and `~` instead. They compile to `&&`, `||`, and `!` in the protocol.
+
+<Warning>
+**Python precedence gotcha.** Bitwise `&` and `|` bind tighter than `>`, `<`, `==` in Python. Always wrap each comparison in parentheses:
+
+```python
+# Correct
+(score > 0) & (score < 100)
+
+# Wrong: parsed as score > (0 & score) < 100
+score > 0 & score < 100
+```
+
+This is a Python quirk. The `{{ }}` protocol expressions use standard precedence and don't require extra parentheses.
+</Warning>
+
+The `||` operator short-circuits, which makes it useful as a falsy default: `{{ name || 'Anonymous' }}` returns `'Anonymous'` when `name` is falsy (empty string, `false`, `0`, or undefined). For null/undefined-only defaults, use the `default` pipe instead; see [Expression Reference](/guides/expression-reference).
+
+### Ternary
+
+`.then(if_true, if_false)` chooses between two values based on a boolean expression. It compiles to the ternary operator `? :` in the protocol:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Row, Switch, Text
+from prefab_ui.rx import Rx
+
+set_initial_state(active=True)
+active = Rx("active")
+
+with Column(gap=2):
+    with Row(gap=3, align="center"):
+        Switch(name="active")
+        Text(active.then("Online", "Offline"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-3 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "name": "active",
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "disabled": false,
+            "required": false
+          },
+          {"content": "{{ active ? 'Online' : 'Offline' }}", "type": "Text"}
+        ]
+      }
+    ]
+  },
+  "state": {"active": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Toggle the switch and the text updates instantly. `.then()` works on any boolean `Rx`, including comparison results: `(score >= 90).then("Pass", "Fail")`. For choices beyond a simple two-way branch, [If/Elif/Else](/components/conditional) is cleaner.
+
+## Formatting with pipes
+
+Raw state values often need formatting before display. Pipes transform expression results: formatting numbers as currency, dates as readable strings, arrays into counts, and more. In the protocol, pipes use the `|` syntax: `{{ revenue | currency }}`. In Python, they're method calls on `Rx`: `revenue.currency()`.
+
+### Number formatting
+
+```python
+from prefab_ui.rx import Rx
+
+revenue = Rx("revenue")   # state value: 2847500
+
+revenue.currency()         # {{ revenue | currency }}       → $2,847,500.00
+revenue.currency("EUR")    # {{ revenue | currency:EUR }}   → €2,847,500.00
+revenue.number()           # {{ revenue | number }}         → 2,847,500
+revenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0
+revenue.percent()          # {{ revenue | percent }}        → 284,750,000%
+revenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%
+revenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00
+revenue.abs()              # {{ revenue | abs }}            → absolute value
+```
+
+`.currency()` and `.number()` add locale-aware grouping separators. `.round()` rounds without adding separators, which is useful for computations that feed into other expressions.
+
+### Date and time formatting
+
+```python
+starts = Rx("starts")      # state value: "2025-03-15T09:30:00Z"
+
+starts.date()              # {{ starts | date }}           → Mar 15, 2025
+starts.date("short")       # {{ starts | date:short }}     → 3/15/25
+starts.date("long")        # {{ starts | date:long }}      → March 15, 2025
+starts.time()              # {{ starts | time }}           → 9:30 AM
+starts.datetime()          # {{ starts | datetime }}       → Mar 15, 2025, 9:30 AM
+```
+
+Date pipes accept ISO 8601 strings or Unix timestamps. The format argument controls verbosity.
+
+### String formatting
+
+```python
+name = Rx("name")          # state value: "arthur dent"
+
+name.upper()               # {{ name | upper }}            → ARTHUR DENT
+name.lower()               # {{ name | lower }}            → arthur dent
+name.truncate(10)          # {{ name | truncate:10 }}      → arthur den…
+```
+
+`.truncate()` adds an ellipsis when the string exceeds the given length.
+
+### Array pipes
+
+```python
+todos = Rx("todos")        # state value: [{done: true, text: "..."}, ...]
+
+todos.length()             # {{ todos | length }}           → 3
+todos.first()              # {{ todos | first }}            → first item
+todos.last()               # {{ todos | last }}             → last item
+todos.join(", ")           # {{ todos | join:', ' }}        → items as string
+todos.selectattr("done")   # {{ todos | selectattr:done }}  → truthy items
+todos.rejectattr("done")   # {{ todos | rejectattr:done }}  → falsy items
+```
+
+`selectattr` and `rejectattr` filter arrays by a boolean attribute, which is particularly useful with `.length()` for counts: `todos.selectattr("done").length()` gives you the number of completed items.
+
+### Chaining and defaults
+
+Pipes chain left to right; each receives the output of the previous one:
+
+```python
+todos = Rx("todos")
+
+# Count incomplete items
+todos.rejectattr("done").length()
+# → {{ todos | rejectattr:done | length }}
+
+# Format with default
+Rx("score").default(0).number()
+# → {{ score | default:0 | number }}
+```
+
+The `.default()` pipe provides a fallback value when the key is null or undefined. Unlike `||`, which triggers on any falsy value (including `0` and empty string), `.default()` only triggers on null/undefined. Use `.default()` when `0` or `""` are valid values you want to preserve.
+
+The [Expression Reference](/guides/expression-reference) has the complete pipe catalog with detailed examples for every formatter.
+
+## Type preservation
+
+When an `Rx` expression is the *entire* value of a prop, the renderer resolves it to the appropriate JavaScript type. `Progress(value=slider.rx)` serializes to `"{{ slider_22 }}"`, and the renderer resolves it to the number `50`, preserving the type for props that expect numbers or booleans.
+
+When an expression is embedded in surrounding text, the result is always a string. `f"Volume: {slider.rx}%"` resolves to `"Volume: 50%"` because the surrounding text forces string concatenation.
+
+The practical rule: if a prop expects a number or boolean (`value`, `min`, `max`, `disabled`, `checked`), pass the `Rx` expression as the sole value. Wrapping it in an f-string converts the result to a string, which may cause unexpected behavior.

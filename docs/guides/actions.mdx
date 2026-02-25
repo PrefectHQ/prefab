@@ -1,0 +1,281 @@
+---
+title: Actions
+description: User interactions drive state changes, server calls, and UI feedback.
+icon: play
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+An action is what happens when a user interacts. Click a button, submit a form, change a slider: any interaction that matters can carry an action. Actions are how state gets updated, how servers get called, and how the UI gives feedback.
+
+Every interactive component exposes event handlers (`on_click`, `on_change`, `on_submit`) that accept an action, a list of actions, or `None`. When the event fires, the action runs.
+
+For the most common case, syncing an interactive component's value to state, the `name` prop handles it automatically. `Input(name="query")` writes to the `query` key on every keystroke without any explicit action. You reach for actions when you need side effects beyond syncing: showing a toast, calling your server, updating multiple keys at once, or running logic conditionally.
+
+## Two families
+
+Prefab draws a clear line between two kinds of actions.
+
+**Client actions** run entirely in the browser. They execute instantly, require no network, and always succeed. `SetState`, `ToggleState`, `AppendState`, `ShowToast`, `OpenLink`, `SetInterval`: these are your tools for managing UI state and giving immediate feedback. From the user's perspective, they're instantaneous.
+
+**Server actions** cross a network boundary. `CallTool` invokes an MCP tool on your server. `Fetch` makes an HTTP request. They're asynchronous: they take time and they can fail. The UI needs to account for both the happy path and errors.
+
+Most real interactions use both. A "Save" button typically sets a loading flag (client, instant), calls the server (server, async), then shows success or failure feedback (client, instant based on the outcome). The split is a design constraint that keeps the UI responsive and makes the code predictable.
+
+| Client actions | Purpose |
+|----------------|---------|
+| `SetState` | Set a state key to a value |
+| `ToggleState` | Flip a boolean state key |
+| `AppendState` | Add an item to a state array |
+| `PopState` | Remove an item from a state array by index |
+| `ShowToast` | Display a brief notification |
+| `OpenLink` | Open a URL |
+| `SetInterval` | Schedule an action to repeat on a timer |
+
+| Server actions | Purpose |
+|----------------|---------|
+| `CallTool` | Call an MCP tool and optionally write the result to state |
+| `Fetch` | Make an HTTP request and optionally write the result to state |
+| `SendMessage` | Send a message to the conversation (MCP hosts only) |
+| `UpdateContext` | Push structured context to the model (MCP hosts only) |
+
+## The $event variable
+
+When an interaction fires, the component emits a value: the slider's current position, the input's current text, the checkbox's checked state. That value is available inside action arguments as `$event`.
+
+Most of the time you don't need `$event` directly, because the `name` prop already syncs the component's value to state automatically. Where `$event` becomes useful is in actions that need to *reference* the emitted value as part of a larger operation, like writing it to a different key, sending it to the server, or using it in a computation:
+
+```python
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+
+# Write the emitted value to a different state key
+Slider(name="volume", on_change=SetState("last_changed_volume", "{{ $event }}"))
+
+# Pass the emitted value to a server call
+Input(on_change=CallTool("search", arguments={"q": "{{ $event }}"}))
+```
+
+The [Expression Reference](/guides/expression-reference) has the full table of what each component emits.
+
+## Chaining actions
+
+A single interaction often needs to do more than one thing. An "Add" button might append an item to a list and then clear the input field. A "Save" button might set a loading flag and then call the server.
+
+To run multiple actions from one event, pass a list. The actions execute in order, and if any action fails, execution stops at that point so a failed server call won't silently proceed to the cleanup steps.
+
+Here's a crew list where the "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input field. Both execute before the next render, so the user sees the item appear and the field reset simultaneously.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Button, Column, ForEach, Input, Muted, Row, Text
+from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.rx import Rx
+
+set_initial_state(crew=["Arthur Dent", "Ford Prefect", "Trillian"], new_member="")
+
+with Column(gap=3):
+    with ForEach("crew"):
+        with Row(gap=2, align="center"):
+            Text("{{ $item }}")
+            Button(
+                "×", 
+                variant="ghost", 
+                size="sm",
+                on_click=PopState("crew", "{{ $index }}")
+            )
+    with Row(gap=2):
+        Input(name="new_member", placeholder="Crew member name...")
+        Button(
+            "Add", 
+            on_click=[
+                AppendState("crew", Rx("new_member")),
+                SetState("new_member", ""),
+            ]
+        )
+    Muted(f"{Rx('crew').length()} crew members")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ForEach",
+        "key": "crew",
+        "children": [
+          {
+            "cssClass": "gap-2 items-center",
+            "type": "Row",
+            "children": [
+              {"content": "{{ $item }}", "type": "Text"},
+              {
+                "type": "Button",
+                "label": "\u00d7",
+                "variant": "ghost",
+                "size": "sm",
+                "disabled": false,
+                "onClick": {"action": "popState", "key": "crew", "index": "{{ $index }}"}
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Row",
+        "children": [
+          {
+            "name": "new_member",
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Crew member name...",
+            "disabled": false,
+            "readOnly": false,
+            "required": false
+          },
+          {
+            "type": "Button",
+            "label": "Add",
+            "variant": "default",
+            "size": "default",
+            "disabled": false,
+            "onClick": [
+              {"action": "appendState", "key": "crew", "value": "{{ new_member }}"},
+              {"action": "setState", "key": "new_member", "value": ""}
+            ]
+          }
+        ]
+      },
+      {"content": "{{ crew | length }} crew members", "type": "Muted"}
+    ]
+  },
+  "state": {"crew": ["Arthur Dent", "Ford Prefect", "Trillian"], "new_member": ""}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The list syntax `[action1, action2, ...]` works with any event handler: `on_click`, `on_change`, `on_submit`.
+
+## Callbacks: on_success and on_error
+
+Action lists handle the setup: things to do *before* or *alongside* an interaction. Callbacks handle the outcomes: things to do *after* an async action completes.
+
+Every action supports `on_success` and `on_error`. They fire after the action resolves, with the outcome determining which branch runs. Both accept a single action or a list.
+
+```python
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.actions import SetState, ShowToast
+
+Button(
+    "Save", 
+    on_click=CallTool(
+        "save_record",
+        arguments={"data": Rx("form")},
+        on_success=ShowToast("Saved!", variant="success"),
+        on_error=ShowToast("{{ $error }}", variant="error"),
+    ),
+)
+```
+
+`$error` is available inside `on_error` callbacks; it holds the error message from the failed action.
+
+Callbacks can themselves have callbacks, making it possible to chain dependent server calls: the result of the first determines what to fetch next.
+
+```python
+CallTool(
+    "get_user",
+    arguments={"id": Rx("user_id")},
+    result_key="user",
+    on_success=CallTool(
+        "get_permissions",
+        arguments={"role": "{{ user.role }}"},
+        result_key="permissions",
+    ),
+)
+```
+
+## Common patterns
+
+### Loading state
+
+The combination of lists and callbacks is what makes loading state clean. Set a flag before the server call in the list; clear it in both callback branches so it always resolves, whether the call succeeds or fails:
+
+```python
+from prefab_ui.rx import Rx
+
+saving = Rx("saving")
+
+Button(
+    saving.then("Saving...", "Save"),
+    disabled=saving,
+    on_click=[
+        SetState("saving", True),
+        CallTool(
+            "save",
+            arguments={"data": Rx("form")},
+            on_success=[
+                SetState("saving", False),
+                ShowToast("Saved!", variant="success"),
+            ],
+            on_error=[
+                SetState("saving", False),
+                ShowToast("{{ $error }}", variant="error"),
+            ],
+        ),
+    ],
+)
+```
+
+The button label switches and disables while the call is in flight. Both branches clear the flag, so the button always returns to its normal state.
+
+### Populating results
+
+For search and filter patterns, use `result_key` to write the tool's response directly into state, then have a `ForEach` or `Slot` display it:
+
+```python
+from prefab_ui.components import Button, Column, ForEach, Input, Text
+
+with Column(gap=3):
+    query = Input(name="q", placeholder="Search...")
+    Button(
+        "Search", 
+        on_click=CallTool(
+            "search",
+            arguments={"q": query.rx},
+            result_key="results",
+        ),
+    )
+    with ForEach("results"):
+        Text("{{ name }}")
+```
+
+When the tool returns, its `PrefabApp` state is merged into the client's state under `results`. The `ForEach` re-renders with whatever came back.
+
+### Optimistic updates
+
+For interactions where you're confident the server will succeed, update state immediately and let the server confirm in the background. Revert on failure:
+
+```python
+with ForEach("todos"):
+    Checkbox(
+        name="todos.{{ $index }}.done",
+        on_change=[
+            SetState("todos.{{ $index }}.done", "{{ $event }}"),
+            CallTool(
+                "persist_todo",
+                arguments={"id": "{{ $item.id }}", "done": "{{ $event }}"},
+                on_error=[
+                    SetState("todos.{{ $index }}.done", "{{ !$event }}"),
+                    ShowToast("Failed to save", variant="error"),
+                ],
+            ),
+        ],
+    )
+```
+
+The checkbox updates instantly. If the server fails, the `on_error` branch flips it back and shows a toast.
