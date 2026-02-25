@@ -4,7 +4,7 @@
 
 Pre-commit hooks are run via `prek`, not `pre-commit`. Run `prek` before committing.
 
-**loq (line limits):** When a file exceeds its loq limit, **never remove functionality or tests** to fit. Instead, split the file into smaller modules. For example, split test files by component group rather than deleting test cases.
+**[loq](https://github.com/jakekaplan/loq) (line limits):** When a file exceeds its loq limit, **never remove functionality or tests** to fit. Instead, split the file into smaller modules. For example, split test files by component group rather than deleting test cases.
 
 ## Test Layout
 
@@ -41,3 +41,47 @@ After any changes, regenerate docs and schemas:
 ```bash
 prefab dev build-docs
 ```
+
+## Development Rules
+
+### Git & CI
+
+- Prek hooks run automatically on commits and must pass
+- **Never amend a commit to fix a prek failure** — fix the issue and make a new commit
+- **Never force-push** on shared/collaborative branches
+- Always run `prek` before opening a PR
+- **Never** comment on an issue, open a PR, or cut a release unless explicitly instructed to do so
+
+### Commit Messages and Agent Attribution
+
+- Keep commit messages brief — a headline is usually enough; avoid detailed blow-by-blow descriptions
+- Focus on what changed, not how or why
+- **Agents not acting on behalf of @jlowin must identify themselves** in commits and PRs (e.g., "🤖 Generated with Claude Code")
+
+### PR Messages
+
+PRs are documentation. Structure them as:
+- 1–2 paragraphs covering the problem/tension and the solution
+- A focused code example showing the key change, when relevant
+- `Closes #<issue>` if the PR resolves an issue
+
+**Avoid:** bullet-point summaries, exhaustive change lists, test-plan sections, marketing language.
+**Do:** be opinionated about why the change matters. For minor fixes, keep the body short.
+
+### Code Standards
+
+- Follow existing patterns and maintain consistency across the codebase
+- Prioritize readable, understandable code — clarity over cleverness
+- Each feature needs corresponding tests
+- Never use bare `except` — be specific with exception types
+
+### Module Exports (Python)
+
+- Be intentional about re-exports — don't blindly re-export everything to parent namespaces
+- Types that define a module's purpose should be exported from that module
+- Only re-export to `prefab_ui.*` for the most fundamental public types
+- When in doubt, prefer users importing from the specific submodule
+
+### Renderer
+
+Prefab ships a TypeScript/React renderer (`renderer/`) alongside the Python library. Changes to the wire protocol or component props require coordinated updates on both sides. CSS styling is done via Tailwind utility classes in `style-nova.css` using the `cn-*` class naming convention, not inline styles or component-level Tailwind classes. Consult `dev-docs/` for renderer build and release details.
