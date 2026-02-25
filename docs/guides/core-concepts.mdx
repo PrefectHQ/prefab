@@ -1,0 +1,118 @@
+---
+title: Core Concepts
+sidebarTitle: Core Concepts
+description: The four concepts that everything in Prefab is built from.
+icon: sitemap
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+At its core, Prefab is a protocol: a JSON document that describes a UI as a tree of components, with state, expressions, and actions wired in. A JavaScript renderer reads that document and turns it into a live interface. You never write the JSON by hand. Instead, you use Prefab's Python SDK, which gives you a natural way to build component trees that compile to the protocol.
+
+Everything in Prefab is built from four concepts:
+
+- **Components** define what the user sees
+- **State** holds the data
+- **Expressions** read state to keep the display current
+- **Actions** respond to interactions by changing state or calling your server
+
+They compose into a cycle: components display state through expressions, users trigger actions, actions update state, and expressions re-evaluate to update the display. Understanding each one, and how they connect, is the foundation for building anything in Prefab.
+
+## Components
+
+Components are the building blocks of every interface. `Text` renders content. A `Button` triggers actions. A `Card` wraps other components in a visual container. Components form a tree where parents contain children, and in Python, the `with` statement expresses that nesting naturally:
+
+<ComponentPreview json={{"view":{"cssClass":"w-48","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"content":"Uptime: 99.97%","type":"Text"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Row, Text
+
+with Card(css_class="w-48") as view:
+    with CardHeader():
+        with Row(gap=2):
+            CardTitle("API Server")
+            Badge("Healthy", variant="success")
+    with CardContent():
+        Text("Uptime: 99.97%")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-48",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {
+            "cssClass": "gap-2",
+            "type": "Row",
+            "children": [
+              {"type": "CardTitle", "content": "API Server"},
+              {"type": "Badge", "label": "Healthy", "variant": "success"}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [{"content": "Uptime: 99.97%", "type": "Text"}]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`Row` arranges children horizontally, `Column` stacks them vertically, `Grid` places them in a grid, and they all nest freely. Switch to the Protocol tab to see the JSON that this Python produces; that's what the renderer actually receives. The [Composition](/guides/composition) guide covers layout primitives, cards, grids, loops, and forward references.
+
+## State
+
+State is a key-value store that the renderer maintains for the lifetime of your app. It starts with whatever values you provide and changes as users interact. State is global: every component can read from it and every action can write to it.
+
+Interactive components are the most natural source of state. An `Input(name="city")` writes its current text to the `city` key on every keystroke. A `Slider(name="volume")` writes its position on every drag. Components with a `value` prop also seed their state key automatically: `Input(value="London")` means the key starts with `"London"` before the user types anything.
+
+The [State](/guides/state) guide covers seeding, form bindings, dot paths for nested data, and how state gets written.
+
+## Expressions
+
+Expressions are how components read from state and compute display values. `{{ count }}` in a text component means "display whatever `count` holds right now, and update whenever it changes." Every `{{ }}` expression declares a live dependency: the renderer tracks which keys it reads, re-evaluates when any change, and updates just those parts of the display. This happens entirely in the browser, instantly.
+
+Beyond reading, expressions can compute: `{{ price * quantity }}` multiplies two keys, `{{ status == 'active' }}` produces a boolean, `{{ revenue | currency }}` formats a number as `$2,847,500.00`. The language is intentionally bounded, covering enough to drive any UI while keeping business logic in your Python code.
+
+In Python, you write expressions using the `Rx` class. `Rx("count")` compiles to `{{ count }}`, and operators chain naturally: `(price * quantity).currency()` compiles to `{{ price * quantity | currency }}`. Stateful components have a `.rx` shorthand; `slider.rx` returns an `Rx` bound to the slider's state key, so you can wire components together without writing key names by hand.
+
+The [Expressions](/guides/expressions) guide covers the Rx DSL, operators, and formatting. The [Expression Reference](/guides/expression-reference) is the lookup page for every operator, pipe, and special variable.
+
+## Actions
+
+Actions are what happen when users interact. Click a button, change a slider, submit a form: each interaction can carry an action that fires when the event occurs.
+
+**Client actions** run instantly in the browser: `SetState` assigns a value, `ToggleState` flips a boolean, `AppendState` pushes onto an array, `ShowToast` gives feedback. **Server actions** cross a network boundary: `CallTool` invokes an MCP tool, `Fetch` makes an HTTP request. They're asynchronous, they can fail, and the renderer handles both outcomes through `on_success` and `on_error` callbacks.
+
+Most real interactions use both. A "Save" button sets a loading flag (instant), calls the server (async), then shows success or failure (instant, based on the outcome). Actions can be sequenced as lists and chained through callbacks.
+
+The [Actions](/guides/actions) guide covers both families, chaining, the `$event` variable, and common patterns like loading state and optimistic updates.
+
+## How it runs
+
+These four concepts are split across two environments.
+
+**Build time** is when your Python code runs. You create components, nest them into a tree, attach state references and actions, and when you're done, Prefab serializes everything to a JSON document. Your server's job ends there.
+
+**Render time** is everything after. A JavaScript renderer receives that document and turns it into a live interface: a React application running in the browser or inside an MCP host like Claude Desktop. The renderer manages state, evaluates expressions, handles interactions, and updates the display. None of that involves your server unless a `CallTool` or `Fetch` action explicitly calls back.
+
+The cycle runs continuously:
+
+1. Python builds a component tree and the renderer displays it
+2. A user interacts: clicks, types, drags
+3. An action fires: state updates directly, or a request goes out to the server
+4. State changes trigger expression re-evaluation; the display updates
+5. For server actions: the tool returns new content or state, and the renderer merges it
+
+Steps 2 through 4 happen without your server involved. Step 5 only occurs when a server action fires, and when it does, it's just another state update from the renderer's perspective.
+
+## MCP Apps
+
+This architecture is what makes Prefab a natural foundation for MCP Apps. Your MCP tools return component trees, and those trees become live interfaces inside Claude Desktop, ChatGPT, and any host that supports the MCP App protocol. The renderer runs inside the host; your Python server handles the tool calls. The programming model is identical to a standalone app: the same components, the same state system, the same actions. See [FastMCP](/running/fastmcp) for the specifics.

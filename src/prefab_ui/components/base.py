@@ -294,6 +294,11 @@ class Component(BaseModel):
             _defer_next_component.set(False)
             return
 
+        # Skip auto-attach when defer=True was passed
+        if _defer_next_component.get():
+            _defer_next_component.set(False)
+            return
+
         stack = _component_stack.get() or []
         if stack:
             stack[-1].children.append(self)
