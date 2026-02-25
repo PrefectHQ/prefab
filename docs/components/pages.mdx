@@ -10,7 +10,7 @@ Pages provide a multi-page layout where only the active page renders. Navigate b
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Earth","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"earth"}},{"type":"Button","label":"Magrathea","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"magrathea"}},{"type":"Button","label":"Milliways","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"milliways"}}]},{"name":"entry","type":"Pages","defaultValue":"earth","children":[{"type":"Page","title":"Earth","value":"earth","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Earth"},{"type":"CardDescription","content":"Mostly harmless."}]}]}]},{"type":"Page","title":"Magrathea","value":"magrathea","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Magrathea"},{"type":"CardDescription","content":"Ancient planet-building civilization. Custom-built luxury planets for the ultra-rich."}]}]}]},{"type":"Page","title":"Milliways","value":"milliways","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Milliways"},{"type":"CardDescription","content":"The Restaurant at the End of the Universe. Reservations recommended."}]}]}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Earth","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"earth"}},{"type":"Button","label":"Magrathea","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"magrathea"}},{"type":"Button","label":"Milliways","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"entry","value":"milliways"}}]},{"name":"entry","type":"Pages","defaultValue":"earth","children":[{"type":"Page","title":"Earth","value":"earth","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Earth"},{"type":"CardDescription","content":"Mostly harmless."}]}]}]},{"type":"Page","title":"Magrathea","value":"magrathea","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Magrathea"},{"type":"CardDescription","content":"Ancient planet-building civilization. Custom-built luxury planets for the ultra-rich."}]}]}]},{"type":"Page","title":"Milliways","value":"milliways","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Milliways"},{"type":"CardDescription","content":"The Restaurant at the End of the Universe. Reservations recommended."}]}]}]}]}]},"state":{"entry":"earth"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -162,7 +162,8 @@ with Column(gap=4):
         ]
       }
     ]
-  }
+  },
+  "state": {"entry": "earth"}
 }
 ```
 </CodeGroup>
@@ -172,29 +173,30 @@ The `name` prop connects the Pages component to client state. When the `entry` k
 
 ## Step-by-Step Navigation
 
-Pages pair naturally with `SetState` to build wizard flows. Each page's button advances to the next step:
+Pages pair naturally with `SetState` to build wizard flows. Each page's button advances to the next step. Use `as pages` to capture the reference, then pass `pages.rx` to `SetState` instead of hardcoding the state key:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"step","type":"Pages","defaultValue":"setup","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Configure your settings.","type":"Text"},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Review your choices.","type":"Text"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"step","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"content":"All done!","type":"Text"}]}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"pages_1","type":"Pages","defaultValue":"setup","children":[{"type":"Page","title":"Setup","value":"setup","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Configure your settings.","type":"Text"},{"type":"Row","children":[{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"pages_1","value":"review"}}]}]}]},{"type":"Page","title":"Review","value":"review","children":[{"cssClass":"gap-4","type":"Column","children":[{"content":"Review your choices.","type":"Text"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Back","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"pages_1","value":"setup"}},{"type":"Button","label":"Next","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"pages_1","value":"complete"}}]}]}]},{"type":"Page","title":"Complete","value":"complete","children":[{"content":"All done!","type":"Text"}]}]},{"cssClass":"text-muted-foreground text-sm","content":"Current step: {{ pages_1 }}","type":"Text"}]},"state":{"pages_1":"setup"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Page, Pages, Row, Text
 from prefab_ui.actions import SetState
 
 with Column(gap=4):
-    with Pages(name="step", default_value="setup"):
+    with Pages(default_value="setup") as pages:
         with Page("Setup", value="setup"):
             with Column(gap=4):
                 Text("Configure your settings.")
                 with Row():
-                    Button("Next", on_click=SetState("step", "review"))
+                    Button("Next", on_click=SetState(pages.rx, "review"))
         with Page("Review", value="review"):
             with Column(gap=4):
                 Text("Review your choices.")
                 with Row(gap=2):
-                    Button("Back", variant="outline", on_click=SetState("step", "setup"))
-                    Button("Next", on_click=SetState("step", "complete"))
+                    Button("Back", variant="outline", on_click=SetState(pages.rx, "setup"))
+                    Button("Next", on_click=SetState(pages.rx, "complete"))
         with Page("Complete", value="complete"):
             Text("All done!")
+    Text(f"Current step: {pages.rx}", css_class="text-muted-foreground text-sm")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -203,7 +205,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "step",
+        "name": "pages_1",
         "type": "Pages",
         "defaultValue": "setup",
         "children": [
@@ -226,7 +228,7 @@ with Column(gap=4):
                         "variant": "default",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {"action": "setState", "key": "step", "value": "review"}
+                        "onClick": {"action": "setState", "key": "pages_1", "value": "review"}
                       }
                     ]
                   }
@@ -254,7 +256,7 @@ with Column(gap=4):
                         "variant": "outline",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {"action": "setState", "key": "step", "value": "setup"}
+                        "onClick": {"action": "setState", "key": "pages_1", "value": "setup"}
                       },
                       {
                         "type": "Button",
@@ -262,7 +264,7 @@ with Column(gap=4):
                         "variant": "default",
                         "size": "default",
                         "disabled": false,
-                        "onClick": {"action": "setState", "key": "step", "value": "complete"}
+                        "onClick": {"action": "setState", "key": "pages_1", "value": "complete"}
                       }
                     ]
                   }
@@ -277,13 +279,156 @@ with Column(gap=4):
             "children": [{"content": "All done!", "type": "Text"}]
           }
         ]
+      },
+      {
+        "cssClass": "text-muted-foreground text-sm",
+        "content": "Current step: {{ pages_1 }}",
+        "type": "Text"
       }
     ]
-  }
+  },
+  "state": {"pages_1": "setup"}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the active page's value string. Since Pages has no built-in navigation, you provide your own — here a `Select` drives which page is shown:
+
+<ComponentPreview json={{"view":{"cssClass":"justify-around w-full","type":"Row","children":[{"cssClass":"gap-4 w-auto","type":"Column","children":[{"name":"pages_2","type":"Pages","defaultValue":"profile","children":[{"type":"Page","title":"Profile","value":"profile","children":[{"content":"Profile","type":"Heading","level":4},{"content":"Update your display name and avatar.","type":"Text"}]},{"type":"Page","title":"Notifications","value":"notifications","children":[{"content":"Notifications","type":"Heading","level":4},{"content":"Choose what triggers an alert.","type":"Text"}]},{"type":"Page","title":"Security","value":"security","children":[{"content":"Security","type":"Heading","level":4},{"content":"Two-factor authentication and sessions.","type":"Text"}]}]}]},{"cssClass":"gap-4 w-auto","type":"Column","children":[{"name":"select_1","type":"Select","placeholder":"Jump to...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"pages_2","value":"{{ $event }}"},"children":[{"type":"SelectOption","value":"profile","label":"Profile","selected":false,"disabled":false},{"type":"SelectOption","value":"notifications","label":"Notifications","selected":false,"disabled":false},{"type":"SelectOption","value":"security","label":"Security","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground text-sm","content":"Section: {{ pages_2 }}","type":"Text"}]}]},"state":{"pages_2":"profile"}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Column, Heading, Page, Pages, Row, Select, SelectOption, Text,
+)
+from prefab_ui.actions import SetState
+
+with Row(justify="around", css_class="w-full"):
+    with Column(gap=4, css_class="w-auto"):
+        with Pages(default_value="profile") as pages:
+            with Page("Profile", value="profile"):
+                Heading("Profile", level=4)
+                Text("Update your display name and avatar.")
+            with Page("Notifications", value="notifications"):
+                Heading("Notifications", level=4)
+                Text("Choose what triggers an alert.")
+            with Page("Security", value="security"):
+                Heading("Security", level=4)
+                Text("Two-factor authentication and sessions.")
+
+    with Column(gap=4, css_class="w-auto"):
+        with Select(
+            placeholder="Jump to...",
+            on_change=SetState(pages.rx, "{{ $event }}"),
+        ):
+            SelectOption("Profile", value="profile")
+            SelectOption("Notifications", value="notifications")
+            SelectOption("Security", value="security")
+        Text(
+            f"Section: {pages.rx}",
+            css_class="text-muted-foreground text-sm",
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "justify-around w-full",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "gap-4 w-auto",
+        "type": "Column",
+        "children": [
+          {
+            "name": "pages_2",
+            "type": "Pages",
+            "defaultValue": "profile",
+            "children": [
+              {
+                "type": "Page",
+                "title": "Profile",
+                "value": "profile",
+                "children": [
+                  {"content": "Profile", "type": "Heading", "level": 4},
+                  {"content": "Update your display name and avatar.", "type": "Text"}
+                ]
+              },
+              {
+                "type": "Page",
+                "title": "Notifications",
+                "value": "notifications",
+                "children": [
+                  {"content": "Notifications", "type": "Heading", "level": 4},
+                  {"content": "Choose what triggers an alert.", "type": "Text"}
+                ]
+              },
+              {
+                "type": "Page",
+                "title": "Security",
+                "value": "security",
+                "children": [
+                  {"content": "Security", "type": "Heading", "level": 4},
+                  {"content": "Two-factor authentication and sessions.", "type": "Text"}
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-4 w-auto",
+        "type": "Column",
+        "children": [
+          {
+            "name": "select_1",
+            "type": "Select",
+            "placeholder": "Jump to...",
+            "size": "default",
+            "disabled": false,
+            "required": false,
+            "onChange": {"action": "setState", "key": "pages_2", "value": "{{ $event }}"},
+            "children": [
+              {
+                "type": "SelectOption",
+                "value": "profile",
+                "label": "Profile",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "notifications",
+                "label": "Notifications",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "security",
+                "label": "Security",
+                "selected": false,
+                "disabled": false
+              }
+            ]
+          },
+          {
+            "cssClass": "text-muted-foreground text-sm",
+            "content": "Section: {{ pages_2 }}",
+            "type": "Text"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"pages_2": "profile"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The `SetState(pages.rx, "{{ $event }}")` writes the Select's chosen value into the pages' state key, switching the visible page. `{{ $event }}` is a special variable containing the value from the triggering component.
 
 ## API Reference
 

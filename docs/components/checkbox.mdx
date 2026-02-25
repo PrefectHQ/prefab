@@ -115,7 +115,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"accepted","type":"Checkbox","label":"Accept terms","checked":false,"disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"accepted","type":"Checkbox","label":"Accept terms","checked":false,"disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Text
@@ -125,7 +125,7 @@ from prefab_ui.rx import Rx
 event = Rx("$event")
 message = Rx("message")
 
-with Column(gap=4):
+with Column(gap=4, css_class="w-fit mx-auto"):
     Checkbox(
         label="Accept terms",
         name="accepted",
@@ -142,7 +142,7 @@ with Column(gap=4):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4",
+    "cssClass": "gap-4 w-fit mx-auto",
     "type": "Column",
     "children": [
       {
@@ -223,6 +223,54 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the checkbox's boolean state. The `.then()` pipe converts `true`/`false` into display-friendly strings:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"checkbox_9","type":"Checkbox","label":"Enable Infinite Improbability Drive","checked":true,"disabled":false,"required":false},{"type":"Label","text":"Drive status:"},{"name":"input_2","type":"Input","inputType":"text","value":"{{ checkbox_9 ? 'Engaged' : 'Disengaged' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"checkbox_9":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Checkbox, Input, Label, Row
+
+with Row(gap=4, align="center"):
+    cb = Checkbox(label="Enable Infinite Improbability Drive", checked=True)
+    Label("Drive status:")
+    Input(value=cb.rx.then("Engaged", "Disengaged"), read_only=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "name": "checkbox_9",
+        "type": "Checkbox",
+        "label": "Enable Infinite Improbability Drive",
+        "checked": true,
+        "disabled": false,
+        "required": false
+      },
+      {"type": "Label", "text": "Drive status:"},
+      {
+        "name": "input_2",
+        "type": "Input",
+        "inputType": "text",
+        "value": "{{ checkbox_9 ? 'Engaged' : 'Disengaged' }}",
+        "disabled": false,
+        "readOnly": true,
+        "required": false
+      }
+    ]
+  },
+  "state": {"checkbox_9": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Toggle the checkbox and the input updates to reflect the current state.
 
 ## API Reference
 

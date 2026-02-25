@@ -24,6 +24,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import Rx
 
 
 class ForEach(ContainerComponent):
@@ -31,6 +32,7 @@ class ForEach(ContainerComponent):
 
     Args:
         key: The data field containing the list to iterate over.
+            Accepts a string key or an ``Rx`` reference.
         css_class: Additional CSS classes for the wrapper element.
 
     Example::
@@ -47,13 +49,13 @@ class ForEach(ContainerComponent):
     key: str = Field(description="Data field containing the list to iterate over")
 
     @overload
-    def __init__(self, key: str, /, **kwargs: Any) -> None: ...
+    def __init__(self, key: str | Rx, /, **kwargs: Any) -> None: ...
 
     @overload
-    def __init__(self, *, key: str, **kwargs: Any) -> None: ...
+    def __init__(self, *, key: str | Rx, **kwargs: Any) -> None: ...
 
-    def __init__(self, key: str | None = None, **kwargs: Any) -> None:
+    def __init__(self, key: str | Rx | None = None, **kwargs: Any) -> None:
         """Accept key as positional or keyword argument."""
         if key is not None:
-            kwargs["key"] = key
+            kwargs["key"] = key.key if isinstance(key, Rx) else key
         super().__init__(**kwargs)

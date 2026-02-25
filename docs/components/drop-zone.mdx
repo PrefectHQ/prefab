@@ -160,103 +160,6 @@ DropZone(
 )
 ```
 
-### Try it
-
-Give a DropZone a `name` and it stores file data in client state automatically — no `on_change` needed. Other components can then reference that state with template expressions. Drop some files here to see it work:
-
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"files","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ files | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"files","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"},{"cssClass":"ml-auto h-6 w-6 p-0","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"setState","key":"files"}}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}}>
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    Badge, Button, Column, DropZone, ForEach,
-    If, Else, Muted, Row, Small,
-)
-from prefab_ui.actions import SetState
-
-with Column(gap=3) as view:
-    DropZone(
-        name="files",
-        label="Drop files to try it",
-        multiple=True,
-    )
-    with If("{{ files | length }}"):
-        with Column(gap=2):
-            with ForEach("files"):
-                with Row(gap=2, align="center"):
-                    Badge("{{ $item.type }}", variant="secondary")
-                    Small("{{ $item.name }}")
-                    Muted("{{ $item.size }} bytes")
-                    Button(
-                        "×",
-                        variant="ghost",
-                        size="sm",
-                        css_class="ml-auto h-6 w-6 p-0",
-                        on_click=SetState("files", None),
-                    )
-    with Else():
-        Muted("No files selected yet")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "name": "files",
-        "type": "DropZone",
-        "label": "Drop files to try it",
-        "multiple": true,
-        "disabled": false
-      },
-      {
-        "type": "Condition",
-        "cases": [
-          {
-            "when": "{{ files | length }}",
-            "children": [
-              {
-                "cssClass": "gap-2",
-                "type": "Column",
-                "children": [
-                  {
-                    "type": "ForEach",
-                    "key": "files",
-                    "children": [
-                      {
-                        "cssClass": "gap-2 items-center",
-                        "type": "Row",
-                        "children": [
-                          {"type": "Badge", "label": "{{ $item.type }}", "variant": "secondary"},
-                          {"content": "{{ $item.name }}", "type": "Small"},
-                          {"content": "{{ $item.size }} bytes", "type": "Muted"},
-                          {
-                            "cssClass": "ml-auto h-6 w-6 p-0",
-                            "type": "Button",
-                            "label": "\u00d7",
-                            "variant": "ghost",
-                            "size": "sm",
-                            "disabled": false,
-                            "onClick": {"action": "setState", "key": "files"}
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "else": [{"content": "No files selected yet", "type": "Muted"}]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
 ## The `FileUpload` Type
 
 Both DropZone and [OpenFilePicker](/actions/open-file-picker) produce the same event shape: an object with `name`, `size` (bytes), `type` (MIME), and `data` (raw base64 — no `data:` URL prefix). For multiple-file mode, you get an array of these objects.
@@ -298,6 +201,98 @@ DropZone(label="Uploads disabled", disabled=True)
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+DropZone stores selected file data in client state automatically. Each file is an object with `name`, `size` (bytes), `type` (MIME), and `data` (base64) properties. For `multiple=True`, the state holds an array of these objects.
+
+Use `.rx` to reference file data in other components. The `.length()` pipe counts entries, and `ForEach` iterates over the array to display each file's details. Drop some files below to see it work:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"dropzone_6","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ dropzone_6 | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-sm font-medium","content":"{{ dropzone_6 | length }} file(s) selected","type":"Text"},{"type":"ForEach","key":"dropzone_6","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Badge, Column, DropZone, ForEach,
+    If, Else, Muted, Row, Small, Text,
+)
+
+with Column(gap=3):
+    zone = DropZone(
+        label="Drop files to try it",
+        multiple=True,
+    )
+    with If(f"{zone.rx.length()}"):
+        with Column(gap=2):
+            Text(
+                f"{zone.rx.length()} file(s) selected",
+                css_class="text-sm font-medium",
+            )
+            with ForEach(zone.rx):
+                with Row(gap=2, align="center"):
+                    Badge("{{ $item.type }}", variant="secondary")
+                    Small("{{ $item.name }}")
+                    Muted("{{ $item.size }} bytes")
+    with Else():
+        Muted("No files selected yet")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "name": "dropzone_6",
+        "type": "DropZone",
+        "label": "Drop files to try it",
+        "multiple": true,
+        "disabled": false
+      },
+      {
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "{{ dropzone_6 | length }}",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Column",
+                "children": [
+                  {
+                    "cssClass": "text-sm font-medium",
+                    "content": "{{ dropzone_6 | length }} file(s) selected",
+                    "type": "Text"
+                  },
+                  {
+                    "type": "ForEach",
+                    "key": "dropzone_6",
+                    "children": [
+                      {
+                        "cssClass": "gap-2 items-center",
+                        "type": "Row",
+                        "children": [
+                          {"type": "Badge", "label": "{{ $item.type }}", "variant": "secondary"},
+                          {"content": "{{ $item.name }}", "type": "Small"},
+                          {"content": "{{ $item.size }} bytes", "type": "Muted"}
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "else": [{"content": "No files selected yet", "type": "Muted"}]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Inside `ForEach`, the template variables `$item.name`, `$item.type`, and `$item.size` resolve to each file's properties.
 
 ## API Reference
 

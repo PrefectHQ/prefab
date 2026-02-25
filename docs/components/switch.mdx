@@ -64,7 +64,7 @@ Switch(label="Dark mode", checked=True)
 
 Switches come in two sizes:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"switch_7","type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"name":"switch_8","type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]},"state":{"switch_7":true,"switch_8":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"switch_7","type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"name":"switch_8","type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]},"state":{"switch_7":true,"switch_8":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -72,14 +72,14 @@ from prefab_ui.components import (
     Switch,
 )
 
-with Column(gap=4):
+with Column(gap=4, css_class="w-fit mx-auto"):
     Switch(label="Default size", checked=True)
     Switch(label="Small size", size="sm", checked=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4",
+    "cssClass": "gap-4 w-fit mx-auto",
     "type": "Column",
     "children": [
       {
@@ -112,7 +112,7 @@ with Column(gap=4):
 
 The `on_change` parameter runs actions when the switch is toggled. The `$event` variable is `true` when switched on, `false` when off. Here, toggling the switch updates a separate status message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"notifications","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]},"state":{"notifications":false}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"notifications","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]},"state":{"notifications":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Switch, Text
@@ -122,7 +122,7 @@ from prefab_ui.rx import Rx
 event = Rx("$event")
 status = Rx("status")
 
-with Column(gap=4):
+with Column(gap=4, css_class="w-fit mx-auto"):
     Switch(
         label="Enable notifications",
         name="notifications",
@@ -139,7 +139,7 @@ with Column(gap=4):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4",
+    "cssClass": "gap-4 w-fit mx-auto",
     "type": "Column",
     "children": [
       {
@@ -171,7 +171,7 @@ with Column(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"switch_9","type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"name":"switch_10","type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"name":"switch_11","type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]},"state":{"switch_9":false,"switch_10":false,"switch_11":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"switch_9","type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"name":"switch_10","type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"name":"switch_11","type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]},"state":{"switch_9":false,"switch_10":false,"switch_11":true}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -179,7 +179,7 @@ from prefab_ui.components import (
     Switch,
 )
 
-with Column(gap=3):
+with Column(gap=3, css_class="w-fit mx-auto"):
     Switch(label="Enabled switch")
     Switch(label="Disabled off", disabled=True)
     Switch(label="Disabled on", checked=True, disabled=True)
@@ -187,7 +187,7 @@ with Column(gap=3):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3",
+    "cssClass": "gap-3 w-fit mx-auto",
     "type": "Column",
     "children": [
       {
@@ -224,6 +224,55 @@ with Column(gap=3):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the switch's boolean state. The `.then()` pipe converts `true`/`false` into display-friendly strings:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"switch_12","type":"Switch","label":"Auto-save to the Guide","checked":true,"size":"default","disabled":false,"required":false},{"type":"Label","text":"Auto-save:"},{"name":"input_17","type":"Input","inputType":"text","value":"{{ switch_12 ? 'On' : 'Off' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"switch_12":true}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Input, Label, Row, Switch
+
+with Row(gap=4, align="center"):
+    sw = Switch(label="Auto-save to the Guide", checked=True)
+    Label("Auto-save:")
+    Input(value=sw.rx.then("On", "Off"), read_only=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "name": "switch_12",
+        "type": "Switch",
+        "label": "Auto-save to the Guide",
+        "checked": true,
+        "size": "default",
+        "disabled": false,
+        "required": false
+      },
+      {"type": "Label", "text": "Auto-save:"},
+      {
+        "name": "input_17",
+        "type": "Input",
+        "inputType": "text",
+        "value": "{{ switch_12 ? 'On' : 'Off' }}",
+        "disabled": false,
+        "readOnly": true,
+        "required": false
+      }
+    ]
+  },
+  "state": {"switch_12": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Toggle the switch and the input updates to reflect the current state.
 
 ## API Reference
 
