@@ -29,3 +29,13 @@ class TestTabsComponents:
         t = Tab("Settings")
         j = t.to_json()
         assert "value" not in j
+
+    def test_tabs_default_variant(self):
+        tabs = Tabs()
+        j = tabs.to_json()
+        assert j.get("variant") == "default"
+
+    def test_tabs_line_variant(self):
+        tabs = Tabs(variant="line")
+        j = tabs.to_json()
+        assert j["variant"] == "line"
