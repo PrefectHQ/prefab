@@ -10,70 +10,73 @@ DatePicker combines a trigger button with a popover calendar. The button display
 
 ## Basic Usage
 
-<ComponentPreview height="400px" json={{"view":{"name":"deadline","type":"DatePicker","placeholder":"Select deadline"}}}>
+<ComponentPreview height="400px" json={{"view":{"name":"datepicker_1","type":"DatePicker","placeholder":"Select deadline"}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DatePicker
 
-DatePicker(placeholder="Select deadline", name="deadline")
+DatePicker(placeholder="Select deadline")
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {"name": "deadline", "type": "DatePicker", "placeholder": "Select deadline"}
+  "view": {"name": "datepicker_1", "type": "DatePicker", "placeholder": "Select deadline"}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-## Displaying the Selection
+## Reading the Value
 
-Give the DatePicker a `name` to store the selected date in state, then reference it with `{{ }}` interpolation. The button itself shows the formatted date, and you can display it elsewhere too:
+Use `.rx` to get a reactive reference to the selected date. The value is an ISO date string once a date is picked, but starts as `undefined` when nothing is selected. Use `.then()` to handle both states — showing formatted text when a date exists, and fallback text otherwise:
 
-<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"deadline","type":"DatePicker","placeholder":"Select deadline"},{"content":"{{ deadline | date:long }}","bold":true,"type":"Text"}]}]},"state":{"deadline":"2025-06-15T12:00:00.000Z"}}}>
+<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"name":"datepicker_2","type":"DatePicker","placeholder":"When does the whale arrive?"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"content":"{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}","italic":true,"type":"Text"}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import (
-    Column,
-    DatePicker,
-    Row,
-    Text,
-)
+from prefab_ui.components import Column, DatePicker, Label, Row, Text
 
-set_initial_state(deadline="2025-06-15T12:00:00.000Z")
-
-with Column(gap=3):
-    with Row(gap=4, css_class="items-center"):
-        DatePicker(placeholder="Select deadline", name="deadline")
-        Text("{{ deadline | date:long }}", bold=True)
+with Row(gap=6, align="center"):
+    picker = DatePicker(placeholder="When does the whale arrive?")
+    with Column(gap=2, justify="center"):
+        Label("Selected date")
+        Text(picker.rx.then(picker.rx.date("long"), "None yet"), italic=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
+    "cssClass": "gap-6 items-center",
+    "type": "Row",
     "children": [
       {
-        "cssClass": "gap-4 items-center",
-        "type": "Row",
+        "name": "datepicker_2",
+        "type": "DatePicker",
+        "placeholder": "When does the whale arrive?"
+      },
+      {
+        "cssClass": "gap-2 justify-center",
+        "type": "Column",
         "children": [
-          {"name": "deadline", "type": "DatePicker", "placeholder": "Select deadline"},
-          {"content": "{{ deadline | date:long }}", "bold": true, "type": "Text"}
+          {"type": "Label", "text": "Selected date"},
+          {
+            "content": "{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}",
+            "italic": true,
+            "type": "Text"
+          }
         ]
       }
     ]
-  },
-  "state": {"deadline": "2025-06-15T12:00:00.000Z"}
+  }
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
+Before a date is picked, the text shows "None yet". Pick a date and it updates instantly — the `.date("long")` pipe formats an ISO string like `"2026-04-02"` into `"April 2, 2026"`.
+
 ## In a Form
 
-DatePicker works naturally alongside other form controls, syncing its value to state via the `name` prop like any other input.
+DatePicker works naturally alongside other form controls. Each component's value syncs to state automatically — use `.rx` to reference it elsewhere:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"eventName","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"eventDate","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"input_3","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"datepicker_3","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -95,9 +98,9 @@ with Card():
     with CardContent():
         with Column(gap=3):
             Label("Event Name")
-            Input(name="eventName", placeholder="Team standup")
+            Input(placeholder="Team standup")
             Label("Date")
-            DatePicker(placeholder="Pick a date", name="eventDate")
+            DatePicker(placeholder="Pick a date")
     with CardFooter():
         Button("Create Event")
 ```
@@ -119,7 +122,7 @@ with Card():
             "children": [
               {"type": "Label", "text": "Event Name"},
               {
-                "name": "eventName",
+                "name": "input_3",
                 "type": "Input",
                 "inputType": "text",
                 "placeholder": "Team standup",
@@ -128,7 +131,7 @@ with Card():
                 "required": false
               },
               {"type": "Label", "text": "Date"},
-              {"name": "eventDate", "type": "DatePicker", "placeholder": "Pick a date"}
+              {"name": "datepicker_3", "type": "DatePicker", "placeholder": "Pick a date"}
             ]
           }
         ]

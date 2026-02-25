@@ -82,3 +82,6 @@ class Pages(StatefulMixin, ContainerComponent):
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
     )
+
+    def _get_initial_value(self) -> str | None:
+        return self.default_value

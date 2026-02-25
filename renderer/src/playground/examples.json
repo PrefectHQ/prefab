@@ -357,6 +357,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Calendar\n\nCalendar()"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "import datetime\nfrom prefab_ui.components import Calendar\n\nCalendar(value=datetime.date(2026, 7, 4))"
   },
   {
@@ -412,12 +417,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nmessage = Rx(\"message\")\n\nwith Column(gap=4):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            event.then(\"Thank you!\", \"Please accept to continue\"),\n        ),\n    )\n    Text(\n        message.default(\"Check the box\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nmessage = Rx(\"message\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            event.then(\"Thank you!\", \"Please accept to continue\"),\n        ),\n    )\n    Text(\n        message.default(\"Check the box\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Checkbox,\n    Column,\n)\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    Checkbox(label=\"Enabled option\")\n    Checkbox(label=\"Disabled option\", disabled=True)\n    Checkbox(label=\"Disabled & checked\", checked=True, disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Checkbox, Input, Label, Row\n\nwith Row(gap=4, align=\"center\"):\n    cb = Checkbox(label=\"Enable Infinite Improbability Drive\", checked=True)\n    Label(\"Drive status:\")\n    Input(value=cb.rx.then(\"Engaged\", \"Disengaged\"), read_only=True)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -472,22 +482,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Select a framework...\",\n    name=\"framework\",\n):\n    ComboboxOption(\"Next.js\", value=\"nextjs\")\n    ComboboxOption(\"Remix\", value=\"remix\")\n    ComboboxOption(\"Astro\", value=\"astro\")\n    ComboboxOption(\"SvelteKit\", value=\"sveltekit\")\n    ComboboxOption(\"Nuxt\", value=\"nuxt\")"
+    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(placeholder=\"Search planets...\"):\n    ComboboxOption(\"Magrathea\", value=\"magrathea\")\n    ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n    ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n    ComboboxOption(\"Krikkit\", value=\"krikkit\")\n    ComboboxOption(\"Earth\", value=\"earth\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Combobox,\n    ComboboxOption,\n    Text,\n)\n\nwith Column(gap=3):\n    with Combobox(\n        placeholder=\"Select a planet...\",\n        name=\"planet\",\n    ):\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Betelgeuse\", value=\"betelgeuse\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n\n    Text(\"Selected: {{ planet }}\")"
+    "code": "from prefab_ui.components import Column, Combobox, ComboboxOption, Text\n\nwith Column(gap=3):\n    with Combobox(placeholder=\"Search planets...\") as combo:\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n        ComboboxOption(\"Krikkit\", value=\"krikkit\")\n    Text(f\"Selected: {combo.rx}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Pick a language...\",\n    search_placeholder=\"Filter languages...\",\n    name=\"language\",\n):\n    ComboboxOption(\"Python\", value=\"python\")\n    ComboboxOption(\"TypeScript\", value=\"typescript\")\n    ComboboxOption(\"Rust\", value=\"rust\")\n    ComboboxOption(\"Go\", value=\"go\")"
+    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Choose a ship...\",\n    search_placeholder=\"Filter by name...\",\n):\n    ComboboxOption(\"Heart of Gold\", value=\"heart-of-gold\")\n    ComboboxOption(\"Bistromath\", value=\"bistromath\")\n    ComboboxOption(\"Starship Titanic\", value=\"starship-titanic\")\n    ComboboxOption(\"Vogon Constructor Fleet\", value=\"vogon-fleet\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Select a planet...\",\n    name=\"planet\",\n):\n    ComboboxOption(\"Magrathea\", value=\"magrathea\")\n    ComboboxOption(\n        \"Earth\",\n        value=\"earth\",\n        disabled=True,\n    )\n    ComboboxOption(\"Betelgeuse\", value=\"betelgeuse\")\n    ComboboxOption(\"Vogsphere\", value=\"vogsphere\")"
+    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(placeholder=\"Select a planet...\"):\n    ComboboxOption(\"Magrathea\", value=\"magrathea\")\n    ComboboxOption(\"Earth\", value=\"earth\", disabled=True)\n    ComboboxOption(\"Betelgeuse\", value=\"betelgeuse\")\n    ComboboxOption(\"Vogsphere\", value=\"vogsphere\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -567,17 +577,17 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import DatePicker\n\nDatePicker(placeholder=\"Select deadline\", name=\"deadline\")"
+    "code": "from prefab_ui.components import DatePicker\n\nDatePicker(placeholder=\"Select deadline\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Column,\n    DatePicker,\n    Row,\n    Text,\n)\n\nset_initial_state(deadline=\"2025-06-15T12:00:00.000Z\")\n\nwith Column(gap=3):\n    with Row(gap=4, css_class=\"items-center\"):\n        DatePicker(placeholder=\"Select deadline\", name=\"deadline\")\n        Text(\"{{ deadline | date:long }}\", bold=True)"
+    "code": "from prefab_ui.components import Column, DatePicker, Label, Row, Text\n\nwith Row(gap=6, align=\"center\"):\n    picker = DatePicker(placeholder=\"When does the whale arrive?\")\n    with Column(gap=2, justify=\"center\"):\n        Label(\"Selected date\")\n        Text(picker.rx.then(picker.rx.date(\"long\"), \"None yet\"), italic=True)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    DatePicker,\n    Input,\n    Label,\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"New Event\")\n    with CardContent():\n        with Column(gap=3):\n            Label(\"Event Name\")\n            Input(name=\"eventName\", placeholder=\"Team standup\")\n            Label(\"Date\")\n            DatePicker(placeholder=\"Pick a date\", name=\"eventDate\")\n    with CardFooter():\n        Button(\"Create Event\")"
+    "code": "from prefab_ui.components import (\n    Button,\n    Card,\n    CardContent,\n    CardFooter,\n    CardHeader,\n    CardTitle,\n    Column,\n    DatePicker,\n    Input,\n    Label,\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"New Event\")\n    with CardContent():\n        with Column(gap=3):\n            Label(\"Event Name\")\n            Input(placeholder=\"Team standup\")\n            Label(\"Date\")\n            DatePicker(placeholder=\"Pick a date\")\n    with CardFooter():\n        Button(\"Create Event\")"
   },
   {
     "title": "from prefab_ui.define import Define",
@@ -660,11 +670,6 @@
     "code": "from prefab_ui.components import DropZone\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\nDropZone(\n    label=\"Upload data file\",\n    on_change=[\n        SetState(\"uploading\", True),\n        CallTool(\"upload_file\", arguments={\"file\": \"{{ $event }}\"}),\n        SetState(\"uploading\", False),\n    ],\n)"
   },
   {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import (\n    Badge, Button, Column, DropZone, ForEach,\n    If, Else, Muted, Row, Small,\n)\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=3) as view:\n    DropZone(\n        name=\"files\",\n        label=\"Drop files to try it\",\n        multiple=True,\n    )\n    with If(\"{{ files | length }}\"):\n        with Column(gap=2):\n            with ForEach(\"files\"):\n                with Row(gap=2, align=\"center\"):\n                    Badge(\"{{ $item.type }}\", variant=\"secondary\")\n                    Small(\"{{ $item.name }}\")\n                    Muted(\"{{ $item.size }} bytes\")\n                    Button(\n                        \"×\",\n                        variant=\"ghost\",\n                        size=\"sm\",\n                        css_class=\"ml-auto h-6 w-6 p-0\",\n                        on_click=SetState(\"files\", None),\n                    )\n    with Else():\n        Muted(\"No files selected yet\")"
-  },
-  {
     "title": "Typing a tool parameter",
     "category": "Components",
     "code": "from prefab_ui.actions import FileUpload\n\n@server.tool()\ndef process_csv(file: FileUpload):\n    import base64\n    contents = base64.b64decode(file.data)\n    # file.name, file.size, file.type also available\n    ..."
@@ -673,6 +678,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import DropZone\n\nDropZone(label=\"Uploads disabled\", disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Badge, Column, DropZone, ForEach,\n    If, Else, Muted, Row, Small, Text,\n)\n\nwith Column(gap=3):\n    zone = DropZone(\n        label=\"Drop files to try it\",\n        multiple=True,\n    )\n    with If(f\"{zone.rx.length()}\"):\n        with Column(gap=2):\n            Text(\n                f\"{zone.rx.length()} file(s) selected\",\n                css_class=\"text-sm font-medium\",\n            )\n            with ForEach(zone.rx):\n                with Row(gap=2, align=\"center\"):\n                    Badge(\"{{ $item.type }}\", variant=\"secondary\")\n                    Small(\"{{ $item.name }}\")\n                    Muted(\"{{ $item.size }} bytes\")\n    with Else():\n        Muted(\"No files selected yet\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -872,6 +882,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Input, Text\n\nwith Column(gap=4):\n    inp = Input(placeholder=\"What is your name, traveler?\")\n    Text(f\"Hello, {inp.rx.default('stranger')}!\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Label\n\nLabel(\"Email address\")"
   },
   {
@@ -992,7 +1007,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(name=\"step\", default_value=\"setup\"):\n        with Page(\"Setup\", value=\"setup\"):\n            with Column(gap=4):\n                Text(\"Configure your settings.\")\n                with Row():\n                    Button(\"Next\", on_click=SetState(\"step\", \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            with Column(gap=4):\n                Text(\"Review your choices.\")\n                with Row(gap=2):\n                    Button(\"Back\", variant=\"outline\", on_click=SetState(\"step\", \"setup\"))\n                    Button(\"Next\", on_click=SetState(\"step\", \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")"
+    "code": "from prefab_ui.components import Button, Column, Page, Pages, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Pages(default_value=\"setup\") as pages:\n        with Page(\"Setup\", value=\"setup\"):\n            with Column(gap=4):\n                Text(\"Configure your settings.\")\n                with Row():\n                    Button(\"Next\", on_click=SetState(pages.rx, \"review\"))\n        with Page(\"Review\", value=\"review\"):\n            with Column(gap=4):\n                Text(\"Review your choices.\")\n                with Row(gap=2):\n                    Button(\"Back\", variant=\"outline\", on_click=SetState(pages.rx, \"setup\"))\n                    Button(\"Next\", on_click=SetState(pages.rx, \"complete\"))\n        with Page(\"Complete\", value=\"complete\"):\n            Text(\"All done!\")\n    Text(f\"Current step: {pages.rx}\", css_class=\"text-muted-foreground text-sm\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Column, Heading, Page, Pages, Row, Select, SelectOption, Text,\n)\nfrom prefab_ui.actions import SetState\n\nwith Row(justify=\"around\", css_class=\"w-full\"):\n    with Column(gap=4, css_class=\"w-auto\"):\n        with Pages(default_value=\"profile\") as pages:\n            with Page(\"Profile\", value=\"profile\"):\n                Heading(\"Profile\", level=4)\n                Text(\"Update your display name and avatar.\")\n            with Page(\"Notifications\", value=\"notifications\"):\n                Heading(\"Notifications\", level=4)\n                Text(\"Choose what triggers an alert.\")\n            with Page(\"Security\", value=\"security\"):\n                Heading(\"Security\", level=4)\n                Text(\"Two-factor authentication and sessions.\")\n\n    with Column(gap=4, css_class=\"w-auto\"):\n        with Select(\n            placeholder=\"Jump to...\",\n            on_change=SetState(pages.rx, \"{{ $event }}\"),\n        ):\n            SelectOption(\"Profile\", value=\"profile\")\n            SelectOption(\"Notifications\", value=\"notifications\")\n            SelectOption(\"Security\", value=\"security\")\n        Text(\n            f\"Section: {pages.rx}\",\n            css_class=\"text-muted-foreground text-sm\",\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1102,22 +1122,27 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Radio,\n    RadioGroup,\n)\n\nwith RadioGroup(name=\"size\"):\n    Radio(value=\"sm\", label=\"Small\")\n    Radio(value=\"md\", label=\"Medium\", checked=True)\n    Radio(value=\"lg\", label=\"Large\")"
+    "code": "from prefab_ui.components import Radio, RadioGroup\n\nwith RadioGroup(css_class=\"w-fit mx-auto\"):\n    Radio(value=\"sm\", label=\"Small\")\n    Radio(value=\"md\", label=\"Medium\")\n    Radio(value=\"lg\", label=\"Large\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Radio,\n)\n\nwith Column(gap=3):\n    Radio(value=\"yes\", label=\"Yes\", name=\"answer\")\n    Radio(value=\"no\", label=\"No\", name=\"answer\", checked=True)"
+    "code": "from prefab_ui.components import Radio, RadioGroup\n\nwith RadioGroup(css_class=\"w-fit mx-auto\"):\n    Radio(value=\"sm\", label=\"Small\")\n    Radio(value=\"md\", label=\"Medium\", checked=True)\n    Radio(value=\"lg\", label=\"Large\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nchoice = Rx(\"choice\")\n\nwith Column(gap=4):\n    with RadioGroup(\n        name=\"theme\",\n        on_change=SetState(\"choice\", f\"You picked: {Rx('$event')}\"),\n    ):\n        Radio(value=\"light\", label=\"Light\")\n        Radio(value=\"dark\", label=\"Dark\")\n        Radio(value=\"system\", label=\"System\", checked=True)\n    Text(\n        choice.default(\"Make a selection\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Radio, RadioGroup\n\nwith RadioGroup(css_class=\"w-fit mx-auto\"):\n    Radio(value=\"free\", label=\"Free\", checked=True)\n    Radio(value=\"pro\", label=\"Pro\")\n    Radio(value=\"enterprise\", label=\"Enterprise\", disabled=True)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Radio,\n    RadioGroup,\n)\n\nwith RadioGroup(name=\"plan\"):\n    Radio(value=\"free\", label=\"Free\", checked=True)\n    Radio(value=\"pro\", label=\"Pro\")\n    Radio(value=\"enterprise\", label=\"Enterprise\", disabled=True)"
+    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    with RadioGroup() as group:\n        Radio(value=\"heart-of-gold\", label=\"Heart of Gold\")\n        Radio(value=\"bistromath\", label=\"Bistromath\")\n        Radio(value=\"vogon-cruiser\", label=\"Vogon Constructor Fleet\")\n    Text(f\"Selected ship: {group.rx}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Radio, RadioGroup, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    with RadioGroup(\n        on_change=SetState(\"choice\", \"You picked: {{ $event }}\"),\n    ):\n        Radio(value=\"light\", label=\"Light\")\n        Radio(value=\"dark\", label=\"Dark\")\n        Radio(value=\"system\", label=\"System\", checked=True)\n    Text(\n        \"{{ choice | default:'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1237,27 +1262,32 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Select,\n    SelectOption,\n)\n\nwith Select(placeholder=\"Choose size...\"):\n    SelectOption(value=\"sm\", label=\"Small\")\n    SelectOption(value=\"md\", label=\"Medium\")\n    SelectOption(value=\"lg\", label=\"Large\")"
+    "code": "from prefab_ui.components import Select, SelectOption\n\nwith Select(placeholder=\"Choose size...\"):\n    SelectOption(value=\"sm\", label=\"Small\")\n    SelectOption(value=\"md\", label=\"Medium\")\n    SelectOption(value=\"lg\", label=\"Large\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Select,\n    SelectOption,\n)\n\nwith Select(placeholder=\"Select country\"):\n    SelectOption(value=\"us\", label=\"United States\")\n    SelectOption(value=\"uk\", label=\"United Kingdom\", selected=True)\n    SelectOption(value=\"ca\", label=\"Canada\")"
+    "code": "from prefab_ui.components import Select, SelectOption\n\nwith Select(placeholder=\"Select country\"):\n    SelectOption(value=\"us\", label=\"United States\")\n    SelectOption(value=\"uk\", label=\"United Kingdom\", selected=True)\n    SelectOption(value=\"ca\", label=\"Canada\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Select,\n    SelectOption,\n)\n\nwith Column(gap=4):\n    with Select(placeholder=\"Default size\"):\n        SelectOption(value=\"1\", label=\"Option 1\")\n        SelectOption(value=\"2\", label=\"Option 2\")\n\n    with Select(placeholder=\"Small size\", size=\"sm\"):\n        SelectOption(value=\"1\", label=\"Option 1\")\n        SelectOption(value=\"2\", label=\"Option 2\")"
+    "code": "from prefab_ui.components import Column, Select, SelectOption\n\nwith Column(gap=4):\n    with Select(placeholder=\"Default size\"):\n        SelectOption(value=\"1\", label=\"Option 1\")\n        SelectOption(value=\"2\", label=\"Option 2\")\n\n    with Select(placeholder=\"Small size\", size=\"sm\"):\n        SelectOption(value=\"1\", label=\"Option 1\")\n        SelectOption(value=\"2\", label=\"Option 2\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Select,\n    SelectOption,\n)\n\nwith Column(gap=2):\n    Label(\"Preferred language\")\n    with Select(placeholder=\"Choose language\"):\n        SelectOption(value=\"en\", label=\"English\")\n        SelectOption(value=\"es\", label=\"Spanish\")\n        SelectOption(value=\"fr\", label=\"French\")"
+    "code": "from prefab_ui.components import Column, Label, Select, SelectOption\n\nwith Column(gap=2):\n    Label(\"Preferred language\")\n    with Select(placeholder=\"Choose language\"):\n        SelectOption(value=\"en\", label=\"English\")\n        SelectOption(value=\"es\", label=\"Spanish\")\n        SelectOption(value=\"fr\", label=\"French\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\npicked = Rx(\"picked\")\n\nwith Column(gap=4):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", f\"You chose: {Rx('$event')}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        picked.default(\"Make a selection\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\n\nwith Column(gap=4):\n    with Select(placeholder=\"Choose a planet...\") as sel:\n        SelectOption(value=\"magrathea\", label=\"Magrathea\")\n        SelectOption(value=\"betelgeuse\", label=\"Betelgeuse V\")\n        SelectOption(value=\"vogsphere\", label=\"Vogsphere\")\n        SelectOption(value=\"earth\", label=\"Earth (Mostly Harmless)\")\n    Text(f\"You chose: {sel.rx}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", \"You chose: {{ $event }}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        \"{{ picked | default:'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1282,7 +1312,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nvolume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nvolume = Slider(value=0.75, min=0, max=1, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.percent()}\", bold=True)\n    insert(volume)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1322,6 +1352,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress, Row, Slider, Text\n\nwith Column(gap=4):\n    s = Slider(value=0.42, min=0, max=1, defer=True)\n    with Row(css_class=\"justify-between\"):\n        Label(\"Brightness\")\n        Text(f\"{s.rx.percent()}\", bold=True)\n    Progress(value=s.rx)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Heading, Slot\n\nset_initial_state(\n    info={\n        \"type\": \"Card\",\n        \"children\": [\n            {\n                \"type\": \"CardHeader\",\n                \"children\": [\n                    {\"type\": \"CardTitle\", \"content\": \"Heart of Gold\"},\n                    {\n                        \"type\": \"CardDescription\",\n                        \"content\": \"Infinite Improbability Drive equipped\",\n                    },\n                ],\n            }\n        ],\n    }\n)\n\nwith Column(gap=4):\n    Heading(\"Starship Registry\", level=3)\n    Slot(\"info\")"
   },
   {
@@ -1342,17 +1377,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=4):\n    Switch(label=\"Default size\", checked=True)\n    Switch(label=\"Small size\", size=\"sm\", checked=True)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Switch(label=\"Default size\", checked=True)\n    Switch(label=\"Small size\", size=\"sm\", checked=True)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nstatus = Rx(\"status\")\n\nwith Column(gap=4):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            event.then(\"Notifications enabled\", \"Notifications disabled\"),\n        ),\n    )\n    Text(\n        status.default(\"Toggle the switch\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nstatus = Rx(\"status\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            event.then(\"Notifications enabled\", \"Notifications disabled\"),\n        ),\n    )\n    Text(\n        status.default(\"Toggle the switch\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=3):\n    Switch(label=\"Enabled switch\")\n    Switch(label=\"Disabled off\", disabled=True)\n    Switch(label=\"Disabled on\", checked=True, disabled=True)"
+    "code": "from prefab_ui.components import (\n    Column,\n    Switch,\n)\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    Switch(label=\"Enabled switch\")\n    Switch(label=\"Disabled off\", disabled=True)\n    Switch(label=\"Disabled on\", checked=True, disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Input, Label, Row, Switch\n\nwith Row(gap=4, align=\"center\"):\n    sw = Switch(label=\"Auto-save to the Guide\", checked=True)\n    Label(\"Auto-save:\")\n    Input(value=sw.rx.then(\"On\", \"Off\"), read_only=True)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1375,9 +1415,9 @@
     "code": "from prefab_ui.components import Column, Tab, Tabs, Text\n\nwith Column(gap=6):\n    with Tabs(default_value=\"one\"):\n        with Tab(\"Mostly\", value=\"one\"):\n            Text(\"Don't panic.\")\n        with Tab(\"Harmless\", value=\"two\"):\n            Text(\"It's a wholly remarkable book.\")\n\n    with Tabs(variant=\"line\", default_value=\"one\"):\n        with Tab(\"Mostly\", value=\"one\"):\n            Text(\"Don't panic.\")\n        with Tab(\"Harmless\", value=\"two\"):\n            Text(\"It's a wholly remarkable book.\")"
   },
   {
-    "title": "Tabs with State",
+    "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Button, Column, Row, Tab, Tabs, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Tabs(name=\"activeTab\", default_value=\"general\"):\n        with Tab(\"General\", value=\"general\"):\n            Text(\"General settings here.\")\n        with Tab(\"Advanced\", value=\"advanced\"):\n            Text(\"Advanced settings here.\")\n\n    with Row(gap=2):\n        Button(\"Go to General\", on_click=SetState(\"activeTab\", \"general\"))\n        Button(\"Go to Advanced\", on_click=SetState(\"activeTab\", \"advanced\"))"
+    "code": "from prefab_ui.components import (\n    Column, Row, Select, SelectOption,\n    Tab, Tabs, Text,\n)\nfrom prefab_ui.actions import SetState\n\nwith Row(justify=\"around\", css_class=\"w-full\"):\n    with Column(gap=4, css_class=\"w-auto\"):\n        with Tabs(default_value=\"earth\") as tabs:\n            with Tab(\"Earth\", value=\"earth\"):\n                Text(\"Mostly harmless.\")\n            with Tab(\"Magrathea\", value=\"magrathea\"):\n                Text(\"Ancient planet of legend.\")\n            with Tab(\"Betelgeuse\", value=\"betelgeuse\"):\n                Text(\"Home of Ford Prefect.\")\n      \n    with Column(gap=4, css_class=\"w-auto\"):\n        with Select(\n            placeholder=\"Jump to...\",\n            on_change=SetState(tabs.rx, \"{{ $event }}\"),\n        ):\n            SelectOption(\"Earth\", value=\"earth\")\n            SelectOption(\"Magrathea\", value=\"magrathea\")\n            SelectOption(\"Betelgeuse\", value=\"betelgeuse\")\n        Text(\n            f\"Viewing: {tabs.rx}\",\n            css_class=\"text-muted-foreground text-sm\",\n        )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1398,6 +1438,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Textarea\n\nTextarea(placeholder=\"This textarea is disabled\", disabled=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Text, Textarea\n\nwith Column(gap=4):\n    ta = Textarea(placeholder=\"Describe your journey through the galaxy...\", rows=4)\n    Text(f\"Character count: {ta.rx.length()}\")"
   },
   {
     "title": "Python icon=\"python\"",

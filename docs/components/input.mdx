@@ -10,7 +10,7 @@ Inputs collect text, email, passwords, and other single-line data from users.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"input_4","type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"readOnly":false,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"input_6","type":"Input","inputType":"text","placeholder":"Enter your email...","disabled":false,"readOnly":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -20,7 +20,7 @@ Input(placeholder="Enter your email...")
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "input_4",
+    "name": "input_6",
     "type": "Input",
     "inputType": "text",
     "placeholder": "Enter your email...",
@@ -37,7 +37,7 @@ Input(placeholder="Enter your email...")
 
 Different input types provide appropriate keyboards and validation on mobile devices:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"input_5","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":false},{"name":"input_6","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":false},{"name":"input_7","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":false},{"name":"input_8","type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"readOnly":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"input_7","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":false},{"name":"input_8","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":false},{"name":"input_9","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":false},{"name":"input_10","type":"Input","inputType":"tel","placeholder":"Phone","disabled":false,"readOnly":false,"required":false}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -58,7 +58,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "input_5",
+        "name": "input_7",
         "type": "Input",
         "inputType": "email",
         "placeholder": "Email",
@@ -67,7 +67,7 @@ with Column(gap=4):
         "required": false
       },
       {
-        "name": "input_6",
+        "name": "input_8",
         "type": "Input",
         "inputType": "password",
         "placeholder": "Password",
@@ -76,7 +76,7 @@ with Column(gap=4):
         "required": false
       },
       {
-        "name": "input_7",
+        "name": "input_9",
         "type": "Input",
         "inputType": "number",
         "placeholder": "Age",
@@ -85,7 +85,7 @@ with Column(gap=4):
         "required": false
       },
       {
-        "name": "input_8",
+        "name": "input_10",
         "type": "Input",
         "inputType": "tel",
         "placeholder": "Phone",
@@ -104,7 +104,7 @@ with Column(gap=4):
 
 Pair inputs with labels for accessible forms:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"name":"input_9","type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":true}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email address"},{"name":"input_11","type":"Input","inputType":"email","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":true}]}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -125,7 +125,7 @@ with Column(gap=2):
     "children": [
       {"type": "Label", "text": "Email address"},
       {
-        "name": "input_9",
+        "name": "input_11",
         "type": "Input",
         "inputType": "email",
         "placeholder": "you@example.com",
@@ -225,7 +225,7 @@ with Row(gap=4):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"name":"input_10","type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"readOnly":false,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"input_12","type":"Input","inputType":"text","placeholder":"Disabled input","disabled":true,"readOnly":false,"required":false}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -235,7 +235,7 @@ Input(placeholder="Disabled input", disabled=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "input_10",
+    "name": "input_12",
     "type": "Input",
     "inputType": "text",
     "placeholder": "Disabled input",
@@ -252,7 +252,7 @@ Input(placeholder="Disabled input", disabled=True)
 
 A read-only input displays its value and allows users to select and copy the text, but prevents editing. Unlike `disabled`, the input retains its normal visual appearance -- it doesn't grey out or signal that interaction is blocked.
 
-<ComponentPreview json={{"view":{"name":"input_11","type":"Input","inputType":"text","value":"api_key_91x8z3...","disabled":false,"readOnly":true,"required":false},"state":{"input_11":"api_key_91x8z3..."}}}>
+<ComponentPreview json={{"view":{"name":"input_13","type":"Input","inputType":"text","value":"api_key_91x8z3...","disabled":false,"readOnly":true,"required":false},"state":{"input_13":"api_key_91x8z3..."}}}>
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input
@@ -262,7 +262,7 @@ Input(value="api_key_91x8z3...", read_only=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "input_11",
+    "name": "input_13",
     "type": "Input",
     "inputType": "text",
     "value": "api_key_91x8z3...",
@@ -270,11 +270,49 @@ Input(value="api_key_91x8z3...", read_only=True)
     "readOnly": true,
     "required": false
   },
-  "state": {"input_11": "api_key_91x8z3..."}
+  "state": {"input_13": "api_key_91x8z3..."}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Reading the Value
+
+Use `.rx` to get a reactive reference to the input's current text. As the user types, any component that references `.rx` updates automatically:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"input_14","type":"Input","inputType":"text","placeholder":"What is your name, traveler?","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ input_14 | default:stranger }}!","type":"Text"}]}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Text
+
+with Column(gap=4):
+    inp = Input(placeholder="What is your name, traveler?")
+    Text(f"Hello, {inp.rx.default('stranger')}!")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "name": "input_14",
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "What is your name, traveler?",
+        "disabled": false,
+        "readOnly": false,
+        "required": false
+      },
+      {"content": "Hello, {{ input_14 | default:stranger }}!", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Type a name and the greeting updates with each keystroke.
 
 ## API Reference
 
