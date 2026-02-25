@@ -47,7 +47,7 @@ prefab dev build-docs
 ### Git & CI
 
 - Prek hooks run automatically on commits and must pass
-- **Never amend a commit to fix a prek failure** — fix the issue and make a new commit
+- **Never amend commits** — always make a new commit instead
 - **Never force-push** on shared/collaborative branches
 - Always run `prek` before opening a PR
 - **Never** comment on an issue, open a PR, or cut a release unless explicitly instructed to do so
