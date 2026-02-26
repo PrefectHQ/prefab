@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Toaster } from "sonner";
-import { Moon, Sun, Search, Braces } from "lucide-react";
+import { Moon, Sun, Search, Braces, Link, Check } from "lucide-react";
 import { RenderTree, type ComponentNode } from "../renderer";
 import { useStateStore } from "../state";
 import { Button } from "@/ui/button";
@@ -141,6 +141,7 @@ export function Playground() {
   const [jsonCode, setJsonCode] = useState("");
   const [jsonDirty, setJsonDirty] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
@@ -166,7 +167,23 @@ export function Playground() {
   }, []);
 
   // Listen for init-code from parent, and signal readiness on mount.
+  // When running standalone (not in an iframe), read the hash directly.
   useEffect(() => {
+    const isStandalone = window.parent === window;
+    if (isStandalone) {
+      const hash = window.location.hash.slice(1);
+      if (hash) {
+        const encoded = new URLSearchParams(hash).get("code");
+        if (encoded) {
+          try {
+            setCode(decodeURIComponent(escape(atob(encoded))));
+          } catch {
+            // ignore malformed hash
+          }
+        }
+      }
+      return;
+    }
     function onMessage(e: MessageEvent) {
       if (
         e.data?.type === "pg-init-code" &&
@@ -185,6 +202,7 @@ export function Playground() {
   }, []);
 
   // Post code changes to parent so it can update the page URL hash.
+  // When standalone, update the hash directly.
   useEffect(() => {
     if (skipFirstCodeMsg.current) {
       skipFirstCodeMsg.current = false;
@@ -193,7 +211,11 @@ export function Playground() {
     if (mode === "python") {
       try {
         const encoded = btoa(unescape(encodeURIComponent(code)));
-        window.parent.postMessage({ type: "pg-code-changed", encoded }, "*");
+        if (window.parent === window) {
+          window.history.replaceState(null, "", `#code=${encoded}`);
+        } else {
+          window.parent.postMessage({ type: "pg-code-changed", encoded }, "*");
+        }
       } catch {
         // non-encodable characters — skip
       }
@@ -341,6 +363,26 @@ export function Playground() {
         <div className="ml-auto flex items-center gap-2">
           <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
           <Separator orientation="vertical" className="h-6" />
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(
+                window.parent === window
+                  ? window.location.href
+                  : window.parent.location.href,
+              );
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1500);
+            }}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+            aria-label="Copy link"
+            title="Copy link"
+          >
+            {copied ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Link className="h-4 w-4" />
+            )}
+          </button>
           <button
             onClick={handleModeToggle}
             className={`inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground ${
