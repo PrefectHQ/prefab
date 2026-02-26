@@ -31,7 +31,6 @@ type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
 const DEFAULT_PYTHON = `from prefab_ui.components import *
-from prefab_ui.actions import *
 
 with Card():
     with CardHeader():
