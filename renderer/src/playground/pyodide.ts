@@ -129,11 +129,14 @@ from prefab_ui.components.base import _component_stack, ContainerComponent
 # Reset the component stack
 _component_stack.set(None)
 
-# State capture
+# State capture (monkey-patched so importing from prefab_ui.app gets this version)
 _pg_state = {}
 
 def set_initial_state(**kwargs):
     _pg_state.update(kwargs)
+
+import prefab_ui.app as _pg_app
+_pg_app.set_initial_state = set_initial_state
 
 # Track all created components
 _pg_created = []
