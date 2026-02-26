@@ -13,6 +13,7 @@ Run via: uv run docs-build/render_previews.py
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import shutil
@@ -159,7 +160,9 @@ def _extract_attrs(tag_text: str) -> dict[str, Any]:
     }
 
 
-def _build_opening_tag(attrs: dict[str, Any], json_str: str) -> str:
+def _build_opening_tag(
+    attrs: dict[str, Any], json_str: str, playground: str | None = None
+) -> str:
     """Build a <ComponentPreview ...> opening tag with inline JSON."""
     parts = ["<ComponentPreview"]
     if attrs["resizable"]:
@@ -173,6 +176,8 @@ def _build_opening_tag(attrs: dict[str, Any], json_str: str) -> str:
     if attrs["hide_json"]:
         parts.append(" hide-json")
     parts.append(f" json={{{json_str}}}")
+    if playground and not attrs["bare"]:
+        parts.append(f' playground="{playground}"')
     parts.append(">")
     return "".join(parts)
 
@@ -246,9 +251,10 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         # Compact JSON for the inline prop
         inline_json = json.dumps(envelope, separators=(",", ":"))
 
-        # Build new opening tag with inline JSON
+        # Build new opening tag with inline JSON and playground link
         attrs = _extract_attrs(opening_tag)
-        new_opening = _build_opening_tag(attrs, inline_json)
+        pg_encoded = base64.b64encode(python_source.encode()).decode()
+        new_opening = _build_opening_tag(attrs, inline_json, pg_encoded)
 
         # Ensure icon attribute on the Python fence line
         if "icon=" not in python_fence_open:

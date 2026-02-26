@@ -1,10 +1,18 @@
-export const ComponentPreview = ({ json, height, resizable, bare, hideJson, children }) => {
+export const ComponentPreview = ({ json, height, resizable, bare, hideJson, playground, children }) => {
   const hostRef = React.useRef(null);
   const handleRef = React.useRef(null);
   const cardRef = React.useRef(null);
   const containerRef = React.useRef(null);
   const [previewWidth, setPreviewWidth] = React.useState(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [playgroundHref, setPlaygroundHref] = React.useState(null);
+
+  React.useEffect(function () {
+    if (!playground) return;
+    var url = new URL("../playground", window.location.href);
+    url.hash = "code=" + playground;
+    setPlaygroundHref(url.href);
+  }, [playground]);
 
   var jsonStr = typeof json === "string" ? json : JSON.stringify(json, null, 2);
 
@@ -169,6 +177,14 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
             </div>
           )}
         </div>
+        {playgroundHref && (
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 0 8px" }}>
+            <a href={playgroundHref} target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "var(--muted-foreground)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 6px", borderRadius: "4px" }} onMouseOver={function(e) { e.currentTarget.style.color = "var(--foreground)"; }} onMouseOut={function(e) { e.currentTarget.style.color = "var(--muted-foreground)"; }}>
+              Open in Playground
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+            </a>
+          </div>
+        )}
         <div style={{ marginBottom: "-2rem" }}>{children}</div>
       </Card>
     );
@@ -178,6 +194,14 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, chil
     <Card>
       <div ref={cardRef} />
       <div ref={hostRef} />
+      {playgroundHref && (
+        <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 0 8px" }}>
+          <a href={playgroundHref} target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "var(--muted-foreground)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 6px", borderRadius: "4px" }} onMouseOver={function(e) { e.currentTarget.style.color = "var(--foreground)"; }} onMouseOut={function(e) { e.currentTarget.style.color = "var(--muted-foreground)"; }}>
+            Open in Playground
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+          </a>
+        </div>
+      )}
       <div style={{ marginBottom: "-2rem" }}>{children}</div>
     </Card>
   );

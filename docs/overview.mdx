@@ -67,7 +67,7 @@ Every form control automatically syncs its value to client-side state. When a us
 
 The `.rx` property on any stateful component returns a reactive reference to that state key. Use it in f-strings or pass it directly to any string prop — it serializes to `{{ key }}` at build time and re-evaluates at render time as the user interacts.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIElucHV0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBDYWxsVG9vbAoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgY2l0eV9pbnB1dCA9IElucHV0KG5hbWU9ImNpdHkiLCBwbGFjZWhvbGRlcj0iRW50ZXIgYSBjaXR5Li4uIikKICAgIEJ1dHRvbigKICAgICAgICAiR2V0IFdlYXRoZXIiLAogICAgICAgIG9uX2NsaWNrPUNhbGxUb29sKAogICAgICAgICAgICAiZ2V0X3dlYXRoZXIiLAogICAgICAgICAgICBhcmd1bWVudHM9eyJsb2NhdGlvbiI6IGNpdHlfaW5wdXQucnh9LAogICAgICAgICksCiAgICApCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input
@@ -142,7 +142,7 @@ Actions define what happens when a user interacts with a component. There are tw
 
 Pass a list to compose multiple actions from a single interaction:
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"saving","value":true},{"action":"toolCall","tool":"save_data","arguments":{"item":"{{ item }}"}},{"action":"setState","key":"saving","value":false}]}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"saving","value":true},{"action":"toolCall","tool":"save_data","arguments":{"item":"{{ item }}"}},{"action":"setState","key":"saving","value":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBDYWxsVG9vbApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCkJ1dHRvbigiU2F2ZSIsIG9uX2NsaWNrPVsKICAgIFNldFN0YXRlKCJzYXZpbmciLCBUcnVlKSwKICAgIENhbGxUb29sKCJzYXZlX2RhdGEiLCBhcmd1bWVudHM9eyJpdGVtIjogUngoIml0ZW0iKX0pLAogICAgU2V0U3RhdGUoInNhdmluZyIsIEZhbHNlKSwKXSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -181,7 +181,7 @@ Actions execute in order. This pattern lets you show a loading indicator before 
 
 FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"input_21","type":"Input","inputType":"text","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}}>
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"input_21","type":"Input","inputType":"text","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDYXJkLCBDYXJkQ29udGVudCwgQ29sdW1uLCBJbnB1dAoKd2l0aCBDYXJkKCkgYXMgdmlldzoKICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICB3aXRoIENvbHVtbihnYXA9Myk6CiAgICAgICAgICAgIElucHV0KHBsYWNlaG9sZGVyPSJ5b3VAZXhhbXBsZS5jb20iKQogICAgICAgICAgICBCdXR0b24oIlN1YnNjcmliZSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Card, CardContent, Column, Input

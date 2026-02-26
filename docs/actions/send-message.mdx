@@ -9,7 +9,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `SendMessage` puts words in the user's mouth — when triggered, it sends a message to the conversation as if the user typed it. This is useful for creating quick-action buttons that trigger follow-up questions or commands.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBTZW5kTWVzc2FnZQoKQnV0dG9uKCJTdW1tYXJpemUiLCBvbl9jbGljaz1TZW5kTWVzc2FnZSgiUGxlYXNlIHN1bW1hcml6ZSB0aGUgZGF0YSBhYm92ZS4iKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -38,7 +38,7 @@ The message appears in the chat attributed to the user, which means the AI assis
 
 Build a row of follow-up actions that save the user from typing:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Quick Actions","type":"H3"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Summarize","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Summarize these results."}},{"type":"Button","label":"Explain Further","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Explain these results in more detail."}},{"type":"Button","label":"Compare Options","variant":"outline","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Compare the top options and recommend one."}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3csIEgzLCBDb2x1bW4KZnJvbSBwcmVmYWJfdWkuYWN0aW9ucy5tY3AgaW1wb3J0IFNlbmRNZXNzYWdlCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBIMygiUXVpY2sgQWN0aW9ucyIpCiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgQnV0dG9uKCJTdW1tYXJpemUiLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9U2VuZE1lc3NhZ2UoIlN1bW1hcml6ZSB0aGVzZSByZXN1bHRzLiIpKQogICAgICAgIEJ1dHRvbigiRXhwbGFpbiBGdXJ0aGVyIiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgICAgIG9uX2NsaWNrPVNlbmRNZXNzYWdlKCJFeHBsYWluIHRoZXNlIHJlc3VsdHMgaW4gbW9yZSBkZXRhaWwuIikpCiAgICAgICAgQnV0dG9uKCJDb21wYXJlIE9wdGlvbnMiLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9U2VuZE1lc3NhZ2UoIkNvbXBhcmUgdGhlIHRvcCBvcHRpb25zIGFuZCByZWNvbW1lbmQgb25lLiIpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row, H3, Column
@@ -105,7 +105,7 @@ with Column(gap=3):
 
 Combine with state interpolation to include UI context in the message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"question","type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"question","type":"Input","inputType":"text","placeholder":"Ask a follow-up question...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Ask","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"{{ question }}"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgSW5wdXQsIEJ1dHRvbiwgQ29sdW1uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBTZW5kTWVzc2FnZQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgcXVlc3Rpb24gPSBJbnB1dChuYW1lPSJxdWVzdGlvbiIsIHBsYWNlaG9sZGVyPSJBc2sgYSBmb2xsb3ctdXAgcXVlc3Rpb24uLi4iKQogICAgQnV0dG9uKCJBc2siLCBvbl9jbGljaz1TZW5kTWVzc2FnZShxdWVzdGlvbi5yeCkpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column

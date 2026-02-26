@@ -153,6 +153,9 @@ export function Playground() {
   codeRef.current = code;
   const pyStatusRef = useRef(pyStatus);
   pyStatusRef.current = pyStatus;
+  // Skip the initial code-changed postMessage so it doesn't clobber the
+  // URL hash before the parent has a chance to send pg-init-code.
+  const skipFirstCodeMsg = useRef(true);
 
   // Sync dark class on <html>
   useEffect(() => {
@@ -163,28 +166,37 @@ export function Playground() {
     loadPyodideRuntime(setPyStatus);
   }, []);
 
-  // Load code from URL hash: playground.html#code=<base64>
+  // Listen for init-code from parent, and signal readiness on mount.
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-    const params = new URLSearchParams(hash);
-    const encoded = params.get("code");
-    if (!encoded) return;
-    try {
-      setCode(decodeURIComponent(escape(atob(encoded))));
-    } catch {
-      // ignore malformed hash
+    function onMessage(e: MessageEvent) {
+      if (
+        e.data?.type === "pg-init-code" &&
+        typeof e.data.encoded === "string"
+      ) {
+        try {
+          setCode(decodeURIComponent(escape(atob(e.data.encoded))));
+        } catch {
+          // ignore malformed payload
+        }
+      }
     }
+    window.addEventListener("message", onMessage);
+    window.parent.postMessage({ type: "pg-ready" }, "*");
+    return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  // Sync code to URL hash for shareability (only in Python mode)
+  // Post code changes to parent so it can update the page URL hash.
   useEffect(() => {
+    if (skipFirstCodeMsg.current) {
+      skipFirstCodeMsg.current = false;
+      return;
+    }
     if (mode === "python") {
       try {
         const encoded = btoa(unescape(encodeURIComponent(code)));
-        window.history.replaceState(null, "", `#code=${encoded}`);
+        window.parent.postMessage({ type: "pg-code-changed", encoded }, "*");
       } catch {
-        // non-encodable characters — skip hash update
+        // non-encodable characters — skip
       }
     }
   }, [code, mode]);
