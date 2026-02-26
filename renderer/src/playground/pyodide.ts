@@ -1,13 +1,14 @@
 /**
  * Lazy Pyodide loader and Python executor for the playground.
  *
- * Loads Pyodide from CDN on first use, installs pydantic, writes the
- * prefab_ui source tree to the virtual filesystem, then executes user
- * code and extracts the component JSON via to_json().
+ * Loads Pyodide from CDN on first use, then installs prefab-ui directly
+ * from PyPI via micropip, then executes user code and extracts the
+ * component JSON via to_json().
  */
 
 import type { ComponentNode } from "../renderer";
-import BUNDLE from "./bundle.json";
+
+declare const __LOCAL_BUNDLE__: boolean;
 
 declare global {
   interface Window {
@@ -60,20 +61,33 @@ export function loadPyodideRuntime(
 
     await loadScript(PYODIDE_CDN);
     const py = await window.loadPyodide();
-    await py.loadPackage(["pydantic"]);
 
-    // Write prefab_ui source files to the virtual filesystem
-    const bundle = BUNDLE as Record<string, string>;
-    const dirs = new Set<string>();
-    for (const modulePath of Object.keys(bundle)) {
-      const dir = modulePath.substring(0, modulePath.lastIndexOf("/"));
-      if (dir && !dirs.has(dir)) {
-        py.FS.mkdirTree(`/lib/python3.12/site-packages/${dir}`);
-        dirs.add(dir);
+    const isLocal =
+      location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+    if (__LOCAL_BUNDLE__ && isLocal) {
+      // Local dev build: write the bundled source tree to the Pyodide FS so
+      // the playground reflects local code changes without a PyPI publish.
+      const { default: BUNDLE } = await import("./bundle.json");
+      const bundle = BUNDLE as Record<string, string>;
+      await py.loadPackage(["pydantic"]);
+      const dirs = new Set<string>();
+      for (const modulePath of Object.keys(bundle)) {
+        const dir = modulePath.substring(0, modulePath.lastIndexOf("/"));
+        if (dir && !dirs.has(dir)) {
+          py.FS.mkdirTree(`/lib/python3.12/site-packages/${dir}`);
+          dirs.add(dir);
+        }
       }
-    }
-    for (const [modulePath, source] of Object.entries(bundle)) {
-      py.FS.writeFile(`/lib/python3.12/site-packages/${modulePath}`, source);
+      for (const [modulePath, source] of Object.entries(bundle)) {
+        py.FS.writeFile(`/lib/python3.12/site-packages/${modulePath}`, source);
+      }
+    } else {
+      await py.loadPackage(["micropip"]);
+      await py.runPythonAsync(`
+import micropip
+await micropip.install("prefab-ui")
+`);
     }
 
     pyodide = py;

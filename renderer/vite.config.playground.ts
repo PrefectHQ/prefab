@@ -15,6 +15,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom(), viteSingleFile()],
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
+    // True only for local docs builds (VITE_LOCAL_PLAYGROUND=1).
+    // When false, the bundle import is tree-shaken out of the production build.
+    __LOCAL_BUNDLE__: process.env.VITE_LOCAL_PLAYGROUND === "1",
   },
   resolve: {
     alias: {
