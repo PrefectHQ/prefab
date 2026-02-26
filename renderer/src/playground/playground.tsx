@@ -328,7 +328,7 @@ export function Playground() {
   }, [pyStatus, running]);
 
   return (
-    <div className="flex min-h-[800px] flex-col bg-background text-foreground">
+    <div className="flex h-[800px] flex-col bg-background text-foreground">
       {/* Toolbar */}
       <div className="flex items-center gap-3 border-b px-4 py-2">
         <ExamplePicker onSelect={handleExampleSelect} />
