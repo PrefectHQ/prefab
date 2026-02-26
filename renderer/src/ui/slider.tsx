@@ -29,6 +29,7 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  step,
   variant,
   indicatorClassName,
   handleStyle,
@@ -38,6 +39,7 @@ function Slider({
     indicatorClassName?: string;
     handleStyle?: "circle" | "bar";
   }) {
+  const resolvedStep = step ?? (max - min) / 100
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -55,6 +57,7 @@ function Slider({
       value={value}
       min={min}
       max={max}
+      step={resolvedStep}
       className={cn(
         "cn-slider relative flex w-full cursor-pointer touch-none items-center select-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col",
         className
