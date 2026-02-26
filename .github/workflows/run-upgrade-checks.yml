@@ -1,0 +1,106 @@
+name: Upgrade checks
+
+env:
+  PY_COLORS: 1
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "uv.lock"
+      - "pyproject.toml"
+      - ".github/workflows/**"
+
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: "0 2 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  static_analysis:
+    name: Static analysis
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup uv (upgrade)
+        uses: ./.github/actions/setup-uv
+        with:
+          resolution: upgrade
+
+      - name: Install renderer dependencies
+        run: cd renderer && npm ci
+
+      - name: Run prek
+        uses: j178/prek-action@v1
+        env:
+          SKIP: no-commit-to-branch
+
+  run_tests:
+    name: "Tests: Python ${{ matrix.python-version }} on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10"]
+        include:
+          - os: ubuntu-latest
+            python-version: "3.13"
+      fail-fast: false
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup uv (upgrade)
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: ${{ matrix.python-version }}
+          resolution: upgrade
+
+      - name: Run tests
+        uses: ./.github/actions/run-pytest
+
+  notify:
+    name: Notify on failure
+    needs: [static_analysis, run_tests]
+    if: failure() && github.event.pull_request == null
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create or update failure issue
+        uses: jayqi/failed-build-issue-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          label-name: "build failed"
+          title-template: "Upgrade checks failing on main branch"
+          body-template: |
+            ## Upgrade Checks Failure on Main Branch
+
+            The upgrade checks workflow has failed on the main branch.
+
+            **Workflow Run**: [#{{runNumber}}]({{serverUrl}}/{{repo.owner}}/{{repo.repo}}/actions/runs/{{runId}})
+            **Commit**: {{sha}}
+            **Branch**: {{ref}}
+            **Event**: {{eventName}}
+
+            ### What to do
+
+            This likely means that upgraded dependencies have introduced new errors. Please review the failed jobs and determine if the code needs to be updated or if dependency constraints need to be adjusted.
+
+            - [ ] Review the failure in the workflow run
+            - [ ] Identify root cause (dependency changes, new linter/type rules, etc.)
+            - [ ] Implement fix or adjust dependency constraints
+            - [ ] Verify fix resolves the issue
+
+            ---
+            *This issue was automatically created by a GitHub Action.*
