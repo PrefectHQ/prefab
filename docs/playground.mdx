@@ -10,6 +10,11 @@ export const PlaygroundFrame = () => {
   const ref = React.useRef(null);
   const [src, setSrc] = React.useState(null);
   React.useEffect(function () {
+    // Mintlify doesn't reliably update data-page-mode on <html> during
+    // client-side navigation. Set it on mount so our custom CSS (which scopes
+    // max-width to non-wide pages) applies correctly, and remove it on unmount
+    // so other pages aren't left with a stale wide-mode attribute.
+    document.documentElement.setAttribute("data-page-mode", "wide");
     var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
     var url = isLocal
       ? "/playground.html"
@@ -21,6 +26,9 @@ export const PlaygroundFrame = () => {
     if (ref.current) {
       ref.current.style.height = "calc(100vh - 60px)";
     }
+    return function () {
+      document.documentElement.removeAttribute("data-page-mode");
+    };
   }, []);
   if (!src) return null;
   return <iframe ref={ref} src={src} style={{ width: "100%", border: "none" }} sandbox="allow-scripts allow-same-origin" />;
