@@ -23,23 +23,11 @@ for py_file in sorted(src_root.glob("*.py")):
     module_path = f"prefab_ui/{py_file.name}"
     bundle[module_path] = py_file.read_text()
 
-# Components subpackage
-components_dir = src_root / "components"
-for py_file in sorted(components_dir.glob("*.py")):
-    module_path = f"prefab_ui/components/{py_file.name}"
-    bundle[module_path] = py_file.read_text()
-
-# Actions subpackage
-actions_dir = src_root / "actions"
-for py_file in sorted(actions_dir.glob("*.py")):
-    module_path = f"prefab_ui/actions/{py_file.name}"
-    bundle[module_path] = py_file.read_text()
-
-# Renderer subpackage (just __init__.py)
-renderer_dir = src_root / "renderer"
-for py_file in sorted(renderer_dir.glob("*.py")):
-    module_path = f"prefab_ui/renderer/{py_file.name}"
-    bundle[module_path] = py_file.read_text()
+for subpkg in ("components", "actions", "renderer"):
+    subpkg_dir = src_root / subpkg
+    for py_file in sorted(subpkg_dir.rglob("*.py")):
+        module_path = f"prefab_ui/{subpkg}/{py_file.relative_to(subpkg_dir)}"
+        bundle[module_path] = py_file.read_text()
 
 output.parent.mkdir(parents=True, exist_ok=True)
 output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2))

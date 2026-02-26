@@ -486,7 +486,7 @@ def build_docs() -> None:
             (
                 "Building playground",
                 ["npm", "run", "--prefix", str(renderer_dir), "build:playground"],
-                None,
+                {**os.environ, "VITE_LOCAL_PLAYGROUND": "1"},
             )
         )
     else:
