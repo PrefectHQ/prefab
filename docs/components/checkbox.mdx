@@ -10,7 +10,7 @@ Checkboxes let users select one or more options from a set.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"checkbox_1","type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false},"state":{"checkbox_1":false}}}>
+<ComponentPreview json={{"view":{"name":"checkbox_1","type":"Checkbox","label":"Accept terms and conditions","checked":false,"disabled":false,"required":false},"state":{"checkbox_1":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gKCkNoZWNrYm94KGxhYmVsPSJBY2NlcHQgdGVybXMgYW5kIGNvbmRpdGlvbnMiKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -35,7 +35,7 @@ Checkbox(label="Accept terms and conditions")
 
 ## Checked State
 
-<ComponentPreview json={{"view":{"name":"checkbox_2","type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false},"state":{"checkbox_2":true}}}>
+<ComponentPreview json={{"view":{"name":"checkbox_2","type":"Checkbox","label":"Subscribe to newsletter","checked":true,"disabled":false,"required":false},"state":{"checkbox_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gKCkNoZWNrYm94KGxhYmVsPSJTdWJzY3JpYmUgdG8gbmV3c2xldHRlciIsIGNoZWNrZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox
@@ -60,7 +60,7 @@ Checkbox(label="Subscribe to newsletter", checked=True)
 
 ## Multiple Checkboxes
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_3","type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"name":"checkbox_4","type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"name":"checkbox_5","type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]},"state":{"checkbox_3":true,"checkbox_4":false,"checkbox_5":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_3","type":"Checkbox","label":"Email notifications","checked":true,"disabled":false,"required":false},{"name":"checkbox_4","type":"Checkbox","label":"SMS notifications","checked":false,"disabled":false,"required":false},{"name":"checkbox_5","type":"Checkbox","label":"Push notifications","checked":true,"disabled":false,"required":false}]},"state":{"checkbox_3":true,"checkbox_4":false,"checkbox_5":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0zLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENoZWNrYm94KGxhYmVsPSJFbWFpbCBub3RpZmljYXRpb25zIiwgY2hlY2tlZD1UcnVlKQogICAgQ2hlY2tib3gobGFiZWw9IlNNUyBub3RpZmljYXRpb25zIikKICAgIENoZWNrYm94KGxhYmVsPSJQdXNoIG5vdGlmaWNhdGlvbnMiLCBjaGVja2VkPVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -115,7 +115,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"accepted","type":"Checkbox","label":"Accept terms","checked":false,"disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"accepted","type":"Checkbox","label":"Accept terms","checked":false,"disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIENvbHVtbiwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCmV2ZW50ID0gUngoIiRldmVudCIpCm1lc3NhZ2UgPSBSeCgibWVzc2FnZSIpCgp3aXRoIENvbHVtbihnYXA9NCwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBDaGVja2JveCgKICAgICAgICBsYWJlbD0iQWNjZXB0IHRlcm1zIiwKICAgICAgICBuYW1lPSJhY2NlcHRlZCIsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKAogICAgICAgICAgICAibWVzc2FnZSIsCiAgICAgICAgICAgIGV2ZW50LnRoZW4oIlRoYW5rIHlvdSEiLCAiUGxlYXNlIGFjY2VwdCB0byBjb250aW51ZSIpLAogICAgICAgICksCiAgICApCiAgICBUZXh0KAogICAgICAgIG1lc3NhZ2UuZGVmYXVsdCgiQ2hlY2sgdGhlIGJveCIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Text
@@ -173,7 +173,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 
 ## With Disabled State
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_6","type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"name":"checkbox_7","type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"name":"checkbox_8","type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]},"state":{"checkbox_6":false,"checkbox_7":false,"checkbox_8":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_6","type":"Checkbox","label":"Enabled option","checked":false,"disabled":false,"required":false},{"name":"checkbox_7","type":"Checkbox","label":"Disabled option","checked":false,"disabled":true,"required":false},{"name":"checkbox_8","type":"Checkbox","label":"Disabled & checked","checked":true,"disabled":true,"required":false}]},"state":{"checkbox_6":false,"checkbox_7":false,"checkbox_8":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0zLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENoZWNrYm94KGxhYmVsPSJFbmFibGVkIG9wdGlvbiIpCiAgICBDaGVja2JveChsYWJlbD0iRGlzYWJsZWQgb3B0aW9uIiwgZGlzYWJsZWQ9VHJ1ZSkKICAgIENoZWNrYm94KGxhYmVsPSJEaXNhYmxlZCAmIGNoZWNrZWQiLCBjaGVja2VkPVRydWUsIGRpc2FibGVkPVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -228,7 +228,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 Use `.rx` to get a reactive reference to the checkbox's boolean state. The `.then()` pipe converts `true`/`false` into display-friendly strings:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"checkbox_9","type":"Checkbox","label":"Enable Infinite Improbability Drive","checked":true,"disabled":false,"required":false},{"type":"Label","text":"Drive status:"},{"name":"input_2","type":"Input","inputType":"text","value":"{{ checkbox_9 ? 'Engaged' : 'Disengaged' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"checkbox_9":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"checkbox_9","type":"Checkbox","label":"Enable Infinite Improbability Drive","checked":true,"disabled":false,"required":false},{"type":"Label","text":"Drive status:"},{"name":"input_2","type":"Input","inputType":"text","value":"{{ checkbox_9 ? 'Engaged' : 'Disengaged' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"checkbox_9":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIElucHV0LCBMYWJlbCwgUm93Cgp3aXRoIFJvdyhnYXA9NCwgYWxpZ249ImNlbnRlciIpOgogICAgY2IgPSBDaGVja2JveChsYWJlbD0iRW5hYmxlIEluZmluaXRlIEltcHJvYmFiaWxpdHkgRHJpdmUiLCBjaGVja2VkPVRydWUpCiAgICBMYWJlbCgiRHJpdmUgc3RhdHVzOiIpCiAgICBJbnB1dCh2YWx1ZT1jYi5yeC50aGVuKCJFbmdhZ2VkIiwgIkRpc2VuZ2FnZWQiKSwgcmVhZF9vbmx5PVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Input, Label, Row

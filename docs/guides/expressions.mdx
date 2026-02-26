@@ -15,7 +15,7 @@ The expression language is intentionally bounded. Prefab UIs are designed to be 
 
 The `{{ }}` syntax is the protocol-level unit of reactivity. Any string prop on any component can contain `{{ }}` expressions, and the renderer treats each one as a live dependency.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIFJvdywgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKc2V0X2luaXRpYWxfc3RhdGUoY291bnQ9MCkKCndpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICBCdXR0b24oIi0iLCB2YXJpYW50PSJvdXRsaW5lIiwgb25fY2xpY2s9U2V0U3RhdGUoImNvdW50IiwgInt7IGNvdW50IC0gMSB9fSIpKQogICAgVGV4dCgie3sgY291bnQgfX0iKQogICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCArIDEgfX0iKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -108,7 +108,7 @@ Every interactive component manages a state key through its `name` prop, and tha
 
 The `.rx` property solves this. It returns `Rx(component.name)`, giving you a reactive reference to that component's state without needing to know or repeat the key name:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_22 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_22":50.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_22 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBzbGlkZXIgPSBTbGlkZXIodmFsdWU9NTAsIG1pbj0wLCBtYXg9MTAwKQogICAgVGV4dChmIlZvbHVtZToge3NsaWRlci5yeH0lIikKICAgIFByb2dyZXNzKHZhbHVlPXNsaWRlci5yeCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text
@@ -164,7 +164,7 @@ Sometimes you need to reference `.rx` on a component that hasn't been placed in 
 
 Standard math operators work on `Rx` objects: `+`, `-`, `*`, `/`, and unary negation. The result is always a new `Rx` that compiles to the corresponding protocol expression.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgUm93LCBUZXh0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2V0X2luaXRpYWxfc3RhdGUocHJpY2U9NDIsIHF1YW50aXR5PTEpCnF1YW50aXR5ID0gUngoInF1YW50aXR5IikKcHJpY2UgPSBSeCgicHJpY2UiKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBUZXh0KCJRdWFudGl0eToiKQogICAgICAgIEJ1dHRvbigiLSIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgicXVhbnRpdHkiLCBxdWFudGl0eSAtIDEpKQogICAgICAgIFRleHQocXVhbnRpdHkpCiAgICAgICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJxdWFudGl0eSIsIHF1YW50aXR5ICsgMSkpCiAgICBUZXh0KGYiVG90YWw6IHsocHJpY2UgKiBxdWFudGl0eSkuY3VycmVuY3koKX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -282,7 +282,7 @@ The `||` operator short-circuits, which makes it useful as a falsy default: `{{ 
 
 `.then(if_true, if_false)` chooses between two values based on a boolean expression. It compiles to the ternary operator `? :` in the protocol:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2V0X2luaXRpYWxfc3RhdGUoYWN0aXZlPVRydWUpCmFjdGl2ZSA9IFJ4KCJhY3RpdmUiKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KGFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state

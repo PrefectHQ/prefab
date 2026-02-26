@@ -10,7 +10,7 @@ The Calendar component renders a month view for selecting dates. It supports sin
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"calendar_1","type":"Calendar","mode":"single"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_1","type":"Calendar","mode":"single"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FsZW5kYXIKCkNhbGVuZGFyKCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Calendar
@@ -27,7 +27,7 @@ Calendar()
 
 Pass a `datetime.date` to `value` to pre-select a date:
 
-<ComponentPreview json={{"view":{"name":"calendar_2","type":"Calendar","mode":"single"},"state":{"calendar_2":"2026-07-04T12:00:00.000Z"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_2","type":"Calendar","mode":"single"},"state":{"calendar_2":"2026-07-04T12:00:00.000Z"}}} playground="aW1wb3J0IGRhdGV0aW1lCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IENhbGVuZGFyCgpDYWxlbmRhcih2YWx1ZT1kYXRldGltZS5kYXRlKDIwMjYsIDcsIDQpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 import datetime
@@ -48,7 +48,7 @@ Calendar(value=datetime.date(2026, 7, 4))
 
 Set `mode="range"` to let users select a start and end date. The value is a dict with `"from"` and `"to"` keys:
 
-<ComponentPreview json={{"view":{"name":"calendar_3","type":"Calendar","mode":"range"},"state":{"calendar_3":"{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_3","type":"Calendar","mode":"range"},"state":{"calendar_3":"{\"from\": \"2025-06-10T12:00:00.000Z\", \"to\": \"2025-06-20T12:00:00.000Z\"}"}}} playground="aW1wb3J0IGRhdGV0aW1lCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IENhbGVuZGFyCgpDYWxlbmRhcigKICAgIG1vZGU9InJhbmdlIiwKICAgIHZhbHVlPXsKICAgICAgICAiZnJvbSI6IGRhdGV0aW1lLmRhdGUoMjAyNSwgNiwgMTApLAogICAgICAgICJ0byI6IGRhdGV0aW1lLmRhdGUoMjAyNSwgNiwgMjApLAogICAgfSwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 import datetime
@@ -77,7 +77,7 @@ Calendar(
 
 Select multiple individual dates with `mode="multiple"`. The value is a list of dates:
 
-<ComponentPreview json={{"view":{"name":"calendar_4","type":"Calendar","mode":"multiple"},"state":{"calendar_4":"[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"}}}>
+<ComponentPreview json={{"view":{"name":"calendar_4","type":"Calendar","mode":"multiple"},"state":{"calendar_4":"[\"2025-06-10T12:00:00.000Z\", \"2025-06-15T12:00:00.000Z\", \"2025-06-22T12:00:00.000Z\"]"}}} playground="aW1wb3J0IGRhdGV0aW1lCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IENhbGVuZGFyCgpDYWxlbmRhcigKICAgIG1vZGU9Im11bHRpcGxlIiwKICAgIHZhbHVlPVsKICAgICAgICBkYXRldGltZS5kYXRlKDIwMjUsIDYsIDEwKSwKICAgICAgICBkYXRldGltZS5kYXRlKDIwMjUsIDYsIDE1KSwKICAgICAgICBkYXRldGltZS5kYXRlKDIwMjUsIDYsIDIyKSwKICAgIF0sCikK">
 <CodeGroup>
 ```python Python icon="python"
 import datetime
@@ -107,7 +107,7 @@ Calendar(
 
 Use `.rx` to get a reactive reference to the calendar's current selection. What `.rx` holds depends on the mode: an ISO date string for single mode, a `{"from": ..., "to": ...}` object for range mode, or an array of ISO strings for multiple mode. The `.date()` pipe formats a single ISO string for display:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"name":"calendar_5","type":"Calendar","mode":"single"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"name":"input_1","type":"Input","inputType":"text","value":"{{ calendar_5 | date:long }}","disabled":false,"readOnly":true,"required":false}]}]},"state":{"calendar_5":"2026-07-04T12:00:00.000Z"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"name":"calendar_5","type":"Calendar","mode":"single"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"name":"input_1","type":"Input","inputType":"text","value":"{{ calendar_5 | date:long }}","disabled":false,"readOnly":true,"required":false}]}]},"state":{"calendar_5":"2026-07-04T12:00:00.000Z"}}} playground="aW1wb3J0IGRhdGV0aW1lCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IENhbGVuZGFyLCBDb2x1bW4sIElucHV0LCBMYWJlbCwgUm93Cgp3aXRoIFJvdyhnYXA9Nik6CiAgICBjYWwgPSBDYWxlbmRhcih2YWx1ZT1kYXRldGltZS5kYXRlKDIwMjYsIDcsIDQpKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIsIGp1c3RpZnk9ImNlbnRlciIpOgogICAgICAgIExhYmVsKCJTZWxlY3RlZCBkYXRlIikKICAgICAgICBJbnB1dCh2YWx1ZT1jYWwucnguZGF0ZSgibG9uZyIpLCByZWFkX29ubHk9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 import datetime

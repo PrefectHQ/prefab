@@ -11,7 +11,7 @@ Prefab UIs are built around a simple loop: you declare **state**, you write **ex
 
 That might sound abstract, so here's what it looks like in practice:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIFJvdywgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKc2V0X2luaXRpYWxfc3RhdGUoY291bnQ9MCkKCndpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICBCdXR0b24oIi0iLCB2YXJpYW50PSJvdXRsaW5lIiwgb25fY2xpY2s9U2V0U3RhdGUoImNvdW50IiwgInt7IGNvdW50IC0gMSB9fSIpKQogICAgVGV4dCgie3sgY291bnQgfX0iKQogICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCArIDEgfX0iKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -70,7 +70,7 @@ That's the complete model: state holds values, expressions read them, actions ch
 
 The counter above creates state explicitly with `set_initial_state()`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIElucHV0LCBUZXh0CgpzZXRfaW5pdGlhbF9zdGF0ZShuYW1lPSJBcnRodXIiKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUiKQogICAgVGV4dCgiSGVsbG8sIHt7IG5hbWUgfX0hIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -155,7 +155,7 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_20","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_20 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_20 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_20":50.0}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_20","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_20 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_20 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_20":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBzbGlkZXIgPSBTbGlkZXIodmFsdWU9NTAsIG1pbj0wLCBtYXg9MTAwKQogICAgVGV4dChmIlZvbHVtZToge3NsaWRlci5yeH0lIikKICAgIFByb2dyZXNzKHZhbHVlPXNsaWRlci5yeCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text

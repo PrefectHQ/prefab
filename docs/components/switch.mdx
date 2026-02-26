@@ -10,7 +10,7 @@ Switches provide a visual toggle for binary states, offering an alternative to c
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"switch_5","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false},"state":{"switch_5":false}}}>
+<ComponentPreview json={{"view":{"name":"switch_5","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false},"state":{"switch_5":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU3dpdGNoCgpTd2l0Y2gobGFiZWw9IkVuYWJsZSBub3RpZmljYXRpb25zIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -36,7 +36,7 @@ Switch(label="Enable notifications")
 
 ## Checked State
 
-<ComponentPreview json={{"view":{"name":"switch_6","type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false},"state":{"switch_6":true}}}>
+<ComponentPreview json={{"view":{"name":"switch_6","type":"Switch","label":"Dark mode","checked":true,"size":"default","disabled":false,"required":false},"state":{"switch_6":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU3dpdGNoCgpTd2l0Y2gobGFiZWw9IkRhcmsgbW9kZSIsIGNoZWNrZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Switch
@@ -64,7 +64,7 @@ Switch(label="Dark mode", checked=True)
 
 Switches come in two sizes:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"switch_7","type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"name":"switch_8","type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]},"state":{"switch_7":true,"switch_8":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"switch_7","type":"Switch","label":"Default size","checked":true,"size":"default","disabled":false,"required":false},{"name":"switch_8","type":"Switch","label":"Small size","checked":true,"size":"sm","disabled":false,"required":false}]},"state":{"switch_7":true,"switch_8":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgU3dpdGNoLAopCgp3aXRoIENvbHVtbihnYXA9NCwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBTd2l0Y2gobGFiZWw9IkRlZmF1bHQgc2l6ZSIsIGNoZWNrZWQ9VHJ1ZSkKICAgIFN3aXRjaChsYWJlbD0iU21hbGwgc2l6ZSIsIHNpemU9InNtIiwgY2hlY2tlZD1UcnVlKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -112,7 +112,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the switch is toggled. The `$event` variable is `true` when switched on, `false` when off. Here, toggling the switch updates a separate status message:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"notifications","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]},"state":{"notifications":false}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"notifications","type":"Switch","label":"Enable notifications","checked":false,"size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"status","value":"{{ $event ? 'Notifications enabled' : 'Notifications disabled' }}"}},{"cssClass":"text-muted-foreground","content":"{{ status | default:'Toggle the switch' }}","type":"Text"}]},"state":{"notifications":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTd2l0Y2gsIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4CgpldmVudCA9IFJ4KCIkZXZlbnQiKQpzdGF0dXMgPSBSeCgic3RhdHVzIikKCndpdGggQ29sdW1uKGdhcD00LCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFN3aXRjaCgKICAgICAgICBsYWJlbD0iRW5hYmxlIG5vdGlmaWNhdGlvbnMiLAogICAgICAgIG5hbWU9Im5vdGlmaWNhdGlvbnMiLAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgKICAgICAgICAgICAgInN0YXR1cyIsCiAgICAgICAgICAgIGV2ZW50LnRoZW4oIk5vdGlmaWNhdGlvbnMgZW5hYmxlZCIsICJOb3RpZmljYXRpb25zIGRpc2FibGVkIiksCiAgICAgICAgKSwKICAgICkKICAgIFRleHQoCiAgICAgICAgc3RhdHVzLmRlZmF1bHQoIlRvZ2dsZSB0aGUgc3dpdGNoIiksCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LW11dGVkLWZvcmVncm91bmQiLAogICAgKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Switch, Text
@@ -171,7 +171,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"switch_9","type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"name":"switch_10","type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"name":"switch_11","type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]},"state":{"switch_9":false,"switch_10":false,"switch_11":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"switch_9","type":"Switch","label":"Enabled switch","checked":false,"size":"default","disabled":false,"required":false},{"name":"switch_10","type":"Switch","label":"Disabled off","checked":false,"size":"default","disabled":true,"required":false},{"name":"switch_11","type":"Switch","label":"Disabled on","checked":true,"size":"default","disabled":true,"required":false}]},"state":{"switch_9":false,"switch_10":false,"switch_11":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgU3dpdGNoLAopCgp3aXRoIENvbHVtbihnYXA9MywgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBTd2l0Y2gobGFiZWw9IkVuYWJsZWQgc3dpdGNoIikKICAgIFN3aXRjaChsYWJlbD0iRGlzYWJsZWQgb2ZmIiwgZGlzYWJsZWQ9VHJ1ZSkKICAgIFN3aXRjaChsYWJlbD0iRGlzYWJsZWQgb24iLCBjaGVja2VkPVRydWUsIGRpc2FibGVkPVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -229,7 +229,7 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 Use `.rx` to get a reactive reference to the switch's boolean state. The `.then()` pipe converts `true`/`false` into display-friendly strings:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"switch_12","type":"Switch","label":"Auto-save to the Guide","checked":true,"size":"default","disabled":false,"required":false},{"type":"Label","text":"Auto-save:"},{"name":"input_17","type":"Input","inputType":"text","value":"{{ switch_12 ? 'On' : 'Off' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"switch_12":true}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"name":"switch_12","type":"Switch","label":"Auto-save to the Guide","checked":true,"size":"default","disabled":false,"required":false},{"type":"Label","text":"Auto-save:"},{"name":"input_17","type":"Input","inputType":"text","value":"{{ switch_12 ? 'On' : 'Off' }}","disabled":false,"readOnly":true,"required":false}]},"state":{"switch_12":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgSW5wdXQsIExhYmVsLCBSb3csIFN3aXRjaAoKd2l0aCBSb3coZ2FwPTQsIGFsaWduPSJjZW50ZXIiKToKICAgIHN3ID0gU3dpdGNoKGxhYmVsPSJBdXRvLXNhdmUgdG8gdGhlIEd1aWRlIiwgY2hlY2tlZD1UcnVlKQogICAgTGFiZWwoIkF1dG8tc2F2ZToiKQogICAgSW5wdXQodmFsdWU9c3cucngudGhlbigiT24iLCAiT2ZmIiksIHJlYWRfb25seT1UcnVlKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Label, Row, Switch

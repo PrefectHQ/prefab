@@ -10,7 +10,7 @@ Textareas provide multi-line text input for comments, descriptions, and other lo
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"name":"textarea_1","type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"textarea_1","type":"Textarea","placeholder":"Enter your message...","disabled":false,"required":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dGFyZWEKClRleHRhcmVhKHBsYWNlaG9sZGVyPSJFbnRlciB5b3VyIG1lc3NhZ2UuLi4iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -33,7 +33,7 @@ Textarea(placeholder="Enter your message...")
 
 ## With Labels
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"name":"textarea_2","type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback"},{"name":"textarea_2","type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBUZXh0YXJlYSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgTGFiZWwoIkZlZWRiYWNrIikKICAgIFRleHRhcmVhKAogICAgICAgIHBsYWNlaG9sZGVyPSJUZWxsIHVzIHdoYXQgeW91IHRoaW5rLi4uIiwKICAgICAgICByb3dzPTUsCiAgICApCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -73,7 +73,7 @@ with Column(gap=2):
 
 ## With Initial Value
 
-<ComponentPreview json={{"view":{"name":"textarea_3","type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false},"state":{"textarea_3":"This is some initial content that can be edited."}}}>
+<ComponentPreview json={{"view":{"name":"textarea_3","type":"Textarea","value":"This is some initial content that can be edited.","rows":4,"disabled":false,"required":false},"state":{"textarea_3":"This is some initial content that can be edited."}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dGFyZWEKClRleHRhcmVhKAogICAgdmFsdWU9IlRoaXMgaXMgc29tZSBpbml0aWFsIGNvbnRlbnQgdGhhdCBjYW4gYmUgZWRpdGVkLiIsCiAgICByb3dzPTQsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -101,7 +101,7 @@ Textarea(
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"name":"textarea_4","type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}}}>
+<ComponentPreview json={{"view":{"name":"textarea_4","type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dGFyZWEKClRleHRhcmVhKHBsYWNlaG9sZGVyPSJUaGlzIHRleHRhcmVhIGlzIGRpc2FibGVkIiwgZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Textarea
@@ -126,7 +126,7 @@ Textarea(placeholder="This textarea is disabled", disabled=True)
 
 Use `.rx` to get a reactive reference to the textarea's current text. The `.length()` pipe returns the character count, which is useful for showing a live counter:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"textarea_5","type":"Textarea","placeholder":"Describe your journey through the galaxy...","rows":4,"disabled":false,"required":false},{"content":"Character count: {{ textarea_5 | length }}","type":"Text"}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"textarea_5","type":"Textarea","placeholder":"Describe your journey through the galaxy...","rows":4,"disabled":false,"required":false},{"content":"Character count: {{ textarea_5 | length }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBUZXh0LCBUZXh0YXJlYQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgdGEgPSBUZXh0YXJlYShwbGFjZWhvbGRlcj0iRGVzY3JpYmUgeW91ciBqb3VybmV5IHRocm91Z2ggdGhlIGdhbGF4eS4uLiIsIHJvd3M9NCkKICAgIFRleHQoZiJDaGFyYWN0ZXIgY291bnQ6IHt0YS5yeC5sZW5ndGgoKX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Text, Textarea

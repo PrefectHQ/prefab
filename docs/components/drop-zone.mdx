@@ -18,7 +18,7 @@ If you don't need a dedicated upload area — say you just want an "Upload" butt
 
 With no configuration, DropZone renders a full-width dashed upload area that accepts a single file of any type.
 
-<ComponentPreview json={{"view":{"name":"dropzone_1","type":"DropZone","multiple":false,"disabled":false}}}>
+<ComponentPreview json={{"view":{"name":"dropzone_1","type":"DropZone","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -37,7 +37,7 @@ DropZone()
 
 The `label` sets the primary prompt text and `description` adds secondary helper text below it — useful for hinting at accepted formats or size limits. You can also swap the default upload icon for any [Lucide icon](https://lucide.dev/icons) via the `icon` prop.
 
-<ComponentPreview json={{"view":{"name":"dropzone_2","type":"DropZone","icon":"image","label":"Drop images here","description":"PNG, JPG, or GIF up to 10MB","multiple":false,"disabled":false}}}>
+<ComponentPreview json={{"view":{"name":"dropzone_2","type":"DropZone","icon":"image","label":"Drop images here","description":"PNG, JPG, or GIF up to 10MB","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgaWNvbj0iaW1hZ2UiLAogICAgbGFiZWw9IkRyb3AgaW1hZ2VzIGhlcmUiLAogICAgZGVzY3JpcHRpb249IlBORywgSlBHLCBvciBHSUYgdXAgdG8gMTBNQiIsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -68,7 +68,7 @@ DropZone(
 
 The `accept` parameter restricts which files the browser will allow. It works just like the HTML `accept` attribute — MIME types (`"image/*"`), extensions (`".csv"`), or a comma-separated mix of both.
 
-<ComponentPreview json={{"view":{"name":"dropzone_3","type":"DropZone","label":"Upload documents","description":"PDF, DOCX, or TXT","accept":".pdf,.docx,.txt","multiple":false,"disabled":false}}}>
+<ComponentPreview json={{"view":{"name":"dropzone_3","type":"DropZone","label":"Upload documents","description":"PDF, DOCX, or TXT","accept":".pdf,.docx,.txt","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBkb2N1bWVudHMiLAogICAgZGVzY3JpcHRpb249IlBERiwgRE9DWCwgb3IgVFhUIiwKICAgIGFjY2VwdD0iLnBkZiwuZG9jeCwudHh0IiwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -99,7 +99,7 @@ DropZone(
 
 By default, DropZone accepts one file. Set `multiple=True` to let users select several at once — `$event` becomes a `list[FileUpload]` instead of a single `FileUpload`.
 
-<ComponentPreview json={{"view":{"name":"dropzone_4","type":"DropZone","label":"Upload files","description":"Select as many as you like","multiple":true,"disabled":false}}}>
+<ComponentPreview json={{"view":{"name":"dropzone_4","type":"DropZone","label":"Upload files","description":"Select as many as you like","multiple":true,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBmaWxlcyIsCiAgICBkZXNjcmlwdGlvbj0iU2VsZWN0IGFzIG1hbnkgYXMgeW91IGxpa2UiLAogICAgbXVsdGlwbGU9VHJ1ZSwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -181,7 +181,7 @@ For multiple-file uploads, annotate as `list[FileUpload]`.
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"name":"dropzone_5","type":"DropZone","label":"Uploads disabled","multiple":false,"disabled":true}}}>
+<ComponentPreview json={{"view":{"name":"dropzone_5","type":"DropZone","label":"Uploads disabled","multiple":false,"disabled":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKGxhYmVsPSJVcGxvYWRzIGRpc2FibGVkIiwgZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -208,7 +208,7 @@ DropZone stores selected file data in client state automatically. Each file is a
 
 Use `.rx` to reference file data in other components. The `.length()` pipe counts entries, and `ForEach` iterates over the array to display each file's details. Drop some files below to see it work:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"dropzone_6","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ dropzone_6 | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-sm font-medium","content":"{{ dropzone_6 | length }} file(s) selected","type":"Text"},{"type":"ForEach","key":"dropzone_6","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"dropzone_6","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ dropzone_6 | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-sm font-medium","content":"{{ dropzone_6 | length }} file(s) selected","type":"Text"},{"type":"ForEach","key":"dropzone_6","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsIENvbHVtbiwgRHJvcFpvbmUsIEZvckVhY2gsCiAgICBJZiwgRWxzZSwgTXV0ZWQsIFJvdywgU21hbGwsIFRleHQsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHpvbmUgPSBEcm9wWm9uZSgKICAgICAgICBsYWJlbD0iRHJvcCBmaWxlcyB0byB0cnkgaXQiLAogICAgICAgIG11bHRpcGxlPVRydWUsCiAgICApCiAgICB3aXRoIElmKGYie3pvbmUucngubGVuZ3RoKCl9Iik6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgICAgICBUZXh0KAogICAgICAgICAgICAgICAgZiJ7em9uZS5yeC5sZW5ndGgoKX0gZmlsZShzKSBzZWxlY3RlZCIsCiAgICAgICAgICAgICAgICBjc3NfY2xhc3M9InRleHQtc20gZm9udC1tZWRpdW0iLAogICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRm9yRWFjaCh6b25lLnJ4KToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQmFkZ2UoInt7ICRpdGVtLnR5cGUgfX0iLCB2YXJpYW50PSJzZWNvbmRhcnkiKQogICAgICAgICAgICAgICAgICAgIFNtYWxsKCJ7eyAkaXRlbS5uYW1lIH19IikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgie3sgJGl0ZW0uc2l6ZSB9fSBieXRlcyIpCiAgICB3aXRoIEVsc2UoKToKICAgICAgICBNdXRlZCgiTm8gZmlsZXMgc2VsZWN0ZWQgeWV0IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

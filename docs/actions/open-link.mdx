@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `OpenLink` opens a URL through the host application's link handler. Use it for navigation buttons, "View docs" links, or any action that should take the user to an external resource.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"View Documentation","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://prefab-ui.dev"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IE9wZW5MaW5rCgpCdXR0b24oIlZpZXcgRG9jdW1lbnRhdGlvbiIsIHZhcmlhbnQ9ImxpbmsiLAogICAgICAgb25fY2xpY2s9T3BlbkxpbmsoImh0dHBzOi8vcHJlZmFiLXVpLmRldiIpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -36,7 +36,7 @@ Button("View Documentation", variant="link",
 
 Pair `OpenLink` with the `link` button variant for a natural look:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Row","children":[{"type":"Button","label":"GitHub","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/prefecthq/prefab"}},{"type":"Button","label":"PyPI","variant":"link","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://pypi.org/project/prefab-ui"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3cKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgT3BlbkxpbmsKCndpdGggUm93KGdhcD00KToKICAgIEJ1dHRvbigiR2l0SHViIiwgdmFyaWFudD0ibGluayIsCiAgICAgICAgICAgb25fY2xpY2s9T3BlbkxpbmsoImh0dHBzOi8vZ2l0aHViLmNvbS9wcmVmZWN0aHEvcHJlZmFiIikpCiAgICBCdXR0b24oIlB5UEkiLCB2YXJpYW50PSJsaW5rIiwKICAgICAgICAgICBvbl9jbGljaz1PcGVuTGluaygiaHR0cHM6Ly9weXBpLm9yZy9wcm9qZWN0L3ByZWZhYi11aSIpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row
@@ -81,7 +81,7 @@ with Row(gap=4):
 
 Build URLs from client state using interpolation:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"repo","type":"Input","inputType":"text","placeholder":"owner/repo","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}}>
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"repo","type":"Input","inputType":"text","placeholder":"owner/repo","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Open on GitHub","variant":"default","size":"default","disabled":false,"onClick":{"action":"openLink","url":"https://github.com/{{ repo }}"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgSW5wdXQsIEJ1dHRvbiwgQ29sdW1uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IE9wZW5MaW5rCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICByZXBvID0gSW5wdXQobmFtZT0icmVwbyIsIHBsYWNlaG9sZGVyPSJvd25lci9yZXBvIikKICAgIEJ1dHRvbigKICAgICAgICAiT3BlbiBvbiBHaXRIdWIiLAogICAgICAgIG9uX2NsaWNrPU9wZW5MaW5rKGYiaHR0cHM6Ly9naXRodWIuY29tL3tyZXBvLnJ4fSIpLAogICAgKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Input, Button, Column

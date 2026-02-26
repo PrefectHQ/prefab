@@ -14,7 +14,7 @@ This is the counterpart to [DropZone](/components/drop-zone). Where DropZone giv
   All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an `on_success` action (like `CallTool`) to do so.
 </Info>
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IE9wZW5GaWxlUGlja2VyCgpCdXR0b24oIlVwbG9hZCBGaWxlIiwgb25fY2xpY2s9T3BlbkZpbGVQaWNrZXIoKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -41,7 +41,7 @@ Button("Upload File", on_click=OpenFilePicker())
 
 Files are read client-side, but they don't go anywhere until you tell them to. The typical pattern is to nest a `CallTool` inside `on_success` — pick the file, then send its base64 data to your MCP server for processing.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}}>
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IE9wZW5GaWxlUGlja2VyCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBDYWxsVG9vbAoKQnV0dG9uKAogICAgIlVwbG9hZCBDU1YiLAogICAgaWNvbj0idXBsb2FkIiwKICAgIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgb25fY2xpY2s9T3BlbkZpbGVQaWNrZXIoCiAgICAgICAgYWNjZXB0PSIuY3N2IiwKICAgICAgICBvbl9zdWNjZXNzPUNhbGxUb29sKAogICAgICAgICAgICAicHJvY2Vzc19jc3YiLAogICAgICAgICAgICBhcmd1bWVudHM9eyJmaWxlIjogInt7ICRldmVudCB9fSJ9LAogICAgICAgICksCiAgICApLAopCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button

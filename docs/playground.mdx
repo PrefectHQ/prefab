@@ -9,6 +9,7 @@ mode: wide
 export const PlaygroundFrame = () => {
   const ref = React.useRef(null);
   const [src, setSrc] = React.useState(null);
+
   React.useEffect(function () {
     document.documentElement.setAttribute("data-page-mode", "wide");
     var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
@@ -23,6 +24,27 @@ export const PlaygroundFrame = () => {
       document.documentElement.removeAttribute("data-page-mode");
     };
   }, []);
+
+  React.useEffect(function () {
+    if (!src) return;
+    function onMessage(e) {
+      if (!e.data) return;
+      if (e.data.type === "pg-ready") {
+        var hash = window.location.hash.slice(1);
+        if (!hash) return;
+        var params = new URLSearchParams(hash);
+        var encoded = params.get("code");
+        if (encoded && ref.current && ref.current.contentWindow) {
+          ref.current.contentWindow.postMessage({ type: "pg-init-code", encoded: encoded }, "*");
+        }
+      } else if (e.data.type === "pg-code-changed") {
+        window.history.replaceState(null, "", "#code=" + e.data.encoded);
+      }
+    }
+    window.addEventListener("message", onMessage);
+    return function () { window.removeEventListener("message", onMessage); };
+  }, [src]);
+
   if (!src) return null;
   return <iframe ref={ref} src={src} style={{ width: "100%", height: "max(800px, 80vh)", border: "none" }} sandbox="allow-scripts allow-same-origin" />;
 };
