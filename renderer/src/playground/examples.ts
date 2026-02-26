@@ -21,17 +21,14 @@ with Card():
     title: "Form with Input",
     category: "Getting Started",
     code: `from prefab_ui.components import Column, Input, Button, Label
-from prefab_ui import ToolCall
+from prefab_ui.actions import ShowToast
 
 with Column(gap=3):
     Label("Name")
     Input(name="name", placeholder="Your name...")
     Label("Email")
     Input(name="email", input_type="email", placeholder="you@example.com")
-    Button("Submit", on_click=ToolCall(
-        "create_user",
-        arguments={"name": "{{ name }}", "email": "{{ email }}"},
-    ))`,
+    Button("Submit", on_click=ShowToast("Submitted!", description="{{ name }} — {{ email }}", variant="success"))`,
   },
   {
     title: "Button Variants",
@@ -99,7 +96,7 @@ with Tabs():
     category: "Components",
     code: `from prefab_ui.components import DataTable, DataTableColumn
 
-set_data(users=[
+set_initial_state(users=[
     {"name": "Alice", "email": "alice@example.com", "role": "Admin"},
     {"name": "Bob", "email": "bob@example.com", "role": "Editor"},
     {"name": "Carol", "email": "carol@example.com", "role": "Viewer"},
@@ -146,7 +143,7 @@ with Accordion():
     title: "Interactive State",
     category: "Patterns",
     code: `from prefab_ui.components import Column, Row, Button, Text, Badge
-from prefab_ui import SetState
+from prefab_ui.actions import SetState
 
 set_initial_state(count=0)
 
@@ -162,9 +159,8 @@ with Column(gap=4):
   {
     title: "Toggle Visibility",
     category: "Patterns",
-    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription
-from prefab_ui.components.control_flow import If
-from prefab_ui import ToggleState
+    code: `from prefab_ui.components import Column, Button, Alert, AlertTitle, AlertDescription, If
+from prefab_ui.actions import ToggleState
 
 set_initial_state(show_alert=False)
 
@@ -179,7 +175,6 @@ with Column(gap=3):
     title: "Dialog",
     category: "Components",
     code: `from prefab_ui.components import Dialog, Button, Column, Input, Label
-from prefab_ui import ToolCall
 
 Dialog(
     trigger=Button("Open Dialog"),
@@ -198,7 +193,7 @@ Dialog(
     title: "Progress Bar",
     category: "Components",
     code: `from prefab_ui.components import Column, Progress, Text, Button, Row
-from prefab_ui import SetState
+from prefab_ui.actions import SetState
 
 set_initial_state(progress=33)
 
@@ -215,7 +210,7 @@ with Column(gap=4):
     title: "Custom Styling",
     category: "Patterns",
     code: `from prefab_ui.components import Column, Row, Button, Div, Text
-from prefab_ui import SetState
+from prefab_ui.actions import SetState
 
 set_initial_state(color="bg-blue-500")
 
