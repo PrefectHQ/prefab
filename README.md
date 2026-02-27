@@ -116,4 +116,4 @@ Button("Save", on_click=[
 
 ## Documentation
 
-Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/playground) where you can try components live.
+Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/docs/playground) where you can try components live.

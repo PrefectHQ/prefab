@@ -9,7 +9,9 @@ export const ComponentPreview = ({ json, height, resizable, bare, hideJson, play
 
   React.useEffect(function () {
     if (!playground) return;
-    var url = new URL("../playground", window.location.href);
+    var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    var path = isLocal ? "/playground" : "/docs/playground";
+    var url = new URL(path, window.location.href);
     url.hash = "code=" + playground;
     setPlaygroundHref(url.href);
   }, [playground]);
