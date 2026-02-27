@@ -15,6 +15,32 @@ from prefab_ui.components import (
 from prefab_ui.components.charts import ChartSeries, LineChart
 
 
+def total_downloads_chart(package_name: str, chart_data: list[dict]):
+    """Render a line chart of the package's own weekly downloads.
+
+    Args:
+        package_name: The PyPI package name.
+        chart_data: List of dicts with ``"week"`` and ``"downloads"`` keys.
+
+    Returns:
+        A ``Card`` component containing the rendered line chart.
+    """
+    with Card() as card:
+        with CardHeader():
+            CardTitle(f"{package_name} - Weekly Downloads")
+        with CardContent():
+            LineChart(
+                data=chart_data,
+                series=[ChartSeries(data_key="downloads", label=package_name)],
+                x_axis="week",
+                height=300,
+                curve="smooth",
+                show_tooltip=True,
+                show_grid=True,
+            )
+    return card
+
+
 def downloads_chart(package_name: str, chart_data, series_keys, **line_chart_kwargs):
     """Render a line chart of weekly downloads for a package's dependents.
 

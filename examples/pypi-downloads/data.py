@@ -1,50 +1,68 @@
 """Data loading and reshaping for the PyPI downloads dashboard."""
 
-import csv
 
-from query import CSV_PATH
-
-
-def load_data(rows: list[dict] | None = None):
-    """Reshape download rows for charting.
+def load_total_data(total_rows: list[dict]) -> dict:
+    """Reshape total download rows into chart data.
 
     Args:
-        rows: List of dicts with ``"week"``, ``"package"``, ``"downloads"``
-            keys. If ``None``, reads from the CSV file on disk.
+        total_rows: List of dicts with ``"week"`` and ``"downloads"`` keys.
 
     Returns:
-        A dict with the following keys:
-
-        - ``chart_data``: List of dicts (one per week) for the line chart.
-        - ``packages``: Package names sorted by total downloads descending.
-        - ``table_rows``: Per-package rows for the downloads table.
-        - ``latest_week``: ISO date string of the most recent week.
-        - ``prev_week``: ISO date string of the previous week, or ``None``.
-        - ``top_gainers``: Top 5 packages by week-over-week increase.
-        - ``top_losers``: Bottom 5 packages by week-over-week change.
+        A dict with ``chart_data`` (list of week dicts) and ``weeks``.
     """
-    if rows is None:
-        with open(CSV_PATH) as f:
-            rows = list(csv.DictReader(f))
+    weeks = sorted({r["week"] for r in total_rows})
+    by_week = {}
+    for r in total_rows:
+        by_week[r["week"]] = {"week": r["week"], "downloads": int(r["downloads"])}
 
-    totals = {}
+    return {
+        "chart_data": [by_week[w] for w in weeks],
+        "weeks": weeks,
+    }
+
+
+def load_data(
+    rows: list[dict],
+    total_rows: list[dict] | None = None,
+) -> dict:
+    """Reshape dependent download rows for charting.
+
+    Args:
+        rows: List of dicts with ``"week"``, ``"package"``, ``"downloads"`` keys.
+        total_rows: Optional list of dicts with ``"week"`` and ``"downloads"``
+            keys for the package's own total downloads. When provided, a
+            ``"direct"`` series is computed and injected.
+
+    Returns:
+        A dict with ``chart_data``, ``packages``, ``table_rows``,
+        ``latest_week``, ``prev_week``, ``top_gainers``, and ``top_losers``.
+    """
+    totals: dict[str, int] = {}
     for r in rows:
         totals[r["package"]] = totals.get(r["package"], 0) + int(r["downloads"])
     packages = sorted(totals, key=totals.get, reverse=True)
     weeks = sorted({r["week"] for r in rows})
 
-    by_week = {}
+    by_week: dict[str, dict] = {}
     for r in rows:
         week = r["week"]
         if week not in by_week:
             by_week[week] = {"week": week}
         by_week[week][r["package"]] = int(r["downloads"])
 
+    if total_rows:
+        total_by_week = {r["week"]: int(r["downloads"]) for r in total_rows}
+        for week in weeks:
+            total = total_by_week.get(week, 0)
+            dep_sum = sum(by_week[week].get(pkg, 0) for pkg in packages)
+            by_week[week]["direct"] = max(0, total - dep_sum)
+        packages = ["direct", *packages]
+
     chart_data = [by_week[w] for w in weeks]
     latest_week = weeks[-1] if weeks else ""
     prev_week = weeks[-2] if len(weeks) >= 2 else None
 
-    prev_downloads = {}
+    prev_downloads: dict[str, int] = {}
     if prev_week:
         for r in rows:
             if r["week"] == prev_week:
