@@ -6,7 +6,7 @@ This package contains the bundled React renderer that turns Prefab's JSON wire f
 
 ## Documentation
 
-Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/playground).
+Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/docs/playground).
 
 ## License
 
