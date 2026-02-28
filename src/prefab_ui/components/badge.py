@@ -20,6 +20,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 BadgeVariant = Literal[
     "default",
@@ -53,7 +54,7 @@ class Badge(ContainerComponent):
     """
 
     type: Literal["Badge"] = "Badge"
-    label: str | None = Field(default=None, description="Badge text")
+    label: RxStr | None = Field(default=None, description="Badge text")
     variant: BadgeVariant = Field(
         default="default",
         description="Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info",

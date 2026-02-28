@@ -18,6 +18,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import Rx, RxStr
 
 
 class AccordionItem(ContainerComponent):
@@ -32,7 +33,7 @@ class AccordionItem(ContainerComponent):
     """
 
     type: Literal["AccordionItem"] = "AccordionItem"
-    title: str = Field(description="Accordion trigger label")
+    title: RxStr = Field(description="Accordion trigger label")
     value: str | None = Field(
         default=None,
         description="Unique value (defaults to title)",
@@ -79,13 +80,13 @@ class Accordion(ContainerComponent):
             "selection, or a str to match by value/title."
         ),
     )
-    default_values: list[str] | None = Field(
+    default_values: list[RxStr] | None = Field(
         default=None,
         alias="defaultValues",
         description="Wire format for default_open_items (always an array).",
     )
 
-    def _resolve_item(self, item: int | str) -> str:
+    def _resolve_item(self, item: int | str) -> str | Rx:
         if isinstance(item, int):
             child = self.children[item]
             if not isinstance(child, AccordionItem):

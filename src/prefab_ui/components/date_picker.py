@@ -19,6 +19,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class DatePicker(StatefulMixin, Component):
@@ -33,7 +34,7 @@ class DatePicker(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "datepicker"
     type: Literal["DatePicker"] = "DatePicker"
-    placeholder: str = Field(
+    placeholder: RxStr = Field(
         default="Pick a date",
         description="Button text when no date is selected",
     )

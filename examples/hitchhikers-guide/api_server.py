@@ -5,7 +5,7 @@ Demonstrates Fetch.get, Fetch.post, Fetch.delete, error handling, and
 live search — all wired to plain FastAPI routes.
 
 Run with:
-    uvicorn examples.hitchhikers_guide.api_server:app --reload
+    cd examples/hitchhikers-guide && uvicorn api_server:app --reload
 """
 
 from data import ENTRIES, add_entry, delete_entry, search_entries
@@ -52,7 +52,7 @@ def remove_entry(title: str):
 
 
 @app.post("/api/entries")
-def create_entry(entry: dict):
+def create_entry(entry: dict[str, str]):
     try:
         return add_entry(
             title=entry.get("title", ""),

@@ -15,6 +15,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Tooltip(ContainerComponent):
@@ -29,7 +30,7 @@ class Tooltip(ContainerComponent):
     """
 
     type: Literal["Tooltip"] = "Tooltip"
-    content: str = Field(description="Tooltip text")
+    content: RxStr = Field(description="Tooltip text")
     side: Literal["top", "right", "bottom", "left"] | None = Field(
         default=None, description="Which side to show the tooltip"
     )

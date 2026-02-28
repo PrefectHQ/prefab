@@ -17,6 +17,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Label(ContainerComponent):
@@ -39,7 +40,7 @@ class Label(ContainerComponent):
     """
 
     type: Literal["Label"] = "Label"
-    text: str | None = Field(default=None, description="Label text")
+    text: RxStr | None = Field(default=None, description="Label text")
     for_id: str | None = Field(
         default=None,
         alias="forId",

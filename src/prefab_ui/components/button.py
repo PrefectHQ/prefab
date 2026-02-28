@@ -27,6 +27,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 ButtonVariant = Literal[
     "default",
@@ -62,7 +63,7 @@ class Button(Component):
     """
 
     type: Literal["Button"] = "Button"
-    label: str = Field(description="Button text")
+    label: RxStr = Field(description="Button text")
     icon: str | None = Field(
         default=None,
         description="Lucide icon name (kebab-case, e.g. 'arrow-right')",
@@ -75,7 +76,7 @@ class Button(Component):
         default="default",
         description="Size: default, sm, lg, icon",
     )
-    disabled: bool | str = Field(
+    disabled: bool | RxStr = Field(
         default=False, description="Whether the button is disabled"
     )
     on_click: Action | list[Action] | None = Field(

@@ -23,6 +23,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import ContainerComponent, StatefulMixin
+from prefab_ui.rx import RxStr
 
 TabsVariant = Literal["default", "line"]
 TabsOrientation = Literal["horizontal", "vertical"]
@@ -40,7 +41,7 @@ class Tab(ContainerComponent):
     """
 
     type: Literal["Tab"] = "Tab"
-    title: str = Field(description="Tab trigger label")
+    title: RxStr = Field(description="Tab trigger label")
     value: str | None = Field(
         default=None,
         description="Unique value for this tab (defaults to title)",

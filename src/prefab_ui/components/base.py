@@ -9,7 +9,13 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from typing import Annotated, Any, ClassVar, Literal
 
-from pydantic import BaseModel, BeforeValidator, Field, model_validator
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    Field,
+    model_serializer,
+    model_validator,
+)
 from typing_extensions import Self
 
 from prefab_ui.css import Responsive
@@ -270,17 +276,17 @@ class Component(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def _coerce_rx_values(cls, data: Any) -> Any:
-        """Recursively convert any Rx values in the input dict to strings.
-
-        Also extracts the ``defer`` kwarg (not a model field) and stores it
-        in ``_deferred`` for :meth:`model_post_init` to check.
-        """
+    def _extract_defer(cls, data: Any) -> Any:
+        """Extract the ``defer`` kwarg before Pydantic validates fields."""
         if isinstance(data, dict):
-            data = {k: _coerce_rx(v) for k, v in data.items()}
             if data.pop("defer", False):
                 _defer_next_component.set(True)
         return data
+
+    @model_serializer(mode="wrap")
+    def _serialize_rx(self, handler: Any) -> dict[str, Any]:
+        """Resolve any Rx values to ``{{ }}`` strings at serialization time."""
+        return _coerce_rx(handler(self))  # type: ignore[return-value]
 
     def model_post_init(self, __context: Any) -> None:
         # Auto-generate name and validate for stateful components

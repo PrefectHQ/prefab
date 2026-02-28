@@ -16,6 +16,7 @@ from typing import Literal
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 TrendDirection = Literal["up", "down", "neutral"]
 TrendSentiment = Literal["positive", "negative", "neutral"]
@@ -41,13 +42,13 @@ class Metric(Component):
     """
 
     type: Literal["Metric"] = "Metric"
-    label: str = Field(description="The metric name")
-    value: str | int | float = Field(description="The headline number")
-    description: str | None = Field(
+    label: RxStr = Field(description="The metric name")
+    value: int | float | RxStr = Field(description="The headline number")
+    description: RxStr | None = Field(
         default=None,
         description="Optional description text",
     )
-    delta: str | int | float | None = Field(
+    delta: int | float | RxStr | None = Field(
         default=None,
         description="Change indicator (e.g. '+23.4%', -15)",
     )

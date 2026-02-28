@@ -32,6 +32,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Card(ContainerComponent):
@@ -75,7 +76,7 @@ class CardTitle(ContainerComponent):
     """
 
     type: Literal["CardTitle"] = "CardTitle"
-    content: str | None = Field(
+    content: RxStr | None = Field(
         default=None,
         description="Title text (alternative to children)",
     )
@@ -102,7 +103,7 @@ class CardDescription(ContainerComponent):
     """
 
     type: Literal["CardDescription"] = "CardDescription"
-    content: str | None = Field(
+    content: RxStr | None = Field(
         default=None,
         description="Description text (alternative to children)",
     )

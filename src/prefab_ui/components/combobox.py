@@ -26,6 +26,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class ComboboxOption(Component):
@@ -37,8 +38,8 @@ class ComboboxOption(Component):
     """
 
     type: Literal["ComboboxOption"] = "ComboboxOption"
-    value: str = Field(description="Option value")
-    label: str = Field(description="Display label")
+    value: RxStr = Field(description="Option value")
+    label: RxStr = Field(description="Display label")
     disabled: bool = Field(default=False, description="Whether option is disabled")
 
     @overload
@@ -76,11 +77,11 @@ class Combobox(StatefulMixin, ContainerComponent):
 
     _auto_name: ClassVar[str] = "combobox"
     type: Literal["Combobox"] = "Combobox"
-    placeholder: str | None = Field(
+    placeholder: RxStr | None = Field(
         default=None,
         description="Placeholder text shown when no value is selected",
     )
-    search_placeholder: str | None = Field(
+    search_placeholder: RxStr | None = Field(
         default=None,
         alias="searchPlaceholder",
         description="Placeholder text in the search input",

@@ -78,8 +78,13 @@ def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
 
     # Handle Union types (e.g., str | None)
     import types
+    from typing import Union
 
-    if origin is types.UnionType or (origin and hasattr(origin, "__origin__")):
+    if (
+        origin is types.UnionType
+        or origin is Union
+        or (origin and hasattr(origin, "__origin__"))
+    ):
         non_none = [a for a in args if a is not type(None)]
         if non_none:
             annotation = non_none[0]

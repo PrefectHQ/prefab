@@ -7,6 +7,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Div(ContainerComponent):
@@ -43,7 +44,7 @@ class Span(Component):
     """
 
     type: Literal["Span"] = "Span"
-    content: str = Field(description="Text content")
+    content: RxStr = Field(description="Text content")
     style: dict[str, str] | None = Field(
         default=None, description="Inline CSS styles as a dict of property/value pairs."
     )

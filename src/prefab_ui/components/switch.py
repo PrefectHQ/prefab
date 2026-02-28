@@ -22,6 +22,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 SwitchSize = Literal["sm", "default"]
 
@@ -46,7 +47,7 @@ class Switch(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "switch"
     type: Literal["Switch"] = "Switch"
-    label: str | None = Field(default=None, description="Label text")
+    label: RxStr | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether switch is on")
     size: SwitchSize = Field(default="default", description="Switch size (sm, default)")
     name: str | None = Field(

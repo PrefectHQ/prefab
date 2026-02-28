@@ -28,6 +28,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.rx import RxStr
 
 AlertVariant = Literal["default", "destructive", "success", "warning", "info"]
 
@@ -71,7 +72,7 @@ class AlertTitle(Component):
     """
 
     type: Literal["AlertTitle"] = "AlertTitle"
-    content: str = Field(description="Title text")
+    content: RxStr = Field(description="Title text")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...
@@ -96,7 +97,7 @@ class AlertDescription(Component):
     """
 
     type: Literal["AlertDescription"] = "AlertDescription"
-    content: str = Field(description="Description text")
+    content: RxStr = Field(description="Description text")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

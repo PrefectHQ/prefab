@@ -14,6 +14,7 @@ from typing import Any, Literal
 from pydantic import Field
 
 from prefab_ui.actions.base import Action
+from prefab_ui.rx import RxStr
 
 
 class CallTool(Action):
@@ -25,7 +26,7 @@ class CallTool(Action):
     """
 
     action: Literal["toolCall"] = "toolCall"
-    tool: str = Field(description="Name of the server tool to call")
+    tool: RxStr = Field(description="Name of the server tool to call")
     arguments: dict[str, Any] = Field(
         default_factory=dict,
         description="Arguments to pass. Supports {{ key }} interpolation.",
@@ -45,7 +46,7 @@ class SendMessage(Action):
     """Send a message to the chat via ``app.sendMessage()``."""
 
     action: Literal["sendMessage"] = "sendMessage"
-    content: str = Field(description="Message text to send")
+    content: RxStr = Field(description="Message text to send")
 
     def __init__(self, content: str, **kwargs: Any) -> None:
         kwargs["content"] = content
@@ -56,7 +57,7 @@ class UpdateContext(Action):
     """Update model context without triggering a response."""
 
     action: Literal["updateContext"] = "updateContext"
-    content: str | None = Field(default=None, description="Text content to add")
+    content: RxStr | None = Field(default=None, description="Text content to add")
     structured_content: dict[str, Any] | None = Field(
         default=None,
         alias="structuredContent",

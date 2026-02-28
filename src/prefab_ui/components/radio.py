@@ -24,6 +24,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class RadioGroup(StatefulMixin, ContainerComponent):
@@ -73,8 +74,8 @@ class Radio(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "radio"
     type: Literal["Radio"] = "Radio"
-    value: str = Field(description="Form value")
-    label: str | None = Field(default=None, description="Label text")
+    value: RxStr = Field(description="Form value")
+    label: RxStr | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether radio is selected")
     name: str | None = Field(
         default=None,

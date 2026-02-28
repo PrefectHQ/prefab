@@ -29,6 +29,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Table(ContainerComponent):
@@ -74,7 +75,7 @@ class TableHead(ContainerComponent):
     """
 
     type: Literal["TableHead"] = "TableHead"
-    content: str | None = Field(
+    content: RxStr | None = Field(
         default=None,
         description="Header text (alternative to children)",
     )
@@ -105,7 +106,7 @@ class TableCell(ContainerComponent):
     """
 
     type: Literal["TableCell"] = "TableCell"
-    content: str | None = Field(
+    content: RxStr | None = Field(
         default=None,
         description="Cell text (alternative to children)",
     )
@@ -131,7 +132,7 @@ class TableCaption(Component):
     """
 
     type: Literal["TableCaption"] = "TableCaption"
-    content: str = Field(description="Caption text")
+    content: RxStr = Field(description="Caption text")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

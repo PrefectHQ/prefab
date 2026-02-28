@@ -25,6 +25,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class DataTableColumn(BaseModel):
@@ -66,4 +67,4 @@ class DataTable(Component):
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
     )
-    caption: str | None = Field(default=None, description="Optional table caption")
+    caption: RxStr | None = Field(default=None, description="Optional table caption")

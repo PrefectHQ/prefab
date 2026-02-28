@@ -28,6 +28,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class DropZone(StatefulMixin, Component):
@@ -55,11 +56,11 @@ class DropZone(StatefulMixin, Component):
         description="Lucide icon name (kebab-case, e.g. 'cloud-upload'). "
         "Defaults to an upload icon when not specified.",
     )
-    label: str | None = Field(
+    label: RxStr | None = Field(
         default=None,
         description="Primary prompt text (e.g. 'Drop files here')",
     )
-    description: str | None = Field(
+    description: RxStr | None = Field(
         default=None,
         description="Secondary helper text (e.g. 'PNG, JPG up to 10MB')",
     )

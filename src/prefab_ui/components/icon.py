@@ -23,6 +23,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class Icon(Component):
@@ -40,7 +41,7 @@ class Icon(Component):
     """
 
     type: Literal["Icon"] = "Icon"
-    name: str = Field(description="Lucide icon name in kebab-case")
+    name: RxStr = Field(description="Lucide icon name in kebab-case")
     size: Literal["sm", "default", "lg"] = Field(
         default="default",
         description="Icon size variant",
