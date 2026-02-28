@@ -6,9 +6,6 @@ wired through MCP's structured content protocol.
 
 Run with:
     uv run examples/hitchhikers-guide/mcp_server.py
-
-Note: use `python` (not `fastmcp run`) so the __main__ block runs,
-which adds CORS middleware needed by browser-based MCP hosts.
 """
 
 from __future__ import annotations
@@ -16,8 +13,6 @@ from __future__ import annotations
 from data import ENTRIES, add_entry, delete_entry, search_entries
 from fastmcp import FastMCP
 from fastmcp.server.apps import AppConfig
-from starlette.middleware import Middleware
-from starlette.types import ASGIApp, Receive, Scope, Send
 
 from prefab_ui.actions import CloseOverlay, SetState, ShowToast
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
@@ -39,50 +34,7 @@ from prefab_ui.components import (
     Tooltip,
 )
 from prefab_ui.components.control_flow import ForEach
-
-
-class CORSMiddleware:
-    """Minimal CORS middleware that works with SSE/streaming responses."""
-
-    def __init__(self, app: ASGIApp) -> None:
-        self.app = app
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope["type"] != "http":
-            await self.app(scope, receive, send)
-            return
-
-        if scope["method"] == "OPTIONS":
-            await send(
-                {
-                    "type": "http.response.start",
-                    "status": 200,
-                    "headers": [
-                        (b"access-control-allow-origin", b"*"),
-                        (
-                            b"access-control-allow-methods",
-                            b"GET, POST, DELETE, OPTIONS",
-                        ),
-                        (b"access-control-allow-headers", b"*"),
-                        (b"access-control-expose-headers", b"mcp-session-id"),
-                        (b"access-control-max-age", b"600"),
-                    ],
-                }
-            )
-            await send({"type": "http.response.body", "body": b""})
-            return
-
-        async def send_with_cors(message: dict) -> None:
-            if message["type"] == "http.response.start":
-                cors_headers = [
-                    (b"access-control-allow-origin", b"*"),
-                    (b"access-control-expose-headers", b"mcp-session-id"),
-                ]
-                message["headers"] = list(message.get("headers", [])) + cors_headers
-            await send(message)
-
-        await self.app(scope, receive, send_with_cors)
-
+from prefab_ui.rx import ERROR, EVENT
 
 mcp = FastMCP("Hitchhiker's Guide")
 
@@ -115,7 +67,7 @@ def browse() -> PrefabApp:
                             SetState("new_description", ""),
                             CloseOverlay(),
                         ],
-                        on_error=ShowToast("{{ $error }}", variant="error"),
+                        on_error=ShowToast(ERROR, variant="error"),
                     ),
                 ):
                     with Column(gap=3):
@@ -128,23 +80,23 @@ def browse() -> PrefabApp:
             name="q",
             placeholder="Search the Guide...",
             on_change=[
-                SetState("q", "{{ $event }}"),
+                SetState("q", EVENT),
                 CallTool(
                     "search",
-                    arguments={"q": "{{ $event }}"},
+                    arguments={"q": EVENT},
                     result_key="entries",
                 ),
             ],
         )
 
         with Column(gap=3):
-            with ForEach("entries"):
+            with ForEach("entries") as entry:
                 with Card():
                     with CardHeader():
                         with Row(align="center", css_class="justify-between"):
                             with Row(gap=2, align="center"):
-                                CardTitle("{{ title }}")
-                                Badge("{{ category }}", variant="success")
+                                CardTitle(entry.title)
+                                Badge(entry.category, variant="success")
                             with Row(gap=1):
                                 with Tooltip("Ask the AI about this entry", delay=0):
                                     Button(
@@ -153,7 +105,7 @@ def browse() -> PrefabApp:
                                         size="icon-xs",
                                         variant="ghost",
                                         on_click=SendMessage(
-                                            "Tell me more about '{{ title }}' from the Hitchhiker's Guide"
+                                            f"Tell me more about '{entry.title}' from the Hitchhiker's Guide"
                                         ),
                                     )
                                 with Tooltip(
@@ -166,7 +118,7 @@ def browse() -> PrefabApp:
                                         variant="ghost",
                                         on_click=[
                                             UpdateContext(
-                                                content="Guide entry — {{ title }} ({{ category }}): {{ description }}"
+                                                content=f"Guide entry — {entry.title} ({entry.category}): {entry.description}"
                                             ),
                                             ShowToast(
                                                 "Sent to chat context",
@@ -182,16 +134,16 @@ def browse() -> PrefabApp:
                                         variant="ghost",
                                         on_click=CallTool(
                                             "delete_entry_tool",
-                                            arguments={"title": "{{ title }}"},
+                                            arguments={"title": entry.title},
                                             result_key="entries",
                                             on_error=ShowToast(
-                                                "{{ $error }}",
+                                                ERROR,
                                                 variant="error",
                                             ),
                                         ),
                                     )
                     with CardContent():
-                        Text("{{ description }}")
+                        Text(entry.description)
 
     return PrefabApp(
         title="Hitchhiker's Guide",
@@ -212,9 +164,7 @@ app_only = AppConfig(visibility=["app"])
 @mcp.tool(app=app_only)
 def search(q: str = "") -> PrefabApp:
     """Search the Guide by keyword."""
-    matches = search_entries(q)
-    print(f"[search] q={q!r} → {len(matches)} matches")
-    return PrefabApp(state={"entries": matches})
+    return PrefabApp(state={"entries": search_entries(q)})
 
 
 @mcp.tool(app=app_only)
@@ -234,7 +184,4 @@ def delete_entry_tool(title: str) -> PrefabApp:
 
 
 if __name__ == "__main__":
-    mcp.run(
-        transport="http",
-        middleware=[Middleware(CORSMiddleware)],
-    )
+    mcp.run(transport="http")

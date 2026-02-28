@@ -19,7 +19,7 @@ from prefab_ui.components.base import (
     defer,
     insert,
 )
-from prefab_ui.rx import Rx
+from prefab_ui.rx import ERROR, EVENT, INDEX, ITEM, Rx
 from prefab_ui.components.button import Button
 from prefab_ui.components.calendar import Calendar
 from prefab_ui.components.button_group import ButtonGroup
@@ -97,10 +97,14 @@ from prefab_ui.components.typography import (
 )
 
 __all__ = [
+    "ERROR",
+    "EVENT",
     "H1",
     "H2",
     "H3",
     "H4",
+    "INDEX",
+    "ITEM",
     "Accordion",
     "AccordionItem",
     "Alert",

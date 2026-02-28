@@ -545,15 +545,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     return (
       <div className={wrapperClass}>
         {items.map((item, idx) => {
-          let itemScope =
-            typeof item === "object" && item !== null
-              ? {
-                  ...scope,
-                  ...(item as Record<string, unknown>),
-                  $index: idx,
-                  $item: item,
-                }
-              : { ...scope, $index: idx, $item: item };
+          let itemScope = { ...scope, $index: idx, $item: item };
           // Evaluate let bindings per iteration (can reference $index/$item)
           const forEachLet = rawProps.let as
             | Record<string, unknown>

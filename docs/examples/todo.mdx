@@ -335,14 +335,14 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
 
 ## How It Works
 
-The state is an array of groups, each containing a `name`, a `todos` array, and a `new_todo` input buffer. [ForEach](/components/for-each) iterates the groups, and a nested ForEach iterates each group's todos.
+The state is an array of groups, each containing a `name`, a `todos` array, and a `new_todo` input buffer. [ForEach](/components/for-each) iterates the groups using `$item` to access fields, and a nested ForEach iterates each group's todos.
 
-**Nested loops with `let`** — the outer ForEach uses `let` to capture the group index as `gi` and the group's visibility flag as `show_done`. Inside the inner todo loop, `$index` and `$item` refer to the todo, but `gi` and `show_done` are still available. This gives us paths like `groups.{{ gi }}.todos.{{ $index }}.done` for targeting a specific todo in a specific group.
+**Nested loops with `let`** — inside a ForEach, `$item` refers to the current item and `$index` to its position. When nesting ForEach loops, use the `let` property to capture these values before they're shadowed by the inner loop. The outer ForEach uses `let=dict(gi="{{ $index }}", show_done="{{ $item.show_done }}")` to capture the group index as `gi` and the group's visibility flag as `show_done`. Inside the inner todo loop, `$index` and `$item` still refer to the todo, but `gi` and `show_done` remain available. This gives us paths like `groups.{{ gi }}.todos.{{ $index }}.done` for targeting a specific todo in a specific group.
 
 **Inline editing** — instead of showing todo text as a `Text` component, each item uses a borderless `Input` styled with `border-0 shadow-none p-0` so it looks like plain text but is directly editable. [Dot-path auto-binding](/actions/set-state#dot-paths) handles the read and write — the input's `name` points at the exact item in state (`groups.{{ gi }}.todos.{{ $index }}.text`).
 
-**Disabling the Add button** — `disabled="{{ not $item.new_todo }}"` evaluates to true when the input is empty, so the button stays disabled until you type something.
+**Disabling the Add button** — `disabled="{{ not $item.new_todo }}"` evaluates to true when the input is empty, so the button stays disabled until you type something. Inside the outer ForEach, `$item` is the current group, so `$item.new_todo` accesses the group's input buffer.
 
-**Hiding completed items** — each group has a `show_done` flag toggled by a small checkbox in the footer. The `let` binding makes it available inside the inner loop, where each todo row is wrapped in `If("{{ not $item.done or show_done }}")`.
+**Hiding completed items** — each group has a `show_done` flag toggled by a small checkbox in the footer. The `let` binding captured it as `show_done` in the outer loop, making it available inside the inner todo loop where each todo row is wrapped in `If("{{ not $item.done or show_done }}")`. Here `$item` is the todo (due to being in the inner ForEach), and `show_done` is the captured group visibility flag.
 
 **Adding a group** — the dashed card at the end appends a new group object with `AppendState("groups", {...})`. ForEach picks it up and renders a new card automatically.
