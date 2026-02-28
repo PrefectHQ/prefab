@@ -26,7 +26,9 @@ returns a new Rx with the compiled ``{{ }}`` expression::
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from contextvars import ContextVar
+from typing import Any
 
 # ── Auto-name counter ────────────────────────────────────────────────
 
@@ -122,7 +124,7 @@ class Rx:
 
     __slots__ = ("_key", "_prec")
 
-    def __init__(self, key: str, _prec: int = _PREC_ATOM) -> None:
+    def __init__(self, key: str | Callable[[], Rx], _prec: int = _PREC_ATOM) -> None:
         object.__setattr__(self, "_key", key)
         object.__setattr__(self, "_prec", _prec)
 
@@ -131,8 +133,38 @@ class Rx:
 
     @property
     def key(self) -> str:
-        """The raw state key string."""
-        return object.__getattribute__(self, "_key")
+        """The raw state key string.
+
+        If the key was provided as a callable, it is invoked on first
+        access and the result is used (allowing forward references to
+        components that don't exist yet at construction time).
+        """
+        raw = object.__getattribute__(self, "_key")
+        if callable(raw):
+            resolved = raw()
+            if isinstance(resolved, Rx):
+                return resolved.key
+            return str(resolved)
+        return raw
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> Any:
+        from pydantic_core import core_schema
+
+        return core_schema.no_info_plain_validator_function(
+            cls._pydantic_validate,
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                lambda v: str(v),
+                info_arg=False,
+                return_schema=core_schema.str_schema(),
+            ),
+        )
+
+    @classmethod
+    def _pydantic_validate(cls, v: Any) -> Rx:
+        if isinstance(v, cls):
+            return v
+        raise ValueError(f"Expected Rx, got {type(v)}")
 
     @property
     def prec(self) -> int:
@@ -341,6 +373,18 @@ def _coerce_rx(value: object) -> object:
         return [_coerce_rx(v) for v in value]
     return value
 
+
+# ── Public type alias ────────────────────────────────────────────────
+
+RxStr = str | Rx
+"""A string that also accepts an ``Rx`` reactive reference.
+
+Use this as the type annotation for component/action fields whose value
+can be either a literal string or a reactive reference::
+
+    class MyComponent(Component):
+        label: RxStr = ""
+"""
 
 # ── Built-in reactive variables ──────────────────────────────────────
 

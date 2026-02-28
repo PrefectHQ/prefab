@@ -20,6 +20,7 @@ from typing import Literal
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Popover(ContainerComponent):
@@ -37,8 +38,10 @@ class Popover(ContainerComponent):
     """
 
     type: Literal["Popover"] = "Popover"
-    title: str | None = Field(default=None, description="Optional popover header title")
-    description: str | None = Field(
+    title: RxStr | None = Field(
+        default=None, description="Optional popover header title"
+    )
+    description: RxStr | None = Field(
         default=None, description="Optional popover description"
     )
     side: Literal["top", "right", "bottom", "left"] | None = Field(

@@ -7,6 +7,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class Markdown(Component):
@@ -18,7 +19,7 @@ class Markdown(Component):
     """
 
     type: Literal["Markdown"] = "Markdown"
-    content: str = Field(description="Markdown content")
+    content: RxStr = Field(description="Markdown content")
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

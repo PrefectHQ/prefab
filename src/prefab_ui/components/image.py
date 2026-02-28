@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class Image(Component):
@@ -18,7 +19,7 @@ class Image(Component):
     """
 
     type: Literal["Image"] = "Image"
-    src: str = Field(description="Image URL")
-    alt: str = Field(default="", description="Alt text")
+    src: RxStr = Field(description="Image URL")
+    alt: RxStr = Field(default="", description="Alt text")
     width: str | None = Field(default=None, description="CSS width")
     height: str | None = Field(default=None, description="CSS height")

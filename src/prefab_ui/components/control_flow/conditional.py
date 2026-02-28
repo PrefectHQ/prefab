@@ -22,6 +22,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import Rx, RxStr
 
 
 class If(ContainerComponent):
@@ -37,15 +38,15 @@ class If(ContainerComponent):
     """
 
     type: Literal["If"] = "If"
-    condition: str = Field(description="Expression to evaluate")
+    condition: RxStr = Field(description="Expression to evaluate")
 
     @overload
-    def __init__(self, condition: str, /, **kwargs: Any) -> None: ...
+    def __init__(self, condition: str | Rx, /, **kwargs: Any) -> None: ...
 
     @overload
-    def __init__(self, *, condition: str, **kwargs: Any) -> None: ...
+    def __init__(self, *, condition: str | Rx, **kwargs: Any) -> None: ...
 
-    def __init__(self, condition: str | None = None, **kwargs: Any) -> None:
+    def __init__(self, condition: str | Rx | None = None, **kwargs: Any) -> None:
         if condition is not None:
             kwargs["condition"] = condition
         super().__init__(**kwargs)
@@ -64,15 +65,15 @@ class Elif(ContainerComponent):
     """
 
     type: Literal["Elif"] = "Elif"
-    condition: str = Field(description="Expression to evaluate")
+    condition: RxStr = Field(description="Expression to evaluate")
 
     @overload
-    def __init__(self, condition: str, /, **kwargs: Any) -> None: ...
+    def __init__(self, condition: str | Rx, /, **kwargs: Any) -> None: ...
 
     @overload
-    def __init__(self, *, condition: str, **kwargs: Any) -> None: ...
+    def __init__(self, *, condition: str | Rx, **kwargs: Any) -> None: ...
 
-    def __init__(self, condition: str | None = None, **kwargs: Any) -> None:
+    def __init__(self, condition: str | Rx | None = None, **kwargs: Any) -> None:
         if condition is not None:
             kwargs["condition"] = condition
         super().__init__(**kwargs)

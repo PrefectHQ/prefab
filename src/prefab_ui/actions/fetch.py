@@ -25,6 +25,7 @@ from pydantic import Field, field_validator
 
 from prefab_ui.actions.base import Action
 from prefab_ui.actions.state import _validate_path
+from prefab_ui.rx import RxStr
 
 Method = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 
@@ -42,7 +43,7 @@ class Fetch(Action):
     """
 
     action: Literal["fetch"] = "fetch"
-    url: str = Field(description="URL to fetch. Supports {{ key }} interpolation.")
+    url: RxStr = Field(description="URL to fetch. Supports {{ key }} interpolation.")
     method: Method = Field(default="GET", description="HTTP method.")
     headers: dict[str, str] | None = Field(
         default=None,

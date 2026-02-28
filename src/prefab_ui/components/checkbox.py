@@ -22,6 +22,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class Checkbox(StatefulMixin, Component):
@@ -45,13 +46,13 @@ class Checkbox(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "checkbox"
     type: Literal["Checkbox"] = "Checkbox"
-    label: str | None = Field(default=None, description="Label text")
+    label: RxStr | None = Field(default=None, description="Label text")
     checked: bool = Field(default=False, description="Whether checkbox is checked")
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
     )
-    value: str | None = Field(default=None, description="Form value")
+    value: RxStr | None = Field(default=None, description="Form value")
     disabled: bool = Field(default=False, description="Whether checkbox is disabled")
     required: bool = Field(default=False, description="Whether checkbox is required")
     on_change: Action | list[Action] | None = Field(

@@ -7,6 +7,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class Code(Component):
@@ -18,7 +19,7 @@ class Code(Component):
     """
 
     type: Literal["Code"] = "Code"
-    content: str = Field(description="Code content")
+    content: RxStr = Field(description="Code content")
     language: str | None = Field(
         default=None, description="Syntax highlighting language"
     )

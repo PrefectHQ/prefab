@@ -5,7 +5,7 @@ Demonstrates CallTool, ForEach, Dialog, and error handling — all
 wired through MCP's structured content protocol.
 
 Run with:
-    uv run examples/hitchhikers-guide/mcp_server.py
+    cd examples/hitchhikers-guide && uv run mcp_server.py
 """
 
 from __future__ import annotations

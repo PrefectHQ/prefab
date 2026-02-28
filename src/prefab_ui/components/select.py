@@ -24,6 +24,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
+from prefab_ui.rx import RxStr
 
 SelectSize = Literal["sm", "default"]
 
@@ -48,7 +49,7 @@ class Select(StatefulMixin, ContainerComponent):
 
     _auto_name: ClassVar[str] = "select"
     type: Literal["Select"] = "Select"
-    placeholder: str | None = Field(
+    placeholder: RxStr | None = Field(
         default=None,
         description="Placeholder text",
     )
@@ -83,8 +84,8 @@ class SelectOption(Component):
     """
 
     type: Literal["SelectOption"] = "SelectOption"
-    value: str = Field(description="Option value")
-    label: str = Field(description="Display text")
+    value: RxStr = Field(description="Option value")
+    label: RxStr = Field(description="Display text")
     selected: bool = Field(default=False, description="Whether option is selected")
     disabled: bool = Field(default=False, description="Whether option is disabled")
 

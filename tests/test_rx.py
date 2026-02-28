@@ -4,7 +4,17 @@ from __future__ import annotations
 
 import pytest
 
-from prefab_ui.rx import ERROR, EVENT, INDEX, ITEM, Rx, _generate_key, reset_counter
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import (
+    ERROR,
+    EVENT,
+    INDEX,
+    ITEM,
+    Rx,
+    RxStr,
+    _generate_key,
+    reset_counter,
+)
 
 # ── String conversion ────────────────────────────────────────────────
 
@@ -475,3 +485,76 @@ class TestBuiltinReactiveVars:
 
     def test_index_arithmetic(self) -> None:
         assert (INDEX + 1).key == "$index + 1"
+
+
+# ── Callable (deferred) keys ────────────────────────────────────────
+
+
+class TestCallableKey:
+    def test_basic_callable_key(self) -> None:
+        rx = Rx(lambda: Rx("resolved"))
+        assert rx.key == "resolved"
+        assert str(rx) == "{{ resolved }}"
+
+    def test_callable_resolves_at_key_access(self) -> None:
+        container: list[Rx] = []
+        rx = Rx(lambda: container[0])
+        container.append(Rx("late_value"))
+        assert rx.key == "late_value"
+
+    def test_callable_dot_path(self) -> None:
+        rx = Rx(lambda: Rx("base"))
+        assert rx.title.key == "base.title"
+
+    def test_callable_returns_string(self) -> None:
+        rx = Rx(lambda: "raw_key")
+        assert rx.key == "raw_key"
+
+
+# ── Deferred resolution in components ────────────────────────────────
+
+
+class TestDeferredResolution:
+    def test_rx_survives_to_serialization(self) -> None:
+        slider_rx = Rx("slider_1")
+        t = Text(content=slider_rx)
+        assert t.to_json()["content"] == "{{ slider_1 }}"
+
+    def test_rx_in_fstring_resolves_eagerly(self) -> None:
+        rx = Rx("count")
+        t = Text(content=f"Total: {rx}")
+        assert t.to_json()["content"] == "Total: {{ count }}"
+
+    def test_callable_rx_in_component(self) -> None:
+        container: list[Rx] = []
+        deferred = Rx(lambda: container[0])
+        t = Text(content=deferred)
+        container.append(Rx("final_key"))
+        assert t.to_json()["content"] == "{{ final_key }}"
+
+    def test_rx_operator_expression_survives(self) -> None:
+        rx = Rx("price") * Rx("qty")
+        t = Text(content=rx)
+        assert t.to_json()["content"] == "{{ price * qty }}"
+
+    def test_rx_in_button_label(self) -> None:
+        rx = Rx("button_text")
+        b = Button(label=rx)
+        assert b.to_json()["label"] == "{{ button_text }}"
+
+    def test_rx_in_disabled(self) -> None:
+        rx = ~Rx("enabled")
+        b = Button(label="Click", disabled=rx)
+        assert b.to_json()["disabled"] == "{{ !enabled }}"
+
+
+# ── RxStr type alias ────────────────────────────────────────────────
+
+
+class TestRxStrType:
+    def test_is_union_of_str_and_rx(self) -> None:
+        import typing
+
+        args = typing.get_args(RxStr)
+        assert str in args
+        assert Rx in args

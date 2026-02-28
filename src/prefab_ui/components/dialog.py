@@ -22,6 +22,7 @@ from typing import Literal
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Dialog(ContainerComponent):
@@ -39,7 +40,7 @@ class Dialog(ContainerComponent):
     """
 
     type: Literal["Dialog"] = "Dialog"
-    title: str | None = Field(default=None, description="Dialog header title")
-    description: str | None = Field(
+    title: RxStr | None = Field(default=None, description="Dialog header title")
+    description: RxStr | None = Field(
         default=None, description="Dialog header description"
     )

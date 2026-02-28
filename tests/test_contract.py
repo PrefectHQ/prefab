@@ -68,7 +68,7 @@ ALL_ACTION_CLASSES: list[type[Action]] = [
 def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     """Produce a minimal valid value for a required Pydantic field."""
     import types
-    from typing import Literal, get_args, get_origin
+    from typing import Literal, Union, get_args, get_origin
 
     annotation = field_info.annotation
     if annotation is None:
@@ -80,7 +80,11 @@ def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     if origin is type(None):
         return None
 
-    if origin is types.UnionType or (origin and hasattr(origin, "__origin__")):
+    if (
+        origin is types.UnionType
+        or origin is Union
+        or (origin and hasattr(origin, "__origin__"))
+    ):
         non_none = [a for a in args if a is not type(None)]
         if non_none:
             annotation = non_none[0]

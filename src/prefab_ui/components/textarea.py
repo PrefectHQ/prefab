@@ -22,6 +22,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class Textarea(StatefulMixin, Component):
@@ -44,11 +45,11 @@ class Textarea(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "textarea"
     type: Literal["Textarea"] = "Textarea"
-    placeholder: str | None = Field(
+    placeholder: RxStr | None = Field(
         default=None,
         description="Placeholder text",
     )
-    value: str | None = Field(default=None, description="Textarea value")
+    value: RxStr | None = Field(default=None, description="Textarea value")
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
@@ -72,5 +73,5 @@ class Textarea(StatefulMixin, Component):
         description="Action(s) to execute when value changes",
     )
 
-    def _get_initial_value(self) -> str | None:
+    def _get_initial_value(self) -> RxStr | None:
         return self.value

@@ -23,6 +23,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 InputType = Literal[
     "text",
@@ -65,11 +66,11 @@ class Input(StatefulMixin, Component):
         alias="inputType",
         description="Input type (text, email, password, etc.)",
     )
-    placeholder: str | None = Field(
+    placeholder: RxStr | None = Field(
         default=None,
         description="Placeholder text",
     )
-    value: str | None = Field(default=None, description="Input value")
+    value: RxStr | None = Field(default=None, description="Input value")
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
@@ -109,5 +110,5 @@ class Input(StatefulMixin, Component):
         description="Action(s) to execute when value changes",
     )
 
-    def _get_initial_value(self) -> str | None:
+    def _get_initial_value(self) -> RxStr | None:
         return self.value

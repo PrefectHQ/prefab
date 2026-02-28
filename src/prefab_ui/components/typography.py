@@ -19,6 +19,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import Component, _merge_css_classes
+from prefab_ui.rx import RxStr
 
 TextAlign = Literal["left", "center", "right", "justify"] | None
 
@@ -26,7 +27,7 @@ TextAlign = Literal["left", "center", "right", "justify"] | None
 class _TextComponent(Component):
     """Base class for text components that accept positional content."""
 
-    content: str = Field(description="Text content")
+    content: RxStr = Field(description="Text content")
     bold: bool | None = Field(default=None, description="Render text in bold")
     italic: bool | None = Field(default=None, description="Render text in italic")
     align: TextAlign = Field(default=None, exclude=True)

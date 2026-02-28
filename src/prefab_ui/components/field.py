@@ -19,6 +19,7 @@ from typing import Literal
 from pydantic import Field as PydanticField
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 
 class Field(ContainerComponent):
@@ -39,8 +40,8 @@ class Field(ContainerComponent):
     """
 
     type: Literal["Field"] = "Field"
-    title: str = PydanticField(description="Card heading text")
-    description: str | None = PydanticField(
+    title: RxStr = PydanticField(description="Card heading text")
+    description: RxStr | None = PydanticField(
         default=None, description="Secondary text below the title"
     )
     disabled: bool = PydanticField(

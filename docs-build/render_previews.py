@@ -124,12 +124,17 @@ def _execute_and_serialize(
 
     # Collect state: explicit set_initial_state() + initial values from
     # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
+    from prefab_ui.rx import Rx
+
     state: dict[str, Any] = {}
     for c in created:
         if isinstance(c, StatefulMixin):
             val = c._get_initial_value()
-            if val is not None and not (isinstance(val, str) and "{{" in val):
-                state[c.name] = val
+            if val is None or isinstance(val, Rx):
+                continue
+            if isinstance(val, str) and "{{" in val:
+                continue
+            state[c.name] = val
     # Explicit set_initial_state() wins over component defaults.
     explicit = get_initial_state()
     if explicit:

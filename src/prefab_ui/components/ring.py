@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import RxStr
 
 RingVariant = Literal["default", "success", "warning", "destructive", "info", "muted"]
 RingSize = Literal["sm", "default", "lg"]
@@ -29,13 +30,13 @@ class Ring(ContainerComponent):
     """
 
     type: Literal["Ring"] = "Ring"
-    value: float | str = Field(
+    value: float | RxStr = Field(
         default=0,
         description="Current value (number or template expression)",
     )
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")
-    label: str | None = Field(
+    label: RxStr | None = Field(
         default=None,
         description="Text displayed in the center of the ring",
     )

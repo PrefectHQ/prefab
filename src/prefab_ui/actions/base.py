@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, SerializeAsAny, model_validator
+from pydantic import BaseModel, Field, SerializeAsAny, model_serializer
 
 from prefab_ui.rx import _coerce_rx
 
@@ -38,13 +38,10 @@ class Action(BaseModel):
 
     model_config = {"populate_by_name": True}
 
-    @model_validator(mode="before")
-    @classmethod
-    def _coerce_rx_values(cls, data: Any) -> Any:
-        """Recursively convert any Rx values in the input dict to strings."""
-        if isinstance(data, dict):
-            return {k: _coerce_rx(v) for k, v in data.items()}
-        return data
+    @model_serializer(mode="wrap")
+    def _serialize_rx(self, handler: Any) -> dict[str, Any]:
+        """Resolve any Rx values to ``{{ }}`` strings at serialization time."""
+        return _coerce_rx(handler(self))  # type: ignore[return-value]
 
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,

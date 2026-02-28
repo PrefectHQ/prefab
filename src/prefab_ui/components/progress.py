@@ -7,6 +7,7 @@ from typing import Any, Literal
 from pydantic import Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 ProgressVariant = Literal[
     "default", "success", "warning", "destructive", "info", "muted"
@@ -28,7 +29,7 @@ class Progress(Component):
     """
 
     type: Literal["Progress"] = "Progress"
-    value: float | str = Field(
+    value: float | RxStr = Field(
         default=0,
         description="Current progress value",
     )
