@@ -1,20 +1,19 @@
 """ForEach control-flow component for iterating over lists.
 
-Repeats its children once per item in a data list, passing each item as the
-data context for interpolation.
-
-Example::
+Repeats its children once per item in a data list.  Inside the loop,
+``$item`` refers to the current element and ``$index`` to its position.
+Use the context manager form to get a typed handle::
 
     from prefab_ui.components.control_flow import ForEach
     from prefab_ui.components import Card, CardTitle, Badge
 
-    with ForEach("users"):
+    with ForEach("users") as user:
         with Card():
-            CardTitle("{{ name }}")
-            Badge("{{ role }}")
+            CardTitle(user.name)
+            Badge(user.role)
 
-When rendered with ``data={"users": [{"name": "Alice", ...}, ...]}``, produces
-one Card per user.
+The ``user`` variable is an ``Rx("$item")`` reference — attribute access
+chains into dot-path expressions like ``{{ $item.name }}``.
 """
 
 from __future__ import annotations
@@ -24,7 +23,7 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
-from prefab_ui.rx import Rx
+from prefab_ui.rx import ITEM, Rx
 
 
 class ForEach(ContainerComponent):
@@ -37,9 +36,9 @@ class ForEach(ContainerComponent):
 
     Example::
 
-        with ForEach("users"):
+        with ForEach("users") as user:
             with Card():
-                CardTitle("{{ name }}")
+                CardTitle(user.name)
 
         # With data={"users": [{"name": "Alice"}, {"name": "Bob"}]}
         # renders two Cards.
@@ -59,3 +58,8 @@ class ForEach(ContainerComponent):
         if key is not None:
             kwargs["key"] = key.key if isinstance(key, Rx) else key
         super().__init__(**kwargs)
+
+    def __enter__(self) -> Rx:  # type: ignore[override]
+        """Push onto the component stack and return ``ITEM`` (``Rx("$item")``)."""
+        super().__enter__()
+        return ITEM

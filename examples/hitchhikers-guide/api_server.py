@@ -30,6 +30,7 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import ERROR, EVENT
 
 app = FastAPI()
 
@@ -90,7 +91,7 @@ def guide():
                                 Fetch.get("/api/entries", result_key="entries"),
                                 CloseOverlay(),
                             ],
-                            on_error=ShowToast("{{ $error }}", variant="error"),
+                            on_error=ShowToast(ERROR, variant="error"),
                         ),
                     ],
                 ):
@@ -104,40 +105,40 @@ def guide():
             name="q",
             placeholder="Search the Guide...",
             on_change=[
-                SetState("q", "{{ $event }}"),
+                SetState("q", EVENT),
                 Fetch.get(
                     "/api/entries",
-                    params={"q": "{{ $event }}"},
+                    params={"q": EVENT},
                     result_key="entries",
                 ),
             ],
         )
 
         with Column(gap=3):
-            with ForEach("entries"):
+            with ForEach("entries") as entry:
                 with Card():
                     with CardHeader():
                         with Row(align="center", css_class="justify-between"):
                             with Row(gap=2, align="center"):
-                                CardTitle("{{ title }}")
-                                Badge("{{ category }}", variant="success")
+                                CardTitle(entry.title)
+                                Badge(entry.category, variant="success")
                             Button(
                                 "Delete",
                                 icon="trash-2",
                                 size="icon-xs",
                                 variant="ghost",
                                 on_click=Fetch.delete(
-                                    "/api/entries/{{ title }}",
+                                    f"/api/entries/{entry.title}",
                                     on_success=Fetch.get(
                                         "/api/entries",
                                         params={"q": "{{ q }}"},
                                         result_key="entries",
                                     ),
-                                    on_error=ShowToast("{{ $error }}", variant="error"),
+                                    on_error=ShowToast(ERROR, variant="error"),
                                 ),
                             )
                     with CardContent():
-                        Text("{{ description }}")
+                        Text(entry.description)
 
     return HTMLResponse(
         PrefabApp(

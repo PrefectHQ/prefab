@@ -48,15 +48,15 @@ describe("$index in templates", () => {
 
   it("interpolates $index + 1 for 1-based numbering", () => {
     expect(
-      interpolateString("{{ $index + 1 }}. {{ name }}", {
+      interpolateString("{{ $index + 1 }}. {{ $item.name }}", {
         $index: 0,
-        name: "First",
+        $item: { name: "First" },
       }),
     ).toBe("1. First");
     expect(
-      interpolateString("{{ $index + 1 }}. {{ name }}", {
+      interpolateString("{{ $index + 1 }}. {{ $item.name }}", {
         $index: 2,
-        name: "Third",
+        $item: { name: "Third" },
       }),
     ).toBe("3. Third");
   });
@@ -102,15 +102,13 @@ describe("$item in templates", () => {
   });
 });
 
-describe("$index coexists with item scope", () => {
-  it("$index alongside destructured object fields", () => {
+describe("$index coexists with $item", () => {
+  it("$index alongside $item object fields", () => {
     const scope = {
-      name: "Arthur",
-      role: "Human",
       $index: 0,
       $item: { name: "Arthur", role: "Human" },
     };
-    expect(interpolateString("{{ $index + 1 }}. {{ name }}", scope)).toBe(
+    expect(interpolateString("{{ $index + 1 }}. {{ $item.name }}", scope)).toBe(
       "1. Arthur",
     );
     expect(evaluate("$item.role", scope)).toBe("Human");

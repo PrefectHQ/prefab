@@ -47,8 +47,8 @@ for name in components_mod.__all__:
     cls = getattr(components_mod, name, None)
     if cls is None or name in _SKIP_COMPONENTS:
         continue
-    # Skip non-model classes (e.g. Responsive)
-    if not hasattr(cls, "model_fields"):
+    # Skip non-class entries (e.g. Rx constants) and non-model classes
+    if not isinstance(cls, type) or not hasattr(cls, "model_fields"):
         continue
     # Get the wire-format type name from the Literal annotation
     type_field = cls.model_fields.get("type")

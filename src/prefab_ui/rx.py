@@ -340,3 +340,19 @@ def _coerce_rx(value: object) -> object:
     if isinstance(value, list):
         return [_coerce_rx(v) for v in value]
     return value
+
+
+# ── Built-in reactive variables ──────────────────────────────────────
+
+#: The current iteration item inside a :class:`ForEach` loop.
+#: Chains via dot-path: ``Item.title`` → ``{{ $item.title }}``.
+ITEM: Rx = Rx("$item")
+
+#: The iteration index inside a :class:`ForEach` loop.
+INDEX: Rx = Rx("$index")
+
+#: The event value in ``on_change`` / ``on_submit`` handlers.
+EVENT: Rx = Rx("$event")
+
+#: The error message in ``on_error`` handlers.
+ERROR: Rx = Rx("$error")

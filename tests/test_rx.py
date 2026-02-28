@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from prefab_ui.rx import Rx, _generate_key, reset_counter
+from prefab_ui.rx import ERROR, EVENT, INDEX, ITEM, Rx, _generate_key, reset_counter
 
 # ── String conversion ────────────────────────────────────────────────
 
@@ -431,3 +431,47 @@ class TestGenerateKey:
         assert _generate_key("slider") == "slider_1"
         reset_counter()
         assert _generate_key("slider") == "slider_1"
+
+
+# ── Built-in rx sentinel ────────────────────────────────────────────
+
+
+class TestBuiltinReactiveVars:
+    def test_event_str(self) -> None:
+        assert str(EVENT) == "{{ $event }}"
+
+    def test_error_str(self) -> None:
+        assert str(ERROR) == "{{ $error }}"
+
+    def test_item_str(self) -> None:
+        assert str(ITEM) == "{{ $item }}"
+
+    def test_index_str(self) -> None:
+        assert str(INDEX) == "{{ $index }}"
+
+    def test_item_dot_path(self) -> None:
+        assert str(ITEM.title) == "{{ $item.title }}"
+
+    def test_item_deep_path(self) -> None:
+        assert str(ITEM.address.city) == "{{ $item.address.city }}"
+
+    def test_item_is_rx(self) -> None:
+        assert isinstance(ITEM, Rx)
+
+    def test_item_key(self) -> None:
+        assert ITEM.key == "$item"
+
+    def test_item_field_key(self) -> None:
+        assert ITEM.title.key == "$item.title"
+
+    def test_operators_on_item_field(self) -> None:
+        assert (ITEM.count > 0).key == "$item.count > 0"
+
+    def test_pipe_on_item_field(self) -> None:
+        assert ITEM.price.currency().key == "$item.price | currency"
+
+    def test_negation(self) -> None:
+        assert (~ITEM.done).key == "!$item.done"
+
+    def test_index_arithmetic(self) -> None:
+        assert (INDEX + 1).key == "$index + 1"

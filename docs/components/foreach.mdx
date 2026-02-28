@@ -6,11 +6,11 @@ icon: repeat
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`ForEach` is a control-flow component that iterates over a list in your data, rendering its children once per item. Each iteration receives the list item as the interpolation context, so `{{ field }}` placeholders resolve to that item's values.
+Given a list of data, `ForEach` renders its children once per item — a card for each user, a badge for each tag, a row for each result. Python's context manager gives you a handle to the current item, so you can access fields naturally with dot notation.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"Badge","label":"{{ designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpOgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQ2FyZFRpdGxlKCJ7eyBuYW1lIH19IikKICAgICAgICAgICAgICAgICAgICBCYWRnZSgie3sgZGVzaWduYXRpb24gfX0iLCB2YXJpYW50PSJzZWNvbmRhcnkiKQogICAgICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKCJ7eyBlbWFpbCB9fSIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ $item.name }}"},{"type":"Badge","label":"{{ $item.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ $item.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -32,13 +32,13 @@ set_initial_state(crew=[
 ])
 
 with Column(gap=2):
-    with ForEach("crew"):
+    with ForEach("crew") as member:
         with Card():
             with CardHeader():
                 with Row(gap=2, align="center"):
-                    CardTitle("{{ name }}")
-                    Badge("{{ designation }}", variant="secondary")
-                CardDescription("{{ email }}")
+                    CardTitle(member.name)
+                    Badge(member.designation, variant="secondary")
+                CardDescription(member.email)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -60,11 +60,11 @@ with Column(gap=2):
                     "cssClass": "gap-2 items-center",
                     "type": "Row",
                     "children": [
-                      {"type": "CardTitle", "content": "{{ name }}"},
-                      {"type": "Badge", "label": "{{ designation }}", "variant": "secondary"}
+                      {"type": "CardTitle", "content": "{{ $item.name }}"},
+                      {"type": "Badge", "label": "{{ $item.designation }}", "variant": "secondary"}
                     ]
                   },
-                  {"type": "CardDescription", "content": "{{ email }}"}
+                  {"type": "CardDescription", "content": "{{ $item.email }}"}
                 ]
               }
             ]
@@ -99,11 +99,11 @@ with Column(gap=2):
 
 When rendered with the data above, this produces one card per crew member.
 
-## How It Works
+## Scalar Items
 
-The `key` argument (passed positionally or as a keyword) names the field in the data dict that contains the list. At render time, `ForEach` iterates that list. If each item is a dict, its keys become the interpolation context for that iteration. If an item is a scalar, it's available as `{{ $item }}`.
+The `key` you pass to `ForEach` names a list field in your data. When items are simple values (strings, numbers), the context manager variable represents the value directly.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ $item }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIik6CiAgICAgICAgQmFkZ2UoInt7ICRpdGVtIH19IiwgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ $item }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIikgYXMgdGFnOgogICAgICAgIEJhZGdlKHRhZywgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -113,8 +113,8 @@ from prefab_ui.components.control_flow import ForEach
 set_initial_state(tags=["earth", "magrathea", "vogon poetry", "42"])
 
 with Row(gap=2):
-    with ForEach("tags"):
-        Badge("{{ $item }}", variant="secondary")
+    with ForEach("tags") as tag:
+        Badge(tag, variant="secondary")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -135,24 +135,25 @@ with Row(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per item.
+With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per tag.
 
-## Iteration Variables
+## Using the Index
 
-Beyond the item's own fields, every iteration exposes two special variables: `$index` (zero-based position) and `$item` (the entire current item). Individual fields like `{{ name }}` are still available directly — `$item` is for when you need to pass the whole object somewhere, like an action argument.
+Each iteration also has access to `$index` — the zero-based position of the current item. Import the `INDEX` constant from `prefab_ui.rx` to use it in expressions.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","?","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKCnNldF9pbml0aWFsX3N0YXRlKHN0ZXBzPVsiQ29sbGVjdCB1bmRlcnBhbnRzIiwgIj8iLCAiUHJvZml0Il0pCgp3aXRoIENvbHVtbihnYXA9MSk6CiAgICB3aXRoIEZvckVhY2goInN0ZXBzIik6CiAgICAgICAgVGV4dCgie3sgJGluZGV4ICsgMSB9fS4ge3sgJGl0ZW0gfX0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","?","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IElOREVYCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI/IiwgIlByb2ZpdCJdKQoKd2l0aCBDb2x1bW4oZ2FwPTEpOgogICAgd2l0aCBGb3JFYWNoKCJzdGVwcyIpIGFzIHN0ZXA6CiAgICAgICAgVGV4dChmIntJTkRFWCArIDF9LiB7c3RlcH0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Text
 from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import INDEX
 
 set_initial_state(steps=["Collect underpants", "?", "Profit"])
 
 with Column(gap=1):
-    with ForEach("steps"):
-        Text("{{ $index + 1 }}. {{ $item }}")
+    with ForEach("steps") as step:
+        Text(f"{INDEX + 1}. {step}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -173,13 +174,13 @@ with Column(gap=1):
 </CodeGroup>
 </ComponentPreview>
 
-`$index` is especially useful for actions that target a specific list position — `SetState("items.{{ $index }}.done", true)` updates the `done` field of the current item. And `$item` lets you pass the whole object to actions like `CallTool("edit_user", arguments={"user": "{{ $item }}"})`.
+`INDEX` is especially useful for actions that target a specific list position — `SetState(f"items.{INDEX}.done", True)` updates the `done` field of the current item.
 
 ## Nested Data
 
-Since each item becomes the full interpolation context for that iteration, you can access nested fields with dot notation:
+Dot notation chains through nested objects naturally — `project.owner.name` reaches into `{"owner": {"name": "..."}}` just as you'd expect.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name }}"},{"type":"CardDescription","content":"Owner: {{ owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKToKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUoInt7IG5hbWUgfX0iKQogICAgICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKCJPd25lcjoge3sgb3duZXIubmFtZSB9fSIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ $item.name }}"},{"type":"CardDescription","content":"Owner: {{ $item.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -198,11 +199,11 @@ set_initial_state(projects=[
 ])
 
 with Column(gap=2):
-    with ForEach("projects"):
+    with ForEach("projects") as project:
         with Card():
             with CardHeader():
-                CardTitle("{{ name }}")
-                CardDescription("Owner: {{ owner.name }}")
+                CardTitle(project.name)
+                CardDescription(f"Owner: {project.owner.name}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -220,8 +221,8 @@ with Column(gap=2):
               {
                 "type": "CardHeader",
                 "children": [
-                  {"type": "CardTitle", "content": "{{ name }}"},
-                  {"type": "CardDescription", "content": "Owner: {{ owner.name }}"}
+                  {"type": "CardTitle", "content": "{{ $item.name }}"},
+                  {"type": "CardDescription", "content": "Owner: {{ $item.owner.name }}"}
                 ]
               }
             ]

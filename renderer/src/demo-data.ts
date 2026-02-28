@@ -610,15 +610,15 @@ export const DEMO_TREE: ComponentNode = {
                   gap: 2,
                   cssClass: "items-center",
                   children: [
-                    { type: "CardTitle", content: "{{ name }}" },
+                    { type: "CardTitle", content: "{{ $item.name }}" },
                     {
                       type: "Badge",
-                      label: "{{ role }}",
+                      label: "{{ $item.role }}",
                       variant: "secondary",
                     },
                   ],
                 },
-                { type: "CardDescription", content: "{{ email }}" },
+                { type: "CardDescription", content: "{{ $item.email }}" },
               ],
             },
           ],
