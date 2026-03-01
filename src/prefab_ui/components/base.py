@@ -367,7 +367,7 @@ class ContainerComponent(Component):
 
 def _to_case(node: Component) -> dict[str, Any]:
     """Convert an If or Elif node to a Condition case entry."""
-    condition = getattr(node, "condition", "")
+    condition = str(getattr(node, "condition", ""))
     stripped = condition.strip()
     if not (stripped.startswith("{{") and stripped.endswith("}}")):
         condition = f"{{{{ {condition} }}}}"

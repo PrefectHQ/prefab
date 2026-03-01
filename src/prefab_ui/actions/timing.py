@@ -7,6 +7,7 @@ from typing import Any, Literal
 from pydantic import Field, SerializeAsAny
 
 from prefab_ui.actions.base import Action
+from prefab_ui.rx import RxStr
 
 
 class SetInterval(Action):
@@ -24,7 +25,7 @@ class SetInterval(Action):
 
     action: Literal["setInterval"] = "setInterval"
     duration: int = Field(description="Interval between ticks, in milliseconds.")
-    while_: str | None = Field(
+    while_: RxStr | None = Field(
         default=None,
         alias="while",
         description=(

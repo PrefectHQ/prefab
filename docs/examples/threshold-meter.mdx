@@ -7,15 +7,15 @@ mode: center
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-A slider drives a progress bar. The bar color changes at each threshold — all evaluated client-side through a `{{ }}` expression in `indicator_class`.
+A slider drives a progress bar whose color shifts at each threshold. The slider is defined first with `defer=True` so its `.rx` reference can be used by components above it in the tree, then placed at the bottom with `insert()`.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ val }}%","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ val }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"},{"name":"val","type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"disabled":false}]}]},"state":{"val":50}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIEgzLCBNdXRlZCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CgpzZXRfaW5pdGlhbF9zdGF0ZSh2YWw9NTApCgp3aXRoIENvbHVtbihnYXA9NiwgY3NzX2NsYXNzPSJtYXgtdy1zbSBteC1hdXRvIik6CiAgICBIMygiSGVhbHRoIE1vbml0b3IiKQogICAgTXV0ZWQoIkRyYWcgdGhlIHNsaWRlciDigJQgdGhlIGJhciBjb2xvciBjaGFuZ2VzIGF0IGVhY2ggdGhyZXNob2xkLiIpCgogICAgd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgICAgICBUZXh0KCJDUFUgVXNhZ2UiKQogICAgICAgICAgICBUZXh0KCJ7eyB2YWwgfX0lIiwgYm9sZD1UcnVlKQogICAgICAgIFByb2dyZXNzKAogICAgICAgICAgICB2YWx1ZT0ie3sgdmFsIH19IiwKICAgICAgICAgICAgaW5kaWNhdG9yX2NsYXNzPSgKICAgICAgICAgICAgICAgICJ7eyB2YWwgPCAyMCA/ICdiZy1yZWQtNTAwJyIKICAgICAgICAgICAgICAgICIgOiB2YWwgPCA2MCA/ICdiZy1wcmltYXJ5JyIKICAgICAgICAgICAgICAgICIgOiB2YWwgPCA3NSA/ICdiZy1hbWJlci01MDAnIgogICAgICAgICAgICAgICAgIiA6ICdiZy1ncmVlbi01MDAnIH19IgogICAgICAgICAgICApLAogICAgICAgICkKICAgICAgICBTbGlkZXIobmFtZT0idmFsIiwgbWluPTAsIG1heD0xMDAsIHN0ZXA9MSwgdmFsdWU9NTApCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ slider_22 / 100 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ slider_22 < 20 ? 'bg-red-500' : (slider_22 < 60 ? 'bg-primary' : (slider_22 < 75 ? 'bg-amber-500' : 'bg-green-500')) }}"},{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"disabled":false}]}]},"state":{"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBIMywgTXV0ZWQsIFByb2dyZXNzLCBSb3csIFNsaWRlciwgVGV4dCwgaW5zZXJ0CgpzbGlkZXIgPSBTbGlkZXIobWluPTAsIG1heD0xMDAsIHN0ZXA9MSwgdmFsdWU9NTAsIGRlZmVyPVRydWUpCnZhbCA9IHNsaWRlci5yeAoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0ibWF4LXctc20gbXgtYXV0byIpOgogICAgSDMoIkhlYWx0aCBNb25pdG9yIikKICAgIE11dGVkKCJEcmFnIHRoZSBzbGlkZXIg4oCUIHRoZSBiYXIgY29sb3IgY2hhbmdlcyBhdCBlYWNoIHRocmVzaG9sZC4iKQoKICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIiKToKICAgICAgICAgICAgVGV4dCgiQ1BVIFVzYWdlIikKICAgICAgICAgICAgVGV4dCgodmFsIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9dmFsLAogICAgICAgICAgICBpbmRpY2F0b3JfY2xhc3M9KHZhbCA8IDIwKS50aGVuKAogICAgICAgICAgICAgICAgImJnLXJlZC01MDAiLAogICAgICAgICAgICAgICAgKHZhbCA8IDYwKS50aGVuKAogICAgICAgICAgICAgICAgICAgICJiZy1wcmltYXJ5IiwKICAgICAgICAgICAgICAgICAgICAodmFsIDwgNzUpLnRoZW4oImJnLWFtYmVyLTUwMCIsICJiZy1ncmVlbi01MDAiKSwKICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICksCiAgICAgICAgKQogICAgICAgIGluc2VydChzbGlkZXIpCg==">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text
+from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text, insert
 
-set_initial_state(val=50)
+slider = Slider(min=0, max=100, step=1, value=50, defer=True)
+val = slider.rx
 
 with Column(gap=6, css_class="max-w-sm mx-auto"):
     H3("Health Monitor")
@@ -24,17 +24,18 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
     with Column(gap=4):
         with Row(css_class="justify-between items-center"):
             Text("CPU Usage")
-            Text("{{ val }}%", bold=True)
+            Text((val / 100).percent(), bold=True)
         Progress(
-            value="{{ val }}",
-            indicator_class=(
-                "{{ val < 20 ? 'bg-red-500'"
-                " : val < 60 ? 'bg-primary'"
-                " : val < 75 ? 'bg-amber-500'"
-                " : 'bg-green-500' }}"
+            value=val,
+            indicator_class=(val < 20).then(
+                "bg-red-500",
+                (val < 60).then(
+                    "bg-primary",
+                    (val < 75).then("bg-amber-500", "bg-green-500"),
+                ),
             ),
         )
-        Slider(name="val", min=0, max=100, step=1, value=50)
+        insert(slider)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -56,19 +57,19 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
             "type": "Row",
             "children": [
               {"content": "CPU Usage", "type": "Text"},
-              {"content": "{{ val }}%", "bold": true, "type": "Text"}
+              {"content": "{{ slider_22 / 100 | percent }}", "bold": true, "type": "Text"}
             ]
           },
           {
             "type": "Progress",
-            "value": "{{ val }}",
+            "value": "{{ slider_22 }}",
             "min": 0,
             "max": 100,
             "variant": "default",
-            "indicatorClass": "{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : val < 75 ? 'bg-amber-500' : 'bg-green-500' }}"
+            "indicatorClass": "{{ slider_22 < 20 ? 'bg-red-500' : (slider_22 < 60 ? 'bg-primary' : (slider_22 < 75 ? 'bg-amber-500' : 'bg-green-500')) }}"
           },
           {
-            "name": "val",
+            "name": "slider_22",
             "type": "Slider",
             "min": 0.0,
             "max": 100.0,
@@ -80,12 +81,10 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
       }
     ]
   },
-  "state": {"val": 50}
+  "state": {"slider_22": 50.0}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-The expression `{{ val < 20 ? 'bg-red-500' : val < 60 ? 'bg-primary' : ... }}` evaluates on every state change. Template expressions work in any string prop — `indicator_class`, `css_class`, `variant` (at the protocol level), or content fields. The renderer re-evaluates them on each render pass, so the color transitions are instant.
-
-This pattern generalizes: any prop that accepts a string can contain a `{{ }}` expression that reacts to state changes.
+The `.then()` chains compile to nested ternary expressions in the wire format — `{{ slider_1 < 20 ? 'bg-red-500' : ... }}` — which the renderer re-evaluates on every state change. Because `val = slider.rx` is a reactive reference, any prop that receives it (here `value`, `indicator_class`, and the `Text` content) updates instantly as the slider moves.

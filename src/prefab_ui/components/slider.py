@@ -33,6 +33,7 @@ from pydantic import Field
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.rx import RxStr
 
 SliderVariant = Literal["default", "success", "warning", "destructive", "info", "muted"]
 
@@ -76,7 +77,7 @@ class Slider(StatefulMixin, Component):
     type: Literal["Slider"] = "Slider"
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")
-    value: float | list[float] | None = Field(
+    value: float | list[float] | RxStr | None = Field(
         default=None,
         description="Initial value (number, or [low, high] list when range=True)",
     )
@@ -91,7 +92,7 @@ class Slider(StatefulMixin, Component):
         default="default",
         description="Visual variant for the filled track: default, success, warning, destructive, info, muted",
     )
-    indicator_class: str | None = Field(
+    indicator_class: RxStr | None = Field(
         default=None,
         alias="indicatorClass",
         description="Tailwind classes for the filled track (e.g. 'bg-green-500')",
@@ -111,15 +112,14 @@ class Slider(StatefulMixin, Component):
         description="Action(s) to execute when value changes",
     )
 
-    def _get_initial_value(self) -> float | list[float] | None:
+    def _get_initial_value(self) -> float | list[float] | RxStr | None:
         return self.value
 
     def model_post_init(self, __context: Any) -> None:
-        if self.step is not None and self.value is not None:
-            if isinstance(self.value, list):
-                self.value = [self._snap(v) for v in self.value]
-            else:
-                self.value = self._snap(self.value)
+        if self.step is not None and isinstance(self.value, (int, float)):
+            self.value = self._snap(self.value)
+        elif self.step is not None and isinstance(self.value, list):
+            self.value = [self._snap(v) for v in self.value]
         super().model_post_init(__context)
 
     def _snap(self, v: float) -> float:
