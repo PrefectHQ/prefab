@@ -93,6 +93,8 @@ def _format_pipe_arg(value: object) -> str:
     Unlike expression tokens, pipe args are bare tokens — strings are
     NOT quoted unless they contain spaces (then use single quotes).
     """
+    if isinstance(value, bool):
+        return "true" if value else "false"
     if isinstance(value, (int, float)):
         return str(value)
     s = str(value)

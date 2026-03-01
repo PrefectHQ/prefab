@@ -12,7 +12,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Set `count=1` to fire once after a pause — no separate "delay" action needed. Put your logic in `on_complete` and it runs when the timer finishes. The button below swaps to a waiting state so the user knows something is happening.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}","variant":"default","size":"default","disabled":"{{ waiting | default:False }}","onClick":[{"action":"setState","key":"waiting","value":true},{"action":"setInterval","duration":3000,"count":1,"onComplete":[{"action":"showToast","message":"Three seconds. An eternity for a brain the size of a planet.","variant":"info"},{"action":"setState","key":"waiting","value":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldEludGVydmFsLCBTZXRTdGF0ZSwgU2hvd1RvYXN0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKd2FpdGluZyA9IFJ4KCJ3YWl0aW5nIikKCkJ1dHRvbigKICAgIHdhaXRpbmcudGhlbigiV2FpdGluZ+KApiIsICJTdGFydCAzIHNlY29uZCB0aW1lciIpLAogICAgZGlzYWJsZWQ9d2FpdGluZy5kZWZhdWx0KEZhbHNlKSwKICAgIG9uX2NsaWNrPVsKICAgICAgICBTZXRTdGF0ZSgid2FpdGluZyIsIFRydWUpLAogICAgICAgIFNldEludGVydmFsKAogICAgICAgICAgICAzMDAwLAogICAgICAgICAgICBjb3VudD0xLAogICAgICAgICAgICBvbl9jb21wbGV0ZT1bCiAgICAgICAgICAgICAgICBTaG93VG9hc3QoCiAgICAgICAgICAgICAgICAgICAgIlRocmVlIHNlY29uZHMuIEFuIGV0ZXJuaXR5IGZvciIKICAgICAgICAgICAgICAgICAgICAiIGEgYnJhaW4gdGhlIHNpemUgb2YgYSBwbGFuZXQuIiwKICAgICAgICAgICAgICAgICAgICB2YXJpYW50PSJpbmZvIiwKICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICAgICBTZXRTdGF0ZSgid2FpdGluZyIsIEZhbHNlKSwKICAgICAgICAgICAgXSwKICAgICAgICApLAogICAgXSwKKQo=">
+<ComponentPreview json={{"view":{"type":"Button","label":"{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}","variant":"default","size":"default","disabled":"{{ waiting | default:false }}","onClick":[{"action":"setState","key":"waiting","value":true},{"action":"setInterval","duration":3000,"count":1,"onComplete":[{"action":"showToast","message":"Three seconds. An eternity for a brain the size of a planet.","variant":"info"},{"action":"setState","key":"waiting","value":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldEludGVydmFsLCBTZXRTdGF0ZSwgU2hvd1RvYXN0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKd2FpdGluZyA9IFJ4KCJ3YWl0aW5nIikKCkJ1dHRvbigKICAgIHdhaXRpbmcudGhlbigiV2FpdGluZ+KApiIsICJTdGFydCAzIHNlY29uZCB0aW1lciIpLAogICAgZGlzYWJsZWQ9d2FpdGluZy5kZWZhdWx0KEZhbHNlKSwKICAgIG9uX2NsaWNrPVsKICAgICAgICBTZXRTdGF0ZSh3YWl0aW5nLCBUcnVlKSwKICAgICAgICBTZXRJbnRlcnZhbCgKICAgICAgICAgICAgMzAwMCwKICAgICAgICAgICAgY291bnQ9MSwKICAgICAgICAgICAgb25fY29tcGxldGU9WwogICAgICAgICAgICAgICAgU2hvd1RvYXN0KAogICAgICAgICAgICAgICAgICAgICJUaHJlZSBzZWNvbmRzLiBBbiBldGVybml0eSBmb3IiCiAgICAgICAgICAgICAgICAgICAgIiBhIGJyYWluIHRoZSBzaXplIG9mIGEgcGxhbmV0LiIsCiAgICAgICAgICAgICAgICAgICAgdmFyaWFudD0iaW5mbyIsCiAgICAgICAgICAgICAgICApLAogICAgICAgICAgICAgICAgU2V0U3RhdGUod2FpdGluZywgRmFsc2UpLAogICAgICAgICAgICBdLAogICAgICAgICksCiAgICBdLAopCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -25,7 +25,7 @@ Button(
     waiting.then("Waiting…", "Start 3 second timer"),
     disabled=waiting.default(False),
     on_click=[
-        SetState("waiting", True),
+        SetState(waiting, True),
         SetInterval(
             3000,
             count=1,
@@ -35,7 +35,7 @@ Button(
                     " a brain the size of a planet.",
                     variant="info",
                 ),
-                SetState("waiting", False),
+                SetState(waiting, False),
             ],
         ),
     ],
@@ -48,7 +48,7 @@ Button(
     "label": "{{ waiting ? 'Waiting\u2026' : 'Start 3 second timer' }}",
     "variant": "default",
     "size": "default",
-    "disabled": "{{ waiting | default:False }}",
+    "disabled": "{{ waiting | default:false }}",
     "onClick": [
       {"action": "setState", "key": "waiting", "value": true},
       {
@@ -75,7 +75,7 @@ Button(
 
 Each tick decrements `seconds` in state, and the display reflects the current value through reactive expressions. When `seconds` reaches zero, the `while_` condition becomes false and the interval stops on its own.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Column","children":[{"cssClass":"text-2xl font-mono","content":"{{ seconds > 0 ? 'T-minus ' + seconds + '\u2026' : 'Ready for launch' }}","type":"Text"},{"type":"Button","label":"{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}","variant":"default","size":"default","disabled":"{{ seconds > 0 }}","onClick":[{"action":"setState","key":"seconds","value":10},{"action":"setInterval","duration":1000,"while":"{{ seconds > 0 }}","onTick":{"action":"setState","key":"seconds","value":"{{ seconds - 1 }}"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0SW50ZXJ2YWwsIFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2Vjb25kcyA9IFJ4KCJzZWNvbmRzIikKCndpdGggQ29sdW1uKGdhcD00LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgVGV4dCgKICAgICAgICAoc2Vjb25kcyA+IDApLnRoZW4oCiAgICAgICAgICAgICJULW1pbnVzICIgKyBzZWNvbmRzICsgIuKApiIsCiAgICAgICAgICAgICJSZWFkeSBmb3IgbGF1bmNoIiwKICAgICAgICApLAogICAgICAgIGNzc19jbGFzcz0idGV4dC0yeGwgZm9udC1tb25vIiwKICAgICkKICAgIEJ1dHRvbigKICAgICAgICAoc2Vjb25kcyA+IDApLnRoZW4oIkNvdW50aW5nIGRvd24iLCAiQmVnaW4gY291bnRkb3duIiksCiAgICAgICAgZGlzYWJsZWQ9c2Vjb25kcyA+IDAsCiAgICAgICAgb25fY2xpY2s9WwogICAgICAgICAgICBTZXRTdGF0ZSgic2Vjb25kcyIsIDEwKSwKICAgICAgICAgICAgU2V0SW50ZXJ2YWwoCiAgICAgICAgICAgICAgICAxMDAwLAogICAgICAgICAgICAgICAgd2hpbGVfPXNlY29uZHMgPiAwLAogICAgICAgICAgICAgICAgb25fdGljaz1TZXRTdGF0ZSgic2Vjb25kcyIsIHNlY29uZHMgLSAxKSwKICAgICAgICAgICAgKSwKICAgICAgICBdLAogICAgKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Column","children":[{"cssClass":"text-2xl font-mono","content":"{{ seconds > 0 ? 'T-minus ' + seconds + '\u2026' : 'Ready for launch' }}","type":"Text"},{"type":"Button","label":"{{ seconds > 0 ? 'Counting down' : 'Begin countdown' }}","variant":"default","size":"default","disabled":"{{ seconds > 0 }}","onClick":[{"action":"setState","key":"seconds","value":10},{"action":"setInterval","duration":1000,"while":"{{ seconds > 0 }}","onTick":{"action":"setState","key":"seconds","value":"{{ seconds - 1 }}"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0SW50ZXJ2YWwsIFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2Vjb25kcyA9IFJ4KCJzZWNvbmRzIikKCndpdGggQ29sdW1uKGdhcD00LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgVGV4dCgKICAgICAgICAoc2Vjb25kcyA+IDApLnRoZW4oCiAgICAgICAgICAgICJULW1pbnVzICIgKyBzZWNvbmRzICsgIuKApiIsCiAgICAgICAgICAgICJSZWFkeSBmb3IgbGF1bmNoIiwKICAgICAgICApLAogICAgICAgIGNzc19jbGFzcz0idGV4dC0yeGwgZm9udC1tb25vIiwKICAgICkKICAgIEJ1dHRvbigKICAgICAgICAoc2Vjb25kcyA+IDApLnRoZW4oIkNvdW50aW5nIGRvd24iLCAiQmVnaW4gY291bnRkb3duIiksCiAgICAgICAgZGlzYWJsZWQ9c2Vjb25kcyA+IDAsCiAgICAgICAgb25fY2xpY2s9WwogICAgICAgICAgICBTZXRTdGF0ZShzZWNvbmRzLCAxMCksCiAgICAgICAgICAgIFNldEludGVydmFsKAogICAgICAgICAgICAgICAgMTAwMCwKICAgICAgICAgICAgICAgIHdoaWxlXz1zZWNvbmRzID4gMCwKICAgICAgICAgICAgICAgIG9uX3RpY2s9U2V0U3RhdGUoc2Vjb25kcywgc2Vjb25kcyAtIDEpLAogICAgICAgICAgICApLAogICAgICAgIF0sCiAgICApCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Text
@@ -96,11 +96,11 @@ with Column(gap=4, css_class="items-center"):
         (seconds > 0).then("Counting down", "Begin countdown"),
         disabled=seconds > 0,
         on_click=[
-            SetState("seconds", 10),
+            SetState(seconds, 10),
             SetInterval(
                 1000,
                 while_=seconds > 0,
-                on_tick=SetState("seconds", seconds - 1),
+                on_tick=SetState(seconds, seconds - 1),
             ),
         ],
     )
@@ -143,7 +143,7 @@ with Column(gap=4, css_class="items-center"):
 
 Store a boolean flag in state and reference it in `while_`. Any action can flip the flag — the interval checks it on the next tick and stops. Here, one button starts an incrementing counter and another stops it. The same pattern works for periodic server polling with `CallTool` in `on_tick`.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Button","label":"Start","variant":"default","size":"default","disabled":"{{ running | default:False }}","onClick":[{"action":"setState","key":"running","value":true},{"action":"setState","key":"ticks","value":0},{"action":"setInterval","duration":1000,"while":"{{ running }}","onTick":{"action":"setState","key":"ticks","value":"{{ ticks + 1 }}"}}]},{"cssClass":"text-2xl font-mono tabular-nums","content":"{{ ticks | default:0 }}","type":"Text"},{"type":"Button","label":"Stop","variant":"outline","size":"default","disabled":"{{ !running }}","onClick":{"action":"setState","key":"running","value":false}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3csIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0SW50ZXJ2YWwsIFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKcnVubmluZyA9IFJ4KCJydW5uaW5nIikKdGlja3MgPSBSeCgidGlja3MiKQoKd2l0aCBSb3coZ2FwPTQsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICBCdXR0b24oCiAgICAgICAgIlN0YXJ0IiwKICAgICAgICBkaXNhYmxlZD1ydW5uaW5nLmRlZmF1bHQoRmFsc2UpLAogICAgICAgIG9uX2NsaWNrPVsKICAgICAgICAgICAgU2V0U3RhdGUoInJ1bm5pbmciLCBUcnVlKSwKICAgICAgICAgICAgU2V0U3RhdGUoInRpY2tzIiwgMCksCiAgICAgICAgICAgIFNldEludGVydmFsKAogICAgICAgICAgICAgICAgMTAwMCwKICAgICAgICAgICAgICAgIHdoaWxlXz1ydW5uaW5nLAogICAgICAgICAgICAgICAgb25fdGljaz1TZXRTdGF0ZSgidGlja3MiLCB0aWNrcyArIDEpLAogICAgICAgICAgICApLAogICAgICAgIF0sCiAgICApCiAgICBUZXh0KAogICAgICAgIHRpY2tzLmRlZmF1bHQoMCksCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LTJ4bCBmb250LW1vbm8gdGFidWxhci1udW1zIiwKICAgICkKICAgIEJ1dHRvbigKICAgICAgICAiU3RvcCIsCiAgICAgICAgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgZGlzYWJsZWQ9fnJ1bm5pbmcsCiAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUoInJ1bm5pbmciLCBGYWxzZSksCiAgICApCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"type":"Button","label":"Start","variant":"default","size":"default","disabled":"{{ running | default:false }}","onClick":[{"action":"setState","key":"running","value":true},{"action":"setState","key":"ticks","value":0},{"action":"setInterval","duration":1000,"while":"{{ running }}","onTick":{"action":"setState","key":"ticks","value":"{{ ticks + 1 }}"}}]},{"cssClass":"text-2xl font-mono tabular-nums","content":"{{ ticks | default:0 }}","type":"Text"},{"type":"Button","label":"Stop","variant":"outline","size":"default","disabled":"{{ !running }}","onClick":{"action":"setState","key":"running","value":false}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3csIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0SW50ZXJ2YWwsIFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKcnVubmluZyA9IFJ4KCJydW5uaW5nIikKdGlja3MgPSBSeCgidGlja3MiKQoKd2l0aCBSb3coZ2FwPTQsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICBCdXR0b24oCiAgICAgICAgIlN0YXJ0IiwKICAgICAgICBkaXNhYmxlZD1ydW5uaW5nLmRlZmF1bHQoRmFsc2UpLAogICAgICAgIG9uX2NsaWNrPVsKICAgICAgICAgICAgU2V0U3RhdGUocnVubmluZywgVHJ1ZSksCiAgICAgICAgICAgIFNldFN0YXRlKHRpY2tzLCAwKSwKICAgICAgICAgICAgU2V0SW50ZXJ2YWwoCiAgICAgICAgICAgICAgICAxMDAwLAogICAgICAgICAgICAgICAgd2hpbGVfPXJ1bm5pbmcsCiAgICAgICAgICAgICAgICBvbl90aWNrPVNldFN0YXRlKHRpY2tzLCB0aWNrcyArIDEpLAogICAgICAgICAgICApLAogICAgICAgIF0sCiAgICApCiAgICBUZXh0KAogICAgICAgIHRpY2tzLmRlZmF1bHQoMCksCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LTJ4bCBmb250LW1vbm8gdGFidWxhci1udW1zIiwKICAgICkKICAgIEJ1dHRvbigKICAgICAgICAiU3RvcCIsCiAgICAgICAgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgZGlzYWJsZWQ9fnJ1bm5pbmcsCiAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUocnVubmluZywgRmFsc2UpLAogICAgKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Row, Text
@@ -158,12 +158,12 @@ with Row(gap=4, css_class="items-center"):
         "Start",
         disabled=running.default(False),
         on_click=[
-            SetState("running", True),
-            SetState("ticks", 0),
+            SetState(running, True),
+            SetState(ticks, 0),
             SetInterval(
                 1000,
                 while_=running,
-                on_tick=SetState("ticks", ticks + 1),
+                on_tick=SetState(ticks, ticks + 1),
             ),
         ],
     )
@@ -175,7 +175,7 @@ with Row(gap=4, css_class="items-center"):
         "Stop",
         variant="outline",
         disabled=~running,
-        on_click=SetState("running", False),
+        on_click=SetState(running, False),
     )
 ```
 ```json Protocol icon="brackets-curly"
@@ -189,7 +189,7 @@ with Row(gap=4, css_class="items-center"):
         "label": "Start",
         "variant": "default",
         "size": "default",
-        "disabled": "{{ running | default:False }}",
+        "disabled": "{{ running | default:false }}",
         "onClick": [
           {"action": "setState", "key": "running", "value": true},
           {"action": "setState", "key": "ticks", "value": 0},
