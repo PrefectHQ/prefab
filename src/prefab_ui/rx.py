@@ -28,7 +28,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from contextvars import ContextVar
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 # ── Auto-name counter ────────────────────────────────────────────────
 
@@ -63,6 +63,14 @@ _PREC_ADD = 7
 _PREC_MUL = 8
 _PREC_UNARY = 9
 _PREC_ATOM = 10
+
+
+@runtime_checkable
+class _HasRx(Protocol):
+    """Structural check for components with a .rx property (StatefulMixin)."""
+
+    @property
+    def rx(self) -> Rx: ...
 
 
 # ── Helpers ──────────────────────────────────────────────────────────
@@ -140,12 +148,19 @@ class Rx:
         If the key was provided as a callable, it is invoked on first
         access and the result is used (allowing forward references to
         components that don't exist yet at construction time).
+
+        Callables may return an ``Rx``, a string, or a stateful component
+        (anything with an ``.rx`` property).  ``Rx(lambda: slider)`` and
+        ``Rx(lambda: slider.rx)`` are equivalent.
         """
         raw = object.__getattribute__(self, "_key")
         if callable(raw):
             resolved = raw()
             if isinstance(resolved, Rx):
                 return resolved.key
+            # Support Rx(lambda: component) — extract .rx automatically
+            if isinstance(resolved, _HasRx):
+                return resolved.rx.key
             return str(resolved)
         return raw
 
@@ -195,88 +210,122 @@ class Rx:
     def __getattr__(self, name: str) -> Rx:
         if name.startswith("_"):
             raise AttributeError(name)
-        return Rx(f"{self.key}.{name}")
+        return Rx(lambda: f"{self.key}.{name}")
 
     # ── Arithmetic ───────────────────────────────────────────────────
 
     def __add__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_ADD)} + {_format_value(other)}", _PREC_ADD)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_ADD)} + {_format_value(other)}", _PREC_ADD
+        )
 
     def __radd__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} + {self._wrap(_PREC_ADD)}", _PREC_ADD)
+        return Rx(
+            lambda: f"{_format_value(other)} + {self._wrap(_PREC_ADD)}", _PREC_ADD
+        )
 
     def __sub__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_ADD)} - {_rhs(other, _PREC_ADD)}", _PREC_ADD)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_ADD)} - {_rhs(other, _PREC_ADD)}", _PREC_ADD
+        )
 
     def __rsub__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} - {self._wrap(_PREC_ADD)}", _PREC_ADD)
+        return Rx(
+            lambda: f"{_format_value(other)} - {self._wrap(_PREC_ADD)}", _PREC_ADD
+        )
 
     def __mul__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_MUL)} * {_format_value(other)}", _PREC_MUL)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_MUL)} * {_format_value(other)}", _PREC_MUL
+        )
 
     def __rmul__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} * {self._wrap(_PREC_MUL)}", _PREC_MUL)
+        return Rx(
+            lambda: f"{_format_value(other)} * {self._wrap(_PREC_MUL)}", _PREC_MUL
+        )
 
     def __truediv__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_MUL)} / {_rhs(other, _PREC_MUL)}", _PREC_MUL)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_MUL)} / {_rhs(other, _PREC_MUL)}", _PREC_MUL
+        )
 
     def __rtruediv__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} / {self._wrap(_PREC_MUL)}", _PREC_MUL)
+        return Rx(
+            lambda: f"{_format_value(other)} / {self._wrap(_PREC_MUL)}", _PREC_MUL
+        )
 
     def __neg__(self) -> Rx:
-        return Rx(f"-{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
+        return Rx(lambda: f"-{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
 
     def __pos__(self) -> Rx:
-        return Rx(f"+{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
+        return Rx(lambda: f"+{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
 
     # ── Comparison ───────────────────────────────────────────────────
 
     def __eq__(self, other: object) -> Rx:  # type: ignore[override]
-        return Rx(f"{self._wrap(_PREC_COMP)} == {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} == {_format_value(other)}", _PREC_COMP
+        )
 
     def __ne__(self, other: object) -> Rx:  # type: ignore[override]
-        return Rx(f"{self._wrap(_PREC_COMP)} != {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} != {_format_value(other)}", _PREC_COMP
+        )
 
     def __gt__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} > {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} > {_format_value(other)}", _PREC_COMP
+        )
 
     def __ge__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} >= {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} >= {_format_value(other)}", _PREC_COMP
+        )
 
     def __lt__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} < {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} < {_format_value(other)}", _PREC_COMP
+        )
 
     def __le__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} <= {_format_value(other)}", _PREC_COMP)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_COMP)} <= {_format_value(other)}", _PREC_COMP
+        )
 
     # ── Logical ──────────────────────────────────────────────────────
 
     def __and__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_AND)} && {_rhs(other, _PREC_AND)}", _PREC_AND)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_AND)} && {_rhs(other, _PREC_AND)}", _PREC_AND
+        )
 
     def __rand__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} && {self._wrap(_PREC_AND)}", _PREC_AND)
+        return Rx(
+            lambda: f"{_format_value(other)} && {self._wrap(_PREC_AND)}", _PREC_AND
+        )
 
     def __or__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_OR)} || {_rhs(other, _PREC_OR)}", _PREC_OR)
+        return Rx(
+            lambda: f"{self._wrap(_PREC_OR)} || {_rhs(other, _PREC_OR)}", _PREC_OR
+        )
 
     def __ror__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} || {self._wrap(_PREC_OR)}", _PREC_OR)
+        return Rx(lambda: f"{_format_value(other)} || {self._wrap(_PREC_OR)}", _PREC_OR)
 
     def __invert__(self) -> Rx:
-        # Wrap anything that isn't a simple atom for readability
-        return Rx(f"!{self._wrap(_PREC_ATOM)}", _PREC_NOT)
+        return Rx(lambda: f"!{self._wrap(_PREC_ATOM)}", _PREC_NOT)
 
     # ── Ternary ──────────────────────────────────────────────────────
 
     def then(self, if_true: object, if_false: object) -> Rx:
         """Ternary conditional: ``condition ? if_true : if_false``."""
-        # Use _PREC_TERNARY + 1 so nested ternaries in branches get wrapped
         branch_prec = _PREC_TERNARY + 1
         return Rx(
-            f"{self._wrap(_PREC_TERNARY)} ? "
-            f"{_format_value(if_true, branch_prec)} : "
-            f"{_format_value(if_false, branch_prec)}",
+            lambda: (
+                f"{self._wrap(_PREC_TERNARY)} ? "
+                f"{_format_value(if_true, branch_prec)} : "
+                f"{_format_value(if_false, branch_prec)}"
+            ),
             _PREC_TERNARY,
         )
 
@@ -285,8 +334,10 @@ class Rx:
     def _pipe(self, name: str, arg: object = None) -> Rx:
         """Apply a pipe: ``key | name`` or ``key | name:arg``."""
         if arg is not None:
-            return Rx(f"{self.key} | {name}:{_format_pipe_arg(arg)}", _PREC_PIPE)
-        return Rx(f"{self.key} | {name}", _PREC_PIPE)
+            return Rx(
+                lambda: f"{self.key} | {name}:{_format_pipe_arg(arg)}", _PREC_PIPE
+            )
+        return Rx(lambda: f"{self.key} | {name}", _PREC_PIPE)
 
     # Number pipes
     def currency(self, code: str | None = None) -> Rx:

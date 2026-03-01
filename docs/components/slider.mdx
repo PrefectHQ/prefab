@@ -35,27 +35,21 @@ Slider(value=50)
 
 ## Displaying the Value
 
-Create the slider with `defer=True` to get a reference to it, then use `.rx` to bind its value into a label. Call `insert()` to place the slider in the tree:
+Forward-declare a reactive reference with `Rx(lambda: ...)`, then create the slider where it belongs in the tree. The lambda resolves at render time, after the slider exists:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBSb3csCiAgICBTbGlkZXIsCiAgICBUZXh0LAogICAgaW5zZXJ0LAopCgp2b2x1bWUgPSBTbGlkZXIodmFsdWU9MC43NSwgbWluPTAsIG1heD0xLCBkZWZlcj1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiVm9sdW1lIikKICAgICAgICBUZXh0KGYie3ZvbHVtZS5yeC5wZXJjZW50KCl9IiwgYm9sZD1UcnVlKQogICAgaW5zZXJ0KHZvbHVtZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCh2b2wucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICB2b2x1bWUgPSBTbGlkZXIodmFsdWU9MC43NSwgbWluPTAsIG1heD0xKQo=">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column,
-    Label,
-    Row,
-    Slider,
-    Text,
-    insert,
-)
+from prefab_ui.components import Column, Label, Row, Slider, Text
+from prefab_ui.rx import Rx
 
-volume = Slider(value=0.75, min=0, max=1, defer=True)
+vol = Rx(lambda: volume)
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Volume")
-        Text(f"{volume.rx.percent()}", bold=True)
-    insert(volume)
+        Text(vol.percent(), bold=True)
+    volume = Slider(value=0.75, min=0, max=1)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -87,31 +81,25 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-The `.number()` pipe strips trailing decimals so the display stays clean. `defer=True` prevents the slider from auto-attaching, letting you reference `.rx` before placing it with `insert()`.
+`Rx(lambda: volume)` forward-declares the reactive reference — the lambda resolves at render time, so you can use `vol` in expressions even though the slider is created later in the code.
 
 ## Range and Step
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBSb3csCiAgICBTbGlkZXIsCiAgICBUZXh0LAogICAgaW5zZXJ0LAopCgpyYXRpbmcgPSBTbGlkZXIodmFsdWU9NCwgbmFtZT0icmF0aW5nIiwgbWluPTAsIG1heD01LCBzdGVwPTAuNSwgZGVmZXI9VHJ1ZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlJhdGluZyIpCiAgICAgICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkKICAgIGluc2VydChyYXRpbmcpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2YWwgPSBSeChsYW1iZGE6IHJhdGluZykKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlJhdGluZyIpCiAgICAgICAgVGV4dCh2YWwsIGJvbGQ9VHJ1ZSkKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQo=">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column,
-    Label,
-    Row,
-    Slider,
-    Text,
-    insert,
-)
+from prefab_ui.components import Column, Label, Row, Slider, Text
+from prefab_ui.rx import Rx
 
-rating = Slider(value=4, name="rating", min=0, max=5, step=0.5, defer=True)
+val = Rx(lambda: rating)
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Rating")
-        Text(rating.rx, bold=True)
-    insert(rating)
+        Text(val, bold=True)
+    rating = Slider(value=4, name="rating", min=0, max=5, step=0.5)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -554,17 +542,20 @@ with Column(gap=4):
 
 Use `.rx` to get a reactive reference to the slider's current numeric value. For a standard slider, `.rx` holds a single number; for a range slider (`range=True`), it holds a `[low, high]` array. The `.number()` pipe formats the value for clean display:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_19 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_19":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSwgZGVmZXI9VHJ1ZSkKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIkJyaWdodG5lc3MiKQogICAgICAgIFRleHQoZiJ7cy5yeC5wZXJjZW50KCl9IiwgYm9sZD1UcnVlKQogICAgUHJvZ3Jlc3ModmFsdWU9cy5yeCkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_19 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"},{"name":"slider_19","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_19":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
+from prefab_ui.rx import Rx
+
+val = Rx(lambda: s)
 
 with Column(gap=4):
-    s = Slider(value=0.42, min=0, max=1, defer=True)
     with Row(css_class="justify-between"):
         Label("Brightness")
-        Text(f"{s.rx.percent()}", bold=True)
-    Progress(value=s.rx)
+        Text(val.percent(), bold=True)
+    Progress(value=val)
+    s = Slider(value=0.42, min=0, max=1)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -586,6 +577,14 @@ with Column(gap=4):
         "min": 0,
         "max": 100,
         "variant": "default"
+      },
+      {
+        "name": "slider_19",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 1.0,
+        "value": 0.42,
+        "disabled": false
       }
     ]
   },

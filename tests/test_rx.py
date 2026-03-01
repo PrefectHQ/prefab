@@ -510,6 +510,44 @@ class TestCallableKey:
         rx = Rx(lambda: "raw_key")
         assert rx.key == "raw_key"
 
+    def test_callable_with_stateful_component(self) -> None:
+        """Rx(lambda: component) extracts .rx automatically."""
+        from prefab_ui.components import Slider
+
+        slider = Slider(value=50, name="vol")
+        rx = Rx(lambda: slider)
+        assert rx.key == "vol"
+        assert str(rx) == "{{ vol }}"
+
+    def test_callable_forward_ref_to_component(self) -> None:
+        """Forward-reference a component that doesn't exist yet."""
+        from prefab_ui.components import Slider
+
+        val = Rx(lambda: s)
+        expr = (val / 100).percent()
+        s = Slider(value=42, name="brightness")
+        assert str(expr) == "{{ brightness / 100 | percent }}"
+
+    def test_callable_forward_reference_with_operators(self) -> None:
+        """Operators on a callable Rx defer resolution until .key is accessed."""
+        container: list[Rx] = []
+        val = Rx(lambda: container[0])
+        expr = (val / 100).percent()
+        cond = (val < 20).then("low", "ok")
+        neg = -val
+        container.append(Rx("slider_1"))
+        assert str(expr) == "{{ slider_1 / 100 | percent }}"
+        assert str(cond) == "{{ slider_1 < 20 ? 'low' : 'ok' }}"
+        assert str(neg) == "{{ -slider_1 }}"
+
+    def test_callable_chained_operators(self) -> None:
+        """Multiple operators compose lazily through nested lambdas."""
+        container: list[Rx] = []
+        val = Rx(lambda: container[0])
+        chained = ((val + 1) * 2 - 3).round()
+        container.append(Rx("x"))
+        assert str(chained) == "{{ (x + 1) * 2 - 3 | round:0 }}"
+
 
 # ── Deferred resolution in components ────────────────────────────────
 
