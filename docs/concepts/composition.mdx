@@ -512,9 +512,11 @@ Prefab UIs are declarative: your Python code runs once to build a component tree
 
 ## Forward references
 
-Sometimes you need a component's reactive value before that component exists. Picture a slider with a label above it showing the current value — the label needs `slider.rx`, but at that line of code, the slider hasn't been created yet.
+Sometimes you need a component's reactive value before that component exists. Python executes top-to-bottom, so if a label above a slider needs `slider.rx`, you have a problem — the slider hasn't been created at the point where the label is defined. Prefab offers two escape hatches: lambda Rx for reactive values, and defer/insert for structural rearrangement.
 
-Wrap the reference in a lambda, and Rx defers resolution until render time:
+### Lambda Rx
+
+The common case is needing a component's `.rx` before it's created. Wrap the reference in a lambda, and Rx defers resolution until render time:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 / 100 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCgodm9sIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT03NSkK">
 <CodeGroup>
