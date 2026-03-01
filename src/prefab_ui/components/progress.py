@@ -39,7 +39,7 @@ class Progress(Component):
         default="default",
         description="Visual variant: default, success, warning, destructive, info, muted",
     )
-    indicator_class: str | None = Field(
+    indicator_class: RxStr | None = Field(
         default=None,
         alias="indicatorClass",
         description="Tailwind classes for the indicator bar (e.g. 'bg-green-500')",

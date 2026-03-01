@@ -296,7 +296,7 @@ class Rx:
     def number(self, decimals: int | None = None) -> Rx:
         return self._pipe("number", decimals)
 
-    def round(self, decimals: int) -> Rx:
+    def round(self, decimals: int = 0) -> Rx:
         return self._pipe("round", decimals)
 
     def abs(self) -> Rx:
