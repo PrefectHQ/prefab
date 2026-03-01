@@ -205,8 +205,8 @@ from prefab_ui.rx import Rx
 vol = Rx(lambda: slider)
 
 with Column():
-    Text(vol.percent(), bold=True)     # vol is usable here...
-    slider = Slider(value=50)          # ...even though slider is created here
+    Text((vol / 100).percent(), bold=True)  # vol is usable here...
+    slider = Slider(value=50)                # ...even though slider is created here
 ```
 
 Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/composition#forward-references) for more.

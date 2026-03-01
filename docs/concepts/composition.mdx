@@ -516,7 +516,7 @@ Sometimes you need a component's reactive value before that component exists. Pi
 
 Wrap the reference in a lambda, and Rx defers resolution until render time:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCh2b2wucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICB2b2x1bWUgPSBTbGlkZXIodmFsdWU9NzUpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 / 100 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCgodm9sIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT03NSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Row, Slider, Text
@@ -527,7 +527,7 @@ vol = Rx(lambda: volume)
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Volume")
-        Text(vol.percent(), bold=True)
+        Text((vol / 100).percent(), bold=True)
     volume = Slider(value=75)
 ```
 ```json Protocol icon="brackets-curly"
@@ -541,7 +541,7 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider_20 | percent }}", "bold": true, "type": "Text"}
+          {"content": "{{ slider_20 / 100 | percent }}", "bold": true, "type": "Text"}
         ]
       },
       {
@@ -560,7 +560,7 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-`Rx(lambda: volume)` doesn't resolve right away — it captures the *name* `volume` and waits. When the lambda returns a stateful component, Rx extracts its `.rx` automatically, so `Rx(lambda: volume)` and `Rx(lambda: volume.rx)` are equivalent. Operations like `.percent()` compose lazily too, so you can build entire expression chains against a component that doesn't exist yet.
+`Rx(lambda: volume)` doesn't resolve right away — it captures the *name* `volume` and waits. When the lambda returns a stateful component, Rx extracts its `.rx` automatically, so `Rx(lambda: volume)` and `Rx(lambda: volume.rx)` are equivalent. Operations like `/ 100` and `.percent()` compose lazily too, so you can build entire expression chains against a component that doesn't exist yet.
 
 ### Structural rearrangement with defer/insert
 
