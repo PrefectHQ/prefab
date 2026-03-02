@@ -1587,7 +1587,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nvol = Rx(lambda: volume)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(vol.percent(), bold=True)\n    volume = Slider(value=75)"
+    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nvol = Rx(lambda: volume)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text((vol / 100).percent(), bold=True)\n    volume = Slider(value=75)"
   },
   {
     "title": "from prefab_ui.components import Column, Text, defer, insert",
@@ -1857,7 +1857,7 @@
   {
     "title": "from prefab_ui.rx import Rx",
     "category": "Expressions",
-    "code": "vol = Rx(lambda: slider)\n\nwith Column():\n    Text(vol.percent(), bold=True)     # vol is usable here...\n    slider = Slider(value=50)          # ...even though slider is created here"
+    "code": "vol = Rx(lambda: slider)\n\nwith Column():\n    Text((vol / 100).percent(), bold=True)  # vol is usable here...\n    slider = Slider(value=50)                # ...even though slider is created here"
   },
   {
     "title": "Python icon=\"python\"",
