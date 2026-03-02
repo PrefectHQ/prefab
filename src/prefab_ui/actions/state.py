@@ -112,12 +112,12 @@ class AppendState(Action):
         key: str | Rx,
         value: Any = "{{ $event }}",
         *,
-        index: int | str | None = None,
+        index: int | str | Rx | None = None,
         **kwargs: Any,
     ) -> None:
         kwargs["key"] = key.key if isinstance(key, Rx) else key
         kwargs["value"] = value
-        kwargs["index"] = index
+        kwargs["index"] = str(index) if isinstance(index, Rx) else index
         super().__init__(**kwargs)
 
 
@@ -138,7 +138,7 @@ class PopState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str | Rx, index: int | str, **kwargs: Any) -> None:
+    def __init__(self, key: str | Rx, index: int | str | Rx, **kwargs: Any) -> None:
         kwargs["key"] = key.key if isinstance(key, Rx) else key
-        kwargs["index"] = index
+        kwargs["index"] = str(index) if isinstance(index, Rx) else index
         super().__init__(**kwargs)

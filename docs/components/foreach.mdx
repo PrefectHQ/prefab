@@ -242,6 +242,38 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
+## Nested Loops and `let`
+
+When you nest ForEach loops, the inner loop shadows `ITEM` and `INDEX`. Use `let` to capture the outer loop's values so they're still accessible inside the inner loop.
+
+```python Nested ForEach with let
+from prefab_ui.components import ITEM, INDEX, Checkbox, Column, Input
+from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import Rx
+
+# Capture outer index/fields as named bindings
+with ForEach("groups", let=dict(gi=INDEX, show_done=ITEM.show_done)):
+
+    # Create Rx handles for the let-binding names
+    gi = Rx("gi")
+    show_done = Rx("show_done")
+
+    # gi and INDEX are now distinct — gi is the outer index,
+    # INDEX inside the inner loop is the inner index
+    with Column():
+        Input(name=f"groups.{gi}.name")
+        with ForEach(f"groups.{gi}.todos"):
+            # ITEM is now the todo, INDEX is the todo index
+            # gi still references the outer group index
+            Checkbox(name=f"groups.{gi}.todos.{INDEX}.done")
+```
+
+`let` evaluates its values per iteration at render time, then stores them as named variables in a new child scope. This is the only mechanism that truly captures per-iteration values — you can't achieve the same effect with Python variables because iteration happens in the renderer, not in Python.
+
+<Warning>
+  `Rx(INDEX)` inside a ForEach body does **not** capture the current index. It just creates another reference to `$index`, which the inner loop will shadow. Use `let=dict(gi=INDEX)` to capture, then `gi = Rx("gi")` for a Python handle to the captured value.
+</Warning>
+
 ## API Reference
 
 <Card icon="code" title="ForEach Parameters">
