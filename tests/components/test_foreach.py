@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from prefab_ui.components import Column, Text
+from prefab_ui.actions import AppendState, PopState
+from prefab_ui.components import INDEX, ITEM, Column, Text
 from prefab_ui.components.control_flow import ForEach
-from prefab_ui.rx import ITEM, Rx
+from prefab_ui.rx import Rx
 
 
 class TestForEachSerialization:
@@ -68,3 +69,63 @@ class TestForEachEnter:
         with ForEach("users") as user:
             Text(content=user.name)
         assert str(user.name) == "{{ $item.name }}"
+
+
+class TestRxPatterns:
+    """Test Rx constants (ITEM, INDEX) in ForEach-related contexts."""
+
+    def test_rx_in_let_dict_serializes(self):
+        fe = ForEach("groups", let=dict(gi=INDEX, show_done=ITEM.show_done))
+        j = fe.to_json()
+        assert j["let"] == {"gi": "{{ $index }}", "show_done": "{{ $item.show_done }}"}
+
+    def test_fstring_key_with_rx(self):
+        gi = Rx("gi")
+        fe = ForEach(f"groups.{gi}.todos")
+        assert fe.key == "groups.{{ gi }}.todos"
+
+    def test_fstring_key_with_index(self):
+        fe = ForEach(f"groups.{INDEX}.todos")
+        assert fe.key == "groups.{{ $index }}.todos"
+
+    def test_item_dot_path_in_text(self):
+        with ForEach("files") as item:
+            t = Text(f"{item.name}")
+        assert t.content == "{{ $item.name }}"
+
+    def test_item_fstring_with_pipes(self):
+        with ForEach("files") as item:
+            t = Text(f"{item.type} · {item.size} bytes")
+        assert t.content == "{{ $item.type }} · {{ $item.size }} bytes"
+
+    def test_popstate_with_index_rx(self):
+        action = PopState("files", INDEX)
+        j = action.model_dump(by_alias=True, exclude_none=True)
+        assert j["index"] == "{{ $index }}"
+
+    def test_popstate_with_let_rx(self):
+        gi = Rx("gi")
+        action = PopState(f"groups.{gi}.todos", INDEX)
+        j = action.model_dump(by_alias=True, exclude_none=True)
+        assert j["key"] == "groups.{{ gi }}.todos"
+        assert j["index"] == "{{ $index }}"
+
+    def test_appendstate_with_rx_index(self):
+        action = AppendState("items", "value", index=INDEX)
+        j = action.model_dump(by_alias=True, exclude_none=True)
+        assert j["index"] == "{{ $index }}"
+
+    def test_item_pipe_in_condition(self):
+        from prefab_ui.components.control_flow import If
+
+        with ForEach("groups"):
+            cond = If(ITEM.todos.length())
+        assert cond.condition == "{{ $item.todos | length }}"
+
+    def test_negation_in_disabled(self):
+        from prefab_ui.components import Button
+
+        with ForEach("groups"):
+            btn = Button("Add", disabled=~ITEM.new_todo)
+        j = btn.to_json()
+        assert j["disabled"] == "{{ !$item.new_todo }}"
