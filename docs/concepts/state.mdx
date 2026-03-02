@@ -12,12 +12,14 @@ Because state is centralized and global, components don't own their data. There'
 
 ## Providing initial values
 
-State starts empty unless you seed it. For apps running via `prefab serve` or as a standalone Python script, use `set_initial_state()`:
+State starts empty unless you seed it. For apps running via `prefab serve` or as a standalone Python script, use `set_initial_state()`. It returns a proxy object whose attributes are reactive references to the keys you just defined — so you can immediately start using them in components without a separate declaration step:
 
 ```python
 from prefab_ui.app import set_initial_state
 
-set_initial_state(count=0, title="Dashboard", items=[])
+state = set_initial_state(count=0, title="Dashboard", items=[])
+state.count       # reactive reference to {{ count }}
+state.items       # reactive reference to {{ items }}
 ```
 
 For MCP tools and API routes that return a `PrefabApp`, pass state to the constructor:
@@ -78,19 +80,29 @@ Inside component props, `{{ key }}` template expressions resolve to the current 
 
 The expression language itself supports operators and formatting: `{{ count + 10 }}` adds ten, `{{ name | upper }}` uppercases. You can write these directly in any string prop.
 
-In Python, `Rx("count")` compiles to the same `{{ count }}` expression in the protocol output, but in your code it behaves like a Python value. You can apply operators, use it in f-strings, and combine it with other values:
+In Python, `Rx` objects compile to the same `{{ key }}` expressions in the protocol output, but in your code they behave like Python values — you can apply operators, use them in f-strings, and combine them with other values. The most common way to get an `Rx` is through the return value of `set_initial_state`:
 
 ```python
-from prefab_ui.rx import Rx
+from prefab_ui.app import set_initial_state
 
-count = Rx("count")
+state = set_initial_state(count=0)
+count = state.count
+
 Text(count)                                  # {{ count }}
 Text(f"Count: {count}")                      # Count: {{ count }}
 Text(count + 10)                             # {{ count + 10 }}
 Text(f"Items: {count} total")                # Items: {{ count }} total
 ```
 
-The full Rx system, including operators, formatting, and the `.rx` shorthand, is covered in [Expressions](/guides/expressions).
+You can also use the `STATE` constant, which works identically but doesn't require capturing the return value — useful when state is set by actions rather than initialization, or when you want a quick reference without calling `set_initial_state` first:
+
+```python
+from prefab_ui.components import STATE
+
+Text(STATE.count)                            # {{ count }}
+```
+
+For keys not tied to initial state (like `let` bindings or forward references), use `Rx` directly: `Rx("key")`. The full Rx system, including operators, formatting, and the `.rx` shorthand, is covered in [Expressions](/concepts/expressions).
 
 ## Nested state and dot paths
 
