@@ -29,17 +29,16 @@ class FileUpload(BaseModel):
     """Data for a single uploaded file.
 
     Produced by :class:`~prefab_ui.components.DropZone` and
-    :class:`OpenFilePicker` events.  Use this type to annotate MCP tool
-    parameters that receive file data::
+    :class:`OpenFilePicker` events.  Both always produce ``list[FileUpload]``
+    as ``$event``, even for single-file uploads::
 
         from prefab_ui.actions import FileUpload
 
         @server.tool()
-        def process_csv(file: FileUpload):
-            contents = base64.b64decode(file.data)
-            ...
-
-    For multiple-file uploads, annotate as ``list[FileUpload]``.
+        def process_csv(files: list[FileUpload]):
+            for f in files:
+                contents = base64.b64decode(f.data)
+                ...
     """
 
     name: str = Field(description="Original filename")
@@ -52,8 +51,7 @@ class OpenFilePicker(Action):
     """Open the browser file picker and read selected files to base64.
 
     Fires ``onSuccess`` with the file data as ``$event``:
-    - Single file mode: ``{name, size, type, data}``
-    - Multiple file mode: ``[{name, size, type, data}, ...]``
+    ``[{name, size, type, data}, ...]`` (always an array, even for single files).
 
     Must execute before any async server actions in the action chain
     (CallTool, SendMessage) since those break the browser's

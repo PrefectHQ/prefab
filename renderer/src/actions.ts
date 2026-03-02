@@ -333,7 +333,7 @@ export async function executeAction(
             try {
               let files = Array.from(input.files ?? []);
               files = filterByAccept(files, accept);
-              const result = await readFiles(files, { multiple, maxSize });
+              const result = await readFiles(files, { maxSize });
               resolve(result);
             } catch (err) {
               reject(err);
@@ -349,7 +349,7 @@ export async function executeAction(
             setTimeout(() => {
               if (document.body.contains(input)) {
                 document.body.removeChild(input);
-                resolve(null);
+                resolve([]);
               }
               window.removeEventListener("focus", onFocus);
             }, 300);
@@ -359,8 +359,8 @@ export async function executeAction(
           input.click();
         });
 
-        if (fileData == null) {
-          // User cancelled — not an error, just stop the chain
+        if (!Array.isArray(fileData) || fileData.length === 0) {
+          // User cancelled or all files rejected — not an error, just stop the chain
           return true;
         }
 

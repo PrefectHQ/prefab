@@ -38,16 +38,13 @@ function readFileAsBase64(file: File): Promise<string> {
  *
  * - Validates each file against maxSize (if provided), showing a toast
  *   for rejected files.
- * - Returns a single FileData for single-file mode, or an array for
- *   multiple-file mode.
+ * - Always returns an array — empty if no files passed validation.
  */
 export async function readFiles(
   files: FileList | File[],
-  options: { multiple?: boolean; maxSize?: number } = {},
-): Promise<FileData | FileData[] | null> {
+  options: { maxSize?: number } = {},
+): Promise<FileData[]> {
   const fileArray = Array.from(files);
-  if (fileArray.length === 0) return null;
-
   const results: FileData[] = [];
 
   for (const file of fileArray) {
@@ -66,8 +63,7 @@ export async function readFiles(
     });
   }
 
-  if (results.length === 0) return null;
-  return options.multiple ? results : results[0];
+  return results;
 }
 
 /**

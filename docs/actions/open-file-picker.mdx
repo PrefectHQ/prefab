@@ -88,7 +88,7 @@ Button(
 
 ## Multiple Files
 
-Set `multiple=True` to let users select several files at once. `$event` becomes an array of file objects.
+Set `multiple=True` to let users select several files at once. `$event` is always `list[FileUpload]` regardless of `multiple`, but the OS file picker restricts multi-select to when `multiple=True`.
 
 ```python Multiple file upload
 from prefab_ui.components import Button
@@ -168,7 +168,7 @@ One constraint worth knowing: `OpenFilePicker` must execute before any async ser
 </ParamField>
 
 <ParamField body="multiple" type="bool" default="False">
-  Allow selecting multiple files. When `True`, `$event` is a `list[FileUpload]`.
+  Allow selecting multiple files. `$event` is always `list[FileUpload]`; this controls whether the OS file picker allows multi-select.
 </ParamField>
 
 <ParamField body="max_size" type="int | None" default="None">
@@ -176,7 +176,7 @@ One constraint worth knowing: `OpenFilePicker` must execute before any async ser
 </ParamField>
 
 <ParamField body="on_success" type="Action | list[Action] | None" default="None">
-  Action(s) to run after files are selected. `$event` is a `FileUpload` (single) or `list[FileUpload]` (multiple).
+  Action(s) to run after files are selected. `$event` is always `list[FileUpload]`.
 </ParamField>
 
 <ParamField body="on_error" type="Action | list[Action] | None" default="None">

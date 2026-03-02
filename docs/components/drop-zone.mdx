@@ -18,7 +18,7 @@ If you don't need a dedicated upload area — say you just want an "Upload" butt
 
 With no configuration, DropZone renders a full-width dashed upload area that accepts a single file of any type.
 
-<ComponentPreview json={{"view":{"name":"dropzone_1","type":"DropZone","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKCkK">
+<ComponentPreview json={{"view":{"name":"dropzone_1","type":"DropZone","multiple":false,"disabled":false},"state":{"dropzone_1":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -27,7 +27,8 @@ DropZone()
 ```
 ```json Protocol icon="brackets-curly"
 {
-  "view": {"name": "dropzone_1", "type": "DropZone", "multiple": false, "disabled": false}
+  "view": {"name": "dropzone_1", "type": "DropZone", "multiple": false, "disabled": false},
+  "state": {"dropzone_1": []}
 }
 ```
 </CodeGroup>
@@ -37,7 +38,7 @@ DropZone()
 
 The `label` sets the primary prompt text and `description` adds secondary helper text below it — useful for hinting at accepted formats or size limits. You can also swap the default upload icon for any [Lucide icon](https://lucide.dev/icons) via the `icon` prop.
 
-<ComponentPreview json={{"view":{"name":"dropzone_2","type":"DropZone","icon":"image","label":"Drop images here","description":"PNG, JPG, or GIF up to 10MB","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgaWNvbj0iaW1hZ2UiLAogICAgbGFiZWw9IkRyb3AgaW1hZ2VzIGhlcmUiLAogICAgZGVzY3JpcHRpb249IlBORywgSlBHLCBvciBHSUYgdXAgdG8gMTBNQiIsCikK">
+<ComponentPreview json={{"view":{"name":"dropzone_2","type":"DropZone","icon":"image","label":"Drop images here","description":"PNG, JPG, or GIF up to 10MB","multiple":false,"disabled":false},"state":{"dropzone_2":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgaWNvbj0iaW1hZ2UiLAogICAgbGFiZWw9IkRyb3AgaW1hZ2VzIGhlcmUiLAogICAgZGVzY3JpcHRpb249IlBORywgSlBHLCBvciBHSUYgdXAgdG8gMTBNQiIsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -58,7 +59,8 @@ DropZone(
     "description": "PNG, JPG, or GIF up to 10MB",
     "multiple": false,
     "disabled": false
-  }
+  },
+  "state": {"dropzone_2": []}
 }
 ```
 </CodeGroup>
@@ -68,7 +70,7 @@ DropZone(
 
 The `accept` parameter restricts which files the browser will allow. It works just like the HTML `accept` attribute — MIME types (`"image/*"`), extensions (`".csv"`), or a comma-separated mix of both.
 
-<ComponentPreview json={{"view":{"name":"dropzone_3","type":"DropZone","label":"Upload documents","description":"PDF, DOCX, or TXT","accept":".pdf,.docx,.txt","multiple":false,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBkb2N1bWVudHMiLAogICAgZGVzY3JpcHRpb249IlBERiwgRE9DWCwgb3IgVFhUIiwKICAgIGFjY2VwdD0iLnBkZiwuZG9jeCwudHh0IiwKKQo=">
+<ComponentPreview json={{"view":{"name":"dropzone_3","type":"DropZone","label":"Upload documents","description":"PDF, DOCX, or TXT","accept":".pdf,.docx,.txt","multiple":false,"disabled":false},"state":{"dropzone_3":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBkb2N1bWVudHMiLAogICAgZGVzY3JpcHRpb249IlBERiwgRE9DWCwgb3IgVFhUIiwKICAgIGFjY2VwdD0iLnBkZiwuZG9jeCwudHh0IiwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -89,7 +91,8 @@ DropZone(
     "accept": ".pdf,.docx,.txt",
     "multiple": false,
     "disabled": false
-  }
+  },
+  "state": {"dropzone_3": []}
 }
 ```
 </CodeGroup>
@@ -97,9 +100,9 @@ DropZone(
 
 ## Multiple Files
 
-By default, DropZone accepts one file. Set `multiple=True` to let users select several at once — `$event` becomes a `list[FileUpload]` instead of a single `FileUpload`.
+By default, DropZone accepts one file. Set `multiple=True` to let users select several at once — each new drop accumulates into the state array rather than replacing it.
 
-<ComponentPreview json={{"view":{"name":"dropzone_4","type":"DropZone","label":"Upload files","description":"Select as many as you like","multiple":true,"disabled":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBmaWxlcyIsCiAgICBkZXNjcmlwdGlvbj0iU2VsZWN0IGFzIG1hbnkgYXMgeW91IGxpa2UiLAogICAgbXVsdGlwbGU9VHJ1ZSwKKQo=">
+<ComponentPreview json={{"view":{"name":"dropzone_4","type":"DropZone","label":"Upload files","description":"Select as many as you like","multiple":true,"disabled":false},"state":{"dropzone_4":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKAogICAgbGFiZWw9IlVwbG9hZCBmaWxlcyIsCiAgICBkZXNjcmlwdGlvbj0iU2VsZWN0IGFzIG1hbnkgYXMgeW91IGxpa2UiLAogICAgbXVsdGlwbGU9VHJ1ZSwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -119,7 +122,8 @@ DropZone(
     "description": "Select as many as you like",
     "multiple": true,
     "disabled": false
-  }
+  },
+  "state": {"dropzone_4": []}
 }
 ```
 </CodeGroup>
@@ -162,7 +166,7 @@ DropZone(
 
 ## The `FileUpload` Type
 
-Both DropZone and [OpenFilePicker](/actions/open-file-picker) produce the same event shape: an object with `name`, `size` (bytes), `type` (MIME), and `data` (raw base64 — no `data:` URL prefix). For multiple-file mode, you get an array of these objects.
+Both DropZone and [OpenFilePicker](/actions/open-file-picker) always produce `$event` as `list[FileUpload]` — an array of objects with `name`, `size` (bytes), `type` (MIME), and `data` (raw base64 — no `data:` URL prefix). Even single-file uploads produce a one-element array.
 
 Prefab ships a `FileUpload` type so you can annotate your MCP tool parameters with it:
 
@@ -170,18 +174,17 @@ Prefab ships a `FileUpload` type so you can annotate your MCP tool parameters wi
 from prefab_ui.actions import FileUpload
 
 @server.tool()
-def process_csv(file: FileUpload):
+def process_csv(files: list[FileUpload]):
     import base64
-    contents = base64.b64decode(file.data)
-    # file.name, file.size, file.type also available
-    ...
+    for f in files:
+        contents = base64.b64decode(f.data)
+        # f.name, f.size, f.type also available
+        ...
 ```
-
-For multiple-file uploads, annotate as `list[FileUpload]`.
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"name":"dropzone_5","type":"DropZone","label":"Uploads disabled","multiple":false,"disabled":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKGxhYmVsPSJVcGxvYWRzIGRpc2FibGVkIiwgZGlzYWJsZWQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"name":"dropzone_5","type":"DropZone","label":"Uploads disabled","multiple":false,"disabled":true},"state":{"dropzone_5":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRHJvcFpvbmUKCkRyb3Bab25lKGxhYmVsPSJVcGxvYWRzIGRpc2FibGVkIiwgZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DropZone
@@ -196,7 +199,8 @@ DropZone(label="Uploads disabled", disabled=True)
     "label": "Uploads disabled",
     "multiple": false,
     "disabled": true
-  }
+  },
+  "state": {"dropzone_5": []}
 }
 ```
 </CodeGroup>
@@ -204,11 +208,11 @@ DropZone(label="Uploads disabled", disabled=True)
 
 ## Reading the Value
 
-DropZone stores selected file data in client state automatically. Each file is an object with `name`, `size` (bytes), `type` (MIME), and `data` (base64) properties. For `multiple=True`, the state holds an array of these objects.
+DropZone stores selected file data in client state as `list[FileUpload]` — always an array, defaulting to `[]`. Each entry has `name`, `size` (bytes), `type` (MIME), and `data` (base64) properties. With `multiple=True`, files accumulate across drops; with `multiple=False`, each upload replaces the previous one.
 
 Use `.rx` to reference file data in other components. The `.length()` pipe counts entries, and `ForEach` iterates over the array to display each file's details. Drop some files below to see it work:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"dropzone_6","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ dropzone_6 | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-sm font-medium","content":"{{ dropzone_6 | length }} file(s) selected","type":"Text"},{"type":"ForEach","key":"dropzone_6","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsIENvbHVtbiwgRHJvcFpvbmUsIEZvckVhY2gsCiAgICBJZiwgRWxzZSwgTXV0ZWQsIFJvdywgU21hbGwsIFRleHQsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHpvbmUgPSBEcm9wWm9uZSgKICAgICAgICBsYWJlbD0iRHJvcCBmaWxlcyB0byB0cnkgaXQiLAogICAgICAgIG11bHRpcGxlPVRydWUsCiAgICApCiAgICB3aXRoIElmKGYie3pvbmUucngubGVuZ3RoKCl9Iik6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgICAgICBUZXh0KAogICAgICAgICAgICAgICAgZiJ7em9uZS5yeC5sZW5ndGgoKX0gZmlsZShzKSBzZWxlY3RlZCIsCiAgICAgICAgICAgICAgICBjc3NfY2xhc3M9InRleHQtc20gZm9udC1tZWRpdW0iLAogICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRm9yRWFjaCh6b25lLnJ4KToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQmFkZ2UoInt7ICRpdGVtLnR5cGUgfX0iLCB2YXJpYW50PSJzZWNvbmRhcnkiKQogICAgICAgICAgICAgICAgICAgIFNtYWxsKCJ7eyAkaXRlbS5uYW1lIH19IikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgie3sgJGl0ZW0uc2l6ZSB9fSBieXRlcyIpCiAgICB3aXRoIEVsc2UoKToKICAgICAgICBNdXRlZCgiTm8gZmlsZXMgc2VsZWN0ZWQgeWV0IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"dropzone_6","type":"DropZone","label":"Drop files to try it","multiple":true,"disabled":false},{"type":"Condition","cases":[{"when":"{{ dropzone_6 | length }}","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-sm font-medium","content":"{{ dropzone_6 | length }} file(s) selected","type":"Text"},{"type":"ForEach","key":"dropzone_6","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ $item.type }}","variant":"secondary"},{"content":"{{ $item.name }}","type":"Small"},{"content":"{{ $item.size }} bytes","type":"Muted"}]}]}]}]}],"else":[{"content":"No files selected yet","type":"Muted"}]}]},"state":{"dropzone_6":[]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsIENvbHVtbiwgRHJvcFpvbmUsIEZvckVhY2gsCiAgICBJZiwgRWxzZSwgTXV0ZWQsIFJvdywgU21hbGwsIFRleHQsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHpvbmUgPSBEcm9wWm9uZSgKICAgICAgICBsYWJlbD0iRHJvcCBmaWxlcyB0byB0cnkgaXQiLAogICAgICAgIG11bHRpcGxlPVRydWUsCiAgICApCiAgICB3aXRoIElmKGYie3pvbmUucngubGVuZ3RoKCl9Iik6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgICAgICBUZXh0KAogICAgICAgICAgICAgICAgZiJ7em9uZS5yeC5sZW5ndGgoKX0gZmlsZShzKSBzZWxlY3RlZCIsCiAgICAgICAgICAgICAgICBjc3NfY2xhc3M9InRleHQtc20gZm9udC1tZWRpdW0iLAogICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRm9yRWFjaCh6b25lLnJ4KToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQmFkZ2UoInt7ICRpdGVtLnR5cGUgfX0iLCB2YXJpYW50PSJzZWNvbmRhcnkiKQogICAgICAgICAgICAgICAgICAgIFNtYWxsKCJ7eyAkaXRlbS5uYW1lIH19IikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgie3sgJGl0ZW0uc2l6ZSB9fSBieXRlcyIpCiAgICB3aXRoIEVsc2UoKToKICAgICAgICBNdXRlZCgiTm8gZmlsZXMgc2VsZWN0ZWQgeWV0IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -286,7 +290,8 @@ with Column(gap=3):
         "else": [{"content": "No files selected yet", "type": "Muted"}]
       }
     ]
-  }
+  },
+  "state": {"dropzone_6": []}
 }
 ```
 </CodeGroup>
@@ -315,7 +320,7 @@ Inside `ForEach`, the template variables `$item.name`, `$item.type`, and `$item.
 </ParamField>
 
 <ParamField body="multiple" type="bool" default="False">
-  Allow selecting multiple files. When `True`, `$event` is a `list[FileUpload]`.
+  Allow selecting multiple files. When `True`, files accumulate across drops. When `False`, each upload overwrites the previous one.
 </ParamField>
 
 <ParamField body="max_size" type="int | None" default="None">
@@ -331,7 +336,7 @@ Inside `ForEach`, the template variables `$item.name`, `$item.type`, and `$item.
 </ParamField>
 
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
-  Action(s) to execute when files are selected. `$event` is a `FileUpload` (single) or `list[FileUpload]` (multiple).
+  Action(s) to execute when files are selected. `$event` is always `list[FileUpload]`.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

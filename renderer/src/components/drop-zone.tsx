@@ -40,12 +40,12 @@ export function PrefabDropZone({
   const handleFiles = React.useCallback(
     async (files: File[]) => {
       const filtered = filterByAccept(files, accept);
-      const result = await readFiles(filtered, { multiple, maxSize });
-      if (result != null) {
+      const result = await readFiles(filtered, { maxSize });
+      if (result.length > 0) {
         onChange?.(result);
       }
     },
-    [accept, multiple, maxSize, onChange],
+    [accept, maxSize, onChange],
   );
 
   const handleDragOver = React.useCallback(

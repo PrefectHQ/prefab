@@ -22,7 +22,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import ClassVar, Literal
+from typing import Any, ClassVar, Literal
 
 from pydantic import Field
 
@@ -35,8 +35,11 @@ class DropZone(StatefulMixin, Component):
     """Drag-and-drop file upload area.
 
     Fires ``onChange`` with file data as ``$event``:
-    - Single file mode: ``{name, size, type, data}`` (data = raw base64)
-    - Multiple file mode: ``[{name, size, type, data}, ...]``
+    ``[{name, size, type, data}, ...]`` (always an array, even for single files).
+
+    State value is always ``list[FileUpload]``, defaulting to ``[]``.
+    When ``multiple=False``, uploading a new file overwrites the previous one.
+    When ``multiple=True``, files accumulate.
 
     Args:
         label: Primary prompt text shown in the drop zone.
@@ -90,3 +93,6 @@ class DropZone(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when files are selected",
     )
+
+    def _get_initial_value(self) -> Any:
+        return []
