@@ -211,7 +211,7 @@ with Column():
 
 Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/composition#forward-references) for more.
 
-Use `.rx` when you have a component variable in scope. Use `Rx("key")` when you're working with keys from `set_initial_state()`, with [ForEach](/components/foreach) iteration variables, or when the component that created the state is defined far away from where you need its value.
+Use `.rx` when you have a component variable in scope. For keys from `set_initial_state()`, use the returned proxy — `state = set_initial_state(count=0)` gives you `state.count`, which is equivalent to `Rx("count")`. Use `Rx("key")` directly when the state key was created by a form control's `name` prop elsewhere in the tree and you don't have the component variable handy.
 
 Here's a quick reference for the Rx patterns you'll use most often:
 

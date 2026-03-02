@@ -80,21 +80,20 @@ Inside component props, `{{ key }}` template expressions resolve to the current 
 
 The expression language itself supports operators and formatting: `{{ count + 10 }}` adds ten, `{{ name | upper }}` uppercases. You can write these directly in any string prop.
 
-In Python, `Rx` objects compile to the same `{{ key }}` expressions in the protocol output, but in your code they behave like Python values — you can apply operators, use them in f-strings, and combine them with other values. The most common way to get an `Rx` is through the return value of `set_initial_state`:
+In Python, `Rx` objects compile to the same `{{ key }}` expressions in the protocol output, but in your code they behave like Python values — you can apply operators, use them in f-strings, and combine them with other values. The most common way to get an `Rx` is through the return value of `set_initial_state`, which is a proxy whose attributes are reactive references to the keys you defined:
 
 ```python
 from prefab_ui.app import set_initial_state
 
 state = set_initial_state(count=0)
-count = state.count
 
-Text(count)                                  # {{ count }}
-Text(f"Count: {count}")                      # Count: {{ count }}
-Text(count + 10)                             # {{ count + 10 }}
-Text(f"Items: {count} total")                # Items: {{ count }} total
+Text(state.count)                            # {{ count }}
+Text(f"Count: {state.count}")                # Count: {{ count }}
+Text(state.count + 10)                       # {{ count + 10 }}
+Text(f"Items: {state.count} total")          # Items: {{ count }} total
 ```
 
-You can also use the `STATE` constant, which works identically but doesn't require capturing the return value — useful when state is set by actions rather than initialization, or when you want a quick reference without calling `set_initial_state` first:
+The `STATE` constant works identically but doesn't require capturing the return value — useful when state is set by actions rather than initialization, or when you want a quick reference without calling `set_initial_state` first:
 
 ```python
 from prefab_ui.components import STATE
