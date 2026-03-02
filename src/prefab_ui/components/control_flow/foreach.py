@@ -23,25 +23,24 @@ from typing import Any, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
-from prefab_ui.rx import ITEM, Rx
+from prefab_ui.rx import INDEX, ITEM, LoopItem, Rx, _generate_key
 
 
 class ForEach(ContainerComponent):
     """Repeat children for each item in a data list.
 
-    Args:
-        key: The data field containing the list to iterate over.
-            Accepts a string key or an ``Rx`` reference.
-        css_class: Additional CSS classes for the wrapper element.
+    The context manager form auto-captures ``$item`` and ``$index`` into
+    scoped ``let`` bindings, so each loop level keeps its own references
+    even when nested::
 
-    Example::
+        with ForEach("groups") as (gi, group):
+            with ForEach(f"groups.{gi}.todos") as (_, todo):
+                Text(f"{todo.name} in {group.name}")
 
-        with ForEach("users") as user:
-            with Card():
-                CardTitle(user.name)
+    The returned object supports both simple and destructured usage:
 
-        # With data={"users": [{"name": "Alice"}, {"name": "Bob"}]}
-        # renders two Cards.
+    - ``as item`` — acts as an Rx for the current item
+    - ``as (idx, item)`` — tuple unpacking (index first, matching enumerate)
     """
 
     type: Literal["ForEach"] = "ForEach"
@@ -59,7 +58,17 @@ class ForEach(ContainerComponent):
             kwargs["key"] = key.key if isinstance(key, Rx) else key
         super().__init__(**kwargs)
 
-    def __enter__(self) -> Rx:  # type: ignore[override]
-        """Push onto the component stack and return ``ITEM`` (``Rx("$item")``)."""
+    def __enter__(self) -> LoopItem:  # type: ignore[override]
+        """Push onto the component stack and return a scoped loop binding.
+
+        Auto-generates ``let`` bindings that capture ``$item`` and ``$index``
+        under unique names, so nested loops don't shadow each other.
+        """
         super().__enter__()
-        return ITEM
+        item_name = _generate_key("_loop")
+        index_name = f"{item_name}_idx"
+        auto_let: dict[str, Any] = {item_name: ITEM, index_name: INDEX}
+        if self.let is not None:
+            auto_let.update(self.let)
+        object.__setattr__(self, "let", auto_let)
+        return LoopItem(item_name, index_name)

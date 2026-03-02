@@ -372,7 +372,7 @@ When the data lives in client-side state and can change dynamically, for example
 
 Inside a `ForEach` block, `{{ $item }}` refers to the current item (or its fields directly if the item is a dict), and `{{ $index }}` gives the zero-based position. Because `ForEach` is a component in the tree (not a Python loop that runs and disappears), the renderer knows about the iteration. If an action appends a fourth task to the list, `ForEach` renders a new row for it automatically.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"tasks","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"tasks":["Write docs","Fix bug","Ship feature"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKCnNldF9pbml0aWFsX3N0YXRlKHRhc2tzPVsiV3JpdGUgZG9jcyIsICJGaXggYnVnIiwgIlNoaXAgZmVhdHVyZSJdKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YXNrcyIpOgogICAgICAgIFRleHQoInt7ICRpbmRleCArIDEgfX0uIHt7ICRpdGVtIH19IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_8":"{{ $item }}","_loop_8_idx":"{{ $index }}"},"type":"ForEach","key":"tasks","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"tasks":["Write docs","Fix bug","Ship feature"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKCnNldF9pbml0aWFsX3N0YXRlKHRhc2tzPVsiV3JpdGUgZG9jcyIsICJGaXggYnVnIiwgIlNoaXAgZmVhdHVyZSJdKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YXNrcyIpOgogICAgICAgIFRleHQoInt7ICRpbmRleCArIDEgfX0uIHt7ICRpdGVtIH19IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -392,6 +392,7 @@ with Column(gap=2):
     "type": "Column",
     "children": [
       {
+        "let": {"_loop_8": "{{ $item }}", "_loop_8_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "tasks",
         "children": [{"content": "{{ $index + 1 }}. {{ $item }}", "type": "Text"}]
