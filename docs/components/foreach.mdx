@@ -6,9 +6,11 @@ icon: repeat
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Given a list of data, `ForEach` renders its children once per item — a card for each user, a badge for each tag, a row for each result. Python's context manager gives you a handle to the current item, so you can access fields naturally with dot notation.
+Given a list of data, `ForEach` renders its children once per item — a card for each user, a badge for each tag, a row for each result. Python's context manager gives you a handle to the current item, and attribute access chains naturally into dot-path expressions, so `member.name` in Python becomes `{{ _loop_1.name }}` in the rendered output.
 
 ## Basic Usage
+
+Pass `ForEach` a state key that contains a list. The `as` variable is a reactive reference to the current item — use dot notation to reach into fields, embed it in f-strings, or pass it directly to components that accept string values.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo=">
 <CodeGroup>
@@ -98,11 +100,7 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-When rendered with the data above, this produces one card per crew member.
-
-## Scalar Items
-
-The `key` you pass to `ForEach` names a list field in your data. When items are simple values (strings, numbers), the context manager variable represents the value directly.
+When items are simple values (strings, numbers) rather than objects, the context variable represents the value directly — no dot access needed.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"let":{"_loop_4":"{{ $item }}","_loop_4_idx":"{{ $index }}"},"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _loop_4 }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIikgYXMgdGFnOgogICAgICAgIEJhZGdlKHRhZywgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
 <CodeGroup>
@@ -137,54 +135,9 @@ with Row(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one badge per tag.
+Dot notation chains through nested objects the same way you'd expect — `project.owner.name` reaches into `{"owner": {"name": "..."}}` without any special syntax.
 
-## Using the Index
-
-Each iteration has access to the zero-based index. Destructure the `as` binding to get both the index and the item — `(i, step)` mirrors Python's `enumerate` convention.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-1 w-fit mx-auto","type":"Column","children":[{"content":"The Plan:","type":"H4"},{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"steps","children":[{"content":"{{ _loop_5_idx + 1 }}. {{ _loop_5 }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","???","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQsIEg0CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI/Pz8iLCAiUHJvZml0Il0pCgp3aXRoIENvbHVtbihnYXA9MSwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBINCgiVGhlIFBsYW46IikKICAgIHdpdGggRm9yRWFjaCgic3RlcHMiKSBhcyAoaSwgc3RlcCk6CiAgICAgICAgVGV4dChmIntpICsgMX0uIHtzdGVwfSIpCg==">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import Column, Text, H4
-from prefab_ui.components.control_flow import ForEach
-
-set_initial_state(steps=["Collect underpants", "???", "Profit"])
-
-with Column(gap=1, css_class="w-fit mx-auto"):
-    H4("The Plan:")
-    with ForEach("steps") as (i, step):
-        Text(f"{i + 1}. {step}")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-1 w-fit mx-auto",
-    "type": "Column",
-    "children": [
-      {"content": "The Plan:", "type": "H4"},
-      {
-        "let": {"_loop_5": "{{ $item }}", "_loop_5_idx": "{{ $index }}"},
-        "type": "ForEach",
-        "key": "steps",
-        "children": [{"content": "{{ _loop_5_idx + 1 }}. {{ _loop_5 }}", "type": "Text"}]
-      }
-    ]
-  },
-  "state": {"steps": ["Collect underpants", "???", "Profit"]}
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-The index is especially useful for actions that target a specific list position — `SetState(f"items.{i}.done", True)` updates the `done` field of the current item. If you don't need the index, use the simpler `as item` form.
-
-## Nested Data
-
-Dot notation chains through nested objects naturally — `project.owner.name` reaches into `{"owner": {"name": "..."}}` just as you'd expect.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_6":"{{ $item }}","_loop_6_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_6.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_6.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_5.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_5.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -216,7 +169,7 @@ with Column(gap=2):
     "type": "Column",
     "children": [
       {
-        "let": {"_loop_6": "{{ $item }}", "_loop_6_idx": "{{ $index }}"},
+        "let": {"_loop_5": "{{ $item }}", "_loop_5_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "projects",
         "children": [
@@ -226,8 +179,8 @@ with Column(gap=2):
               {
                 "type": "CardHeader",
                 "children": [
-                  {"type": "CardTitle", "content": "{{ _loop_6.name }}"},
-                  {"type": "CardDescription", "content": "Owner: {{ _loop_6.owner.name }}"}
+                  {"type": "CardTitle", "content": "{{ _loop_5.name }}"},
+                  {"type": "CardDescription", "content": "Owner: {{ _loop_5.owner.name }}"}
                 ]
               }
             ]
@@ -247,9 +200,54 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
+## Destructuring
+
+The `as` clause supports tuple destructuring — `as (i, item)` — giving you both the zero-based iteration index and the item, matching Python's `enumerate` convention.
+
+The index is valuable for two things: displaying position numbers, and constructing state paths that target specific items. When an action like `SetState` needs to modify one particular item in a list, you need its index to build the path.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-1 w-fit mx-auto","type":"Column","children":[{"content":"The Plan:","type":"H4"},{"let":{"_loop_6":"{{ $item }}","_loop_6_idx":"{{ $index }}"},"type":"ForEach","key":"steps","children":[{"content":"{{ _loop_6_idx + 1 }}. {{ _loop_6 }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","???","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQsIEg0CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI/Pz8iLCAiUHJvZml0Il0pCgp3aXRoIENvbHVtbihnYXA9MSwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBINCgiVGhlIFBsYW46IikKICAgIHdpdGggRm9yRWFjaCgic3RlcHMiKSBhcyAoaSwgc3RlcCk6CiAgICAgICAgVGV4dChmIntpICsgMX0uIHtzdGVwfSIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Text, H4
+from prefab_ui.components.control_flow import ForEach
+
+set_initial_state(steps=["Collect underpants", "???", "Profit"])
+
+with Column(gap=1, css_class="w-fit mx-auto"):
+    H4("The Plan:")
+    with ForEach("steps") as (i, step):
+        Text(f"{i + 1}. {step}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-1 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {"content": "The Plan:", "type": "H4"},
+      {
+        "let": {"_loop_6": "{{ $item }}", "_loop_6_idx": "{{ $index }}"},
+        "type": "ForEach",
+        "key": "steps",
+        "children": [{"content": "{{ _loop_6_idx + 1 }}. {{ _loop_6 }}", "type": "Text"}]
+      }
+    ]
+  },
+  "state": {"steps": ["Collect underpants", "???", "Profit"]}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Use the simpler `as item` form when you only need the item. `as (i, item)` is worth reaching for when you need positional display or indexed state mutations like `SetState(f"items.{i}.done", True)`.
+
 ## Nested Loops
 
-When ForEach loops nest, the inner loop normally shadows `$item` and `$index`. ForEach handles this automatically — each loop captures its values into uniquely scoped `let` bindings, so outer variables survive inner-loop shadowing. Destructure both levels to get named references:
+When ForEach loops nest, each level automatically captures `$item` and `$index` into uniquely scoped `let` bindings. This means the outer loop's variables survive even after the inner loop introduces its own — no manual scoping required.
+
+Destructure both levels to get named handles. The outer group's index (`gi`) becomes part of the inner loop's key path, threading the two loops together:
 
 ```python Nested ForEach
 from prefab_ui.components import Checkbox, Column, Input
@@ -262,9 +260,9 @@ with ForEach("groups") as (gi, group):
             Checkbox(name=f"groups.{gi}.todos.{ti}.done")
 ```
 
-`gi` and `group` reference the outer loop's index and item; `ti` and `todo` reference the inner loop's. Both sets remain valid inside the inner body because ForEach stores them in separate `let` scopes under the hood.
+`gi` and `group` reference the outer loop's index and item; `ti` and `todo` reference the inner loop's. Both sets remain valid inside the inner body because each ForEach stores them in separate `let` scopes under the hood — `group` resolves to `_loop_1` (bound to the outer `$item`), while `todo` resolves to `_loop_2` (bound to the inner `$item`).
 
-See the [Todo List](/examples/todo) example for a full nested-loop walkthrough.
+The [Todo List](/examples/todo) example is a full nested-loop application with inline editing, conditional visibility, and indexed state mutations across both loop levels.
 
 ## API Reference
 
