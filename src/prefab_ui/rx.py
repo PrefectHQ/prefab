@@ -462,6 +462,33 @@ class Rx:
         return self._pipe("default", value)
 
 
+class LoopItem(Rx):
+    """Rx subclass returned by :class:`ForEach.__enter__`.
+
+    Acts as an Rx keyed to an auto-generated ``let`` binding for ``$item``.
+    Provides ``get_index()`` for the companion ``$index`` binding and
+    supports tuple destructuring matching ``enumerate`` order::
+
+        with ForEach("items") as (i, item):
+            Text(f"{i + 1}. {item.name}")
+    """
+
+    __slots__ = ("_index_rx",)
+
+    def __init__(self, item_key: str, index_key: str) -> None:
+        super().__init__(item_key)
+        object.__setattr__(self, "_index_rx", Rx(index_key))
+
+    def get_index(self) -> Rx:
+        """Return an Rx reference to this loop's iteration index."""
+        return object.__getattribute__(self, "_index_rx")
+
+    def __iter__(self):
+        """Support ``as (idx, item)`` destructuring (enumerate order)."""
+        yield object.__getattribute__(self, "_index_rx")
+        yield Rx(self.key)
+
+
 def _coerce_rx(value: object) -> object:
     """Recursively convert Rx instances to their string form."""
     if isinstance(value, Rx):

@@ -10,7 +10,7 @@ Given a list of data, `ForEach` renders its children once per item — a card fo
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ $item.name }}"},{"type":"Badge","label":"{{ $item.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ $item.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -47,6 +47,7 @@ with Column(gap=2):
     "type": "Column",
     "children": [
       {
+        "let": {"_loop_3": "{{ $item }}", "_loop_3_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "crew",
         "children": [
@@ -60,11 +61,11 @@ with Column(gap=2):
                     "cssClass": "gap-2 items-center",
                     "type": "Row",
                     "children": [
-                      {"type": "CardTitle", "content": "{{ $item.name }}"},
-                      {"type": "Badge", "label": "{{ $item.designation }}", "variant": "secondary"}
+                      {"type": "CardTitle", "content": "{{ _loop_3.name }}"},
+                      {"type": "Badge", "label": "{{ _loop_3.designation }}", "variant": "secondary"}
                     ]
                   },
-                  {"type": "CardDescription", "content": "{{ $item.email }}"}
+                  {"type": "CardDescription", "content": "{{ _loop_3.email }}"}
                 ]
               }
             ]
@@ -103,7 +104,7 @@ When rendered with the data above, this produces one card per crew member.
 
 The `key` you pass to `ForEach` names a list field in your data. When items are simple values (strings, numbers), the context manager variable represents the value directly.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ $item }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIikgYXMgdGFnOgogICAgICAgIEJhZGdlKHRhZywgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"let":{"_loop_4":"{{ $item }}","_loop_4_idx":"{{ $index }}"},"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _loop_4 }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIikgYXMgdGFnOgogICAgICAgIEJhZGdlKHRhZywgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -123,9 +124,10 @@ with Row(gap=2):
     "type": "Row",
     "children": [
       {
+        "let": {"_loop_4": "{{ $item }}", "_loop_4_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "tags",
-        "children": [{"type": "Badge", "label": "{{ $item }}", "variant": "secondary"}]
+        "children": [{"type": "Badge", "label": "{{ _loop_4 }}", "variant": "secondary"}]
       }
     ]
   },
@@ -139,48 +141,50 @@ With `{"tags": ["earth", "magrathea", "vogon poetry", "42"]}`, this renders one 
 
 ## Using the Index
 
-Each iteration also has access to `$index` — the zero-based position of the current item. Import the `INDEX` constant from `prefab_ui.rx` to use it in expressions.
+Each iteration has access to the zero-based index. Destructure the `as` binding to get both the index and the item — `(i, step)` mirrors Python's `enumerate` convention.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-1","type":"Column","children":[{"type":"ForEach","key":"steps","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","?","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IElOREVYCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI/IiwgIlByb2ZpdCJdKQoKd2l0aCBDb2x1bW4oZ2FwPTEpOgogICAgd2l0aCBGb3JFYWNoKCJzdGVwcyIpIGFzIHN0ZXA6CiAgICAgICAgVGV4dChmIntJTkRFWCArIDF9LiB7c3RlcH0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-1 w-fit mx-auto","type":"Column","children":[{"content":"The Plan:","type":"H4"},{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"steps","children":[{"content":"{{ _loop_5_idx + 1 }}. {{ _loop_5 }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","???","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQsIEg0CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI/Pz8iLCAiUHJvZml0Il0pCgp3aXRoIENvbHVtbihnYXA9MSwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBINCgiVGhlIFBsYW46IikKICAgIHdpdGggRm9yRWFjaCgic3RlcHMiKSBhcyAoaSwgc3RlcCk6CiAgICAgICAgVGV4dChmIntpICsgMX0uIHtzdGVwfSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
-from prefab_ui.components import Column, Text
+from prefab_ui.components import Column, Text, H4
 from prefab_ui.components.control_flow import ForEach
-from prefab_ui.rx import INDEX
 
-set_initial_state(steps=["Collect underpants", "?", "Profit"])
+set_initial_state(steps=["Collect underpants", "???", "Profit"])
 
-with Column(gap=1):
-    with ForEach("steps") as step:
-        Text(f"{INDEX + 1}. {step}")
+with Column(gap=1, css_class="w-fit mx-auto"):
+    H4("The Plan:")
+    with ForEach("steps") as (i, step):
+        Text(f"{i + 1}. {step}")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-1",
+    "cssClass": "gap-1 w-fit mx-auto",
     "type": "Column",
     "children": [
+      {"content": "The Plan:", "type": "H4"},
       {
+        "let": {"_loop_5": "{{ $item }}", "_loop_5_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "steps",
-        "children": [{"content": "{{ $index + 1 }}. {{ $item }}", "type": "Text"}]
+        "children": [{"content": "{{ _loop_5_idx + 1 }}. {{ _loop_5 }}", "type": "Text"}]
       }
     ]
   },
-  "state": {"steps": ["Collect underpants", "?", "Profit"]}
+  "state": {"steps": ["Collect underpants", "???", "Profit"]}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-`INDEX` is especially useful for actions that target a specific list position — `SetState(f"items.{INDEX}.done", True)` updates the `done` field of the current item.
+The index is especially useful for actions that target a specific list position — `SetState(f"items.{i}.done", True)` updates the `done` field of the current item. If you don't need the index, use the simpler `as item` form.
 
 ## Nested Data
 
 Dot notation chains through nested objects naturally — `project.owner.name` reaches into `{"owner": {"name": "..."}}` just as you'd expect.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ $item.name }}"},{"type":"CardDescription","content":"Owner: {{ $item.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_6":"{{ $item }}","_loop_6_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_6.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_6.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -212,6 +216,7 @@ with Column(gap=2):
     "type": "Column",
     "children": [
       {
+        "let": {"_loop_6": "{{ $item }}", "_loop_6_idx": "{{ $index }}"},
         "type": "ForEach",
         "key": "projects",
         "children": [
@@ -221,8 +226,8 @@ with Column(gap=2):
               {
                 "type": "CardHeader",
                 "children": [
-                  {"type": "CardTitle", "content": "{{ $item.name }}"},
-                  {"type": "CardDescription", "content": "Owner: {{ $item.owner.name }}"}
+                  {"type": "CardTitle", "content": "{{ _loop_6.name }}"},
+                  {"type": "CardDescription", "content": "Owner: {{ _loop_6.owner.name }}"}
                 ]
               }
             ]
@@ -242,37 +247,24 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-## Nested Loops and `let`
+## Nested Loops
 
-When you nest ForEach loops, the inner loop shadows `ITEM` and `INDEX`. Use `let` to capture the outer loop's values so they're still accessible inside the inner loop.
+When ForEach loops nest, the inner loop normally shadows `$item` and `$index`. ForEach handles this automatically — each loop captures its values into uniquely scoped `let` bindings, so outer variables survive inner-loop shadowing. Destructure both levels to get named references:
 
-```python Nested ForEach with let
-from prefab_ui.components import ITEM, INDEX, Checkbox, Column, Input
+```python Nested ForEach
+from prefab_ui.components import Checkbox, Column, Input
 from prefab_ui.components.control_flow import ForEach
-from prefab_ui.rx import Rx
 
-# Capture outer index/fields as named bindings
-with ForEach("groups", let=dict(gi=INDEX, show_done=ITEM.show_done)):
-
-    # Create Rx handles for the let-binding names
-    gi = Rx("gi")
-    show_done = Rx("show_done")
-
-    # gi and INDEX are now distinct — gi is the outer index,
-    # INDEX inside the inner loop is the inner index
+with ForEach("groups") as (gi, group):
     with Column():
         Input(name=f"groups.{gi}.name")
-        with ForEach(f"groups.{gi}.todos"):
-            # ITEM is now the todo, INDEX is the todo index
-            # gi still references the outer group index
-            Checkbox(name=f"groups.{gi}.todos.{INDEX}.done")
+        with ForEach(f"groups.{gi}.todos") as (ti, todo):
+            Checkbox(name=f"groups.{gi}.todos.{ti}.done")
 ```
 
-`let` evaluates its values per iteration at render time, then stores them as named variables in a new child scope. This is the only mechanism that truly captures per-iteration values — you can't achieve the same effect with Python variables because iteration happens in the renderer, not in Python.
+`gi` and `group` reference the outer loop's index and item; `ti` and `todo` reference the inner loop's. Both sets remain valid inside the inner body because ForEach stores them in separate `let` scopes under the hood.
 
-<Warning>
-  `Rx(INDEX)` inside a ForEach body does **not** capture the current index. It just creates another reference to `$index`, which the inner loop will shadow. Use `let=dict(gi=INDEX)` to capture, then `gi = Rx("gi")` for a Python handle to the captured value.
-</Warning>
+See the [Todo List](/examples/todo) example for a full nested-loop walkthrough.
 
 ## API Reference
 
