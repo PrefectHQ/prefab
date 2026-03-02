@@ -76,7 +76,7 @@ export function collectComponentState(
       typeof n.name === "string" &&
       !(n.name in existing)
     ) {
-      const val = n.value ?? n.checked;
+      const val = n.type === "DropZone" ? [] : n.value ?? n.checked;
       if (
         val !== undefined &&
         !(typeof val === "string" && val.includes("{{"))

@@ -672,7 +672,7 @@
   {
     "title": "Typing a tool parameter",
     "category": "Components",
-    "code": "from prefab_ui.actions import FileUpload\n\n@server.tool()\ndef process_csv(file: FileUpload):\n    import base64\n    contents = base64.b64decode(file.data)\n    # file.name, file.size, file.type also available\n    ..."
+    "code": "from prefab_ui.actions import FileUpload\n\n@server.tool()\ndef process_csv(files: list[FileUpload]):\n    import base64\n    for f in files:\n        contents = base64.b64decode(f.data)\n        # f.name, f.size, f.type also available\n        ..."
   },
   {
     "title": "Python icon=\"python\"",
