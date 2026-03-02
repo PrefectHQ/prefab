@@ -1087,7 +1087,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Progress,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nslider = Slider(min=0, max=1, step=0.01, value=0.65, defer=True)\n\nwith Column(gap=3):\n    with Row(css_class=\"justify-between items-center\"):\n        Text(\"Upload progress\")\n        Text(slider.rx.percent(), bold=True)\n    Progress(value=slider.rx, max=1)\n    insert(slider)"
+    "code": "from prefab_ui.components import Column, Progress, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: slider)\n\nwith Column(gap=3):\n    with Row(css_class=\"justify-between items-center\"):\n        Text(\"Upload progress\")\n        Text(val.percent(), bold=True)\n    Progress(value=val, max=1)\n    slider = Slider(min=0, max=1, step=0.01, value=0.65)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1312,12 +1312,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nvolume = Slider(value=0.75, min=0, max=1, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.percent()}\", bold=True)\n    insert(volume)"
+    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nvol = Rx(lambda: volume)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(vol.percent(), bold=True)\n    volume = Slider(value=0.75, min=0, max=1)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column,\n    Label,\n    Row,\n    Slider,\n    Text,\n    insert,\n)\n\nrating = Slider(value=4, name=\"rating\", min=0, max=5, step=0.5, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(rating.rx, bold=True)\n    insert(rating)"
+    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: rating)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Rating\")\n        Text(val, bold=True)\n    rating = Slider(value=4, name=\"rating\", min=0, max=5, step=0.5)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1352,7 +1352,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Progress, Row, Slider, Text\n\nwith Column(gap=4):\n    s = Slider(value=0.42, min=0, max=1, defer=True)\n    with Row(css_class=\"justify-between\"):\n        Label(\"Brightness\")\n        Text(f\"{s.rx.percent()}\", bold=True)\n    Progress(value=s.rx)"
+    "code": "from prefab_ui.components import Column, Label, Progress, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: s)\n\nwith Column(gap=4):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Brightness\")\n        Text(val.percent(), bold=True)\n    Progress(value=val)\n    s = Slider(value=0.42, min=0, max=1)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1585,14 +1585,9 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Alert, AlertTitle, Badge, Column, Select, SelectOption\nfrom prefab_ui.components.control_flow import Elif, Else, If\nfrom prefab_ui.rx import Rx\n\nset_initial_state(status=\"healthy\")\nstatus = Rx(\"status\")\n\nwith Column(gap=3):\n    with Select(name=\"status\", placeholder=\"Pick a status\"):\n        SelectOption(value=\"healthy\", label=\"Healthy\")\n        SelectOption(value=\"warning\", label=\"Warning\")\n        SelectOption(value=\"error\", label=\"Error\")\n    with If(status == \"error\"):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"System down\")\n    with Elif(status == \"warning\"):\n        with Alert(variant=\"warning\"):\n            AlertTitle(\"Degraded performance\")\n    with Else():\n        Badge(\"All systems go\", variant=\"success\")"
   },
   {
-    "title": "from prefab_ui.components import Column, Label, Row, Slider, Text, insert",
-    "category": "Concepts",
-    "code": "slider = Slider(value=75, defer=True)"
-  },
-  {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text, insert\n\nvolume = Slider(value=75, defer=True)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text(f\"{volume.rx.number()}%\", bold=True)\n    insert(volume)"
+    "code": "from prefab_ui.components import Column, Label, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nvol = Rx(lambda: volume)\n\nwith Column(gap=2):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Volume\")\n        Text((vol / 100).percent(), bold=True)\n    volume = Slider(value=75)"
   },
   {
     "title": "from prefab_ui.components import Column, Text, defer, insert",
@@ -1782,7 +1777,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Examples",
-    "code": "from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text, insert\n\nslider = Slider(min=0, max=100, step=1, value=50, defer=True)\nval = slider.rx\n\nwith Column(gap=6, css_class=\"max-w-sm mx-auto\"):\n    H3(\"Health Monitor\")\n    Muted(\"Drag the slider — the bar color changes at each threshold.\")\n\n    with Column(gap=4):\n        with Row(css_class=\"justify-between items-center\"):\n            Text(\"CPU Usage\")\n            Text((val / 100).percent(), bold=True)\n        Progress(\n            value=val,\n            indicator_class=(val < 20).then(\n                \"bg-red-500\",\n                (val < 60).then(\n                    \"bg-primary\",\n                    (val < 75).then(\"bg-amber-500\", \"bg-green-500\"),\n                ),\n            ),\n        )\n        insert(slider)"
+    "code": "from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: slider)\n\nwith Column(gap=6, css_class=\"max-w-sm mx-auto\"):\n    H3(\"Health Monitor\")\n    Muted(\"Drag the slider — the bar color changes at each threshold.\")\n\n    with Column(gap=4):\n        with Row(css_class=\"justify-between items-center\"):\n            Text(\"CPU Usage\")\n            Text((val / 100).percent(), bold=True)\n        Progress(\n            value=val,\n            indicator_class=(val < 20).then(\n                \"bg-red-500\",\n                (val < 60).then(\n                    \"bg-primary\",\n                    (val < 75).then(\"bg-amber-500\", \"bg-green-500\"),\n                ),\n            ),\n        )\n        slider = Slider(min=0, max=100, step=1, value=50)"
   },
   {
     "title": "Python icon=\"python\" expandable",
@@ -1860,9 +1855,9 @@
     "code": "slider.rx              # → Rx(\"volume\") → {{ volume }}\nslider.rx.percent()    # → {{ volume | percent }}\nslider.rx > 80         # → {{ volume > 80 }}"
   },
   {
-    "title": "slider = Slider(value=50, defer=True)",
+    "title": "from prefab_ui.rx import Rx",
     "category": "Expressions",
-    "code": "with Column():\n    Text(f\"Volume: {slider.rx}%\")  # reference .rx first\n    insert(slider)                 # place the slider below"
+    "code": "vol = Rx(lambda: slider)\n\nwith Column():\n    Text((vol / 100).percent(), bold=True)  # vol is usable here...\n    slider = Slider(value=50)                # ...even though slider is created here"
   },
   {
     "title": "Python icon=\"python\"",

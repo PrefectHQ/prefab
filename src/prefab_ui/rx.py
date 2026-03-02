@@ -28,7 +28,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from contextvars import ContextVar
-from typing import Any
+from typing import Any, NamedTuple, Protocol, runtime_checkable
 
 # ── Auto-name counter ────────────────────────────────────────────────
 
@@ -65,17 +65,59 @@ _PREC_UNARY = 9
 _PREC_ATOM = 10
 
 
-# ── Helpers ──────────────────────────────────────────────────────────
+# ── Expression tree nodes ────────────────────────────────────────────
 
 
-def _format_value(value: object, min_prec: int = 0) -> str:
-    """Format a Python value as an expression token.
+class _BinOp(NamedTuple):
+    op: str  # "+", "-", "*", "/", "==", "!=", ">", ">=", "<", "<=", "&&", "||"
+    left: object  # Rx or scalar
+    right: object  # Rx or scalar
 
-    Strings → single-quoted, numbers → bare, bools → true/false,
-    None → null, Rx → raw key (wrapped in parens if below min_prec).
+
+class _UnaryOp(NamedTuple):
+    op: str  # "-", "+", "!"
+    operand: Rx
+
+
+class _Ternary(NamedTuple):
+    cond: Rx
+    if_true: object
+    if_false: object
+
+
+class _Pipe(NamedTuple):
+    expr: Rx
+    name: str
+    arg: object  # None if no arg
+
+
+class _DotPath(NamedTuple):
+    expr: Rx
+    attr: str
+
+
+_Node = _BinOp | _UnaryOp | _Ternary | _Pipe | _DotPath
+
+# Ops where RHS needs strict wrapping (parens at same precedence)
+_STRICT_RHS_OPS = frozenset({"-", "/", "&&", "||"})
+
+
+@runtime_checkable
+class _HasRx(Protocol):
+    """Structural check for components with a .rx property (StatefulMixin)."""
+
+    @property
+    def rx(self) -> Rx: ...
+
+
+# ── Resolution ───────────────────────────────────────────────────────
+
+
+def _format_scalar(value: object) -> str:
+    """Format a non-Rx Python value as an expression token.
+
+    Strings → single-quoted, numbers → bare, bools → true/false, None → null.
     """
-    if isinstance(value, Rx):
-        return value._wrap(min_prec)
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, (int, float)):
@@ -85,6 +127,89 @@ def _format_value(value: object, min_prec: int = 0) -> str:
     if isinstance(value, str):
         return f"'{value}'"
     return str(value)
+
+
+def _resolve_operand(value: object, min_prec: int, *, strict: bool = False) -> str:
+    """Resolve a child operand (Rx or scalar) for use in an expression.
+
+    For Rx children: resolves the key, wraps in parens if the child's
+    precedence is too low.  ``strict=True`` uses ``<=`` instead of ``<``
+    for non-commutative RHS (e.g. ``a - (b - c)``).
+    """
+    if isinstance(value, Rx):
+        key = value.key
+        needs_parens = value.prec <= min_prec if strict else value.prec < min_prec
+        return f"({key})" if needs_parens else key
+    return _format_scalar(value)
+
+
+def _resolve(raw: str | Callable[[], Rx] | _Node) -> str:
+    """Walk an Rx's internal key to produce the expression string.
+
+    Handles three cases:
+    - ``str``: leaf key, returned as-is
+    - ``_Node``: expression tree node, resolved recursively
+    - ``callable``: forward reference, invoked and unwrapped
+    """
+    if isinstance(raw, str):
+        return raw
+
+    # Check node types before callable — NamedTuples are callable.
+    if isinstance(raw, _BinOp):
+        op_prec = _OP_PREC[raw.op]
+        strict = raw.op in _STRICT_RHS_OPS
+        left = _resolve_operand(raw.left, op_prec, strict=False)
+        right = _resolve_operand(raw.right, op_prec, strict=strict)
+        return f"{left} {raw.op} {right}"
+
+    if isinstance(raw, _UnaryOp):
+        wrap_prec = _PREC_ATOM if raw.op == "!" else _PREC_UNARY
+        operand = _resolve_operand(raw.operand, wrap_prec)
+        return f"{raw.op}{operand}"
+
+    if isinstance(raw, _Ternary):
+        branch_prec = _PREC_TERNARY + 1
+        cond = _resolve_operand(raw.cond, _PREC_TERNARY)
+        if_true = _resolve_operand(raw.if_true, branch_prec)
+        if_false = _resolve_operand(raw.if_false, branch_prec)
+        return f"{cond} ? {if_true} : {if_false}"
+
+    if isinstance(raw, _Pipe):
+        inner_key = raw.expr.key
+        if raw.arg is not None:
+            return f"{inner_key} | {raw.name}:{_format_pipe_arg(raw.arg)}"
+        return f"{inner_key} | {raw.name}"
+
+    if isinstance(raw, _DotPath):
+        return f"{raw.expr.key}.{raw.attr}"
+
+    # Callable: forward references like Rx(lambda: component)
+    if callable(raw):
+        resolved = raw()
+        if isinstance(resolved, Rx):
+            return resolved.key
+        if isinstance(resolved, _HasRx):
+            return resolved.rx.key
+        return str(resolved)
+
+    return str(raw)  # pragma: no cover
+
+
+# Operator → precedence mapping (used by _resolve for _BinOp)
+_OP_PREC: dict[str, int] = {
+    "+": _PREC_ADD,
+    "-": _PREC_ADD,
+    "*": _PREC_MUL,
+    "/": _PREC_MUL,
+    "==": _PREC_COMP,
+    "!=": _PREC_COMP,
+    ">": _PREC_COMP,
+    ">=": _PREC_COMP,
+    "<": _PREC_COMP,
+    "<=": _PREC_COMP,
+    "&&": _PREC_AND,
+    "||": _PREC_OR,
+}
 
 
 def _format_pipe_arg(value: object) -> str:
@@ -126,7 +251,9 @@ class Rx:
 
     __slots__ = ("_key", "_prec")
 
-    def __init__(self, key: str | Callable[[], Rx], _prec: int = _PREC_ATOM) -> None:
+    def __init__(
+        self, key: str | Callable[[], Rx] | _Node, _prec: int = _PREC_ATOM
+    ) -> None:
         object.__setattr__(self, "_key", key)
         object.__setattr__(self, "_prec", _prec)
 
@@ -135,19 +262,13 @@ class Rx:
 
     @property
     def key(self) -> str:
-        """The raw state key string.
+        """The resolved expression string (without ``{{ }}`` wrapper).
 
-        If the key was provided as a callable, it is invoked on first
-        access and the result is used (allowing forward references to
-        components that don't exist yet at construction time).
+        Resolution walks the expression tree: leaf nodes return their key,
+        operator nodes recurse into their children, and callable nodes
+        (forward references) invoke the callable on access.
         """
-        raw = object.__getattribute__(self, "_key")
-        if callable(raw):
-            resolved = raw()
-            if isinstance(resolved, Rx):
-                return resolved.key
-            return str(resolved)
-        return raw
+        return _resolve(object.__getattribute__(self, "_key"))
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> Any:
@@ -195,98 +316,88 @@ class Rx:
     def __getattr__(self, name: str) -> Rx:
         if name.startswith("_"):
             raise AttributeError(name)
-        return Rx(f"{self.key}.{name}")
+        return Rx(_DotPath(self, name), _PREC_ATOM)
 
     # ── Arithmetic ───────────────────────────────────────────────────
 
     def __add__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_ADD)} + {_format_value(other)}", _PREC_ADD)
+        return Rx(_BinOp("+", self, other), _PREC_ADD)
 
     def __radd__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} + {self._wrap(_PREC_ADD)}", _PREC_ADD)
+        return Rx(_BinOp("+", other, self), _PREC_ADD)
 
     def __sub__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_ADD)} - {_rhs(other, _PREC_ADD)}", _PREC_ADD)
+        return Rx(_BinOp("-", self, other), _PREC_ADD)
 
     def __rsub__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} - {self._wrap(_PREC_ADD)}", _PREC_ADD)
+        return Rx(_BinOp("-", other, self), _PREC_ADD)
 
     def __mul__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_MUL)} * {_format_value(other)}", _PREC_MUL)
+        return Rx(_BinOp("*", self, other), _PREC_MUL)
 
     def __rmul__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} * {self._wrap(_PREC_MUL)}", _PREC_MUL)
+        return Rx(_BinOp("*", other, self), _PREC_MUL)
 
     def __truediv__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_MUL)} / {_rhs(other, _PREC_MUL)}", _PREC_MUL)
+        return Rx(_BinOp("/", self, other), _PREC_MUL)
 
     def __rtruediv__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} / {self._wrap(_PREC_MUL)}", _PREC_MUL)
+        return Rx(_BinOp("/", other, self), _PREC_MUL)
 
     def __neg__(self) -> Rx:
-        return Rx(f"-{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
+        return Rx(_UnaryOp("-", self), _PREC_UNARY)
 
     def __pos__(self) -> Rx:
-        return Rx(f"+{self._wrap(_PREC_UNARY)}", _PREC_UNARY)
+        return Rx(_UnaryOp("+", self), _PREC_UNARY)
 
     # ── Comparison ───────────────────────────────────────────────────
 
     def __eq__(self, other: object) -> Rx:  # type: ignore[override]
-        return Rx(f"{self._wrap(_PREC_COMP)} == {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp("==", self, other), _PREC_COMP)
 
     def __ne__(self, other: object) -> Rx:  # type: ignore[override]
-        return Rx(f"{self._wrap(_PREC_COMP)} != {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp("!=", self, other), _PREC_COMP)
 
     def __gt__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} > {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp(">", self, other), _PREC_COMP)
 
     def __ge__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} >= {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp(">=", self, other), _PREC_COMP)
 
     def __lt__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} < {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp("<", self, other), _PREC_COMP)
 
     def __le__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_COMP)} <= {_format_value(other)}", _PREC_COMP)
+        return Rx(_BinOp("<=", self, other), _PREC_COMP)
 
     # ── Logical ──────────────────────────────────────────────────────
 
     def __and__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_AND)} && {_rhs(other, _PREC_AND)}", _PREC_AND)
+        return Rx(_BinOp("&&", self, other), _PREC_AND)
 
     def __rand__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} && {self._wrap(_PREC_AND)}", _PREC_AND)
+        return Rx(_BinOp("&&", other, self), _PREC_AND)
 
     def __or__(self, other: object) -> Rx:
-        return Rx(f"{self._wrap(_PREC_OR)} || {_rhs(other, _PREC_OR)}", _PREC_OR)
+        return Rx(_BinOp("||", self, other), _PREC_OR)
 
     def __ror__(self, other: object) -> Rx:
-        return Rx(f"{_format_value(other)} || {self._wrap(_PREC_OR)}", _PREC_OR)
+        return Rx(_BinOp("||", other, self), _PREC_OR)
 
     def __invert__(self) -> Rx:
-        # Wrap anything that isn't a simple atom for readability
-        return Rx(f"!{self._wrap(_PREC_ATOM)}", _PREC_NOT)
+        return Rx(_UnaryOp("!", self), _PREC_NOT)
 
     # ── Ternary ──────────────────────────────────────────────────────
 
     def then(self, if_true: object, if_false: object) -> Rx:
         """Ternary conditional: ``condition ? if_true : if_false``."""
-        # Use _PREC_TERNARY + 1 so nested ternaries in branches get wrapped
-        branch_prec = _PREC_TERNARY + 1
-        return Rx(
-            f"{self._wrap(_PREC_TERNARY)} ? "
-            f"{_format_value(if_true, branch_prec)} : "
-            f"{_format_value(if_false, branch_prec)}",
-            _PREC_TERNARY,
-        )
+        return Rx(_Ternary(self, if_true, if_false), _PREC_TERNARY)
 
     # ── Pipes ────────────────────────────────────────────────────────
 
     def _pipe(self, name: str, arg: object = None) -> Rx:
         """Apply a pipe: ``key | name`` or ``key | name:arg``."""
-        if arg is not None:
-            return Rx(f"{self.key} | {name}:{_format_pipe_arg(arg)}", _PREC_PIPE)
-        return Rx(f"{self.key} | {name}", _PREC_PIPE)
+        return Rx(_Pipe(self, name, arg), _PREC_PIPE)
 
     # Number pipes
     def currency(self, code: str | None = None) -> Rx:
@@ -349,20 +460,6 @@ class Rx:
     # Default
     def default(self, value: object) -> Rx:
         return self._pipe("default", value)
-
-
-def _rhs(value: object, min_prec: int) -> str:
-    """Format a right-hand operand, wrapping in parens if needed.
-
-    For non-commutative operators (-, /), the RHS needs parens if it's
-    an expression at the same precedence level to avoid ambiguity:
-    ``a - (b - c)`` vs ``a - b - c``.
-    """
-    if isinstance(value, Rx):
-        if value.prec <= min_prec:
-            return f"({value.key})"
-        return value.key
-    return _format_value(value)
 
 
 def _coerce_rx(value: object) -> object:

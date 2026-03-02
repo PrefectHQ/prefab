@@ -487,30 +487,6 @@ class TestBuiltinReactiveVars:
         assert (INDEX + 1).key == "$index + 1"
 
 
-# ── Callable (deferred) keys ────────────────────────────────────────
-
-
-class TestCallableKey:
-    def test_basic_callable_key(self) -> None:
-        rx = Rx(lambda: Rx("resolved"))
-        assert rx.key == "resolved"
-        assert str(rx) == "{{ resolved }}"
-
-    def test_callable_resolves_at_key_access(self) -> None:
-        container: list[Rx] = []
-        rx = Rx(lambda: container[0])
-        container.append(Rx("late_value"))
-        assert rx.key == "late_value"
-
-    def test_callable_dot_path(self) -> None:
-        rx = Rx(lambda: Rx("base"))
-        assert rx.title.key == "base.title"
-
-    def test_callable_returns_string(self) -> None:
-        rx = Rx(lambda: "raw_key")
-        assert rx.key == "raw_key"
-
-
 # ── Deferred resolution in components ────────────────────────────────
 
 

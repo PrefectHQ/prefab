@@ -7,15 +7,15 @@ mode: center
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-A slider drives a progress bar whose color shifts at each threshold. The slider is defined first with `defer=True` so its `.rx` reference can be used by components above it in the tree, then placed at the bottom with `insert()`.
+A slider drives a progress bar whose color shifts at each threshold. The slider's reactive reference is forward-declared with a lambda, so it can be used by components above it in the tree — the lambda resolves at render time, after the slider exists.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ slider_22 / 100 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ slider_22 < 20 ? 'bg-red-500' : (slider_22 < 60 ? 'bg-primary' : (slider_22 < 75 ? 'bg-amber-500' : 'bg-green-500')) }}"},{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"disabled":false}]}]},"state":{"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBIMywgTXV0ZWQsIFByb2dyZXNzLCBSb3csIFNsaWRlciwgVGV4dCwgaW5zZXJ0CgpzbGlkZXIgPSBTbGlkZXIobWluPTAsIG1heD0xMDAsIHN0ZXA9MSwgdmFsdWU9NTAsIGRlZmVyPVRydWUpCnZhbCA9IHNsaWRlci5yeAoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0ibWF4LXctc20gbXgtYXV0byIpOgogICAgSDMoIkhlYWx0aCBNb25pdG9yIikKICAgIE11dGVkKCJEcmFnIHRoZSBzbGlkZXIg4oCUIHRoZSBiYXIgY29sb3IgY2hhbmdlcyBhdCBlYWNoIHRocmVzaG9sZC4iKQoKICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIiKToKICAgICAgICAgICAgVGV4dCgiQ1BVIFVzYWdlIikKICAgICAgICAgICAgVGV4dCgodmFsIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9dmFsLAogICAgICAgICAgICBpbmRpY2F0b3JfY2xhc3M9KHZhbCA8IDIwKS50aGVuKAogICAgICAgICAgICAgICAgImJnLXJlZC01MDAiLAogICAgICAgICAgICAgICAgKHZhbCA8IDYwKS50aGVuKAogICAgICAgICAgICAgICAgICAgICJiZy1wcmltYXJ5IiwKICAgICAgICAgICAgICAgICAgICAodmFsIDwgNzUpLnRoZW4oImJnLWFtYmVyLTUwMCIsICJiZy1ncmVlbi01MDAiKSwKICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICksCiAgICAgICAgKQogICAgICAgIGluc2VydChzbGlkZXIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-6 max-w-sm mx-auto","type":"Column","children":[{"content":"Health Monitor","type":"H3"},{"content":"Drag the slider \u2014 the bar color changes at each threshold.","type":"Muted"},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"CPU Usage","type":"Text"},{"content":"{{ slider_22 / 100 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_22 }}","min":0,"max":100,"variant":"default","indicatorClass":"{{ slider_22 < 20 ? 'bg-red-500' : (slider_22 < 60 ? 'bg-primary' : (slider_22 < 75 ? 'bg-amber-500' : 'bg-green-500')) }}"},{"name":"slider_22","type":"Slider","min":0.0,"max":100.0,"value":50.0,"step":1.0,"disabled":false}]}]},"state":{"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBIMywgTXV0ZWQsIFByb2dyZXNzLCBSb3csIFNsaWRlciwgVGV4dApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCnZhbCA9IFJ4KGxhbWJkYTogc2xpZGVyKQoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0ibWF4LXctc20gbXgtYXV0byIpOgogICAgSDMoIkhlYWx0aCBNb25pdG9yIikKICAgIE11dGVkKCJEcmFnIHRoZSBzbGlkZXIg4oCUIHRoZSBiYXIgY29sb3IgY2hhbmdlcyBhdCBlYWNoIHRocmVzaG9sZC4iKQoKICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIiKToKICAgICAgICAgICAgVGV4dCgiQ1BVIFVzYWdlIikKICAgICAgICAgICAgVGV4dCgodmFsIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9dmFsLAogICAgICAgICAgICBpbmRpY2F0b3JfY2xhc3M9KHZhbCA8IDIwKS50aGVuKAogICAgICAgICAgICAgICAgImJnLXJlZC01MDAiLAogICAgICAgICAgICAgICAgKHZhbCA8IDYwKS50aGVuKAogICAgICAgICAgICAgICAgICAgICJiZy1wcmltYXJ5IiwKICAgICAgICAgICAgICAgICAgICAodmFsIDwgNzUpLnRoZW4oImJnLWFtYmVyLTUwMCIsICJiZy1ncmVlbi01MDAiKSwKICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICksCiAgICAgICAgKQogICAgICAgIHNsaWRlciA9IFNsaWRlcihtaW49MCwgbWF4PTEwMCwgc3RlcD0xLCB2YWx1ZT01MCkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text, insert
+from prefab_ui.components import Column, H3, Muted, Progress, Row, Slider, Text
+from prefab_ui.rx import Rx
 
-slider = Slider(min=0, max=100, step=1, value=50, defer=True)
-val = slider.rx
+val = Rx(lambda: slider)
 
 with Column(gap=6, css_class="max-w-sm mx-auto"):
     H3("Health Monitor")
@@ -35,7 +35,7 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
                 ),
             ),
         )
-        insert(slider)
+        slider = Slider(min=0, max=100, step=1, value=50)
 ```
 ```json Protocol icon="brackets-curly"
 {

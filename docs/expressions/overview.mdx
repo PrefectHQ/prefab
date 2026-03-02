@@ -197,15 +197,19 @@ with Column(gap=3):
 
 Drag the slider — the text and progress bar update together. The Python code reads naturally: create a slider, show its value as a percentage, feed it to a progress bar. Under the hood, `slider.rx` compiles to `{{ volume }}`, and the reactive model you learned in the counter example handles the rest.
 
-When you need to reference `.rx` *before* the component appears in the tree — say, a label above the slider — use `defer=True` to create the component without placing it, then call `insert()` later:
+Sometimes you need a component's reactive value before the component exists — a label above a slider that shows the slider's current position, for instance. Wrap the reference in a lambda and Rx defers resolution until render time:
 
 ```python
-slider = Slider(value=50, defer=True)
+from prefab_ui.rx import Rx
+
+vol = Rx(lambda: slider)
 
 with Column():
-    Text(f"Volume: {slider.rx}%")  # reference .rx first
-    insert(slider)                 # place the slider below
+    Text((vol / 100).percent(), bold=True)  # vol is usable here...
+    slider = Slider(value=50)                # ...even though slider is created here
 ```
+
+Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/composition#forward-references) for more.
 
 Use `.rx` when you have a component variable in scope. Use `Rx("key")` when you're working with keys from `set_initial_state()`, with [ForEach](/components/foreach) iteration variables, or when the component that created the state is defined far away from where you need its value.
 

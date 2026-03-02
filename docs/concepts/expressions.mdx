@@ -154,7 +154,7 @@ Because `.rx` returns an `Rx` object, all the same operations work on it. `slide
 
 Use `.rx` when you have a component reference in scope. Use `Rx("key")` when working with keys from `set_initial_state()`, `ForEach` iteration, or state keys that belong to components you don't have a reference to.
 
-Sometimes you need to reference `.rx` on a component that hasn't been placed in the tree yet, for instance a label above a slider that shows its current value. The [Composition](/guides/composition#forward-references) guide covers that pattern with `defer` and `insert`.
+Sometimes you need a component's `.rx` before the component exists — a label above a slider that shows its current value, for instance. `Rx(lambda: slider)` defers resolution until render time, when the variable is available. See [Forward References](/concepts/composition#forward-references) for details.
 
 ## Operators
 

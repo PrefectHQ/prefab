@@ -350,28 +350,22 @@ with Row(css_class="gap-8 h-48 items-end justify-center"):
 
 ## Dynamic Progress with Labels
 
-Bind a slider to a progress bar so the label reflects the actual value. The `percent` format specifier turns a raw fraction into a readable percentage:
+Bind a slider to a progress bar so the label reflects the actual value. Forward-declare the reactive reference with a lambda so it can be used before the slider appears in the tree:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider_1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_1 }}","min":0,"max":1.0,"variant":"default"},{"name":"slider_1","type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"disabled":false}]},"state":{"slider_1":0.65}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgUHJvZ3Jlc3MsCiAgICBSb3csCiAgICBTbGlkZXIsCiAgICBUZXh0LAogICAgaW5zZXJ0LAopCgpzbGlkZXIgPSBTbGlkZXIobWluPTAsIG1heD0xLCBzdGVwPTAuMDEsIHZhbHVlPTAuNjUsIGRlZmVyPVRydWUpCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiBpdGVtcy1jZW50ZXIiKToKICAgICAgICBUZXh0KCJVcGxvYWQgcHJvZ3Jlc3MiKQogICAgICAgIFRleHQoc2xpZGVyLnJ4LnBlcmNlbnQoKSwgYm9sZD1UcnVlKQogICAgUHJvZ3Jlc3ModmFsdWU9c2xpZGVyLnJ4LCBtYXg9MSkKICAgIGluc2VydChzbGlkZXIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider_1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_1 }}","min":0,"max":1.0,"variant":"default"},{"name":"slider_1","type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"disabled":false}]},"state":{"slider_1":0.65}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2YWwgPSBSeChsYW1iZGE6IHNsaWRlcikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgIFRleHQoIlVwbG9hZCBwcm9ncmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwsIG1heD0xKQogICAgc2xpZGVyID0gU2xpZGVyKG1pbj0wLCBtYXg9MSwgc3RlcD0wLjAxLCB2YWx1ZT0wLjY1KQo=">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column,
-    Progress,
-    Row,
-    Slider,
-    Text,
-    insert,
-)
+from prefab_ui.components import Column, Progress, Row, Slider, Text
+from prefab_ui.rx import Rx
 
-slider = Slider(min=0, max=1, step=0.01, value=0.65, defer=True)
+val = Rx(lambda: slider)
 
 with Column(gap=3):
     with Row(css_class="justify-between items-center"):
         Text("Upload progress")
-        Text(slider.rx.percent(), bold=True)
-    Progress(value=slider.rx, max=1)
-    insert(slider)
+        Text(val.percent(), bold=True)
+    Progress(value=val, max=1)
+    slider = Slider(min=0, max=1, step=0.01, value=0.65)
 ```
 ```json Protocol icon="brackets-curly"
 {

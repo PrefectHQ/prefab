@@ -512,40 +512,25 @@ Prefab UIs are declarative: your Python code runs once to build a component tree
 
 ## Forward references
 
-Prefab's composition model is automatic: every component created inside a `with` block attaches to that container immediately. This creates a tension when you need a component's reactive value _before_ the component appears in the tree. The common trigger is the `.rx` pattern: column headers that show a row count, panels that preview a form input's value, progress bars above the slider they reflect. Any time you want to reference a component's reactive value in something that appears earlier in the layout, you need a way to create the component first without placing it.
+Sometimes you need a component's reactive value before that component exists. Python executes top-to-bottom, so if a label above a slider needs `slider.rx`, you have a problem — the slider hasn't been created at the point where the label is defined. Prefab offers two escape hatches: lambda Rx for reactive values, and defer/insert for structural rearrangement.
 
-Consider a label that displays a slider's current value, positioned _above_ the slider. You need to reference `slider.rx` to build the label, but `slider` doesn't exist yet at the point where the label is created. If you flip the order and create the slider first, it attaches to the current container and renders above the label, which is exactly what you were trying to avoid.
+### Lambda Rx
 
-`defer=True` and `insert()` solve this.
+The common case is needing a component's `.rx` before it's created. Wrap the reference in a lambda, and Rx defers resolution until render time:
 
-### Deferred creation
-
-Pass `defer=True` when creating a component to prevent it from attaching to any parent:
-
-```python
-from prefab_ui.components import Column, Label, Row, Slider, Text, insert
-
-slider = Slider(value=75, defer=True)
-```
-
-The slider object exists, and you can reference `slider.rx`, build expressions from it, and pass it to other components. It just hasn't been placed anywhere in the tree yet.
-
-### Placing deferred components
-
-When you're ready to place the deferred component, call `insert()` inside the appropriate `with` block:
-
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 | number }}%","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQsIGluc2VydAoKdm9sdW1lID0gU2xpZGVyKHZhbHVlPTc1LCBkZWZlcj1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiVm9sdW1lIikKICAgICAgICBUZXh0KGYie3ZvbHVtZS5yeC5udW1iZXIoKX0lIiwgYm9sZD1UcnVlKQogICAgaW5zZXJ0KHZvbHVtZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 / 100 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCgodm9sIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT03NSkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Label, Row, Slider, Text, insert
+from prefab_ui.components import Column, Label, Row, Slider, Text
+from prefab_ui.rx import Rx
 
-volume = Slider(value=75, defer=True)
+vol = Rx(lambda: volume)
 
 with Column(gap=2):
     with Row(css_class="justify-between"):
         Label("Volume")
-        Text(f"{volume.rx.number()}%", bold=True)
-    insert(volume)
+        Text((vol / 100).percent(), bold=True)
+    volume = Slider(value=75)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -558,7 +543,7 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider_20 | number }}%", "bold": true, "type": "Text"}
+          {"content": "{{ slider_20 / 100 | percent }}", "bold": true, "type": "Text"}
         ]
       },
       {
@@ -577,11 +562,11 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-The slider is created first so `.rx` is available for the label. `defer=True` keeps it out of the tree. `insert(volume)` places it inside the `Column`, below the row, exactly where it should visually appear.
+`Rx(lambda: volume)` doesn't resolve right away — it captures the *name* `volume` and waits. When the lambda returns a stateful component, Rx extracts its `.rx` automatically, so `Rx(lambda: volume)` and `Rx(lambda: volume.rx)` are equivalent. Operations like `/ 100` and `.percent()` compose lazily too, so you can build entire expression chains against a component that doesn't exist yet.
 
-### Deferring subtrees
+### Structural rearrangement with defer/insert
 
-When you need to build an entire subtree of deferred components, where the components inside use `with` blocks to collect their own children, use `defer()` as a context manager:
+Lambda Rx covers the common case of forward-referencing a value. Occasionally you need something different: building an entire component subtree outside the current tree and grafting it in later. That's what `defer()` and `insert()` are for:
 
 ```python
 from prefab_ui.components import Column, Text, defer, insert
@@ -597,6 +582,6 @@ with Column() as page:
     insert(sidebar)
 ```
 
-Inside the `defer()` block, the normal auto-attachment mechanism is suspended. Components created there can still use `with` to nest children inside each other; they just won't attach to whatever container was active outside the block. When the block exits, the original attachment context resumes.
+Inside a `defer()` block, auto-attachment is suspended — components can still nest children inside each other with `with`, they just won't attach to the outer container. `insert()` grafts them in where you want them.
 
-Outside of `.rx`, you rarely need forward references. If you are not referencing a component's reactive state before creating it, the normal composition model handles everything.
+Most of the time you won't need `defer`/`insert`. Lambda Rx covers the `.rx` forward-reference pattern, and normal composition handles everything else.
