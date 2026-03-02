@@ -27,6 +27,7 @@ import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
+from prefab_ui.rx import STATE, _StateProxy
 from prefab_ui.themes import Theme
 
 PROTOCOL_VERSION = "0.2"
@@ -38,22 +39,24 @@ _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
 )
 
 
-def set_initial_state(**kwargs: Any) -> None:
+def set_initial_state(**kwargs: Any) -> _StateProxy:
     """Declare initial client-side state for the current app.
 
     Called alongside component construction to define the starting
-    values that templates like ``{{ name }}`` resolve against::
+    values that templates like ``{{ name }}`` resolve against.
 
-        set_initial_state(name="world")
+    Returns the :data:`STATE` proxy, so you can immediately use
+    attribute access to reference the keys you just defined::
 
-        with Card():
-            H3("Hello, {{ name }}!")
+        state = set_initial_state(count=0, items=[])
+        Text(f"Count: {state.count}")
     """
     current = _initial_state.get()
     if current is None:
         current = {}
         _initial_state.set(current)
     current.update(kwargs)
+    return STATE
 
 
 def get_initial_state() -> dict[str, Any] | None:

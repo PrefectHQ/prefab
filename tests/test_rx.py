@@ -10,9 +10,11 @@ from prefab_ui.rx import (
     EVENT,
     INDEX,
     ITEM,
+    STATE,
     Rx,
     RxStr,
     _generate_key,
+    _StateProxy,
     reset_counter,
 )
 
@@ -534,3 +536,34 @@ class TestRxStrType:
         args = typing.get_args(RxStr)
         assert str in args
         assert Rx in args
+
+
+# ── StateProxy ─────────────────────────────────────────────────────
+
+
+class TestStateProxy:
+    def test_attribute_creates_rx(self) -> None:
+        assert isinstance(STATE.groups, Rx)
+        assert STATE.groups.key == "groups"
+
+    def test_chains_through_rx_getattr(self) -> None:
+        assert str(STATE.groups.name) == "{{ groups.name }}"
+
+    def test_fstring_produces_template(self) -> None:
+        assert f"{STATE.count}" == "{{ count }}"
+
+    def test_underscore_raises(self) -> None:
+        with pytest.raises(AttributeError):
+            STATE._private
+
+    def test_repr(self) -> None:
+        assert repr(STATE) == "STATE"
+
+    def test_singleton_identity(self) -> None:
+        from prefab_ui.app import set_initial_state
+
+        result = set_initial_state(x=1)
+        assert result is STATE
+
+    def test_is_state_proxy(self) -> None:
+        assert isinstance(STATE, _StateProxy)

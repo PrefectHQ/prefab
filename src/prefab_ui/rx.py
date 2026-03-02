@@ -512,6 +512,36 @@ can be either a literal string or a reactive reference::
         label: RxStr = ""
 """
 
+# ── State proxy ──────────────────────────────────────────────────────
+
+
+class _StateProxy:
+    """Proxy that creates top-level ``Rx`` references via attribute access.
+
+    ``STATE.groups`` is equivalent to ``Rx("groups")``, providing a
+    concise way to reference state keys without separate declarations::
+
+        state = set_initial_state(groups=[...], count=0)
+        state.groups          # Rx("groups")
+        state.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    """
+
+    __slots__ = ()
+
+    def __getattr__(self, name: str) -> Rx:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        return Rx(name)
+
+    def __repr__(self) -> str:
+        return "STATE"
+
+
+#: Proxy for accessing state keys as reactive references.
+#: ``STATE.count`` is equivalent to ``Rx("count")``.
+STATE: _StateProxy = _StateProxy()
+
+
 # ── Built-in reactive variables ──────────────────────────────────────
 
 #: The current iteration item inside a :class:`ForEach` loop.
