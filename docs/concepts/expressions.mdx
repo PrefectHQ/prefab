@@ -164,25 +164,22 @@ Sometimes you need a component's `.rx` before the component exists — a label a
 
 Standard math operators work on `Rx` objects: `+`, `-`, `*`, `/`, and unary negation. The result is always a new `Rx` that compiles to the corresponding protocol expression.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgUm93LCBUZXh0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2V0X2luaXRpYWxfc3RhdGUocHJpY2U9NDIsIHF1YW50aXR5PTEpCnF1YW50aXR5ID0gUngoInF1YW50aXR5IikKcHJpY2UgPSBSeCgicHJpY2UiKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBUZXh0KCJRdWFudGl0eToiKQogICAgICAgIEJ1dHRvbigiLSIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgicXVhbnRpdHkiLCBxdWFudGl0eSAtIDEpKQogICAgICAgIFRleHQocXVhbnRpdHkpCiAgICAgICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJxdWFudGl0eSIsIHF1YW50aXR5ICsgMSkpCiAgICBUZXh0KGYiVG90YWw6IHsocHJpY2UgKiBxdWFudGl0eSkuY3VycmVuY3koKX0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgUm93LCBUZXh0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKHByaWNlPTQyLCBxdWFudGl0eT0xKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBUZXh0KCJRdWFudGl0eToiKQogICAgICAgIEJ1dHRvbigiLSIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgicXVhbnRpdHkiLCBzdGF0ZS5xdWFudGl0eSAtIDEpKQogICAgICAgIFRleHQoc3RhdGUucXVhbnRpdHkpCiAgICAgICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJxdWFudGl0eSIsIHN0YXRlLnF1YW50aXR5ICsgMSkpCiAgICBUZXh0KGYiVG90YWw6IHsoc3RhdGUucHJpY2UgKiBzdGF0ZS5xdWFudGl0eSkuY3VycmVuY3koKX0iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import Button, Column, Row, Text
 from prefab_ui.actions import SetState
-from prefab_ui.rx import Rx
 
-set_initial_state(price=42, quantity=1)
-quantity = Rx("quantity")
-price = Rx("price")
+state = set_initial_state(price=42, quantity=1)
 
 with Column(gap=3):
     with Row(gap=2, align="center"):
         Text("Quantity:")
-        Button("-", variant="outline", on_click=SetState("quantity", quantity - 1))
-        Text(quantity)
-        Button("+", variant="outline", on_click=SetState("quantity", quantity + 1))
-    Text(f"Total: {(price * quantity).currency()}")
+        Button("-", variant="outline", on_click=SetState("quantity", state.quantity - 1))
+        Text(state.quantity)
+        Button("+", variant="outline", on_click=SetState("quantity", state.quantity + 1))
+    Text(f"Total: {(state.price * state.quantity).currency()}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -282,20 +279,18 @@ The `||` operator short-circuits, which makes it useful as a falsy default: `{{ 
 
 `.then(if_true, if_false)` chooses between two values based on a boolean expression. It compiles to the ternary operator `? :` in the protocol:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKc2V0X2luaXRpYWxfc3RhdGUoYWN0aXZlPVRydWUpCmFjdGl2ZSA9IFJ4KCJhY3RpdmUiKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KGFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Row, Switch, Text
-from prefab_ui.rx import Rx
 
-set_initial_state(active=True)
-active = Rx("active")
+state = set_initial_state(active=True)
 
 with Column(gap=2):
     with Row(gap=3, align="center"):
         Switch(name="active")
-        Text(active.then("Online", "Offline"))
+        Text(state.active.then("Online", "Offline"))
 ```
 ```json Protocol icon="brackets-curly"
 {

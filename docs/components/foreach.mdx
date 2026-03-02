@@ -12,7 +12,7 @@ Given a list of data, `ForEach` renders its children once per item — a card fo
 
 Pass `ForEach` a state key that contains a list. The `as` variable is a reactive reference to the current item — use dot notation to reach into fields, embed it in f-strings, or pass it directly to components that accept string values.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShjcmV3PVsKICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImRlc2lnbmF0aW9uIjogIlJlc2VhcmNoZXIiLCAiZW1haWwiOiAiZm9yZEBtZWdhZG9kby5wdWIifSwKICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJkZXNpZ25hdGlvbiI6ICJBc3Ryb3BoeXNpY2lzdCIsICJlbWFpbCI6ICJ0cmlsbGlhbkBoZWFydC1vZi1nb2xkLnNoaXAifSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSgKICAgIGNyZXc9WwogICAgICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJkZXNpZ25hdGlvbiI6ICJSZXNlYXJjaGVyIiwgImVtYWlsIjogImZvcmRAbWVnYWRvZG8ucHViIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImRlc2lnbmF0aW9uIjogIkFzdHJvcGh5c2ljaXN0IiwgImVtYWlsIjogInRyaWxsaWFuQGhlYXJ0LW9mLWdvbGQuc2hpcCJ9LAogICAgXSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJjcmV3IikgYXMgbWVtYmVyOgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQ2FyZFRpdGxlKG1lbWJlci5uYW1lKQogICAgICAgICAgICAgICAgICAgIEJhZGdlKG1lbWJlci5kZXNpZ25hdGlvbiwgdmFyaWFudD0ic2Vjb25kYXJ5IikKICAgICAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbihtZW1iZXIuZW1haWwpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -27,11 +27,13 @@ from prefab_ui.components import (
 )
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(crew=[
-    {"name": "Arthur Dent", "designation": "Sandwich Maker", "email": "arthur@heart-of-gold.ship"},
-    {"name": "Ford Prefect", "designation": "Researcher", "email": "ford@megadodo.pub"},
-    {"name": "Trillian", "designation": "Astrophysicist", "email": "trillian@heart-of-gold.ship"},
-])
+set_initial_state(
+    crew=[
+        {"name": "Arthur Dent", "designation": "Sandwich Maker", "email": "arthur@heart-of-gold.ship"},
+        {"name": "Ford Prefect", "designation": "Researcher", "email": "ford@megadodo.pub"},
+        {"name": "Trillian", "designation": "Astrophysicist", "email": "trillian@heart-of-gold.ship"},
+    ],
+)
 
 with Column(gap=2):
     with ForEach("crew") as member:
@@ -137,7 +139,7 @@ with Row(gap=2):
 
 Dot notation chains through nested objects the same way you'd expect — `project.owner.name` reaches into `{"owner": {"name": "..."}}` without any special syntax.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_5.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_5.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUocHJvamVjdHM9WwogICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICB7Im5hbWUiOiAiSGl0Y2hoaWtlcidzIEd1aWRlIiwgIm93bmVyIjogeyJuYW1lIjogIkZvcmQgUHJlZmVjdCJ9fSwKXSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgicHJvamVjdHMiKSBhcyBwcm9qZWN0OgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIENhcmRUaXRsZShwcm9qZWN0Lm5hbWUpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oZiJPd25lcjoge3Byb2plY3Qub3duZXIubmFtZX0iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_5.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_5.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcm9qZWN0cz1bCiAgICAgICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICAgICAgeyJuYW1lIjogIkhpdGNoaGlrZXIncyBHdWlkZSIsICJvd25lciI6IHsibmFtZSI6ICJGb3JkIFByZWZlY3QifX0sCiAgICBdLAopCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICB3aXRoIEZvckVhY2goInByb2plY3RzIikgYXMgcHJvamVjdDoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUocHJvamVjdC5uYW1lKQogICAgICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKGYiT3duZXI6IHtwcm9qZWN0Lm93bmVyLm5hbWV9IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -150,10 +152,12 @@ from prefab_ui.components import (
 )
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(projects=[
-    {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},
-    {"name": "Hitchhiker's Guide", "owner": {"name": "Ford Prefect"}},
-])
+set_initial_state(
+    projects=[
+        {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},
+        {"name": "Hitchhiker's Guide", "owner": {"name": "Ford Prefect"}},
+    ],
+)
 
 with Column(gap=2):
     with ForEach("projects") as project:

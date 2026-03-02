@@ -35,21 +35,17 @@ Slider(value=50)
 
 ## Displaying the Value
 
-Forward-declare a reactive reference with `Rx(lambda: ...)`, then create the slider where it belongs in the tree. The lambda resolves at render time, after the slider exists:
+Every form control has an `.rx` property — a reactive reference to its current value. For a slider, `.rx` is a number you can format with pipes like `.percent()` or use in expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCh2b2wucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICB2b2x1bWUgPSBTbGlkZXIodmFsdWU9MC43NSwgbWluPTAsIG1heD0xKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume"},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiVm9sdW1lIikKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT0wLjc1LCBtaW49MCwgbWF4PTEpCiAgICBUZXh0KHZvbHVtZS5yeC5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Label, Row, Slider, Text
-from prefab_ui.rx import Rx
-
-vol = Rx(lambda: volume)
+from prefab_ui.components import Column, Label, Slider, Text
 
 with Column(gap=2):
-    with Row(css_class="justify-between"):
-        Label("Volume")
-        Text(vol.percent(), bold=True)
+    Label("Volume")
     volume = Slider(value=0.75, min=0, max=1)
+    Text(volume.rx.percent(), bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -57,14 +53,7 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {
-        "cssClass": "justify-between",
-        "type": "Row",
-        "children": [
-          {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider_3 | percent }}", "bold": true, "type": "Text"}
-        ]
-      },
+      {"type": "Label", "text": "Volume"},
       {
         "name": "slider_3",
         "type": "Slider",
@@ -72,7 +61,8 @@ with Column(gap=2):
         "max": 1.0,
         "value": 0.75,
         "disabled": false
-      }
+      },
+      {"content": "{{ slider_3 | percent }}", "bold": true, "type": "Text"}
     ]
   },
   "state": {"slider_3": 0.75}
@@ -81,25 +71,75 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-`Rx(lambda: volume)` forward-declares the reactive reference — the lambda resolves at render time, so you can use `vol` in expressions even though the slider is created later in the code.
+When the display needs to appear *above* the slider in the layout, forward-declare the reference with `Rx(lambda: ...)` so it resolves at render time:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_4 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0,"max":100,"variant":"default"},{"name":"slider_4","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
+from prefab_ui.rx import Rx
+
+val = Rx(lambda: s)
+
+with Column(gap=4):
+    with Row(css_class="justify-between"):
+        Label("Brightness")
+        Text(val.percent(), bold=True)
+    Progress(value=val)
+    s = Slider(value=0.42, min=0, max=1)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "justify-between",
+        "type": "Row",
+        "children": [
+          {"type": "Label", "text": "Brightness"},
+          {"content": "{{ slider_4 | percent }}", "bold": true, "type": "Text"}
+        ]
+      },
+      {
+        "type": "Progress",
+        "value": "{{ slider_4 }}",
+        "min": 0,
+        "max": 100,
+        "variant": "default"
+      },
+      {
+        "name": "slider_4",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 1.0,
+        "value": 0.42,
+        "disabled": false
+      }
+    ]
+  },
+  "state": {"slider_4": 0.42}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+See [Forward References](/concepts/composition#forward-references) for more on this pattern.
 
 ## Range and Step
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Rating"},{"content":"{{ rating }}","bold":true,"type":"Text"}]},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2YWwgPSBSeChsYW1iZGE6IHJhdGluZykKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlJhdGluZyIpCiAgICAgICAgVGV4dCh2YWwsIGJvbGQ9VHJ1ZSkKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Rating"},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false},{"content":"{{ rating }}","bold":true,"type":"Text"}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiUmF0aW5nIikKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Label, Row, Slider, Text
-from prefab_ui.rx import Rx
-
-val = Rx(lambda: rating)
+from prefab_ui.components import Column, Label, Slider, Text
 
 with Column(gap=2):
-    with Row(css_class="justify-between"):
-        Label("Rating")
-        Text(val, bold=True)
+    Label("Rating")
     rating = Slider(value=4, name="rating", min=0, max=5, step=0.5)
+    Text(rating.rx, bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -107,14 +147,7 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {
-        "cssClass": "justify-between",
-        "type": "Row",
-        "children": [
-          {"type": "Label", "text": "Rating"},
-          {"content": "{{ rating }}", "bold": true, "type": "Text"}
-        ]
-      },
+      {"type": "Label", "text": "Rating"},
       {
         "name": "rating",
         "type": "Slider",
@@ -123,7 +156,8 @@ with Column(gap=2):
         "value": 4.0,
         "step": 0.5,
         "disabled": false
-      }
+      },
+      {"content": "{{ rating }}", "bold": true, "type": "Text"}
     ]
   },
   "state": {"rating": 4.0}
@@ -136,7 +170,7 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"slider_4","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_4":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSeCwgU2xpZGVyLCBUZXh0CgpsZXZlbCA9IFJ4KCJsZXZlbCIpCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICBTbGlkZXIoCiAgICAgICAgdmFsdWU9NTAsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKCJsZXZlbCIsIFJ4KCIkZXZlbnQiKSksCiAgICApCiAgICBUZXh0KAogICAgICAgIGxldmVsLmRlZmF1bHQoIkRyYWcgdGhlIHNsaWRlciIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"slider_5","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_5":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSeCwgU2xpZGVyLCBUZXh0CgpsZXZlbCA9IFJ4KCJsZXZlbCIpCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICBTbGlkZXIoCiAgICAgICAgdmFsdWU9NTAsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKCJsZXZlbCIsIFJ4KCIkZXZlbnQiKSksCiAgICApCiAgICBUZXh0KAogICAgICAgIGxldmVsLmRlZmF1bHQoIkRyYWcgdGhlIHNsaWRlciIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.actions import SetState
@@ -161,7 +195,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
-        "name": "slider_4",
+        "name": "slider_5",
         "type": "Slider",
         "min": 0,
         "max": 100,
@@ -176,7 +210,7 @@ with Column(gap=4):
       }
     ]
   },
-  "state": {"slider_4": 50.0}
+  "state": {"slider_5": 50.0}
 }
 ```
 </CodeGroup>
@@ -188,7 +222,7 @@ For simply displaying the slider's current value, [`.rx` binding](#displaying-th
 
 ## Disabled State
 
-<ComponentPreview json={{"view":{"name":"slider_5","type":"Slider","min":0,"max":100,"value":30.0,"disabled":true},"state":{"slider_5":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2xpZGVyCgpTbGlkZXIodmFsdWU9MzAsIGRpc2FibGVkPVRydWUpCg==">
+<ComponentPreview json={{"view":{"name":"slider_6","type":"Slider","min":0,"max":100,"value":30.0,"disabled":true},"state":{"slider_6":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2xpZGVyCgpTbGlkZXIodmFsdWU9MzAsIGRpc2FibGVkPVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Slider
@@ -198,14 +232,14 @@ Slider(value=30, disabled=True)
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "name": "slider_5",
+    "name": "slider_6",
     "type": "Slider",
     "min": 0,
     "max": 100,
     "value": 30.0,
     "disabled": true
   },
-  "state": {"slider_5": 30.0}
+  "state": {"slider_6": 30.0}
 }
 ```
 </CodeGroup>
@@ -215,7 +249,7 @@ Slider(value=30, disabled=True)
 
 Semantic variants color the filled track to communicate meaning at a glance — the same palette available on Progress:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"name":"slider_6","type":"Slider","min":0,"max":100,"value":60.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"name":"slider_7","type":"Slider","min":0,"max":100,"value":100.0,"disabled":false,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"name":"slider_8","type":"Slider","min":0,"max":100,"value":72.0,"disabled":false,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"name":"slider_9","type":"Slider","min":0,"max":100,"value":90.0,"disabled":false,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"name":"slider_10","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"name":"slider_11","type":"Slider","min":0,"max":100,"value":30.0,"disabled":false,"variant":"muted"}]}]},"state":{"slider_6":60.0,"slider_7":100.0,"slider_8":72.0,"slider_9":90.0,"slider_10":45.0,"slider_11":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFNsaWRlcih2YWx1ZT02MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3VjY2VzcyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFNsaWRlcih2YWx1ZT03MiwgdmFyaWFudD0id2FybmluZyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlc3RydWN0aXZlIikKICAgICAgICBTbGlkZXIodmFsdWU9OTAsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiSW5mbyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFNsaWRlcih2YWx1ZT0zMCwgdmFyaWFudD0ibXV0ZWQiKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"name":"slider_7","type":"Slider","min":0,"max":100,"value":60.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"name":"slider_8","type":"Slider","min":0,"max":100,"value":100.0,"disabled":false,"variant":"success"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"name":"slider_9","type":"Slider","min":0,"max":100,"value":72.0,"disabled":false,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"name":"slider_10","type":"Slider","min":0,"max":100,"value":90.0,"disabled":false,"variant":"destructive"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"name":"slider_11","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"variant":"info"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"name":"slider_12","type":"Slider","min":0,"max":100,"value":30.0,"disabled":false,"variant":"muted"}]}]},"state":{"slider_7":60.0,"slider_8":100.0,"slider_9":72.0,"slider_10":90.0,"slider_11":45.0,"slider_12":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFNsaWRlcih2YWx1ZT02MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3VjY2VzcyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFNsaWRlcih2YWx1ZT03MiwgdmFyaWFudD0id2FybmluZyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlc3RydWN0aXZlIikKICAgICAgICBTbGlkZXIodmFsdWU9OTAsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiSW5mbyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFNsaWRlcih2YWx1ZT0zMCwgdmFyaWFudD0ibXV0ZWQiKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -252,7 +286,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Default"},
           {
-            "name": "slider_6",
+            "name": "slider_7",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -267,7 +301,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Success"},
           {
-            "name": "slider_7",
+            "name": "slider_8",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -283,7 +317,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Warning"},
           {
-            "name": "slider_8",
+            "name": "slider_9",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -299,7 +333,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Destructive"},
           {
-            "name": "slider_9",
+            "name": "slider_10",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -315,7 +349,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Info"},
           {
-            "name": "slider_10",
+            "name": "slider_11",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -331,7 +365,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Muted"},
           {
-            "name": "slider_11",
+            "name": "slider_12",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -344,12 +378,12 @@ with Column(gap=4):
     ]
   },
   "state": {
-    "slider_6": 60.0,
-    "slider_7": 100.0,
-    "slider_8": 72.0,
-    "slider_9": 90.0,
-    "slider_10": 45.0,
-    "slider_11": 30.0
+    "slider_7": 60.0,
+    "slider_8": 100.0,
+    "slider_9": 72.0,
+    "slider_10": 90.0,
+    "slider_11": 45.0,
+    "slider_12": 30.0
   }
 }
 ```
@@ -360,7 +394,7 @@ with Column(gap=4):
 
 Use `indicator_class` for arbitrary track colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"name":"slider_12","type":"Slider","min":0,"max":100,"value":85.0,"disabled":false,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"name":"slider_13","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"indicatorClass":"bg-blue-500"}]}]},"state":{"slider_12":85.0,"slider_13":45.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN0b3JhZ2UgVXNlZCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTg1LCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJVcGxvYWQgUHJvZ3Jlc3MiKQogICAgICAgIFNsaWRlcih2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"name":"slider_13","type":"Slider","min":0,"max":100,"value":85.0,"disabled":false,"indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"name":"slider_14","type":"Slider","min":0,"max":100,"value":45.0,"disabled":false,"indicatorClass":"bg-blue-500"}]}]},"state":{"slider_13":85.0,"slider_14":45.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN0b3JhZ2UgVXNlZCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTg1LCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJVcGxvYWQgUHJvZ3Jlc3MiKQogICAgICAgIFNsaWRlcih2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -385,7 +419,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Storage Used"},
           {
-            "name": "slider_12",
+            "name": "slider_13",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -401,7 +435,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Upload Progress"},
           {
-            "name": "slider_13",
+            "name": "slider_14",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -413,7 +447,7 @@ with Column(gap=4):
       }
     ]
   },
-  "state": {"slider_12": 85.0, "slider_13": 45.0}
+  "state": {"slider_13": 85.0, "slider_14": 45.0}
 }
 ```
 </CodeGroup>
@@ -423,7 +457,7 @@ with Column(gap=4):
 
 Set `orientation="vertical"` for vertical sliders. They fill their container's height, so wrap them in a fixed-height parent:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-center justify-center","type":"Row","children":[{"name":"slider_14","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false,"orientation":"vertical"},{"name":"slider_15","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"variant":"success","orientation":"vertical"},{"name":"slider_16","type":"Slider","min":0,"max":100,"value":25.0,"disabled":false,"variant":"info","orientation":"vertical"}]},"state":{"slider_14":75.0,"slider_15":50.0,"slider_16":25.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBTbGlkZXIKCndpdGggUm93KGNzc19jbGFzcz0iZ2FwLTggaC00OCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIiKToKICAgIFNsaWRlcih2YWx1ZT03NSwgb3JpZW50YXRpb249InZlcnRpY2FsIikKICAgIFNsaWRlcih2YWx1ZT01MCwgb3JpZW50YXRpb249InZlcnRpY2FsIiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICBTbGlkZXIodmFsdWU9MjUsIG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIsIHZhcmlhbnQ9ImluZm8iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-center justify-center","type":"Row","children":[{"name":"slider_15","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false,"orientation":"vertical"},{"name":"slider_16","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"variant":"success","orientation":"vertical"},{"name":"slider_17","type":"Slider","min":0,"max":100,"value":25.0,"disabled":false,"variant":"info","orientation":"vertical"}]},"state":{"slider_15":75.0,"slider_16":50.0,"slider_17":25.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBTbGlkZXIKCndpdGggUm93KGNzc19jbGFzcz0iZ2FwLTggaC00OCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIiKToKICAgIFNsaWRlcih2YWx1ZT03NSwgb3JpZW50YXRpb249InZlcnRpY2FsIikKICAgIFNsaWRlcih2YWx1ZT01MCwgb3JpZW50YXRpb249InZlcnRpY2FsIiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICBTbGlkZXIodmFsdWU9MjUsIG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIsIHZhcmlhbnQ9ImluZm8iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Row, Slider
@@ -440,7 +474,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
     "type": "Row",
     "children": [
       {
-        "name": "slider_14",
+        "name": "slider_15",
         "type": "Slider",
         "min": 0,
         "max": 100,
@@ -449,7 +483,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
         "orientation": "vertical"
       },
       {
-        "name": "slider_15",
+        "name": "slider_16",
         "type": "Slider",
         "min": 0,
         "max": 100,
@@ -459,7 +493,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
         "orientation": "vertical"
       },
       {
-        "name": "slider_16",
+        "name": "slider_17",
         "type": "Slider",
         "min": 0,
         "max": 100,
@@ -470,7 +504,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
       }
     ]
   },
-  "state": {"slider_14": 75.0, "slider_15": 50.0, "slider_16": 25.0}
+  "state": {"slider_15": 75.0, "slider_16": 50.0, "slider_17": 25.0}
 }
 ```
 </CodeGroup>
@@ -480,7 +514,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
 
 The `handle_style` parameter changes the thumb shape. Use `"bar"` for a tall rounded rectangle instead of the default circle:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"name":"slider_17","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"name":"slider_18","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"handleStyle":"bar"}]}]},"state":{"slider_17":50.0,"slider_18":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkNpcmNsZSAoZGVmYXVsdCkiKQogICAgICAgIFNsaWRlcih2YWx1ZT01MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmFyIikKICAgICAgICBTbGlkZXIodmFsdWU9NTAsIGhhbmRsZV9zdHlsZT0iYmFyIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"name":"slider_18","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"name":"slider_19","type":"Slider","min":0,"max":100,"value":50.0,"disabled":false,"handleStyle":"bar"}]}]},"state":{"slider_18":50.0,"slider_19":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkNpcmNsZSAoZGVmYXVsdCkiKQogICAgICAgIFNsaWRlcih2YWx1ZT01MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmFyIikKICAgICAgICBTbGlkZXIodmFsdWU9NTAsIGhhbmRsZV9zdHlsZT0iYmFyIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -505,7 +539,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Circle (default)"},
           {
-            "name": "slider_17",
+            "name": "slider_18",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -520,7 +554,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Bar"},
           {
-            "name": "slider_18",
+            "name": "slider_19",
             "type": "Slider",
             "min": 0,
             "max": 100,
@@ -532,69 +566,11 @@ with Column(gap=4):
       }
     ]
   },
-  "state": {"slider_17": 50.0, "slider_18": 50.0}
+  "state": {"slider_18": 50.0, "slider_19": 50.0}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
-
-## Reading the Value
-
-Use `.rx` to get a reactive reference to the slider's current numeric value. For a standard slider, `.rx` holds a single number; for a range slider (`range=True`), it holds a `[low, high]` array. The `.number()` pipe formats the value for clean display:
-
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_19 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_19 }}","min":0,"max":100,"variant":"default"},{"name":"slider_19","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_19":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
-from prefab_ui.rx import Rx
-
-val = Rx(lambda: s)
-
-with Column(gap=4):
-    with Row(css_class="justify-between"):
-        Label("Brightness")
-        Text(val.percent(), bold=True)
-    Progress(value=val)
-    s = Slider(value=0.42, min=0, max=1)
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "cssClass": "justify-between",
-        "type": "Row",
-        "children": [
-          {"type": "Label", "text": "Brightness"},
-          {"content": "{{ slider_19 | percent }}", "bold": true, "type": "Text"}
-        ]
-      },
-      {
-        "type": "Progress",
-        "value": "{{ slider_19 }}",
-        "min": 0,
-        "max": 100,
-        "variant": "default"
-      },
-      {
-        "name": "slider_19",
-        "type": "Slider",
-        "min": 0.0,
-        "max": 1.0,
-        "value": 0.42,
-        "disabled": false
-      }
-    ]
-  },
-  "state": {"slider_19": 0.42}
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-Drag the handle and both the percentage text and the progress bar update to reflect the slider's current position.
 
 ## API Reference
 
