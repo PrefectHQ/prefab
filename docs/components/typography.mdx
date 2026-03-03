@@ -235,7 +235,7 @@ These are handy for data-driven UIs where the styling comes from the container r
 
 All text components accept `bold` and `italic` props for quick emphasis without reaching for CSS classes:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"content":"This is bold.","bold":true,"type":"P"},{"content":"This is italic.","italic":true,"type":"P"},{"content":"Bold and italic combined.","bold":true,"italic":true,"type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgUCwKICAgIFRleHQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIFAoIlJlZ3VsYXIgcGFyYWdyYXBoIHRleHQuIikKICAgIFAoIlRoaXMgaXMgYm9sZC4iLCBib2xkPVRydWUpCiAgICBQKCJUaGlzIGlzIGl0YWxpYy4iLCBpdGFsaWM9VHJ1ZSkKICAgIFRleHQoIkJvbGQgYW5kIGl0YWxpYyBjb21iaW5lZC4iLCBib2xkPVRydWUsIGl0YWxpYz1UcnVlKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"cssClass":"font-bold","content":"This is bold.","type":"P"},{"cssClass":"italic","content":"This is italic.","type":"P"},{"cssClass":"font-bold italic","content":"Bold and italic combined.","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgUCwKICAgIFRleHQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIFAoIlJlZ3VsYXIgcGFyYWdyYXBoIHRleHQuIikKICAgIFAoIlRoaXMgaXMgYm9sZC4iLCBib2xkPVRydWUpCiAgICBQKCJUaGlzIGlzIGl0YWxpYy4iLCBpdGFsaWM9VHJ1ZSkKICAgIFRleHQoIkJvbGQgYW5kIGl0YWxpYyBjb21iaW5lZC4iLCBib2xkPVRydWUsIGl0YWxpYz1UcnVlKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -257,12 +257,11 @@ with Column(gap=2):
     "type": "Column",
     "children": [
       {"content": "Regular paragraph text.", "type": "P"},
-      {"content": "This is bold.", "bold": true, "type": "P"},
-      {"content": "This is italic.", "italic": true, "type": "P"},
+      {"cssClass": "font-bold", "content": "This is bold.", "type": "P"},
+      {"cssClass": "italic", "content": "This is italic.", "type": "P"},
       {
+        "cssClass": "font-bold italic",
         "content": "Bold and italic combined.",
-        "bold": true,
-        "italic": true,
         "type": "Text"
       }
     ]

@@ -352,7 +352,7 @@ with Row(css_class="gap-8 h-48 items-end justify-center"):
 
 Bind a slider to a progress bar so the label reflects the actual value. Forward-declare the reactive reference with a lambda so it can be used before the slider appears in the tree:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"content":"{{ slider_1 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_1 }}","min":0,"max":1.0,"variant":"default"},{"name":"slider_1","type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"disabled":false}]},"state":{"slider_1":0.65}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2YWwgPSBSeChsYW1iZGE6IHNsaWRlcikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgIFRleHQoIlVwbG9hZCBwcm9ncmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwsIG1heD0xKQogICAgc2xpZGVyID0gU2xpZGVyKG1pbj0wLCBtYXg9MSwgc3RlcD0wLjAxLCB2YWx1ZT0wLjY1KQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"justify-between items-center","type":"Row","children":[{"content":"Upload progress","type":"Text"},{"cssClass":"font-bold","content":"{{ slider_1 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_1 }}","min":0,"max":1.0,"variant":"default"},{"name":"slider_1","type":"Slider","min":0.0,"max":1.0,"value":0.65,"step":0.01,"disabled":false}]},"state":{"slider_1":0.65}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2YWwgPSBSeChsYW1iZGE6IHNsaWRlcikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgIFRleHQoIlVwbG9hZCBwcm9ncmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwsIG1heD0xKQogICAgc2xpZGVyID0gU2xpZGVyKG1pbj0wLCBtYXg9MSwgc3RlcD0wLjAxLCB2YWx1ZT0wLjY1KQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Row, Slider, Text
@@ -378,7 +378,7 @@ with Column(gap=3):
         "type": "Row",
         "children": [
           {"content": "Upload progress", "type": "Text"},
-          {"content": "{{ slider_1 | percent }}", "bold": true, "type": "Text"}
+          {"cssClass": "font-bold", "content": "{{ slider_1 | percent }}", "type": "Text"}
         ]
       },
       {
