@@ -5,7 +5,7 @@ from __future__ import annotations
 from prefab_ui.actions import AppendState, PopState
 from prefab_ui.components import INDEX, ITEM, Button, Column, Text
 from prefab_ui.components.control_flow import ForEach, If
-from prefab_ui.rx import LoopItem, Rx
+from prefab_ui.rx import STATE, LoopItem, Rx
 
 
 class TestForEachSerialization:
@@ -44,6 +44,14 @@ class TestForEachSerialization:
             Text(content=item.name)
         j = fe.to_json()
         assert j["key"] == "items"
+
+    def test_state_proxy_as_key(self):
+        fe = ForEach(STATE.items)
+        assert fe.key == "items"
+
+    def test_indexed_rx_as_key(self):
+        fe = ForEach(STATE.groups[Rx("gi")].todos)
+        assert fe.key == "groups.{{ gi }}.todos"
 
     def test_nested_children(self):
         fe = ForEach("users")

@@ -277,10 +277,14 @@ class Component(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _extract_defer(cls, data: Any) -> Any:
-        """Extract the ``defer`` kwarg before Pydantic validates fields."""
+        """Extract the ``defer`` kwarg and unwrap Rx names before validation."""
         if isinstance(data, dict):
             if data.pop("defer", False):
                 _defer_next_component.set(True)
+            # Unwrap Rx name to bare key string for state path binding
+            name = data.get("name")
+            if isinstance(name, Rx):
+                data["name"] = name.key
         return data
 
     @model_serializer(mode="wrap")

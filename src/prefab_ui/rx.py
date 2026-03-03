@@ -96,7 +96,12 @@ class _DotPath(NamedTuple):
     attr: str
 
 
-_Node = _BinOp | _UnaryOp | _Ternary | _Pipe | _DotPath
+class _IndexPath(NamedTuple):
+    expr: Rx
+    index: object  # int, str, or Rx
+
+
+_Node = _BinOp | _UnaryOp | _Ternary | _Pipe | _DotPath | _IndexPath
 
 # Ops where RHS needs strict wrapping (parens at same precedence)
 _STRICT_RHS_OPS = frozenset({"-", "/", "&&", "||"})
@@ -182,6 +187,9 @@ def _resolve(raw: str | Callable[[], Rx] | _Node) -> str:
 
     if isinstance(raw, _DotPath):
         return f"{raw.expr.key}.{raw.attr}"
+
+    if isinstance(raw, _IndexPath):
+        return f"{raw.expr.key}.{raw.index}"
 
     # Callable: forward references like Rx(lambda: component)
     if callable(raw):
@@ -317,6 +325,15 @@ class Rx:
         if name.startswith("_"):
             raise AttributeError(name)
         return Rx(_DotPath(self, name), _PREC_ATOM)
+
+    # ── Index access ─────────────────────────────────────────────────
+
+    def __getitem__(self, index: object) -> Rx:
+        if isinstance(index, (int, str, Rx)):
+            return Rx(_IndexPath(self, index), _PREC_ATOM)
+        raise TypeError(
+            f"Rx indices must be int, str, or Rx, not {type(index).__name__}"
+        )
 
     # ── Arithmetic ───────────────────────────────────────────────────
 
