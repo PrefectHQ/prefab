@@ -442,7 +442,7 @@ Available inside action handlers. Contains the value emitted by the interaction:
 | RadioGroup | Selected value (string) |
 | Button | `undefined` |
 
-`SetState("key")` with no second argument defaults to `"{{ $event }}"`.
+To capture `$event` explicitly, pass `EVENT` as the value: `SetState("last_volume", EVENT)`. Form controls update their own state key automatically, so this is mainly useful when writing the event value to a different key.
 
 #### `$error`
 

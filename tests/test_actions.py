@@ -18,7 +18,7 @@ from prefab_ui.actions import (
 )
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
-from prefab_ui.rx import STATE, Rx
+from prefab_ui.rx import EVENT, STATE, Rx
 
 
 class TestActionSerialization:
@@ -40,17 +40,21 @@ class TestActionSerialization:
         assert d["action"] == "sendMessage"
         assert d["content"] == "Summarize this"
 
-    def test_set_state_default_event(self):
-        a = SetState("brightness")
-        d = a.model_dump()
-        assert d["action"] == "setState"
-        assert d["key"] == "brightness"
-        assert d["value"] == "{{ $event }}"
+    def test_set_state_requires_value(self):
+        with pytest.raises(TypeError):
+            SetState("brightness")
 
     def test_set_state_explicit_value(self):
         a = SetState("loading", True)
         d = a.model_dump()
         assert d["value"] is True
+
+    def test_set_state_event_value(self):
+        a = SetState("brightness", EVENT)
+        d = a.model_dump()
+        assert d["action"] == "setState"
+        assert d["key"] == "brightness"
+        assert d["value"] == "{{ $event }}"
 
     def test_toggle_state(self):
         a = ToggleState("showDetails")
@@ -120,13 +124,13 @@ class TestActionOnComponents:
         assert j["onClick"][1]["action"] == "toolCall"
 
     def test_slider_on_change(self):
-        s = Slider(min=0, max=100, on_change=SetState("volume"))
+        s = Slider(min=0, max=100, on_change=SetState("volume", EVENT))
         j = s.to_json()
         assert j["onChange"]["action"] == "setState"
         assert j["onChange"]["key"] == "volume"
 
     def test_input_on_change(self):
-        i = Input(placeholder="Name", on_change=SetState("name"))
+        i = Input(placeholder="Name", on_change=SetState("name", EVENT))
         j = i.to_json()
         assert j["onChange"]["action"] == "setState"
 
@@ -189,9 +193,9 @@ class TestActionCallbacks:
             SendMessage("m"),
             UpdateContext(content="c"),
             OpenLink("http://example.com"),
-            SetState("k"),
+            SetState("k", 0),
             ToggleState("k"),
-            AppendState("k"),
+            AppendState("k", 0),
             PopState("k", 0),
             ShowToast("m"),
             CloseOverlay(),
@@ -349,10 +353,9 @@ class TestAppendStateSerialization:
         assert d["value"] == "new_item"
         assert "index" not in d
 
-    def test_default_event_value(self):
-        a = AppendState("items")
-        d = a.model_dump(by_alias=True, exclude_none=True)
-        assert d["value"] == "{{ $event }}"
+    def test_requires_value(self):
+        with pytest.raises(TypeError):
+            AppendState("items")
 
     def test_with_index(self):
         a = AppendState("items", "new_item", index=0)
@@ -590,12 +593,10 @@ class TestRxAsKey:
         assert d["key"] == "brightness"
         assert d["value"] == 50
 
-    def test_set_state_rx_default_event(self):
+    def test_set_state_rx_requires_value(self):
         rx = Rx("volume")
-        a = SetState(rx)
-        d = a.model_dump(by_alias=True, exclude_none=True)
-        assert d["key"] == "volume"
-        assert d["value"] == "{{ $event }}"
+        with pytest.raises(TypeError):
+            SetState(rx)
 
     def test_set_state_rx_with_dot_path(self):
         rx = Rx("user")
@@ -671,12 +672,10 @@ class TestRxAsKey:
         assert d["key"] == "todos"
         assert d["index"] == 0
 
-    def test_append_state_rx_default_event(self):
+    def test_append_state_rx_requires_value(self):
         rx = Rx("log")
-        a = AppendState(rx)
-        d = a.model_dump(by_alias=True, exclude_none=True)
-        assert d["key"] == "log"
-        assert d["value"] == "{{ $event }}"
+        with pytest.raises(TypeError):
+            AppendState(rx)
 
     def test_append_state_string_key_unchanged(self):
         a = AppendState("items", "val")
@@ -711,7 +710,7 @@ class TestRxAsKey:
         assert j["onClick"]["key"] == "active_tab"
 
     def test_rx_key_on_slider_change(self):
-        s = Slider(min=0, max=100, on_change=SetState(Rx("volume")), defer=True)
+        s = Slider(min=0, max=100, on_change=SetState(Rx("volume"), EVENT), defer=True)
         j = s.to_json()
         assert j["onChange"]["key"] == "volume"
 
