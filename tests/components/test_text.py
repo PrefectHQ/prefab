@@ -28,19 +28,72 @@ class TestTextAlign:
         assert j["cssClass"] == "text-center"
 
     def test_align_merges_with_css_class(self):
-        t = Text("hello", align="center", css_class="font-bold")
+        t = Text("hello", align="center", css_class="text-red-500")
         assert "text-center" in (t.css_class or "")
-        assert "font-bold" in (t.css_class or "")
+        assert "text-red-500" in (t.css_class or "")
 
     def test_no_align_no_css_class(self):
         t = Text("hello")
         assert t.css_class is None
 
-    def test_heading_inherits_bold_italic(self):
+
+class TestTextBoldItalic:
+    def test_bold_compiles_to_css_class(self):
+        t = Text("important", bold=True)
+        j = t.to_json()
+        assert "bold" not in j
+        assert "font-bold" in (j.get("cssClass") or "")
+
+    def test_italic_compiles_to_css_class(self):
+        t = Text("emphasis", italic=True)
+        j = t.to_json()
+        assert "italic" not in j
+        assert "italic" in (j.get("cssClass") or "")
+
+    def test_bold_and_italic_together(self):
+        t = Text("strong emphasis", bold=True, italic=True)
+        j = t.to_json()
+        assert "bold" not in j
+        assert not j.get("italic")
+        css = j.get("cssClass") or ""
+        assert "font-bold" in css
+        assert "italic" in css
+
+    def test_none_values_no_css_class(self):
+        t = Text("plain")
+        j = t.to_json()
+        assert "bold" not in j
+        assert "italic" not in j
+        assert "cssClass" not in j
+
+    def test_merges_with_existing_css_class(self):
+        t = Text("hello", bold=True, css_class="text-red-500")
+        css = t.css_class or ""
+        assert "font-bold" in css
+        assert "text-red-500" in css
+
+    def test_heading_bold_italic(self):
         h = Heading("title", level=1, bold=True, italic=True)
         j = h.to_json()
-        assert j["bold"] is True
-        assert j["italic"] is True
+        assert "bold" not in j
+        assert "italic" not in j
+        css = j.get("cssClass") or ""
+        assert "font-bold" in css
+        assert "italic" in css
+
+    @pytest.mark.parametrize("cls", [H1, P], ids=lambda c: c.__name__)
+    def test_typography_subclasses(self, cls):
+        t = cls("content", bold=True)
+        j = t.to_json()
+        assert "bold" not in j
+        assert "font-bold" in (j.get("cssClass") or "")
+
+    def test_bold_italic_with_align(self):
+        t = Text("hello", bold=True, italic=True, align="center")
+        css = t.css_class or ""
+        assert "font-bold" in css
+        assert "italic" in css
+        assert "text-center" in css
 
 
 def test_text_to_json():
@@ -49,27 +102,3 @@ def test_text_to_json():
     assert j["type"] == "Text"
     assert j["content"] == "hello"
     assert "cssClass" not in j
-
-
-def test_text_bold_italic():
-    t = Text(content="important", bold=True, italic=True)
-    j = t.to_json()
-    assert j["bold"] is True
-    assert j["italic"] is True
-
-    t2 = Text(content="plain")
-    j2 = t2.to_json()
-    assert "bold" not in j2
-    assert "italic" not in j2
-
-
-def test_typography_bold_italic():
-    h = H1("Title", bold=True)
-    j = h.to_json()
-    assert j["bold"] is True
-    assert "italic" not in j
-
-    p = P("body", italic=True)
-    j = p.to_json()
-    assert j["italic"] is True
-    assert "bold" not in j

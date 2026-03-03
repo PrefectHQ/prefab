@@ -28,8 +28,8 @@ class _TextComponent(Component):
     """Base class for text components that accept positional content."""
 
     content: RxStr = Field(description="Text content")
-    bold: bool | None = Field(default=None, description="Render text in bold")
-    italic: bool | None = Field(default=None, description="Render text in italic")
+    bold: bool | None = Field(default=None, exclude=True)
+    italic: bool | None = Field(default=None, exclude=True)
     align: TextAlign = Field(default=None, exclude=True)
 
     @overload
@@ -45,8 +45,15 @@ class _TextComponent(Component):
         super().__init__(**kwargs)
 
     def model_post_init(self, __context: Any) -> None:
+        parts: list[str] = []
+        if self.bold:
+            parts.append("font-bold")
+        if self.italic:
+            parts.append("italic")
         if self.align is not None:
-            self.css_class = _merge_css_classes(f"text-{self.align}", self.css_class)
+            parts.append(f"text-{self.align}")
+        if parts:
+            self.css_class = _merge_css_classes(" ".join(parts), self.css_class)
         super().model_post_init(__context)
 
 
