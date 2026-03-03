@@ -604,3 +604,12 @@ class TestGetItem:
     def test_str_produces_template_wrapping(self) -> None:
         result = STATE.groups[Rx("gi")].name
         assert str(result) == "{{ groups.{{ gi }}.name }}"
+
+    def test_rx_not_iterable(self) -> None:
+        with pytest.raises(TypeError, match="not iterable"):
+            list(Rx("items"))
+
+    def test_rx_not_iterable_in_for_loop(self) -> None:
+        with pytest.raises(TypeError, match="not iterable"):
+            for _ in Rx("items"):
+                pass  # pragma: no cover
