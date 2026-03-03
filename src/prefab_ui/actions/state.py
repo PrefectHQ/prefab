@@ -38,9 +38,6 @@ def _validate_path(path: str) -> str:
 class SetState(Action):
     """Set a client-side state variable. No server round-trip.
 
-    The default ``value`` of ``{{ $event }}`` captures the event value
-    (slider position, input text, checkbox state, etc.).
-
     The ``key`` supports dot-paths for nested updates::
 
         SetState("todos.0.done", True)   # deep-update into a list
@@ -48,19 +45,14 @@ class SetState(Action):
 
     action: Literal["setState"] = "setState"
     key: str = Field(description="State key or dot-path to set")
-    value: Any = Field(
-        default="{{ $event }}",
-        description="Value to set. Use '{{ $event }}' for the event value.",
-    )
+    value: Any = Field(description="Value to set.")
 
     @field_validator("key")
     @classmethod
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(
-        self, key: str | Rx, value: Any = "{{ $event }}", **kwargs: Any
-    ) -> None:
+    def __init__(self, key: str | Rx, value: Any, **kwargs: Any) -> None:
         kwargs["key"] = key.key if isinstance(key, Rx) else key
         kwargs["value"] = value
         super().__init__(**kwargs)
@@ -93,10 +85,7 @@ class AppendState(Action):
 
     action: Literal["appendState"] = "appendState"
     key: str = Field(description="State key or dot-path to the array")
-    value: Any = Field(
-        default="{{ $event }}",
-        description="Value to append.",
-    )
+    value: Any = Field(description="Value to append.")
     index: int | str | None = Field(
         default=None,
         description="Insert position (int or template string). None to append at end.",
@@ -110,7 +99,7 @@ class AppendState(Action):
     def __init__(
         self,
         key: str | Rx,
-        value: Any = "{{ $event }}",
+        value: Any,
         *,
         index: int | str | Rx | None = None,
         **kwargs: Any,

@@ -66,6 +66,8 @@ _WIRE_ONLY_FIXTURES: dict[str, dict[str, Any]] = {
 def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     """Produce a minimal valid value for a required Pydantic field."""
     annotation = field_info.annotation
+    if annotation is Any:
+        return f"test_{field_name}"
     if annotation is None:
         return None
 

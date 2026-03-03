@@ -63,9 +63,7 @@ async def settings() -> AppResult:
 
 ## SetState
 
-`SetState` explicitly sets a state key to a value. When you wire it to a form control's `on_change`, the default value is `{{ $event }}` — the current value of that control (slider position, input text, checkbox state, etc.). This means `SetState("key")` with no second argument captures whatever the user entered.
-
-For non-form elements like buttons, pass an explicit value as the second argument:
+`SetState` explicitly sets a state key to a value. Both arguments are required — the key and the value to write:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgQnV0dG9uLCBDb2x1bW4sIFJvdwpmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKc3RhdGUgPSBzZXRfaW5pdGlhbF9zdGF0ZShkcml2ZT0iaW1wcm9iYWJpbGl0eSIpCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgQnV0dG9uKCJJbXByb2JhYmlsaXR5IiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgICAgIG9uX2NsaWNrPVNldFN0YXRlKCJkcml2ZSIsICJpbXByb2JhYmlsaXR5IikpCiAgICAgICAgQnV0dG9uKCJDb252ZW50aW9uYWwiLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUoImRyaXZlIiwgImNvbnZlbnRpb25hbCIpKQogICAgICAgIEJ1dHRvbigiQmlzdHJvbWF0aCIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZSgiZHJpdmUiLCAiYmlzdHJvbWF0aCIpKQogICAgQmFkZ2UoZiJBY3RpdmUgZHJpdmU6IHtzdGF0ZS5kcml2ZX0iKQo=">
 <CodeGroup>

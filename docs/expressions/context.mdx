@@ -127,7 +127,7 @@ Available inside action handlers. It contains the value from the interaction tha
 | RadioGroup | Selected value (string) |
 | Button | `undefined` |
 
-This is why [SetState](/actions/update-state) can be so concise: when you write `SetState("volume")` without a second argument, it defaults to `"{{ $event }}"`, which automatically captures whatever the component emitted. On a slider, that's the position; on an input, that's the text.
+When you need to capture the event value explicitly — for example, to store it under a different key or transform it — pass `EVENT` as the value: `SetState("last_volume", EVENT)`. For form controls like Slider and Input, the component's own state key updates automatically, so a separate `SetState` is only needed when you want to write the value somewhere else.
 
 ### `$error`
 

@@ -71,6 +71,8 @@ def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     from typing import Literal, Union, get_args, get_origin
 
     annotation = field_info.annotation
+    if annotation is Any:
+        return f"test_{field_name}"
     if annotation is None:
         return None
 
