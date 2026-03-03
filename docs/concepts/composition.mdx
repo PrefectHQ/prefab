@@ -517,7 +517,7 @@ Sometimes you need a component's reactive value before that component exists. Py
 
 The common case is needing a component's `.rx` before it's created. Wrap the reference in a lambda, and Rx defers resolution until render time:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"content":"{{ slider_20 / 100 | percent }}","bold":true,"type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCgodm9sIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT03NSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Volume"},{"cssClass":"font-bold","content":"{{ slider_20 / 100 | percent }}","type":"Text"}]},{"name":"slider_20","type":"Slider","min":0,"max":100,"value":75.0,"disabled":false}]},"state":{"slider_20":75.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUm93LCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgp2b2wgPSBSeChsYW1iZGE6IHZvbHVtZSkKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggUm93KGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgTGFiZWwoIlZvbHVtZSIpCiAgICAgICAgVGV4dCgodm9sIC8gMTAwKS5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT03NSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Row, Slider, Text
@@ -542,7 +542,11 @@ with Column(gap=2):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Volume"},
-          {"content": "{{ slider_20 / 100 | percent }}", "bold": true, "type": "Text"}
+          {
+            "cssClass": "font-bold",
+            "content": "{{ slider_20 / 100 | percent }}",
+            "type": "Text"
+          }
         ]
       },
       {

@@ -37,7 +37,7 @@ Slider(value=50)
 
 Every form control has an `.rx` property — a reactive reference to its current value. For a slider, `.rx` is a number you can format with pipes like `.percent()` or use in expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume"},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false},{"content":"{{ slider_3 | percent }}","bold":true,"type":"Text"}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiVm9sdW1lIikKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT0wLjc1LCBtaW49MCwgbWF4PTEpCiAgICBUZXh0KHZvbHVtZS5yeC5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume"},{"name":"slider_3","type":"Slider","min":0.0,"max":1.0,"value":0.75,"disabled":false},{"cssClass":"font-bold","content":"{{ slider_3 | percent }}","type":"Text"}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiVm9sdW1lIikKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT0wLjc1LCBtaW49MCwgbWF4PTEpCiAgICBUZXh0KHZvbHVtZS5yeC5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider, Text
@@ -62,7 +62,7 @@ with Column(gap=2):
         "value": 0.75,
         "disabled": false
       },
-      {"content": "{{ slider_3 | percent }}", "bold": true, "type": "Text"}
+      {"cssClass": "font-bold", "content": "{{ slider_3 | percent }}", "type": "Text"}
     ]
   },
   "state": {"slider_3": 0.75}
@@ -73,7 +73,7 @@ with Column(gap=2):
 
 When the display needs to appear *above* the slider in the layout, forward-declare the reference with `Rx(lambda: ...)` so it resolves at render time:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"content":"{{ slider_4 | percent }}","bold":true,"type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0,"max":100,"variant":"default"},{"name":"slider_4","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"cssClass":"font-bold","content":"{{ slider_4 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0,"max":100,"variant":"default"},{"name":"slider_4","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
@@ -99,7 +99,7 @@ with Column(gap=4):
         "type": "Row",
         "children": [
           {"type": "Label", "text": "Brightness"},
-          {"content": "{{ slider_4 | percent }}", "bold": true, "type": "Text"}
+          {"cssClass": "font-bold", "content": "{{ slider_4 | percent }}", "type": "Text"}
         ]
       },
       {
@@ -131,7 +131,7 @@ See [Forward References](/concepts/composition#forward-references) for more on t
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Rating"},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false},{"content":"{{ rating }}","bold":true,"type":"Text"}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiUmF0aW5nIikKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Rating"},{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":4.0,"step":0.5,"disabled":false},{"cssClass":"font-bold","content":"{{ rating }}","type":"Text"}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiUmF0aW5nIikKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider, Text
@@ -157,7 +157,7 @@ with Column(gap=2):
         "step": 0.5,
         "disabled": false
       },
-      {"content": "{{ rating }}", "bold": true, "type": "Text"}
+      {"cssClass": "font-bold", "content": "{{ rating }}", "type": "Text"}
     ]
   },
   "state": {"rating": 4.0}
