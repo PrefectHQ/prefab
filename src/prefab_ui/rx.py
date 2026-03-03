@@ -335,6 +335,13 @@ class Rx:
             f"Rx indices must be int, str, or Rx, not {type(index).__name__}"
         )
 
+    def __iter__(self):
+        raise TypeError(
+            f"Rx({self.key!r}) is not iterable. "
+            "Use str(rx) to get the template string, "
+            "or rx[i] for index access."
+        )
+
     # ── Arithmetic ───────────────────────────────────────────────────
 
     def __add__(self, other: object) -> Rx:

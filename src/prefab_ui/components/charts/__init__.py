@@ -26,6 +26,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from prefab_ui.components.base import Component
+from prefab_ui.rx import RxStr
 
 
 class ChartSeries(BaseModel):
@@ -54,7 +55,7 @@ class BarChart(Component):
     """
 
     type: Literal["BarChart"] = "BarChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as bars")
@@ -101,7 +102,7 @@ class LineChart(Component):
     """
 
     type: Literal["LineChart"] = "LineChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as lines")
@@ -148,7 +149,7 @@ class AreaChart(Component):
     """
 
     type: Literal["AreaChart"] = "AreaChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as areas")
@@ -199,7 +200,7 @@ class PieChart(Component):
     """
 
     type: Literal["PieChart"] = "PieChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
@@ -243,7 +244,7 @@ class ScatterChart(Component):
     """
 
     type: Literal["ScatterChart"] = "ScatterChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as scatter groups")
@@ -282,7 +283,7 @@ class RadarChart(Component):
     """
 
     type: Literal["RadarChart"] = "RadarChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as radar areas")
@@ -323,7 +324,7 @@ class RadialChart(Component):
     """
 
     type: Literal["RadialChart"] = "RadialChart"
-    data: list[dict[str, Any]] | str = Field(
+    data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or {{ interpolation }} reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
