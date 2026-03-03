@@ -567,3 +567,35 @@ class TestStateProxy:
 
     def test_is_state_proxy(self) -> None:
         assert isinstance(STATE, _StateProxy)
+
+
+# ── Rx.__getitem__ ────────────────────────────────────────────────
+
+
+class TestGetItem:
+    def test_int_index(self) -> None:
+        assert Rx("groups")[0].key == "groups.0"
+
+    def test_str_index(self) -> None:
+        assert Rx("data")["name"].key == "data.name"
+
+    def test_rx_index(self) -> None:
+        assert Rx("groups")[Rx("idx")].key == "groups.{{ idx }}"
+
+    def test_chained_index_and_attr(self) -> None:
+        result = Rx("groups")[Rx("gi")].todos[Rx("ti")].done
+        assert result.key == "groups.{{ gi }}.todos.{{ ti }}.done"
+
+    def test_invalid_type_raises(self) -> None:
+        with pytest.raises(TypeError, match="float"):
+            Rx("x")[3.14]
+
+    def test_state_proxy_with_index(self) -> None:
+        assert STATE.groups[Rx("gi")].todos.key == "groups.{{ gi }}.todos"
+
+    def test_int_index_chained_attr(self) -> None:
+        assert STATE.items[0].name.key == "items.0.name"
+
+    def test_str_produces_template_wrapping(self) -> None:
+        result = STATE.groups[Rx("gi")].name
+        assert str(result) == "{{ groups.{{ gi }}.name }}"

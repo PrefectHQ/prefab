@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from prefab_ui.components import Input
+from prefab_ui.rx import STATE, Rx
 
 
 def test_input_serializes():
@@ -61,3 +62,19 @@ class TestInputConstraintProps:
         assert "max" not in j
         assert "step" not in j
         assert "pattern" not in j
+
+
+class TestInputRxName:
+    def test_rx_name(self):
+        inp = Input(name=Rx("email"))
+        assert inp.name == "email"
+        assert inp.to_json()["name"] == "email"
+
+    def test_state_proxy_name(self):
+        inp = Input(name=STATE.email)
+        assert inp.name == "email"
+
+    def test_indexed_rx_name(self):
+        inp = Input(name=STATE.groups[Rx("gi")].new_todo)
+        assert inp.name == "groups.{{ gi }}.new_todo"
+        assert inp.to_json()["name"] == "groups.{{ gi }}.new_todo"

@@ -18,7 +18,7 @@ from prefab_ui.actions import (
 )
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
 from prefab_ui.components import Button, Checkbox, DropZone, Input, Slider
-from prefab_ui.rx import Rx
+from prefab_ui.rx import STATE, Rx
 
 
 class TestActionSerialization:
@@ -714,3 +714,29 @@ class TestRxAsKey:
         s = Slider(min=0, max=100, on_change=SetState(Rx("volume")), defer=True)
         j = s.to_json()
         assert j["onChange"]["key"] == "volume"
+
+    # ── STATE proxy ──────────────────────────────────────────────────
+
+    def test_set_state_state_proxy(self):
+        a = SetState(STATE.count, 0)
+        assert a.key == "count"
+
+    def test_append_state_state_proxy(self):
+        a = AppendState(STATE.items, "new")
+        assert a.key == "items"
+
+    def test_pop_state_state_proxy(self):
+        a = PopState(STATE.items, 0)
+        assert a.key == "items"
+
+    # ── Indexed Rx paths ─────────────────────────────────────────────
+
+    def test_set_state_indexed_rx(self):
+        a = SetState(STATE.groups[Rx("gi")].new_todo, "")
+        assert a.key == "groups.{{ gi }}.new_todo"
+
+    def test_pop_state_indexed_rx(self):
+        a = PopState(STATE.groups[Rx("gi")].todos, Rx("ti"))
+        d = a.model_dump(by_alias=True, exclude_none=True)
+        assert d["key"] == "groups.{{ gi }}.todos"
+        assert d["index"] == "{{ ti }}"
