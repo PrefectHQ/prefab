@@ -13,6 +13,7 @@ from prefab_ui.rx import (
     STATE,
     Rx,
     RxStr,
+    _BoundStateProxy,
     _generate_key,
     _StateProxy,
     reset_counter,
@@ -559,11 +560,15 @@ class TestStateProxy:
     def test_repr(self) -> None:
         assert repr(STATE) == "STATE"
 
-    def test_singleton_identity(self) -> None:
-        from prefab_ui.app import set_initial_state
+    def test_set_initial_state_returns_bound_proxy(self) -> None:
+        from prefab_ui.app import clear_initial_state, set_initial_state
 
-        result = set_initial_state(x=1)
-        assert result is STATE
+        try:
+            result = set_initial_state(x=1)
+            assert isinstance(result, _BoundStateProxy)
+            assert isinstance(result, _StateProxy)
+        finally:
+            clear_initial_state()
 
     def test_is_state_proxy(self) -> None:
         assert isinstance(STATE, _StateProxy)

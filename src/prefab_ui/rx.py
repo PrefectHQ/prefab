@@ -554,6 +554,51 @@ class _StateProxy:
         return "STATE"
 
 
+class _BoundStateProxy(_StateProxy):
+    """State proxy that validates attribute access against declared keys.
+
+    Returned by :func:`set_initial_state`, this proxy knows which keys
+    were declared and raises :class:`AttributeError` for undeclared ones::
+
+        state = set_initial_state(count=0, items=[])
+        state.count    # ✓ Rx("count")
+        state.countt   # ✗ AttributeError with helpful message
+
+    The proxy holds a reference to the same dict that
+    ``set_initial_state`` accumulates into, so multiple calls are fine::
+
+        state = set_initial_state(count=0)
+        set_initial_state(items=[])
+        state.items    # ✓ — visible because the backing dict grew
+
+    Use the unrestricted :data:`STATE` global for keys defined elsewhere
+    (e.g. by form controls or ``SetState`` actions).
+    """
+
+    __slots__ = ("_declared",)
+
+    def __init__(self, declared: dict[str, object]) -> None:
+        object.__setattr__(self, "_declared", declared)
+
+    def __getattr__(self, name: str) -> Rx:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        declared: dict[str, object] = object.__getattribute__(self, "_declared")
+        if name not in declared:
+            known = ", ".join(sorted(declared)) or "(none)"
+            raise AttributeError(
+                f"'{name}' is not a declared state key. "
+                f"Declared keys: {known}. "
+                f"Use STATE.{name} if this key is defined elsewhere."
+            )
+        return Rx(name)
+
+    def __repr__(self) -> str:
+        declared: dict[str, object] = object.__getattribute__(self, "_declared")
+        keys = ", ".join(sorted(declared))
+        return f"State({keys})"
+
+
 #: Proxy for accessing state keys as reactive references.
 #: ``STATE.count`` is equivalent to ``Rx("count")``.
 STATE: _StateProxy = _StateProxy()
