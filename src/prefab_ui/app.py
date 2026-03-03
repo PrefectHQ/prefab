@@ -27,7 +27,7 @@ import pydantic_core
 from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
-from prefab_ui.rx import STATE, _StateProxy
+from prefab_ui.rx import _BoundStateProxy
 from prefab_ui.themes import Theme
 
 PROTOCOL_VERSION = "0.2"
@@ -39,24 +39,30 @@ _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
 )
 
 
-def set_initial_state(**kwargs: Any) -> _StateProxy:
+def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
     """Declare initial client-side state for the current app.
 
     Called alongside component construction to define the starting
     values that templates like ``{{ name }}`` resolve against.
 
-    Returns the :data:`STATE` proxy, so you can immediately use
-    attribute access to reference the keys you just defined::
+    Returns a bound state proxy that validates attribute access against
+    the declared keys::
 
         state = set_initial_state(count=0, items=[])
-        Text(f"Count: {state.count}")
+        state.count    # Rx("count")
+        state.typo     # AttributeError — catches misspelled keys
+
+    The proxy holds a reference to the same accumulator dict, so
+    multiple calls to ``set_initial_state`` are visible from any proxy.
+    Use the global :data:`~prefab_ui.rx.STATE` for keys defined
+    elsewhere (form controls, ``SetState`` actions, etc.).
     """
     current = _initial_state.get()
     if current is None:
         current = {}
         _initial_state.set(current)
     current.update(kwargs)
-    return STATE
+    return _BoundStateProxy(current)
 
 
 def get_initial_state() -> dict[str, Any] | None:
