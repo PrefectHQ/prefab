@@ -9,16 +9,25 @@ module.
 
 from __future__ import annotations
 
+import types
+from collections.abc import Callable
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import Field, PrivateAttr, field_serializer
 
 from prefab_ui.actions.base import Action
+from prefab_ui.app import get_tool_resolver
 from prefab_ui.rx import RxStr
 
 
 class CallTool(Action):
     """Call an MCP server tool via ``app.callServerTool()``.
+
+    The ``tool`` argument can be a string name or a callable reference
+    to the tool function.  Callables are resolved to name strings at
+    serialization time via the resolver passed to
+    ``PrefabApp.to_json(tool_resolver=...)``.  Without a resolver,
+    the function's ``__name__`` is used as a fallback.
 
     If ``result_key`` is set, the tool's return value is written into
     client-side state at that key. The key supports interpolation:
@@ -36,10 +45,24 @@ class CallTool(Action):
         alias="resultKey",
         description="State key to store the tool result under",
     )
+    _tool_ref: Callable[..., Any] | None = PrivateAttr(default=None)
 
-    def __init__(self, tool: str, **kwargs: Any) -> None:
-        kwargs["tool"] = tool
-        super().__init__(**kwargs)
+    def __init__(self, tool: str | Callable[..., Any], **kwargs: Any) -> None:
+        if isinstance(tool, types.FunctionType):
+            kwargs["tool"] = tool.__name__
+            super().__init__(**kwargs)
+            self._tool_ref = tool
+        else:
+            kwargs["tool"] = tool
+            super().__init__(**kwargs)
+
+    @field_serializer("tool")
+    def _resolve_tool_ref(self, value: str) -> str:
+        if self._tool_ref is not None:
+            resolver = get_tool_resolver()
+            if resolver is not None:
+                return resolver(self._tool_ref)
+        return value
 
 
 class SendMessage(Action):

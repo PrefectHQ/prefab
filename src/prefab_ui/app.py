@@ -20,6 +20,7 @@ Usage::
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from contextvars import ContextVar
 from typing import Any
 
@@ -37,6 +38,17 @@ PROTOCOL_VERSION = "0.2"
 _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
     "_initial_state", default=None
 )
+
+# ── Tool Resolver ─────────────────────────────────────────────────────
+
+_tool_resolver: ContextVar[Callable[[Any], str] | None] = ContextVar(
+    "_tool_resolver", default=None
+)
+
+
+def get_tool_resolver() -> Callable[[Any], str] | None:
+    """Return the active tool resolver, or ``None``."""
+    return _tool_resolver.get()
 
 
 def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
@@ -143,29 +155,49 @@ class PrefabApp(BaseModel):
                     raise ValueError(f"State key {key!r} uses reserved prefix '$'")
         return self
 
-    def to_json(self) -> dict[str, Any]:
+    def to_json(
+        self,
+        *,
+        tool_resolver: Callable[[Any], str] | None = None,
+    ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
         Returns a dict with ``version``, ``view``, ``defs``, and ``state``
         as top-level keys (omitting any that are None).
+
+        Parameters
+        ----------
+        tool_resolver:
+            Resolves callable tool references to name strings during
+            serialization.  Scoped to this call — safe for concurrent use
+            with different resolvers.
         """
-        result: dict[str, Any] = {"version": PROTOCOL_VERSION}
+        token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
+        try:
+            result: dict[str, Any] = {"version": PROTOCOL_VERSION}
 
-        if self.view is not None:
-            result["view"] = self.view.to_json()
+            if self.view is not None:
+                result["view"] = self.view.to_json()
 
-        if self.defs:
-            result["defs"] = {d.name: d.to_json() for d in self.defs}
+            if self.defs:
+                result["defs"] = {d.name: d.to_json() for d in self.defs}
 
-        if self.state is not None:
-            result["state"] = pydantic_core.to_jsonable_python(self.state)
+            if self.state is not None:
+                result["state"] = pydantic_core.to_jsonable_python(self.state)
 
-        if self.theme is not None:
-            result["theme"] = self.theme.to_json()
+            if self.theme is not None:
+                result["theme"] = self.theme.to_json()
 
-        return result
+            return result
+        finally:
+            if token is not None:
+                _tool_resolver.reset(token)
 
-    def html(self) -> str:
+    def html(
+        self,
+        *,
+        tool_resolver: Callable[[Any], str] | None = None,
+    ) -> str:
         """Produce a complete, self-contained HTML page.
 
         The page includes the Prefab renderer (JS/CSS), any user-specified
@@ -185,7 +217,10 @@ class PrefabApp(BaseModel):
             for url in self.scripts:
                 head_parts.append(f'  <script src="{url}"></script>')
 
-        data_json = json.dumps(self.to_json(), separators=(",", ":"))
+        data_json = json.dumps(
+            self.to_json(tool_resolver=tool_resolver),
+            separators=(",", ":"),
+        )
         # Escape </ to prevent premature closing of the script tag
         safe_json = data_json.replace("</", r"<\/")
 
