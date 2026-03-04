@@ -90,6 +90,22 @@ function applyTheme(ctx: McpUiHostContext) {
   }
 }
 
+/**
+ * Extract the subset of host context fields that are useful as reactive
+ * state. Excludes `styles` (CSS variables, not data) and `toolInfo`
+ * (static metadata about the originating tool call).
+ */
+function hostContextToState(ctx: McpUiHostContext): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  if (ctx.theme != null) result.theme = ctx.theme;
+  if (ctx.displayMode != null) result.displayMode = ctx.displayMode;
+  if (ctx.availableDisplayModes != null)
+    result.availableDisplayModes = ctx.availableDisplayModes;
+  if (ctx.containerDimensions != null)
+    result.containerDimensions = ctx.containerDimensions;
+  return result;
+}
+
 export function App() {
   const [tree, setTree] = useState<ComponentNode | null>(INITIAL?.view ?? null);
   const [defs, setDefs] = useState<Record<string, ComponentNode>>(
@@ -128,9 +144,13 @@ export function App() {
       >;
       const stateData = (structured.state ?? {}) as Record<string, unknown>;
 
-      // Full state reset — host is providing a fresh view + state
+      // Full state reset — host is providing a fresh view + state.
+      // Preserve $host across resets so host context stays available.
       clearAllIntervals();
-      state.reset(stateData);
+      const currentHost = state.get("$host");
+      state.reset(
+        currentHost != null ? { ...stateData, $host: currentHost } : stateData,
+      );
       setDefs(extractedDefs);
 
       if (view) {
@@ -140,20 +160,29 @@ export function App() {
     [state],
   );
 
+  /** Apply host context: theme + inject $host into state store. */
+  const handleHostContext = useCallback(
+    (ctx: McpUiHostContext) => {
+      applyTheme(ctx);
+      state.set("$host", hostContextToState(ctx));
+    },
+    [state],
+  );
+
   // Subscribe to the early bridge — this replays any buffered tool results
   // that arrived before React mounted.
   useEffect(() => {
     earlyBridge.onToolResult(handleToolResult);
-    earlyBridge.onHostContext(applyTheme);
-  }, [handleToolResult]);
+    earlyBridge.onHostContext(handleHostContext);
+  }, [handleToolResult, handleHostContext]);
 
   // Apply initial theme from host context (if already available)
   useEffect(() => {
     if (earlyBridge.app) {
       const ctx = earlyBridge.app.getHostContext();
-      if (ctx) applyTheme(ctx);
+      if (ctx) handleHostContext(ctx);
     }
-  }, []);
+  }, [handleHostContext]);
 
   // Error state — only fatal if we have no content to render
   if (!earlyBridge.app && !tree) {

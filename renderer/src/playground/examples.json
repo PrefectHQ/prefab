@@ -97,7 +97,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions.mcp import RequestDisplayMode\n\nwith Row(gap=2):\n    Button(\"Fullscreen\", variant=\"outline\",\n           on_click=RequestDisplayMode(\"fullscreen\"))\n    Button(\"Exit Fullscreen\", variant=\"outline\",\n           on_click=RequestDisplayMode(\"inline\"))"
+    "code": "from prefab_ui.components import Button, Column, If, Else\nfrom prefab_ui.actions.mcp import RequestDisplayMode\nfrom prefab_ui.rx.mcp import HOST\n\nwith Column():\n    with If(HOST.displayMode == \"fullscreen\"):\n        Button(\"Exit Fullscreen\", variant=\"outline\",\n               on_click=RequestDisplayMode(\"inline\"))\n    with Else():\n        Button(\"Go Fullscreen\", variant=\"outline\",\n               on_click=RequestDisplayMode(\"fullscreen\"))"
   },
   {
     "title": "Python icon=\"python\"",
