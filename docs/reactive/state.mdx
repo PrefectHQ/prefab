@@ -1,0 +1,58 @@
+---
+title: STATE
+sidebarTitle: $state
+description: Proxy for accessing state keys as reactive references.
+icon: database
+---
+
+`STATE` gives you reactive references to state keys through attribute access. `STATE.count` is equivalent to `Rx("count")` — it creates an `Rx` reference without needing to declare one separately.
+
+```python
+from prefab_ui.rx import STATE
+
+STATE.count       # → {{ count }}
+STATE.user.name   # → {{ user.name }}
+```
+
+## With set_initial_state
+
+The return value of `set_initial_state()` is a *bound* state proxy that validates attribute access against the keys you declared. This catches typos at definition time rather than at runtime:
+
+```python
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Text
+
+state = set_initial_state(count=0, name="Arthur")
+
+Text(f"Count: {state.count}")   # ✓ Rx("count")
+Text(f"Name: {state.countt}")   # ✗ AttributeError — typo caught!
+```
+
+The unbound `STATE` global skips validation, which is useful for keys created dynamically by form controls or actions:
+
+```python
+from prefab_ui.rx import STATE
+from prefab_ui.components import Input, Text
+
+Input(name="query", placeholder="Search...")
+Text(f"You typed: {STATE.query}")
+```
+
+## Dot Paths
+
+Attribute access chains naturally. Each `.` adds a path segment to the expression:
+
+```python
+from prefab_ui.rx import STATE
+
+STATE.user.address.city    # → {{ user.address.city }}
+STATE.todos.length()       # → {{ todos | length }}
+```
+
+## Import
+
+```python
+from prefab_ui.rx import STATE
+```
+
+Or use the bound proxy returned by `set_initial_state()`, which is the recommended approach when you're declaring initial state.

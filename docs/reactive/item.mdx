@@ -1,0 +1,56 @@
+---
+title: ITEM
+sidebarTitle: $item
+description: The current iteration item inside a ForEach loop.
+icon: cube
+---
+
+`ITEM` is a reactive reference to `$item` — the current element in a [ForEach](/components/foreach) iteration. It gives you access to the entire item object, which is useful when you need to pass it whole to an action or reference it explicitly.
+
+```python
+from prefab_ui.components import Text, ForEach
+from prefab_ui.rx import ITEM
+
+with ForEach("crew"):
+    Text(f"Name: {ITEM.name}")
+```
+
+## When You Need It
+
+Most of the time you don't. Inside a `ForEach`, individual fields are available directly — `{{ name }}` works the same as `{{ $item.name }}`. But `ITEM` is valuable when:
+
+**Passing the whole object to an action:**
+
+```python
+from prefab_ui.components import Button, ForEach
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import ITEM
+
+with ForEach("users"):
+    Button(
+        "Edit",
+        on_click=CallTool(
+            "edit_user",
+            arguments={"user": str(ITEM)},
+        ),
+    )
+```
+
+**Disambiguating nested structures** where a field name might collide with a `let` binding or outer state key.
+
+## Dot Paths
+
+Attribute access chains as expected:
+
+```python
+from prefab_ui.rx import ITEM
+
+ITEM.name          # → {{ $item.name }}
+ITEM.address.city  # → {{ $item.address.city }}
+```
+
+## Import
+
+```python
+from prefab_ui.rx import ITEM
+```

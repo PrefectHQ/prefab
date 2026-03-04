@@ -1,0 +1,47 @@
+---
+title: ERROR
+sidebarTitle: $error
+description: The error message available in on_error callbacks.
+icon: triangle-exclamation
+---
+
+`ERROR` is a reactive reference to `$error` — the error message string available inside `on_error` callbacks. When an action fails, the framework catches the error and makes its message available through this variable.
+
+```python
+from prefab_ui.components import Button
+from prefab_ui.actions import ShowToast
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import ERROR
+
+Button(
+    "Save",
+    on_click=CallTool(
+        "save_data",
+        on_error=ShowToast(
+            f"Failed: {ERROR}",
+            variant="error",
+        ),
+    ),
+)
+```
+
+## Where It's Available
+
+`ERROR` is only meaningful inside `on_error` handlers. Outside that context, `$error` is undefined. Every action that supports callbacks (`on_success` / `on_error`) makes this variable available when the action fails.
+
+Typical use: show a toast with the error message, or write it to state so it can be displayed in the UI:
+
+```python
+from prefab_ui.actions import SetState
+
+CallTool(
+    "fetch_data",
+    on_error=SetState("error_message", ERROR),
+)
+```
+
+## Import
+
+```python
+from prefab_ui.rx import ERROR
+```

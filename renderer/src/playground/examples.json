@@ -1840,6 +1840,11 @@
     "code": "from prefab_ui.components.control_flow import ForEach\nfrom prefab_ui.actions.mcp import CallTool\n\nwith ForEach(\"users\"):\n    Text(\"{{ name }}\")\n    Button(\n        \"Edit\",\n        on_click=CallTool(\n            \"edit_user\",\n            arguments={\"user\": \"{{ $item }}\"},\n        ),\n    )"
   },
   {
+    "title": "from prefab_ui.components import Button, If, Else",
+    "category": "Expressions",
+    "code": "from prefab_ui.actions.mcp import RequestDisplayMode\nfrom prefab_ui.rx.mcp import HOST\n\nwith If(HOST.displayMode == \"fullscreen\"):\n    Button(\"Exit Fullscreen\",\n           on_click=RequestDisplayMode(\"inline\"))\nwith Else():\n    Button(\"Go Fullscreen\",\n           on_click=RequestDisplayMode(\"fullscreen\"))"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Expressions",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Input, Row, Text\n\nstate = set_initial_state(first=\"Arthur\", last=\"Dent\")\n\nwith Column(gap=3):\n    with Row(gap=2):\n        Input(name=\"first\", placeholder=\"First name\")\n        Input(name=\"last\", placeholder=\"Last name\")\n    Text(f\"Hello, {state.first} {state.last}!\")"
@@ -1923,6 +1928,96 @@
     "title": "Python icon=\"python\"",
     "category": "General",
     "code": "from prefab_ui.components import Button, Card, CardContent, Column, Input\n\nwith Card() as view:\n    with CardContent():\n        with Column(gap=3):\n            Input(placeholder=\"you@example.com\")\n            Button(\"Subscribe\")"
+  },
+  {
+    "title": "from prefab_ui.components import Button",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import ERROR\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\n            f\"Failed: {ERROR}\",\n            variant=\"error\",\n        ),\n    ),\n)"
+  },
+  {
+    "title": "from prefab_ui.actions import SetState",
+    "category": "Reactive",
+    "code": "CallTool(\n    \"fetch_data\",\n    on_error=SetState(\"error_message\", ERROR),\n)"
+  },
+  {
+    "title": "from prefab_ui.components import Slider",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.rx import EVENT\n\nSlider(\n    name=\"volume\",\n    on_change=SetState(\"last_adjusted\", EVENT),\n)"
+  },
+  {
+    "title": "from prefab_ui.components import Input",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions import ShowToast\n\nInput(\n    name=\"search\",\n    on_change=ShowToast(\"Searching for: {{ $event }}\"),\n)"
+  },
+  {
+    "title": "from prefab_ui.rx.mcp import HOST",
+    "category": "Reactive",
+    "code": "HOST.displayMode             # → {{ $host.displayMode }}\nHOST.theme                   # → {{ $host.theme }}\nHOST.availableDisplayModes   # → {{ $host.availableDisplayModes }}\nHOST.containerDimensions     # → {{ $host.containerDimensions }}"
+  },
+  {
+    "title": "from prefab_ui.components import Button, Column, If, Else",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions.mcp import RequestDisplayMode\nfrom prefab_ui.rx.mcp import HOST\n\nwith Column():\n    with If(HOST.displayMode == \"fullscreen\"):\n        Button(\"Exit Fullscreen\", variant=\"outline\",\n               on_click=RequestDisplayMode(\"inline\"))\n    with Else():\n        Button(\"Go Fullscreen\", variant=\"outline\",\n               on_click=RequestDisplayMode(\"fullscreen\"))"
+  },
+  {
+    "title": "from prefab_ui.rx.mcp import HOST",
+    "category": "Reactive",
+    "code": "HOST.displayMode.default(\"inline\")  # → {{ $host.displayMode | default:inline }}"
+  },
+  {
+    "title": "from prefab_ui.components import Text, ForEach",
+    "category": "Reactive",
+    "code": "from prefab_ui.rx import INDEX\n\nwith ForEach(\"items\"):\n    Text(f\"{INDEX + 1}. {{{{ name }}}}\")"
+  },
+  {
+    "title": "from prefab_ui.components import Checkbox, ForEach",
+    "category": "Reactive",
+    "code": "from prefab_ui.rx import INDEX\n\nwith ForEach(\"todos\"):\n    Checkbox(name=f\"todos.{INDEX}.done\")"
+  },
+  {
+    "title": "from prefab_ui.components import Text, ForEach",
+    "category": "Reactive",
+    "code": "with ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
+  },
+  {
+    "title": "from prefab_ui.rx import INDEX",
+    "category": "Reactive",
+    "code": "INDEX + 1          # → {{ $index + 1 }}\nINDEX == 0         # → {{ $index == 0 }}"
+  },
+  {
+    "title": "from prefab_ui.components import Text, ForEach",
+    "category": "Reactive",
+    "code": "from prefab_ui.rx import ITEM\n\nwith ForEach(\"crew\"):\n    Text(f\"Name: {ITEM.name}\")"
+  },
+  {
+    "title": "from prefab_ui.components import Button, ForEach",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import ITEM\n\nwith ForEach(\"users\"):\n    Button(\n        \"Edit\",\n        on_click=CallTool(\n            \"edit_user\",\n            arguments={\"user\": str(ITEM)},\n        ),\n    )"
+  },
+  {
+    "title": "from prefab_ui.rx import ITEM",
+    "category": "Reactive",
+    "code": "ITEM.name          # → {{ $item.name }}\nITEM.address.city  # → {{ $item.address.city }}"
+  },
+  {
+    "title": "from prefab_ui.rx import STATE",
+    "category": "Reactive",
+    "code": "STATE.count       # → {{ count }}\nSTATE.user.name   # → {{ user.name }}"
+  },
+  {
+    "title": "from prefab_ui.app import set_initial_state",
+    "category": "Reactive",
+    "code": "from prefab_ui.components import Text\n\nstate = set_initial_state(count=0, name=\"Arthur\")\n\nText(f\"Count: {state.count}\")   # ✓ Rx(\"count\")\nText(f\"Name: {state.countt}\")   # ✗ AttributeError — typo caught!"
+  },
+  {
+    "title": "from prefab_ui.rx import STATE",
+    "category": "Reactive",
+    "code": "from prefab_ui.components import Input, Text\n\nInput(name=\"query\", placeholder=\"Search...\")\nText(f\"You typed: {STATE.query}\")"
+  },
+  {
+    "title": "from prefab_ui.rx import STATE",
+    "category": "Reactive",
+    "code": "STATE.user.address.city    # → {{ user.address.city }}\nSTATE.todos.length()       # → {{ todos | length }}"
   },
   {
     "title": "from fastapi import FastAPI",
