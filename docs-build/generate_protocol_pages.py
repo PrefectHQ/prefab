@@ -104,6 +104,7 @@ _ACTION_DEF_NAMES = {
     "Action",
     "CallTool",
     "Fetch",
+    "RequestDisplayMode",
     "SendMessage",
     "UpdateContext",
     "OpenLink",

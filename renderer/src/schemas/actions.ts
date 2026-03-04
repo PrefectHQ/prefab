@@ -49,6 +49,12 @@ export const openLinkSchema = z.object({
   ...actionCallbacks,
 });
 
+export const requestDisplayModeSchema = z.object({
+  action: z.literal("requestDisplayMode"),
+  mode: z.enum(["inline", "fullscreen", "pip"]),
+  ...actionCallbacks,
+});
+
 export const setStateSchema = z.object({
   action: z.literal("setState"),
   key: z.string(),
@@ -131,6 +137,7 @@ export const actionSchema = z.discriminatedUnion("action", [
   sendMessageSchema,
   updateContextSchema,
   openLinkSchema,
+  requestDisplayModeSchema,
   setStateSchema,
   toggleStateSchema,
   appendStateSchema,
@@ -151,6 +158,7 @@ export const HANDLED_ACTIONS = new Set([
   "sendMessage",
   "updateContext",
   "openLink",
+  "requestDisplayMode",
   "setState",
   "toggleState",
   "appendState",
@@ -171,6 +179,7 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   sendMessage: sendMessageSchema,
   updateContext: updateContextSchema,
   openLink: openLinkSchema,
+  requestDisplayMode: requestDisplayModeSchema,
   setState: setStateSchema,
   toggleState: toggleStateSchema,
   appendState: appendStateSchema,
@@ -186,6 +195,7 @@ export type ToolCallWire = z.infer<typeof toolCallSchema>;
 export type SendMessageWire = z.infer<typeof sendMessageSchema>;
 export type UpdateContextWire = z.infer<typeof updateContextSchema>;
 export type OpenLinkWire = z.infer<typeof openLinkSchema>;
+export type RequestDisplayModeWire = z.infer<typeof requestDisplayModeSchema>;
 export type SetStateWire = z.infer<typeof setStateSchema>;
 export type ToggleStateWire = z.infer<typeof toggleStateSchema>;
 export type AppendStateWire = z.infer<typeof appendStateSchema>;

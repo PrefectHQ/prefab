@@ -1,0 +1,97 @@
+---
+title: Request Display Mode
+sidebarTitle: "MCP: Display Mode"
+description: Request a display mode change from the MCP host.
+icon: maximize
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`RequestDisplayMode` asks the host to change how the app is displayed — switching between inline, fullscreen, or picture-in-picture. The host decides whether to honor the request, so the actual mode may differ from what you asked for.
+
+<ComponentPreview json={{"view":{"type":"Button","label":"Go Fullscreen","variant":"default","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBSZXF1ZXN0RGlzcGxheU1vZGUKCkJ1dHRvbigiR28gRnVsbHNjcmVlbiIsIG9uX2NsaWNrPVJlcXVlc3REaXNwbGF5TW9kZSgiZnVsbHNjcmVlbiIpKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button
+from prefab_ui.actions.mcp import RequestDisplayMode
+
+Button("Go Fullscreen", on_click=RequestDisplayMode("fullscreen"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Button",
+    "label": "Go Fullscreen",
+    "variant": "default",
+    "size": "default",
+    "disabled": false,
+    "onClick": {"action": "requestDisplayMode", "mode": "fullscreen"}
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Display Mode Toggle
+
+Pair fullscreen entry with an exit button so users can switch back:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}},{"type":"Button","label":"Exit Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"inline"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3cKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucy5tY3AgaW1wb3J0IFJlcXVlc3REaXNwbGF5TW9kZQoKd2l0aCBSb3coZ2FwPTIpOgogICAgQnV0dG9uKCJGdWxsc2NyZWVuIiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgb25fY2xpY2s9UmVxdWVzdERpc3BsYXlNb2RlKCJmdWxsc2NyZWVuIikpCiAgICBCdXR0b24oIkV4aXQgRnVsbHNjcmVlbiIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgIG9uX2NsaWNrPVJlcXVlc3REaXNwbGF5TW9kZSgiaW5saW5lIikpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Button, Row
+from prefab_ui.actions.mcp import RequestDisplayMode
+
+with Row(gap=2):
+    Button("Fullscreen", variant="outline",
+           on_click=RequestDisplayMode("fullscreen"))
+    Button("Exit Fullscreen", variant="outline",
+           on_click=RequestDisplayMode("inline"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Button",
+        "label": "Fullscreen",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {"action": "requestDisplayMode", "mode": "fullscreen"}
+      },
+      {
+        "type": "Button",
+        "label": "Exit Fullscreen",
+        "variant": "outline",
+        "size": "default",
+        "disabled": false,
+        "onClick": {"action": "requestDisplayMode", "mode": "inline"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="RequestDisplayMode Parameters">
+<ParamField body="mode" type='"inline" | "fullscreen" | "pip"' required>
+  The display mode to request. Can be passed as a positional argument. The host may not support all modes — use `onError` to handle rejection.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json RequestDisplayMode
+{
+  "action": "requestDisplayMode",
+  "mode": "\"inline\" | \"fullscreen\" | \"pip\" (required)"
+}
+```
+
+For the complete protocol schema, see [RequestDisplayMode](/protocol/request-display-mode).

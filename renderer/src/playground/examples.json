@@ -92,6 +92,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import RequestDisplayMode\n\nButton(\"Go Fullscreen\", on_click=RequestDisplayMode(\"fullscreen\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button, Row\nfrom prefab_ui.actions.mcp import RequestDisplayMode\n\nwith Row(gap=2):\n    Button(\"Fullscreen\", variant=\"outline\",\n           on_click=RequestDisplayMode(\"fullscreen\"))\n    Button(\"Exit Fullscreen\", variant=\"outline\",\n           on_click=RequestDisplayMode(\"inline\"))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import SendMessage\n\nButton(\"Summarize\", on_click=SendMessage(\"Please summarize the data above.\"))"
   },
   {
