@@ -34,41 +34,55 @@ Button("Go Fullscreen", on_click=RequestDisplayMode("fullscreen"))
 
 ## Display Mode Toggle
 
-Pair fullscreen entry with an exit button so users can switch back:
+Use the `HOST` reactive variable to show the right button based on the current display mode. The host context is automatically available as `$host` in the renderer's state:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}},{"type":"Button","label":"Exit Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"inline"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3cKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucy5tY3AgaW1wb3J0IFJlcXVlc3REaXNwbGF5TW9kZQoKd2l0aCBSb3coZ2FwPTIpOgogICAgQnV0dG9uKCJGdWxsc2NyZWVuIiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgb25fY2xpY2s9UmVxdWVzdERpc3BsYXlNb2RlKCJmdWxsc2NyZWVuIikpCiAgICBCdXR0b24oIkV4aXQgRnVsbHNjcmVlbiIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgIG9uX2NsaWNrPVJlcXVlc3REaXNwbGF5TW9kZSgiaW5saW5lIikpCg==">
+<ComponentPreview json={{"view":{"type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ $host.displayMode == 'fullscreen' }}","children":[{"type":"Button","label":"Exit Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"inline"}}]}],"else":[{"type":"Button","label":"Go Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIElmLCBFbHNlCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBSZXF1ZXN0RGlzcGxheU1vZGUKZnJvbSBwcmVmYWJfdWkucngubWNwIGltcG9ydCBIT1NUCgp3aXRoIENvbHVtbigpOgogICAgd2l0aCBJZihIT1NULmRpc3BsYXlNb2RlID09ICJmdWxsc2NyZWVuIik6CiAgICAgICAgQnV0dG9uKCJFeGl0IEZ1bGxzY3JlZW4iLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9UmVxdWVzdERpc3BsYXlNb2RlKCJpbmxpbmUiKSkKICAgIHdpdGggRWxzZSgpOgogICAgICAgIEJ1dHRvbigiR28gRnVsbHNjcmVlbiIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICBvbl9jbGljaz1SZXF1ZXN0RGlzcGxheU1vZGUoImZ1bGxzY3JlZW4iKSkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Row
+from prefab_ui.components import Button, Column, If, Else
 from prefab_ui.actions.mcp import RequestDisplayMode
+from prefab_ui.rx.mcp import HOST
 
-with Row(gap=2):
-    Button("Fullscreen", variant="outline",
-           on_click=RequestDisplayMode("fullscreen"))
-    Button("Exit Fullscreen", variant="outline",
-           on_click=RequestDisplayMode("inline"))
+with Column():
+    with If(HOST.displayMode == "fullscreen"):
+        Button("Exit Fullscreen", variant="outline",
+               on_click=RequestDisplayMode("inline"))
+    with Else():
+        Button("Go Fullscreen", variant="outline",
+               on_click=RequestDisplayMode("fullscreen"))
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-2",
-    "type": "Row",
+    "type": "Column",
     "children": [
       {
-        "type": "Button",
-        "label": "Fullscreen",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {"action": "requestDisplayMode", "mode": "fullscreen"}
-      },
-      {
-        "type": "Button",
-        "label": "Exit Fullscreen",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {"action": "requestDisplayMode", "mode": "inline"}
+        "type": "Condition",
+        "cases": [
+          {
+            "when": "{{ $host.displayMode == 'fullscreen' }}",
+            "children": [
+              {
+                "type": "Button",
+                "label": "Exit Fullscreen",
+                "variant": "outline",
+                "size": "default",
+                "disabled": false,
+                "onClick": {"action": "requestDisplayMode", "mode": "inline"}
+              }
+            ]
+          }
+        ],
+        "else": [
+          {
+            "type": "Button",
+            "label": "Go Fullscreen",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {"action": "requestDisplayMode", "mode": "fullscreen"}
+          }
+        ]
       }
     ]
   }
