@@ -1,0 +1,59 @@
+---
+title: INDEX
+sidebarTitle: $index
+description: The zero-based iteration index inside a ForEach loop.
+icon: hashtag
+---
+
+`INDEX` is a reactive reference to `$index` — the zero-based position of the current item in a [ForEach](/components/foreach) loop. It's essential for targeting specific items in state arrays.
+
+```python
+from prefab_ui.components import Text, ForEach
+from prefab_ui.rx import INDEX
+
+with ForEach("items"):
+    Text(f"{INDEX + 1}. {{{{ name }}}}")
+```
+
+## Targeting Array Items
+
+`INDEX` is the key to modifying specific items in a list. Without it, you'd have no way to know which row the user clicked:
+
+```python
+from prefab_ui.components import Checkbox, ForEach
+from prefab_ui.rx import INDEX
+
+with ForEach("todos"):
+    Checkbox(name=f"todos.{INDEX}.done")
+```
+
+This binds each checkbox to the `done` field of its corresponding array item. When the user checks row 2, `todos.2.done` gets updated.
+
+## Nested Loops
+
+When you nest `ForEach` loops, the inner loop shadows `$index`. Capture the outer index with `let` before entering the inner loop:
+
+```python
+from prefab_ui.components import Text, ForEach
+
+with ForEach("groups", let={"gi": "{{ $index }}"}):
+    with ForEach("groups.{{ gi }}.todos"):
+        Text("Group {{ gi }}, item {{ $index }}")
+```
+
+## Arithmetic
+
+`INDEX` supports operators like any `Rx` reference. Show 1-based numbering with `INDEX + 1`, or use it in comparisons:
+
+```python
+from prefab_ui.rx import INDEX
+
+INDEX + 1          # → {{ $index + 1 }}
+INDEX == 0         # → {{ $index == 0 }}
+```
+
+## Import
+
+```python
+from prefab_ui.rx import INDEX
+```

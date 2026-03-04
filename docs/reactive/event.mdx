@@ -1,0 +1,54 @@
+---
+title: EVENT
+sidebarTitle: $event
+description: The value from the interaction that triggered an action.
+icon: bolt
+---
+
+`EVENT` is a reactive reference to `$event` — the value produced by the interaction that triggered an action handler. What `$event` contains depends on which component fired the action:
+
+| Component | `$event` value |
+|-----------|---------------|
+| Input / Textarea | Current text (string) |
+| Slider | Current position (number) |
+| Checkbox / Switch | Checked state (boolean) |
+| Select | Selected value (string) |
+| RadioGroup | Selected value (string) |
+| Button | `undefined` |
+
+## Usage
+
+`EVENT` is most useful when you need to capture an interaction value and store it under a different key, or pass it to a server action:
+
+```python
+from prefab_ui.components import Slider
+from prefab_ui.actions import SetState
+from prefab_ui.rx import EVENT
+
+Slider(
+    name="volume",
+    on_change=SetState("last_adjusted", EVENT),
+)
+```
+
+For form controls, the component's own state key (from `name`) updates automatically. A separate `SetState` with `EVENT` is only needed when you want to write the value somewhere *else*.
+
+## In Templates
+
+In raw template strings, use `$event` directly:
+
+```python
+from prefab_ui.components import Input
+from prefab_ui.actions import ShowToast
+
+Input(
+    name="search",
+    on_change=ShowToast("Searching for: {{ $event }}"),
+)
+```
+
+## Import
+
+```python
+from prefab_ui.rx import EVENT
+```

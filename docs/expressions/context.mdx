@@ -112,7 +112,7 @@ In the protocol, write the path directly: `{{ user.address.city }}`. If any segm
 
 ## Special Variables
 
-Several variables are injected by the framework at specific points in the component tree. These are **runtime values** — they don't exist in your global state and there's no Python-side `Rx` reference for them. You access them with raw `{{ }}` template strings.
+Several variables are injected by the framework at specific points in the component tree. These are **runtime values** — they don't exist in your global state. Each has a corresponding Python-side `Rx` constant (importable from `prefab_ui.rx`) that you can use instead of raw `{{ }}` template strings.
 
 ### `$event`
 
@@ -180,6 +180,25 @@ with ForEach("users"):
         ),
     )
 ```
+
+### `$host`
+
+Available when the renderer is connected to an MCP host. Contains host context — display mode, theme, and container dimensions. In Python, use `HOST` from `prefab_ui.rx.mcp`:
+
+```python
+from prefab_ui.components import Button, If, Else
+from prefab_ui.actions.mcp import RequestDisplayMode
+from prefab_ui.rx.mcp import HOST
+
+with If(HOST.displayMode == "fullscreen"):
+    Button("Exit Fullscreen",
+           on_click=RequestDisplayMode("inline"))
+with Else():
+    Button("Go Fullscreen",
+           on_click=RequestDisplayMode("fullscreen"))
+```
+
+See [HOST](/reactive/host) for the full list of available fields.
 
 ## Undefined Values
 

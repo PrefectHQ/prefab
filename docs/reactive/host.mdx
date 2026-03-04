@@ -1,0 +1,64 @@
+---
+title: HOST
+sidebarTitle: $host
+description: Reactive access to MCP host context — display mode, theme, and container dimensions.
+icon: server
+---
+
+`HOST` is a reactive reference to `$host` — the MCP host context injected by the MCP Apps runtime. It gives your UI reactive access to environment information like the current display mode, available display modes, theme, and container dimensions.
+
+```python
+from prefab_ui.rx.mcp import HOST
+
+HOST.displayMode             # → {{ $host.displayMode }}
+HOST.theme                   # → {{ $host.theme }}
+HOST.availableDisplayModes   # → {{ $host.availableDisplayModes }}
+HOST.containerDimensions     # → {{ $host.containerDimensions }}
+```
+
+## Display Mode Toggle
+
+The most common use of `HOST` is building adaptive UI that responds to the current display mode. Combine it with [If/Else](/components/conditional) and [RequestDisplayMode](/actions/request-display-mode) to create a toggle:
+
+```python
+from prefab_ui.components import Button, Column, If, Else
+from prefab_ui.actions.mcp import RequestDisplayMode
+from prefab_ui.rx.mcp import HOST
+
+with Column():
+    with If(HOST.displayMode == "fullscreen"):
+        Button("Exit Fullscreen", variant="outline",
+               on_click=RequestDisplayMode("inline"))
+    with Else():
+        Button("Go Fullscreen", variant="outline",
+               on_click=RequestDisplayMode("fullscreen"))
+```
+
+## Available Fields
+
+The host context includes these fields (all dependent on what the MCP host provides):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `displayMode` | `string` | Current display mode: `"inline"`, `"fullscreen"`, or `"pip"` |
+| `availableDisplayModes` | `string[]` | Display modes the host supports |
+| `theme` | `string` | Host theme: `"light"` or `"dark"` |
+| `containerDimensions` | `object` | Container size with `width` and `height` |
+
+## MCP Only
+
+`HOST` is only populated when the renderer is connected to an MCP host. In standalone mode (via `prefab serve`), `$host` is undefined. Use the `default` pipe to handle this gracefully:
+
+```python
+from prefab_ui.rx.mcp import HOST
+
+HOST.displayMode.default("inline")  # → {{ $host.displayMode | default:inline }}
+```
+
+## Import
+
+```python
+from prefab_ui.rx.mcp import HOST
+```
+
+Note: `HOST` is in `prefab_ui.rx.mcp`, not `prefab_ui.rx`, because it's specific to the MCP runtime environment.
