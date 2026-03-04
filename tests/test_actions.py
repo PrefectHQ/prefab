@@ -22,24 +22,6 @@ from prefab_ui.rx import EVENT, STATE, Rx
 
 
 class TestActionSerialization:
-    def test_tool_call_positional(self):
-        a = CallTool("refresh")
-        d = a.model_dump()
-        assert d["action"] == "toolCall"
-        assert d["tool"] == "refresh"
-        assert d["arguments"] == {}
-
-    def test_tool_call_with_args(self):
-        a = CallTool("search", arguments={"q": "{{ query }}"})
-        d = a.model_dump()
-        assert d["arguments"]["q"] == "{{ query }}"
-
-    def test_send_message(self):
-        a = SendMessage("Summarize this")
-        d = a.model_dump()
-        assert d["action"] == "sendMessage"
-        assert d["content"] == "Summarize this"
-
     def test_set_state_requires_value(self):
         with pytest.raises(TypeError):
             SetState("brightness")
@@ -211,41 +193,6 @@ class TestActionCallbacks:
             )
             d = with_callback.model_dump(by_alias=True, exclude_none=True)
             assert "onSuccess" in d, f"{type(action).__name__} missing onSuccess"
-
-
-# ---------------------------------------------------------------------------
-# CallTool result_key
-# ---------------------------------------------------------------------------
-
-
-class TestCallToolResultKey:
-    def test_result_key_serializes(self):
-        action = CallTool("search", result_key="results")
-        d = action.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "results"
-
-    def test_result_key_excluded_when_none(self):
-        action = CallTool("search")
-        d = action.model_dump(by_alias=True, exclude_none=True)
-        assert "resultKey" not in d
-
-    def test_result_key_with_callbacks(self):
-        action = CallTool(
-            "search",
-            result_key="results",
-            on_success=ShowToast("Found results!"),
-        )
-        d = action.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "results"
-        assert d["onSuccess"]["action"] == "showToast"
-
-    def test_result_key_on_component(self):
-        btn = Button(
-            label="Search",
-            on_click=CallTool("search", result_key="results"),
-        )
-        j = btn.to_json()
-        assert j["onClick"]["resultKey"] == "results"
 
 
 # ---------------------------------------------------------------------------

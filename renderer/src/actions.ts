@@ -194,6 +194,17 @@ export async function executeAction(
         }
         break;
       }
+      case "requestDisplayMode": {
+        try {
+          await app?.requestDisplayMode({
+            mode: resolved.mode as "inline" | "fullscreen" | "pip",
+          });
+        } catch (e) {
+          success = false;
+          errorMessage = e instanceof Error ? e.message : String(e);
+        }
+        break;
+      }
 
       // ── Client actions (synchronous, always succeed) ────────────
       case "setState": {

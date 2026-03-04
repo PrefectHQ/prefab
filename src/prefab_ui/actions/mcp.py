@@ -63,3 +63,20 @@ class UpdateContext(Action):
         alias="structuredContent",
         description="Structured content to add",
     )
+
+
+class RequestDisplayMode(Action):
+    """Request a display mode change via ``app.requestDisplayMode()``.
+
+    The host decides whether to honor the request — the actual mode may
+    differ from what was asked for.
+    """
+
+    action: Literal["requestDisplayMode"] = "requestDisplayMode"
+    mode: Literal["inline", "fullscreen", "pip"] = Field(
+        description="Display mode to request: inline, fullscreen, or pip",
+    )
+
+    def __init__(self, mode: str, **kwargs: Any) -> None:
+        kwargs["mode"] = mode
+        super().__init__(**kwargs)

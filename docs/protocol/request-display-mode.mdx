@@ -1,0 +1,28 @@
+---
+title: RequestDisplayMode
+description: JSON Schema for the RequestDisplayMode action.
+---
+
+Request a display mode change via `app.requestDisplayMode()`.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "requestDisplayMode",
+      "default": "requestDisplayMode",
+      "type": "string"
+    },
+    "mode": {
+      "description": "Display mode to request: inline, fullscreen, or pip",
+      "enum": ["inline", "fullscreen", "pip"],
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "mode"
+  ]
+}
+```
