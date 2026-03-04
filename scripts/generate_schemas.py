@@ -24,7 +24,12 @@ from pydantic_core import PydanticUndefined
 from prefab_ui.actions import Action
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
-from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
+from prefab_ui.actions.mcp import (
+    CallTool,
+    RequestDisplayMode,
+    SendMessage,
+    UpdateContext,
+)
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
 from prefab_ui.actions.timing import SetInterval
@@ -182,6 +187,7 @@ def discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
         CallTool,
+        RequestDisplayMode,
         SendMessage,
         UpdateContext,
         OpenLink,
