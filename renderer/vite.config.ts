@@ -13,6 +13,12 @@ export default defineConfig({
   // and fail.  With "./", dynamic imports and CSS preloads resolve relative
   // to the module that triggered them, which is loaded from the correct origin.
   base: "./",
+  define: {
+    // The playground checks this to decide whether to load prefab-ui from a
+    // bundled source tree or via micropip.  In dev mode it's always false
+    // (Pyodide uses micropip), but it must be defined to avoid a ReferenceError.
+    __LOCAL_BUNDLE__: false,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

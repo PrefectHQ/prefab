@@ -26,6 +26,7 @@ import {
 import { Editor } from "./editor";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { EXAMPLES, type Example } from "./examples";
+import { ThemePicker } from "./theme-picker";
 
 type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
@@ -142,6 +143,7 @@ export function Playground() {
   const [jsonDirty, setJsonDirty] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [themeCss, setThemeCss] = useState("");
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
@@ -153,30 +155,51 @@ export function Playground() {
   codeRef.current = code;
   const pyStatusRef = useRef(pyStatus);
   pyStatusRef.current = pyStatus;
-  // Skip the initial code-changed postMessage so it doesn't clobber the
-  // URL hash before the parent has a chance to send pg-init-code.
+  // Skip the initial postMessages so they don't clobber the URL hash
+  // before the parent has a chance to send pg-init-code.
   const skipFirstCodeMsg = useRef(true);
+  const skipFirstThemeMsg = useRef(true);
 
   // Sync dark class on <html>
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
+  // Inject theme CSS into the page
+  useEffect(() => {
+    let el = document.getElementById("pg-theme") as HTMLStyleElement | null;
+    if (!el) {
+      el = document.createElement("style");
+      el.id = "pg-theme";
+      document.head.appendChild(el);
+    }
+    el.textContent = themeCss;
+  }, [themeCss]);
+
   useEffect(() => {
     loadPyodideRuntime(setPyStatus);
   }, []);
 
-  // Listen for init-code from parent, and signal readiness on mount.
+  // Listen for init from parent, and signal readiness on mount.
   // When running standalone (not in an iframe), read the hash directly.
   useEffect(() => {
     const isStandalone = window.parent === window;
     if (isStandalone) {
       const hash = window.location.hash.slice(1);
       if (hash) {
-        const encoded = new URLSearchParams(hash).get("code");
-        if (encoded) {
+        const params = new URLSearchParams(hash);
+        const encodedCode = params.get("code");
+        if (encodedCode) {
           try {
-            setCode(decodeURIComponent(escape(atob(encoded))));
+            setCode(decodeURIComponent(escape(atob(encodedCode))));
+          } catch {
+            // ignore malformed hash
+          }
+        }
+        const encodedTheme = params.get("theme");
+        if (encodedTheme) {
+          try {
+            setThemeCss(decodeURIComponent(escape(atob(encodedTheme))));
           } catch {
             // ignore malformed hash
           }
@@ -185,20 +208,40 @@ export function Playground() {
       return;
     }
     function onMessage(e: MessageEvent) {
-      if (
-        e.data?.type === "pg-init-code" &&
-        typeof e.data.encoded === "string"
-      ) {
-        try {
-          setCode(decodeURIComponent(escape(atob(e.data.encoded))));
-        } catch {
-          // ignore malformed payload
+      if (e.data?.type === "pg-init-code") {
+        if (typeof e.data.encoded === "string") {
+          try {
+            setCode(decodeURIComponent(escape(atob(e.data.encoded))));
+          } catch {
+            // ignore malformed payload
+          }
+        }
+        if (typeof e.data.theme === "string" && e.data.theme) {
+          try {
+            setThemeCss(decodeURIComponent(escape(atob(e.data.theme))));
+          } catch {
+            // ignore malformed payload
+          }
         }
       }
     }
     window.addEventListener("message", onMessage);
     window.parent.postMessage({ type: "pg-ready" }, "*");
     return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  // Build the full hash string from code + theme.
+  const buildHash = useCallback((codeStr: string, themeStr: string) => {
+    try {
+      const parts: string[] = [];
+      parts.push(`code=${btoa(unescape(encodeURIComponent(codeStr)))}`);
+      if (themeStr) {
+        parts.push(`theme=${btoa(unescape(encodeURIComponent(themeStr)))}`);
+      }
+      return parts.join("&");
+    } catch {
+      return null;
+    }
   }, []);
 
   // Post code changes to parent so it can update the page URL hash.
@@ -209,18 +252,32 @@ export function Playground() {
       return;
     }
     if (mode === "python") {
-      try {
-        const encoded = btoa(unescape(encodeURIComponent(code)));
+      const hash = buildHash(code, themeCss);
+      if (hash) {
         if (window.parent === window) {
-          window.history.replaceState(null, "", `#code=${encoded}`);
+          window.history.replaceState(null, "", `#${hash}`);
         } else {
-          window.parent.postMessage({ type: "pg-code-changed", encoded }, "*");
+          window.parent.postMessage({ type: "pg-code-changed", hash }, "*");
         }
-      } catch {
-        // non-encodable characters — skip
       }
     }
-  }, [code, mode]);
+  }, [code, mode, themeCss, buildHash]);
+
+  // Post theme changes to parent.
+  useEffect(() => {
+    if (skipFirstThemeMsg.current) {
+      skipFirstThemeMsg.current = false;
+      return;
+    }
+    const hash = buildHash(codeRef.current, themeCss);
+    if (hash) {
+      if (window.parent === window) {
+        window.history.replaceState(null, "", `#${hash}`);
+      } else {
+        window.parent.postMessage({ type: "pg-theme-changed", hash }, "*");
+      }
+    }
+  }, [themeCss, buildHash]);
 
   // --- Python execution ---
 
@@ -393,10 +450,11 @@ export function Playground() {
           >
             <Braces className="h-4 w-4" />
           </button>
+          <ThemePicker value={themeCss} onChange={setThemeCss} />
           <button
             onClick={() => setDark((d) => !d)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
-            aria-label="Toggle theme"
+            aria-label="Toggle dark mode"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
