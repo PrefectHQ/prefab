@@ -276,28 +276,35 @@ def playground(
 ) -> None:
     """Launch the interactive playground in your browser.
 
-    Serves the built playground assets and opens a split-pane editor
-    with live preview. Requires the renderer to be built first:
-
-        cd renderer && npm run build
+    Serves the self-contained playground HTML.  Requires docs to be
+    built first (``prefab dev build-docs``).
 
     Example:
         prefab playground
         prefab playground --port 8080
     """
-    dist_dir = _find_dist_dir()
-    playground_path = dist_dir / "playground.html"
+    # Prefer the single-file build (has bundled Python source inlined)
+    # over the multi-file dist build (which tries micropip and currently
+    # hits a Pyodide bug).
+    repo_root = _find_repo_root()
+    single_file = repo_root / "docs" / "playground.html"
+    dist_file = _find_dist_dir() / "playground.html"
 
-    if not playground_path.is_file():
+    if single_file.is_file():
+        playground_path = single_file
+    elif dist_file.is_file():
+        playground_path = dist_file
+    else:
         console.print(
             "[bold red]Error:[/bold red] Playground not built.\n"
-            "  Run: [cyan]cd renderer && npm run build[/cyan]"
+            "  Run: [cyan]prefab dev build-docs[/cyan]"
         )
         raise SystemExit(1)
 
+    # Serve from the parent directory so relative asset paths resolve.
     handler = functools.partial(
         _SilentHandler,
-        directory=str(dist_dir),
+        directory=str(playground_path.parent),
     )
 
     try:
@@ -314,7 +321,7 @@ def playground(
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
 
-    url = f"http://127.0.0.1:{port}/playground.html"
+    url = f"http://127.0.0.1:{port}/{playground_path.name}"
     console.print(
         f"[bold green]✓[/bold green] Playground running at [cyan]{url}[/cyan]"
     )
