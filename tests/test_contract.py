@@ -125,6 +125,11 @@ def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
 _M = TypeVar("_M", bound=BaseModel)
 
 
+_MINIMAL_OVERRIDES: dict[str, dict[str, Any]] = {
+    "Embed": {"url": "https://example.com"},
+}
+
+
 def _minimal_instance(cls: type[_M]) -> _M:
     """Create a minimal valid instance of a Pydantic model."""
     kwargs: dict[str, Any] = {}
@@ -136,6 +141,8 @@ def _minimal_instance(cls: type[_M]) -> _M:
         if has_default:
             continue
         kwargs[name] = _minimal_value(field_info, name)
+    overrides = _MINIMAL_OVERRIDES.get(cls.__name__, {})
+    kwargs.update(overrides)
     return cls(**kwargs)
 
 

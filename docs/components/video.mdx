@@ -1,0 +1,129 @@
+---
+title: Video
+description: Play video files with native HTML5 controls.
+icon: video
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`Video` renders an HTML5 `<video>` element with playback controls. Supports dynamic URLs via `{{ field }}` interpolation.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"Video","src":"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm","controls":true,"autoplay":false,"loop":false,"muted":false,"width":"100%"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVmlkZW8KClZpZGVvKAogICAgc3JjPSJodHRwczovL2ludGVyYWN0aXZlLWV4YW1wbGVzLm1kbi5tb3ppbGxhLm5ldCIKICAgICIvbWVkaWEvY2MwLXZpZGVvcy9mbG93ZXIud2VibSIsCiAgICB3aWR0aD0iMTAwJSIsCikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Video
+
+Video(
+    src="https://interactive-examples.mdn.mozilla.net"
+    "/media/cc0-videos/flower.webm",
+    width="100%",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Video",
+    "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm",
+    "controls": true,
+    "autoplay": false,
+    "loop": false,
+    "muted": false,
+    "width": "100%"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Controls are shown by default. The first positional argument is `src`.
+
+## Playback Options
+
+Control autoplay, looping, and muting. Browsers require `muted=True` for autoplay to work without user interaction:
+
+```python Autoplay with loop
+from prefab_ui.components import Video
+
+Video(
+    src="https://example.com/background.mp4",
+    autoplay=True,
+    muted=True,
+    loop=True,
+    controls=False,
+)
+```
+
+## Poster Image
+
+Show a thumbnail before the video plays:
+
+```python Poster thumbnail
+from prefab_ui.components import Video
+
+Video(
+    src="https://example.com/presentation.mp4",
+    poster="https://example.com/thumbnail.jpg",
+    width="640px",
+)
+```
+
+## API Reference
+
+<Card icon="code" title="Video Parameters">
+<ParamField body="src" type="str" required>
+  Video URL.
+</ParamField>
+
+<ParamField body="poster" type="str | None" default="None">
+  Poster image URL shown before playback.
+</ParamField>
+
+<ParamField body="controls" type="bool" default="True">
+  Show playback controls.
+</ParamField>
+
+<ParamField body="autoplay" type="bool" default="False">
+  Auto-start playback. Requires `muted=True` in most browsers.
+</ParamField>
+
+<ParamField body="loop" type="bool" default="False">
+  Loop playback.
+</ParamField>
+
+<ParamField body="muted" type="bool" default="False">
+  Mute audio.
+</ParamField>
+
+<ParamField body="width" type="str | None" default="None">
+  CSS width value with units.
+</ParamField>
+
+<ParamField body="height" type="str | None" default="None">
+  CSS height value with units.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Video
+{
+  "type": "Video",
+  "src": "string (required)",
+  "poster?": "string",
+  "controls?": true,
+  "autoplay?": false,
+  "loop?": false,
+  "muted?": false,
+  "width?": "string",
+  "height?": "string",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Video](/protocol/video).

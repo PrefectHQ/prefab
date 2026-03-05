@@ -1,0 +1,55 @@
+---
+title: Audio
+description: JSON Schema for the Audio component.
+---
+
+HTML5 audio element.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Audio",
+      "default": "Audio",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "src": {
+      "description": "Audio URL",
+      "type": "string"
+    },
+    "controls": {
+      "default": true,
+      "description": "Show playback controls",
+      "type": "boolean"
+    },
+    "autoplay": {
+      "default": false,
+      "description": "Auto-start playback",
+      "type": "boolean"
+    },
+    "loop": {
+      "default": false,
+      "description": "Loop playback",
+      "type": "boolean"
+    },
+    "muted": {
+      "default": false,
+      "description": "Mute audio",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type",
+    "src"
+  ]
+}
+```

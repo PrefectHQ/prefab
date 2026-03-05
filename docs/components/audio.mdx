@@ -1,0 +1,94 @@
+---
+title: Audio
+description: Play audio files with native HTML5 controls.
+icon: volume
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`Audio` renders an HTML5 `<audio>` element. Supports dynamic URLs via `{{ field }}` interpolation.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"Audio","src":"https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3","controls":true,"autoplay":false,"loop":false,"muted":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQXVkaW8KCkF1ZGlvKHNyYz0iaHR0cHM6Ly9pbnRlcmFjdGl2ZS1leGFtcGxlcy5tZG4ubW96aWxsYS5uZXQiCiAgICAgICIvbWVkaWEvY2MwLWF1ZGlvL3QtcmV4LXJvYXIubXAzIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Audio
+
+Audio(src="https://interactive-examples.mdn.mozilla.net"
+      "/media/cc0-audio/t-rex-roar.mp3")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Audio",
+    "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
+    "controls": true,
+    "autoplay": false,
+    "loop": false,
+    "muted": false
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Controls are shown by default. The first positional argument is `src`.
+
+## Playback Options
+
+```python Looping background audio
+from prefab_ui.components import Audio
+
+Audio(
+    src="https://example.com/ambient.mp3",
+    loop=True,
+    controls=False,
+    autoplay=True,
+    muted=True,
+)
+```
+
+## API Reference
+
+<Card icon="code" title="Audio Parameters">
+<ParamField body="src" type="str" required>
+  Audio URL.
+</ParamField>
+
+<ParamField body="controls" type="bool" default="True">
+  Show playback controls.
+</ParamField>
+
+<ParamField body="autoplay" type="bool" default="False">
+  Auto-start playback. Requires `muted=True` in most browsers.
+</ParamField>
+
+<ParamField body="loop" type="bool" default="False">
+  Loop playback.
+</ParamField>
+
+<ParamField body="muted" type="bool" default="False">
+  Mute audio.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Audio
+{
+  "type": "Audio",
+  "src": "string (required)",
+  "controls?": true,
+  "autoplay?": false,
+  "loop?": false,
+  "muted?": false,
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Audio](/protocol/audio).

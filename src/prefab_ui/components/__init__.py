@@ -43,7 +43,9 @@ from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
 from prefab_ui.components.div import Div, Span
 from prefab_ui.components.drop_zone import DropZone
+from prefab_ui.components.embed import Embed
 from prefab_ui.components.accordion import Accordion, AccordionItem
+from prefab_ui.components.audio import Audio
 from prefab_ui.components.field import Field
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid
@@ -67,6 +69,7 @@ from prefab_ui.components.separator import Separator
 from prefab_ui.components.slot import Slot
 from prefab_ui.components.slider import Slider
 from prefab_ui.components.loader import Loader
+from prefab_ui.components.svg import Svg
 from prefab_ui.components.switch import Switch
 from prefab_ui.components.tabs import Tab, Tabs
 from prefab_ui.components.tooltip import Tooltip
@@ -82,6 +85,7 @@ from prefab_ui.components.table import (
 )
 from prefab_ui.components.text import Text
 from prefab_ui.components.textarea import Textarea
+from prefab_ui.components.video import Video
 from prefab_ui.components.typography import (
     H1,
     H2,
@@ -111,6 +115,7 @@ __all__ = [
     "Alert",
     "AlertDescription",
     "AlertTitle",
+    "Audio",
     "Badge",
     "BlockQuote",
     "Button",
@@ -140,6 +145,7 @@ __all__ = [
     "DropZone",
     "Elif",
     "Else",
+    "Embed",
     "Field",
     "ForEach",
     "Form",
@@ -178,6 +184,7 @@ __all__ = [
     "Small",
     "Span",
     "StatefulMixin",
+    "Svg",
     "Switch",
     "Tab",
     "Table",
@@ -192,6 +199,7 @@ __all__ = [
     "Text",
     "Textarea",
     "Tooltip",
+    "Video",
     "defer",
     "insert",
 ]
