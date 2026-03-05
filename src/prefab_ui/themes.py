@@ -75,13 +75,13 @@ def _basic_theme(hue: float) -> Theme:
             "primary": f"oklch(0.6 0.24 {hue})",
             "primary-foreground": "oklch(0.985 0 0)",
             "ring": f"oklch(0.6 0.24 {hue})",
-            **_chart_colors(hue, 0.6, 0.2),
+            **_chart_colors(hue, 0.65, 0.25),
         },
         dark={
             "primary": f"oklch(0.7 0.18 {hue})",
             "primary-foreground": "oklch(0.205 0 0)",
             "ring": f"oklch(0.7 0.18 {hue})",
-            **_chart_colors(hue, 0.7, 0.15),
+            **_chart_colors(hue, 0.72, 0.22),
         },
     )
 
