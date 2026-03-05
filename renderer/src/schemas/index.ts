@@ -68,6 +68,7 @@ import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
 import { divSchema, spanSchema } from "./div.ts";
 import { dropZoneSchema } from "./drop_zone.ts";
+import { embedSchema } from "./embed.ts";
 import { fieldSchema } from "./field.ts";
 import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
@@ -76,6 +77,7 @@ import { headingSchema } from "./typography.ts";
 import { hoverCardSchema } from "./hover_card.ts";
 import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
+import { videoSchema, audioSchema } from "./media.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
 import { markdownSchema } from "./markdown.ts";
@@ -90,6 +92,7 @@ import { selectSchema, selectOptionSchema } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
 import { slotSchema } from "./slot.ts";
 import { sliderSchema } from "./slider.ts";
+import { svgSchema } from "./svg.ts";
 import { loaderSchema } from "./loader.ts";
 import { switchSchema } from "./switch.ts";
 import {
@@ -129,6 +132,7 @@ import {
 export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Accordion: accordionSchema,
   AccordionItem: accordionItemSchema,
+  Audio: audioSchema,
   Alert: alertSchema,
   AlertTitle: alertTitleSchema,
   AlertDescription: alertDescriptionSchema,
@@ -159,6 +163,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Dialog: dialogSchema,
   Div: divSchema,
   DropZone: dropZoneSchema,
+  Embed: embedSchema,
   Field: fieldSchema,
   ForEach: forEachSchema,
   Form: formSchema,
@@ -198,6 +203,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Separator: separatorSchema,
   Slider: sliderSchema,
   Slot: slotSchema,
+  Svg: svgSchema,
   Small: smallSchema,
   Loader: loaderSchema,
   Span: spanSchema,
@@ -215,4 +221,5 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Text: textSchema,
   Textarea: textareaSchema,
   Tooltip: tooltipSchema,
+  Video: videoSchema,
 };

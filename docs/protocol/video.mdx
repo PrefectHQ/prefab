@@ -1,0 +1,79 @@
+---
+title: Video
+description: JSON Schema for the Video component.
+---
+
+HTML5 video element.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Video",
+      "default": "Video",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "src": {
+      "description": "Video URL",
+      "type": "string"
+    },
+    "poster": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Poster image URL"
+    },
+    "controls": {
+      "default": true,
+      "description": "Show playback controls",
+      "type": "boolean"
+    },
+    "autoplay": {
+      "default": false,
+      "description": "Auto-start playback",
+      "type": "boolean"
+    },
+    "loop": {
+      "default": false,
+      "description": "Loop playback",
+      "type": "boolean"
+    },
+    "muted": {
+      "default": false,
+      "description": "Mute audio",
+      "type": "boolean"
+    },
+    "width": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS width"
+    },
+    "height": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS height"
+    }
+  },
+  "required": [
+    "type",
+    "src"
+  ]
+}
+```

@@ -277,6 +277,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Audio\n\nAudio(src=\"https://interactive-examples.mdn.mozilla.net\"\n      \"/media/cc0-audio/t-rex-roar.mp3\")"
+  },
+  {
+    "title": "Looping background audio",
+    "category": "Components",
+    "code": "from prefab_ui.components import Audio\n\nAudio(\n    src=\"https://example.com/ambient.mp3\",\n    loop=True,\n    controls=False,\n    autoplay=True,\n    muted=True,\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Badge\n\nBadge(\"Mostly Harmless\")"
   },
   {
@@ -693,6 +703,41 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Badge, Column, DropZone, ForEach,\n    If, Else, Muted, Row, Small, Text,\n)\n\nwith Column(gap=3):\n    zone = DropZone(\n        label=\"Drop files to try it\",\n        multiple=True,\n    )\n    with If(f\"{zone.rx.length()}\"):\n        with Column(gap=2):\n            Text(\n                f\"{zone.rx.length()} file(s) selected\",\n                css_class=\"text-sm font-medium\",\n            )\n            with ForEach(zone.rx):\n                with Row(gap=2, align=\"center\"):\n                    Badge(\"{{ $item.type }}\", variant=\"secondary\")\n                    Small(\"{{ $item.name }}\")\n                    Muted(\"{{ $item.size }} bytes\")\n    with Else():\n        Muted(\"No files selected yet\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed(\n    url=(\n        \"https://www.google.com/maps/embed?pb=\"\n        \"!1m18!1m12!1m3!1d31313.45173960986\"\n        \"!2d-77.07343327228305!3d38.903839376406246\"\n        \"!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1\"\n        \"!3m3!1m2!1s0x89b7b7b0dc3245fd%3A0xdfcb0cc37e2e6999\"\n        \"!2s2112%20Pennsylvania%20Ave%20NW%2C%20\"\n        \"Washington%2C%20DC%2020037\"\n        \"!5e0!3m2!1sen!2sus!4v1772669563862!5m2!1sen!2sus\"\n    ),\n    width=\"100%\",\n    height=\"400px\",\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed(\n    url=\"https://www.youtube.com/embed/iVdZdLL0CJ4\",\n    width=\"100%\",\n    height=\"400px\",\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed(\n    url=(\n        \"https://open.spotify.com/embed/track/\"\n        \"2CgBqLufSdwMt0FMIu1CVn?utm_source=generator\"\n    ),\n    width=\"100%\",\n    height=\"152px\",\n)"
+  },
+  {
+    "title": "Python expandable icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed(\n    html=\"\"\"\\\n<style>\n  html, body { margin: 0; height: 100%; overflow: hidden;\n               background: #1a1a2e; }\n  canvas { display: block; width: 100%; height: 100%;\n           cursor: crosshair; }\n</style>\n<canvas id=\"c\"></canvas>\n<script>\n  const canvas = document.getElementById('c');\n  const ctx = canvas.getContext('2d');\n  canvas.width = canvas.clientWidth;\n  canvas.height = canvas.clientHeight;\n  const particles = [];\n\n  canvas.addEventListener('mousemove', (e) => {\n    for (let i = 0; i < 3; i++) {\n      particles.push({\n        x: e.offsetX, y: e.offsetY,\n        vx: (Math.random() - 0.5) * 4,\n        vy: (Math.random() - 0.5) * 4,\n        life: 1,\n        hue: (Date.now() / 10) % 360,\n      });\n    }\n  });\n\n  function draw() {\n    ctx.fillStyle = 'rgba(26, 26, 46, 0.15)';\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n    for (let i = particles.length - 1; i >= 0; i--) {\n      const p = particles[i];\n      p.x += p.vx; p.y += p.vy; p.life -= 0.015;\n      if (p.life <= 0) { particles.splice(i, 1); continue; }\n      ctx.beginPath();\n      ctx.arc(p.x, p.y, p.life * 4, 0, Math.PI * 2);\n      ctx.fillStyle =\n        `hsla(${p.hue}, 80%, 60%, ${p.life})`;\n      ctx.fill();\n    }\n    requestAnimationFrame(draw);\n  }\n  draw();\n</script>\"\"\",\n    width=\"100%\",\n    height=\"250px\",\n)"
+  },
+  {
+    "title": "Pasting an embed code",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed.from_iframe(\n    '<iframe src=\"https://open.spotify.com/embed/track/2CgBqLufSdwMt0FMIu1CVn\"'\n    ' width=\"100%\" height=\"352\" allow=\"autoplay; encrypted-media;'\n    ' fullscreen; picture-in-picture\"></iframe>'\n)"
+  },
+  {
+    "title": "Restricting capabilities",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\n# Scripts can run, but no access to parent origin\nEmbed(url=\"https://example.com\", sandbox=\"allow-scripts\")\n\n# Scripts + forms + same-origin access\nEmbed(\n    url=\"https://example.com\",\n    sandbox=\"allow-scripts allow-same-origin allow-forms\",\n)"
+  },
+  {
+    "title": "Feature policies",
+    "category": "Components",
+    "code": "from prefab_ui.components import Embed\n\nEmbed(\n    url=\"https://www.youtube.com/embed/dQw4w9WgXcQ\",\n    allow=\"fullscreen; autoplay\",\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1382,6 +1427,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Svg\n\nSvg(\n    \"\"\"\\\n<svg viewBox=\"0 0 200 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <rect width=\"200\" height=\"100\" rx=\"10\" fill=\"#4cc9f0\"/>\n  <text x=\"100\" y=\"58\" text-anchor=\"middle\"\n        font-size=\"20\" fill=\"white\">Hello SVG</text>\n</svg>\"\"\",\n    width=\"200px\",\n)"
+  },
+  {
+    "title": "Fixed size",
+    "category": "Components",
+    "code": "from prefab_ui.components import Svg\n\nSvg(content=diagram_svg, width=\"400px\", height=\"300px\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Switch\n\nSwitch(label=\"Enable notifications\")"
   },
   {
@@ -1523,6 +1578,21 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    H2,\n    P,\n    Muted,\n    Column,\n)\n\nwith Column(gap=2):\n    H2(\"Welcome Back\", align=\"center\")\n    P(\n        \"Your dashboard is ready.\",\n        align=\"center\",\n    )\n    Muted(\n        \"Last login: February 19, 2026\",\n        align=\"right\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://interactive-examples.mdn.mozilla.net\"\n    \"/media/cc0-videos/flower.webm\",\n    width=\"100%\",\n)"
+  },
+  {
+    "title": "Autoplay with loop",
+    "category": "Components",
+    "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://example.com/background.mp4\",\n    autoplay=True,\n    muted=True,\n    loop=True,\n    controls=False,\n)"
+  },
+  {
+    "title": "Poster thumbnail",
+    "category": "Components",
+    "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://example.com/presentation.mp4\",\n    poster=\"https://example.com/thumbnail.jpg\",\n    width=\"640px\",\n)"
   },
   {
     "title": "from prefab_ui.actions import SetState",

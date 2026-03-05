@@ -37,6 +37,8 @@ Doc conventions are encoded as agent skills in `.claude/skills/`:
 - `writing-component-docs` — page structure, preview format, API/Protocol reference conventions
 - `docs-build-pipeline` — how the build scripts work and when to update them
 
+**ComponentPreview blocks: only edit the Python code.** The `<ComponentPreview>` build pipeline (`docs-build/render_previews.py`) reads the Python code block, executes it, and generates everything else — the `json` prop, the `playground` prop, the `<CodeGroup>` wrapper, and the Protocol JSON tab. When editing previews, write only the Python `` ```python `` block. Do not write, edit, or clear the generated JSON, playground, CodeGroup, or Protocol tab — the build process owns those.
+
 After any changes, regenerate docs and schemas:
 ```bash
 prefab dev build-docs

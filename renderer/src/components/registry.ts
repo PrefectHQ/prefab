@@ -104,7 +104,9 @@ import {
   InlineCode,
   BlockQuote,
 } from "./typography";
+import { Embed } from "./embed";
 import { Image } from "./image";
+import { Video, Audio } from "./media";
 import { PrefabMetric } from "./metric";
 import { Ring } from "./ring";
 import { Condition, ForEach, Slot } from "./control-flow";
@@ -118,6 +120,10 @@ import {
   PrefabPopover,
   PrefabDialog,
 } from "./compound";
+
+// SVG (lazy — dompurify)
+const svgModule = () => import("./svg");
+const LazySvg = lazyNamed(svgModule, "Svg");
 
 // ── Lazy imports (heavy dependencies) ───────────────────────────────────
 
@@ -241,6 +247,12 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Image,
   Markdown: LazyMarkdown,
   Icon: PrefabIcon,
+
+  // Media
+  Audio,
+  Embed,
+  Svg: LazySvg,
+  Video,
 
   // Control flow
   Condition,

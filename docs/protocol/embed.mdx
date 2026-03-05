@@ -1,0 +1,78 @@
+---
+title: Embed
+description: JSON Schema for the Embed component.
+---
+
+Embed external content in a sandboxed iframe.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Embed",
+      "default": "Embed",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "URL to embed (iframe src)"
+    },
+    "html": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML to embed (iframe srcdoc)"
+    },
+    "width": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS width"
+    },
+    "height": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS height"
+    },
+    "sandbox": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Iframe sandbox attribute (e.g. 'allow-scripts allow-same-origin')"
+    },
+    "allow": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Iframe allow attribute (e.g. 'fullscreen; autoplay')"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

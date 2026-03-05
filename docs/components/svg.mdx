@@ -1,0 +1,88 @@
+---
+title: Svg
+description: Render inline SVG with automatic sanitization.
+icon: vector-square
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+`Svg` renders inline SVG markup directly in the page. Content is automatically sanitized to strip scripts and event handlers, making it safe for LLM-generated diagrams, charts, and illustrations.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"Svg","content":"<svg viewBox=\"0 0 200 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <rect width=\"200\" height=\"100\" rx=\"10\" fill=\"#4cc9f0\"/>\n  <text x=\"100\" y=\"58\" text-anchor=\"middle\"\n        font-size=\"20\" fill=\"white\">Hello SVG</text>\n</svg>","width":"200px"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU3ZnCgpTdmcoCiAgICAiIiJcCjxzdmcgdmlld0JveD0iMCAwIDIwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIHJ4PSIxMCIgZmlsbD0iIzRjYzlmMCIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iNTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgICAgZm9udC1zaXplPSIyMCIgZmlsbD0id2hpdGUiPkhlbGxvIFNWRzwvdGV4dD4KPC9zdmc+IiIiLAogICAgd2lkdGg9IjIwMHB4IiwKKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Svg
+
+Svg(
+    """\
+<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" rx="10" fill="#4cc9f0"/>
+  <text x="100" y="58" text-anchor="middle"
+        font-size="20" fill="white">Hello SVG</text>
+</svg>""",
+    width="200px",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Svg",
+    "content": "<svg viewBox=\"0 0 200 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <rect width=\"200\" height=\"100\" rx=\"10\" fill=\"#4cc9f0\"/>\n  <text x=\"100\" y=\"58\" text-anchor=\"middle\"\n        font-size=\"20\" fill=\"white\">Hello SVG</text>\n</svg>",
+    "width": "200px"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The first positional argument is `content`. Unlike `Embed`, SVG renders inline in the DOM — it participates in the page layout and can be styled with CSS classes.
+
+## Sizing
+
+By default, the SVG renders at its intrinsic size (from `viewBox`). Override with `width` and `height`:
+
+```python Fixed size
+from prefab_ui.components import Svg
+
+Svg(content=diagram_svg, width="400px", height="300px")
+```
+
+## Security
+
+All SVG content is sanitized with DOMPurify before rendering. This strips `<script>` tags, event handlers (`onload`, `onclick`, etc.), and other potentially dangerous elements. Safe SVG features — paths, shapes, gradients, filters, text — pass through unchanged.
+
+## API Reference
+
+<Card icon="code" title="Svg Parameters">
+<ParamField body="content" type="str" required>
+  SVG markup string.
+</ParamField>
+
+<ParamField body="width" type="str | None" default="None">
+  CSS width value with units.
+</ParamField>
+
+<ParamField body="height" type="str | None" default="None">
+  CSS height value with units.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Svg
+{
+  "type": "Svg",
+  "content": "string (required)",
+  "width?": "string",
+  "height?": "string",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Svg](/protocol/svg).

@@ -1,0 +1,51 @@
+---
+title: Svg
+description: JSON Schema for the Svg component.
+---
+
+Inline SVG element.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Svg",
+      "default": "Svg",
+      "type": "string"
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "content": {
+      "description": "SVG markup",
+      "type": "string"
+    },
+    "width": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS width"
+    },
+    "height": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS height"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```
