@@ -232,6 +232,101 @@ with Grid(columns=[1, "auto", 1], gap=6, css_class="p-3 border-3 border-dashed")
 </CodeGroup>
 </ComponentPreview>
 
+## Spanning Cells
+
+Wrap a child in `GridItem` to make it span multiple columns or rows. Children without a `GridItem` wrapper take a single cell. The grid still auto-flows, so items reflow responsively as columns change.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-4","type":"Grid","children":[{"type":"GridItem","colSpan":2,"rowSpan":1,"children":[{"cssClass":"bg-blue-500 rounded-md h-10","type":"Div"}]},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"type":"GridItem","colSpan":3,"rowSpan":1,"children":[{"cssClass":"bg-purple-500 rounded-md h-10","type":"Div"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGl2LCBHcmlkLCBHcmlkSXRlbQoKd2l0aCBHcmlkKGNvbHVtbnM9NCwgZ2FwPTQpOgogICAgd2l0aCBHcmlkSXRlbShjb2xfc3Bhbj0yKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLW1kIGgtMTAiKQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1tZCBoLTEwIikKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbWQgaC0xMCIpCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLW1kIGgtMTAiKQogICAgd2l0aCBHcmlkSXRlbShjb2xfc3Bhbj0zKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1wdXJwbGUtNTAwIHJvdW5kZWQtbWQgaC0xMCIpCg==">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Div, Grid, GridItem
+
+with Grid(columns=4, gap=4):
+    with GridItem(col_span=2):
+        Div(css_class="bg-blue-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    with GridItem(col_span=3):
+        Div(css_class="bg-purple-500 rounded-md h-10")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 grid-cols-4",
+    "type": "Grid",
+    "children": [
+      {
+        "type": "GridItem",
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [{"cssClass": "bg-blue-500 rounded-md h-10", "type": "Div"}]
+      },
+      {"cssClass": "bg-emerald-500 rounded-md h-10", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10", "type": "Div"},
+      {
+        "type": "GridItem",
+        "colSpan": 3,
+        "rowSpan": 1,
+        "children": [{"cssClass": "bg-purple-500 rounded-md h-10", "type": "Div"}]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`row_span` works the same way for vertical spanning. This is useful for tall cards alongside shorter ones in dashboard-style layouts.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"GridItem","colSpan":1,"rowSpan":2,"children":[{"cssClass":"bg-blue-500 rounded-md h-full min-h-24 flex items-center justify-center","type":"Div","children":[{"cssClass":"text-white font-semibold","content":"Tall","type":"Text"}]}]},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-amber-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-emerald-500 rounded-md h-10","type":"Div"},{"cssClass":"bg-amber-500 rounded-md h-10","type":"Div"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGl2LCBHcmlkLCBHcmlkSXRlbSwgVGV4dAoKd2l0aCBHcmlkKGNvbHVtbnM9MywgZ2FwPTQpOgogICAgd2l0aCBHcmlkSXRlbShyb3dfc3Bhbj0yKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLW1kIGgtZnVsbCBtaW4taC0yNCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciIsCiAgICAgICAgICAgIGNoaWxkcmVuPVtUZXh0KCJUYWxsIiwgY3NzX2NsYXNzPSJ0ZXh0LXdoaXRlIGZvbnQtc2VtaWJvbGQiKV0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLW1kIGgtMTAiKQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbWQgaC0xMCIpCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLW1kIGgtMTAiKQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbWQgaC0xMCIpCg==">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Div, Grid, GridItem, Text
+
+with Grid(columns=3, gap=4):
+    with GridItem(row_span=2):
+        Div(css_class="bg-blue-500 rounded-md h-full min-h-24 flex items-center justify-center",
+            children=[Text("Tall", css_class="text-white font-semibold")])
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-amber-500 rounded-md h-10")
+    Div(css_class="bg-emerald-500 rounded-md h-10")
+    Div(css_class="bg-amber-500 rounded-md h-10")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 grid-cols-3",
+    "type": "Grid",
+    "children": [
+      {
+        "type": "GridItem",
+        "colSpan": 1,
+        "rowSpan": 2,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-md h-full min-h-24 flex items-center justify-center",
+            "type": "Div",
+            "children": [{"cssClass": "text-white font-semibold", "content": "Tall", "type": "Text"}]
+          }
+        ]
+      },
+      {"cssClass": "bg-emerald-500 rounded-md h-10", "type": "Div"},
+      {"cssClass": "bg-amber-500 rounded-md h-10", "type": "Div"},
+      {"cssClass": "bg-emerald-500 rounded-md h-10", "type": "Div"},
+      {"cssClass": "bg-amber-500 rounded-md h-10", "type": "Div"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+<Tip>
+For explicit row/column placement (pinning items to exact coordinates), use [Dashboard](/components/dashboard-grid) instead. GridItem controls *size*; DashboardItem controls *size and position*.
+</Tip>
+
 ## Auto-fill Columns
 
 Set `min_column_width` instead of `columns` to let CSS Grid automatically fit as many columns as possible, each at least the given width. Drag the handle to see the grid reflow.
@@ -351,6 +446,20 @@ with Grid(columns=2, gap=6, css_class="p-3 border-3 border-dashed"):
 
 <ParamField body="css_class" type="str | Responsive | None" default="None">
   Additional Tailwind CSS classes. A `Responsive()` compiles breakpoint-prefixed classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="GridItem Parameters">
+<ParamField body="col_span" type="int" default="1">
+  Number of columns to span.
+</ParamField>
+
+<ParamField body="row_span" type="int" default="1">
+  Number of rows to span.
+</ParamField>
+
+<ParamField body="css_class" type="str | Responsive | None" default="None">
+  Additional Tailwind CSS classes.
 </ParamField>
 </Card>
 
