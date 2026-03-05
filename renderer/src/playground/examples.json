@@ -840,6 +840,16 @@
     "code": "from prefab_ui.components import Column, Grid, H3, P, Separator\n\nwith Grid(columns=[1, \"auto\", 1], gap=6, css_class=\"p-3 border-3 border-dashed\"):\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Panel A\")\n        P(\"Left side content.\")\n    Separator(orientation=\"vertical\")\n    with Column(css_class=\"p-3 border-3 border-dashed\"):\n        H3(\"Panel B\")\n        P(\"Right side content.\")"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Div, Grid, GridItem\n\nwith Grid(columns=4, gap=4):\n    with GridItem(col_span=2):\n        Div(css_class=\"bg-blue-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    with GridItem(col_span=3):\n        Div(css_class=\"bg-purple-500 rounded-md h-10\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Div, Grid, GridItem, Text\n\nwith Grid(columns=3, gap=4):\n    with GridItem(row_span=2):\n        Div(css_class=\"bg-blue-500 rounded-md h-full min-h-24 flex items-center justify-center\",\n            children=[Text(\"Tall\", css_class=\"text-white font-semibold\")])\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-amber-500 rounded-md h-10\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10\")\n    Div(css_class=\"bg-amber-500 rounded-md h-10\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Div, Grid\n\nwith Grid(min_column_width=\"10rem\", gap=4):\n    for _ in range(6):\n        Div(css_class=\"bg-emerald-500 rounded-md h-10\")"

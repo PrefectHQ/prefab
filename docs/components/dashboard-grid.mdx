@@ -6,11 +6,11 @@ icon: objects-column
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Prefab has two grid components, and the choice between them comes down to whether you want to control placement:
+Prefab has two grid components, and the choice between them comes down to whether you need explicit positioning:
 
-- [**Grid**](/components/grid) is for uniform layouts. You set a column count and children flow in left-to-right, wrapping to new rows automatically. Every child gets the same column width. Use Grid when you have a collection of same-shaped items — a card grid, a gallery, a set of form fields.
+- [**Grid**](/components/grid) auto-flows children left-to-right, wrapping to new rows. Wrap children in [GridItem](/components/grid#spanning-cells) to span multiple columns or rows while keeping responsive reflow. Use Grid for most layouts, including dashboard-style layouts where items have different sizes but don't need pinned coordinates.
 
-- **Dashboard** is for composed layouts where items have different sizes and specific positions. A chart might span 8 of 12 columns while stat cards stack in the remaining 4. A table might stretch the full width below. You place each item at exact grid coordinates and control how many columns and rows it spans.
+- **Dashboard** places items at exact grid coordinates. Each child is a DashboardItem with explicit `col`, `row`, `col_span`, and `row_span` values. Use Dashboard when you need pixel-precise control over where every item sits, like a drag-and-drop layout builder.
 
 Dashboard works like pinning widgets to a canvas. You define the grid with a `columns` count and a `row_height`, then wrap each piece of content in a DashboardItem that declares its position (`col`, `row`) and size (`col_span`, `row_span`). Coordinates are 1-indexed, matching CSS Grid conventions.
 
