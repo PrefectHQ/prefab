@@ -73,6 +73,7 @@ import { fieldSchema } from "./field.ts";
 import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
+import { gridItemSchema } from "./grid_item.ts";
 import { headingSchema } from "./typography.ts";
 import { hoverCardSchema } from "./hover_card.ts";
 import { iconSchema } from "./icon.ts";
@@ -168,6 +169,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   ForEach: forEachSchema,
   Form: formSchema,
   Grid: gridSchema,
+  GridItem: gridItemSchema,
   H1: h1Schema,
   H2: h2Schema,
   H3: h3Schema,

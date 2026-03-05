@@ -48,7 +48,7 @@ from prefab_ui.components.accordion import Accordion, AccordionItem
 from prefab_ui.components.audio import Audio
 from prefab_ui.components.field import Field
 from prefab_ui.components.form import Form
-from prefab_ui.components.grid import Grid
+from prefab_ui.components.grid import Grid, GridItem
 from prefab_ui.components.heading import Heading
 from prefab_ui.components.histogram import Histogram
 from prefab_ui.components.hover_card import HoverCard
@@ -150,6 +150,7 @@ __all__ = [
     "ForEach",
     "Form",
     "Grid",
+    "GridItem",
     "Heading",
     "Histogram",
     "HoverCard",
