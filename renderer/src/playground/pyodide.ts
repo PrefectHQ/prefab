@@ -62,12 +62,9 @@ export function loadPyodideRuntime(
     await loadScript(PYODIDE_CDN);
     const py = await window.loadPyodide();
 
-    const isLocal =
-      location.hostname === "localhost" || location.hostname === "127.0.0.1";
-
-    if (__LOCAL_BUNDLE__ && isLocal) {
-      // Local dev build: write the bundled source tree to the Pyodide FS so
-      // the playground reflects local code changes without a PyPI publish.
+    if (__LOCAL_BUNDLE__) {
+      // Bundled build: write the bundled source tree to the Pyodide FS.
+      // This avoids micropip which can't install pydantic-core (Rust ext).
       const { default: BUNDLE } = await import("./bundle.json");
       const bundle = BUNDLE as Record<string, string>;
       await py.loadPackage(["pydantic"]);
