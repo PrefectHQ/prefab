@@ -1,4 +1,4 @@
-"""Grid layout container."""
+"""Grid layout container and grid item wrapper."""
 
 from __future__ import annotations
 
@@ -134,3 +134,31 @@ class Grid(ContainerComponent):
         )
         self.css_class = _merge_css_classes(layout, self.css_class)
         super().model_post_init(__context)
+
+
+class GridItem(ContainerComponent):
+    """A child of :class:`Grid` that spans multiple columns or rows.
+
+    Use ``GridItem`` to control how much space a child occupies within
+    a ``Grid``.  Items without a ``GridItem`` wrapper span a single cell.
+    Positioning is automatic (CSS auto-placement); use
+    :class:`~prefab_ui.components.dashboard.DashboardItem` for explicit
+    ``col``/``row`` coordinates instead.
+
+    Example::
+
+        with Grid(columns=4, gap=4):
+            with GridItem(col_span=2):
+                Card(...)        # spans 2 columns
+            Card(...)            # spans 1 column
+            with GridItem(col_span=2, row_span=2):
+                BigChart(...)    # spans 2x2
+    """
+
+    type: Literal["GridItem"] = "GridItem"
+    col_span: int = Field(
+        default=1, alias="colSpan", description="Number of columns to span."
+    )
+    row_span: int = Field(
+        default=1, alias="rowSpan", description="Number of rows to span."
+    )

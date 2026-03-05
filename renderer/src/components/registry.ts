@@ -88,6 +88,7 @@ import {
   Div,
   Span,
   PrefabForm,
+  GridItem,
 } from "./layout";
 import {
   Text,
@@ -222,6 +223,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Container,
   Form: PrefabForm,
   Grid,
+  GridItem,
   Dashboard,
   DashboardItem,
   Div,

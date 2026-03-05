@@ -55,6 +55,32 @@ export function Grid({
   );
 }
 
+interface GridItemProps extends LayoutProps {
+  colSpan?: number;
+  rowSpan?: number;
+}
+
+export function GridItem({
+  className,
+  cssClass,
+  children,
+  colSpan = 1,
+  rowSpan = 1,
+}: GridItemProps) {
+  const style: React.CSSProperties = {
+    ...(colSpan !== 1 ? { gridColumn: `span ${colSpan}` } : {}),
+    ...(rowSpan !== 1 ? { gridRow: `span ${rowSpan}` } : {}),
+  };
+  return (
+    <div
+      className={cn("min-w-0 min-h-0", className, cssClass)}
+      style={Object.keys(style).length > 0 ? style : undefined}
+    >
+      {children}
+    </div>
+  );
+}
+
 interface FormProps extends LayoutProps {
   onSubmit?: (e: FormEvent) => void;
 }
