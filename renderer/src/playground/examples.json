@@ -15,9 +15,19 @@
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\ndataset = Rx(\"dataset\")\n\nButton(\"Analyze\", on_click=[\n    SetState(\"status\", \"analyzing...\"),\n    CallTool(\"run_analysis\", arguments={\"data\": dataset}),\n])"
   },
   {
+    "title": "Writing results to state",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Search\",\n    on_click=CallTool(\n        \"search\",\n        arguments={\"q\": \"{{ query }}\"},\n        on_success=SetState(\"results\", RESULT),\n    ),\n)"
+  },
+  {
+    "title": "Callbacks with result",
+    "category": "Actions",
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import AppendState, SetState, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import ERROR, RESULT\n\nButton(\n    \"Add Item\",\n    on_click=CallTool(\n        \"create_item\",\n        arguments={\"name\": \"{{ item_name }}\"},\n        on_success=[\n            AppendState(\"items\", RESULT),\n            ShowToast(\"Item created!\", variant=\"success\"),\n        ],\n        on_error=ShowToast(ERROR, variant=\"error\"),\n    ),\n)"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, ShowToast\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\n        \"/api/users\",\n        result_key=\"users\",\n        on_success=ShowToast(\"Users loaded!\", variant=\"success\"),\n    ),\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState, ShowToast\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\n        \"/api/users\",\n        on_success=[\n            SetState(\"users\", RESULT),\n            ShowToast(\"Users loaded!\", variant=\"success\"),\n        ],\n    ),\n)"
   },
   {
     "title": "GET with query params",
@@ -37,7 +47,7 @@
   {
     "title": "Full form",
     "category": "Actions",
-    "code": "from prefab_ui.rx import Rx\n\nform_data = Rx(\"form_data\")\n\nFetch(\n    \"/api/submit\",\n    method=\"POST\",\n    headers={\"X-Custom\": \"value\"},\n    body={\"data\": form_data},\n    result_key=\"response\",\n)"
+    "code": "from prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.rx import RESULT, Rx\n\nform_data = Rx(\"form_data\")\n\nFetch(\n    \"/api/submit\",\n    method=\"POST\",\n    headers={\"X-Custom\": \"value\"},\n    body={\"data\": form_data},\n    on_success=SetState(\"response\", RESULT),\n)"
   },
   {
     "title": "Error handling",
@@ -47,7 +57,7 @@
   {
     "title": "Combined actions",
     "category": "Actions",
-    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.rx import Rx\n\nquery = Rx(\"query\")\n\nButton(\n    \"Submit\",\n    on_click=[\n        SetState(\"loading\", True),\n        Fetch.post(\n            \"/api/submit\",\n            body={\"q\": query},\n            result_key=\"result\",\n        ),\n        SetState(\"loading\", False),\n    ],\n)"
+    "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.rx import RESULT, Rx\n\nquery = Rx(\"query\")\n\nButton(\n    \"Submit\",\n    on_click=[\n        SetState(\"loading\", True),\n        Fetch.post(\n            \"/api/submit\",\n            body={\"q\": query},\n            on_success=SetState(\"result\", RESULT),\n        ),\n        SetState(\"loading\", False),\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -363,6 +373,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Button, Row\n\nwith Row(gap=3, css_class=\"items-center\"):\n    Button(\"\", icon=\"plus\", size=\"icon-xs\")\n    Button(\"\", icon=\"plus\", size=\"icon-sm\")\n    Button(\"\", icon=\"plus\", size=\"icon\")\n    Button(\"\", icon=\"plus\", size=\"icon-lg\")"
+  },
+  {
+    "title": "from prefab_ui.components import Button, Form",
+    "category": "Components",
+    "code": "from prefab_ui.actions.mcp import CallTool\n\nwith Form(on_submit=CallTool(\"save\")):\n    # ... inputs ...\n    Button(\"Cancel\", variant=\"outline\", button_type=\"button\")\n    Button(\"Save\")  # defaults to submit"
   },
   {
     "title": "Python icon=\"python\"",
@@ -792,7 +807,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=CallTool(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\")\n            Button(\"Send Message\")"
+    "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardTitle,\n    Column, Form,\n)\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nclass ContactInfo(BaseModel):\n    name: str = Field(title=\"Full Name\", min_length=1)\n    email: str\n    message: str = Field(\n        description=\"Your message\",\n        json_schema_extra={\"ui\": {\"type\": \"textarea\", \"rows\": 4}},\n    )\n\nwith Card(css_class=\"w-full max-w-lg\"):\n    with Form(on_submit=CallTool(\n        \"submit_contact\",\n        arguments={\"name\": \"{{ name }}\", \"email\": \"{{ email }}\", \"message\": \"{{ message }}\"},\n        on_success=ShowToast(\"Message sent!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    )):\n\n        with CardContent():\n            CardTitle(\"Contact Us\", css_class=\"mb-2\")\n            with Column(gap=4):\n                Form.from_model(ContactInfo, fields_only=True)\n        with CardFooter(css_class=\"justify-end gap-2\"):\n            Button(\"Cancel\", variant=\"outline\", button_type=\"button\")\n            Button(\"Send Message\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1620,14 +1635,14 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Column, ForEach, Input, Muted, Row, Text\nfrom prefab_ui.actions import AppendState, PopState, SetState\n\nstate = set_initial_state(\n    crew=[\"Arthur Dent\", \"Ford Prefect\", \"Trillian\"],\n    new_member=\"\",\n)\n\nwith Column(gap=3):\n    with ForEach(\"crew\") as item:\n        with Row(gap=2, align=\"center\"):\n            Text(item)\n            Button(\n                \"×\",\n                variant=\"ghost\",\n                size=\"sm\",\n                on_click=PopState(\"crew\", item.get_index())\n            )\n    with Row(gap=2):\n        Input(name=\"new_member\", placeholder=\"Crew member name...\")\n        Button(\n            \"Add\",\n            on_click=[\n                AppendState(\"crew\", state.new_member),\n                SetState(\"new_member\", \"\"),\n            ]\n        )\n    Muted(f\"{state.crew.length()} crew members\")"
   },
   {
-    "title": "from prefab_ui.actions.mcp import CallTool",
+    "title": "from prefab_ui.actions import SetState, ShowToast",
     "category": "Concepts",
-    "code": "from prefab_ui.actions import SetState, ShowToast\n\nButton(\n    \"Save\", \n    on_click=CallTool(\n        \"save_record\",\n        arguments={\"data\": Rx(\"form\")},\n        on_success=ShowToast(\"Saved!\", variant=\"success\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_record\",\n        arguments={\"data\": Rx(\"form\")},\n        on_success=[\n            SetState(\"result\", RESULT),\n            ShowToast(\"Saved!\", variant=\"success\"),\n        ],\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "CallTool(",
     "category": "Concepts",
-    "code": "\"get_user\",\n    arguments={\"id\": Rx(\"user_id\")},\n    result_key=\"user\",\n    on_success=CallTool(\n        \"get_permissions\",\n        arguments={\"role\": \"{{ user.role }}\"},\n        result_key=\"permissions\",\n    ),\n)"
+    "code": "\"get_user\",\n    arguments={\"id\": Rx(\"user_id\")},\n    on_success=[\n        SetState(\"user\", RESULT),\n        CallTool(\n            \"get_permissions\",\n            arguments={\"role\": \"{{ user.role }}\"},\n            on_success=SetState(\"permissions\", RESULT),\n        ),\n    ],\n)"
   },
   {
     "title": "from prefab_ui.rx import Rx",
@@ -1635,9 +1650,9 @@
     "code": "saving = Rx(\"saving\")\n\nButton(\n    saving.then(\"Saving...\", \"Save\"),\n    disabled=saving,\n    on_click=[\n        SetState(\"saving\", True),\n        CallTool(\n            \"save\",\n            arguments={\"data\": Rx(\"form\")},\n            on_success=[\n                SetState(\"saving\", False),\n                ShowToast(\"Saved!\", variant=\"success\"),\n            ],\n            on_error=[\n                SetState(\"saving\", False),\n                ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ],\n        ),\n    ],\n)"
   },
   {
-    "title": "from prefab_ui.components import Button, Column, ForEach, Input, Text",
+    "title": "from prefab_ui.actions import SetState",
     "category": "Concepts",
-    "code": "with Column(gap=3):\n    query = Input(name=\"q\", placeholder=\"Search...\")\n    Button(\n        \"Search\", \n        on_click=CallTool(\n            \"search\",\n            arguments={\"q\": query.rx},\n            result_key=\"results\",\n        ),\n    )\n    with ForEach(\"results\"):\n        Text(\"{{ name }}\")"
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.components import Button, Column, ForEach, Input, Text\nfrom prefab_ui.rx import RESULT\n\nwith Column(gap=3):\n    query = Input(name=\"q\", placeholder=\"Search...\")\n    Button(\n        \"Search\",\n        on_click=CallTool(\n            \"search\",\n            arguments={\"q\": query.rx},\n            on_success=SetState(\"results\", RESULT),\n        ),\n    )\n    with ForEach(\"results\"):\n        Text(\"{{ name }}\")"
   },
   {
     "title": "with ForEach(\"todos\"):",
@@ -1897,6 +1912,11 @@
   {
     "title": "from prefab_ui.components import Button",
     "category": "Expressions",
+    "code": "from prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\n        \"/api/users\",\n        on_success=SetState(\"users\", RESULT),\n    ),\n)"
+  },
+  {
+    "title": "from prefab_ui.components import Button",
+    "category": "Expressions",
     "code": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
@@ -2070,6 +2090,16 @@
     "code": "ITEM.name          # → {{ $item.name }}\nITEM.address.city  # → {{ $item.address.city }}"
   },
   {
+    "title": "from prefab_ui.components import Button",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Search\",\n    on_click=CallTool(\n        \"search\",\n        arguments={\"q\": \"{{ query }}\"},\n        on_success=SetState(\"results\", RESULT),\n    ),\n)"
+  },
+  {
+    "title": "from prefab_ui.actions import AppendState, SetState, ShowToast",
+    "category": "Reactive",
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\nCallTool(\n    \"create_item\",\n    arguments={\"name\": \"{{ item_name }}\"},\n    on_success=[\n        AppendState(\"items\", RESULT),\n        ShowToast(\"Created!\", variant=\"success\"),\n    ],\n)"
+  },
+  {
     "title": "from prefab_ui.rx import STATE",
     "category": "Reactive",
     "code": "STATE.count       # → {{ count }}\nSTATE.user.name   # → {{ user.name }}"
@@ -2092,12 +2122,12 @@
   {
     "title": "from fastapi import FastAPI",
     "category": "Running",
-    "code": "from fastapi.responses import HTMLResponse\n\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Input, Text\nfrom prefab_ui.components.control_flow import ForEach\n\napp = FastAPI()\n\n\n@app.get(\"/api/items\")\ndef list_items(q: str = \"\"):\n    items = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n    if q:\n        items = [i for i in items if q.lower() in i[\"name\"].lower()]\n    return items\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                Fetch.get(\n                    \"/api/items\",\n                    params={\"q\": \"{{ $event }}\"},\n                    result_key=\"items\",\n                ),\n            ],\n        )\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n\n    return HTMLResponse(\n        PrefabApp(\n            title=\"My App\",\n            view=view,\n            state={\"q\": \"\", \"items\": []},\n        ).html()\n    )"
+    "code": "from fastapi.responses import HTMLResponse\n\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Input, Text\nfrom prefab_ui.components.control_flow import ForEach\nfrom prefab_ui.rx import RESULT\n\napp = FastAPI()\n\n\n@app.get(\"/api/items\")\ndef list_items(q: str = \"\"):\n    items = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n    if q:\n        items = [i for i in items if q.lower() in i[\"name\"].lower()]\n    return items\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                Fetch.get(\n                    \"/api/items\",\n                    params={\"q\": \"{{ $event }}\"},\n                    on_success=SetState(\"items\", RESULT),\n                ),\n            ],\n        )\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n\n    return HTMLResponse(\n        PrefabApp(\n            title=\"My App\",\n            view=view,\n            state={\"q\": \"\", \"items\": []},\n        ).html()\n    )"
   },
   {
-    "title": "Button(",
+    "title": "from prefab_ui.actions import Fetch, SetState",
     "category": "Running",
-    "code": "\"Load Users\",\n    on_click=Fetch.get(\"/api/users\", result_key=\"users\"),\n)"
+    "code": "from prefab_ui.rx import RESULT\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\"/api/users\", on_success=SetState(\"users\", RESULT)),\n)"
   },
   {
     "title": "from prefab_ui.rx import Rx",
@@ -2112,17 +2142,17 @@
   {
     "title": "{10-14}",
     "category": "Running",
-    "code": "from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast\nfrom prefab_ui.components import Button, Column, Dialog, Form, Input\nfrom prefab_ui.rx import Rx\n\nnew_name = Rx(\"new_name\")\n\nwith Dialog(title=\"New Item\", description=\"Add an item to the catalog.\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=Fetch.post(\n            \"/api/items\",\n            body={\"name\": new_name},\n            on_success=[\n                ShowToast(\"Created!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                Fetch.get(\"/api/items\", result_key=\"items\"),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        with Column(gap=3):\n            Input(name=\"new_name\", placeholder=\"Name\")\n            Button(\"Add Item\")"
+    "code": "from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast\nfrom prefab_ui.components import Button, Column, Dialog, Form, Input\nfrom prefab_ui.rx import RESULT, Rx\n\nnew_name = Rx(\"new_name\")\n\nwith Dialog(title=\"New Item\", description=\"Add an item to the catalog.\"):\n    Button(\"+ Add\", size=\"sm\")\n    with Form(\n        on_submit=Fetch.post(\n            \"/api/items\",\n            body={\"name\": new_name},\n            on_success=[\n                ShowToast(\"Created!\", variant=\"success\"),\n                SetState(\"new_name\", \"\"),\n                Fetch.get(\"/api/items\", on_success=SetState(\"items\", RESULT)),\n                CloseOverlay(),\n            ],\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n    ):\n        with Column(gap=3):\n            Input(name=\"new_name\", placeholder=\"Name\")\n            Button(\"Add Item\")"
   },
   {
     "title": "Button(",
     "category": "Running",
-    "code": "\"Delete\",\n    icon=\"trash-2\",\n    size=\"icon-xs\",\n    variant=\"ghost\",\n    on_click=Fetch.delete(\n        \"/api/items/{{ id }}\",\n        on_success=Fetch.get(\"/api/items\", result_key=\"items\"),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
+    "code": "\"Delete\",\n    icon=\"trash-2\",\n    size=\"icon-xs\",\n    variant=\"ghost\",\n    on_click=Fetch.delete(\n        \"/api/items/{{ id }}\",\n        on_success=Fetch.get(\"/api/items\", on_success=SetState(\"items\", RESULT)),\n        on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {
     "title": "{11,25}",
     "category": "Running",
-    "code": "from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text\n\n@app.get(\"/api/items/{id}/detail\")\ndef item_detail(id: str):\n    item = get_item(id)\n    with Card() as detail:\n        with CardHeader():\n            CardTitle(item[\"name\"])\n        with CardContent():\n            Text(item[\"description\"])\n    return detail.to_json()\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        with ForEach(\"items\"):\n            Button(\n                \"{{ name }}\",\n                on_click=Fetch.get(\n                    \"/api/items/{{ id }}/detail\",\n                    result_key=\"detail\",\n                ),\n            )\n        with Slot(\"detail\"):\n            Text(\"Select an item to see details\", css_class=\"text-muted-foreground\")\n\n    return HTMLResponse(\n        PrefabApp(view=view, state={\"items\": items, \"detail\": None}).html()\n    )"
+    "code": "from prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text\nfrom prefab_ui.rx import RESULT\n\n@app.get(\"/api/items/{id}/detail\")\ndef item_detail(id: str):\n    item = get_item(id)\n    with Card() as detail:\n        with CardHeader():\n            CardTitle(item[\"name\"])\n        with CardContent():\n            Text(item[\"description\"])\n    return detail.to_json()\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        with ForEach(\"items\"):\n            Button(\n                \"{{ name }}\",\n                on_click=Fetch.get(\n                    \"/api/items/{{ id }}/detail\",\n                    on_success=SetState(\"detail\", RESULT),\n                ),\n            )\n        with Slot(\"detail\"):\n            Text(\"Select an item to see details\", css_class=\"text-muted-foreground\")\n\n    return HTMLResponse(\n        PrefabApp(view=view, state={\"items\": items, \"detail\": None}).html()\n    )"
   },
   {
     "title": "from prefab_ui.rx import Rx",
@@ -2140,9 +2170,9 @@
     "code": "from prefab_ui.rx import Rx\n\nitem = Rx(\"item\")\n\nButton(\n    \"Save\",\n    on_click=[\n        SetState(\"saving\", True),\n        Fetch.post(\n            \"/api/save\",\n            body={\"item\": item},\n            on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n        ),\n        SetState(\"saving\", False),\n    ],\n)"
   },
   {
-    "title": "from prefab_ui.rx import Rx",
+    "title": "from prefab_ui.actions import Fetch, SetState, ShowToast",
     "category": "Running",
-    "code": "new_name = Rx(\"new_name\")\n\nFetch.post(\n    \"/api/items\",\n    body={\"name\": new_name},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", result_key=\"items\"),\n    ],\n)"
+    "code": "from prefab_ui.rx import RESULT, Rx\n\nnew_name = Rx(\"new_name\")\n\nFetch.post(\n    \"/api/items\",\n    body={\"name\": new_name},\n    on_success=[\n        ShowToast(\"Created!\", variant=\"success\"),\n        Fetch.get(\"/api/items\", on_success=SetState(\"items\", RESULT)),\n    ],\n)"
   },
   {
     "title": "from fastmcp import FastMCP",
@@ -2160,9 +2190,9 @@
     "code": "@mcp.tool(app=True)\ndef dashboard() -> Column:\n    with Column(gap=4) as view:\n        Heading(\"Dashboard\")\n        Text(\"Hello!\")\n    return view"
   },
   {
-    "title": "@mcp.tool(app=True)",
+    "title": "from prefab_ui.actions import SetState",
     "category": "Running",
-    "code": "def browse() -> PrefabApp:\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}, result_key=\"results\"),\n            ],\n        )\n        Slot(\"results\")\n    return PrefabApp(view=view, state={\"q\": \"\", \"results\": None})\n\n@mcp.tool\ndef search(q: str = \"\") -> PrefabApp:\n    matches = [i for i in ITEMS if q.lower() in i[\"name\"].lower()] if q else ITEMS\n    with ForEach(\"items\") as view:\n        Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": matches})"
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}, on_success=SetState(\"results\", RESULT)),\n            ],\n        )\n        Slot(\"results\")\n    return PrefabApp(view=view, state={\"q\": \"\", \"results\": None})\n\n@mcp.tool\ndef search(q: str = \"\") -> PrefabApp:\n    matches = [i for i in ITEMS if q.lower() in i[\"name\"].lower()] if q else ITEMS\n    with ForEach(\"items\") as view:\n        Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": matches})"
   },
   {
     "title": "{5,11}",
