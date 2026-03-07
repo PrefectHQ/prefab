@@ -238,6 +238,67 @@ with Row(css_class="gap-6 items-end"):
 </CodeGroup>
 </ComponentPreview>
 
+## Indicator Class
+
+`indicator_class` applies Tailwind classes directly to the filled arc, just like Progress's `indicator_class` targets the bar. The Ring wrapper acts as a `group`, so `group-hover:` classes let you trigger effects when hovering anywhere on the ring.
+
+Because the Ring arc is an SVG stroke, use `stroke-*` classes (not `bg-*`) to override colors.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Ring","value":72.0,"min":0,"max":100,"label":"72%","variant":"info","size":"default","thickness":6,"indicatorClass":"group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]"},{"type":"Ring","value":90.0,"min":0,"max":100,"label":"90%","variant":"default","size":"default","thickness":6,"indicatorClass":"stroke-emerald-500 group-hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.8)]"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmluZywgUm93Cgp3aXRoIFJvdyhjc3NfY2xhc3M9ImdhcC02Iik6CiAgICBSaW5nKAogICAgICAgIHZhbHVlPTcyLCBsYWJlbD0iNzIlIiwgdmFyaWFudD0iaW5mbyIsCiAgICAgICAgaW5kaWNhdG9yX2NsYXNzPSgKICAgICAgICAgICAgImdyb3VwLWhvdmVyOmRyb3Atc2hhZG93LVswXzBfMjBweF9yZ2JhKDU5LDEzMCwyNDYsMC44KV0iCiAgICAgICAgKSwKICAgICkKICAgIFJpbmcoCiAgICAgICAgdmFsdWU9OTAsIGxhYmVsPSI5MCUiLAogICAgICAgIGluZGljYXRvcl9jbGFzcz0oCiAgICAgICAgICAgICJzdHJva2UtZW1lcmFsZC01MDAiCiAgICAgICAgICAgICIgZ3JvdXAtaG92ZXI6ZHJvcC1zaGFkb3ctWzBfMF8yMHB4X3JnYmEoMTYsMTg1LDEyOSwwLjgpXSIKICAgICAgICApLAogICAgKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Ring, Row
+
+with Row(css_class="gap-6"):
+    Ring(
+        value=72, label="72%", variant="info",
+        indicator_class=(
+            "group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]"
+        ),
+    )
+    Ring(
+        value=90, label="90%",
+        indicator_class=(
+            "stroke-emerald-500"
+            " group-hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.8)]"
+        ),
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Ring",
+        "value": 72.0,
+        "min": 0,
+        "max": 100,
+        "label": "72%",
+        "variant": "info",
+        "size": "default",
+        "thickness": 6,
+        "indicatorClass": "group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]"
+      },
+      {
+        "type": "Ring",
+        "value": 90.0,
+        "min": 0,
+        "max": 100,
+        "label": "90%",
+        "variant": "default",
+        "size": "default",
+        "thickness": 6,
+        "indicatorClass": "stroke-emerald-500 group-hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.8)]"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Custom Range
 
 Set `min` and `max` to define a range other than 0–100. The renderer normalizes the value to a percentage automatically.
@@ -382,6 +443,10 @@ with Row(css_class="gap-6"):
   Stroke width of the ring arc in pixels.
 </ParamField>
 
+<ParamField body="indicator_class" type="str | None" default="None">
+  Tailwind classes applied to the filled arc. The Ring wrapper is a `group`, so `group-hover:` classes trigger on hover anywhere on the ring.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Tailwind classes for the outer container.
 </ParamField>
@@ -401,6 +466,7 @@ with Row(css_class="gap-6"):
   "variant?": "default | success | warning | destructive | info | muted",
   "size?": "sm | default | lg",
   "thickness?": 6,
+  "indicatorClass?": "string",
   "cssClass?": "string"
 }
 ```

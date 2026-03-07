@@ -68,8 +68,8 @@ export function GridItem({
   rowSpan = 1,
 }: GridItemProps) {
   const style: React.CSSProperties = {
-    ...(colSpan !== 1 ? { gridColumn: `span ${colSpan}` } : {}),
-    ...(rowSpan !== 1 ? { gridRow: `span ${rowSpan}` } : {}),
+    ...(colSpan !== 1 ? { gridColumnEnd: `span ${colSpan}` } : {}),
+    ...(rowSpan !== 1 ? { gridRowEnd: `span ${rowSpan}` } : {}),
   };
   return (
     <div

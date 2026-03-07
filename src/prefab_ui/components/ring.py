@@ -52,3 +52,8 @@ class Ring(ContainerComponent):
         default=6,
         description="Stroke width of the ring in pixels",
     )
+    indicator_class: RxStr | None = Field(
+        default=None,
+        alias="indicatorClass",
+        description="Tailwind classes for the filled arc (e.g. 'hover:drop-shadow-lg')",
+    )

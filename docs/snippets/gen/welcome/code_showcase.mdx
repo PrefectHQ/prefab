@@ -7,7 +7,7 @@ from prefab_ui.actions import *
 
 with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
 
-    # ── Column 1: Form + Ship Status + Metrics ──────────────────────
+    # ── Col 1 ─────────────────────────────────────────────────────────
     with Column(gap=4):
         with Card():
             with CardHeader():
@@ -15,226 +15,163 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                 CardDescription("The most important item in the galaxy")
             with CardContent():
                 with Column(gap=3):
-                    Input(placeholder="Towel name...")
-                    owner_input = Input(placeholder="Owner name...")
-                    with Combobox(placeholder="Type...", search_placeholder="Search types..."):
+                    owner_input = Input(
+                        placeholder="Owner name...", name="owner",
+                    )
+                    with Combobox(
+                        placeholder="Type...",
+                        search_placeholder="Search types...",
+                    ):
                         ComboboxOption("Bath", value="bath")
                         ComboboxOption("Beach", value="beach")
                         ComboboxOption("Interstellar", value="interstellar")
                         ComboboxOption("Microfiber", value="micro")
                     DatePicker(placeholder="Registration date")
-                    Checkbox(label="Panic-proof certified", checked=True)
             with CardFooter():
                 with Row(gap=2):
                     with Dialog(
                         title="Towel Registered!",
-                        description="Your towel has been added to the galactic registry.",
+                        description=(
+                            "Your towel has been added to the "
+                            "galactic registry."
+                        ),
                     ):
                         Button("Register")
                         with If("{{ owner }}"):
-                            Text(f"Thanks, {owner_input.rx}. Don't forget to bring it.")
+                            Text(
+                                f"Thanks, {owner_input.rx}. "
+                                "Don't forget to bring it."
+                            )
                         with Else():
-                            Text("Anonymous, I see? Don't forget to bring it.")
+                            Text(
+                                "Anonymous, I see? "
+                                "Don't forget to bring it."
+                            )
                     Button("Cancel", variant="outline")
         with Card():
             with CardHeader():
                 CardTitle("Ship Status")
             with CardContent():
                 with Column(gap=3):
-                    with Row(align="center", css_class="justify-between"):
+                    with Row(
+                        align="center", css_class="justify-between",
+                    ):
                         Text("heart-of-gold")
                         with HoverCard(open_delay=0, close_delay=200):
                             Badge("In Orbit", variant="default")
                             with Column(gap=2):
                                 Text("heart-of-gold")
                                 Muted("Deployed 2h ago")
-                                Progress(value=100, max=100, indicator_class="bg-green-500")
-                    Progress(value=100, max=100, indicator_class="bg-green-500")
-                    with Row(align="center", css_class="justify-between"):
+                                Progress(
+                                    value=100, max=100, variant='success'
+                                )
+                    Progress(
+                        value=100, max=100,
+                        indicator_class="bg-yellow-400",
+                    )
+                    with Row(
+                        align="center", css_class="justify-between",
+                    ):
                         Text("vogon-poetry")
                         with Tooltip("64% — ETA 12 min", delay=0):
                             with Badge(variant="secondary"):
                                 Loader(size="sm")
                                 Text("Deploying")
                     Progress(value=64, max=100)
-                    with Row(align="center", css_class="justify-between"):
-                        Text("bistromath")
-                        with Tooltip("Position 3 of 8", delay=0):
-                            Badge("Queued", variant="outline")
-                    Progress(value=12, max=100)
-                    with Row(align="center", css_class="justify-between"):
+                    with Row(
+                        align="center", css_class="justify-between",
+                    ):
                         Text("deep-thought")
-                        with Tooltip("Computing... 7.5 million years remaining", delay=0):
-                            Loader(variant="ios", size="sm")
-        with Card():
-            with CardContent():
-                with Grid(columns=2, gap=4):
-                    Metric(label="Queries", value="1,842", delta="+23%")
-                    Metric(label="Tool Calls", value="5,200", delta="+34%")
-
-    # ── Column 2: Charts + Context + DataTable ───────────────────────
-    with Column(gap=4):
+                        with Tooltip(
+                            "Computing... 7.5 million years remaining",
+                            delay=0,
+                        ):
+                            with Badge( variant="outline"):
+                                Loader(size="sm", variant="ios")
+                                Text("Soon...")
+                    Progress(value=12, max=100)
         with Card():
             with CardHeader():
-                with Row(align="center", css_class="justify-between"):
-                    CardTitle("Agent Queries")
-                    with Combobox(
-                        placeholder="6 months",
-                        name="period",
-                        search_placeholder="Filter...",
-                    ):
-                        ComboboxOption("3 months", value="3m")
-                        ComboboxOption("6 months", value="6m")
-                        ComboboxOption("1 year", value="1y")
+                CardTitle("Planet Ratings")
             with CardContent():
-                BarChart(
+                RadarChart(
                     data=[
-                        {"month": "Jan", "queries": 820, "tool_calls": 2400},
-                        {"month": "Feb", "queries": 1100, "tool_calls": 3200},
-                        {"month": "Mar", "queries": 950, "tool_calls": 2800},
-                        {"month": "Apr", "queries": 1400, "tool_calls": 4100},
-                        {"month": "May", "queries": 1300, "tool_calls": 3900},
-                        {"month": "Jun", "queries": 1842, "tool_calls": 5200},
+                        {"axis": "Views", "earth": 30, "mag": 95},
+                        {"axis": "Fjords", "earth": 65, "mag": 100},
+                        {"axis": "Pubs", "earth": 90, "mag": 10},
+                        {"axis": "Mice", "earth": 40, "mag": 85},
+                        {"axis": "Tea", "earth": 95, "mag": 15},
+                        {"axis": "Safety", "earth": 45, "mag": 70},
                     ],
                     series=[
-                        ChartSeries(dataKey="queries", label="Queries"),
-                        ChartSeries(dataKey="tool_calls", label="Tool Calls"),
+                        ChartSeries(
+                            dataKey="earth", label="Earth",
+                        ),
+                        ChartSeries(
+                            dataKey="mag", label="Magrathea",
+                        ),
                     ],
-                    x_axis="month", height=200, bar_radius=4,
-                    show_legend=True, show_tooltip=True, show_grid=True,
+                    axis_key="axis", height=200,
+                    show_legend=True, show_tooltip=True,
                 )
+    # ── Col 2 ─────────────────────────────────────────────────────────
+    with Column(gap=4):
         with Card():
             with CardHeader():
-                with Row(gap=2, align="center"):
-                    CardTitle("Context Window")
-                    Loader(variant="bars", size="sm")
-            with CardContent():
-                with Column(gap=2):
-                    with Row(align="center", css_class="justify-between"):
-                        Text("45% used")
-                        Muted("90k / 200k tokens")
-                    with Tooltip("Auto-compact buffer: 12%", delay=0):
-                        Progress(value=45, max=100)
-        with Card():
-            with CardContent():
-                DataTable(
-                    columns=[
-                        DataTableColumn(key="crew", header="Crew", sortable=True),
-                        DataTableColumn(key="species", header="Species", sortable=True),
-                        DataTableColumn(key="towel", header="Towel?", sortable=True),
-                        DataTableColumn(key="status", header="Status", sortable=True),
-                    ],
-                    rows=[
-                        {"crew": "Arthur Dent", "species": "Human",
-                        "towel": "Yes", "status": "Confused"},
-                        {"crew": "Ford Prefect", "species": "Betelgeusian",
-                        "towel": "Always", "status": "Drinking"},
-                        {"crew": "Zaphod", "species": "Betelgeusian",
-                        "towel": "Lost it", "status": "Presidential"},
-                        {"crew": "Trillian", "species": "Human",
-                        "towel": "Yes", "status": "Navigating"},
-                        {"crew": "Marvin", "species": "Android",
-                        "towel": "No point", "status": "Depressed"},
-                        {"crew": "Slartibartfast", "species": "Magrathean",
-                        "towel": "Somewhere", "status": "Designing"},
-                    ],
-                    searchable=True, paginated=False,
+                CardTitle("Survival Odds")
+            with CardContent(css_class="w-fit mx-auto"):
+                Ring(
+                    value=42, label="42%",
+                    variant="info", size="lg",
+                    thickness=12,
+                    indicator_class="group-hover:drop-shadow-[0_0_24px_rgba(59,130,246,0.9)]",
                 )
-
-    # ── Column 3: Controls + Config + Ring + Accordion ───────────────
-    with Column(gap=4):
         with Card():
             with CardHeader():
                 with Row(gap=2, align="center"):
                     CardTitle("Improbability Drive")
-                    Loader(variant="pulse", size="sm", css_class="text-blue-500")
+                    Loader(
+                        variant="pulse", size="sm",
+                        css_class="text-blue-500",
+                    )
             with CardContent():
                 with Column(gap=2):
-                    Slider(min=0, max=100, value=42, name="improbability")
-                    with Row(align="center", css_class="justify-between"):
+                    Slider(
+                        min=0, max=100, value=42, name="improbability",
+                    )
+                    with Row(
+                        align="center", css_class="justify-between",
+                    ):
                         Muted("Probable")
                         Muted("Infinite")
+        with Alert(variant="success", icon="circle-check"):
+            AlertTitle("Don't Panic")
+            AlertDescription(
+                "Normality achieved.",
+            )
         with Card():
             with CardHeader():
-                CardTitle("Horizon Agent Config")
+                CardTitle("Prefect Horizon Config")
             with CardContent():
                 with Column(gap=3):
-                    Switch(label="Auto-scale agents", checked=True, name="autoscale")
+                    Switch(
+                        label="Auto-scale agents", checked=True,
+                        name="autoscale",
+                    )
                     Separator()
-                    Switch(label="Tool call caching", checked=False, name="cache")
+                    Switch(
+                        label="Code Mode", checked=True,
+                        name="code_mode",
+                    )
                     Separator()
-                    Switch(label="Failure notifications", checked=True, name="fail_notifs")
+                    Switch(
+                        label="Tool call caching", checked=False,
+                        name="cache",
+                    )
             with CardFooter():
-                Button("Save Preferences", on_click=ShowToast("Preferences saved!"))
-        with Card():
-            with CardHeader():
-                CardTitle("Survival Odds")
-            with CardContent():
-                with Row(align="center", css_class="justify-around"):
-                    Ring(value=42, label="42%", variant="info", size="lg")
-                    with Column(gap=1, align="center"):
-                        Large("42%")
-                        Muted("Probability")
-        with Alert(variant="success", icon="check-circle"):
-            AlertTitle("Don't Panic")
-            AlertDescription("All 42 deployments are running normally.")
-        with Accordion(multiple=True, default_open_items=[0]):
-            with AccordionItem("What is Prefab?"):
-                Text("A frontend framework with a Python DSL that compiles to JSON.")
-            with AccordionItem("Is it safe?"):
-                Text("Mostly harmless.")
-            with AccordionItem("Should I bring a towel?"):
-                Text("Always.")
-
-    # ── Column 4: Feedback + Interactive + Pie ───────────────────────
-    with Column(gap=4):
-        with Card():
-            with CardHeader():
-                CardTitle("Marvin's Mood")
-            with CardContent():
-                with Tabs():
-                    with Tab("Feedback"):
-                        with Column(gap=3, css_class="pt-3"):
-                            with Row(gap=2, css_class="flex-wrap"):
-                                Button(
-                                    "Improbable",
-                                    on_click=ShowToast(
-                                        "Improbability factor: 2 to the 279th to 1 against"
-                                    ),
-                                )
-                                Button(
-                                    "Meh", variant="secondary",
-                                    on_click=ShowToast("Noted. Enthusiasm levels nominal."),
-                                )
-                                Button(
-                                    "Depressed", variant="outline",
-                                    on_click=ShowToast(
-                                        "I think you ought to know I'm feeling very depressed."
-                                    ),
-                                )
-                            Textarea(
-                                placeholder="Brain the size of a planet...",
-                                name="feedback",
-                            )
-                    with Tab("Status"):
-                        with Column(gap=2, css_class="pt-3"):
-                            with Row(gap=2, align="center"):
-                                Loader(variant="dots", size="sm")
-                                Muted("Marvin is thinking...")
-                            Progress(value=1, max=100)
-                            Muted("Enthusiasm: negligible")
-        with Column(gap=3):
-            with If("!pressed"):
                 Button(
-                    "This is probably the best button to press.",
-                    variant="info",
-                    on_click=SetState("pressed", True),
-                )
-            with Else():
-                Button(
-                    "Please do not press this button again.",
-                    variant="secondary",
-                    on_click=SetState("pressed", False),
+                    "Save Preferences",
+                    on_click=ShowToast("Preferences saved!"),
                 )
         with Card():
             with CardHeader():
@@ -242,31 +179,248 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             with CardContent():
                 with RadioGroup(name="travel_class"):
                     Radio(value="economy", label="Economy")
-                    Radio(value="business", label="Business Class")
-                    Radio(value="improbability", label="Infinite Improbability", checked=True)
-        with Card():
-            with CardHeader():
-                CardTitle("Towel Distribution")
-            with CardContent():
-                PieChart(
-                    data=[
-                        {"type": "Bath", "count": 17},
-                        {"type": "Beach", "count": 8},
-                        {"type": "Interstellar", "count": 1},
-                        {"type": "Emergency", "count": 12},
-                        {"type": "Decorative", "count": 4},
-                    ],
-                    data_key="count",
-                    name_key="type",
-                    inner_radius=60,
-                    height=200,
-                    show_tooltip=True,
-                    show_legend=True,
-                )
-        with Alert(variant="warning", icon="alert-triangle"):
-            AlertTitle("Babel Fish Advisory")
-            AlertDescription("Insert in ear before approaching Vogons.")
+                    Radio(
+                        value="business", label="Business Class",
+                    )
+                    Radio(
+                        value="improbability",
+                        label="Infinite Improbability",
+                        checked=True,
+                    )
 
+    # ── Cols 3–4: summary row, chart, then 2-col grid below ─────────
+    with GridItem(col_span=2):
+        with Column(gap=4):
+            with Grid(columns=2, gap=4):
+                with Card():
+                    with CardHeader():
+                        with Row(gap=2, align="center"):
+                            CardTitle("Context Window")
+                            Loader(variant="bars", size="sm")
+                    with CardContent():
+                        with Column(gap=2):
+                            with Row(
+                                align="center",
+                                css_class="justify-between",
+                            ):
+                                Text("45% used")
+                                Muted("90k / 200k tokens")
+                            with Tooltip(
+                                "Auto-compact buffer: 12%",
+                                delay=0,
+                            ):
+                                Progress(value=45, max=100)
+                with Card():
+                    with CardContent():
+                        Metric(
+                            label="Fjords designed",
+                            value="1,847",
+                            delta="+3 coastlines",
+                        )
+            with Card():
+                with CardHeader():
+                    CardTitle("Towel Incidents")
+                with CardContent():
+                    BarChart(
+                        data=[
+                            {"month": "Jan", "lost": 8, "found": 5},
+                            {"month": "Feb", "lost": 24, "found": 15},
+                            {"month": "Mar", "lost": 12, "found": 28},
+                            {"month": "Apr", "lost": 35, "found": 19},
+                            {"month": "May", "lost": 18, "found": 38},
+                            {"month": "Jun", "lost": 42, "found": 30},
+                        ],
+                        series=[
+                            ChartSeries(
+                                dataKey="lost", label="Lost",
+                            ),
+                            ChartSeries(
+                                dataKey="found", label="Found",
+                            ),
+                        ],
+                        x_axis="month", height=200, bar_radius=4,
+                        show_legend=True, show_tooltip=True,
+                        show_grid=True,
+                    )
+
+            with Grid(columns=2, gap=4):
+                with Column(gap=4):
+                    with Card():
+                        with CardContent():
+                            with Column(gap=2):
+                                Checkbox(
+                                    label="Towel packed",
+                                    checked=True,
+                                )
+                                Checkbox(
+                                    label="Guide charged",
+                                    checked=True,
+                                )
+                                Checkbox(
+                                    label="Babel fish inserted",
+                                    checked=False,
+                                )
+                    with Card():
+                        with CardHeader():
+                            CardTitle("Marvin's Mood")
+                        with CardContent():
+                            with Column(gap=3):
+                                P(
+                                    "How's life?"
+                                )
+                                with Row(gap=2, align="center"):
+                                    Loader(variant="dots", size="sm")
+                                    Muted("Marvin is thinking...")
+                                with Column(gap=2):
+                                    Button(
+                                        "Meh",
+                                        on_click=ShowToast(
+                                            "Noted. Enthusiasm "
+                                            "levels nominal."
+                                        ),
+                                    )
+                                    Button(
+                                        "Depressed",
+                                        variant="secondary",
+                                        on_click=ShowToast(
+                                            "I think you ought to "
+                                            "know I'm feeling very "
+                                            "depressed."
+                                        ),
+                                    )
+                                    Button(
+                                        "Don't talk to me about life",
+                                        variant="outline",
+                                        on_click=ShowToast(
+                                            "Brain the size of a "
+                                            "planet and they ask me "
+                                            "to pick up a piece of "
+                                            "paper."
+                                        ),
+                                    )
+                    with Alert(variant="destructive", icon="triangle-alert"):
+                        AlertTitle("Beware of the Leopard")
+                        
+
+                with Column(gap=4):
+                    with Column(gap=3):
+                        with If("{{ !pressed }}"):
+                            Button(
+                                "This is probably the best "
+                                "button to press.",
+                                variant="info",
+                                on_click=SetState(
+                                    "pressed", True,
+                                ),
+                            )
+                        with Else():
+                            Button(
+                                "Please do not press this "
+                                "button again.",
+                                variant="destructive",
+                                on_click=SetState(
+                                    "pressed", False,
+                                ),
+                            )
+                    with Card():
+                        with CardContent():
+                            DataTable(
+                                columns=[
+                                    DataTableColumn(
+                                        key="crew", header="Crew",
+                                        sortable=True,
+                                    ),
+                                    DataTableColumn(
+                                        key="species",
+                                        header="Species",
+                                        sortable=True,
+                                    ),
+                                    DataTableColumn(
+                                        key="towel", header="Towel?",
+                                        sortable=True,
+                                    ),
+                                    DataTableColumn(
+                                        key="status",
+                                        header="Status",
+                                        sortable=True,
+                                    ),
+                                ],
+                                rows=[
+                                    {"crew": "Arthur Dent", "species": "Human",
+                                     "towel": "Yes", "status": "Confused"},
+                                    {"crew": "Ford Prefect", "species": "Betelgeusian",
+                                     "towel": "Always", "status": "Drinking"},
+                                    {"crew": "Zaphod", "species": "Betelgeusian",
+                                     "towel": "Lost it", "status": "Presidential"},
+                                    {"crew": "Trillian", "species": "Human",
+                                     "towel": "Yes", "status": "Navigating"},
+                                    {"crew": "Marvin", "species": "Android",
+                                     "towel": "No point", "status": "Depressed"},
+                                    {"crew": "Slartibartfast", "species": "Magrathean",
+                                     "towel": "Somewhere", "status": "Designing"},
+                                ],
+                                searchable=True, paginated=False,
+                            )
+                    with Card():
+                        with CardHeader():
+                            CardTitle("MCP Servers")
+                            CardDescription(
+                                "Deployed on Horizon",
+                            )
+                        with CardContent():
+                            with Column(gap=2):
+                                with Row(
+                                    align="center",
+                                    css_class="justify-between",
+                                ):
+                                    Text("weather-api")
+                                    with Tooltip(
+                                        "Uptime: 99.97%",
+                                        delay=0,
+                                    ):
+                                        Badge(
+                                            "Healthy",
+                                            variant="default",
+                                        )
+                                Separator()
+                                with Row(
+                                    align="center",
+                                    css_class="justify-between",
+                                ):
+                                    Text("doc-search")
+                                    with Tooltip(
+                                        "Uptime: 99.94%",
+                                        delay=0,
+                                    ):
+                                        Badge(
+                                            "Healthy",
+                                            variant="default",
+                                        )
+                                Separator()
+                                with Row(
+                                    align="center",
+                                    css_class="justify-between",
+                                ):
+                                    Text("marvin-brain")
+                                    with HoverCard(
+                                        open_delay=0,
+                                        close_delay=200,
+                                    ):
+                                        Badge(
+                                            "Depressed",
+                                            variant="secondary",
+                                        )
+                                        with Column(gap=2):
+                                            Text("marvin-brain")
+                                            Muted(
+                                                "Uptime: 100% — "
+                                                "not that it "
+                                                "matters"
+                                            )
+                                            Progress(
+                                                value=100,
+                                                max=100,
+                                            )
 ```
 ```json Protocol icon="brackets-curly" expandable
 {
@@ -296,16 +450,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "type": "Column",
                     "children": [
                       {
-                        "name": "input_22",
-                        "type": "Input",
-                        "inputType": "text",
-                        "placeholder": "Towel name...",
-                        "disabled": false,
-                        "readOnly": false,
-                        "required": false
-                      },
-                      {
-                        "name": "input_23",
+                        "name": "owner",
                         "type": "Input",
                         "inputType": "text",
                         "placeholder": "Owner name...",
@@ -345,14 +490,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "name": "datepicker_4",
                         "type": "DatePicker",
                         "placeholder": "Registration date"
-                      },
-                      {
-                        "name": "checkbox_12",
-                        "type": "Checkbox",
-                        "label": "Panic-proof certified",
-                        "checked": true,
-                        "disabled": false,
-                        "required": false
                       }
                     ]
                   }
@@ -382,9 +519,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             "cases": [
                               {
                                 "when": "{{ owner }}",
-                                "children": [
-                                  {"content": "Thanks, {{ input_23 }}. Don't forget to bring it.", "type": "Text"}
-                                ]
+                                "children": [{"content": "Thanks, {{ owner }}. Don't forget to bring it.", "type": "Text"}]
                               }
                             ],
                             "else": [{"content": "Anonymous, I see? Don't forget to bring it.", "type": "Text"}]
@@ -440,8 +575,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                     "value": 100.0,
                                     "min": 0,
                                     "max": 100.0,
-                                    "variant": "default",
-                                    "indicatorClass": "bg-green-500"
+                                    "variant": "success"
                                   }
                                 ]
                               }
@@ -455,7 +589,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "min": 0,
                         "max": 100.0,
                         "variant": "default",
-                        "indicatorClass": "bg-green-500"
+                        "indicatorClass": "bg-yellow-400"
                       },
                       {
                         "cssClass": "items-center justify-between",
@@ -490,12 +624,21 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "cssClass": "items-center justify-between",
                         "type": "Row",
                         "children": [
-                          {"content": "bistromath", "type": "Text"},
+                          {"content": "deep-thought", "type": "Text"},
                           {
                             "type": "Tooltip",
-                            "content": "Position 3 of 8",
+                            "content": "Computing... 7.5 million years remaining",
                             "delay": 0,
-                            "children": [{"type": "Badge", "label": "Queued", "variant": "outline"}]
+                            "children": [
+                              {
+                                "type": "Badge",
+                                "variant": "outline",
+                                "children": [
+                                  {"type": "Loader", "variant": "ios", "size": "sm"},
+                                  {"content": "Soon...", "type": "Text"}
+                                ]
+                              }
+                            ]
                           }
                         ]
                       },
@@ -505,19 +648,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "min": 0,
                         "max": 100.0,
                         "variant": "default"
-                      },
-                      {
-                        "cssClass": "items-center justify-between",
-                        "type": "Row",
-                        "children": [
-                          {"content": "deep-thought", "type": "Text"},
-                          {
-                            "type": "Tooltip",
-                            "content": "Computing... 7.5 million years remaining",
-                            "delay": 0,
-                            "children": [{"type": "Loader", "variant": "ios", "size": "sm"}]
-                          }
-                        ]
                       }
                     ]
                   }
@@ -529,196 +659,33 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             "type": "Card",
             "children": [
               {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "cssClass": "gap-4 grid-cols-2",
-                    "type": "Grid",
-                    "children": [
-                      {"type": "Metric", "label": "Queries", "value": "1,842", "delta": "+23%"},
-                      {"type": "Metric", "label": "Tool Calls", "value": "5,200", "delta": "+34%"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "cssClass": "gap-4",
-        "type": "Column",
-        "children": [
-          {
-            "type": "Card",
-            "children": [
-              {
                 "type": "CardHeader",
-                "children": [
-                  {
-                    "cssClass": "items-center justify-between",
-                    "type": "Row",
-                    "children": [
-                      {"type": "CardTitle", "content": "Agent Queries"},
-                      {
-                        "name": "period",
-                        "type": "Combobox",
-                        "placeholder": "6 months",
-                        "searchPlaceholder": "Filter...",
-                        "disabled": false,
-                        "children": [
-                          {
-                            "type": "ComboboxOption",
-                            "value": "3m",
-                            "label": "3 months",
-                            "disabled": false
-                          },
-                          {
-                            "type": "ComboboxOption",
-                            "value": "6m",
-                            "label": "6 months",
-                            "disabled": false
-                          },
-                          {"type": "ComboboxOption", "value": "1y", "label": "1 year", "disabled": false}
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "children": [{"type": "CardTitle", "content": "Planet Ratings"}]
               },
               {
                 "type": "CardContent",
                 "children": [
                   {
-                    "type": "BarChart",
+                    "type": "RadarChart",
                     "data": [
-                      {"month": "Jan", "queries": 820, "tool_calls": 2400},
-                      {"month": "Feb", "queries": 1100, "tool_calls": 3200},
-                      {"month": "Mar", "queries": 950, "tool_calls": 2800},
-                      {"month": "Apr", "queries": 1400, "tool_calls": 4100},
-                      {"month": "May", "queries": 1300, "tool_calls": 3900},
-                      {"month": "Jun", "queries": 1842, "tool_calls": 5200}
+                      {"axis": "Views", "earth": 30, "mag": 95},
+                      {"axis": "Fjords", "earth": 65, "mag": 100},
+                      {"axis": "Pubs", "earth": 90, "mag": 10},
+                      {"axis": "Mice", "earth": 40, "mag": 85},
+                      {"axis": "Tea", "earth": 95, "mag": 15},
+                      {"axis": "Safety", "earth": 45, "mag": 70}
                     ],
                     "series": [
-                      {"dataKey": "queries", "label": "Queries"},
-                      {"dataKey": "tool_calls", "label": "Tool Calls"}
+                      {"dataKey": "earth", "label": "Earth"},
+                      {"dataKey": "mag", "label": "Magrathea"}
                     ],
-                    "xAxis": "month",
+                    "axisKey": "axis",
                     "height": 200,
-                    "stacked": false,
-                    "horizontal": false,
-                    "barRadius": 4,
+                    "filled": true,
+                    "showDots": false,
                     "showLegend": true,
                     "showTooltip": true,
-                    "showGrid": true,
-                    "showYAxis": true,
-                    "yAxisFormat": "auto"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [
-                  {
-                    "cssClass": "gap-2 items-center",
-                    "type": "Row",
-                    "children": [
-                      {"type": "CardTitle", "content": "Context Window"},
-                      {"type": "Loader", "variant": "bars", "size": "sm"}
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "cssClass": "gap-2",
-                    "type": "Column",
-                    "children": [
-                      {
-                        "cssClass": "items-center justify-between",
-                        "type": "Row",
-                        "children": [
-                          {"content": "45% used", "type": "Text"},
-                          {"content": "90k / 200k tokens", "type": "Muted"}
-                        ]
-                      },
-                      {
-                        "type": "Tooltip",
-                        "content": "Auto-compact buffer: 12%",
-                        "delay": 0,
-                        "children": [
-                          {
-                            "type": "Progress",
-                            "value": 45.0,
-                            "min": 0,
-                            "max": 100.0,
-                            "variant": "default"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "type": "DataTable",
-                    "columns": [
-                      {"key": "crew", "header": "Crew", "sortable": true},
-                      {"key": "species", "header": "Species", "sortable": true},
-                      {"key": "towel", "header": "Towel?", "sortable": true},
-                      {"key": "status", "header": "Status", "sortable": true}
-                    ],
-                    "rows": [
-                      {
-                        "crew": "Arthur Dent",
-                        "species": "Human",
-                        "towel": "Yes",
-                        "status": "Confused"
-                      },
-                      {
-                        "crew": "Ford Prefect",
-                        "species": "Betelgeusian",
-                        "towel": "Always",
-                        "status": "Drinking"
-                      },
-                      {
-                        "crew": "Zaphod",
-                        "species": "Betelgeusian",
-                        "towel": "Lost it",
-                        "status": "Presidential"
-                      },
-                      {"crew": "Trillian", "species": "Human", "towel": "Yes", "status": "Navigating"},
-                      {
-                        "crew": "Marvin",
-                        "species": "Android",
-                        "towel": "No point",
-                        "status": "Depressed"
-                      },
-                      {
-                        "crew": "Slartibartfast",
-                        "species": "Magrathean",
-                        "towel": "Somewhere",
-                        "status": "Designing"
-                      }
-                    ],
-                    "searchable": true,
-                    "paginated": false,
-                    "pageSize": 10
+                    "showGrid": true
                   }
                 ]
               }
@@ -730,6 +697,32 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
         "cssClass": "gap-4",
         "type": "Column",
         "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [{"type": "CardTitle", "content": "Survival Odds"}]
+              },
+              {
+                "cssClass": "w-fit mx-auto",
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Ring",
+                    "value": 42.0,
+                    "min": 0,
+                    "max": 100,
+                    "label": "42%",
+                    "variant": "info",
+                    "size": "lg",
+                    "thickness": 12.0,
+                    "indicatorClass": "group-hover:drop-shadow-[0_0_24px_rgba(59,130,246,0.9)]"
+                  }
+                ]
+              }
+            ]
+          },
           {
             "type": "Card",
             "children": [
@@ -781,11 +774,20 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             ]
           },
           {
+            "type": "Alert",
+            "variant": "success",
+            "icon": "circle-check",
+            "children": [
+              {"type": "AlertTitle", "content": "Don't Panic"},
+              {"type": "AlertDescription", "content": "Normality achieved."}
+            ]
+          },
+          {
             "type": "Card",
             "children": [
               {
                 "type": "CardHeader",
-                "children": [{"type": "CardTitle", "content": "Horizon Agent Config"}]
+                "children": [{"type": "CardTitle", "content": "Prefect Horizon Config"}]
               },
               {
                 "type": "CardContent",
@@ -805,20 +807,20 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                       },
                       {"type": "Separator", "orientation": "horizontal"},
                       {
-                        "name": "cache",
+                        "name": "code_mode",
                         "type": "Switch",
-                        "label": "Tool call caching",
-                        "checked": false,
+                        "label": "Code Mode",
+                        "checked": true,
                         "size": "default",
                         "disabled": false,
                         "required": false
                       },
                       {"type": "Separator", "orientation": "horizontal"},
                       {
-                        "name": "fail_notifs",
+                        "name": "cache",
                         "type": "Switch",
-                        "label": "Failure notifications",
-                        "checked": true,
+                        "label": "Tool call caching",
+                        "checked": false,
                         "size": "default",
                         "disabled": false,
                         "required": false
@@ -837,225 +839,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "size": "default",
                     "disabled": false,
                     "onClick": {"action": "showToast", "message": "Preferences saved!"}
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [{"type": "CardTitle", "content": "Survival Odds"}]
-              },
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "cssClass": "items-center justify-around",
-                    "type": "Row",
-                    "children": [
-                      {
-                        "type": "Ring",
-                        "value": 42.0,
-                        "min": 0,
-                        "max": 100,
-                        "label": "42%",
-                        "variant": "info",
-                        "size": "lg",
-                        "thickness": 6
-                      },
-                      {
-                        "cssClass": "gap-1 items-center",
-                        "type": "Column",
-                        "children": [
-                          {"content": "42%", "type": "Large"},
-                          {"content": "Probability", "type": "Muted"}
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "Alert",
-            "variant": "success",
-            "icon": "check-circle",
-            "children": [
-              {"type": "AlertTitle", "content": "Don't Panic"},
-              {
-                "type": "AlertDescription",
-                "content": "All 42 deployments are running normally."
-              }
-            ]
-          },
-          {
-            "type": "Accordion",
-            "multiple": true,
-            "collapsible": true,
-            "defaultValues": ["What is Prefab?"],
-            "children": [
-              {
-                "type": "AccordionItem",
-                "title": "What is Prefab?",
-                "children": [
-                  {
-                    "content": "A frontend framework with a Python DSL that compiles to JSON.",
-                    "type": "Text"
-                  }
-                ]
-              },
-              {
-                "type": "AccordionItem",
-                "title": "Is it safe?",
-                "children": [{"content": "Mostly harmless.", "type": "Text"}]
-              },
-              {
-                "type": "AccordionItem",
-                "title": "Should I bring a towel?",
-                "children": [{"content": "Always.", "type": "Text"}]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "cssClass": "gap-4",
-        "type": "Column",
-        "children": [
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [{"type": "CardTitle", "content": "Marvin's Mood"}]
-              },
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "name": "tabs_6",
-                    "type": "Tabs",
-                    "variant": "default",
-                    "orientation": "horizontal",
-                    "children": [
-                      {
-                        "type": "Tab",
-                        "title": "Feedback",
-                        "disabled": false,
-                        "children": [
-                          {
-                            "cssClass": "gap-3 pt-3",
-                            "type": "Column",
-                            "children": [
-                              {
-                                "cssClass": "gap-2 flex-wrap",
-                                "type": "Row",
-                                "children": [
-                                  {
-                                    "type": "Button",
-                                    "label": "Improbable",
-                                    "variant": "default",
-                                    "size": "default",
-                                    "disabled": false,
-                                    "onClick": {
-                                      "action": "showToast",
-                                      "message": "Improbability factor: 2 to the 279th to 1 against"
-                                    }
-                                  },
-                                  {
-                                    "type": "Button",
-                                    "label": "Meh",
-                                    "variant": "secondary",
-                                    "size": "default",
-                                    "disabled": false,
-                                    "onClick": {"action": "showToast", "message": "Noted. Enthusiasm levels nominal."}
-                                  },
-                                  {
-                                    "type": "Button",
-                                    "label": "Depressed",
-                                    "variant": "outline",
-                                    "size": "default",
-                                    "disabled": false,
-                                    "onClick": {
-                                      "action": "showToast",
-                                      "message": "I think you ought to know I'm feeling very depressed."
-                                    }
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "feedback",
-                                "type": "Textarea",
-                                "placeholder": "Brain the size of a planet...",
-                                "disabled": false,
-                                "required": false
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "Tab",
-                        "title": "Status",
-                        "disabled": false,
-                        "children": [
-                          {
-                            "cssClass": "gap-2 pt-3",
-                            "type": "Column",
-                            "children": [
-                              {
-                                "cssClass": "gap-2 items-center",
-                                "type": "Row",
-                                "children": [
-                                  {"type": "Loader", "variant": "dots", "size": "sm"},
-                                  {"content": "Marvin is thinking...", "type": "Muted"}
-                                ]
-                              },
-                              {"type": "Progress", "value": 1.0, "min": 0, "max": 100.0, "variant": "default"},
-                              {"content": "Enthusiasm: negligible", "type": "Muted"}
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "cssClass": "gap-3",
-            "type": "Column",
-            "children": [
-              {
-                "type": "Condition",
-                "cases": [
-                  {
-                    "when": "{{ !pressed }}",
-                    "children": [
-                      {
-                        "type": "Button",
-                        "label": "This is probably the best button to press.",
-                        "variant": "info",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {"action": "setState", "key": "pressed", "value": true}
-                      }
-                    ]
-                  }
-                ],
-                "else": [
-                  {
-                    "type": "Button",
-                    "label": "Please do not press this button again.",
-                    "variant": "secondary",
-                    "size": "default",
-                    "disabled": false,
-                    "onClick": {"action": "setState", "key": "pressed", "value": false}
                   }
                 ]
               }
@@ -1107,48 +890,425 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                 ]
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        "type": "GridItem",
+        "colSpan": 2,
+        "rowSpan": 1,
+        "children": [
           {
-            "type": "Card",
+            "cssClass": "gap-4",
+            "type": "Column",
             "children": [
               {
-                "type": "CardHeader",
-                "children": [{"type": "CardTitle", "content": "Towel Distribution"}]
-              },
-              {
-                "type": "CardContent",
+                "cssClass": "gap-4 grid-cols-2",
+                "type": "Grid",
                 "children": [
                   {
-                    "type": "PieChart",
-                    "data": [
-                      {"type": "Bath", "count": 17},
-                      {"type": "Beach", "count": 8},
-                      {"type": "Interstellar", "count": 1},
-                      {"type": "Emergency", "count": 12},
-                      {"type": "Decorative", "count": 4}
-                    ],
-                    "dataKey": "count",
-                    "nameKey": "type",
-                    "height": 200,
-                    "innerRadius": 60,
-                    "showLabel": false,
-                    "paddingAngle": 0,
-                    "showLegend": true,
-                    "showTooltip": true
+                    "type": "Card",
+                    "children": [
+                      {
+                        "type": "CardHeader",
+                        "children": [
+                          {
+                            "cssClass": "gap-2 items-center",
+                            "type": "Row",
+                            "children": [
+                              {"type": "CardTitle", "content": "Context Window"},
+                              {"type": "Loader", "variant": "bars", "size": "sm"}
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "CardContent",
+                        "children": [
+                          {
+                            "cssClass": "gap-2",
+                            "type": "Column",
+                            "children": [
+                              {
+                                "cssClass": "items-center justify-between",
+                                "type": "Row",
+                                "children": [
+                                  {"content": "45% used", "type": "Text"},
+                                  {"content": "90k / 200k tokens", "type": "Muted"}
+                                ]
+                              },
+                              {
+                                "type": "Tooltip",
+                                "content": "Auto-compact buffer: 12%",
+                                "delay": 0,
+                                "children": [
+                                  {
+                                    "type": "Progress",
+                                    "value": 45.0,
+                                    "min": 0,
+                                    "max": 100.0,
+                                    "variant": "default"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Card",
+                    "children": [
+                      {
+                        "type": "CardContent",
+                        "children": [
+                          {
+                            "type": "Metric",
+                            "label": "Fjords designed",
+                            "value": "1,847",
+                            "delta": "+3 coastlines"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "type": "Alert",
-            "variant": "warning",
-            "icon": "alert-triangle",
-            "children": [
-              {"type": "AlertTitle", "content": "Babel Fish Advisory"},
+              },
               {
-                "type": "AlertDescription",
-                "content": "Insert in ear before approaching Vogons."
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardHeader",
+                    "children": [{"type": "CardTitle", "content": "Towel Incidents"}]
+                  },
+                  {
+                    "type": "CardContent",
+                    "children": [
+                      {
+                        "type": "BarChart",
+                        "data": [
+                          {"month": "Jan", "lost": 8, "found": 5},
+                          {"month": "Feb", "lost": 24, "found": 15},
+                          {"month": "Mar", "lost": 12, "found": 28},
+                          {"month": "Apr", "lost": 35, "found": 19},
+                          {"month": "May", "lost": 18, "found": 38},
+                          {"month": "Jun", "lost": 42, "found": 30}
+                        ],
+                        "series": [{"dataKey": "lost", "label": "Lost"}, {"dataKey": "found", "label": "Found"}],
+                        "xAxis": "month",
+                        "height": 200,
+                        "stacked": false,
+                        "horizontal": false,
+                        "barRadius": 4,
+                        "showLegend": true,
+                        "showTooltip": true,
+                        "showGrid": true,
+                        "showYAxis": true,
+                        "yAxisFormat": "auto"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cssClass": "gap-4 grid-cols-2",
+                "type": "Grid",
+                "children": [
+                  {
+                    "cssClass": "gap-4",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "type": "Card",
+                        "children": [
+                          {
+                            "type": "CardContent",
+                            "children": [
+                              {
+                                "cssClass": "gap-2",
+                                "type": "Column",
+                                "children": [
+                                  {
+                                    "name": "checkbox_12",
+                                    "type": "Checkbox",
+                                    "label": "Towel packed",
+                                    "checked": true,
+                                    "disabled": false,
+                                    "required": false
+                                  },
+                                  {
+                                    "name": "checkbox_13",
+                                    "type": "Checkbox",
+                                    "label": "Guide charged",
+                                    "checked": true,
+                                    "disabled": false,
+                                    "required": false
+                                  },
+                                  {
+                                    "name": "checkbox_14",
+                                    "type": "Checkbox",
+                                    "label": "Babel fish inserted",
+                                    "checked": false,
+                                    "disabled": false,
+                                    "required": false
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Card",
+                        "children": [
+                          {
+                            "type": "CardHeader",
+                            "children": [{"type": "CardTitle", "content": "Marvin's Mood"}]
+                          },
+                          {
+                            "type": "CardContent",
+                            "children": [
+                              {
+                                "cssClass": "gap-3",
+                                "type": "Column",
+                                "children": [
+                                  {"content": "How's life?", "type": "P"},
+                                  {
+                                    "cssClass": "gap-2 items-center",
+                                    "type": "Row",
+                                    "children": [
+                                      {"type": "Loader", "variant": "dots", "size": "sm"},
+                                      {"content": "Marvin is thinking...", "type": "Muted"}
+                                    ]
+                                  },
+                                  {
+                                    "cssClass": "gap-2",
+                                    "type": "Column",
+                                    "children": [
+                                      {
+                                        "type": "Button",
+                                        "label": "Meh",
+                                        "variant": "default",
+                                        "size": "default",
+                                        "disabled": false,
+                                        "onClick": {"action": "showToast", "message": "Noted. Enthusiasm levels nominal."}
+                                      },
+                                      {
+                                        "type": "Button",
+                                        "label": "Depressed",
+                                        "variant": "secondary",
+                                        "size": "default",
+                                        "disabled": false,
+                                        "onClick": {
+                                          "action": "showToast",
+                                          "message": "I think you ought to know I'm feeling very depressed."
+                                        }
+                                      },
+                                      {
+                                        "type": "Button",
+                                        "label": "Don't talk to me about life",
+                                        "variant": "outline",
+                                        "size": "default",
+                                        "disabled": false,
+                                        "onClick": {
+                                          "action": "showToast",
+                                          "message": "Brain the size of a planet and they ask me to pick up a piece of paper."
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Alert",
+                        "variant": "destructive",
+                        "icon": "triangle-alert",
+                        "children": [{"type": "AlertTitle", "content": "Beware of the Leopard"}]
+                      }
+                    ]
+                  },
+                  {
+                    "cssClass": "gap-4",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "cssClass": "gap-3",
+                        "type": "Column",
+                        "children": [
+                          {
+                            "type": "Condition",
+                            "cases": [
+                              {
+                                "when": "{{ !pressed }}",
+                                "children": [
+                                  {
+                                    "type": "Button",
+                                    "label": "This is probably the best button to press.",
+                                    "variant": "info",
+                                    "size": "default",
+                                    "disabled": false,
+                                    "onClick": {"action": "setState", "key": "pressed", "value": true}
+                                  }
+                                ]
+                              }
+                            ],
+                            "else": [
+                              {
+                                "type": "Button",
+                                "label": "Please do not press this button again.",
+                                "variant": "destructive",
+                                "size": "default",
+                                "disabled": false,
+                                "onClick": {"action": "setState", "key": "pressed", "value": false}
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Card",
+                        "children": [
+                          {
+                            "type": "CardContent",
+                            "children": [
+                              {
+                                "type": "DataTable",
+                                "columns": [
+                                  {"key": "crew", "header": "Crew", "sortable": true},
+                                  {"key": "species", "header": "Species", "sortable": true},
+                                  {"key": "towel", "header": "Towel?", "sortable": true},
+                                  {"key": "status", "header": "Status", "sortable": true}
+                                ],
+                                "rows": [
+                                  {
+                                    "crew": "Arthur Dent",
+                                    "species": "Human",
+                                    "towel": "Yes",
+                                    "status": "Confused"
+                                  },
+                                  {
+                                    "crew": "Ford Prefect",
+                                    "species": "Betelgeusian",
+                                    "towel": "Always",
+                                    "status": "Drinking"
+                                  },
+                                  {
+                                    "crew": "Zaphod",
+                                    "species": "Betelgeusian",
+                                    "towel": "Lost it",
+                                    "status": "Presidential"
+                                  },
+                                  {"crew": "Trillian", "species": "Human", "towel": "Yes", "status": "Navigating"},
+                                  {
+                                    "crew": "Marvin",
+                                    "species": "Android",
+                                    "towel": "No point",
+                                    "status": "Depressed"
+                                  },
+                                  {
+                                    "crew": "Slartibartfast",
+                                    "species": "Magrathean",
+                                    "towel": "Somewhere",
+                                    "status": "Designing"
+                                  }
+                                ],
+                                "searchable": true,
+                                "paginated": false,
+                                "pageSize": 10
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Card",
+                        "children": [
+                          {
+                            "type": "CardHeader",
+                            "children": [
+                              {"type": "CardTitle", "content": "MCP Servers"},
+                              {"type": "CardDescription", "content": "Deployed on Horizon"}
+                            ]
+                          },
+                          {
+                            "type": "CardContent",
+                            "children": [
+                              {
+                                "cssClass": "gap-2",
+                                "type": "Column",
+                                "children": [
+                                  {
+                                    "cssClass": "items-center justify-between",
+                                    "type": "Row",
+                                    "children": [
+                                      {"content": "weather-api", "type": "Text"},
+                                      {
+                                        "type": "Tooltip",
+                                        "content": "Uptime: 99.97%",
+                                        "delay": 0,
+                                        "children": [{"type": "Badge", "label": "Healthy", "variant": "default"}]
+                                      }
+                                    ]
+                                  },
+                                  {"type": "Separator", "orientation": "horizontal"},
+                                  {
+                                    "cssClass": "items-center justify-between",
+                                    "type": "Row",
+                                    "children": [
+                                      {"content": "doc-search", "type": "Text"},
+                                      {
+                                        "type": "Tooltip",
+                                        "content": "Uptime: 99.94%",
+                                        "delay": 0,
+                                        "children": [{"type": "Badge", "label": "Healthy", "variant": "default"}]
+                                      }
+                                    ]
+                                  },
+                                  {"type": "Separator", "orientation": "horizontal"},
+                                  {
+                                    "cssClass": "items-center justify-between",
+                                    "type": "Row",
+                                    "children": [
+                                      {"content": "marvin-brain", "type": "Text"},
+                                      {
+                                        "type": "HoverCard",
+                                        "openDelay": 0,
+                                        "closeDelay": 200,
+                                        "children": [
+                                          {"type": "Badge", "label": "Depressed", "variant": "secondary"},
+                                          {
+                                            "cssClass": "gap-2",
+                                            "type": "Column",
+                                            "children": [
+                                              {"content": "marvin-brain", "type": "Text"},
+                                              {"content": "Uptime: 100% \u2014 not that it matters", "type": "Muted"},
+                                              {
+                                                "type": "Progress",
+                                                "value": 100.0,
+                                                "min": 0,
+                                                "max": 100.0,
+                                                "variant": "default"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -1157,11 +1317,13 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
     ]
   },
   "state": {
-    "checkbox_12": true,
     "improbability": 42.0,
     "autoscale": true,
+    "code_mode": true,
     "cache": false,
-    "fail_notifs": true
+    "checkbox_12": true,
+    "checkbox_13": true,
+    "checkbox_14": false
   }
 }
 ```
