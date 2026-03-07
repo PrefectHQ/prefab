@@ -18,9 +18,9 @@
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="1000">
 </a>
 
-Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity — and a bundled React renderer turns that JSON into a self-contained application.
+Prefab is a frontend framework with a Python DSL that compiles to JSON. Build [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), data dashboards, and interactive tools with layouts, forms, charts, data tables, and full interactivity. A bundled React renderer turns the JSON into a self-contained application.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because it's a JSON protocol, any source can produce a Prefab UI. Write one in Python, serve one as an [MCP App](https://modelcontextprotocol.io/docs/extensions/apps), or let an agent generate one dynamically — no templates or predefined views required.
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because Prefab is a JSON protocol, any source can produce a UI: write one yourself and serve it from any backend, or have an agent generate it dynamically, no templates or predefined views required.
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/hello-world-card.png" alt="Hello world card" width="400">
