@@ -8,6 +8,24 @@ from prefab_ui.components import Column, Heading, Row, Slider, Text, defer, inse
 from prefab_ui.components.base import ContainerComponent
 
 
+class TestComponentId:
+    def test_id_serializes(self):
+        t = Text(content="hello", id="my-text")
+        j = t.to_json()
+        assert j["id"] == "my-text"
+
+    def test_id_excluded_when_none(self):
+        t = Text(content="hello")
+        j = t.to_json()
+        assert "id" not in j
+
+    def test_id_on_container(self):
+        with Column(id="main-col") as col:
+            Text(content="child")
+        j = col.to_json()
+        assert j["id"] == "main-col"
+
+
 class TestContextManagerNesting:
     def test_single_level(self):
         with Column() as col:
