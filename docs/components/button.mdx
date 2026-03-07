@@ -301,6 +301,22 @@ with Row(gap=3, css_class="items-center"):
 </CodeGroup>
 </ComponentPreview>
 
+## Button Type
+
+Inside a `Form`, buttons default to `type="submit"`, which triggers form submission on click. Set `button_type="button"` for actions that should not submit the form, like cancel or close buttons.
+
+```python
+from prefab_ui.components import Button, Form
+from prefab_ui.actions.mcp import CallTool
+
+with Form(on_submit=CallTool("save")):
+    # ... inputs ...
+    Button("Cancel", variant="outline", button_type="button")
+    Button("Save")  # defaults to submit
+```
+
+The three standard HTML button types are available: `"submit"` (default in forms), `"button"` (no form behavior), and `"reset"` (clears the form).
+
 ## Disabled State
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Unavailable","variant":"default","size":"default","disabled":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCgpCdXR0b24oIlVuYXZhaWxhYmxlIiwgZGlzYWJsZWQ9VHJ1ZSkK">
@@ -388,6 +404,10 @@ with Column(gap=3, css_class="items-start w-full"):
   Button dimensions: `"default"`, `"xs"`, `"sm"`, `"lg"`, `"icon"`, `"icon-xs"`, `"icon-sm"`, `"icon-lg"`.
 </ParamField>
 
+<ParamField body="button_type" type="str | None" default="None">
+  HTML button type: `"submit"` (default in forms), `"button"` (no form submit), or `"reset"`. Use `"button"` for cancel/close actions inside a Form.
+</ParamField>
+
 <ParamField body="disabled" type="bool | str" default="False">
   Whether the button is non-interactive. Accepts a template expression like `"{{ not $item.name }}"` for conditional disabling.
 </ParamField>
@@ -406,6 +426,7 @@ with Column(gap=3, css_class="items-start w-full"):
   "icon?": "string",
   "variant?": "default | destructive | outline | secondary | ghost | link | success | warning | info",
   "size?": "default | xs | sm | lg | icon | icon-xs | icon-sm | icon-lg",
+  "buttonType?": "submit | button | reset",
   "disabled?": "boolean | string",
   "onClick?": "Action | Action[]",
   "cssClass?": "string"
