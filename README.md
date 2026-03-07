@@ -14,7 +14,9 @@
 
 </div>
 
+<a href="https://prefab.prefect.io">
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="1000">
+</a>
 
 Prefab is a frontend framework with a Python DSL that compiles to JSON. Describe a UI — layouts, forms, charts, data tables, full interactivity — and a bundled React renderer turns that JSON into a self-contained application.
 
