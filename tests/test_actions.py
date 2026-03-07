@@ -133,6 +133,16 @@ class TestActionOnComponents:
         assert j["onClick"]["action"] == "toolCall"
         assert j["onClick"]["tool"] == "refresh"
 
+    def test_button_type_serializes(self):
+        b = Button(label="Cancel", button_type="button")
+        j = b.to_json()
+        assert j["buttonType"] == "button"
+
+    def test_button_type_default_omitted(self):
+        b = Button(label="Go")
+        j = b.to_json()
+        assert "buttonType" not in j
+
     def test_button_action_list(self):
         b = Button(
             label="Submit",
@@ -271,6 +281,7 @@ class TestFormOnSubmit:
         assert "onSubmit" not in j
 
     def test_from_model_passes_on_submit(self):
+        """on_submit goes on the Form, not the Button (avoids double-fire)."""
         from pydantic import BaseModel
 
         from prefab_ui.components import Form
@@ -280,9 +291,10 @@ class TestFormOnSubmit:
 
         form = Form.from_model(Simple, on_submit=CallTool("save"))
         j = form.to_json()
+        assert j["onSubmit"]["action"] == "toolCall"
         button = j["children"][-1]
         assert button["type"] == "Button"
-        assert button["onClick"]["action"] == "toolCall"
+        assert "onClick" not in button
 
 
 # ---------------------------------------------------------------------------

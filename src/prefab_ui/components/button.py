@@ -43,6 +43,7 @@ ButtonVariant = Literal[
 ButtonSize = Literal[
     "default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"
 ]
+ButtonType = Literal["submit", "button", "reset"]
 
 
 class Button(Component):
@@ -75,6 +76,15 @@ class Button(Component):
     size: ButtonSize = Field(
         default="default",
         description="Size: default, sm, lg, icon",
+    )
+    button_type: ButtonType | None = Field(
+        default=None,
+        alias="buttonType",
+        description=(
+            "HTML button type: 'submit' (default in forms), 'button' "
+            "(no form submit), or 'reset'. Use 'button' for cancel/close "
+            "actions inside a Form."
+        ),
     )
     disabled: bool | RxStr = Field(
         default=False, description="Whether the button is disabled"
