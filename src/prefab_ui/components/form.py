@@ -222,7 +222,7 @@ def _maybe_enrich_tool_call(
     }
 
     kwargs: dict[str, Any] = {
-        "tool": on_submit.tool,
+        "tool": on_submit._tool_ref or on_submit.tool,
         "arguments": {"data": field_templates},
     }
     if on_submit.result_key is not None:

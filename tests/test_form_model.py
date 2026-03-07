@@ -330,6 +330,61 @@ class TestAutoFillConvention:
         j = form.to_json()
         assert j["onSubmit"]["tool"] == "save"
 
+    def test_callable_tool_ref_preserved_through_from_model(self):
+        """CallTool(fn) should resolve via tool_resolver after from_model enrichment."""
+        from prefab_ui.app import PrefabApp
+
+        def save_item(name: str) -> dict:
+            return {"name": name}
+
+        class M(BaseModel):
+            name: str
+
+        def resolver(fn: object) -> str:
+            assert fn is save_item
+            return "save_item-abc123"
+
+        form = Form.from_model(M, on_submit=CallTool(save_item))
+        app = PrefabApp(view=form)
+        j = app.to_json(tool_resolver=resolver)
+        view = j["view"]
+
+        assert view["onSubmit"]["tool"] == "save_item-abc123"
+        button = view["children"][-1]
+        assert button["onClick"]["tool"] == "save_item-abc123"
+
+    def test_callable_tool_ref_preserved_with_explicit_arguments(self):
+        """When arguments are provided (no enrichment), callable still resolves."""
+        from prefab_ui.app import PrefabApp
+
+        def save_item(name: str) -> dict:
+            return {"name": name}
+
+        class M(BaseModel):
+            name: str
+
+        form = Form.from_model(
+            M,
+            on_submit=CallTool(save_item, arguments={"custom": "val"}),
+        )
+        app = PrefabApp(view=form)
+        j = app.to_json(tool_resolver=lambda fn: fn.__name__ + "-resolved")
+        assert j["view"]["onSubmit"]["tool"] == "save_item-resolved"
+        assert j["view"]["onSubmit"]["arguments"] == {"custom": "val"}
+
+    def test_callable_without_resolver_uses_name(self):
+        """Without a resolver, CallTool(fn) falls back to fn.__name__."""
+
+        def my_tool(x: str) -> str:
+            return x
+
+        class M(BaseModel):
+            name: str
+
+        form = Form.from_model(M, on_submit=CallTool(my_tool))
+        j = form.to_json()
+        assert j["onSubmit"]["tool"] == "my_tool"
+
 
 # ---------------------------------------------------------------------------
 # Context-manager isolation

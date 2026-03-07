@@ -87,6 +87,45 @@ class TestCloseOverlayAction:
         assert callbacks[1]["action"] == "closeOverlay"
 
 
+class TestCallToolResolver:
+    """CallTool(fn) resolves callables via tool_resolver at serialization."""
+
+    def test_callable_resolved_by_tool_resolver(self):
+        from prefab_ui.app import PrefabApp
+        from prefab_ui.components import Column
+
+        def save(name: str) -> dict:
+            return {"name": name}
+
+        action = CallTool(save, arguments={"name": "test"})
+        view = Column()
+        view.children = [Button(label="Go", on_click=action)]
+        app = PrefabApp(view=view)
+
+        j = app.to_json(tool_resolver=lambda fn: fn.__name__ + "-abc123")
+        assert j["view"]["children"][0]["onClick"]["tool"] == "save-abc123"
+
+    def test_callable_without_resolver_uses_name(self):
+        def my_tool() -> None:
+            pass
+
+        action = CallTool(my_tool)
+        d = action.model_dump(by_alias=True, exclude_none=True)
+        assert d["tool"] == "my_tool"
+
+    def test_string_tool_unaffected_by_resolver(self):
+        from prefab_ui.app import PrefabApp
+        from prefab_ui.components import Column
+
+        action = CallTool("explicit_name")
+        view = Column()
+        view.children = [Button(label="Go", on_click=action)]
+        app = PrefabApp(view=view)
+
+        j = app.to_json(tool_resolver=lambda fn: "should_not_be_called")
+        assert j["view"]["children"][0]["onClick"]["tool"] == "explicit_name"
+
+
 class TestActionOnComponents:
     def test_button_on_click(self):
         b = Button(label="Go", on_click=CallTool("refresh"))
