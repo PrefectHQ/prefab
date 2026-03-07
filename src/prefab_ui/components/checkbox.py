@@ -60,6 +60,3 @@ class Checkbox(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when checked state changes",
     )
-
-    def _get_initial_value(self) -> bool:
-        return self.checked

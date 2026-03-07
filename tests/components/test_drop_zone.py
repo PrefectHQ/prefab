@@ -12,10 +12,6 @@ class TestDropZone:
         for key in ("label", "description", "accept", "maxSize", "onChange"):
             assert key not in j
 
-    def test_initial_value_is_empty_list(self):
-        zone = DropZone()
-        assert zone._get_initial_value() == []
-
     def test_with_all_props(self):
         j = DropZone(
             label="Drop files here",

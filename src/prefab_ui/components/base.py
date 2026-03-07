@@ -207,9 +207,6 @@ class StatefulMixin:
     mixin to gain the ``.rx`` property, which returns an ``Rx`` object
     serializing to ``{{ name }}`` for template expressions.
 
-    Subclasses with initial state values should override
-    ``_get_initial_value`` to return the value that should populate
-    client state on first render.
     """
 
     _auto_name: ClassVar[str]
@@ -217,15 +214,6 @@ class StatefulMixin:
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
-
-    def _get_initial_value(self) -> Any:
-        """Return the initial value for this component's client state.
-
-        Returns ``None`` by default, meaning no state entry is created.
-        Subclasses override this to return their initial state value
-        (e.g. ``self.value`` for Slider, ``self.checked`` for Checkbox).
-        """
-        return None
 
     def _validate_state_key_name(self) -> None:
         """Raise ValueError if name is not a valid expression identifier."""
