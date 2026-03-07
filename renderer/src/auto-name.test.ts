@@ -10,6 +10,7 @@ import { describe, test, expect, beforeEach } from "vitest";
 import {
   STATEFUL_TYPES,
   autoAssignName,
+  collectComponentState,
   resetAutoNameCounter,
 } from "./auto-name.ts";
 
@@ -108,5 +109,84 @@ describe("STATEFUL_TYPES", () => {
         false,
       );
     }
+  });
+});
+
+describe("collectComponentState", () => {
+  test("seeds value from Input with value prop", () => {
+    const tree = {
+      type: "Column",
+      children: [{ type: "Input", name: "email", value: "a@b.com" }],
+    };
+    expect(collectComponentState(tree, {})).toEqual({ email: "a@b.com" });
+  });
+
+  test("seeds checked from Checkbox", () => {
+    const tree = {
+      type: "Column",
+      children: [{ type: "Checkbox", name: "agree", checked: true }],
+    };
+    expect(collectComponentState(tree, {})).toEqual({ agree: true });
+  });
+
+  test("skips keys already in existing state", () => {
+    const tree = {
+      type: "Column",
+      children: [{ type: "Slider", name: "vol", value: 50 }],
+    };
+    expect(collectComponentState(tree, { vol: 80 })).toEqual({});
+  });
+
+  test("skips template values", () => {
+    const tree = {
+      type: "Column",
+      children: [{ type: "Input", name: "x", value: "{{ something }}" }],
+    };
+    expect(collectComponentState(tree, {})).toEqual({});
+  });
+
+  test("seeds Select from selected child option", () => {
+    const tree = {
+      type: "Select",
+      name: "color",
+      children: [
+        { type: "SelectOption", value: "red", label: "Red", selected: false },
+        { type: "SelectOption", value: "blue", label: "Blue", selected: true },
+      ],
+    };
+    expect(collectComponentState(tree, {})).toEqual({ color: "blue" });
+  });
+
+  test("seeds RadioGroup from checked child option", () => {
+    const tree = {
+      type: "RadioGroup",
+      name: "size",
+      children: [
+        { type: "Radio", value: "sm", label: "Small" },
+        { type: "Radio", value: "md", label: "Medium", checked: true },
+        { type: "Radio", value: "lg", label: "Large" },
+      ],
+    };
+    expect(collectComponentState(tree, {})).toEqual({ size: "md" });
+  });
+
+  test("Select with no selected child seeds nothing", () => {
+    const tree = {
+      type: "Select",
+      name: "color",
+      children: [
+        { type: "SelectOption", value: "red", label: "Red" },
+        { type: "SelectOption", value: "blue", label: "Blue" },
+      ],
+    };
+    expect(collectComponentState(tree, {})).toEqual({});
+  });
+
+  test("seeds DropZone with empty array", () => {
+    const tree = {
+      type: "Column",
+      children: [{ type: "DropZone", name: "files" }],
+    };
+    expect(collectComponentState(tree, {})).toEqual({ files: [] });
   });
 });

@@ -65,6 +65,7 @@ export function collectComponentState(
     name?: unknown;
     value?: unknown;
     checked?: unknown;
+    selected?: unknown;
     children?: unknown[];
   },
   existing: Record<string, unknown>,
@@ -76,7 +77,23 @@ export function collectComponentState(
       typeof n.name === "string" &&
       !(n.name in existing)
     ) {
-      const val = n.type === "DropZone" ? [] : n.value ?? n.checked;
+      let val: unknown = n.type === "DropZone" ? [] : n.value ?? n.checked;
+
+      // Select/RadioGroup: default lives on children (selected/checked)
+      if (val === undefined && n.children) {
+        if (n.type === "Select") {
+          const selected = n.children.find((c) => (c as typeof n).selected) as
+            | typeof n
+            | undefined;
+          if (selected) val = selected.value;
+        } else if (n.type === "RadioGroup") {
+          const checked = n.children.find((c) => (c as typeof n).checked) as
+            | typeof n
+            | undefined;
+          if (checked) val = checked.value;
+        }
+      }
+
       if (
         val !== undefined &&
         !(typeof val === "string" && val.includes("{{"))
