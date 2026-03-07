@@ -309,7 +309,9 @@ class TestAutoFillConvention:
         j = form.to_json()
         assert "internal" not in j["onSubmit"]["arguments"]["data"]
 
-    def test_button_gets_same_action(self):
+    def test_button_has_no_on_click(self):
+        """Submit button relies on HTML form submit, not its own onClick."""
+
         class M(BaseModel):
             name: str
 
@@ -317,8 +319,7 @@ class TestAutoFillConvention:
         j = form.to_json()
         button = j["children"][-1]
         assert button["type"] == "Button"
-        assert button["onClick"]["tool"] == "save"
-        assert "data" in button["onClick"]["arguments"]
+        assert "onClick" not in button
 
     def test_form_on_submit_set(self):
         class M(BaseModel):
@@ -349,7 +350,7 @@ class TestAutoFillConvention:
 
         assert view["onSubmit"]["tool"] == "save_item-abc123"
         button = view["children"][-1]
-        assert button["onClick"]["tool"] == "save_item-abc123"
+        assert "onClick" not in button
 
     def test_callable_tool_ref_preserved_with_explicit_arguments(self):
         """When arguments are provided (no enrichment), callable still resolves."""

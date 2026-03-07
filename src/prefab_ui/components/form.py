@@ -194,7 +194,7 @@ class Form(ContainerComponent):
                     children.append(component)
 
             if on_submit is not None:
-                children.append(Button(submit_label, on_click=on_submit))
+                children.append(Button(submit_label))
 
         form.children = children
         return form

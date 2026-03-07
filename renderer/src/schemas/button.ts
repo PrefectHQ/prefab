@@ -31,6 +31,7 @@ export const buttonSchema = componentBase.extend({
       "icon-lg",
     ])
     .optional(),
+  buttonType: z.enum(["submit", "button", "reset"]).nullable().optional(),
   disabled: z.union([z.boolean(), z.string()]).optional(),
   onClick: actionOrList.optional(),
 });

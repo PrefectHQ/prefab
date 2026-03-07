@@ -178,6 +178,14 @@ export function mapProps(
     delete mapped.inputType;
   }
 
+  // Button: buttonType → type (avoids collision with component discriminator)
+  if (type === "Button" && "buttonType" in mapped) {
+    if (mapped.buttonType) {
+      mapped.type = mapped.buttonType;
+    }
+    delete mapped.buttonType;
+  }
+
   // Label: forId → htmlFor
   if (type === "Label" && "forId" in mapped) {
     mapped.htmlFor = mapped.forId;
