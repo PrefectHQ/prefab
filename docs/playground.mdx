@@ -34,11 +34,16 @@ export const PlaygroundFrame = () => {
         if (!hash) return;
         var params = new URLSearchParams(hash);
         var encoded = params.get("code");
-        if (encoded && ref.current && ref.current.contentWindow) {
-          ref.current.contentWindow.postMessage({ type: "pg-init-code", encoded: encoded }, "*");
+        var theme = params.get("theme");
+        if (ref.current && ref.current.contentWindow && (encoded || theme)) {
+          ref.current.contentWindow.postMessage({
+            type: "pg-init-code",
+            encoded: encoded || "",
+            theme: theme || "",
+          }, "*");
         }
-      } else if (e.data.type === "pg-code-changed") {
-        window.history.replaceState(null, "", "#code=" + e.data.encoded);
+      } else if (e.data.type === "pg-code-changed" || e.data.type === "pg-theme-changed") {
+        window.history.replaceState(null, "", "#" + e.data.hash);
       }
     }
     window.addEventListener("message", onMessage);

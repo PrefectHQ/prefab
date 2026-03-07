@@ -15,8 +15,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom(), viteSingleFile()],
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
-    // True only for local docs builds (VITE_LOCAL_PLAYGROUND=1).
-    // When false, the bundle import is tree-shaken out of the production build.
+    // When true, prefab-ui source is bundled into the playground HTML so
+    // Pyodide loads it from the filesystem instead of micropip (which can't
+    // install pydantic-core). Set via VITE_LOCAL_PLAYGROUND=1 in build-docs.
     __LOCAL_BUNDLE__: process.env.VITE_LOCAL_PLAYGROUND === "1",
   },
   resolve: {

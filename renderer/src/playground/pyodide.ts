@@ -62,15 +62,16 @@ export function loadPyodideRuntime(
     await loadScript(PYODIDE_CDN);
     const py = await window.loadPyodide();
 
-    const isLocal =
-      location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    // Pydantic must come from Pyodide's built-in packages (WASM build)
+    // because pydantic-core is a Rust extension with no WASM wheel on PyPI.
+    await py.loadPackage(["pydantic"]);
 
-    if (__LOCAL_BUNDLE__ && isLocal) {
-      // Local dev build: write the bundled source tree to the Pyodide FS so
-      // the playground reflects local code changes without a PyPI publish.
+    if (__LOCAL_BUNDLE__) {
+      // Bundle build (build-docs): write bundled source to Pyodide FS.
+      // Mintlify serves the playground in a blob: iframe where
+      // location.hostname is empty, so we can't use a hostname check.
       const { default: BUNDLE } = await import("./bundle.json");
       const bundle = BUNDLE as Record<string, string>;
-      await py.loadPackage(["pydantic"]);
       const dirs = new Set<string>();
       for (const modulePath of Object.keys(bundle)) {
         const dir = modulePath.substring(0, modulePath.lastIndexOf("/"));
@@ -83,10 +84,12 @@ export function loadPyodideRuntime(
         py.FS.writeFile(`/lib/python3.12/site-packages/${modulePath}`, source);
       }
     } else {
+      // Fallback: install prefab-ui from PyPI, skipping deps since
+      // pydantic is already loaded from Pyodide's built-in packages.
       await py.loadPackage(["micropip"]);
       await py.runPythonAsync(`
 import micropip
-await micropip.install("prefab-ui")
+await micropip.install("prefab-ui", deps=False)
 `);
     }
 

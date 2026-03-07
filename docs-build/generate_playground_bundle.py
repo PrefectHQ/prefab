@@ -23,7 +23,7 @@ for py_file in sorted(src_root.glob("*.py")):
     module_path = f"prefab_ui/{py_file.name}"
     bundle[module_path] = py_file.read_text()
 
-for subpkg in ("components", "actions", "renderer"):
+for subpkg in ("components", "actions", "renderer", "rx"):
     subpkg_dir = src_root / subpkg
     for py_file in sorted(subpkg_dir.rglob("*.py")):
         module_path = f"prefab_ui/{subpkg}/{py_file.relative_to(subpkg_dir)}"
