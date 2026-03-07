@@ -197,6 +197,6 @@ If any segment along a path is missing or the wrong type, the expression resolve
 
 ## Writing to state
 
-Two things write to state: interactive controls (automatically, via the `name` prop) and [actions](/guides/actions) (explicitly, in response to events). `SetState` assigns a value. `ToggleState` flips a boolean. `AppendState` and `PopState` manipulate arrays. `CallTool` and `Fetch` can write their results into state via `result_key`.
+Two things write to state: interactive controls (automatically, via the `name` prop) and [actions](/guides/actions) (explicitly, in response to events). `SetState` assigns a value. `ToggleState` flips a boolean. `AppendState` and `PopState` manipulate arrays. `CallTool` and `Fetch` make their results available as `$result` in `on_success` callbacks, where you can write them to state with `SetState`.
 
 State is deliberately simple: a flat map with dot-path addressing for nesting. There are no computed properties, no watchers, no derived state in the store itself. Derived values belong in [expressions](/guides/expressions), where they're computed at render time from whatever state holds. Complex computations belong in Python, run before you return the component tree, or in a server action.

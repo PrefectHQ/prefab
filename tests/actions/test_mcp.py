@@ -10,7 +10,6 @@ from prefab_ui.actions.mcp import (
     SendMessage,
     UpdateContext,
 )
-from prefab_ui.actions.ui import ShowToast
 from prefab_ui.app import PrefabApp, _tool_resolver
 from prefab_ui.components import Button
 
@@ -28,33 +27,17 @@ class TestCallToolSerialization:
         d = a.model_dump()
         assert d["arguments"]["q"] == "{{ query }}"
 
-    def test_result_key_serializes(self):
-        action = CallTool("search", result_key="results")
-        d = action.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "results"
+    def test_on_success_with_result(self):
+        from prefab_ui.actions.state import SetState
+        from prefab_ui.rx import RESULT
 
-    def test_result_key_excluded_when_none(self):
-        action = CallTool("search")
-        d = action.model_dump(by_alias=True, exclude_none=True)
-        assert "resultKey" not in d
-
-    def test_result_key_with_callbacks(self):
         action = CallTool(
             "search",
-            result_key="results",
-            on_success=ShowToast("Found results!"),
+            on_success=SetState("results", RESULT),
         )
         d = action.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "results"
-        assert d["onSuccess"]["action"] == "showToast"
-
-    def test_result_key_on_component(self):
-        btn = Button(
-            label="Search",
-            on_click=CallTool("search", result_key="results"),
-        )
-        j = btn.to_json()
-        assert j["onClick"]["resultKey"] == "results"
+        assert d["onSuccess"]["action"] == "setState"
+        assert d["onSuccess"]["value"] == "{{ $result }}"
 
 
 class TestCallToolCallableRef:
@@ -141,14 +124,18 @@ class TestCallToolCallableRef:
         assert d["tool"] == "search"
         assert d["arguments"]["q"] == "{{ query }}"
 
-    def test_callable_preserves_result_key(self):
+    def test_callable_with_on_success(self):
+        from prefab_ui.actions.state import SetState
+        from prefab_ui.rx import RESULT
+
         def search(query: str) -> list[str]:
             return []
 
-        a = CallTool(search, result_key="results")
+        a = CallTool(search, on_success=SetState("results", RESULT))
         d = a.model_dump(by_alias=True, exclude_none=True)
         assert d["tool"] == "search"
-        assert d["resultKey"] == "results"
+        assert d["onSuccess"]["action"] == "setState"
+        assert d["onSuccess"]["value"] == "{{ $result }}"
 
 
 class TestSendMessageSerialization:

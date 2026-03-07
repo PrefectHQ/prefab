@@ -10,17 +10,15 @@
  *
  *   Button("Save", onClick=[
  *     SetState("saving", true),
- *     CallTool("save_item", resultKey="result",
- *       onSuccess=ShowToast("Saved!"),
+ *     CallTool("save_item",
+ *       onSuccess=SetState("result", "$result"),
  *       onError=ShowToast("Failed", variant="error")),
  *     SetState("saving", false),   // only runs if CallTool succeeded
  *   ])
  *
- * `resultKey` on CallTool writes the tool's response data into state under
- * that key, making results available for template interpolation in the UI.
- *
  * Interpolation context: all state keys as bare names, plus `$event` for
- * the triggering event value and `$error` for error messages in `onError`
+ * the triggering event value, `$result` for the action's return value in
+ * `onSuccess` callbacks, and `$error` for error messages in `onError`
  * callbacks.
  */
 
@@ -77,18 +75,26 @@ function extractErrorText(result: Record<string, unknown>): string {
 }
 
 /**
- * Extract user-facing data from a tool result's structuredContent.
+ * Extract user-facing data from a tool result's content blocks.
  *
- * Reads from the `state` envelope key. If exactly one state key exists,
- * unwraps to its value (so `result_key="users"` with a response
- * of `{state: {users: [...]}}` writes the array directly).
+ * MCP tool results contain an array of content blocks. This extracts text
+ * content and tries to parse it as JSON, falling back to the raw string.
  */
-function extractResultData(structured: Record<string, unknown>): unknown {
-  const state = structured.state as Record<string, unknown> | undefined;
-  if (!state) return undefined;
-  const entries = Object.entries(state);
-  if (entries.length === 1) return entries[0][1];
-  return state;
+function extractToolResultData(result: Record<string, unknown>): unknown {
+  const content = result.content as
+    | Array<{ type: string; text?: string }>
+    | undefined;
+  if (!content?.length) return undefined;
+  const text = content
+    .filter((c) => c.type === "text" && c.text)
+    .map((c) => c.text)
+    .join("");
+  if (!text) return undefined;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
 /**
@@ -107,17 +113,19 @@ export async function executeAction(
   error?: string,
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
+  result?: unknown,
 ): Promise<boolean> {
   if (depth > MAX_DEPTH) {
     console.warn("[Prefab] Action callback depth limit exceeded");
     return false;
   }
 
-  // Interpolation context: state + scope (ForEach vars) + $event + $error
+  // Interpolation context: state + scope (ForEach vars) + $event + $result + $error
   const ctx: Record<string, unknown> = {
     ...state.getAll(),
     ...scope,
     $event: event,
+    $result: result,
     $error: error,
   };
 
@@ -135,6 +143,7 @@ export async function executeAction(
 
   let success = true;
   let errorMessage: string | undefined;
+  let resultData: unknown;
 
   try {
     switch (resolved.action) {
@@ -142,20 +151,17 @@ export async function executeAction(
       case "toolCall": {
         const name = resolved.tool as string;
         const args = (resolved.arguments ?? {}) as Record<string, string>;
-        const result = await app?.callServerTool({ name, arguments: args });
-        if (result?.isError) {
+        const toolResult = await app?.callServerTool({
+          name,
+          arguments: args,
+        });
+        if (toolResult?.isError) {
           success = false;
-          errorMessage = extractErrorText(result);
+          errorMessage = extractErrorText(toolResult);
           break;
         }
-        // Write result data into state if resultKey is specified
-        const resultKey = resolved.resultKey as string | undefined;
-        if (resultKey && result?.structuredContent) {
-          const data = extractResultData(
-            result.structuredContent as Record<string, unknown>,
-          );
-          state.set(resultKey, data);
-        }
+        // Extract result data — available as $result in onSuccess callbacks
+        resultData = toolResult ? extractToolResultData(toolResult) : undefined;
         break;
       }
       case "sendMessage": {
@@ -305,26 +311,9 @@ export async function executeAction(
           }
         }
 
-        // Write to state if resultKey set
-        const resultKey = resolved.resultKey as string | undefined;
-        if (resultKey) {
-          state.set(resultKey, data);
-        }
-
-        // Fire onSuccess with response data as $event
-        if (resolved.onSuccess) {
-          await executeActions(
-            resolved.onSuccess,
-            app,
-            state,
-            data,
-            depth + 1,
-            undefined,
-            scope,
-            overlayClose,
-          );
-        }
-        return true;
+        // Response data is available as $result in onSuccess callbacks
+        resultData = data;
+        break;
       }
 
       case "openFilePicker": {
@@ -375,21 +364,9 @@ export async function executeAction(
           return true;
         }
 
-        // Fire onSuccess with the file data as $event
-        if (resolved.onSuccess) {
-          await executeActions(
-            resolved.onSuccess,
-            app,
-            state,
-            fileData,
-            depth + 1,
-            undefined,
-            scope,
-            overlayClose,
-          );
-        }
-        // Skip the generic onSuccess handling below
-        return true;
+        // File data is available as $result in onSuccess callbacks
+        resultData = fileData;
+        break;
       }
 
       case "setInterval": {
@@ -483,7 +460,7 @@ export async function executeAction(
     errorMessage = e instanceof Error ? e.message : String(e);
   }
 
-  // Dispatch lifecycle callbacks, passing $error to onError
+  // Dispatch lifecycle callbacks: $result to onSuccess, $error to onError
   if (success && resolved.onSuccess) {
     await executeActions(
       resolved.onSuccess,
@@ -494,6 +471,7 @@ export async function executeAction(
       undefined,
       scope,
       overlayClose,
+      resultData,
     );
   } else if (!success && resolved.onError) {
     await executeActions(
@@ -527,6 +505,7 @@ export async function executeActions(
   error?: string,
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
+  result?: unknown,
 ): Promise<void> {
   const list = Array.isArray(actions) ? actions : [actions];
   for (const action of list) {
@@ -539,6 +518,7 @@ export async function executeActions(
       error,
       scope,
       overlayClose,
+      result,
     );
     if (!ok) break;
   }

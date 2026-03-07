@@ -15,7 +15,7 @@
  *
  * State model: the `state` key in structuredContent holds client-side state.
  * The model sees initial state via structuredContent; all subsequent mutations
- * (SetState, form inputs, CallTool result_key) are renderer-private and never
+ * (SetState, form inputs, action callbacks) are renderer-private and never
  * propagate back.
  */
 

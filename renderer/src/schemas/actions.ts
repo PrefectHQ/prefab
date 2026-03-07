@@ -26,7 +26,6 @@ export const toolCallSchema = z.object({
   action: z.literal("toolCall"),
   tool: z.string(),
   arguments: z.record(z.string(), z.unknown()).optional(),
-  resultKey: z.string().optional(),
   ...actionCallbacks,
 });
 
@@ -113,7 +112,6 @@ export const fetchSchema = z.object({
   method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]).optional(),
   headers: z.record(z.string(), z.string()).optional(),
   body: z.union([z.record(z.string(), z.unknown()), z.string()]).optional(),
-  resultKey: z.string().optional(),
   ...actionCallbacks,
 });
 

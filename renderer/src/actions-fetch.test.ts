@@ -47,13 +47,17 @@ describe("fetch action", () => {
     });
   });
 
-  it("writes result to state via resultKey", async () => {
+  it("passes $result to onSuccess callbacks", async () => {
     mockFetchResponse([{ name: "Alice" }]);
     const state = createStateStore();
     const action: ActionSpec = {
       action: "fetch",
       url: "/api/users",
-      resultKey: "users",
+      onSuccess: {
+        action: "setState",
+        key: "users",
+        value: "{{ $result }}",
+      },
     };
 
     await executeAction(action, null, state);
@@ -130,7 +134,7 @@ describe("fetch action", () => {
     expect(state.get("err")).toBe("404 Not Found");
   });
 
-  it("fires onSuccess with response data as $event", async () => {
+  it("passes $result (not $event) to onSuccess", async () => {
     mockFetchResponse({ count: 42 });
     const state = createStateStore();
     const action: ActionSpec = {
@@ -139,7 +143,7 @@ describe("fetch action", () => {
       onSuccess: {
         action: "setState",
         key: "result",
-        value: "{{ $event }}",
+        value: "{{ $result }}",
       },
     };
 
@@ -154,7 +158,11 @@ describe("fetch action", () => {
     const action: ActionSpec = {
       action: "fetch",
       url: "/api/text",
-      resultKey: "data",
+      onSuccess: {
+        action: "setState",
+        key: "data",
+        value: "{{ $result }}",
+      },
     };
 
     await executeAction(action, null, state);
@@ -175,7 +183,11 @@ describe("fetch action", () => {
     const action: ActionSpec = {
       action: "fetch",
       url: "/api/sneaky-json",
-      resultKey: "data",
+      onSuccess: {
+        action: "setState",
+        key: "data",
+        value: "{{ $result }}",
+      },
     };
 
     await executeAction(action, null, state);
@@ -210,7 +222,6 @@ describe("fetch action", () => {
     const action: ActionSpec = {
       action: "fetch",
       url: "/api/users/{{ userId }}",
-      resultKey: "user",
     };
 
     await executeAction(action, null, state);

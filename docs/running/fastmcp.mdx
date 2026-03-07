@@ -79,9 +79,13 @@ Return a `PrefabApp` when you need initial state, a page title, or reusable defi
 
 ### Calling Back to the Server
 
-[`CallTool`](/actions/call-tool) is the MCP equivalent of [`Fetch`](/actions/fetch). It sends a tool call through MCP and writes the response into client-side state:
+[`CallTool`](/actions/call-tool) is the MCP equivalent of [`Fetch`](/actions/fetch). It sends a tool call through MCP, and the response is available as `$result` (Python: `RESULT`) in the `on_success` callback:
 
 ```python
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
+
 @mcp.tool(app=True)
 def browse() -> PrefabApp:
     with Column(gap=4) as view:
@@ -90,7 +94,7 @@ def browse() -> PrefabApp:
             placeholder="Search...",
             on_change=[
                 SetState("q", "{{ $event }}"),
-                CallTool("search", arguments={"q": "{{ $event }}"}, result_key="results"),
+                CallTool("search", arguments={"q": "{{ $event }}"}, on_success=SetState("results", RESULT)),
             ],
         )
         Slot("results")
@@ -112,7 +116,7 @@ The first tool (`browse`) defines the layout with a `Slot`. The second tool (`se
 
 ### Dynamic Component Results with Slot
 
-When a `CallTool` has `result_key`, the tool's `PrefabApp` response is written into that state key. A [`Slot`](/components/slot) watching that key renders whatever component tree arrives:
+When a `CallTool` writes its result into state via `SetState("key", RESULT)` in `on_success`, a [`Slot`](/components/slot) watching that key renders whatever component tree arrives:
 
 ```python {5,11}
 # In the main view

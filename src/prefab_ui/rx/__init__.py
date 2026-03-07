@@ -625,3 +625,6 @@ EVENT: Rx = Rx("$event")
 
 #: The error message in ``on_error`` handlers.
 ERROR: Rx = Rx("$error")
+
+#: The action result in ``on_success`` handlers.
+RESULT: Rx = Rx("$result")

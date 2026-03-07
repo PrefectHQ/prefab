@@ -277,12 +277,10 @@ class TestAutoFillConvention:
             M,
             on_submit=CallTool(
                 "save",
-                result_key="result",
                 on_success=ShowToast("Saved!"),
             ),
         )
         j = form.to_json()
-        assert j["onSubmit"]["resultKey"] == "result"
         assert j["onSubmit"]["onSuccess"]["message"] == "Saved!"
 
     def test_action_list_not_auto_filled(self):

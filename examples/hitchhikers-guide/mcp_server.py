@@ -12,7 +12,6 @@ from __future__ import annotations
 
 from data import ENTRIES, add_entry, delete_entry, search_entries
 from fastmcp import FastMCP
-from fastmcp.server.apps import AppConfig
 
 from prefab_ui.actions import CloseOverlay, SetState, ShowToast
 from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
@@ -34,7 +33,7 @@ from prefab_ui.components import (
     Tooltip,
 )
 from prefab_ui.components.control_flow import ForEach
-from prefab_ui.rx import ERROR, EVENT
+from prefab_ui.rx import ERROR, EVENT, RESULT
 
 mcp = FastMCP("Hitchhiker's Guide")
 
@@ -59,8 +58,8 @@ def browse() -> PrefabApp:
                             "category": "{{ new_category }}",
                             "description": "{{ new_description }}",
                         },
-                        result_key="entries",
                         on_success=[
+                            SetState("entries", RESULT),
                             ShowToast("Entry added!", variant="success"),
                             SetState("new_title", ""),
                             SetState("new_category", ""),
@@ -84,7 +83,7 @@ def browse() -> PrefabApp:
                 CallTool(
                     "search",
                     arguments={"q": EVENT},
-                    result_key="entries",
+                    on_success=SetState("entries", RESULT),
                 ),
             ],
         )
@@ -135,7 +134,7 @@ def browse() -> PrefabApp:
                                         on_click=CallTool(
                                             "delete_entry_tool",
                                             arguments={"title": entry.title},
-                                            result_key="entries",
+                                            on_success=SetState("entries", RESULT),
                                             on_error=ShowToast(
                                                 ERROR,
                                                 variant="error",
@@ -158,29 +157,26 @@ def browse() -> PrefabApp:
     )
 
 
-app_only = AppConfig(visibility=["app"])
-
-
-@mcp.tool(app=app_only)
-def search(q: str = "") -> PrefabApp:
+@mcp.tool()
+def search(q: str = "") -> list[dict]:
     """Search the Guide by keyword."""
-    return PrefabApp(state={"entries": search_entries(q)})
+    return search_entries(q)
 
 
-@mcp.tool(app=app_only)
+@mcp.tool()
 def add_entry_tool(
     title: str, category: str = "Uncategorized", description: str = ""
-) -> PrefabApp:
+) -> list[dict]:
     """Add a new entry to the Guide."""
     add_entry(title, category, description)
-    return PrefabApp(state={"entries": ENTRIES})
+    return ENTRIES
 
 
-@mcp.tool(app=app_only)
-def delete_entry_tool(title: str) -> PrefabApp:
+@mcp.tool()
+def delete_entry_tool(title: str) -> list[dict]:
     """Remove an entry from the Guide."""
     delete_entry(title)
-    return PrefabApp(state={"entries": ENTRIES})
+    return ENTRIES
 
 
 if __name__ == "__main__":

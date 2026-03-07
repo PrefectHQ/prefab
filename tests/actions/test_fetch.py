@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from prefab_ui.actions import Fetch, SetState, ShowToast
 from prefab_ui.components import Button
 
@@ -29,15 +27,14 @@ class TestFetchSerialization:
         d = a.model_dump(by_alias=True, exclude_none=True)
         assert d["headers"]["Authorization"] == "Bearer {{ token }}"
 
-    def test_result_key_serializes(self):
-        a = Fetch("/api/users", result_key="users")
-        d = a.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "users"
+    def test_on_success_with_result(self):
+        from prefab_ui.rx import RESULT
 
-    def test_result_key_excluded_when_none(self):
-        a = Fetch("/api/users")
+        a = Fetch("/api/users", on_success=SetState("users", RESULT))
         d = a.model_dump(by_alias=True, exclude_none=True)
-        assert "resultKey" not in d
+        assert d["onSuccess"]["action"] == "setState"
+        assert d["onSuccess"]["key"] == "users"
+        assert d["onSuccess"]["value"] == "{{ $result }}"
 
     def test_string_body(self):
         a = Fetch("/api/raw", method="POST", body="raw text content")
@@ -50,12 +47,20 @@ class TestFetchSerialization:
             d = a.model_dump(by_alias=True, exclude_none=True)
             assert d["method"] == method
 
-    def test_on_button(self):
-        btn = Button("Load", on_click=Fetch("/api/data", result_key="data"))
+    def test_on_button_with_on_success(self):
+        from prefab_ui.rx import RESULT
+
+        btn = Button(
+            "Load",
+            on_click=Fetch(
+                "/api/data",
+                on_success=SetState("data", RESULT),
+            ),
+        )
         j = btn.to_json()
         assert j["onClick"]["action"] == "fetch"
         assert j["onClick"]["url"] == "/api/data"
-        assert j["onClick"]["resultKey"] == "data"
+        assert j["onClick"]["onSuccess"]["action"] == "setState"
 
     def test_interpolation_in_url(self):
         a = Fetch("/api/users/{{ user_id }}")
@@ -115,10 +120,13 @@ class TestFetchClassmethods:
         d = a.model_dump(by_alias=True, exclude_none=True)
         assert d["method"] == "DELETE"
 
-    def test_classmethod_with_result_key(self):
-        a = Fetch.get("/api/users", result_key="users")
+    def test_classmethod_with_on_success(self):
+        from prefab_ui.rx import RESULT
+
+        a = Fetch.get("/api/users", on_success=SetState("users", RESULT))
         d = a.model_dump(by_alias=True, exclude_none=True)
-        assert d["resultKey"] == "users"
+        assert d["onSuccess"]["action"] == "setState"
+        assert d["onSuccess"]["value"] == "{{ $result }}"
 
     def test_classmethod_with_callbacks(self):
         a = Fetch.post(
@@ -130,20 +138,6 @@ class TestFetchClassmethods:
         d = a.model_dump(by_alias=True, exclude_none=True)
         assert d["onSuccess"]["action"] == "showToast"
         assert d["onError"]["variant"] == "error"
-
-
-class TestFetchResultKeyValidation:
-    def test_valid_key(self):
-        a = Fetch("/api", result_key="users")
-        assert a.result_key == "users"
-
-    def test_dot_path_key(self):
-        a = Fetch("/api", result_key="data.users")
-        assert a.result_key == "data.users"
-
-    def test_invalid_key_rejected(self):
-        with pytest.raises(ValueError, match="Invalid path segment"):
-            Fetch("/api", result_key="bad-key")
 
 
 class TestFetchActionChain:

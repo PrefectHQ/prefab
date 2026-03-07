@@ -225,8 +225,6 @@ def _maybe_enrich_tool_call(
         "tool": on_submit._tool_ref or on_submit.tool,
         "arguments": {"data": field_templates},
     }
-    if on_submit.result_key is not None:
-        kwargs["result_key"] = on_submit.result_key
     if on_submit.on_success is not None:
         kwargs["on_success"] = on_submit.on_success
     if on_submit.on_error is not None:

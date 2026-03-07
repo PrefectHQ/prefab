@@ -29,6 +29,7 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.components.base import insert
+from prefab_ui.rx import RESULT
 
 app = FastAPI()
 
@@ -175,11 +176,13 @@ def page():
                             "min_date": "{{ min_date }}",
                             "max_date": "{{ max_date }}",
                         },
-                        result_key="dashboard_content",
-                        on_success=ShowToast(
-                            "Dashboard updated",
-                            variant="success",
-                        ),
+                        on_success=[
+                            SetState("dashboard_content", RESULT),
+                            ShowToast(
+                                "Dashboard updated",
+                                variant="success",
+                            ),
+                        ],
                         on_error=ShowToast("{{ $error }}", variant="error"),
                     ),
                 ):
@@ -213,7 +216,7 @@ def page():
                             Fetch.post(
                                 "/api/render",
                                 body={"show_direct": "{{ $event }}"},
-                                result_key="dashboard_content",
+                                on_success=SetState("dashboard_content", RESULT),
                             ),
                         ],
                     )

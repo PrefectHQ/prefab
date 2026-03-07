@@ -34,8 +34,8 @@ Most real interactions use both. A "Save" button typically sets a loading flag (
 
 | Server actions | Purpose |
 |----------------|---------|
-| `CallTool` | Call an MCP tool and optionally write the result to state |
-| `Fetch` | Make an HTTP request and optionally write the result to state |
+| `CallTool` | Call an MCP tool; result available as `$result` in `on_success` |
+| `Fetch` | Make an HTTP request; result available as `$result` in `on_success` |
 | `SendMessage` | Send a message to the conversation (MCP hosts only) |
 | `UpdateContext` | Push structured context to the model (MCP hosts only) |
 
@@ -171,21 +171,25 @@ Action lists handle the setup: things to do *before* or *alongside* an interacti
 Every action supports `on_success` and `on_error`. They fire after the action resolves, with the outcome determining which branch runs. Both accept a single action or a list.
 
 ```python
-from prefab_ui.actions.mcp import CallTool
 from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
 
 Button(
-    "Save", 
+    "Save",
     on_click=CallTool(
         "save_record",
         arguments={"data": Rx("form")},
-        on_success=ShowToast("Saved!", variant="success"),
+        on_success=[
+            SetState("result", RESULT),
+            ShowToast("Saved!", variant="success"),
+        ],
         on_error=ShowToast("{{ $error }}", variant="error"),
     ),
 )
 ```
 
-`$error` is available inside `on_error` callbacks; it holds the error message from the failed action.
+`$result` is available inside `on_success` callbacks; it holds the return value of the action that just completed. `$error` is available inside `on_error` callbacks; it holds the error message from the failed action. These are a matched pair: each exists only within its respective callback scope.
 
 Callbacks can themselves have callbacks, making it possible to chain dependent server calls: the result of the first determines what to fetch next.
 
@@ -193,12 +197,14 @@ Callbacks can themselves have callbacks, making it possible to chain dependent s
 CallTool(
     "get_user",
     arguments={"id": Rx("user_id")},
-    result_key="user",
-    on_success=CallTool(
-        "get_permissions",
-        arguments={"role": "{{ user.role }}"},
-        result_key="permissions",
-    ),
+    on_success=[
+        SetState("user", RESULT),
+        CallTool(
+            "get_permissions",
+            arguments={"role": "{{ user.role }}"},
+            on_success=SetState("permissions", RESULT),
+        ),
+    ],
 )
 ```
 
@@ -238,26 +244,29 @@ The button label switches and disables while the call is in flight. Both branche
 
 ### Populating results
 
-For search and filter patterns, use `result_key` to write the tool's response directly into state, then have a `ForEach` or `Slot` display it:
+For search and filter patterns, use `RESULT` in an `on_success` callback to write the tool's response directly into state, then have a `ForEach` or `Slot` display it:
 
 ```python
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
 from prefab_ui.components import Button, Column, ForEach, Input, Text
+from prefab_ui.rx import RESULT
 
 with Column(gap=3):
     query = Input(name="q", placeholder="Search...")
     Button(
-        "Search", 
+        "Search",
         on_click=CallTool(
             "search",
             arguments={"q": query.rx},
-            result_key="results",
+            on_success=SetState("results", RESULT),
         ),
     )
     with ForEach("results"):
         Text("{{ name }}")
 ```
 
-When the tool returns, its `PrefabApp` state is merged into the client's state under `results`. The `ForEach` re-renders with whatever came back.
+When the tool returns, `RESULT` holds the response data. `SetState` writes it to `results`, and the `ForEach` re-renders with whatever came back.
 
 ### Optimistic updates
 

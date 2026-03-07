@@ -162,45 +162,45 @@ describe("executeAction", () => {
       expect(result).toBe(true);
     });
 
-    it("writes result to state via resultKey", async () => {
+    it("passes $result to onSuccess callbacks", async () => {
       app.callServerTool.mockResolvedValueOnce({
-        structuredContent: {
-          version: "0.2",
-          view: { type: "Text" },
-          state: { users: [{ name: "Alice" }] },
-        },
+        content: [{ type: "text", text: JSON.stringify([{ name: "Alice" }]) }],
       });
       const state = createStateStore();
       const action: ActionSpec = {
         action: "toolCall",
         tool: "get_users",
-        resultKey: "users",
+        onSuccess: {
+          action: "setState",
+          key: "users",
+          value: "{{ $result }}",
+        },
       };
 
       await executeAction(action, appAsApp, state);
 
-      // Single state key gets unwrapped
       expect(state.get("users")).toEqual([{ name: "Alice" }]);
     });
 
-    it("extracts state from envelope, ignoring protocol keys", async () => {
+    it("parses JSON text content as $result", async () => {
       app.callServerTool.mockResolvedValueOnce({
-        structuredContent: {
-          version: "0.2",
-          view: { type: "Column" },
-          state: { items: [1, 2], total: 2 },
-        },
+        content: [
+          { type: "text", text: JSON.stringify({ items: [1, 2], total: 2 }) },
+        ],
       });
       const state = createStateStore();
       const action: ActionSpec = {
         action: "toolCall",
         tool: "fetch",
-        resultKey: "data",
+        onSuccess: {
+          action: "setState",
+          key: "data",
+          value: "{{ $result }}",
+        },
       };
 
       await executeAction(action, appAsApp, state);
 
-      // Multiple state keys → object with both
       const data = state.get("data") as Record<string, unknown>;
       expect(data).toEqual({ items: [1, 2], total: 2 });
     });
