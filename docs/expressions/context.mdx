@@ -40,7 +40,7 @@ Text(f"You typed: {search.rx}")
 # search.rx is Rx("query") → {{ query }}
 ```
 
-**Actions** write to state when they fire. [SetState](/actions/update-state) sets a key to an explicit value (or defaults to `$event` — see below). [CallTool](/actions/call-tool) runs server-side logic and writes the result to state via `result_key`. Either way, the new value is immediately available to every expression that references that key.
+**Actions** write to state when they fire. [SetState](/actions/update-state) sets a key to an explicit value (or defaults to `$event` — see below). [CallTool](/actions/call-tool) and [Fetch](/actions/fetch) run server-side logic and make the result available as `$result` inside `on_success` callbacks, where you can write it to state with `SetState`. Either way, the new value is immediately available to every expression that references that key.
 
 ## Local Scope (`let`)
 
@@ -128,6 +128,26 @@ Available inside action handlers. It contains the value from the interaction tha
 | Button | `undefined` |
 
 When you need to capture the event value explicitly — for example, to store it under a different key or transform it — pass `EVENT` as the value: `SetState("last_volume", EVENT)`. For form controls like Slider and Input, the component's own state key updates automatically, so a separate `SetState` is only needed when you want to write the value somewhere else.
+
+### `$result`
+
+Available inside `on_success` callbacks. Contains the return value of the action that just completed — the parsed JSON from a `Fetch` response, or the `PrefabApp` result from a `CallTool`. Use it with `SetState` to write the result into state:
+
+```python
+from prefab_ui.components import Button
+from prefab_ui.actions import Fetch, SetState
+from prefab_ui.rx import RESULT
+
+Button(
+    "Load Users",
+    on_click=Fetch.get(
+        "/api/users",
+        on_success=SetState("users", RESULT),
+    ),
+)
+```
+
+`$result` is the success counterpart of `$error`: one is available in `on_success`, the other in `on_error`. Neither exists outside its callback scope.
 
 ### `$error`
 

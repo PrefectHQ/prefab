@@ -14,7 +14,7 @@ Prefab has no dependency on any web framework. This guide uses [FastAPI](https:/
 A Prefab + FastAPI app has three kinds of routes:
 
 - **Page routes** return HTML — they build a component tree, wrap it in `PrefabApp`, and call `.html()`
-- **Data routes** return plain JSON (lists, dicts) — consumed via `result_key` into state
+- **Data routes** return plain JSON (lists, dicts) — written into state via `SetState` in an `on_success` callback
 - **Component routes** return a component tree as JSON (via `.to_json()`) — rendered by a [`Slot`](/components/slot)
 
 <Tip>
@@ -31,6 +31,7 @@ from prefab_ui.actions import Fetch, SetState
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, Input, Text
 from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import RESULT
 
 app = FastAPI()
 
@@ -54,7 +55,7 @@ def page():
                 Fetch.get(
                     "/api/items",
                     params={"q": "{{ $event }}"},
-                    result_key="items",
+                    on_success=SetState("items", RESULT),
                 ),
             ],
         )
@@ -82,12 +83,15 @@ When an Input has `on_change`, you must include `SetState` to update the input's
 
 ### Loading Data
 
-`Fetch.get` makes a GET request and writes the parsed JSON response into client-side state via `result_key`. Components that reference that key re-render automatically.
+`Fetch.get` makes a GET request. The parsed JSON response is available as `$result` (Python: `RESULT`) inside the `on_success` callback. Use `SetState` to write it into client-side state, and components that reference that key re-render automatically.
 
 ```python
+from prefab_ui.actions import Fetch, SetState
+from prefab_ui.rx import RESULT
+
 Button(
     "Load Users",
-    on_click=Fetch.get("/api/users", result_key="users"),
+    on_click=Fetch.get("/api/users", on_success=SetState("users", RESULT)),
 )
 ```
 
@@ -136,7 +140,7 @@ For forms that shouldn't clutter the main layout, put them inside a `Dialog`. Us
 ```python {10-14}
 from prefab_ui.actions import CloseOverlay, Fetch, SetState, ShowToast
 from prefab_ui.components import Button, Column, Dialog, Form, Input
-from prefab_ui.rx import Rx
+from prefab_ui.rx import RESULT, Rx
 
 new_name = Rx("new_name")
 
@@ -149,7 +153,7 @@ with Dialog(title="New Item", description="Add an item to the catalog."):
             on_success=[
                 ShowToast("Created!", variant="success"),
                 SetState("new_name", ""),
-                Fetch.get("/api/items", result_key="items"),
+                Fetch.get("/api/items", on_success=SetState("items", RESULT)),
                 CloseOverlay(),
             ],
             on_error=ShowToast("{{ $error }}", variant="error"),
@@ -174,7 +178,7 @@ Button(
     variant="ghost",
     on_click=Fetch.delete(
         "/api/items/{{ id }}",
-        on_success=Fetch.get("/api/items", result_key="items"),
+        on_success=Fetch.get("/api/items", on_success=SetState("items", RESULT)),
         on_error=ShowToast("{{ $error }}", variant="error"),
     ),
 )
@@ -187,7 +191,9 @@ Data routes return plain values that templates interpolate. But sometimes you wa
 A component route builds a component tree in Python and returns its JSON representation. On the client, a [`Slot`](/components/slot) renders whatever component tree lands in its state key:
 
 ```python {11,25}
+from prefab_ui.actions import Fetch, SetState
 from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Text
+from prefab_ui.rx import RESULT
 
 @app.get("/api/items/{id}/detail")
 def item_detail(id: str):
@@ -208,7 +214,7 @@ def page():
                 "{{ name }}",
                 on_click=Fetch.get(
                     "/api/items/{{ id }}/detail",
-                    result_key="detail",
+                    on_success=SetState("detail", RESULT),
                 ),
             )
         with Slot("detail"):
@@ -279,7 +285,8 @@ If the request fails, the chain stops — `SetState("saving", False)` never runs
 After a successful POST or DELETE, you often want to reload the data list. Chain a `Fetch.get` inside `on_success`:
 
 ```python
-from prefab_ui.rx import Rx
+from prefab_ui.actions import Fetch, SetState, ShowToast
+from prefab_ui.rx import RESULT, Rx
 
 new_name = Rx("new_name")
 
@@ -288,7 +295,7 @@ Fetch.post(
     body={"name": new_name},
     on_success=[
         ShowToast("Created!", variant="success"),
-        Fetch.get("/api/items", result_key="items"),
+        Fetch.get("/api/items", on_success=SetState("items", RESULT)),
     ],
 )
 ```

@@ -7,11 +7,12 @@ that talks HTTP without going through an MCP server.
 Example::
 
     from prefab_ui.components import Button
-    from prefab_ui.actions import Fetch, ShowToast
+    from prefab_ui.actions import Fetch, SetState, ShowToast
+    from prefab_ui.rx import RESULT
 
     Button("Load Users", on_click=Fetch.get(
         "/api/users",
-        result_key="users",
+        on_success=SetState("users", RESULT),
         on_error=ShowToast("{{ $error }}", variant="error"),
     ))
 """
@@ -21,10 +22,9 @@ from __future__ import annotations
 from typing import Any, Literal
 from urllib.parse import quote
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
 from prefab_ui.actions.base import Action
-from prefab_ui.actions.state import _validate_path
 from prefab_ui.rx import RxStr
 
 Method = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
@@ -33,13 +33,10 @@ Method = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 class Fetch(Action):
     """Make an HTTP request from the browser.
 
-    Fires ``onSuccess`` with the parsed response body as ``$event``.
-    JSON responses are parsed automatically; other content types return
-    the raw text. Non-2xx responses trigger ``onError`` with the status
-    text as ``$error``.
-
-    If ``result_key`` is set, the response body is written into
-    client-side state at that key.
+    The parsed response body is available as ``$result`` in ``on_success``
+    callbacks. JSON responses are parsed automatically; other content types
+    return the raw text. Non-2xx responses trigger ``on_error`` with the
+    status text as ``$error``.
     """
 
     action: Literal["fetch"] = "fetch"
@@ -53,18 +50,6 @@ class Fetch(Action):
         default=None,
         description="Request body. Dicts are JSON-serialized automatically.",
     )
-    result_key: str | None = Field(
-        default=None,
-        alias="resultKey",
-        description="State key to store the response under.",
-    )
-
-    @field_validator("result_key")
-    @classmethod
-    def _validate_result_key(cls, v: str | None) -> str | None:
-        if v is not None:
-            _validate_path(v)
-        return v
 
     def __init__(self, url: str, **kwargs: Any) -> None:
         kwargs["url"] = url

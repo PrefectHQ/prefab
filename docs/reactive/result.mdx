@@ -1,0 +1,53 @@
+---
+title: RESULT
+sidebarTitle: $result
+description: The action's return value available in on_success callbacks.
+icon: circle-check
+---
+
+`RESULT` is a reactive reference to `$result` — the return value available inside `on_success` callbacks. When an action completes successfully, the framework captures its output and makes it available through this variable.
+
+```python
+from prefab_ui.components import Button
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
+
+Button(
+    "Search",
+    on_click=CallTool(
+        "search",
+        arguments={"q": "{{ query }}"},
+        on_success=SetState("results", RESULT),
+    ),
+)
+```
+
+## Where It's Available
+
+`RESULT` is only meaningful inside `on_success` handlers. Outside that context, `$result` is undefined. Every action that supports callbacks (`on_success` / `on_error`) makes this variable available when the action succeeds.
+
+For `CallTool`, `$result` is the tool's return value (parsed as JSON when possible). For `Fetch`, it's the parsed response body. You can use it with any action in the callback:
+
+```python
+from prefab_ui.actions import AppendState, SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
+
+CallTool(
+    "create_item",
+    arguments={"name": "{{ item_name }}"},
+    on_success=[
+        AppendState("items", RESULT),
+        ShowToast("Created!", variant="success"),
+    ],
+)
+```
+
+`$result` is the success counterpart of `$error`: one is available in `on_success`, the other in `on_error`. Neither exists outside its callback scope.
+
+## Import
+
+```python
+from prefab_ui.rx import RESULT
+```

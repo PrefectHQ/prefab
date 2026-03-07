@@ -8,18 +8,21 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `Fetch` makes HTTP requests from the browser using the native `fetch()` API. Use it to call REST endpoints, load external data, or submit forms — anything that speaks HTTP without needing an MCP server in the middle.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Load Users","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"showToast","message":"Users loaded!","variant":"success"},"action":"fetch","url":"/api/users","method":"GET","resultKey":"users"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IEZldGNoLCBTaG93VG9hc3QKCkJ1dHRvbigKICAgICJMb2FkIFVzZXJzIiwKICAgIG9uX2NsaWNrPUZldGNoLmdldCgKICAgICAgICAiL2FwaS91c2VycyIsCiAgICAgICAgcmVzdWx0X2tleT0idXNlcnMiLAogICAgICAgIG9uX3N1Y2Nlc3M9U2hvd1RvYXN0KCJVc2VycyBsb2FkZWQhIiwgdmFyaWFudD0ic3VjY2VzcyIpLAogICAgKSwKKQo=">
+<ComponentPreview json={{"view":{"type":"Button","label":"Load Users","variant":"default","size":"default","disabled":false,"onClick":{"onSuccess":[{"action":"setState","key":"users","value":"{{ $result }}"},{"action":"showToast","message":"Users loaded!","variant":"success"}],"action":"fetch","url":"/api/users","method":"GET"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IEZldGNoLCBTZXRTdGF0ZSwgU2hvd1RvYXN0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSRVNVTFQKCkJ1dHRvbigKICAgICJMb2FkIFVzZXJzIiwKICAgIG9uX2NsaWNrPUZldGNoLmdldCgKICAgICAgICAiL2FwaS91c2VycyIsCiAgICAgICAgb25fc3VjY2Vzcz1bCiAgICAgICAgICAgIFNldFN0YXRlKCJ1c2VycyIsIFJFU1VMVCksCiAgICAgICAgICAgIFNob3dUb2FzdCgiVXNlcnMgbG9hZGVkISIsIHZhcmlhbnQ9InN1Y2Nlc3MiKSwKICAgICAgICBdLAogICAgKSwKKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
-from prefab_ui.actions import Fetch, ShowToast
+from prefab_ui.actions import Fetch, SetState, ShowToast
+from prefab_ui.rx import RESULT
 
 Button(
     "Load Users",
     on_click=Fetch.get(
         "/api/users",
-        result_key="users",
-        on_success=ShowToast("Users loaded!", variant="success"),
+        on_success=[
+            SetState("users", RESULT),
+            ShowToast("Users loaded!", variant="success"),
+        ],
     ),
 )
 ```
@@ -32,11 +35,13 @@ Button(
     "size": "default",
     "disabled": false,
     "onClick": {
-      "onSuccess": {"action": "showToast", "message": "Users loaded!", "variant": "success"},
+      "onSuccess": [
+        {"action": "setState", "key": "users", "value": "{{ $result }}"},
+        {"action": "showToast", "message": "Users loaded!", "variant": "success"}
+      ],
       "action": "fetch",
       "url": "/api/users",
-      "method": "GET",
-      "resultKey": "users"
+      "method": "GET"
     }
   }
 }
@@ -44,7 +49,7 @@ Button(
 </CodeGroup>
 </ComponentPreview>
 
-The response is parsed automatically — JSON becomes an object, everything else becomes a string. If `result_key` is set, the parsed response is written into client-side state, making it immediately available via `{{ users }}` interpolation. The `on_success` callback fires after a successful request, so you can confirm the result with a toast or trigger follow-up actions.
+The response is parsed automatically — JSON becomes an object, everything else becomes a string. The `on_success` callback fires after a successful request, and the parsed response is available as `$result` (Python: `RESULT`). Use `SetState("users", RESULT)` inside `on_success` to write the response into client-side state, making it immediately available via `{{ users }}` interpolation.
 
 ## Classmethods
 
@@ -74,7 +79,8 @@ Fetch.delete(f"/api/users/{user_id}")
 You can also construct a `Fetch` directly for full control:
 
 ```python Full form
-from prefab_ui.rx import Rx
+from prefab_ui.actions import Fetch, SetState
+from prefab_ui.rx import RESULT, Rx
 
 form_data = Rx("form_data")
 
@@ -83,7 +89,7 @@ Fetch(
     method="POST",
     headers={"X-Custom": "value"},
     body={"data": form_data},
-    result_key="response",
+    on_success=SetState("response", RESULT),
 )
 ```
 
@@ -118,7 +124,7 @@ Like any action, `Fetch` composes in a list. A common pattern: show a loading st
 ```python Combined actions
 from prefab_ui.components import Button
 from prefab_ui.actions import Fetch, SetState
-from prefab_ui.rx import Rx
+from prefab_ui.rx import RESULT, Rx
 
 query = Rx("query")
 
@@ -129,7 +135,7 @@ Button(
         Fetch.post(
             "/api/submit",
             body={"q": query},
-            result_key="result",
+            on_success=SetState("result", RESULT),
         ),
         SetState("loading", False),
     ],
@@ -157,9 +163,6 @@ If the request fails, `SetState("loading", False)` never runs (the chain short-c
   Request body. Dicts are JSON-serialized automatically. Ignored for GET requests.
 </ParamField>
 
-<ParamField body="result_key" type="str">
-  State key to store the parsed response under. Supports dot-paths like `data.users`.
-</ParamField>
 </Card>
 
 ## Protocol Reference
@@ -170,8 +173,7 @@ If the request fails, `SetState("loading", False)` never runs (the chain short-c
   "url": "string (required)",
   "method?": "GET | POST | PUT | PATCH | DELETE",
   "headers?": "object",
-  "body?": "object | string",
-  "resultKey?": "string"
+  "body?": "object | string"
 }
 ```
 

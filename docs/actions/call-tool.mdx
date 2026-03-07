@@ -110,6 +110,48 @@ Button("Analyze", on_click=[
 
 The `SetState` executes first (instant), then `CallTool` fires the server request.
 
+## Handling Results
+
+The tool's return value is available as `$result` (Python: `RESULT`) inside `on_success` callbacks. Use `SetState` to write it into client-side state:
+
+```python Writing results to state
+from prefab_ui.components import Button
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
+
+Button(
+    "Search",
+    on_click=CallTool(
+        "search",
+        arguments={"q": "{{ query }}"},
+        on_success=SetState("results", RESULT),
+    ),
+)
+```
+
+`$result` is the success counterpart of `$error`: one is available in `on_success`, the other in `on_error`. You can combine them with any action — `ShowToast`, `AppendState`, or chain multiple actions in a list:
+
+```python Callbacks with result
+from prefab_ui.components import Button
+from prefab_ui.actions import AppendState, SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import ERROR, RESULT
+
+Button(
+    "Add Item",
+    on_click=CallTool(
+        "create_item",
+        arguments={"name": "{{ item_name }}"},
+        on_success=[
+            AppendState("items", RESULT),
+            ShowToast("Item created!", variant="success"),
+        ],
+        on_error=ShowToast(ERROR, variant="error"),
+    ),
+)
+```
+
 ## API Reference
 
 <Card icon="code" title="CallTool Parameters">
@@ -128,8 +170,7 @@ The `SetState` executes first (instant), then `CallTool` fires the server reques
 {
   "action": "toolCall",
   "tool": "string (required)",
-  "arguments?": "object",
-  "resultKey?": "string"
+  "arguments?": "object"
 }
 ```
 

@@ -19,12 +19,15 @@ class Slot(ContainerComponent):
         with Slot("detail_view"):
             Text("Select an item to see details")
 
-    The slot content is typically populated by an action with
-    ``result_key``::
+    The slot content is typically populated by writing component JSON
+    into state via ``SetState`` in an ``on_success`` callback::
 
         Button(
             "Load Details",
-            on_click=CallTool("get_detail", result_key="detail_view"),
+            on_click=CallTool(
+                "get_detail",
+                on_success=SetState("detail_view", RESULT),
+            ),
         )
     """
 

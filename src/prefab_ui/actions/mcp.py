@@ -29,9 +29,8 @@ class CallTool(Action):
     ``PrefabApp.to_json(tool_resolver=...)``.  Without a resolver,
     the function's ``__name__`` is used as a fallback.
 
-    If ``result_key`` is set, the tool's return value is written into
-    client-side state at that key. The key supports interpolation:
-    ``result_key="detail_{{ selectedId }}"``.
+    The tool's return value is available as ``$result`` in ``on_success``
+    callbacks.
     """
 
     action: Literal["toolCall"] = "toolCall"
@@ -39,11 +38,6 @@ class CallTool(Action):
     arguments: dict[str, Any] = Field(
         default_factory=dict,
         description="Arguments to pass. Supports {{ key }} interpolation.",
-    )
-    result_key: str | None = Field(
-        default=None,
-        alias="resultKey",
-        description="State key to store the tool result under",
     )
     _tool_ref: Callable[..., Any] | None = PrivateAttr(default=None)
 

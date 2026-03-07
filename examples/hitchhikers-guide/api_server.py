@@ -30,7 +30,7 @@ from prefab_ui.components import (
     Text,
 )
 from prefab_ui.components.control_flow import ForEach
-from prefab_ui.rx import ERROR, EVENT
+from prefab_ui.rx import ERROR, EVENT, RESULT
 
 app = FastAPI()
 
@@ -88,7 +88,10 @@ def guide():
                                 SetState("new_title", ""),
                                 SetState("new_category", ""),
                                 SetState("new_description", ""),
-                                Fetch.get("/api/entries", result_key="entries"),
+                                Fetch.get(
+                                    "/api/entries",
+                                    on_success=SetState("entries", RESULT),
+                                ),
                                 CloseOverlay(),
                             ],
                             on_error=ShowToast(ERROR, variant="error"),
@@ -109,7 +112,7 @@ def guide():
                 Fetch.get(
                     "/api/entries",
                     params={"q": EVENT},
-                    result_key="entries",
+                    on_success=SetState("entries", RESULT),
                 ),
             ],
         )
@@ -132,7 +135,7 @@ def guide():
                                     on_success=Fetch.get(
                                         "/api/entries",
                                         params={"q": "{{ q }}"},
-                                        result_key="entries",
+                                        on_success=SetState("entries", RESULT),
                                     ),
                                     on_error=ShowToast(ERROR, variant="error"),
                                 ),
