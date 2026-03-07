@@ -9,11 +9,11 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Prefab UIs are trees of components. You compose them with Python's `with` statement: nesting in code mirrors nesting on screen. This page builds up from simple layout primitives to a complete interface, one layer at a time.
 
-Composition controls the _structure_ of your interface, while CSS handles styling and layout fine-tuning. Every component accepts a `css_class` prop that maps directly to [Tailwind utility classes](/css), so you can adjust widths, colors, spacing, and more without leaving Python.
+Composition controls the _structure_ of your interface, while CSS handles styling and layout fine-tuning. Every component accepts a `css_class` prop that maps directly to [Tailwind utility classes](/styling/css), so you can adjust widths, colors, spacing, and more without leaving Python.
 
 ## Rows and columns
 
-Every interface needs a way to arrange things on screen. Prefab provides two fundamental layout containers: `Row` arranges children horizontally, and `Column` stacks them vertically. Both accept a `gap` parameter that controls the spacing between children; the number maps to [Tailwind's spacing scale](/css), so `gap=4` means `1rem`.
+Every interface needs a way to arrange things on screen. Prefab provides two fundamental layout containers: `Row` arranges children horizontally, and `Column` stacks them vertically. Both accept a `gap` parameter that controls the spacing between children; the number maps to [Tailwind's spacing scale](/styling/css), so `gap=4` means `1rem`.
 
 To place components inside a container, use Python's `with` statement. Any component created inside a `with` block automatically becomes a child of that container.
 

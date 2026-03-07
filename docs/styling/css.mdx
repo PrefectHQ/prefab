@@ -1,9 +1,26 @@
 ---
 title: CSS Helpers
-description: Compose Tailwind classes without repeating variant prefixes.
+description: Compose Tailwind classes and target components by id.
 ---
 
-Every Prefab component accepts a `css_class` prop for Tailwind styling. A plain string works fine until you start mixing hover states, focus rings, and breakpoints — then the prefixes pile up:
+Every Prefab component accepts a `css_class` prop for Tailwind styling and an `id` prop for targeting with custom CSS selectors.
+
+## Component IDs
+
+The `id` prop sets the HTML `id` attribute on a component's outermost element. This is useful when you need to target a specific component with custom CSS or anchor links:
+
+```python
+from prefab_ui.components import Card, Column
+
+Card(id="status-card", css_class="my-card-styles")
+Column(id="sidebar")
+```
+
+For components that render multiple DOM elements, `id` is always applied to the outermost wrapper.
+
+## Tailwind Classes
+
+A plain `css_class` string works fine until you start mixing hover states, focus rings, and breakpoints — then the prefixes pile up:
 
 ```python
 css_class="border-0 ring-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b focus-visible:border-border hover:bg-muted"

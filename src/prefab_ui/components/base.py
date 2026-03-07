@@ -268,6 +268,11 @@ class Component(BaseModel):
     to automatic name generation.  When set, components without an explicit
     ``name`` receive a deterministic sequential key like ``slider-1``."""
 
+    id: str | None = Field(
+        default=None,
+        description="HTML id attribute for CSS targeting. Applied to the outermost element.",
+    )
+
     css_class: Annotated[str | None, BeforeValidator(_coerce_css_class)] = Field(
         default=None,
         alias="cssClass",
