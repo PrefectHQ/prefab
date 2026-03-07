@@ -258,6 +258,10 @@ function mapProps(
     }
     delete mapped.min;
     delete mapped.max;
+    if ("indicatorClass" in mapped) {
+      mapped.indicatorClassName = mapped.indicatorClass;
+      delete mapped.indicatorClass;
+    }
   }
 
   // Select/RadioGroup: onChange → onValueChange

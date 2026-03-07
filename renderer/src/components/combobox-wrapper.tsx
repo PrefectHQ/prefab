@@ -58,7 +58,7 @@ export function PrefabCombobox({
           aria-expanded={open}
           disabled={disabled}
           className={cn(
-            "cn-combobox-trigger w-[240px] justify-between font-normal",
+            "cn-combobox-trigger w-full justify-between font-normal",
             !value && "text-muted-foreground",
             className,
           )}
@@ -67,10 +67,7 @@ export function PrefabCombobox({
           <ChevronsUpDown className="cn-combobox-trigger-icon" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="cn-combobox-content w-[240px] p-0"
-        align="start"
-      >
+      <PopoverContent className="cn-combobox-content p-0" align="start">
         <div className="p-2">
           <Input
             placeholder={searchPlaceholder}

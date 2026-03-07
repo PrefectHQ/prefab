@@ -27,6 +27,7 @@ interface RingProps {
   variant?: string;
   size?: string;
   thickness?: number;
+  indicatorClassName?: string;
   className?: string;
   cssClass?: string;
   children?: React.ReactNode;
@@ -38,6 +39,7 @@ export function Ring({
   variant = "default",
   size = "default",
   thickness = 6,
+  indicatorClassName,
   className,
   cssClass,
   children,
@@ -52,7 +54,7 @@ export function Ring({
   return (
     <div
       className={cn(
-        "cn-ring inline-flex items-center justify-center",
+        "cn-ring group inline-flex items-center justify-center overflow-visible",
         className,
         cssClass,
       )}
@@ -68,6 +70,7 @@ export function Ring({
         height={px}
         viewBox={`0 0 ${px} ${px}`}
         className="cn-ring-svg"
+        overflow="visible"
         style={{ transform: "rotate(-90deg)" }}
       >
         <circle
@@ -81,6 +84,7 @@ export function Ring({
           className={cn(
             "cn-ring-fill",
             VARIANT_CLASS[variant] ?? VARIANT_CLASS.default,
+            indicatorClassName,
           )}
           cx={half}
           cy={half}
