@@ -129,7 +129,12 @@ def _execute_and_serialize(
     state: dict[str, Any] = {}
     for c in created:
         if isinstance(c, StatefulMixin):
-            val = c._get_initial_value()
+            # Extract the initial value from the component's model fields.
+            val = None
+            for field_name in ("value", "checked", "default_value"):
+                if field_name in c.model_fields:
+                    val = c.__dict__.get(field_name)
+                    break
             if val is None or isinstance(val, Rx):
                 continue
             if isinstance(val, str) and "{{" in val:

@@ -56,7 +56,6 @@ class Calendar(StatefulMixin, Component):
         | None
     ) = Field(
         default=None,
-        exclude=True,
         description="Initial selected date(s). Single: a date or Rx. Range: {'from': date, 'to': date}. Multiple: list of dates. Any position accepts an Rx for reactive binding.",
     )
     name: str | None = Field(
@@ -68,11 +67,6 @@ class Calendar(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) when selection changes",
     )
-
-    def _get_initial_value(self) -> str | None:
-        if isinstance(self.value, str):
-            return self.value
-        return None
 
     def model_post_init(self, __context: Any) -> None:
         if self.value is not None and not isinstance(self.value, str):

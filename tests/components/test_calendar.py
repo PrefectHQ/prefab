@@ -27,10 +27,10 @@ class TestCalendarValue:
         c = Calendar(value=datetime.date(2026, 5, 4))
         assert c.value == "2026-05-04T12:00:00.000Z"
 
-    def test_value_excluded_from_json(self):
+    def test_value_included_in_json(self):
         c = Calendar(value=datetime.date(2026, 5, 4))
         j = c.to_json()
-        assert "value" not in j
+        assert j["value"] == "2026-05-04T12:00:00.000Z"
 
     def test_range_dict_converts_to_json_object(self):
         c = Calendar(
@@ -69,27 +69,3 @@ class TestCalendarValue:
     def test_string_value_passthrough(self):
         c = Calendar(value="2026-05-04T12:00:00.000Z")
         assert c.value == "2026-05-04T12:00:00.000Z"
-
-
-class TestCalendarGetInitialValue:
-    def test_returns_none_when_no_value(self):
-        c = Calendar()
-        assert c._get_initial_value() is None
-
-    def test_returns_iso_string_for_date(self):
-        c = Calendar(value=datetime.date(2026, 5, 4))
-        assert c._get_initial_value() == "2026-05-04T12:00:00.000Z"
-
-    def test_returns_json_for_range(self):
-        c = Calendar(
-            mode="range",
-            value={
-                "from": datetime.date(2025, 6, 10),
-                "to": datetime.date(2025, 6, 20),
-            },
-        )
-        val = c._get_initial_value()
-        assert val is not None
-        parsed = json.loads(val)
-        assert "from" in parsed
-        assert "to" in parsed

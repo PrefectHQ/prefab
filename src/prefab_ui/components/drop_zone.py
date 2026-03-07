@@ -22,7 +22,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any, ClassVar, Literal
+from typing import ClassVar, Literal
 
 from pydantic import Field
 
@@ -93,6 +93,3 @@ class DropZone(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when files are selected",
     )
-
-    def _get_initial_value(self) -> Any:
-        return []

@@ -109,6 +109,3 @@ class Input(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when value changes",
     )
-
-    def _get_initial_value(self) -> RxStr | None:
-        return self.value
