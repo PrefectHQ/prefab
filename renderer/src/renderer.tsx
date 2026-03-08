@@ -215,11 +215,19 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
           ? (stateValue as number[])
           : [Number(stateValue)];
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (values: number[]) => {
-          state.set(name, isRange ? values : values[0]);
-        };
-      }
+      // Always sync slider's own state so the controlled value updates.
+      // If the user also provided onValueChange (via on_change), wrap it.
+      const userHandler = finalProps.onValueChange as
+        | ((val: number | readonly number[]) => void)
+        | undefined;
+      finalProps.onValueChange = (val: number | readonly number[]) => {
+        if (isRange) {
+          state.set(name, Array.isArray(val) ? val : [val]);
+        } else {
+          state.set(name, Array.isArray(val) ? val[0] : val);
+        }
+        userHandler?.(val);
+      };
     } else if (type === "Calendar" || type === "DatePicker") {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);

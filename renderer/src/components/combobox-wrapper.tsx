@@ -8,7 +8,6 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/ui/popover";
 import { Input } from "@/ui/input";
 
@@ -51,21 +50,18 @@ export function PrefabCombobox({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            "cn-combobox-trigger w-full justify-between font-normal",
-            !value && "text-muted-foreground",
-            className,
-          )}
-        >
-          {selectedLabel ?? placeholder}
-          <ChevronsUpDown className="cn-combobox-trigger-icon" />
-        </Button>
+      <PopoverTrigger
+        role="combobox"
+        aria-expanded={open}
+        disabled={disabled}
+        className={cn(
+          "cn-button cn-button-variant-outline cn-button-size-default cn-combobox-trigger w-full justify-between font-normal",
+          !value && "text-muted-foreground",
+          className,
+        )}
+      >
+        {selectedLabel ?? placeholder}
+        <ChevronsUpDown className="cn-combobox-trigger-icon" />
       </PopoverTrigger>
       <PopoverContent className="cn-combobox-content p-0" align="start">
         <div className="p-2">

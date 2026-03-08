@@ -25,6 +25,11 @@
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import AppendState, SetState, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import ERROR, RESULT\n\nButton(\n    \"Add Item\",\n    on_click=CallTool(\n        \"create_item\",\n        arguments={\"name\": \"{{ item_name }}\"},\n        on_success=[\n            AppendState(\"items\", RESULT),\n            ShowToast(\"Item created!\", variant=\"success\"),\n        ],\n        on_error=ShowToast(ERROR, variant=\"error\"),\n    ),\n)"
   },
   {
+    "title": "from fastmcp import FastMCP, FastMCPApp",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import RESULT\n\napp = FastMCPApp(\"My App\")\n\n@app.tool()\ndef search(q: str) -> list[dict]:\n    return [{\"name\": \"Arthur\"}, {\"name\": \"Ford\"}]\n\n@app.ui()\ndef browse():\n    # Function reference — resolved automatically\n    Button(\"Search\", on_click=CallTool(\n        search,\n        arguments={\"q\": \"{{ query }}\"},\n        on_success=SetState(\"results\", RESULT),\n    ))"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions import Fetch, SetState, ShowToast\nfrom prefab_ui.rx import RESULT\n\nButton(\n    \"Load Users\",\n    on_click=Fetch.get(\n        \"/api/users\",\n        on_success=[\n            SetState(\"users\", RESULT),\n            ShowToast(\"Users loaded!\", variant=\"success\"),\n        ],\n    ),\n)"

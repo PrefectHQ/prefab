@@ -65,16 +65,14 @@ export function ThemePicker({ value, onChange }: ThemePickerProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          className={`inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground ${
-            value ? "bg-accent text-accent-foreground" : ""
-          }`}
-          aria-label="Theme"
-          title="Theme"
-        >
-          <Palette className="h-4 w-4" />
-        </button>
+      <PopoverTrigger
+        className={`inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground ${
+          value ? "bg-accent text-accent-foreground" : ""
+        }`}
+        aria-label="Theme"
+        title="Theme"
+      >
+        <Palette className="h-4 w-4" />
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[320px] p-3">
         <div className="mb-2 text-xs font-medium text-muted-foreground">

@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/ui/popover";
-import { Button } from "@/ui/button";
+
 import type { DateRange } from "react-day-picker";
 
 // ── Calendar ────────────────────────────────────────────────────────────
@@ -162,18 +162,15 @@ export function PrefabDatePicker({
 
   return (
     <ShadcnPopover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !selectedDate && "text-muted-foreground",
-            className,
-          )}
-        >
-          <CalendarIcon className="size-4" />
-          {selectedDate ? format(selectedDate, "PPP") : placeholder}
-        </Button>
+      <PopoverTrigger
+        className={cn(
+          "cn-button cn-button-variant-outline cn-button-size-default w-full justify-start text-left font-normal",
+          !selectedDate && "text-muted-foreground",
+          className,
+        )}
+      >
+        <CalendarIcon className="size-4" />
+        {selectedDate ? format(selectedDate, "PPP") : placeholder}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <ShadcnCalendar
