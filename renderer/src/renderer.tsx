@@ -152,6 +152,82 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // don't need to supply names manually.
   autoAssignName(type, finalProps);
 
+  // --- Custom child handling: Combobox with groups/separators ---
+  // Combobox children may include ComboboxGroup, ComboboxLabel,
+  // ComboboxSeparator alongside flat ComboboxOption children.
+  if (type === "Combobox" && children) {
+    const hasGroups = children.some((c) => c.type === "ComboboxGroup");
+
+    if (hasGroups) {
+      // Build structured groups data
+      const groups: { label?: string; items: Record<string, unknown>[] }[] = [];
+      for (const child of children) {
+        if (child.type === "ComboboxGroup" && child.children) {
+          const group: { label?: string; items: Record<string, unknown>[] } = {
+            items: [],
+          };
+          for (const gc of child.children) {
+            if (gc.type === "ComboboxLabel" && "label" in gc) {
+              const val = gc.label;
+              group.label = (
+                typeof val === "string" ? interpolateString(val, ctx) : val
+              ) as string;
+            } else if (gc.type === "ComboboxOption") {
+              const item: Record<string, unknown> = {};
+              for (const field of ["value", "label", "disabled"]) {
+                if (field in gc) {
+                  const val = gc[field];
+                  item[field] =
+                    typeof val === "string" ? interpolateString(val, ctx) : val;
+                }
+              }
+              group.items.push(item);
+            }
+          }
+          groups.push(group);
+        }
+      }
+      finalProps._groups = groups;
+    } else {
+      // Flat items with optional separators
+      const items: Record<string, unknown>[] = [];
+      const separatorIndices: number[] = [];
+      for (const child of children) {
+        if (child.type === "ComboboxSeparator") {
+          separatorIndices.push(items.length);
+        } else if (child.type === "ComboboxOption") {
+          const item: Record<string, unknown> = {};
+          for (const field of ["value", "label", "disabled"]) {
+            if (field in child) {
+              const val = child[field];
+              item[field] =
+                typeof val === "string" ? interpolateString(val, ctx) : val;
+            }
+          }
+          items.push(item);
+        }
+      }
+      finalProps._items = items;
+      if (separatorIndices.length > 0) {
+        finalProps._separatorIndices = separatorIndices;
+      }
+    }
+
+    // Auto-state for Combobox with name prop
+    if ("name" in finalProps && typeof finalProps.name === "string") {
+      const name = finalProps.name;
+      const stateValue = state.get(name);
+      if (stateValue !== undefined) {
+        finalProps.value = String(stateValue);
+      }
+      if (!finalProps.onValueChange) {
+        finalProps.onValueChange = (val: string) => state.set(name, val);
+      }
+    }
+
+    return <Component {...finalProps}>{textContent}</Component>;
+  }
+
   // --- Custom child handling: composite components ---
   // Select and RadioGroup consume their children as data items
   // rather than rendering them as nested React components.

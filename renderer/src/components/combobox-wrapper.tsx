@@ -1,20 +1,25 @@
 /**
- * Combobox — searchable select built on Popover + filtered list.
+ * Combobox — searchable select built on Base UI's Combobox primitive.
  *
- * Uses `cn-combobox-*` classes from the v4 stylesheet. No cmdk dependency —
- * filtering is done in-component via simple string matching.
+ * Uses `cn-combobox-*` classes from the v4 stylesheet.
+ * Supports groups, labels, separators, side/align positioning, and invalid state.
  */
 
 import * as React from "react";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverTrigger, PopoverContent } from "@/ui/popover";
-import { Input } from "@/ui/input";
+import { usePortalContainer } from "../portal-container";
 
 interface ComboboxItemData {
   value: string;
   label: string;
   disabled?: boolean;
+}
+
+interface ComboboxGroupData {
+  label?: string;
+  items: ComboboxItemData[];
 }
 
 interface PrefabComboboxProps {
@@ -23,9 +28,32 @@ interface PrefabComboboxProps {
   name?: string;
   disabled?: boolean;
   value?: string;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  invalid?: boolean;
   onValueChange?: (value: string) => void;
   className?: string;
   _items?: ComboboxItemData[];
+  _groups?: ComboboxGroupData[];
+  _separatorIndices?: number[];
+}
+
+function ComboboxItem({ item }: { item: ComboboxItemData }) {
+  return (
+    <ComboboxPrimitive.Item
+      value={item.value}
+      disabled={item.disabled}
+      className={cn(
+        "cn-combobox-item relative flex cursor-pointer select-none items-center",
+        item.disabled && "pointer-events-none opacity-50",
+      )}
+    >
+      <span className="cn-combobox-item-text">{item.label}</span>
+      <ComboboxPrimitive.ItemIndicator className="cn-combobox-item-indicator">
+        <Check className="size-4" />
+      </ComboboxPrimitive.ItemIndicator>
+    </ComboboxPrimitive.Item>
+  );
 }
 
 export function PrefabCombobox({
@@ -33,89 +61,103 @@ export function PrefabCombobox({
   searchPlaceholder = "Search...",
   disabled,
   value,
+  side = "bottom",
+  align = "start",
+  invalid = false,
   onValueChange,
   className,
   _items = [],
+  _groups = [],
+  _separatorIndices = [],
 }: PrefabComboboxProps) {
-  const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
+  const container = usePortalContainer();
+  const hasGroups = _groups.length > 0;
 
-  const filtered = React.useMemo(() => {
-    if (!search) return _items;
-    const lower = search.toLowerCase();
-    return _items.filter((item) => item.label.toLowerCase().includes(lower));
-  }, [_items, search]);
+  // Collect all items (flat + from groups) for finding selected label
+  const allItems = React.useMemo(() => {
+    if (hasGroups) {
+      return _groups.flatMap((g) => g.items);
+    }
+    return _items;
+  }, [_items, _groups, hasGroups]);
 
-  const selectedLabel = _items.find((i) => i.value === value)?.label;
+  const selectedLabel = allItems.find((i) => i.value === value)?.label;
+
+  // Build the separator index set for flat items
+  const separatorSet = React.useMemo(
+    () => new Set(_separatorIndices),
+    [_separatorIndices],
+  );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        role="combobox"
-        aria-expanded={open}
+    <ComboboxPrimitive.Root
+      value={value ?? null}
+      onValueChange={(newValue: string | null) => {
+        onValueChange?.(newValue ?? "");
+      }}
+      disabled={disabled}
+    >
+      <ComboboxPrimitive.Trigger
+        aria-invalid={invalid || undefined}
         disabled={disabled}
         className={cn(
           "cn-button cn-button-variant-outline cn-button-size-default cn-combobox-trigger w-full justify-between font-normal",
           !value && "text-muted-foreground",
+          invalid &&
+            "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
           className,
         )}
       >
         {selectedLabel ?? placeholder}
         <ChevronsUpDown className="cn-combobox-trigger-icon" />
-      </PopoverTrigger>
-      <PopoverContent className="cn-combobox-content p-0" align="start">
-        <div className="p-2">
-          <Input
-            placeholder={searchPlaceholder}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-8"
-          />
-        </div>
-        <div
-          className="cn-combobox-list"
-          data-empty={filtered.length === 0 ? "" : undefined}
-          role="listbox"
+      </ComboboxPrimitive.Trigger>
+
+      <ComboboxPrimitive.Portal container={container}>
+        <ComboboxPrimitive.Positioner
+          side={side}
+          sideOffset={4}
+          align={align}
+          className="isolate z-50"
         >
-          {filtered.map((item) => (
-            <div
-              key={item.value}
-              role="option"
-              aria-selected={value === item.value}
-              aria-disabled={item.disabled}
-              data-highlighted={undefined}
-              className={cn(
-                "cn-combobox-item relative flex cursor-pointer select-none items-center",
-                item.disabled && "pointer-events-none opacity-50",
-              )}
-              onMouseEnter={(e) =>
-                e.currentTarget.setAttribute("data-highlighted", "")
-              }
-              onMouseLeave={(e) =>
-                e.currentTarget.removeAttribute("data-highlighted")
-              }
-              onClick={() => {
-                if (item.disabled) return;
-                onValueChange?.(item.value === value ? "" : item.value);
-                setOpen(false);
-                setSearch("");
-              }}
-            >
-              <span className="cn-combobox-item-text">{item.label}</span>
-              {value === item.value && (
-                <span className="cn-combobox-item-indicator">
-                  <Check className="size-4" />
-                </span>
-              )}
-            </div>
-          ))}
-          {filtered.length === 0 && (
-            <div className="py-6 text-center text-sm text-muted-foreground">
+          <ComboboxPrimitive.Popup className="cn-combobox-content group/combobox-content p-0">
+            <ComboboxPrimitive.Input
+              placeholder={searchPlaceholder}
+              className="cn-input h-8 m-1 mb-0 w-[calc(100%-0.5rem)] border bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            />
+            <ComboboxPrimitive.List className="cn-combobox-list">
+              {hasGroups
+                ? _groups.map((group, gi) => (
+                    <React.Fragment key={gi}>
+                      {gi > 0 && (
+                        <ComboboxPrimitive.Separator className="cn-combobox-separator" />
+                      )}
+                      <ComboboxPrimitive.Group>
+                        {group.label && (
+                          <ComboboxPrimitive.GroupLabel className="cn-combobox-label">
+                            {group.label}
+                          </ComboboxPrimitive.GroupLabel>
+                        )}
+                        {group.items.map((item) => (
+                          <ComboboxItem key={item.value} item={item} />
+                        ))}
+                      </ComboboxPrimitive.Group>
+                    </React.Fragment>
+                  ))
+                : _items.map((item, idx) => (
+                    <React.Fragment key={item.value}>
+                      {separatorSet.has(idx) && (
+                        <ComboboxPrimitive.Separator className="cn-combobox-separator" />
+                      )}
+                      <ComboboxItem item={item} />
+                    </React.Fragment>
+                  ))}
+            </ComboboxPrimitive.List>
+            <ComboboxPrimitive.Empty className="cn-combobox-empty">
               No results found.
-            </div>
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
+            </ComboboxPrimitive.Empty>
+          </ComboboxPrimitive.Popup>
+        </ComboboxPrimitive.Positioner>
+      </ComboboxPrimitive.Portal>
+    </ComboboxPrimitive.Root>
   );
 }

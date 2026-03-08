@@ -542,6 +542,16 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import (\n    Combobox,\n    ComboboxGroup,\n    ComboboxLabel,\n    ComboboxOption,\n)\n\nwith Combobox(placeholder=\"Choose a destination...\", css_class=\"w-fit mx-auto\"):\n    with ComboboxGroup():\n        ComboboxLabel(\"Inner Planets\")\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n    with ComboboxGroup():\n        ComboboxLabel(\"Outer Reaches\")\n        ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n        ComboboxOption(\"Krikkit\", value=\"krikkit\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Combobox, ComboboxOption, ComboboxSeparator\n\nwith Combobox(placeholder=\"Pick one...\", css_class=\"w-fit mx-auto\"):\n    ComboboxOption(\"Earth\", value=\"earth\")\n    ComboboxOption(\"Mars\", value=\"mars\")\n    ComboboxSeparator()\n    ComboboxOption(\"Jupiter\", value=\"jupiter\")\n    ComboboxOption(\"Saturn\", value=\"saturn\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Alert, AlertTitle, Column, Row, Switch, Text\nfrom prefab_ui.components.control_flow import If\nfrom prefab_ui.rx import Rx\n\noutOfStock = Rx(\"outOfStock\")\n\nwith Column(gap=3):\n    with Row(gap=2, align=\"center\"):\n        Switch(name=\"outOfStock\")\n        Text(\"Out of stock\")\n    with If(outOfStock):\n        with Alert(variant=\"destructive\"):\n            AlertTitle(\"This item is unavailable\")"
   },
   {

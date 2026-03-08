@@ -3,6 +3,9 @@
 A filterable dropdown for selecting from large option lists. Options are
 defined as ``ComboboxOption`` children, similar to ``Select``/``SelectOption``.
 
+Supports grouping options with ``ComboboxGroup`` and ``ComboboxLabel``,
+and visual dividers with ``ComboboxSeparator``.
+
 Example::
 
     from prefab_ui.components import Combobox, ComboboxOption
@@ -56,16 +59,72 @@ class ComboboxOption(Component):
         super().__init__(**kwargs)
 
 
+class ComboboxGroup(ContainerComponent):
+    """A group container for related combobox options.
+
+    Children should be ``ComboboxLabel`` and ``ComboboxOption`` components.
+
+    Example::
+
+        with ComboboxGroup():
+            ComboboxLabel("Planets")
+            ComboboxOption("Earth", value="earth")
+            ComboboxOption("Mars", value="mars")
+    """
+
+    type: Literal["ComboboxGroup"] = "ComboboxGroup"
+
+
+class ComboboxLabel(Component):
+    """A label/header for a ``ComboboxGroup``.
+
+    Example::
+
+        ComboboxLabel("Planets")
+    """
+
+    type: Literal["ComboboxLabel"] = "ComboboxLabel"
+    label: RxStr = Field(description="Label text")
+
+    @overload
+    def __init__(self, label: str, /, **kwargs: Any) -> None: ...
+
+    @overload
+    def __init__(self, *, label: str, **kwargs: Any) -> None: ...
+
+    def __init__(self, label: str | None = None, **kwargs: Any) -> None:
+        if label is not None and "label" not in kwargs:
+            kwargs["label"] = label
+        super().__init__(**kwargs)
+
+
+class ComboboxSeparator(Component):
+    """A visual divider between combobox options or groups.
+
+    Example::
+
+        ComboboxOption("Earth", value="earth")
+        ComboboxSeparator()
+        ComboboxOption("Mars", value="mars")
+    """
+
+    type: Literal["ComboboxSeparator"] = "ComboboxSeparator"
+
+
 class Combobox(StatefulMixin, ContainerComponent):
     """Searchable select dropdown.
 
-    Children must be ``ComboboxOption`` components.
+    Children must be ``ComboboxOption``, ``ComboboxGroup``,
+    ``ComboboxLabel``, or ``ComboboxSeparator`` components.
 
     Args:
         placeholder: Placeholder text when no value selected
         search_placeholder: Placeholder text in the search input
         name: State key for the selected value
         disabled: Whether the combobox is disabled
+        side: Which side to show the dropdown
+        align: Alignment of the dropdown relative to the trigger
+        invalid: Whether the combobox is in an error state
 
     Example::
 
@@ -91,6 +150,15 @@ class Combobox(StatefulMixin, ContainerComponent):
         description="State key for reactive binding. Auto-generated if omitted.",
     )
     disabled: bool = Field(default=False, description="Whether combobox is disabled")
+    side: Literal["top", "right", "bottom", "left"] | None = Field(
+        default=None, description="Which side to show the dropdown"
+    )
+    align: Literal["start", "center", "end"] | None = Field(
+        default=None, description="Alignment of the dropdown relative to the trigger"
+    )
+    invalid: bool = Field(
+        default=False, description="Whether the combobox is in an error state"
+    )
     on_change: Action | list[Action] | None = Field(
         default=None,
         alias="onChange",
