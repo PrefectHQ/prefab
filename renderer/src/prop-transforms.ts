@@ -25,6 +25,9 @@ export const ITEM_CHILD_TYPES: Record<string, string[]> = {
   RadioGroup: ["value", "label", "checked", "disabled"],
 };
 
+/** Child types used for Select option groups. */
+export const SELECT_GROUP_FIELDS = ["value", "label", "selected", "disabled"];
+
 /**
  * Bind action props — replace action spec objects with actual event handlers.
  *

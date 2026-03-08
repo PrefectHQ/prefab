@@ -13,7 +13,10 @@ import { cn } from "@/lib/utils";
 import {
   Select as ShadcnSelect,
   SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
@@ -89,15 +92,48 @@ interface RadioItemData {
 /*  Select                                                            */
 /* ------------------------------------------------------------------ */
 
+interface SelectGroupData {
+  _type: "group";
+  label?: string;
+  items: SelectItemData[];
+}
+
+interface SelectItemEntry {
+  _type: "item";
+  value: string;
+  label: string;
+  selected?: boolean;
+  disabled?: boolean;
+}
+
+interface SelectSeparatorEntry {
+  _type: "separator";
+}
+
+interface SelectLabelEntry {
+  _type: "label";
+  label?: string;
+}
+
+type SelectChildEntry =
+  | SelectGroupData
+  | SelectItemEntry
+  | SelectSeparatorEntry
+  | SelectLabelEntry;
+
 interface PrefabSelectProps {
   placeholder?: string;
   name?: string;
   size?: "sm" | "default";
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
   disabled?: boolean;
+  invalid?: boolean;
   className?: string;
   value?: string;
   onValueChange?: (value: string) => void;
   _items?: SelectItemData[];
+  _selectChildren?: SelectChildEntry[];
   children?: React.ReactNode;
 }
 
@@ -105,35 +141,93 @@ export function PrefabSelect({
   placeholder,
   name,
   size,
+  side,
+  align,
   disabled,
+  invalid,
   className,
   value,
   onValueChange,
   _items = [],
+  _selectChildren,
 }: PrefabSelectProps) {
-  const defaultValue = _items.find((i) => i.selected)?.value;
+  // Build a flat list of all items for label lookup
+  const allItems = React.useMemo(() => {
+    if (_selectChildren) {
+      const items: SelectItemData[] = [];
+      for (const entry of _selectChildren) {
+        if (entry._type === "item") items.push(entry);
+        if (entry._type === "group") items.push(...entry.items);
+      }
+      return items;
+    }
+    return _items;
+  }, [_selectChildren, _items]);
 
-  // Controlled when value + handler provided, uncontrolled otherwise
+  // Find default from items
+  const defaultValue = allItems.find((i) => i.selected)?.value;
+
+  // Track the current value so we can look up its label
+  const [internalValue, setInternalValue] = React.useState(
+    value ?? defaultValue ?? "",
+  );
+  React.useEffect(() => {
+    if (value !== undefined) setInternalValue(value);
+  }, [value]);
+
+  const handleChange = (val: string) => {
+    setInternalValue(val);
+    onValueChange?.(val);
+  };
+
+  const selectedLabel = allItems.find((i) => i.value === internalValue)?.label;
+
   const controlProps =
     value !== undefined
-      ? { value, onValueChange }
-      : { defaultValue, onValueChange };
+      ? { value: internalValue, onValueChange: handleChange }
+      : { defaultValue, onValueChange: handleChange };
+
+  const renderItem = (item: SelectItemData) => (
+    <SelectItem key={item.value} value={item.value} disabled={item.disabled}>
+      {item.label}
+    </SelectItem>
+  );
 
   return (
     <ShadcnSelect {...controlProps} disabled={disabled} name={name}>
-      <SelectTrigger className={className} size={size}>
-        <SelectValue placeholder={placeholder} />
+      <SelectTrigger
+        className={className}
+        size={size}
+        aria-invalid={invalid || undefined}
+      >
+        <SelectValue placeholder={placeholder}>
+          {selectedLabel || null}
+        </SelectValue>
       </SelectTrigger>
-      <SelectContent>
-        {_items.map((item) => (
-          <SelectItem
-            key={item.value}
-            value={item.value}
-            disabled={item.disabled}
-          >
-            {item.label}
-          </SelectItem>
-        ))}
+      <SelectContent side={side} align={align}>
+        {_selectChildren
+          ? _selectChildren.map((entry, i) => {
+              if (entry._type === "group") {
+                return (
+                  <SelectGroup key={i}>
+                    {entry.label && (
+                      <SelectGroupLabel>{entry.label}</SelectGroupLabel>
+                    )}
+                    {entry.items.map(renderItem)}
+                  </SelectGroup>
+                );
+              }
+              if (entry._type === "separator") {
+                return <SelectSeparator key={i} />;
+              }
+              if (entry._type === "label") {
+                return (
+                  <SelectGroupLabel key={i}>{entry.label}</SelectGroupLabel>
+                );
+              }
+              return renderItem(entry as SelectItemData);
+            })
+          : _items.map(renderItem)}
       </SelectContent>
     </ShadcnSelect>
   );
