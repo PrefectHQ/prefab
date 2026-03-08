@@ -52,29 +52,6 @@ interface ChildPanel {
   content: ReactNode;
 }
 
-/**
- * Wrapper for overlay triggers (Dialog, Popover, Tooltip).
- *
- * Radix's `asChild` pattern requires the child to be a forwardRef component
- * that accepts a `ref` and forwards arbitrary DOM props (onClick, aria-*, etc.).
- * Our rendered children are `<RenderNode>` elements that don't do either of
- * those things, so Radix's handlers get silently dropped.
- *
- * This thin `<span>` wrapper accepts the ref and props from Radix, and the
- * actual trigger element (Button, etc.) renders inside it. Events bubble up
- * from the inner element to the span, which has the Radix handlers attached.
- */
-const TriggerSlot = React.forwardRef<
-  HTMLSpanElement,
-  React.HTMLAttributes<HTMLSpanElement>
->(function TriggerSlot({ children, ...props }, ref) {
-  return (
-    <span ref={ref} {...props}>
-      {children}
-    </span>
-  );
-});
-
 // ── Tabs ───────────────────────────────────────────────────────────────
 
 interface PrefabTabsProps {
@@ -139,33 +116,14 @@ interface PrefabAccordionProps {
 
 export function PrefabAccordion({
   multiple = false,
-  collapsible = true,
   defaultValues,
   className,
   _panels,
 }: PrefabAccordionProps) {
-  if (multiple) {
-    return (
-      <ShadcnAccordion
-        type="multiple"
-        defaultValue={defaultValues}
-        className={className}
-      >
-        {_panels.map((panel) => (
-          <ShadcnAccordionItem key={panel.value} value={panel.value}>
-            <AccordionTrigger>{panel.title}</AccordionTrigger>
-            <AccordionContent>{panel.content}</AccordionContent>
-          </ShadcnAccordionItem>
-        ))}
-      </ShadcnAccordion>
-    );
-  }
-
   return (
     <ShadcnAccordion
-      type="single"
-      collapsible={collapsible}
-      defaultValue={defaultValues?.[0]}
+      multiple={multiple}
+      defaultValue={defaultValues ?? []}
       className={className}
     >
       {_panels.map((panel) => (
@@ -255,9 +213,9 @@ export function PrefabHoverCard({
   const content = childArray.slice(1);
 
   return (
-    <ShadcnHoverCard openDelay={openDelay} closeDelay={closeDelay}>
-      <HoverCardTrigger asChild>
-        <TriggerSlot>{trigger}</TriggerSlot>
+    <ShadcnHoverCard>
+      <HoverCardTrigger delay={openDelay} closeDelay={closeDelay}>
+        {trigger}
       </HoverCardTrigger>
       <HoverCardContent side={side}>{content}</HoverCardContent>
     </ShadcnHoverCard>
@@ -287,9 +245,7 @@ export function PrefabPopover({
 
   return (
     <ShadcnPopover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <TriggerSlot>{trigger}</TriggerSlot>
-      </PopoverTrigger>
+      <PopoverTrigger>{trigger}</PopoverTrigger>
       <PopoverContent side={side} className="w-80">
         <OverlayProvider close={() => setOpen(false)}>
           {title && (
@@ -328,9 +284,7 @@ export function PrefabDialog({
 
   return (
     <ShadcnDialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <TriggerSlot>{trigger}</TriggerSlot>
-      </DialogTrigger>
+      <DialogTrigger>{trigger}</DialogTrigger>
       <DialogContent>
         <OverlayProvider close={() => setOpen(false)}>
           {(title || description) && (

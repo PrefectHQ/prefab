@@ -85,11 +85,9 @@ function ExamplePicker({ onSelect }: { onSelect: (ex: Example) => void }) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button className="inline-flex h-10 items-center gap-2 rounded-md border bg-background px-3 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          <Search className="h-4 w-4" />
-          Examples...
-        </button>
+      <PopoverTrigger className="inline-flex h-10 items-center gap-2 rounded-md border bg-background px-3 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+        <Search className="h-4 w-4" />
+        Examples...
       </PopoverTrigger>
       <PopoverContent align="start" className="w-[320px] p-0">
         <div className="border-b px-3 py-2">

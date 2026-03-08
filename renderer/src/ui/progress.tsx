@@ -1,5 +1,4 @@
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -23,19 +22,23 @@ const progressVariants = cva(
   }
 )
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> &
-    VariantProps<typeof progressVariants> & {
-      indicatorClassName?: string;
-      orientation?: "horizontal" | "vertical";
-    }
->(({ className, indicatorClassName, variant, value, orientation = "horizontal", ...props }, ref) => {
+function Progress({
+  className,
+  indicatorClassName,
+  variant,
+  value,
+  orientation = "horizontal",
+  ...props
+}: ProgressPrimitive.Root.Props &
+  VariantProps<typeof progressVariants> & {
+    indicatorClassName?: string;
+    orientation?: "horizontal" | "vertical";
+  }) {
   const isVertical = orientation === "vertical";
 
   return (
     <ProgressPrimitive.Root
-      ref={ref}
+      value={value}
       className={cn(
         "cn-progress relative overflow-hidden rounded-full",
         isVertical
@@ -45,17 +48,18 @@ const Progress = React.forwardRef<
       )}
       {...props}
     >
-      <ProgressPrimitive.Indicator
-        className={cn(progressVariants({ variant }), indicatorClassName)}
-        style={
-          isVertical
-            ? { transform: `translateY(${100 - (value || 0)}%)` }
-            : { transform: `translateX(-${100 - (value || 0)}%)` }
-        }
-      />
+      <ProgressPrimitive.Track className="cn-progress relative flex w-full items-center overflow-hidden rounded-full">
+        <ProgressPrimitive.Indicator
+          className={cn(progressVariants({ variant }), indicatorClassName)}
+          style={
+            isVertical
+              ? { transform: `translateY(${100 - (value || 0)}%)` }
+              : { transform: `translateX(-${100 - (value || 0)}%)` }
+          }
+        />
+      </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>
   );
-})
-Progress.displayName = ProgressPrimitive.Root.displayName
+}
 
 export { Progress, progressVariants }
