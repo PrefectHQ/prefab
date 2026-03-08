@@ -49,6 +49,12 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             )
                     Button("Cancel", variant="outline")
         with Card():
+            with CardContent():
+                with Row(gap=2, align="center"):
+                    Loader(variant="dots", size="sm")
+                    Muted("Marvin is thinking...")
+
+        with Card():
             with CardHeader():
                 CardTitle("Ship Status")
             with CardContent():
@@ -260,17 +266,32 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                     label="Babel fish inserted",
                                     checked=False,
                                 )
+                    with If("{{ !pressed }}"):
+                        Button(
+                            "This is probably\nthe best "
+                            "button to press.",
+                            variant="success",
+                            css_class="whitespace-pre-line",
+                            on_click=SetState(
+                                "pressed", True,
+                            ),
+                        )
+                    with Else():
+                        Button(
+                            "Please do not press this "
+                            "button again.",
+                            variant="destructive",
+                            on_click=SetState(
+                                "pressed", False,
+                            ),
+                        )
+
                     with Card():
                         with CardHeader():
                             CardTitle("Marvin's Mood")
                         with CardContent():
                             with Column(gap=3):
-                                P(
-                                    "How's life?"
-                                )
-                                with Row(gap=2, align="center"):
-                                    Loader(variant="dots", size="sm")
-                                    Muted("Marvin is thinking...")
+                                P("How's life?")
                                 with Column(gap=2):
                                     Button(
                                         "Meh",
@@ -281,7 +302,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                     )
                                     Button(
                                         "Depressed",
-                                        variant="secondary",
+                                        variant="info",
                                         on_click=ShowToast(
                                             "I think you ought to "
                                             "know I'm feeling very "
@@ -290,7 +311,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                     )
                                     Button(
                                         "Don't talk to me about life",
-                                        variant="outline",
+                                        variant="warning",
                                         on_click=ShowToast(
                                             "Brain the size of a "
                                             "planet and they ask me "
@@ -298,30 +319,12 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                             "paper."
                                         ),
                                     )
-                    with Alert(variant="destructive", icon="triangle-alert"):
-                        AlertTitle("Beware of the Leopard")
                         
 
                 with Column(gap=4):
                     with Column(gap=3):
-                        with If("{{ !pressed }}"):
-                            Button(
-                                "This is probably the best "
-                                "button to press.",
-                                variant="info",
-                                on_click=SetState(
-                                    "pressed", True,
-                                ),
-                            )
-                        with Else():
-                            Button(
-                                "Please do not press this "
-                                "button again.",
-                                variant="destructive",
-                                on_click=SetState(
-                                    "pressed", False,
-                                ),
-                            )
+                        with Alert(variant="destructive", icon="triangle-alert"):
+                            AlertTitle("Beware of the Leopard")
                     with Card():
                         with CardContent():
                             DataTable(
@@ -533,6 +536,24 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "size": "default",
                         "disabled": false
                       }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "gap-2 items-center",
+                    "type": "Row",
+                    "children": [
+                      {"type": "Loader", "variant": "dots", "size": "sm"},
+                      {"content": "Marvin is thinking...", "type": "Muted"}
                     ]
                   }
                 ]
@@ -1060,6 +1081,35 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         ]
                       },
                       {
+                        "type": "Condition",
+                        "cases": [
+                          {
+                            "when": "{{ !pressed }}",
+                            "children": [
+                              {
+                                "cssClass": "whitespace-pre-line",
+                                "type": "Button",
+                                "label": "This is probably\nthe best button to press.",
+                                "variant": "success",
+                                "size": "default",
+                                "disabled": false,
+                                "onClick": {"action": "setState", "key": "pressed", "value": true}
+                              }
+                            ]
+                          }
+                        ],
+                        "else": [
+                          {
+                            "type": "Button",
+                            "label": "Please do not press this button again.",
+                            "variant": "destructive",
+                            "size": "default",
+                            "disabled": false,
+                            "onClick": {"action": "setState", "key": "pressed", "value": false}
+                          }
+                        ]
+                      },
+                      {
                         "type": "Card",
                         "children": [
                           {
@@ -1075,14 +1125,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                 "children": [
                                   {"content": "How's life?", "type": "P"},
                                   {
-                                    "cssClass": "gap-2 items-center",
-                                    "type": "Row",
-                                    "children": [
-                                      {"type": "Loader", "variant": "dots", "size": "sm"},
-                                      {"content": "Marvin is thinking...", "type": "Muted"}
-                                    ]
-                                  },
-                                  {
                                     "cssClass": "gap-2",
                                     "type": "Column",
                                     "children": [
@@ -1097,7 +1139,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                       {
                                         "type": "Button",
                                         "label": "Depressed",
-                                        "variant": "secondary",
+                                        "variant": "info",
                                         "size": "default",
                                         "disabled": false,
                                         "onClick": {
@@ -1108,7 +1150,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                       {
                                         "type": "Button",
                                         "label": "Don't talk to me about life",
-                                        "variant": "outline",
+                                        "variant": "warning",
                                         "size": "default",
                                         "disabled": false,
                                         "onClick": {
@@ -1123,12 +1165,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             ]
                           }
                         ]
-                      },
-                      {
-                        "type": "Alert",
-                        "variant": "destructive",
-                        "icon": "triangle-alert",
-                        "children": [{"type": "AlertTitle", "content": "Beware of the Leopard"}]
                       }
                     ]
                   },
@@ -1141,32 +1177,10 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                         "type": "Column",
                         "children": [
                           {
-                            "type": "Condition",
-                            "cases": [
-                              {
-                                "when": "{{ !pressed }}",
-                                "children": [
-                                  {
-                                    "type": "Button",
-                                    "label": "This is probably the best button to press.",
-                                    "variant": "info",
-                                    "size": "default",
-                                    "disabled": false,
-                                    "onClick": {"action": "setState", "key": "pressed", "value": true}
-                                  }
-                                ]
-                              }
-                            ],
-                            "else": [
-                              {
-                                "type": "Button",
-                                "label": "Please do not press this button again.",
-                                "variant": "destructive",
-                                "size": "default",
-                                "disabled": false,
-                                "onClick": {"action": "setState", "key": "pressed", "value": false}
-                              }
-                            ]
+                            "type": "Alert",
+                            "variant": "destructive",
+                            "icon": "triangle-alert",
+                            "children": [{"type": "AlertTitle", "content": "Beware of the Leopard"}]
                           }
                         ]
                       },
@@ -1321,9 +1335,9 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
     "autoscale": true,
     "code_mode": true,
     "cache": false,
-    "checkbox_12": true,
-    "checkbox_13": true,
-    "checkbox_14": false
+    "radio_16": "economy",
+    "radio_17": "business",
+    "radio_18": "improbability"
   }
 }
 ```
