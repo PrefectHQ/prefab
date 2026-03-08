@@ -12,12 +12,12 @@ Select dropdowns let users pick one option from a collapsible list. The selected
 
 A `Select` is a container — use the `with` block to add `SelectOption` children. Each option needs a `value` (what gets stored) and a `label` (what the user sees):
 
-<ComponentPreview json={{"view":{"name":"select_2","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJDaG9vc2Ugc2l6ZS4uLiIpOgogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJzbSIsIGxhYmVsPSJTbWFsbCIpCiAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1kIiwgbGFiZWw9Ik1lZGl1bSIpCiAgICBTZWxlY3RPcHRpb24odmFsdWU9ImxnIiwgbGFiZWw9IkxhcmdlIikK">
+<ComponentPreview json={{"view":{"cssClass":"w-fit","name":"select_2","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJDaG9vc2Ugc2l6ZS4uLiIsIGNzc19jbGFzcz0idy1maXQiKToKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ic20iLCBsYWJlbD0iU21hbGwiKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJtZCIsIGxhYmVsPSJNZWRpdW0iKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Select, SelectOption
 
-with Select(placeholder="Choose size..."):
+with Select(placeholder="Choose size...", css_class="w-fit"):
     SelectOption(value="sm", label="Small")
     SelectOption(value="md", label="Medium")
     SelectOption(value="lg", label="Large")
@@ -25,6 +25,7 @@ with Select(placeholder="Choose size..."):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-fit",
     "name": "select_2",
     "type": "Select",
     "placeholder": "Choose size...",
