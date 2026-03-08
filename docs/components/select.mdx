@@ -120,12 +120,12 @@ with Select(placeholder="Select country", css_class="w-fit mx-auto"):
 
 Selects come in two sizes. The `"sm"` variant is useful when space is tight or when embedding a select alongside other compact controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_4","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_5","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbgoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkRlZmF1bHQgc2l6ZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iMSIsIGxhYmVsPSJPcHRpb24gMSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIyIiwgbGFiZWw9Ik9wdGlvbiAyIikKCiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iU21hbGwgc2l6ZSIsIHNpemU9InNtIik6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIxIiwgbGFiZWw9Ik9wdGlvbiAxIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjIiLCBsYWJlbD0iT3B0aW9uIDIiKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit min-w-[200px] mx-auto","type":"Column","children":[{"name":"select_4","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_5","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbgoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbWluLXctWzIwMHB4XSBteC1hdXRvIik6CiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iRGVmYXVsdCBzaXplIik6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIxIiwgbGFiZWw9Ik9wdGlvbiAxIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjIiLCBsYWJlbD0iT3B0aW9uIDIiKQoKICAgIHdpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJTbWFsbCBzaXplIiwgc2l6ZT0ic20iKToKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjEiLCBsYWJlbD0iT3B0aW9uIDEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iMiIsIGxhYmVsPSJPcHRpb24gMiIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption
 
-with Column(gap=4, css_class="w-fit mx-auto"):
+with Column(gap=4, css_class="w-fit min-w-[200px] mx-auto"):
     with Select(placeholder="Default size"):
         SelectOption(value="1", label="Option 1")
         SelectOption(value="2", label="Option 2")
@@ -137,7 +137,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4 w-fit mx-auto",
+    "cssClass": "gap-4 w-fit min-w-[200px] mx-auto",
     "type": "Column",
     "children": [
       {

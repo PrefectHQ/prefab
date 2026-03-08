@@ -5,24 +5,58 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePortalContainer } from "../portal-container"
 
+/**
+ * Context to pass a close callback from Select root to SelectContent.
+ * Needed because Base UI's outside-click detection doesn't work inside
+ * shadow DOM (event retargeting), so we add our own backdrop.
+ */
+const SelectCloseContext = React.createContext<{
+  close: () => void
+  open: boolean
+} | null>(null)
+
 function Select({
   onValueChange,
+  onOpenChange,
+  open: openProp,
   ...props
 }: Omit<SelectPrimitive.Root.Props<string>, "onValueChange"> & {
   onValueChange?: (value: string) => void
 }) {
+  const [openInternal, setOpenInternal] = React.useState(false)
+  const open = openProp ?? openInternal
+
+  const handleOpenChange: NonNullable<
+    SelectPrimitive.Root.Props<string>["onOpenChange"]
+  > = (nextOpen, eventDetails) => {
+    setOpenInternal(nextOpen)
+    onOpenChange?.(nextOpen, eventDetails)
+  }
+
   return (
-    <SelectPrimitive.Root
-      data-slot="select"
-      onValueChange={
-        onValueChange
-          ? (value: string | null) => {
-              if (value !== null) onValueChange(value)
-            }
-          : undefined
-      }
-      {...props}
-    />
+    <SelectCloseContext.Provider
+      value={React.useMemo(
+        () => ({
+          close: () => setOpenInternal(false),
+          open,
+        }),
+        [open],
+      )}
+    >
+      <SelectPrimitive.Root
+        data-slot="select"
+        open={open}
+        onOpenChange={handleOpenChange}
+        onValueChange={
+          onValueChange
+            ? (value: string | null) => {
+                if (value !== null) onValueChange(value)
+              }
+            : undefined
+        }
+        {...props}
+      />
+    </SelectCloseContext.Provider>
   )
 }
 
@@ -75,9 +109,18 @@ function SelectContent({
     "align" | "alignOffset" | "side" | "sideOffset" | "alignItemWithTrigger"
   >) {
   const container = usePortalContainer();
+  const ctx = React.useContext(SelectCloseContext);
   return (
     <SelectPrimitive.Portal container={container}>
-      <SelectPrimitive.Backdrop className="fixed inset-0" />
+      {/* Manual backdrop for shadow DOM — Base UI's outside-click
+          detection doesn't work when the portal is inside a shadow root
+          because of event retargeting. */}
+      {ctx?.open && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => ctx.close()}
+        />
+      )}
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
@@ -112,7 +155,7 @@ function SelectGroup({
   return (
     <SelectPrimitive.Group
       data-slot="select-group"
-      className={cn("cn-select-group", className)}
+      className={cn("cn-select-group scroll-my-1 p-1", className)}
       {...props}
     >
       {children}
@@ -129,7 +172,7 @@ function SelectGroupLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-group-label"
       className={cn(
-        "cn-select-group-label text-muted-foreground pointer-events-none select-none",
+        "cn-select-group-label px-1.5 py-1.5 text-xs text-muted-foreground/70 pointer-events-none select-none",
         className
       )}
       {...props}

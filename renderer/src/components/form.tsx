@@ -151,28 +151,41 @@ export function PrefabSelect({
   _items = [],
   _selectChildren,
 }: PrefabSelectProps) {
-  // Find default from flat items or structured children
-  const findDefault = (): string | undefined => {
+  // Build a flat list of all items for label lookup
+  const allItems = React.useMemo(() => {
     if (_selectChildren) {
+      const items: SelectItemData[] = [];
       for (const entry of _selectChildren) {
-        if (entry._type === "item" && entry.selected) return entry.value;
-        if (entry._type === "group") {
-          const selected = entry.items.find((i) => i.selected);
-          if (selected) return selected.value;
-        }
+        if (entry._type === "item") items.push(entry);
+        if (entry._type === "group") items.push(...entry.items);
       }
-      return undefined;
+      return items;
     }
-    return _items.find((i) => i.selected)?.value;
+    return _items;
+  }, [_selectChildren, _items]);
+
+  // Find default from items
+  const defaultValue = allItems.find((i) => i.selected)?.value;
+
+  // Track the current value so we can look up its label
+  const [internalValue, setInternalValue] = React.useState(
+    value ?? defaultValue ?? "",
+  );
+  React.useEffect(() => {
+    if (value !== undefined) setInternalValue(value);
+  }, [value]);
+
+  const handleChange = (val: string) => {
+    setInternalValue(val);
+    onValueChange?.(val);
   };
 
-  const defaultValue = findDefault();
+  const selectedLabel = allItems.find((i) => i.value === internalValue)?.label;
 
-  // Controlled when value + handler provided, uncontrolled otherwise
   const controlProps =
     value !== undefined
-      ? { value, onValueChange }
-      : { defaultValue, onValueChange };
+      ? { value: internalValue, onValueChange: handleChange }
+      : { defaultValue, onValueChange: handleChange };
 
   const renderItem = (item: SelectItemData) => (
     <SelectItem key={item.value} value={item.value} disabled={item.disabled}>
@@ -187,7 +200,9 @@ export function PrefabSelect({
         size={size}
         aria-invalid={invalid || undefined}
       >
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={placeholder}>
+          {selectedLabel || null}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent side={side} align={align}>
         {_selectChildren
