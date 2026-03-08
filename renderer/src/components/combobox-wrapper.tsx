@@ -55,7 +55,7 @@ export function PrefabCombobox({
         aria-expanded={open}
         disabled={disabled}
         className={cn(
-          "cn-button cn-button-variant-outline cn-button-size-default cn-combobox-trigger w-full justify-between font-normal",
+          "cn-button cn-button-variant-outline cn-button-size-default cn-combobox-trigger w-fit min-w-[200px] justify-between font-normal",
           !value && "text-muted-foreground",
           className,
         )}

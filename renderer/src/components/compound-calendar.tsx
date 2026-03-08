@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from "react";
 import { format, parseISO } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar as ShadcnCalendar } from "@/ui/calendar";
 import {
@@ -164,13 +164,16 @@ export function PrefabDatePicker({
     <ShadcnPopover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         className={cn(
-          "cn-button cn-button-variant-outline cn-button-size-default w-full justify-start text-left font-normal",
+          "cn-button cn-button-variant-outline cn-button-size-default w-fit min-w-[200px] justify-between text-left font-normal",
           !selectedDate && "text-muted-foreground",
           className,
         )}
       >
-        <CalendarIcon className="size-4" />
-        {selectedDate ? format(selectedDate, "PPP") : placeholder}
+        <span className="flex items-center gap-1.5">
+          <CalendarIcon className="size-4" />
+          {selectedDate ? format(selectedDate, "PPP") : placeholder}
+        </span>
+        <ChevronDownIcon className="size-4 opacity-50" />
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <ShadcnCalendar
