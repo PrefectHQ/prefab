@@ -164,7 +164,7 @@ export function PrefabDatePicker({
     <ShadcnPopover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         className={cn(
-          "cn-button cn-button-variant-outline cn-button-size-default w-fit min-w-[200px] justify-between text-left font-normal",
+          "cn-button cn-button-variant-outline cn-button-size-default w-full justify-between text-left font-normal",
           !selectedDate && "text-muted-foreground",
           className,
         )}
