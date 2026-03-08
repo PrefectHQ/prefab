@@ -19,6 +19,7 @@ Usage::
 
 from __future__ import annotations
 
+import dataclasses
 import json
 from collections.abc import Callable
 from contextvars import ContextVar
@@ -41,12 +42,26 @@ _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
 
 # ── Tool Resolver ─────────────────────────────────────────────────────
 
-_tool_resolver: ContextVar[Callable[[Any], str] | None] = ContextVar(
+
+@dataclasses.dataclass(frozen=True)
+class ResolvedTool:
+    """Enriched result from a tool resolver.
+
+    Beyond the tool ``name``, the resolver can set flags that influence
+    how the renderer handles the tool's result.  This keeps the contract
+    typed and extensible without allowing arbitrary key injection.
+    """
+
+    name: str
+    unwrap_result: bool = False
+
+
+_tool_resolver: ContextVar[Callable[[Any], str | ResolvedTool] | None] = ContextVar(
     "_tool_resolver", default=None
 )
 
 
-def get_tool_resolver() -> Callable[[Any], str] | None:
+def get_tool_resolver() -> Callable[[Any], str | ResolvedTool] | None:
     """Return the active tool resolver, or ``None``."""
     return _tool_resolver.get()
 
