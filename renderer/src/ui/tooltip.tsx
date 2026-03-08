@@ -1,35 +1,58 @@
 import * as React from "react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
-
 import { cn } from "@/lib/utils"
-import { usePortalContainer } from "@/portal-container"
 
-const TooltipProvider = TooltipPrimitive.Provider
+/**
+ * Pure-CSS tooltip that avoids Radix's Portal/ref composition issues
+ * in production builds within sandboxed iframes.
+ *
+ * Uses CSS group-hover for zero-JS tooltip display. The tooltip content
+ * is positioned absolutely relative to the trigger wrapper.
+ */
 
-const Tooltip = TooltipPrimitive.Root
+interface SimpleTooltipProps {
+  content: string;
+  side?: "top" | "right" | "bottom" | "left";
+  delay?: number;
+  className?: string;
+  children?: React.ReactNode;
+}
 
-const TooltipTrigger = TooltipPrimitive.Trigger
+const sideStyles: Record<string, string> = {
+  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
+  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
+  left: "right-full top-1/2 -translate-y-1/2 mr-2",
+  right: "left-full top-1/2 -translate-y-1/2 ml-2",
+}
 
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => {
-  const container = usePortalContainer();
+function SimpleTooltip({
+  content,
+  side = "top",
+  delay = 700,
+  className,
+  children,
+}: SimpleTooltipProps) {
   return (
-    <TooltipPrimitive.Portal container={container}>
-      <TooltipPrimitive.Content
-        ref={ref}
-        sideOffset={sideOffset}
-        data-slot="tooltip-content"
+    <span className={cn("group/tooltip relative inline-flex", className)}>
+      {children}
+      <span
+        role="tooltip"
         className={cn(
-          "cn-tooltip-content z-50 origin-[--radix-tooltip-content-transform-origin]",
-          className
+          "cn-tooltip-content",
+          "pointer-events-none absolute z-50",
+          "opacity-0 group-hover/tooltip:opacity-100",
+          "transition-opacity duration-150",
+          "whitespace-nowrap",
+          sideStyles[side] || sideStyles.top
         )}
-        {...props}
-      />
-    </TooltipPrimitive.Portal>
-  );
-})
-TooltipContent.displayName = TooltipPrimitive.Content.displayName
+        style={{
+          "--tooltip-delay": `${delay}ms`,
+        } as React.CSSProperties}
+      >
+        {content}
+      </span>
+    </span>
+  )
+}
+SimpleTooltip.displayName = "SimpleTooltip"
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+export { SimpleTooltip }

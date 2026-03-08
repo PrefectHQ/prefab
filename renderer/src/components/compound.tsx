@@ -23,12 +23,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/ui/accordion";
-import {
-  Tooltip as ShadcnTooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/ui/tooltip";
+import { SimpleTooltip } from "@/ui/tooltip";
 import {
   Popover as ShadcnPopover,
   PopoverTrigger,
@@ -228,21 +223,14 @@ interface PrefabTooltipProps {
 
 export function PrefabTooltip({
   content,
-  side,
-  delay,
+  side = "top",
+  delay = 300,
   children,
 }: PrefabTooltipProps) {
   return (
-    <TooltipProvider delayDuration={delay}>
-      <ShadcnTooltip>
-        <TooltipTrigger asChild>
-          <TriggerSlot>{children}</TriggerSlot>
-        </TooltipTrigger>
-        <TooltipContent side={side}>
-          <p>{content}</p>
-        </TooltipContent>
-      </ShadcnTooltip>
-    </TooltipProvider>
+    <SimpleTooltip content={content} side={side} delay={delay}>
+      {children}
+    </SimpleTooltip>
   );
 }
 
