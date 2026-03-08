@@ -27,6 +27,7 @@ import {
 import {
   ACTION_PROPS,
   ITEM_CHILD_TYPES,
+  SELECT_GROUP_FIELDS,
   bindActions,
   mapProps,
   filterInternalProps,
@@ -156,19 +157,65 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Select and RadioGroup consume their children as data items
   // rather than rendering them as nested React components.
   if (type in ITEM_CHILD_TYPES && children) {
-    const fields = ITEM_CHILD_TYPES[type];
-    const items = children.map((child) => {
-      const item: Record<string, unknown> = {};
-      for (const field of fields) {
-        if (field in child) {
-          const val = child[field];
-          item[field] =
-            typeof val === "string" ? interpolateString(val, ctx) : val;
+    // Select with SelectGroup children: extract structured group data
+    const hasGroups =
+      type === "Select" && children.some((c) => c.type === "SelectGroup");
+
+    if (hasGroups) {
+      const extractItem = (child: ComponentNode) => {
+        const item: Record<string, unknown> = {};
+        for (const field of SELECT_GROUP_FIELDS) {
+          if (field in child) {
+            const val = child[field];
+            item[field] =
+              typeof val === "string" ? interpolateString(val, ctx) : val;
+          }
+        }
+        return item;
+      };
+
+      // Build structured children: groups and top-level options
+      const selectChildren: Record<string, unknown>[] = [];
+      for (const child of children) {
+        if (child.type === "SelectGroup") {
+          const groupItems: Record<string, unknown>[] = [];
+          let groupLabel: string | undefined;
+          for (const gc of child.children ?? []) {
+            if (gc.type === "SelectLabel") {
+              const rawLabel = gc.label;
+              groupLabel =
+                typeof rawLabel === "string"
+                  ? (interpolateString(rawLabel, ctx) as string)
+                  : undefined;
+            } else if (gc.type === "SelectOption") {
+              groupItems.push(extractItem(gc));
+            }
+          }
+          selectChildren.push({
+            _type: "group",
+            label: groupLabel,
+            items: groupItems,
+          });
+        } else if (child.type === "SelectOption") {
+          selectChildren.push({ _type: "item", ...extractItem(child) });
         }
       }
-      return item;
-    });
-    finalProps._items = items;
+      finalProps._selectChildren = selectChildren;
+    } else {
+      const fields = ITEM_CHILD_TYPES[type];
+      const items = children.map((child) => {
+        const item: Record<string, unknown> = {};
+        for (const field of fields) {
+          if (field in child) {
+            const val = child[field];
+            item[field] =
+              typeof val === "string" ? interpolateString(val, ctx) : val;
+          }
+        }
+        return item;
+      });
+      finalProps._items = items;
+    }
 
     // Auto-state for Select/RadioGroup with name prop
     if ("name" in finalProps && typeof finalProps.name === "string") {

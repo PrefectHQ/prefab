@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 import {
   Select as ShadcnSelect,
   SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -89,15 +91,34 @@ interface RadioItemData {
 /*  Select                                                            */
 /* ------------------------------------------------------------------ */
 
+interface SelectGroupData {
+  _type: "group";
+  label?: string;
+  items: SelectItemData[];
+}
+
+interface SelectItemEntry {
+  _type: "item";
+  value: string;
+  label: string;
+  selected?: boolean;
+  disabled?: boolean;
+}
+
+type SelectChildEntry = SelectGroupData | SelectItemEntry;
+
 interface PrefabSelectProps {
   placeholder?: string;
   name?: string;
   size?: "sm" | "default";
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
   disabled?: boolean;
   className?: string;
   value?: string;
   onValueChange?: (value: string) => void;
   _items?: SelectItemData[];
+  _selectChildren?: SelectChildEntry[];
   children?: React.ReactNode;
 }
 
@@ -105,13 +126,31 @@ export function PrefabSelect({
   placeholder,
   name,
   size,
+  side,
+  align,
   disabled,
   className,
   value,
   onValueChange,
   _items = [],
+  _selectChildren,
 }: PrefabSelectProps) {
-  const defaultValue = _items.find((i) => i.selected)?.value;
+  // Find default from flat items or structured children
+  const findDefault = (): string | undefined => {
+    if (_selectChildren) {
+      for (const entry of _selectChildren) {
+        if (entry._type === "item" && entry.selected) return entry.value;
+        if (entry._type === "group") {
+          const selected = entry.items.find((i) => i.selected);
+          if (selected) return selected.value;
+        }
+      }
+      return undefined;
+    }
+    return _items.find((i) => i.selected)?.value;
+  };
+
+  const defaultValue = findDefault();
 
   // Controlled when value + handler provided, uncontrolled otherwise
   const controlProps =
@@ -119,21 +158,33 @@ export function PrefabSelect({
       ? { value, onValueChange }
       : { defaultValue, onValueChange };
 
+  const renderItem = (item: SelectItemData) => (
+    <SelectItem key={item.value} value={item.value} disabled={item.disabled}>
+      {item.label}
+    </SelectItem>
+  );
+
   return (
     <ShadcnSelect {...controlProps} disabled={disabled} name={name}>
       <SelectTrigger className={className} size={size}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
-        {_items.map((item) => (
-          <SelectItem
-            key={item.value}
-            value={item.value}
-            disabled={item.disabled}
-          >
-            {item.label}
-          </SelectItem>
-        ))}
+      <SelectContent side={side} align={align}>
+        {_selectChildren
+          ? _selectChildren.map((entry, i) => {
+              if (entry._type === "group") {
+                return (
+                  <SelectGroup key={i}>
+                    {entry.label && (
+                      <SelectGroupLabel>{entry.label}</SelectGroupLabel>
+                    )}
+                    {entry.items.map(renderItem)}
+                  </SelectGroup>
+                );
+              }
+              return renderItem(entry as SelectItemData);
+            })
+          : _items.map(renderItem)}
       </SelectContent>
     </ShadcnSelect>
   );

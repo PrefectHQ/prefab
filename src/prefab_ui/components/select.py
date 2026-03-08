@@ -27,6 +27,8 @@ from prefab_ui.components.base import Component, ContainerComponent, StatefulMix
 from prefab_ui.rx import RxStr
 
 SelectSize = Literal["sm", "default"]
+SelectSide = Literal["top", "right", "bottom", "left"]
+SelectAlign = Literal["start", "center", "end"]
 
 
 class Select(StatefulMixin, ContainerComponent):
@@ -36,6 +38,8 @@ class Select(StatefulMixin, ContainerComponent):
         placeholder: Placeholder text when no option selected
         name: Form field name
         size: Select size ("sm" or "default")
+        side: Which side of the trigger the dropdown appears on
+        align: Alignment of the dropdown relative to the trigger
         disabled: Whether select is disabled
         required: Whether select is required
         css_class: Additional CSS classes
@@ -58,6 +62,14 @@ class Select(StatefulMixin, ContainerComponent):
         description="State key for reactive binding. Auto-generated if omitted.",
     )
     size: SelectSize = Field(default="default", description="Select size (sm, default)")
+    side: SelectSide | None = Field(
+        default=None,
+        description="Which side of the trigger the dropdown appears on",
+    )
+    align: SelectAlign | None = Field(
+        default=None,
+        description="Alignment of the dropdown relative to the trigger",
+    )
     disabled: bool = Field(default=False, description="Whether select is disabled")
     required: bool = Field(default=False, description="Whether select is required")
     on_change: Action | list[Action] | None = Field(
@@ -65,6 +77,60 @@ class Select(StatefulMixin, ContainerComponent):
         alias="onChange",
         description="Action(s) to execute when selection changes",
     )
+
+
+class SelectGroup(ContainerComponent):
+    """Group of related select options with an optional label.
+
+    Use inside a Select to visually group related options with a header.
+
+    Args:
+        css_class: Additional CSS classes
+
+    Example::
+
+        with Select(placeholder="Pick a food..."):
+            with SelectGroup():
+                SelectLabel("Fruits")
+                SelectOption(value="apple", label="Apple")
+                SelectOption(value="banana", label="Banana")
+            with SelectGroup():
+                SelectLabel("Vegetables")
+                SelectOption(value="carrot", label="Carrot")
+                SelectOption(value="broccoli", label="Broccoli")
+    """
+
+    type: Literal["SelectGroup"] = "SelectGroup"
+
+
+class SelectLabel(Component):
+    """Label for a group of select options.
+
+    Renders a non-selectable header within a SelectGroup.
+
+    Args:
+        label: Display text for the group header
+        css_class: Additional CSS classes
+
+    Example::
+
+        SelectLabel("Fruits")
+    """
+
+    type: Literal["SelectLabel"] = "SelectLabel"
+    label: RxStr = Field(description="Group label text")
+
+    @overload
+    def __init__(self, label: str, /, **kwargs: Any) -> None: ...
+
+    @overload
+    def __init__(self, *, label: str, **kwargs: Any) -> None: ...
+
+    def __init__(self, label: str | None = None, **kwargs: Any) -> None:
+        """Accept label as positional or keyword argument."""
+        if label is not None:
+            kwargs["label"] = label
+        super().__init__(**kwargs)
 
 
 class SelectOption(Component):

@@ -64,7 +64,7 @@ from prefab_ui.components.progress import Progress
 from prefab_ui.components.radio import Radio, RadioGroup
 from prefab_ui.components.ring import Ring
 from prefab_ui.components.row import Row
-from prefab_ui.components.select import Select, SelectOption
+from prefab_ui.components.select import Select, SelectGroup, SelectLabel, SelectOption
 from prefab_ui.components.separator import Separator
 from prefab_ui.components.slot import Slot
 from prefab_ui.components.slider import Slider
@@ -179,6 +179,8 @@ __all__ = [
     "Rx",
     "RxStr",
     "Select",
+    "SelectGroup",
+    "SelectLabel",
     "SelectOption",
     "Separator",
     "Slider",

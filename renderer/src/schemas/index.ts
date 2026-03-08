@@ -89,7 +89,12 @@ import { progressSchema } from "./progress.ts";
 import { radioGroupSchema, radioSchema } from "./radio.ts";
 import { ringSchema } from "./ring.ts";
 import { rowSchema } from "./row.ts";
-import { selectSchema, selectOptionSchema } from "./select.ts";
+import {
+  selectSchema,
+  selectGroupSchema,
+  selectLabelSchema,
+  selectOptionSchema,
+} from "./select.ts";
 import { separatorSchema } from "./separator.ts";
 import { slotSchema } from "./slot.ts";
 import { sliderSchema } from "./slider.ts";
@@ -201,6 +206,8 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Row: rowSchema,
   ScatterChart: scatterChartSchema,
   Select: selectSchema,
+  SelectGroup: selectGroupSchema,
+  SelectLabel: selectLabelSchema,
   SelectOption: selectOptionSchema,
   Separator: separatorSchema,
   Slider: sliderSchema,

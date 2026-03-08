@@ -400,6 +400,99 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 
 This is different from `.rx` — here we're transforming the value before storing it (prepending "You chose: "). For simple "show the current selection" cases, `.rx` is the better approach.
 
+## Option Groups
+
+Organize long option lists into labeled sections with `SelectGroup` and `SelectLabel`. Each group gets a non-selectable header that helps users scan the dropdown:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit","name":"select_9","type":"Select","placeholder":"Choose a food...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectGroup","children":[{"type":"SelectLabel","label":"Fruits"},{"type":"SelectOption","value":"apple","label":"Apple","selected":false,"disabled":false},{"type":"SelectOption","value":"banana","label":"Banana","selected":false,"disabled":false},{"type":"SelectOption","value":"cherry","label":"Cherry","selected":false,"disabled":false}]},{"type":"SelectGroup","children":[{"type":"SelectLabel","label":"Vegetables"},{"type":"SelectOption","value":"carrot","label":"Carrot","selected":false,"disabled":false},{"type":"SelectOption","value":"broccoli","label":"Broccoli","selected":false,"disabled":false},{"type":"SelectOption","value":"spinach","label":"Spinach","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RHcm91cCwgU2VsZWN0TGFiZWwsIFNlbGVjdE9wdGlvbgoKd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBhIGZvb2QuLi4iLCBjc3NfY2xhc3M9InctZml0Iik6CiAgICB3aXRoIFNlbGVjdEdyb3VwKCk6CiAgICAgICAgU2VsZWN0TGFiZWwoIkZydWl0cyIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJhcHBsZSIsIGxhYmVsPSJBcHBsZSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJiYW5hbmEiLCBsYWJlbD0iQmFuYW5hIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImNoZXJyeSIsIGxhYmVsPSJDaGVycnkiKQogICAgd2l0aCBTZWxlY3RHcm91cCgpOgogICAgICAgIFNlbGVjdExhYmVsKCJWZWdldGFibGVzIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImNhcnJvdCIsIGxhYmVsPSJDYXJyb3QiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYnJvY2NvbGkiLCBsYWJlbD0iQnJvY2NvbGkiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ic3BpbmFjaCIsIGxhYmVsPSJTcGluYWNoIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Select, SelectGroup, SelectLabel, SelectOption
+
+with Select(placeholder="Choose a food...", css_class="w-fit"):
+    with SelectGroup():
+        SelectLabel("Fruits")
+        SelectOption(value="apple", label="Apple")
+        SelectOption(value="banana", label="Banana")
+        SelectOption(value="cherry", label="Cherry")
+    with SelectGroup():
+        SelectLabel("Vegetables")
+        SelectOption(value="carrot", label="Carrot")
+        SelectOption(value="broccoli", label="Broccoli")
+        SelectOption(value="spinach", label="Spinach")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit",
+    "name": "select_9",
+    "type": "Select",
+    "placeholder": "Choose a food...",
+    "size": "default",
+    "disabled": false,
+    "required": false,
+    "children": [
+      {
+        "type": "SelectGroup",
+        "children": [
+          {"type": "SelectLabel", "label": "Fruits"},
+          {
+            "type": "SelectOption",
+            "value": "apple",
+            "label": "Apple",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "banana",
+            "label": "Banana",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "cherry",
+            "label": "Cherry",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "type": "SelectGroup",
+        "children": [
+          {"type": "SelectLabel", "label": "Vegetables"},
+          {
+            "type": "SelectOption",
+            "value": "carrot",
+            "label": "Carrot",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "broccoli",
+            "label": "Broccoli",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "spinach",
+            "label": "Spinach",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Select Parameters">
@@ -415,6 +508,14 @@ This is different from `.rx` — here we're transforming the value before storin
   Select size: `"default"`, `"sm"`.
 </ParamField>
 
+<ParamField body="side" type="str | None" default="None">
+  Which side of the trigger the dropdown appears on: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="align" type="str | None" default="None">
+  Alignment of the dropdown relative to the trigger: `"start"`, `"center"`, `"end"`.
+</ParamField>
+
 <ParamField body="disabled" type="bool" default="False">
   Whether the select is non-interactive.
 </ParamField>
@@ -425,6 +526,22 @@ This is different from `.rx` — here we're transforming the value before storin
 
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
   Action(s) to execute when the selection changes. `$event` is the `value` string of the selected option.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectGroup Parameters">
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectLabel Parameters">
+<ParamField body="label" type="str" required>
+  Display text for the group header.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -464,9 +581,27 @@ This is different from `.rx` — here we're transforming the value before storin
   "name?": "string",
   "placeholder?": "string",
   "size?": "sm | default",
+  "side?": "top | right | bottom | left",
+  "align?": "start | center | end",
   "disabled?": false,
   "required?": false,
   "onChange?": "Action | Action[]",
+  "cssClass?": "string"
+}
+```
+
+```json SelectGroup
+{
+  "type": "SelectGroup",
+  "children?": "[Component]",
+  "cssClass?": "string"
+}
+```
+
+```json SelectLabel
+{
+  "type": "SelectLabel",
+  "label": "string (required)",
   "cssClass?": "string"
 }
 ```
@@ -482,4 +617,4 @@ This is different from `.rx` — here we're transforming the value before storin
 }
 ```
 
-For the complete protocol schema, see [Select](/protocol/select), [SelectOption](/protocol/select-option).
+For the complete protocol schema, see [Select](/protocol/select), [SelectGroup](/protocol/select-group), [SelectLabel](/protocol/select-label), [SelectOption](/protocol/select-option).

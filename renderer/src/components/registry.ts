@@ -176,6 +176,8 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Combobox: PrefabCombobox,
   ComboboxOption: () => null, // consumed by parent Combobox via _items
   Select: PrefabSelect,
+  SelectGroup: () => null, // consumed by parent Select via _selectChildren
+  SelectLabel: () => null, // consumed by parent Select via _selectChildren
   SelectOption: () => null, // consumed by parent Select via _items
   RadioGroup: PrefabRadioGroup,
   Radio: PrefabRadio, // standalone renders as native radio; inside RadioGroup consumed as data

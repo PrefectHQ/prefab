@@ -67,7 +67,7 @@ function SelectContent({
   sideOffset = 4,
   align = "center",
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  alignItemWithTrigger = false,
   ...props
 }: SelectPrimitive.Popup.Props &
   Pick<
@@ -101,6 +101,41 @@ function SelectContent({
         </SelectPrimitive.Popup>
       </SelectPrimitive.Positioner>
     </SelectPrimitive.Portal>
+  )
+}
+
+function SelectGroup({
+  className,
+  children,
+  ...props
+}: SelectPrimitive.Group.Props) {
+  return (
+    <SelectPrimitive.Group
+      data-slot="select-group"
+      className={cn("cn-select-group", className)}
+      {...props}
+    >
+      {children}
+    </SelectPrimitive.Group>
+  )
+}
+
+function SelectGroupLabel({
+  className,
+  children,
+  ...props
+}: SelectPrimitive.GroupLabel.Props) {
+  return (
+    <SelectPrimitive.GroupLabel
+      data-slot="select-group-label"
+      className={cn(
+        "cn-select-group-label text-muted-foreground pointer-events-none select-none",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </SelectPrimitive.GroupLabel>
   )
 }
 
@@ -161,6 +196,8 @@ function SelectScrollDownButton({
 export {
   Select,
   SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
   SelectItem,
   SelectScrollDownButton,
   SelectScrollUpButton,
