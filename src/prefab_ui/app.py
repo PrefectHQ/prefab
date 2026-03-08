@@ -56,12 +56,12 @@ class ResolvedTool:
     unwrap_result: bool = False
 
 
-_tool_resolver: ContextVar[Callable[[Any], str | ResolvedTool] | None] = ContextVar(
+_tool_resolver: ContextVar[Callable[[Any], ResolvedTool] | None] = ContextVar(
     "_tool_resolver", default=None
 )
 
 
-def get_tool_resolver() -> Callable[[Any], str | ResolvedTool] | None:
+def get_tool_resolver() -> Callable[[Any], ResolvedTool] | None:
     """Return the active tool resolver, or ``None``."""
     return _tool_resolver.get()
 
@@ -173,7 +173,7 @@ class PrefabApp(BaseModel):
     def to_json(
         self,
         *,
-        tool_resolver: Callable[[Any], str] | None = None,
+        tool_resolver: Callable[[Any], ResolvedTool] | None = None,
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
@@ -183,9 +183,9 @@ class PrefabApp(BaseModel):
         Parameters
         ----------
         tool_resolver:
-            Resolves callable tool references to name strings during
-            serialization.  Scoped to this call — safe for concurrent use
-            with different resolvers.
+            Resolves callable tool references to ``ResolvedTool`` instances
+            during serialization.  Scoped to this call — safe for
+            concurrent use with different resolvers.
         """
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
@@ -211,7 +211,7 @@ class PrefabApp(BaseModel):
     def html(
         self,
         *,
-        tool_resolver: Callable[[Any], str] | None = None,
+        tool_resolver: Callable[[Any], ResolvedTool] | None = None,
     ) -> str:
         """Produce a complete, self-contained HTML page.
 

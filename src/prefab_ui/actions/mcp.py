@@ -16,7 +16,7 @@ from typing import Any, Literal
 from pydantic import Field, PrivateAttr, model_serializer
 
 from prefab_ui.actions.base import Action
-from prefab_ui.app import ResolvedTool, get_tool_resolver
+from prefab_ui.app import get_tool_resolver
 from prefab_ui.rx import RxStr, _coerce_rx
 
 
@@ -58,13 +58,10 @@ class CallTool(Action):
         if self._tool_ref is not None:
             resolver = get_tool_resolver()
             if resolver is not None:
-                result = resolver(self._tool_ref)
-                if isinstance(result, ResolvedTool):
-                    data["tool"] = result.name
-                    if result.unwrap_result:
-                        data["unwrapResult"] = True
-                else:
-                    data["tool"] = result
+                resolved = resolver(self._tool_ref)
+                data["tool"] = resolved.name
+                if resolved.unwrap_result:
+                    data["unwrapResult"] = True
         return {k: v for k, v in data.items() if v is not None}
 
 

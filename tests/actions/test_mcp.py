@@ -10,7 +10,7 @@ from prefab_ui.actions.mcp import (
     SendMessage,
     UpdateContext,
 )
-from prefab_ui.app import PrefabApp, _tool_resolver
+from prefab_ui.app import PrefabApp, ResolvedTool, _tool_resolver
 from prefab_ui.components import Button
 
 
@@ -58,7 +58,9 @@ class TestCallToolCallableRef:
         def save_contact(name: str) -> dict[str, str]:
             return {"name": name}
 
-        token = _tool_resolver.set(lambda fn: f"{fn.__name__}-abc123")
+        token = _tool_resolver.set(
+            lambda fn: ResolvedTool(name=f"{fn.__name__}-abc123")
+        )
         try:
             a = CallTool(save_contact)
             d = a.model_dump()
@@ -90,8 +92,8 @@ class TestCallToolCallableRef:
             ),
         )
 
-        def resolver(fn: types.FunctionType) -> str:
-            return f"{fn.__name__}-resolved"
+        def resolver(fn: types.FunctionType) -> ResolvedTool:
+            return ResolvedTool(name=f"{fn.__name__}-resolved")
 
         data = app.to_json(tool_resolver=resolver)
         assert data["view"]["onClick"]["tool"] == "save_contact-resolved"
@@ -102,8 +104,8 @@ class TestCallToolCallableRef:
         def my_tool() -> None:
             pass
 
-        def resolver(fn: object) -> str:
-            return "resolved"
+        def resolver(fn: object) -> ResolvedTool:
+            return ResolvedTool(name="resolved")
 
         app = PrefabApp(
             view=Button(label="Go", on_click=CallTool(my_tool)),
