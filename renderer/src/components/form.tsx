@@ -16,6 +16,7 @@ import {
   SelectGroup,
   SelectGroupLabel,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
@@ -105,7 +106,20 @@ interface SelectItemEntry {
   disabled?: boolean;
 }
 
-type SelectChildEntry = SelectGroupData | SelectItemEntry;
+interface SelectSeparatorEntry {
+  _type: "separator";
+}
+
+interface SelectLabelEntry {
+  _type: "label";
+  label?: string;
+}
+
+type SelectChildEntry =
+  | SelectGroupData
+  | SelectItemEntry
+  | SelectSeparatorEntry
+  | SelectLabelEntry;
 
 interface PrefabSelectProps {
   placeholder?: string;
@@ -114,6 +128,7 @@ interface PrefabSelectProps {
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
   disabled?: boolean;
+  invalid?: boolean;
   className?: string;
   value?: string;
   onValueChange?: (value: string) => void;
@@ -129,6 +144,7 @@ export function PrefabSelect({
   side,
   align,
   disabled,
+  invalid,
   className,
   value,
   onValueChange,
@@ -166,7 +182,11 @@ export function PrefabSelect({
 
   return (
     <ShadcnSelect {...controlProps} disabled={disabled} name={name}>
-      <SelectTrigger className={className} size={size}>
+      <SelectTrigger
+        className={className}
+        size={size}
+        aria-invalid={invalid || undefined}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent side={side} align={align}>
@@ -180,6 +200,14 @@ export function PrefabSelect({
                     )}
                     {entry.items.map(renderItem)}
                   </SelectGroup>
+                );
+              }
+              if (entry._type === "separator") {
+                return <SelectSeparator key={i} />;
+              }
+              if (entry._type === "label") {
+                return (
+                  <SelectGroupLabel key={i}>{entry.label}</SelectGroupLabel>
                 );
               }
               return renderItem(entry as SelectItemData);

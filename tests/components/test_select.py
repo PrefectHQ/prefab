@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import pytest
 
-from prefab_ui.components import Select, SelectGroup, SelectLabel, SelectOption
+from prefab_ui.components import (
+    Select,
+    SelectGroup,
+    SelectLabel,
+    SelectOption,
+    SelectSeparator,
+)
 
 
 def test_select_with_options():
@@ -91,3 +97,58 @@ def test_select_group_serialization():
     grp = SelectGroup()
     j = grp.to_json()
     assert j["type"] == "SelectGroup"
+
+
+def test_select_separator_serialization():
+    sep = SelectSeparator()
+    j = sep.to_json()
+    assert j["type"] == "SelectSeparator"
+
+
+def test_select_separator_with_css_class():
+    sep = SelectSeparator(css_class="my-2")
+    j = sep.to_json()
+    assert j["type"] == "SelectSeparator"
+    assert j["cssClass"] == "my-2"
+
+
+def test_select_invalid_true():
+    sel = Select(placeholder="Pick", invalid=True)
+    j = sel.to_json()
+    assert j["invalid"] is True
+
+
+def test_select_invalid_default_false():
+    sel = Select(placeholder="Pick")
+    j = sel.to_json()
+    assert j["invalid"] is False
+
+
+def test_select_with_groups_separators_and_labels():
+    with Select(placeholder="Choose...") as sel:
+        with SelectGroup():
+            SelectLabel("Fruits")
+            SelectOption(value="apple", label="Apple")
+            SelectOption(value="banana", label="Banana")
+        SelectSeparator()
+        with SelectGroup():
+            SelectLabel("Vegetables")
+            SelectOption(value="carrot", label="Carrot")
+            SelectOption(value="broccoli", label="Broccoli")
+    j = sel.to_json()
+    assert j["type"] == "Select"
+    assert len(j["children"]) == 3
+    assert j["children"][0]["type"] == "SelectGroup"
+    assert j["children"][1]["type"] == "SelectSeparator"
+    assert j["children"][2]["type"] == "SelectGroup"
+
+
+def test_select_standalone_label():
+    with Select(placeholder="Pick...") as sel:
+        SelectLabel("Section Header")
+        SelectOption(value="a", label="A")
+        SelectOption(value="b", label="B")
+    j = sel.to_json()
+    assert j["children"][0]["type"] == "SelectLabel"
+    assert j["children"][0]["label"] == "Section Header"
+    assert j["children"][1]["type"] == "SelectOption"

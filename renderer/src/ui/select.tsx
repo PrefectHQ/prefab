@@ -163,6 +163,19 @@ function SelectItem({
   )
 }
 
+function SelectSeparator({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="select-separator"
+      className={cn("cn-select-separator -mx-1 my-1 h-px bg-border", className)}
+      {...props}
+    />
+  )
+}
+
 function SelectScrollUpButton({
   className,
   ...props
@@ -201,6 +214,7 @@ export {
   SelectItem,
   SelectScrollDownButton,
   SelectScrollUpButton,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 }

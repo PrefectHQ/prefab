@@ -11,6 +11,7 @@ export const selectSchema = containerBase.extend({
   align: z.enum(["start", "center", "end"]).optional(),
   disabled: z.boolean().optional(),
   required: z.boolean().optional(),
+  invalid: z.boolean().optional(),
   onChange: actionOrList.optional(),
 });
 
@@ -21,6 +22,10 @@ export const selectGroupSchema = containerBase.extend({
 export const selectLabelSchema = componentBase.extend({
   type: z.literal("SelectLabel"),
   label: z.string(),
+});
+
+export const selectSeparatorSchema = componentBase.extend({
+  type: z.literal("SelectSeparator"),
 });
 
 export const selectOptionSchema = componentBase.extend({
@@ -34,4 +39,5 @@ export const selectOptionSchema = componentBase.extend({
 export type SelectWire = z.infer<typeof selectSchema>;
 export type SelectGroupWire = z.infer<typeof selectGroupSchema>;
 export type SelectLabelWire = z.infer<typeof selectLabelSchema>;
+export type SelectSeparatorWire = z.infer<typeof selectSeparatorSchema>;
 export type SelectOptionWire = z.infer<typeof selectOptionSchema>;

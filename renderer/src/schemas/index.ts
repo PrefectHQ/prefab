@@ -93,6 +93,7 @@ import {
   selectSchema,
   selectGroupSchema,
   selectLabelSchema,
+  selectSeparatorSchema,
   selectOptionSchema,
 } from "./select.ts";
 import { separatorSchema } from "./separator.ts";
@@ -209,6 +210,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   SelectGroup: selectGroupSchema,
   SelectLabel: selectLabelSchema,
   SelectOption: selectOptionSchema,
+  SelectSeparator: selectSeparatorSchema,
   Separator: separatorSchema,
   Slider: sliderSchema,
   Slot: slotSchema,

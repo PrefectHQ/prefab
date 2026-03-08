@@ -157,11 +157,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Select and RadioGroup consume their children as data items
   // rather than rendering them as nested React components.
   if (type in ITEM_CHILD_TYPES && children) {
-    // Select with SelectGroup children: extract structured group data
-    const hasGroups =
-      type === "Select" && children.some((c) => c.type === "SelectGroup");
+    // Select with structured children (groups, separators, standalone labels):
+    // extract into _selectChildren data format
+    const hasStructured =
+      type === "Select" &&
+      children.some(
+        (c) =>
+          c.type === "SelectGroup" ||
+          c.type === "SelectSeparator" ||
+          c.type === "SelectLabel",
+      );
 
-    if (hasGroups) {
+    if (hasStructured) {
       const extractItem = (child: ComponentNode) => {
         const item: Record<string, unknown> = {};
         for (const field of SELECT_GROUP_FIELDS) {
@@ -174,7 +181,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         return item;
       };
 
-      // Build structured children: groups and top-level options
+      // Build structured children: groups, separators, labels, and top-level options
       const selectChildren: Record<string, unknown>[] = [];
       for (const child of children) {
         if (child.type === "SelectGroup") {
@@ -196,6 +203,15 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             label: groupLabel,
             items: groupItems,
           });
+        } else if (child.type === "SelectSeparator") {
+          selectChildren.push({ _type: "separator" });
+        } else if (child.type === "SelectLabel") {
+          const rawLabel = child.label;
+          const label =
+            typeof rawLabel === "string"
+              ? (interpolateString(rawLabel, ctx) as string)
+              : undefined;
+          selectChildren.push({ _type: "label", label });
         } else if (child.type === "SelectOption") {
           selectChildren.push({ _type: "item", ...extractItem(child) });
         }

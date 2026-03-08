@@ -72,6 +72,10 @@ class Select(StatefulMixin, ContainerComponent):
     )
     disabled: bool = Field(default=False, description="Whether select is disabled")
     required: bool = Field(default=False, description="Whether select is required")
+    invalid: bool = Field(
+        default=False,
+        description="Whether select shows error/invalid styling",
+    )
     on_change: Action | list[Action] | None = Field(
         default=None,
         alias="onChange",
@@ -131,6 +135,26 @@ class SelectLabel(Component):
         if label is not None:
             kwargs["label"] = label
         super().__init__(**kwargs)
+
+
+class SelectSeparator(Component):
+    """Visual separator between items or groups in a Select dropdown.
+
+    Renders a horizontal divider line in the dropdown menu to visually
+    separate sections of options.
+
+    Args:
+        css_class: Additional CSS classes
+
+    Example::
+
+        with Select(placeholder="Pick one..."):
+            SelectOption(value="a", label="Option A")
+            SelectSeparator()
+            SelectOption(value="b", label="Option B")
+    """
+
+    type: Literal["SelectSeparator"] = "SelectSeparator"
 
 
 class SelectOption(Component):
