@@ -1377,17 +1377,32 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Select, SelectOption\n\nwith Select(\n    placeholder=\"Travel class...\",\n    disabled=True,\n    css_class=\"w-fit mx-auto\",\n):\n    SelectOption(value=\"first\", label=\"First Class\")\n    SelectOption(value=\"business\", label=\"Business\")\n    SelectOption(value=\"economy\", label=\"Economy\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Select, SelectOption\n\nwith Select(\n    placeholder=\"Choose a ship...\",\n    css_class=\"w-fit mx-auto\",\n):\n    SelectOption(value=\"heart_of_gold\", label=\"Heart of Gold\")\n    SelectOption(\n        value=\"bistromath\",\n        label=\"Bistromath\",\n        disabled=True,\n    )\n    SelectOption(value=\"vogon_ship\", label=\"Vogon Constructor Fleet\")\n    SelectOption(\n        value=\"starship_titanic\",\n        label=\"Starship Titanic\",\n        disabled=True,\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Select, SelectOption\n\nwith Column(gap=2, css_class=\"w-fit mx-auto\"):\n    Label(\"Destination\")\n    with Select(placeholder=\"Choose a planet...\", invalid=True):\n        SelectOption(value=\"magrathea\", label=\"Magrathea\")\n        SelectOption(value=\"betelgeuse\", label=\"Betelgeuse V\")\n        SelectOption(value=\"vogsphere\", label=\"Vogsphere\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Select,\n    SelectGroup,\n    SelectLabel,\n    SelectOption,\n    SelectSeparator,\n)\n\nwith Select(placeholder=\"Choose a food...\", css_class=\"w-fit\"):\n    with SelectGroup():\n        SelectLabel(\"Fruits\")\n        SelectOption(value=\"apple\", label=\"Apple\")\n        SelectOption(value=\"banana\", label=\"Banana\")\n        SelectOption(value=\"cherry\", label=\"Cherry\")\n    SelectSeparator()\n    with SelectGroup():\n        SelectLabel(\"Vegetables\")\n        SelectOption(value=\"carrot\", label=\"Carrot\")\n        SelectOption(value=\"broccoli\", label=\"Broccoli\")\n        SelectOption(value=\"spinach\", label=\"Spinach\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Column, Select, SelectOption, Text\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    with Select(placeholder=\"Choose a planet...\") as sel:\n        SelectOption(value=\"magrathea\", label=\"Magrathea\")\n        SelectOption(value=\"betelgeuse\", label=\"Betelgeuse V\")\n        SelectOption(value=\"vogsphere\", label=\"Vogsphere\")\n        SelectOption(value=\"earth\", label=\"Earth (Mostly Harmless)\")\n    Text(f\"You chose: {sel.rx}\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Column, Select, SelectOption, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    with Select(\n        placeholder=\"Pick a color...\",\n        on_change=SetState(\"picked\", \"You chose: {{ $event }}\"),\n    ):\n        SelectOption(value=\"red\", label=\"Red\")\n        SelectOption(value=\"green\", label=\"Green\")\n        SelectOption(value=\"blue\", label=\"Blue\")\n    Text(\n        \"{{ picked | default:'Make a selection' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import (\n    Select,\n    SelectGroup,\n    SelectLabel,\n    SelectOption,\n    SelectSeparator,\n)\n\nwith Select(placeholder=\"Choose a food...\", css_class=\"w-fit\"):\n    with SelectGroup():\n        SelectLabel(\"Fruits\")\n        SelectOption(value=\"apple\", label=\"Apple\")\n        SelectOption(value=\"banana\", label=\"Banana\")\n        SelectOption(value=\"cherry\", label=\"Cherry\")\n    SelectSeparator()\n    with SelectGroup():\n        SelectLabel(\"Vegetables\")\n        SelectOption(value=\"carrot\", label=\"Carrot\")\n        SelectOption(value=\"broccoli\", label=\"Broccoli\")\n        SelectOption(value=\"spinach\", label=\"Spinach\")"
   },
   {
     "title": "Python icon=\"python\"",
