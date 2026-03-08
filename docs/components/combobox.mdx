@@ -198,11 +198,128 @@ with Combobox(
 </CodeGroup>
 </ComponentPreview>
 
+## With Label
+
+Pair a `Combobox` with a `Label` in a `Column` for a standard form field pattern:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination"},{"name":"combobox_4","type":"Combobox","placeholder":"Search planets...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsCgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiRGVzdGluYXRpb24iKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VhcmNoIHBsYW5ldHMuLi4iKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIktyaWtraXQiLCB2YWx1ZT0ia3Jpa2tpdCIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Combobox, ComboboxOption, Label
+
+with Column(gap=2, css_class="w-fit mx-auto"):
+    Label("Destination")
+    with Combobox(placeholder="Search planets..."):
+        ComboboxOption("Magrathea", value="magrathea")
+        ComboboxOption("Betelgeuse V", value="betelgeuse")
+        ComboboxOption("Vogsphere", value="vogsphere")
+        ComboboxOption("Krikkit", value="krikkit")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Destination"},
+      {
+        "name": "combobox_4",
+        "type": "Combobox",
+        "placeholder": "Search planets...",
+        "disabled": false,
+        "invalid": false,
+        "children": [
+          {
+            "type": "ComboboxOption",
+            "value": "magrathea",
+            "label": "Magrathea",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "betelgeuse",
+            "label": "Betelgeuse V",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "vogsphere",
+            "label": "Vogsphere",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "krikkit",
+            "label": "Krikkit",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Disabled State
+
+A disabled combobox is non-interactive — the trigger button is grayed out and the dropdown won't open:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_5","type":"Combobox","placeholder":"Search planets...","disabled":true,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uCgp3aXRoIENvbWJvYm94KAogICAgcGxhY2Vob2xkZXI9IlNlYXJjaCBwbGFuZXRzLi4uIiwKICAgIGRpc2FibGVkPVRydWUsCiAgICBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iLAopOgogICAgQ29tYm9ib3hPcHRpb24oIk1hZ3JhdGhlYSIsIHZhbHVlPSJtYWdyYXRoZWEiKQogICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgIENvbWJvYm94T3B0aW9uKCJWb2dzcGhlcmUiLCB2YWx1ZT0idm9nc3BoZXJlIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Combobox, ComboboxOption
+
+with Combobox(
+    placeholder="Search planets...",
+    disabled=True,
+    css_class="w-fit mx-auto",
+):
+    ComboboxOption("Magrathea", value="magrathea")
+    ComboboxOption("Betelgeuse V", value="betelgeuse")
+    ComboboxOption("Vogsphere", value="vogsphere")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit mx-auto",
+    "name": "combobox_5",
+    "type": "Combobox",
+    "placeholder": "Search planets...",
+    "disabled": true,
+    "invalid": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "magrathea",
+        "label": "Magrathea",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "betelgeuse",
+        "label": "Betelgeuse V",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "vogsphere",
+        "label": "Vogsphere",
+        "disabled": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Disabled Options
 
 Individual options can be disabled while the rest remain selectable. Disabled options still appear in the list but can't be chosen — useful for options that exist but aren't currently available:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_4","type":"Combobox","placeholder":"Select a planet...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":true},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uCgp3aXRoIENvbWJvYm94KHBsYWNlaG9sZGVyPSJTZWxlY3QgYSBwbGFuZXQuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJNYWdyYXRoZWEiLCB2YWx1ZT0ibWFncmF0aGVhIikKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIsIGRpc2FibGVkPVRydWUpCiAgICBDb21ib2JveE9wdGlvbigiQmV0ZWxnZXVzZSIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgIENvbWJvYm94T3B0aW9uKCJWb2dzcGhlcmUiLCB2YWx1ZT0idm9nc3BoZXJlIikK">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_6","type":"Combobox","placeholder":"Select a planet...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":true},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uCgp3aXRoIENvbWJvYm94KHBsYWNlaG9sZGVyPSJTZWxlY3QgYSBwbGFuZXQuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJNYWdyYXRoZWEiLCB2YWx1ZT0ibWFncmF0aGVhIikKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIsIGRpc2FibGVkPVRydWUpCiAgICBDb21ib2JveE9wdGlvbigiQmV0ZWxnZXVzZSIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgIENvbWJvYm94T3B0aW9uKCJWb2dzcGhlcmUiLCB2YWx1ZT0idm9nc3BoZXJlIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Combobox, ComboboxOption
@@ -217,7 +334,7 @@ with Combobox(placeholder="Select a planet...", css_class="w-fit mx-auto"):
 {
   "view": {
     "cssClass": "w-fit mx-auto",
-    "name": "combobox_4",
+    "name": "combobox_6",
     "type": "Combobox",
     "placeholder": "Select a planet...",
     "disabled": false,
@@ -249,11 +366,77 @@ with Combobox(placeholder="Select a planet...", css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
-## Groups
+## Invalid State
 
-Organize related options with `ComboboxGroup` and `ComboboxLabel`. Each group can have a label header, and groups are automatically separated by dividers:
+Set `invalid=True` to indicate a validation error. The trigger shows a red border, making it clear the user needs to correct their selection. Pair it with a `Label` and error text for a complete form field:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_5","type":"Combobox","placeholder":"Choose a destination...","disabled":false,"invalid":false,"children":[{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Inner Planets"},{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Outer Reaches"},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29tYm9ib3gsCiAgICBDb21ib2JveEdyb3VwLAogICAgQ29tYm9ib3hMYWJlbCwKICAgIENvbWJvYm94T3B0aW9uLAopCgp3aXRoIENvbWJvYm94KHBsYWNlaG9sZGVyPSJDaG9vc2UgYSBkZXN0aW5hdGlvbi4uLiIsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBDb21ib2JveEdyb3VwKCk6CiAgICAgICAgQ29tYm9ib3hMYWJlbCgiSW5uZXIgUGxhbmV0cyIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIk1hZ3JhdGhlYSIsIHZhbHVlPSJtYWdyYXRoZWEiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJWb2dzcGhlcmUiLCB2YWx1ZT0idm9nc3BoZXJlIikKICAgIHdpdGggQ29tYm9ib3hHcm91cCgpOgogICAgICAgIENvbWJvYm94TGFiZWwoIk91dGVyIFJlYWNoZXMiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJCZXRlbGdldXNlIFYiLCB2YWx1ZT0iYmV0ZWxnZXVzZSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIktyaWtraXQiLCB2YWx1ZT0ia3Jpa2tpdCIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Home planet"},{"name":"combobox_7","type":"Combobox","placeholder":"Select a planet...","disabled":false,"invalid":true,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"cssClass":"text-sm text-destructive","content":"Please select your home planet","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiSG9tZSBwbGFuZXQiKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VsZWN0IGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICBUZXh0KAogICAgICAgICJQbGVhc2Ugc2VsZWN0IHlvdXIgaG9tZSBwbGFuZXQiLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1zbSB0ZXh0LWRlc3RydWN0aXZlIiwKICAgICkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Combobox, ComboboxOption, Label, Text
+
+with Column(gap=2, css_class="w-fit mx-auto"):
+    Label("Home planet")
+    with Combobox(placeholder="Select a planet...", invalid=True):
+        ComboboxOption("Magrathea", value="magrathea")
+        ComboboxOption("Betelgeuse V", value="betelgeuse")
+        ComboboxOption("Vogsphere", value="vogsphere")
+    Text(
+        "Please select your home planet",
+        css_class="text-sm text-destructive",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Home planet"},
+      {
+        "name": "combobox_7",
+        "type": "Combobox",
+        "placeholder": "Select a planet...",
+        "disabled": false,
+        "invalid": true,
+        "children": [
+          {
+            "type": "ComboboxOption",
+            "value": "magrathea",
+            "label": "Magrathea",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "betelgeuse",
+            "label": "Betelgeuse V",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "vogsphere",
+            "label": "Vogsphere",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "text-sm text-destructive",
+        "content": "Please select your home planet",
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Option Groups
+
+Organize related options with `ComboboxGroup` and `ComboboxLabel`. Each group gets a non-selectable header label, and groups are automatically separated by dividers in the dropdown:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_8","type":"Combobox","placeholder":"Choose a destination...","disabled":false,"invalid":false,"children":[{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Inner Planets"},{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false}]},{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Outer Reaches"},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false},{"type":"ComboboxOption","value":"lamuella","label":"Lamuella","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29tYm9ib3gsCiAgICBDb21ib2JveEdyb3VwLAogICAgQ29tYm9ib3hMYWJlbCwKICAgIENvbWJvYm94T3B0aW9uLAopCgp3aXRoIENvbWJvYm94KAogICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIGRlc3RpbmF0aW9uLi4uIiwKICAgIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIsCik6CiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJJbm5lciBQbGFuZXRzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIlZvZ3NwaGVyZSIsIHZhbHVlPSJ2b2dzcGhlcmUiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJPdXRlciBSZWFjaGVzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiQmV0ZWxnZXVzZSBWIiwgdmFsdWU9ImJldGVsZ2V1c2UiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJLcmlra2l0IiwgdmFsdWU9ImtyaWtraXQiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJMYW11ZWxsYSIsIHZhbHVlPSJsYW11ZWxsYSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -263,21 +446,26 @@ from prefab_ui.components import (
     ComboboxOption,
 )
 
-with Combobox(placeholder="Choose a destination...", css_class="w-fit mx-auto"):
+with Combobox(
+    placeholder="Choose a destination...",
+    css_class="w-fit mx-auto",
+):
     with ComboboxGroup():
         ComboboxLabel("Inner Planets")
         ComboboxOption("Magrathea", value="magrathea")
         ComboboxOption("Vogsphere", value="vogsphere")
+        ComboboxOption("Earth", value="earth")
     with ComboboxGroup():
         ComboboxLabel("Outer Reaches")
         ComboboxOption("Betelgeuse V", value="betelgeuse")
         ComboboxOption("Krikkit", value="krikkit")
+        ComboboxOption("Lamuella", value="lamuella")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
     "cssClass": "w-fit mx-auto",
-    "name": "combobox_5",
+    "name": "combobox_8",
     "type": "Combobox",
     "placeholder": "Choose a destination...",
     "disabled": false,
@@ -298,6 +486,12 @@ with Combobox(placeholder="Choose a destination...", css_class="w-fit mx-auto"):
             "value": "vogsphere",
             "label": "Vogsphere",
             "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "earth",
+            "label": "Earth",
+            "disabled": false
           }
         ]
       },
@@ -316,6 +510,12 @@ with Combobox(placeholder="Choose a destination...", css_class="w-fit mx-auto"):
             "value": "krikkit",
             "label": "Krikkit",
             "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "lamuella",
+            "label": "Lamuella",
+            "disabled": false
           }
         ]
       }
@@ -328,9 +528,9 @@ with Combobox(placeholder="Choose a destination...", css_class="w-fit mx-auto"):
 
 ## Separators
 
-Use `ComboboxSeparator` to add visual dividers between flat options without needing full group containers:
+Use `ComboboxSeparator` to add visual dividers between flat options without needing full group containers. Separators are lightweight — they just draw a line to create logical sections:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_6","type":"Combobox","placeholder":"Pick one...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false},{"type":"ComboboxOption","value":"mars","label":"Mars","disabled":false},{"type":"ComboboxSeparator"},{"type":"ComboboxOption","value":"jupiter","label":"Jupiter","disabled":false},{"type":"ComboboxOption","value":"saturn","label":"Saturn","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uLCBDb21ib2JveFNlcGFyYXRvcgoKd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iUGljayBvbmUuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICBDb21ib2JveE9wdGlvbigiTWFycyIsIHZhbHVlPSJtYXJzIikKICAgIENvbWJvYm94U2VwYXJhdG9yKCkKICAgIENvbWJvYm94T3B0aW9uKCJKdXBpdGVyIiwgdmFsdWU9Imp1cGl0ZXIiKQogICAgQ29tYm9ib3hPcHRpb24oIlNhdHVybiIsIHZhbHVlPSJzYXR1cm4iKQo=">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_9","type":"Combobox","placeholder":"Pick one...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false},{"type":"ComboboxOption","value":"mars","label":"Mars","disabled":false},{"type":"ComboboxSeparator"},{"type":"ComboboxOption","value":"jupiter","label":"Jupiter","disabled":false},{"type":"ComboboxOption","value":"saturn","label":"Saturn","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uLCBDb21ib2JveFNlcGFyYXRvcgoKd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iUGljayBvbmUuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICBDb21ib2JveE9wdGlvbigiTWFycyIsIHZhbHVlPSJtYXJzIikKICAgIENvbWJvYm94U2VwYXJhdG9yKCkKICAgIENvbWJvYm94T3B0aW9uKCJKdXBpdGVyIiwgdmFsdWU9Imp1cGl0ZXIiKQogICAgQ29tYm9ib3hPcHRpb24oIlNhdHVybiIsIHZhbHVlPSJzYXR1cm4iKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Combobox, ComboboxOption, ComboboxSeparator
@@ -346,7 +546,7 @@ with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
 {
   "view": {
     "cssClass": "w-fit mx-auto",
-    "name": "combobox_6",
+    "name": "combobox_9",
     "type": "Combobox",
     "placeholder": "Pick one...",
     "disabled": false,
@@ -379,6 +579,136 @@ with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
+## Actions
+
+The `on_change` parameter fires actions when the selection changes. Inside the action, `$event` holds the newly selected `value` string:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"combobox_10","type":"Combobox","placeholder":"Choose a ship...","disabled":false,"invalid":false,"onChange":{"action":"setState","key":"ship_status","value":"Boarding: {{ $event }}"},"children":[{"type":"ComboboxOption","value":"heart-of-gold","label":"Heart of Gold","disabled":false},{"type":"ComboboxOption","value":"bistromath","label":"Bistromath","disabled":false},{"type":"ComboboxOption","value":"starship-titanic","label":"Starship Titanic","disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ ship_status | default:'No ship selected' }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKCndpdGggQ29sdW1uKGdhcD00LCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIHdpdGggQ29tYm9ib3goCiAgICAgICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIHNoaXAuLi4iLAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgKICAgICAgICAgICAgInNoaXBfc3RhdHVzIiwKICAgICAgICAgICAgIkJvYXJkaW5nOiB7eyAkZXZlbnQgfX0iLAogICAgICAgICksCiAgICApOgogICAgICAgIENvbWJvYm94T3B0aW9uKCJIZWFydCBvZiBHb2xkIiwgdmFsdWU9ImhlYXJ0LW9mLWdvbGQiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJCaXN0cm9tYXRoIiwgdmFsdWU9ImJpc3Ryb21hdGgiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJTdGFyc2hpcCBUaXRhbmljIiwgdmFsdWU9InN0YXJzaGlwLXRpdGFuaWMiKQogICAgVGV4dCgKICAgICAgICAie3sgc2hpcF9zdGF0dXMgfCBkZWZhdWx0OidObyBzaGlwIHNlbGVjdGVkJyB9fSIsCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LW11dGVkLWZvcmVncm91bmQiLAogICAgKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Combobox, ComboboxOption, Text
+from prefab_ui.actions import SetState
+
+with Column(gap=4, css_class="w-fit mx-auto"):
+    with Combobox(
+        placeholder="Choose a ship...",
+        on_change=SetState(
+            "ship_status",
+            "Boarding: {{ $event }}",
+        ),
+    ):
+        ComboboxOption("Heart of Gold", value="heart-of-gold")
+        ComboboxOption("Bistromath", value="bistromath")
+        ComboboxOption("Starship Titanic", value="starship-titanic")
+    Text(
+        "{{ ship_status | default:'No ship selected' }}",
+        css_class="text-muted-foreground",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {
+        "name": "combobox_10",
+        "type": "Combobox",
+        "placeholder": "Choose a ship...",
+        "disabled": false,
+        "invalid": false,
+        "onChange": {"action": "setState", "key": "ship_status", "value": "Boarding: {{ $event }}"},
+        "children": [
+          {
+            "type": "ComboboxOption",
+            "value": "heart-of-gold",
+            "label": "Heart of Gold",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "bistromath",
+            "label": "Bistromath",
+            "disabled": false
+          },
+          {
+            "type": "ComboboxOption",
+            "value": "starship-titanic",
+            "label": "Starship Titanic",
+            "disabled": false
+          }
+        ]
+      },
+      {
+        "cssClass": "text-muted-foreground",
+        "content": "{{ ship_status | default:'No ship selected' }}",
+        "type": "Text"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+This is different from `.rx` — here we're transforming the value before storing it (prepending "Boarding: "). For simple "show the current selection" cases, `.rx` is the better approach.
+
+## Side and Align
+
+Control where the dropdown appears relative to the trigger with `side` and `align`. This is useful when the combobox is near the edge of a viewport or inside a constrained layout:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_11","type":"Combobox","placeholder":"Choose a ship...","disabled":false,"side":"top","align":"end","invalid":false,"children":[{"type":"ComboboxOption","value":"heart-of-gold","label":"Heart of Gold","disabled":false},{"type":"ComboboxOption","value":"bistromath","label":"Bistromath","disabled":false},{"type":"ComboboxOption","value":"starship-titanic","label":"Starship Titanic","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uCgp3aXRoIENvbWJvYm94KAogICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIHNoaXAuLi4iLAogICAgc2lkZT0idG9wIiwKICAgIGFsaWduPSJlbmQiLAogICAgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIiwKKToKICAgIENvbWJvYm94T3B0aW9uKCJIZWFydCBvZiBHb2xkIiwgdmFsdWU9ImhlYXJ0LW9mLWdvbGQiKQogICAgQ29tYm9ib3hPcHRpb24oIkJpc3Ryb21hdGgiLCB2YWx1ZT0iYmlzdHJvbWF0aCIpCiAgICBDb21ib2JveE9wdGlvbigiU3RhcnNoaXAgVGl0YW5pYyIsIHZhbHVlPSJzdGFyc2hpcC10aXRhbmljIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Combobox, ComboboxOption
+
+with Combobox(
+    placeholder="Choose a ship...",
+    side="top",
+    align="end",
+    css_class="w-fit mx-auto",
+):
+    ComboboxOption("Heart of Gold", value="heart-of-gold")
+    ComboboxOption("Bistromath", value="bistromath")
+    ComboboxOption("Starship Titanic", value="starship-titanic")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit mx-auto",
+    "name": "combobox_11",
+    "type": "Combobox",
+    "placeholder": "Choose a ship...",
+    "disabled": false,
+    "side": "top",
+    "align": "end",
+    "invalid": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "heart-of-gold",
+        "label": "Heart of Gold",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "bistromath",
+        "label": "Bistromath",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "starship-titanic",
+        "label": "Starship Titanic",
+        "disabled": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Combobox Parameters">
@@ -398,6 +728,10 @@ with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
   Whether the combobox is non-interactive.
 </ParamField>
 
+<ParamField body="invalid" type="bool" default="False">
+  Whether the combobox is in an error state.
+</ParamField>
+
 <ParamField body="side" type="'top' | 'right' | 'bottom' | 'left' | None" default="None">
   Which side to show the dropdown.
 </ParamField>
@@ -406,8 +740,8 @@ with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
   Alignment of the dropdown relative to the trigger.
 </ParamField>
 
-<ParamField body="invalid" type="bool" default="False">
-  Whether the combobox is in an error state.
+<ParamField body="on_change" type="Action | list[Action] | None" default="None">
+  Action(s) to execute when the selection changes. `$event` is the `value` string of the selected option.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -439,7 +773,7 @@ Container for grouping related options. Children should be `ComboboxLabel` and `
 </ParamField>
 </Card>
 
-<Card icon="code" title="ComboboxSeparator">
+<Card icon="code" title="ComboboxSeparator Parameters">
 Visual divider between options. No parameters.
 </Card>
 
