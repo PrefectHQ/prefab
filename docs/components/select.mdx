@@ -12,7 +12,7 @@ Select dropdowns let users pick one option from a collapsible list. The selected
 
 A `Select` is a container — use the `with` block to add `SelectOption` children. Each option needs a `value` (what gets stored) and a `label` (what the user sees):
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit","name":"select_2","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJDaG9vc2Ugc2l6ZS4uLiIsIGNzc19jbGFzcz0idy1maXQiKToKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ic20iLCBsYWJlbD0iU21hbGwiKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJtZCIsIGxhYmVsPSJNZWRpdW0iKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"w-fit","name":"select_2","type":"Select","placeholder":"Choose size...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"sm","label":"Small","selected":false,"disabled":false},{"type":"SelectOption","value":"md","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"lg","label":"Large","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJDaG9vc2Ugc2l6ZS4uLiIsIGNzc19jbGFzcz0idy1maXQiKToKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ic20iLCBsYWJlbD0iU21hbGwiKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJtZCIsIGxhYmVsPSJNZWRpdW0iKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Select, SelectOption
@@ -32,6 +32,7 @@ with Select(placeholder="Choose size...", css_class="w-fit"):
     "size": "default",
     "disabled": false,
     "required": false,
+    "invalid": false,
     "children": [
       {
         "type": "SelectOption",
@@ -65,7 +66,7 @@ with Select(placeholder="Choose size...", css_class="w-fit"):
 
 Mark an option as `selected=True` to have it chosen when the component first renders:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"select_3","type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJTZWxlY3QgY291bnRyeSIsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJ1cyIsIGxhYmVsPSJVbml0ZWQgU3RhdGVzIikKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idWsiLCBsYWJlbD0iVW5pdGVkIEtpbmdkb20iLCBzZWxlY3RlZD1UcnVlKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJjYSIsIGxhYmVsPSJDYW5hZGEiKQo=">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"select_3","type":"Select","placeholder":"Select country","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"us","label":"United States","selected":false,"disabled":false},{"type":"SelectOption","value":"uk","label":"United Kingdom","selected":true,"disabled":false},{"type":"SelectOption","value":"ca","label":"Canada","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJTZWxlY3QgY291bnRyeSIsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJ1cyIsIGxhYmVsPSJVbml0ZWQgU3RhdGVzIikKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idWsiLCBsYWJlbD0iVW5pdGVkIEtpbmdkb20iLCBzZWxlY3RlZD1UcnVlKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJjYSIsIGxhYmVsPSJDYW5hZGEiKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Select, SelectOption
@@ -85,6 +86,7 @@ with Select(placeholder="Select country", css_class="w-fit mx-auto"):
     "size": "default",
     "disabled": false,
     "required": false,
+    "invalid": false,
     "children": [
       {
         "type": "SelectOption",
@@ -118,12 +120,12 @@ with Select(placeholder="Select country", css_class="w-fit mx-auto"):
 
 Selects come in two sizes. The `"sm"` variant is useful when space is tight or when embedding a select alongside other compact controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_4","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_5","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbgoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkRlZmF1bHQgc2l6ZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iMSIsIGxhYmVsPSJPcHRpb24gMSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIyIiwgbGFiZWw9Ik9wdGlvbiAyIikKCiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iU21hbGwgc2l6ZSIsIHNpemU9InNtIik6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIxIiwgbGFiZWw9Ik9wdGlvbiAxIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjIiLCBsYWJlbD0iT3B0aW9uIDIiKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit min-w-[200px] mx-auto","type":"Column","children":[{"name":"select_4","type":"Select","placeholder":"Default size","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]},{"name":"select_5","type":"Select","placeholder":"Small size","size":"sm","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"1","label":"Option 1","selected":false,"disabled":false},{"type":"SelectOption","value":"2","label":"Option 2","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbgoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbWluLXctWzIwMHB4XSBteC1hdXRvIik6CiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iRGVmYXVsdCBzaXplIik6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSIxIiwgbGFiZWw9Ik9wdGlvbiAxIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjIiLCBsYWJlbD0iT3B0aW9uIDIiKQoKICAgIHdpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJTbWFsbCBzaXplIiwgc2l6ZT0ic20iKToKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9IjEiLCBsYWJlbD0iT3B0aW9uIDEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iMiIsIGxhYmVsPSJPcHRpb24gMiIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption
 
-with Column(gap=4, css_class="w-fit mx-auto"):
+with Column(gap=4, css_class="w-fit min-w-[200px] mx-auto"):
     with Select(placeholder="Default size"):
         SelectOption(value="1", label="Option 1")
         SelectOption(value="2", label="Option 2")
@@ -135,7 +137,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4 w-fit mx-auto",
+    "cssClass": "gap-4 w-fit min-w-[200px] mx-auto",
     "type": "Column",
     "children": [
       {
@@ -145,6 +147,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
         "size": "default",
         "disabled": false,
         "required": false,
+        "invalid": false,
         "children": [
           {
             "type": "SelectOption",
@@ -169,6 +172,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
         "size": "sm",
         "disabled": false,
         "required": false,
+        "invalid": false,
         "children": [
           {
             "type": "SelectOption",
@@ -197,7 +201,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 
 Pair a `Select` with a `Label` in a `Column` for a standard form field pattern:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"name":"select_6","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJQcmVmZXJyZWQgbGFuZ3VhZ2UiKQogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBsYW5ndWFnZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iZW4iLCBsYWJlbD0iRW5nbGlzaCIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlcyIsIGxhYmVsPSJTcGFuaXNoIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImZyIiwgbGFiZWw9IkZyZW5jaCIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"name":"select_6","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJQcmVmZXJyZWQgbGFuZ3VhZ2UiKQogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBsYW5ndWFnZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iZW4iLCBsYWJlbD0iRW5nbGlzaCIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlcyIsIGxhYmVsPSJTcGFuaXNoIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImZyIiwgbGFiZWw9IkZyZW5jaCIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Select, SelectOption
@@ -223,6 +227,7 @@ with Column(gap=2, css_class="w-fit mx-auto"):
         "size": "default",
         "disabled": false,
         "required": false,
+        "invalid": false,
         "children": [
           {
             "type": "SelectOption",
@@ -254,11 +259,304 @@ with Column(gap=2, css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
+## Disabled State
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"select_7","type":"Select","placeholder":"Travel class...","size":"default","disabled":true,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"first","label":"First Class","selected":false,"disabled":false},{"type":"SelectOption","value":"business","label":"Business","selected":false,"disabled":false},{"type":"SelectOption","value":"economy","label":"Economy","selected":false,"disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KAogICAgcGxhY2Vob2xkZXI9IlRyYXZlbCBjbGFzcy4uLiIsCiAgICBkaXNhYmxlZD1UcnVlLAogICAgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIiwKKToKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iZmlyc3QiLCBsYWJlbD0iRmlyc3QgQ2xhc3MiKQogICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJidXNpbmVzcyIsIGxhYmVsPSJCdXNpbmVzcyIpCiAgICBTZWxlY3RPcHRpb24odmFsdWU9ImVjb25vbXkiLCBsYWJlbD0iRWNvbm9teSIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Select, SelectOption
+
+with Select(
+    placeholder="Travel class...",
+    disabled=True,
+    css_class="w-fit mx-auto",
+):
+    SelectOption(value="first", label="First Class")
+    SelectOption(value="business", label="Business")
+    SelectOption(value="economy", label="Economy")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit mx-auto",
+    "name": "select_7",
+    "type": "Select",
+    "placeholder": "Travel class...",
+    "size": "default",
+    "disabled": true,
+    "required": false,
+    "invalid": false,
+    "children": [
+      {
+        "type": "SelectOption",
+        "value": "first",
+        "label": "First Class",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "business",
+        "label": "Business",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "economy",
+        "label": "Economy",
+        "selected": false,
+        "disabled": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Disabled Options
+
+Individual options can be disabled while the rest of the dropdown remains interactive. Disabled options appear dimmed and cannot be selected:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"select_8","type":"Select","placeholder":"Choose a ship...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"heart_of_gold","label":"Heart of Gold","selected":false,"disabled":false},{"type":"SelectOption","value":"bistromath","label":"Bistromath","selected":false,"disabled":true},{"type":"SelectOption","value":"vogon_ship","label":"Vogon Constructor Fleet","selected":false,"disabled":false},{"type":"SelectOption","value":"starship_titanic","label":"Starship Titanic","selected":false,"disabled":true}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggU2VsZWN0KAogICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIHNoaXAuLi4iLAogICAgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIiwKKToKICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iaGVhcnRfb2ZfZ29sZCIsIGxhYmVsPSJIZWFydCBvZiBHb2xkIikKICAgIFNlbGVjdE9wdGlvbigKICAgICAgICB2YWx1ZT0iYmlzdHJvbWF0aCIsCiAgICAgICAgbGFiZWw9IkJpc3Ryb21hdGgiLAogICAgICAgIGRpc2FibGVkPVRydWUsCiAgICApCiAgICBTZWxlY3RPcHRpb24odmFsdWU9InZvZ29uX3NoaXAiLCBsYWJlbD0iVm9nb24gQ29uc3RydWN0b3IgRmxlZXQiKQogICAgU2VsZWN0T3B0aW9uKAogICAgICAgIHZhbHVlPSJzdGFyc2hpcF90aXRhbmljIiwKICAgICAgICBsYWJlbD0iU3RhcnNoaXAgVGl0YW5pYyIsCiAgICAgICAgZGlzYWJsZWQ9VHJ1ZSwKICAgICkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Select, SelectOption
+
+with Select(
+    placeholder="Choose a ship...",
+    css_class="w-fit mx-auto",
+):
+    SelectOption(value="heart_of_gold", label="Heart of Gold")
+    SelectOption(
+        value="bistromath",
+        label="Bistromath",
+        disabled=True,
+    )
+    SelectOption(value="vogon_ship", label="Vogon Constructor Fleet")
+    SelectOption(
+        value="starship_titanic",
+        label="Starship Titanic",
+        disabled=True,
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit mx-auto",
+    "name": "select_8",
+    "type": "Select",
+    "placeholder": "Choose a ship...",
+    "size": "default",
+    "disabled": false,
+    "required": false,
+    "invalid": false,
+    "children": [
+      {
+        "type": "SelectOption",
+        "value": "heart_of_gold",
+        "label": "Heart of Gold",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "bistromath",
+        "label": "Bistromath",
+        "selected": false,
+        "disabled": true
+      },
+      {
+        "type": "SelectOption",
+        "value": "vogon_ship",
+        "label": "Vogon Constructor Fleet",
+        "selected": false,
+        "disabled": false
+      },
+      {
+        "type": "SelectOption",
+        "value": "starship_titanic",
+        "label": "Starship Titanic",
+        "selected": false,
+        "disabled": true
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Invalid State
+
+Set `invalid=True` to flag a select with error styling. Pair it with a `Label` in a form layout to signal that a selection is required or incorrect:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination"},{"name":"select_9","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":true,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJEZXN0aW5hdGlvbiIpCiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iQ2hvb3NlIGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hZ3JhdGhlYSIsIGxhYmVsPSJNYWdyYXRoZWEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYmV0ZWxnZXVzZSIsIGxhYmVsPSJCZXRlbGdldXNlIFYiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idm9nc3BoZXJlIiwgbGFiZWw9IlZvZ3NwaGVyZSIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Select, SelectOption
+
+with Column(gap=2, css_class="w-fit mx-auto"):
+    Label("Destination")
+    with Select(placeholder="Choose a planet...", invalid=True):
+        SelectOption(value="magrathea", label="Magrathea")
+        SelectOption(value="betelgeuse", label="Betelgeuse V")
+        SelectOption(value="vogsphere", label="Vogsphere")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Destination"},
+      {
+        "name": "select_9",
+        "type": "Select",
+        "placeholder": "Choose a planet...",
+        "size": "default",
+        "disabled": false,
+        "required": false,
+        "invalid": true,
+        "children": [
+          {
+            "type": "SelectOption",
+            "value": "magrathea",
+            "label": "Magrathea",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "betelgeuse",
+            "label": "Betelgeuse V",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "vogsphere",
+            "label": "Vogsphere",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Option Groups
+
+Organize long option lists into labeled sections with `SelectGroup` and `SelectLabel`. Use `SelectSeparator` to add visual dividers between groups:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit","name":"select_10","type":"Select","placeholder":"Choose a food...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectGroup","children":[{"type":"SelectLabel","label":"Fruits"},{"type":"SelectOption","value":"apple","label":"Apple","selected":false,"disabled":false},{"type":"SelectOption","value":"banana","label":"Banana","selected":false,"disabled":false},{"type":"SelectOption","value":"cherry","label":"Cherry","selected":false,"disabled":false}]},{"type":"SelectSeparator"},{"type":"SelectGroup","children":[{"type":"SelectLabel","label":"Vegetables"},{"type":"SelectOption","value":"carrot","label":"Carrot","selected":false,"disabled":false},{"type":"SelectOption","value":"broccoli","label":"Broccoli","selected":false,"disabled":false},{"type":"SelectOption","value":"spinach","label":"Spinach","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU2VsZWN0LAogICAgU2VsZWN0R3JvdXAsCiAgICBTZWxlY3RMYWJlbCwKICAgIFNlbGVjdE9wdGlvbiwKICAgIFNlbGVjdFNlcGFyYXRvciwKKQoKd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBhIGZvb2QuLi4iLCBjc3NfY2xhc3M9InctZml0Iik6CiAgICB3aXRoIFNlbGVjdEdyb3VwKCk6CiAgICAgICAgU2VsZWN0TGFiZWwoIkZydWl0cyIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJhcHBsZSIsIGxhYmVsPSJBcHBsZSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJiYW5hbmEiLCBsYWJlbD0iQmFuYW5hIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImNoZXJyeSIsIGxhYmVsPSJDaGVycnkiKQogICAgU2VsZWN0U2VwYXJhdG9yKCkKICAgIHdpdGggU2VsZWN0R3JvdXAoKToKICAgICAgICBTZWxlY3RMYWJlbCgiVmVnZXRhYmxlcyIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJjYXJyb3QiLCBsYWJlbD0iQ2Fycm90IikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImJyb2Njb2xpIiwgbGFiZWw9IkJyb2Njb2xpIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9InNwaW5hY2giLCBsYWJlbD0iU3BpbmFjaCIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Select,
+    SelectGroup,
+    SelectLabel,
+    SelectOption,
+    SelectSeparator,
+)
+
+with Select(placeholder="Choose a food...", css_class="w-fit"):
+    with SelectGroup():
+        SelectLabel("Fruits")
+        SelectOption(value="apple", label="Apple")
+        SelectOption(value="banana", label="Banana")
+        SelectOption(value="cherry", label="Cherry")
+    SelectSeparator()
+    with SelectGroup():
+        SelectLabel("Vegetables")
+        SelectOption(value="carrot", label="Carrot")
+        SelectOption(value="broccoli", label="Broccoli")
+        SelectOption(value="spinach", label="Spinach")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit",
+    "name": "select_10",
+    "type": "Select",
+    "placeholder": "Choose a food...",
+    "size": "default",
+    "disabled": false,
+    "required": false,
+    "invalid": false,
+    "children": [
+      {
+        "type": "SelectGroup",
+        "children": [
+          {"type": "SelectLabel", "label": "Fruits"},
+          {
+            "type": "SelectOption",
+            "value": "apple",
+            "label": "Apple",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "banana",
+            "label": "Banana",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "cherry",
+            "label": "Cherry",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      },
+      {"type": "SelectSeparator"},
+      {
+        "type": "SelectGroup",
+        "children": [
+          {"type": "SelectLabel", "label": "Vegetables"},
+          {
+            "type": "SelectOption",
+            "value": "carrot",
+            "label": "Carrot",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "broccoli",
+            "label": "Broccoli",
+            "selected": false,
+            "disabled": false
+          },
+          {
+            "type": "SelectOption",
+            "value": "spinach",
+            "label": "Spinach",
+            "selected": false,
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Reading the Value
 
 Use `.rx` to get a reactive reference to the selected option's `value` string. When the user picks an option, anything bound to `.rx` updates automatically:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_7","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false},{"type":"SelectOption","value":"earth","label":"Earth (Mostly Harmless)","selected":false,"disabled":false}]},{"content":"You chose: {{ select_7 }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbiwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBhIHBsYW5ldC4uLiIpIGFzIHNlbDoKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hZ3JhdGhlYSIsIGxhYmVsPSJNYWdyYXRoZWEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYmV0ZWxnZXVzZSIsIGxhYmVsPSJCZXRlbGdldXNlIFYiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idm9nc3BoZXJlIiwgbGFiZWw9IlZvZ3NwaGVyZSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlYXJ0aCIsIGxhYmVsPSJFYXJ0aCAoTW9zdGx5IEhhcm1sZXNzKSIpCiAgICBUZXh0KGYiWW91IGNob3NlOiB7c2VsLnJ4fSIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_11","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false},{"type":"SelectOption","value":"earth","label":"Earth (Mostly Harmless)","selected":false,"disabled":false}]},{"content":"You chose: {{ select_11 }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbiwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBhIHBsYW5ldC4uLiIpIGFzIHNlbDoKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hZ3JhdGhlYSIsIGxhYmVsPSJNYWdyYXRoZWEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYmV0ZWxnZXVzZSIsIGxhYmVsPSJCZXRlbGdldXNlIFYiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idm9nc3BoZXJlIiwgbGFiZWw9IlZvZ3NwaGVyZSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlYXJ0aCIsIGxhYmVsPSJFYXJ0aCAoTW9zdGx5IEhhcm1sZXNzKSIpCiAgICBUZXh0KGYiWW91IGNob3NlOiB7c2VsLnJ4fSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -278,12 +576,13 @@ with Column(gap=4, css_class="w-fit mx-auto"):
     "type": "Column",
     "children": [
       {
-        "name": "select_7",
+        "name": "select_11",
         "type": "Select",
         "placeholder": "Choose a planet...",
         "size": "default",
         "disabled": false,
         "required": false,
+        "invalid": false,
         "children": [
           {
             "type": "SelectOption",
@@ -315,7 +614,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
           }
         ]
       },
-      {"content": "You chose: {{ select_7 }}", "type": "Text"}
+      {"content": "You chose: {{ select_11 }}", "type": "Text"}
     ]
   }
 }
@@ -323,13 +622,13 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
-Pick an option and the text updates instantly. The `.rx` reference holds the `value` string of whichever option is selected — `"magrathea"`, `"betelgeuse"`, etc. — not the display label.
+Pick an option and the text updates instantly. The `.rx` reference holds the `value` string of whichever option is selected -- `"magrathea"`, `"betelgeuse"`, etc. -- not the display label.
 
 ## Actions
 
 The `on_change` parameter fires actions when the selection changes. Inside the action, `$event` holds the newly selected `value` string:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_8","type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | default:'Make a selection' }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbiwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QoCiAgICAgICAgcGxhY2Vob2xkZXI9IlBpY2sgYSBjb2xvci4uLiIsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKCJwaWNrZWQiLCAiWW91IGNob3NlOiB7eyAkZXZlbnQgfX0iKSwKICAgICk6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJyZWQiLCBsYWJlbD0iUmVkIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImdyZWVuIiwgbGFiZWw9IkdyZWVuIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImJsdWUiLCBsYWJlbD0iQmx1ZSIpCiAgICBUZXh0KAogICAgICAgICJ7eyBwaWNrZWQgfCBkZWZhdWx0OidNYWtlIGEgc2VsZWN0aW9uJyB9fSIsCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LW11dGVkLWZvcmVncm91bmQiLAogICAgKQo=">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"select_12","type":"Select","placeholder":"Pick a color...","size":"default","disabled":false,"required":false,"invalid":false,"onChange":{"action":"setState","key":"picked","value":"You chose: {{ $event }}"},"children":[{"type":"SelectOption","value":"red","label":"Red","selected":false,"disabled":false},{"type":"SelectOption","value":"green","label":"Green","selected":false,"disabled":false},{"type":"SelectOption","value":"blue","label":"Blue","selected":false,"disabled":false}]},{"cssClass":"text-muted-foreground","content":"{{ picked | default:'Make a selection' }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTZWxlY3QsIFNlbGVjdE9wdGlvbiwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBTZWxlY3QoCiAgICAgICAgcGxhY2Vob2xkZXI9IlBpY2sgYSBjb2xvci4uLiIsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKCJwaWNrZWQiLCAiWW91IGNob3NlOiB7eyAkZXZlbnQgfX0iKSwKICAgICk6CiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJyZWQiLCBsYWJlbD0iUmVkIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImdyZWVuIiwgbGFiZWw9IkdyZWVuIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImJsdWUiLCBsYWJlbD0iQmx1ZSIpCiAgICBUZXh0KAogICAgICAgICJ7eyBwaWNrZWQgfCBkZWZhdWx0OidNYWtlIGEgc2VsZWN0aW9uJyB9fSIsCiAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LW11dGVkLWZvcmVncm91bmQiLAogICAgKQo=">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Select, SelectOption, Text
@@ -355,12 +654,13 @@ with Column(gap=4, css_class="w-fit mx-auto"):
     "type": "Column",
     "children": [
       {
-        "name": "select_8",
+        "name": "select_12",
         "type": "Select",
         "placeholder": "Pick a color...",
         "size": "default",
         "disabled": false,
         "required": false,
+        "invalid": false,
         "onChange": {"action": "setState", "key": "picked", "value": "You chose: {{ $event }}"},
         "children": [
           {
@@ -398,7 +698,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
-This is different from `.rx` — here we're transforming the value before storing it (prepending "You chose: "). For simple "show the current selection" cases, `.rx` is the better approach.
+This is different from `.rx` -- here we're transforming the value before storing it (prepending "You chose: "). For simple "show the current selection" cases, `.rx` is the better approach.
 
 ## API Reference
 
@@ -415,6 +715,14 @@ This is different from `.rx` — here we're transforming the value before storin
   Select size: `"default"`, `"sm"`.
 </ParamField>
 
+<ParamField body="side" type="str | None" default="None">
+  Which side of the trigger the dropdown appears on: `"top"`, `"right"`, `"bottom"`, `"left"`.
+</ParamField>
+
+<ParamField body="align" type="str | None" default="None">
+  Alignment of the dropdown relative to the trigger: `"start"`, `"center"`, `"end"`.
+</ParamField>
+
 <ParamField body="disabled" type="bool" default="False">
   Whether the select is non-interactive.
 </ParamField>
@@ -423,10 +731,36 @@ This is different from `.rx` — here we're transforming the value before storin
   Whether a selection is required for form submission.
 </ParamField>
 
+<ParamField body="invalid" type="bool" default="False">
+  Whether the select shows error styling (red border).
+</ParamField>
+
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
   Action(s) to execute when the selection changes. `$event` is the `value` string of the selected option.
 </ParamField>
 
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectGroup Parameters">
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectLabel Parameters">
+<ParamField body="label" type="str" required>
+  Display text for the group header.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="SelectSeparator Parameters">
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
 </ParamField>
@@ -464,9 +798,35 @@ This is different from `.rx` — here we're transforming the value before storin
   "name?": "string",
   "placeholder?": "string",
   "size?": "sm | default",
+  "side?": "top | right | bottom | left",
+  "align?": "start | center | end",
   "disabled?": false,
   "required?": false,
+  "invalid?": false,
   "onChange?": "Action | Action[]",
+  "cssClass?": "string"
+}
+```
+
+```json SelectGroup
+{
+  "type": "SelectGroup",
+  "children?": "[Component]",
+  "cssClass?": "string"
+}
+```
+
+```json SelectLabel
+{
+  "type": "SelectLabel",
+  "label": "string (required)",
+  "cssClass?": "string"
+}
+```
+
+```json SelectSeparator
+{
+  "type": "SelectSeparator",
   "cssClass?": "string"
 }
 ```
@@ -482,4 +842,4 @@ This is different from `.rx` — here we're transforming the value before storin
 }
 ```
 
-For the complete protocol schema, see [Select](/protocol/select), [SelectOption](/protocol/select-option).
+For the complete protocol schema, see [Select](/protocol/select), [SelectGroup](/protocol/select-group), [SelectLabel](/protocol/select-label), [SelectSeparator](/protocol/select-separator), [SelectOption](/protocol/select-option).

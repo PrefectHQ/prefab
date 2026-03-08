@@ -1,0 +1,43 @@
+---
+title: SelectLabel
+description: JSON Schema for the SelectLabel component.
+---
+
+Label for a group of select options.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "SelectLabel",
+      "default": "SelectLabel",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "label": {
+      "description": "Group label text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "label"
+  ]
+}
+```
