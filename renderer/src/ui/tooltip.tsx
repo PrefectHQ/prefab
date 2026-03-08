@@ -1,27 +1,15 @@
 import * as React from "react"
+import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
+
 import { cn } from "@/lib/utils"
+import { usePortalContainer } from "../portal-container"
 
-/**
- * Pure-CSS tooltip that avoids Radix's Portal/ref composition issues
- * in production builds within sandboxed iframes.
- *
- * Uses CSS group-hover for zero-JS tooltip display. The tooltip content
- * is positioned absolutely relative to the trigger wrapper.
- */
-
-interface SimpleTooltipProps {
-  content: string;
-  side?: "top" | "right" | "bottom" | "left";
-  delay?: number;
-  className?: string;
-  children?: React.ReactNode;
-}
-
-const sideStyles: Record<string, string> = {
-  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-  left: "right-full top-1/2 -translate-y-1/2 mr-2",
-  right: "left-full top-1/2 -translate-y-1/2 ml-2",
+interface TooltipProps {
+  content: string
+  side?: "top" | "right" | "bottom" | "left"
+  delay?: number
+  className?: string
+  children?: React.ReactNode
 }
 
 function SimpleTooltip({
@@ -30,27 +18,26 @@ function SimpleTooltip({
   delay = 700,
   className,
   children,
-}: SimpleTooltipProps) {
+}: TooltipProps) {
+  const container = usePortalContainer()
+
   return (
-    <span className={cn("group/tooltip relative inline-flex", className)}>
-      {children}
-      <span
-        role="tooltip"
-        className={cn(
-          "cn-tooltip-content",
-          "pointer-events-none absolute z-50",
-          "opacity-0 group-hover/tooltip:opacity-100",
-          "transition-opacity duration-150",
-          "whitespace-nowrap",
-          sideStyles[side] || sideStyles.top
-        )}
-        style={{
-          "--tooltip-delay": `${delay}ms`,
-        } as React.CSSProperties}
+    <TooltipPrimitive.Root>
+      <TooltipPrimitive.Trigger
+        delay={delay}
+        className={cn("inline-flex", className)}
+        render={<span />}
       >
-        {content}
-      </span>
-    </span>
+        {children}
+      </TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Portal container={container}>
+        <TooltipPrimitive.Positioner side={side} sideOffset={6}>
+          <TooltipPrimitive.Popup className="cn-tooltip-content">
+            {content}
+          </TooltipPrimitive.Popup>
+        </TooltipPrimitive.Positioner>
+      </TooltipPrimitive.Portal>
+    </TooltipPrimitive.Root>
   )
 }
 SimpleTooltip.displayName = "SimpleTooltip"

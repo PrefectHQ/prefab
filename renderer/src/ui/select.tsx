@@ -77,6 +77,7 @@ function SelectContent({
   const container = usePortalContainer();
   return (
     <SelectPrimitive.Portal container={container}>
+      <SelectPrimitive.Backdrop className="fixed inset-0" />
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
