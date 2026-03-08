@@ -160,8 +160,18 @@ export async function executeAction(
           errorMessage = extractErrorText(toolResult);
           break;
         }
-        // Extract result data — available as $result in onSuccess callbacks
-        resultData = toolResult ? extractToolResultData(toolResult) : undefined;
+        // Extract result data — available as $result in onSuccess callbacks.
+        // Prefer structuredContent (typed response). If the action spec
+        // includes unwrapResult (set by the server framework's callable
+        // resolver), dig into the "result" envelope automatically.
+        if (toolResult?.structuredContent != null) {
+          const sc = toolResult.structuredContent as Record<string, unknown>;
+          resultData = resolved.unwrapResult && "result" in sc ? sc.result : sc;
+        } else {
+          resultData = toolResult
+            ? extractToolResultData(toolResult)
+            : undefined;
+        }
         break;
       }
       case "sendMessage": {

@@ -102,7 +102,11 @@ class TestCallToolResolver:
         view.children = [Button(label="Go", on_click=action)]
         app = PrefabApp(view=view)
 
-        j = app.to_json(tool_resolver=lambda fn: fn.__name__ + "-abc123")
+        from prefab_ui.app import ResolvedTool
+
+        j = app.to_json(
+            tool_resolver=lambda fn: ResolvedTool(name=fn.__name__ + "-abc123")
+        )
         assert j["view"]["children"][0]["onClick"]["tool"] == "save-abc123"
 
     def test_callable_without_resolver_uses_name(self):
@@ -122,7 +126,11 @@ class TestCallToolResolver:
         view.children = [Button(label="Go", on_click=action)]
         app = PrefabApp(view=view)
 
-        j = app.to_json(tool_resolver=lambda fn: "should_not_be_called")
+        from prefab_ui.app import ResolvedTool
+
+        j = app.to_json(
+            tool_resolver=lambda fn: ResolvedTool(name="should_not_be_called")
+        )
         assert j["view"]["children"][0]["onClick"]["tool"] == "explicit_name"
 
 

@@ -13,21 +13,23 @@ import types
 from collections.abc import Callable
 from typing import Any, Literal
 
-from pydantic import Field, PrivateAttr, field_serializer
+from pydantic import Field, PrivateAttr, model_serializer
 
 from prefab_ui.actions.base import Action
 from prefab_ui.app import get_tool_resolver
-from prefab_ui.rx import RxStr
+from prefab_ui.rx import RxStr, _coerce_rx
 
 
 class CallTool(Action):
     """Call an MCP server tool via ``app.callServerTool()``.
 
     The ``tool`` argument can be a string name or a callable reference
-    to the tool function.  Callables are resolved to name strings at
-    serialization time via the resolver passed to
-    ``PrefabApp.to_json(tool_resolver=...)``.  Without a resolver,
-    the function's ``__name__`` is used as a fallback.
+    to the tool function.  Callables are resolved at serialization time
+    via the resolver passed to ``PrefabApp.to_json(tool_resolver=...)``.
+
+    The resolver may return a plain name string or a :class:`ResolvedTool`
+    carrying the name plus flags (e.g. ``unwrap_result``) that the
+    renderer can act on.
 
     The tool's return value is available as ``$result`` in ``on_success``
     callbacks.
@@ -50,13 +52,17 @@ class CallTool(Action):
             kwargs["tool"] = tool
             super().__init__(**kwargs)
 
-    @field_serializer("tool")
-    def _resolve_tool_ref(self, value: str) -> str:
+    @model_serializer(mode="wrap")
+    def _serialize_with_resolver(self, handler: Any) -> dict[str, Any]:
+        data: dict[str, Any] = _coerce_rx(handler(self))  # type: ignore[assignment]
         if self._tool_ref is not None:
             resolver = get_tool_resolver()
             if resolver is not None:
-                return resolver(self._tool_ref)
-        return value
+                resolved = resolver(self._tool_ref)
+                data["tool"] = resolved.name
+                if resolved.unwrap_result:
+                    data["unwrapResult"] = True
+        return {k: v for k, v in data.items() if v is not None}
 
 
 class SendMessage(Action):

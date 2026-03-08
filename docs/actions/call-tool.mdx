@@ -152,11 +152,47 @@ Button(
 )
 ```
 
+## Callable References (FastMCP)
+
+When using Prefab with [FastMCP](/running/fastmcp), you can pass a function reference instead of a tool name string. The framework resolves it to the correct tool name at serialization time, including any namespace prefixes or global keys:
+
+```python
+from fastmcp import FastMCP, FastMCPApp
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import RESULT
+
+app = FastMCPApp("My App")
+
+@app.tool()
+def search(q: str) -> list[dict]:
+    return [{"name": "Arthur"}, {"name": "Ford"}]
+
+@app.ui()
+def browse():
+    # Function reference — resolved automatically
+    Button("Search", on_click=CallTool(
+        search,
+        arguments={"q": "{{ query }}"},
+        on_success=SetState("results", RESULT),
+    ))
+```
+
+Callable references provide two advantages over string names. First, the resolver handles name mangling (global keys, namespace prefixes) so your code doesn't need to know the final tool name. Second, the resolver can inspect the tool's metadata and inject hints into the serialized action — for example, `unwrapResult`.
+
+### Automatic Result Unwrapping
+
+MCP requires `structuredContent` to be a JSON object, so FastMCP wraps non-object tool returns (lists, strings, numbers) in a `{"result": X}` envelope. Without correction, `$result` in your `on_success` callback would contain this envelope instead of the actual data.
+
+When you use a callable reference, the resolver detects this wrapping and sets `unwrapResult: true` on the serialized action. The renderer sees the flag and automatically extracts the inner value, so `$result` contains exactly what your tool returned.
+
+This only happens with callable references. If you use a string name (`CallTool("search")`), the resolver isn't involved and no unwrapping occurs — `$result` will contain the raw `structuredContent` from the server.
+
 ## API Reference
 
 <Card icon="code" title="CallTool Parameters">
-<ParamField body="tool" type="str" required>
-  Name of the server tool to call. Can be passed as a positional argument.
+<ParamField body="tool" type="str | Callable" required>
+  Name of the server tool to call, or a callable reference to the tool function. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="arguments" type="dict[str, Any]" default="{}">
@@ -170,8 +206,11 @@ Button(
 {
   "action": "toolCall",
   "tool": "string (required)",
-  "arguments?": "object"
+  "arguments?": "object",
+  "unwrapResult?": "boolean"
 }
 ```
+
+When `unwrapResult` is `true`, the renderer extracts `$result` from a `{"result": X}` envelope in the tool's `structuredContent`. This is set automatically by the callable resolver when the tool wraps its return value.
 
 For the complete protocol schema, see [CallTool](/protocol/tool-call).

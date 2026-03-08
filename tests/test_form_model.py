@@ -339,9 +339,11 @@ class TestAutoFillConvention:
         class M(BaseModel):
             name: str
 
-        def resolver(fn: object) -> str:
+        from prefab_ui.app import ResolvedTool
+
+        def resolver(fn: object) -> ResolvedTool:
             assert fn is save_item
-            return "save_item-abc123"
+            return ResolvedTool(name="save_item-abc123")
 
         form = Form.from_model(M, on_submit=CallTool(save_item))
         app = PrefabApp(view=form)
@@ -367,7 +369,11 @@ class TestAutoFillConvention:
             on_submit=CallTool(save_item, arguments={"custom": "val"}),
         )
         app = PrefabApp(view=form)
-        j = app.to_json(tool_resolver=lambda fn: fn.__name__ + "-resolved")
+        from prefab_ui.app import ResolvedTool
+
+        j = app.to_json(
+            tool_resolver=lambda fn: ResolvedTool(name=fn.__name__ + "-resolved")
+        )
         assert j["view"]["onSubmit"]["tool"] == "save_item-resolved"
         assert j["view"]["onSubmit"]["arguments"] == {"custom": "val"}
 
