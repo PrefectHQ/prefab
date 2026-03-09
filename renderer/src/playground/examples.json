@@ -797,17 +797,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Field, Switch\n\nwith Column(gap=4):\n    with Field(\n        title=\"Marketing emails\",\n        description=\"Receive emails about new products \"\n        \"and features.\",\n    ):\n        Switch()\n\n    with Field(\n        title=\"Security emails\",\n        description=\"Receive emails about your account \"\n        \"activity.\",\n    ):\n        Switch(checked=True)"
+    "code": "from prefab_ui.components import (\n    Column, Field, FieldError, Input, Label, Select, SelectOption,\n)\n\nwith Column(gap=4):\n    with Field():\n        Label(\"Username\")\n        Input(name=\"username\", placeholder=\"Enter username\")\n\n    with Field(invalid=True):\n        Label(\"Destination\")\n        with Select(placeholder=\"Choose a planet...\"):\n            SelectOption(value=\"mars\", label=\"Mars\")\n            SelectOption(value=\"jupiter\", label=\"Jupiter\")\n            SelectOption(value=\"saturn\", label=\"Saturn\")\n        FieldError(\"Please select a destination.\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Checkbox, Column, Field\n\nwith Column(gap=4):\n    with Field(\n        title=\"Accept terms\",\n        description=\"You agree to our Terms of Service \"\n        \"and Privacy Policy.\",\n    ):\n        Checkbox()\n\n    with Field(\n        title=\"Subscribe to newsletter\",\n        description=\"Get weekly updates on new features.\",\n    ):\n        Checkbox(checked=True)"
+    "code": "from prefab_ui.components import (\n    Column, Field, FieldContent, FieldDescription, FieldTitle, Switch,\n)\n\nwith Column(gap=4):\n    with Field(orientation=\"horizontal\"):\n        with FieldContent():\n            FieldTitle(\"Marketing emails\")\n            FieldDescription(\n                \"Receive emails about new products and features.\"\n            )\n        Switch()\n\n    with Field(orientation=\"horizontal\"):\n        with FieldContent():\n            FieldTitle(\"Security emails\")\n            FieldDescription(\n                \"Receive emails about your account activity.\"\n            )\n        Switch(checked=True)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Field, Switch\n\nwith Column(gap=4):\n    with Field(\n        title=\"Enabled option\",\n        description=\"You can toggle this.\",\n    ):\n        Switch(checked=True)\n\n    with Field(\n        title=\"Disabled option\",\n        description=\"This cannot be changed.\",\n        disabled=True,\n    ):\n        Switch(disabled=True)"
+    "code": "from prefab_ui.components import (\n    Checkbox, Column, Field, FieldContent, FieldDescription, FieldTitle,\n)\n\nwith Column(gap=4):\n    with Field(orientation=\"horizontal\"):\n        with FieldContent():\n            FieldTitle(\"Accept terms\")\n            FieldDescription(\n                \"You agree to our Terms of Service and Privacy Policy.\"\n            )\n        Checkbox()\n\n    with Field(orientation=\"horizontal\"):\n        with FieldContent():\n            FieldTitle(\"Subscribe to newsletter\")\n            FieldDescription(\"Get weekly updates on new features.\")\n        Checkbox(checked=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Column, Field, FieldContent, FieldDescription, FieldTitle, Switch,\n)\n\nwith Column(gap=4):\n    with Field(orientation=\"horizontal\"):\n        with FieldContent():\n            FieldTitle(\"Enabled option\")\n            FieldDescription(\"You can toggle this.\")\n        Switch(checked=True)\n\n    with Field(orientation=\"horizontal\", disabled=True):\n        with FieldContent():\n            FieldTitle(\"Disabled option\")\n            FieldDescription(\"This cannot be changed.\")\n        Switch(disabled=True)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1912,7 +1917,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input,\n)\n\nset_initial_state(\n    profile={\n        \"name\": \"Arthur Dent\",\n        \"title\": \"Sandwich Maker, Lamuella\",\n    },\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field(title=\"Name\"):\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field(title=\"Title\"):\n        Input(name=\"profile.title\", placeholder=\"Title\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input, Label,\n)\n\nset_initial_state(\n    profile={\n        \"name\": \"Arthur Dent\",\n        \"title\": \"Sandwich Maker, Lamuella\",\n    },\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field():\n        Label(\"Name\")\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field():\n        Label(\"Title\")\n        Input(name=\"profile.title\", placeholder=\"Title\")"
   },
   {
     "title": "Python icon=\"python\" expandable",

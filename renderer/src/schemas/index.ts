@@ -75,7 +75,13 @@ import { dialogSchema } from "./dialog.ts";
 import { divSchema, spanSchema } from "./div.ts";
 import { dropZoneSchema } from "./drop_zone.ts";
 import { embedSchema } from "./embed.ts";
-import { fieldSchema } from "./field.ts";
+import {
+  fieldSchema,
+  fieldTitleSchema,
+  fieldDescriptionSchema,
+  fieldContentSchema,
+  fieldErrorSchema,
+} from "./field.ts";
 import { forEachSchema } from "./foreach.ts";
 import { formSchema } from "./form.ts";
 import { gridSchema } from "./grid.ts";
@@ -181,6 +187,10 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   DropZone: dropZoneSchema,
   Embed: embedSchema,
   Field: fieldSchema,
+  FieldTitle: fieldTitleSchema,
+  FieldDescription: fieldDescriptionSchema,
+  FieldContent: fieldContentSchema,
+  FieldError: fieldErrorSchema,
   ForEach: forEachSchema,
   Form: formSchema,
   Grid: gridSchema,

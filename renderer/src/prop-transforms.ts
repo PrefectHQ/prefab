@@ -151,12 +151,15 @@ export function mapProps(
     }
   }
 
-  // Card/Alert sub-components: title, description → children
+  // Card/Alert/Field sub-components: title, description → children
   if (
     type === "CardTitle" ||
     type === "CardDescription" ||
     type === "AlertTitle" ||
-    type === "AlertDescription"
+    type === "AlertDescription" ||
+    type === "FieldTitle" ||
+    type === "FieldDescription" ||
+    type === "FieldError"
   ) {
     for (const key of ["title", "description", "text", "content"]) {
       if (key in mapped) {

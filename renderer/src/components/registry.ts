@@ -44,7 +44,13 @@ import {
 import { AlertTitle, AlertDescription } from "@/ui/alert";
 import { PrefabAlert } from "./alert-wrapper";
 import { PrefabCombobox } from "./combobox-wrapper";
-import { PrefabField } from "./field-wrapper";
+import {
+  PrefabField,
+  PrefabFieldTitle,
+  PrefabFieldDescription,
+  PrefabFieldContent,
+  PrefabFieldError,
+} from "./field-wrapper";
 import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
@@ -220,8 +226,12 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   // File upload
   DropZone: PrefabDropZone,
 
-  // Field (choice card wrapper)
+  // Field (composable form wrapper)
   Field: PrefabField,
+  FieldTitle: PrefabFieldTitle,
+  FieldDescription: PrefabFieldDescription,
+  FieldContent: PrefabFieldContent,
+  FieldError: PrefabFieldError,
 
   // Layout
   Row,

@@ -52,7 +52,13 @@ from prefab_ui.components.drop_zone import DropZone
 from prefab_ui.components.embed import Embed
 from prefab_ui.components.accordion import Accordion, AccordionItem
 from prefab_ui.components.audio import Audio
-from prefab_ui.components.field import Field
+from prefab_ui.components.field import (
+    Field,
+    FieldContent,
+    FieldDescription,
+    FieldError,
+    FieldTitle,
+)
 from prefab_ui.components.form import Form
 from prefab_ui.components.grid import Grid, GridItem
 from prefab_ui.components.heading import Heading
@@ -163,6 +169,10 @@ __all__ = [
     "Else",
     "Embed",
     "Field",
+    "FieldContent",
+    "FieldDescription",
+    "FieldError",
+    "FieldTitle",
     "ForEach",
     "Form",
     "Grid",

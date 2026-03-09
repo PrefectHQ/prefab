@@ -107,13 +107,13 @@ For keys not tied to initial state (like `let` bindings or forward references), 
 
 State values can be nested objects, and you reach into them with dot notation. `{{ profile.name }}` reads the `name` field of the `profile` object. The `name` prop accepts dot paths too, so inputs can bind directly to nested fields:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","title":"Name","disabled":false,"children":[{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","title":"Title","disabled":false,"children":[{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgRmllbGQsIElucHV0LAopCgpzZXRfaW5pdGlhbF9zdGF0ZSgKICAgIHByb2ZpbGU9ewogICAgICAgICJuYW1lIjogIkFydGh1ciBEZW50IiwKICAgICAgICAidGl0bGUiOiAiU2FuZHdpY2ggTWFrZXIsIExhbXVlbGxhIiwKICAgIH0sCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoInt7IHByb2ZpbGUubmFtZSB9fSIpCiAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbigie3sgcHJvZmlsZS50aXRsZSB9fSIpCiAgICB3aXRoIEZpZWxkKHRpdGxlPSJOYW1lIik6CiAgICAgICAgSW5wdXQobmFtZT0icHJvZmlsZS5uYW1lIiwgcGxhY2Vob2xkZXI9Ik5hbWUiKQogICAgd2l0aCBGaWVsZCh0aXRsZT0iVGl0bGUiKToKICAgICAgICBJbnB1dChuYW1lPSJwcm9maWxlLnRpdGxlIiwgcGxhY2Vob2xkZXI9IlRpdGxlIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","invalid":false,"disabled":false,"orientation":"vertical","children":[{"type":"Label","text":"Name"},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"orientation":"vertical","children":[{"type":"Label","text":"Title"},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgRmllbGQsIElucHV0LCBMYWJlbCwKKQoKc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcm9maWxlPXsKICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgInRpdGxlIjogIlNhbmR3aWNoIE1ha2VyLCBMYW11ZWxsYSIsCiAgICB9LAopCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIENhcmQoKToKICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgQ2FyZFRpdGxlKCJ7eyBwcm9maWxlLm5hbWUgfX0iKQogICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oInt7IHByb2ZpbGUudGl0bGUgfX0iKQogICAgd2l0aCBGaWVsZCgpOgogICAgICAgIExhYmVsKCJOYW1lIikKICAgICAgICBJbnB1dChuYW1lPSJwcm9maWxlLm5hbWUiLCBwbGFjZWhvbGRlcj0iTmFtZSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIlRpdGxlIikKICAgICAgICBJbnB1dChuYW1lPSJwcm9maWxlLnRpdGxlIiwgcGxhY2Vob2xkZXI9IlRpdGxlIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Card, CardDescription, CardHeader, CardTitle,
-    Column, Field, Input,
+    Column, Field, Input, Label,
 )
 
 set_initial_state(
@@ -128,9 +128,11 @@ with Column(gap=3):
         with CardHeader():
             CardTitle("{{ profile.name }}")
             CardDescription("{{ profile.title }}")
-    with Field(title="Name"):
+    with Field():
+        Label("Name")
         Input(name="profile.name", placeholder="Name")
-    with Field(title="Title"):
+    with Field():
+        Label("Title")
         Input(name="profile.title", placeholder="Title")
 ```
 ```json Protocol icon="brackets-curly"
@@ -153,9 +155,11 @@ with Column(gap=3):
       },
       {
         "type": "Field",
-        "title": "Name",
+        "invalid": false,
         "disabled": false,
+        "orientation": "vertical",
         "children": [
+          {"type": "Label", "text": "Name"},
           {
             "name": "profile.name",
             "type": "Input",
@@ -169,9 +173,11 @@ with Column(gap=3):
       },
       {
         "type": "Field",
-        "title": "Title",
+        "invalid": false,
         "disabled": false,
+        "orientation": "vertical",
         "children": [
+          {"type": "Label", "text": "Title"},
           {
             "name": "profile.title",
             "type": "Input",

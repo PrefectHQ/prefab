@@ -1,44 +1,93 @@
 /**
- * Field wrapper — renders a choice card layout using cn-field-* CSS.
+ * Field wrapper — composable form field with data-invalid propagation.
  *
- * Wraps any form control (Switch, Checkbox, etc.) in a bordered card
- * with title and description. The outer <label> makes the entire card
- * clickable, activating the wrapped control.
+ * Vertical (default): renders a plain <div> for form validation layouts.
+ * Horizontal: renders a bordered choice card wrapped in a <label> for
+ * click-to-toggle behavior.
+ *
+ * Sub-components (FieldTitle, FieldDescription, FieldContent, FieldError)
+ * render as simple styled elements — all error styling is handled by CSS
+ * cascade from data-invalid on the parent .cn-field div.
  */
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
 interface PrefabFieldProps {
-  title: string;
-  description?: string;
+  invalid?: boolean;
   disabled?: boolean;
+  orientation?: "vertical" | "horizontal";
   className?: string;
   children?: React.ReactNode;
 }
 
+const ORIENTATION_CLASSES = {
+  vertical: "flex flex-col gap-1.5",
+  horizontal: "flex items-center justify-between gap-2",
+};
+
 export function PrefabField({
-  title,
-  description,
+  invalid,
   disabled,
+  orientation = "vertical",
   className,
   children,
 }: PrefabFieldProps) {
-  return (
-    <label className={cn("cn-field-label", className)}>
-      <div
-        data-slot="field"
-        data-disabled={disabled || undefined}
-        className="cn-field group/field flex items-center justify-between"
-      >
-        <div className="cn-field-content grid">
-          <span className="cn-field-title">{title}</span>
-          {description && (
-            <span className="cn-field-description">{description}</span>
-          )}
-        </div>
-        {children}
-      </div>
-    </label>
+  const inner = (
+    <div
+      data-slot="field"
+      data-invalid={invalid || undefined}
+      data-disabled={disabled || undefined}
+      className={cn(
+        "cn-field group/field",
+        ORIENTATION_CLASSES[orientation],
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
+
+  if (orientation === "horizontal") {
+    return <label className="cn-field-label">{inner}</label>;
+  }
+
+  return inner;
+}
+
+interface PrefabFieldTextProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export function PrefabFieldTitle({
+  className,
+  children,
+}: PrefabFieldTextProps) {
+  return <span className={cn("cn-field-title", className)}>{children}</span>;
+}
+
+export function PrefabFieldDescription({
+  className,
+  children,
+}: PrefabFieldTextProps) {
+  return (
+    <span className={cn("cn-field-description", className)}>{children}</span>
+  );
+}
+
+export function PrefabFieldContent({
+  className,
+  children,
+}: PrefabFieldTextProps) {
+  return (
+    <div className={cn("cn-field-content grid", className)}>{children}</div>
+  );
+}
+
+export function PrefabFieldError({
+  className,
+  children,
+}: PrefabFieldTextProps) {
+  return <p className={cn("cn-field-error", className)}>{children}</p>;
 }

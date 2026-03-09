@@ -1,35 +1,136 @@
 ---
 title: Field
-description: Choice card container for form controls.
+description: Composable form field wrapper with validation and choice card layouts.
 icon: rectangle-list
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Field wraps a form control in a bordered card with a title and optional description. The entire card is clickable — clicking anywhere activates the wrapped control. When the control is checked, the card highlights with a subtle border and background tint.
+Field is a composable wrapper that handles both form validation and choice card layouts. It propagates `data-invalid` via CSS cascade, so labels turn red, controls get error styling, and error messages appear — all without wiring each control individually.
 
-## Basic Usage
+## Form Validation
 
-Wrap any toggle-like control (Switch, Checkbox) inside a Field to get the choice card layout.
+Wrap a label, control, and optional error message in a Field. When `invalid=True`, all text descendants turn red automatically.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Marketing emails","description":"Receive emails about new products and features.","disabled":false,"children":[{"name":"switch_1","type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Security emails","description":"Receive emails about your account activity.","disabled":false,"children":[{"name":"switch_2","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBGaWVsZCwgU3dpdGNoCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIEZpZWxkKAogICAgICAgIHRpdGxlPSJNYXJrZXRpbmcgZW1haWxzIiwKICAgICAgICBkZXNjcmlwdGlvbj0iUmVjZWl2ZSBlbWFpbHMgYWJvdXQgbmV3IHByb2R1Y3RzICIKICAgICAgICAiYW5kIGZlYXR1cmVzLiIsCiAgICApOgogICAgICAgIFN3aXRjaCgpCgogICAgd2l0aCBGaWVsZCgKICAgICAgICB0aXRsZT0iU2VjdXJpdHkgZW1haWxzIiwKICAgICAgICBkZXNjcmlwdGlvbj0iUmVjZWl2ZSBlbWFpbHMgYWJvdXQgeW91ciBhY2NvdW50ICIKICAgICAgICAiYWN0aXZpdHkuIiwKICAgICk6CiAgICAgICAgU3dpdGNoKGNoZWNrZWQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","invalid":false,"disabled":false,"orientation":"vertical","children":[{"type":"Label","text":"Username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Enter username","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":true,"disabled":false,"orientation":"vertical","children":[{"type":"Label","text":"Destination"},{"name":"select_1","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"mars","label":"Mars","selected":false,"disabled":false},{"type":"SelectOption","value":"jupiter","label":"Jupiter","selected":false,"disabled":false},{"type":"SelectOption","value":"saturn","label":"Saturn","selected":false,"disabled":false}]},{"type":"FieldError","content":"Please select a destination."}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLCBGaWVsZCwgRmllbGRFcnJvciwgSW5wdXQsIExhYmVsLCBTZWxlY3QsIFNlbGVjdE9wdGlvbiwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBGaWVsZCgpOgogICAgICAgIExhYmVsKCJVc2VybmFtZSIpCiAgICAgICAgSW5wdXQobmFtZT0idXNlcm5hbWUiLCBwbGFjZWhvbGRlcj0iRW50ZXIgdXNlcm5hbWUiKQoKICAgIHdpdGggRmllbGQoaW52YWxpZD1UcnVlKToKICAgICAgICBMYWJlbCgiRGVzdGluYXRpb24iKQogICAgICAgIHdpdGggU2VsZWN0KHBsYWNlaG9sZGVyPSJDaG9vc2UgYSBwbGFuZXQuLi4iKToKICAgICAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJtYXJzIiwgbGFiZWw9Ik1hcnMiKQogICAgICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Imp1cGl0ZXIiLCBsYWJlbD0iSnVwaXRlciIpCiAgICAgICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ic2F0dXJuIiwgbGFiZWw9IlNhdHVybiIpCiAgICAgICAgRmllbGRFcnJvcigiUGxlYXNlIHNlbGVjdCBhIGRlc3RpbmF0aW9uLiIpCg==">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Field, Switch
+from prefab_ui.components import (
+    Column, Field, FieldError, Input, Label, Select, SelectOption,
+)
 
 with Column(gap=4):
-    with Field(
-        title="Marketing emails",
-        description="Receive emails about new products "
-        "and features.",
-    ):
+    with Field():
+        Label("Username")
+        Input(name="username", placeholder="Enter username")
+
+    with Field(invalid=True):
+        Label("Destination")
+        with Select(placeholder="Choose a planet..."):
+            SelectOption(value="mars", label="Mars")
+            SelectOption(value="jupiter", label="Jupiter")
+            SelectOption(value="saturn", label="Saturn")
+        FieldError("Please select a destination.")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Field",
+        "invalid": false,
+        "disabled": false,
+        "orientation": "vertical",
+        "children": [
+          {"type": "Label", "text": "Username"},
+          {
+            "name": "username",
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Enter username",
+            "disabled": false,
+            "readOnly": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": "Field",
+        "invalid": true,
+        "disabled": false,
+        "orientation": "vertical",
+        "children": [
+          {"type": "Label", "text": "Destination"},
+          {
+            "name": "select_1",
+            "type": "Select",
+            "placeholder": "Choose a planet...",
+            "size": "default",
+            "disabled": false,
+            "required": false,
+            "invalid": false,
+            "children": [
+              {
+                "type": "SelectOption",
+                "value": "mars",
+                "label": "Mars",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "jupiter",
+                "label": "Jupiter",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "saturn",
+                "label": "Saturn",
+                "selected": false,
+                "disabled": false
+              }
+            ]
+          },
+          {"type": "FieldError", "content": "Please select a destination."}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Choice Card
+
+Use `orientation="horizontal"` for a bordered card with click-to-toggle behavior. Group the title and description in a `FieldContent` wrapper.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","invalid":false,"disabled":false,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Marketing emails"},{"type":"FieldDescription","content":"Receive emails about new products and features."}]},{"name":"switch_1","type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Security emails"},{"type":"FieldDescription","content":"Receive emails about your account activity."}]},{"name":"switch_2","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLCBGaWVsZCwgRmllbGRDb250ZW50LCBGaWVsZERlc2NyaXB0aW9uLCBGaWVsZFRpdGxlLCBTd2l0Y2gsCikKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggRmllbGQob3JpZW50YXRpb249Imhvcml6b250YWwiKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJNYXJrZXRpbmcgZW1haWxzIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigKICAgICAgICAgICAgICAgICJSZWNlaXZlIGVtYWlscyBhYm91dCBuZXcgcHJvZHVjdHMgYW5kIGZlYXR1cmVzLiIKICAgICAgICAgICAgKQogICAgICAgIFN3aXRjaCgpCgogICAgd2l0aCBGaWVsZChvcmllbnRhdGlvbj0iaG9yaXpvbnRhbCIpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlNlY3VyaXR5IGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgeW91ciBhY2NvdW50IGFjdGl2aXR5LiIKICAgICAgICAgICAgKQogICAgICAgIFN3aXRjaChjaGVja2VkPVRydWUpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Column, Field, FieldContent, FieldDescription, FieldTitle, Switch,
+)
+
+with Column(gap=4):
+    with Field(orientation="horizontal"):
+        with FieldContent():
+            FieldTitle("Marketing emails")
+            FieldDescription(
+                "Receive emails about new products and features."
+            )
         Switch()
 
-    with Field(
-        title="Security emails",
-        description="Receive emails about your account "
-        "activity.",
-    ):
+    with Field(orientation="horizontal"):
+        with FieldContent():
+            FieldTitle("Security emails")
+            FieldDescription(
+                "Receive emails about your account activity."
+            )
         Switch(checked=True)
 ```
 ```json Protocol icon="brackets-curly"
@@ -40,10 +141,20 @@ with Column(gap=4):
     "children": [
       {
         "type": "Field",
-        "title": "Marketing emails",
-        "description": "Receive emails about new products and features.",
+        "invalid": false,
         "disabled": false,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Marketing emails"},
+              {
+                "type": "FieldDescription",
+                "content": "Receive emails about new products and features."
+              }
+            ]
+          },
           {
             "name": "switch_1",
             "type": "Switch",
@@ -56,10 +167,20 @@ with Column(gap=4):
       },
       {
         "type": "Field",
-        "title": "Security emails",
-        "description": "Receive emails about your account activity.",
+        "invalid": false,
         "disabled": false,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Security emails"},
+              {
+                "type": "FieldDescription",
+                "content": "Receive emails about your account activity."
+              }
+            ]
+          },
           {
             "name": "switch_2",
             "type": "Switch",
@@ -80,25 +201,28 @@ with Column(gap=4):
 
 ## With Checkbox
 
-Field works with any toggle control.
+Choice cards work with any toggle control.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Accept terms","description":"You agree to our Terms of Service and Privacy Policy.","disabled":false,"children":[{"name":"checkbox_10","type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"Field","title":"Subscribe to newsletter","description":"Get weekly updates on new features.","disabled":false,"children":[{"name":"checkbox_11","type":"Checkbox","checked":true,"disabled":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIENvbHVtbiwgRmllbGQKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggRmllbGQoCiAgICAgICAgdGl0bGU9IkFjY2VwdCB0ZXJtcyIsCiAgICAgICAgZGVzY3JpcHRpb249IllvdSBhZ3JlZSB0byBvdXIgVGVybXMgb2YgU2VydmljZSAiCiAgICAgICAgImFuZCBQcml2YWN5IFBvbGljeS4iLAogICAgKToKICAgICAgICBDaGVja2JveCgpCgogICAgd2l0aCBGaWVsZCgKICAgICAgICB0aXRsZT0iU3Vic2NyaWJlIHRvIG5ld3NsZXR0ZXIiLAogICAgICAgIGRlc2NyaXB0aW9uPSJHZXQgd2Vla2x5IHVwZGF0ZXMgb24gbmV3IGZlYXR1cmVzLiIsCiAgICApOgogICAgICAgIENoZWNrYm94KGNoZWNrZWQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","invalid":false,"disabled":false,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Accept terms"},{"type":"FieldDescription","content":"You agree to our Terms of Service and Privacy Policy."}]},{"name":"checkbox_10","type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Subscribe to newsletter"},{"type":"FieldDescription","content":"Get weekly updates on new features."}]},{"name":"checkbox_11","type":"Checkbox","checked":true,"disabled":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsIENvbHVtbiwgRmllbGQsIEZpZWxkQ29udGVudCwgRmllbGREZXNjcmlwdGlvbiwgRmllbGRUaXRsZSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBGaWVsZChvcmllbnRhdGlvbj0iaG9yaXpvbnRhbCIpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIkFjY2VwdCB0ZXJtcyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiWW91IGFncmVlIHRvIG91ciBUZXJtcyBvZiBTZXJ2aWNlIGFuZCBQcml2YWN5IFBvbGljeS4iCiAgICAgICAgICAgICkKICAgICAgICBDaGVja2JveCgpCgogICAgd2l0aCBGaWVsZChvcmllbnRhdGlvbj0iaG9yaXpvbnRhbCIpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlN1YnNjcmliZSB0byBuZXdzbGV0dGVyIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiR2V0IHdlZWtseSB1cGRhdGVzIG9uIG5ldyBmZWF0dXJlcy4iKQogICAgICAgIENoZWNrYm94KGNoZWNrZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Checkbox, Column, Field
+from prefab_ui.components import (
+    Checkbox, Column, Field, FieldContent, FieldDescription, FieldTitle,
+)
 
 with Column(gap=4):
-    with Field(
-        title="Accept terms",
-        description="You agree to our Terms of Service "
-        "and Privacy Policy.",
-    ):
+    with Field(orientation="horizontal"):
+        with FieldContent():
+            FieldTitle("Accept terms")
+            FieldDescription(
+                "You agree to our Terms of Service and Privacy Policy."
+            )
         Checkbox()
 
-    with Field(
-        title="Subscribe to newsletter",
-        description="Get weekly updates on new features.",
-    ):
+    with Field(orientation="horizontal"):
+        with FieldContent():
+            FieldTitle("Subscribe to newsletter")
+            FieldDescription("Get weekly updates on new features.")
         Checkbox(checked=True)
 ```
 ```json Protocol icon="brackets-curly"
@@ -109,10 +233,20 @@ with Column(gap=4):
     "children": [
       {
         "type": "Field",
-        "title": "Accept terms",
-        "description": "You agree to our Terms of Service and Privacy Policy.",
+        "invalid": false,
         "disabled": false,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Accept terms"},
+              {
+                "type": "FieldDescription",
+                "content": "You agree to our Terms of Service and Privacy Policy."
+              }
+            ]
+          },
           {
             "name": "checkbox_10",
             "type": "Checkbox",
@@ -124,10 +258,17 @@ with Column(gap=4):
       },
       {
         "type": "Field",
-        "title": "Subscribe to newsletter",
-        "description": "Get weekly updates on new features.",
+        "invalid": false,
         "disabled": false,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Subscribe to newsletter"},
+              {"type": "FieldDescription", "content": "Get weekly updates on new features."}
+            ]
+          },
           {
             "name": "checkbox_11",
             "type": "Checkbox",
@@ -148,23 +289,24 @@ with Column(gap=4):
 
 A disabled Field dims the card and prevents interaction.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","title":"Enabled option","description":"You can toggle this.","disabled":false,"children":[{"name":"switch_3","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"Field","title":"Disabled option","description":"This cannot be changed.","disabled":true,"children":[{"name":"switch_4","type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBGaWVsZCwgU3dpdGNoCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIEZpZWxkKAogICAgICAgIHRpdGxlPSJFbmFibGVkIG9wdGlvbiIsCiAgICAgICAgZGVzY3JpcHRpb249IllvdSBjYW4gdG9nZ2xlIHRoaXMuIiwKICAgICk6CiAgICAgICAgU3dpdGNoKGNoZWNrZWQ9VHJ1ZSkKCiAgICB3aXRoIEZpZWxkKAogICAgICAgIHRpdGxlPSJEaXNhYmxlZCBvcHRpb24iLAogICAgICAgIGRlc2NyaXB0aW9uPSJUaGlzIGNhbm5vdCBiZSBjaGFuZ2VkLiIsCiAgICAgICAgZGlzYWJsZWQ9VHJ1ZSwKICAgICk6CiAgICAgICAgU3dpdGNoKGRpc2FibGVkPVRydWUpCg==">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","invalid":false,"disabled":false,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Enabled option"},{"type":"FieldDescription","content":"You can toggle this."}]},{"name":"switch_3","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"Field","invalid":false,"disabled":true,"orientation":"horizontal","children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Disabled option"},{"type":"FieldDescription","content":"This cannot be changed."}]},{"name":"switch_4","type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLCBGaWVsZCwgRmllbGRDb250ZW50LCBGaWVsZERlc2NyaXB0aW9uLCBGaWVsZFRpdGxlLCBTd2l0Y2gsCikKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggRmllbGQob3JpZW50YXRpb249Imhvcml6b250YWwiKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJFbmFibGVkIG9wdGlvbiIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oIllvdSBjYW4gdG9nZ2xlIHRoaXMuIikKICAgICAgICBTd2l0Y2goY2hlY2tlZD1UcnVlKQoKICAgIHdpdGggRmllbGQob3JpZW50YXRpb249Imhvcml6b250YWwiLCBkaXNhYmxlZD1UcnVlKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJEaXNhYmxlZCBvcHRpb24iKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKCJUaGlzIGNhbm5vdCBiZSBjaGFuZ2VkLiIpCiAgICAgICAgU3dpdGNoKGRpc2FibGVkPVRydWUpCg==">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Field, Switch
+from prefab_ui.components import (
+    Column, Field, FieldContent, FieldDescription, FieldTitle, Switch,
+)
 
 with Column(gap=4):
-    with Field(
-        title="Enabled option",
-        description="You can toggle this.",
-    ):
+    with Field(orientation="horizontal"):
+        with FieldContent():
+            FieldTitle("Enabled option")
+            FieldDescription("You can toggle this.")
         Switch(checked=True)
 
-    with Field(
-        title="Disabled option",
-        description="This cannot be changed.",
-        disabled=True,
-    ):
+    with Field(orientation="horizontal", disabled=True):
+        with FieldContent():
+            FieldTitle("Disabled option")
+            FieldDescription("This cannot be changed.")
         Switch(disabled=True)
 ```
 ```json Protocol icon="brackets-curly"
@@ -175,10 +317,17 @@ with Column(gap=4):
     "children": [
       {
         "type": "Field",
-        "title": "Enabled option",
-        "description": "You can toggle this.",
+        "invalid": false,
         "disabled": false,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Enabled option"},
+              {"type": "FieldDescription", "content": "You can toggle this."}
+            ]
+          },
           {
             "name": "switch_3",
             "type": "Switch",
@@ -191,10 +340,17 @@ with Column(gap=4):
       },
       {
         "type": "Field",
-        "title": "Disabled option",
-        "description": "This cannot be changed.",
+        "invalid": false,
         "disabled": true,
+        "orientation": "horizontal",
         "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Disabled option"},
+              {"type": "FieldDescription", "content": "This cannot be changed."}
+            ]
+          },
           {
             "name": "switch_4",
             "type": "Switch",
@@ -215,21 +371,43 @@ with Column(gap=4):
 
 ## API Reference
 
-<Card icon="code" title="Field Parameters">
-<ParamField body="title" type="str" required>
-  Card heading text.
-</ParamField>
-
-<ParamField body="description" type="str | None" default="None">
-  Secondary text below the title.
+<Card icon="code" title="Field">
+<ParamField body="invalid" type="bool" default="False">
+  Whether the field is in an error state. Cascades red text to all children.
 </ParamField>
 
 <ParamField body="disabled" type="bool" default="False">
   Whether the field is dimmed and non-interactive.
 </ParamField>
 
+<ParamField body="orientation" type='"vertical" | "horizontal"' default='"vertical"'>
+  Layout direction. `"vertical"` for form fields, `"horizontal"` for choice cards.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldTitle">
+<ParamField body="content" type="str" required>
+  Title text for the field.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldDescription">
+<ParamField body="content" type="str" required>
+  Description text for the field.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldContent">
+  Container that groups FieldTitle and FieldDescription in horizontal layouts.
+</Card>
+
+<Card icon="code" title="FieldError">
+<ParamField body="content" type="str" required>
+  Error message text, always rendered in destructive (red) styling.
 </ParamField>
 </Card>
 
@@ -240,10 +418,38 @@ with Column(gap=4):
   "type": "Field",
   "children?": "[Component]",
   "let?": "object",
-  "title": "string (required)",
-  "description?": "string",
+  "invalid?": false,
   "disabled?": false,
+  "orientation?": "\"vertical\"",
   "cssClass?": "string"
+}
+```
+
+```json FieldTitle
+{
+  "type": "FieldTitle",
+  "content": "string (required)"
+}
+```
+
+```json FieldDescription
+{
+  "type": "FieldDescription",
+  "content": "string (required)"
+}
+```
+
+```json FieldContent
+{
+  "type": "FieldContent",
+  "children?": "[Component]"
+}
+```
+
+```json FieldError
+{
+  "type": "FieldError",
+  "content": "string (required)"
 }
 ```
 
