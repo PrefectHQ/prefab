@@ -1,22 +1,23 @@
 """Composable form field components.
 
-Field is a wrapper that propagates ``data-invalid`` to all children via CSS
-cascade, so labels turn red, controls get error styling, and error messages
-appear — without each control needing its own ``invalid`` prop.
+Field groups a label, control, and error message into a single unit. Its
+main job is validation styling — when ``invalid`` is set, all text inside
+turns red automatically via CSS cascade.
 
-The same components compose into both form validation wrappers (vertical) and
-choice cards (horizontal):
+ChoiceCard is a Field subclass that renders as a bordered, clickable card.
+Clicking anywhere on the card toggles the wrapped control (Switch, Checkbox,
+etc.).
 
 Form validation::
 
-    with Field(invalid=True):
+    with Field(invalid=Rx("!destination")):
         Label("Destination")
-        Select(placeholder="Choose a planet...")
+        Select(name="destination", placeholder="Choose a planet...")
         FieldError("Please select a destination.")
 
 Choice card::
 
-    with Field(orientation="horizontal"):
+    with ChoiceCard():
         with FieldContent():
             FieldTitle("Share across devices")
             FieldDescription("Focus is shared across devices.")
@@ -36,15 +37,14 @@ from prefab_ui.rx import RxStr
 class Field(ContainerComponent):
     """Composable form field wrapper.
 
-    Propagates ``data-invalid`` to all children via CSS cascade. In vertical
-    mode (default) renders a plain ``<div>``; in horizontal mode renders a
-    bordered choice card wrapped in a ``<label>`` for click-to-toggle.
+    Groups a label, control, and error message. Propagates ``data-invalid``
+    to all children via CSS cascade so labels turn red, controls get error
+    styling, and error messages appear — without wiring each individually.
 
     Args:
-        invalid: Whether the field is in an error state.
+        invalid: Whether the field is in an error state. Accepts reactive
+            expressions like ``Rx("!email")``.
         disabled: Whether the field is dimmed and non-interactive.
-        orientation: Layout direction — ``"vertical"`` for form fields,
-            ``"horizontal"`` for choice cards.
 
     Example::
 
@@ -55,16 +55,34 @@ class Field(ContainerComponent):
     """
 
     type: Literal["Field"] = "Field"
-    invalid: bool = PydanticField(
+    invalid: bool | RxStr = PydanticField(
         default=False, description="Whether the field is in an error state"
     )
-    disabled: bool = PydanticField(
+    disabled: bool | RxStr = PydanticField(
         default=False, description="Whether the field is dimmed and non-interactive"
     )
-    orientation: Literal["vertical", "horizontal"] = PydanticField(
-        default="vertical",
-        description="Layout direction: vertical for forms, horizontal for choice cards",
-    )
+
+
+class ChoiceCard(Field):
+    """Bordered, clickable card for toggle controls.
+
+    A Field subclass that renders as a bordered card with click-anywhere-
+    to-toggle behavior. Use FieldContent to group the title and description,
+    and place the toggle control (Switch, Checkbox) alongside it.
+
+    When the control is toggled on, the card highlights with a subtle
+    border and background tint.
+
+    Example::
+
+        with ChoiceCard():
+            with FieldContent():
+                FieldTitle("Dark mode")
+                FieldDescription("Use dark theme throughout the app.")
+            Switch()
+    """
+
+    type: Literal["ChoiceCard"] = "ChoiceCard"
 
 
 class FieldTitle(Component):
@@ -114,7 +132,7 @@ class FieldDescription(Component):
 
 
 class FieldContent(ContainerComponent):
-    """Groups title and description in horizontal field layouts.
+    """Groups title and description in choice card layouts.
 
     Example::
 

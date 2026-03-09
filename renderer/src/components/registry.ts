@@ -46,6 +46,7 @@ import { PrefabAlert } from "./alert-wrapper";
 import { PrefabCombobox } from "./combobox-wrapper";
 import {
   PrefabField,
+  PrefabChoiceCard,
   PrefabFieldTitle,
   PrefabFieldDescription,
   PrefabFieldContent,
@@ -226,8 +227,9 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   // File upload
   DropZone: PrefabDropZone,
 
-  // Field (composable form wrapper)
+  // Field / ChoiceCard
   Field: PrefabField,
+  ChoiceCard: PrefabChoiceCard,
   FieldTitle: PrefabFieldTitle,
   FieldDescription: PrefabFieldDescription,
   FieldContent: PrefabFieldContent,

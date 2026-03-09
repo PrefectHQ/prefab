@@ -77,6 +77,7 @@ import { dropZoneSchema } from "./drop_zone.ts";
 import { embedSchema } from "./embed.ts";
 import {
   fieldSchema,
+  choiceCardSchema,
   fieldTitleSchema,
   fieldDescriptionSchema,
   fieldContentSchema,
@@ -169,6 +170,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   CardContent: cardContentSchema,
   CardFooter: cardFooterSchema,
   Checkbox: checkboxSchema,
+  ChoiceCard: choiceCardSchema,
   Code: codeSchema,
   Combobox: comboboxSchema,
   ComboboxGroup: comboboxGroupSchema,

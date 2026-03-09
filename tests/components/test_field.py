@@ -1,14 +1,16 @@
-"""Tests for Field and sub-components."""
+"""Tests for Field, ChoiceCard, and sub-components."""
 
 from __future__ import annotations
 
 from prefab_ui.components import (
+    ChoiceCard,
     Field,
     FieldContent,
     FieldDescription,
     FieldError,
     FieldTitle,
     Label,
+    Rx,
     Switch,
 )
 
@@ -20,19 +22,19 @@ class TestField:
         assert j["type"] == "Field"
         assert j["invalid"] is False
         assert j["disabled"] is False
-        assert j["orientation"] == "vertical"
+        assert "orientation" not in j
 
-    def test_invalid_prop(self):
+    def test_invalid_bool(self):
         j = Field(invalid=True).to_json()
         assert j["invalid"] is True
+
+    def test_invalid_reactive(self):
+        j = Field(invalid=Rx("!email")).to_json()
+        assert j["invalid"] == "{{ !email }}"
 
     def test_disabled_prop(self):
         j = Field(disabled=True).to_json()
         assert j["disabled"] is True
-
-    def test_horizontal_orientation(self):
-        j = Field(orientation="horizontal").to_json()
-        assert j["orientation"] == "horizontal"
 
     def test_children(self):
         with Field() as f:
@@ -40,6 +42,36 @@ class TestField:
         j = f.to_json()
         assert len(j["children"]) == 1
         assert j["children"][0]["type"] == "Label"
+
+
+class TestChoiceCard:
+    def test_serialization(self):
+        j = ChoiceCard().to_json()
+        assert j["type"] == "ChoiceCard"
+        assert j["invalid"] is False
+        assert j["disabled"] is False
+
+    def test_inherits_invalid(self):
+        j = ChoiceCard(invalid=True).to_json()
+        assert j["invalid"] is True
+
+    def test_inherits_disabled(self):
+        j = ChoiceCard(disabled=True).to_json()
+        assert j["disabled"] is True
+
+    def test_is_field_subclass(self):
+        assert issubclass(ChoiceCard, Field)
+
+    def test_with_children(self):
+        with ChoiceCard() as cc:
+            with FieldContent():
+                FieldTitle("Dark mode")
+                FieldDescription("Use dark theme.")
+            Switch()
+        j = cc.to_json()
+        assert len(j["children"]) == 2
+        assert j["children"][0]["type"] == "FieldContent"
+        assert j["children"][1]["type"] == "Switch"
 
 
 class TestFieldTitle:
@@ -97,13 +129,13 @@ class TestFieldComposition:
         assert j["children"][1]["type"] == "FieldError"
 
     def test_choice_card_layout(self):
-        with Field(orientation="horizontal") as f:
+        with ChoiceCard() as cc:
             with FieldContent():
                 FieldTitle("Share across devices")
                 FieldDescription("Focus is shared across devices.")
             Switch()
-        j = f.to_json()
-        assert j["orientation"] == "horizontal"
+        j = cc.to_json()
+        assert j["type"] == "ChoiceCard"
         assert len(j["children"]) == 2
         assert j["children"][0]["type"] == "FieldContent"
         assert j["children"][1]["type"] == "Switch"

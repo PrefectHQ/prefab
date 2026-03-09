@@ -53,6 +53,7 @@ from prefab_ui.components.embed import Embed
 from prefab_ui.components.accordion import Accordion, AccordionItem
 from prefab_ui.components.audio import Audio
 from prefab_ui.components.field import (
+    ChoiceCard,
     Field,
     FieldContent,
     FieldDescription,
@@ -147,6 +148,7 @@ __all__ = [
     "CardHeader",
     "CardTitle",
     "Checkbox",
+    "ChoiceCard",
     "Code",
     "Column",
     "Combobox",
