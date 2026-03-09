@@ -432,11 +432,64 @@ with Column(gap=2, css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
+## Separators
+
+Use `ComboboxSeparator` to add visual dividers between flat options without needing full group containers. Separators are lightweight — they just draw a line to create logical sections:
+
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_8","type":"Combobox","placeholder":"Pick one...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false},{"type":"ComboboxOption","value":"mars","label":"Mars","disabled":false},{"type":"ComboboxSeparator"},{"type":"ComboboxOption","value":"jupiter","label":"Jupiter","disabled":false},{"type":"ComboboxOption","value":"saturn","label":"Saturn","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uLCBDb21ib2JveFNlcGFyYXRvcgoKd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iUGljayBvbmUuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICBDb21ib2JveE9wdGlvbigiTWFycyIsIHZhbHVlPSJtYXJzIikKICAgIENvbWJvYm94U2VwYXJhdG9yKCkKICAgIENvbWJvYm94T3B0aW9uKCJKdXBpdGVyIiwgdmFsdWU9Imp1cGl0ZXIiKQogICAgQ29tYm9ib3hPcHRpb24oIlNhdHVybiIsIHZhbHVlPSJzYXR1cm4iKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Combobox, ComboboxOption, ComboboxSeparator
+
+with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
+    ComboboxOption("Earth", value="earth")
+    ComboboxOption("Mars", value="mars")
+    ComboboxSeparator()
+    ComboboxOption("Jupiter", value="jupiter")
+    ComboboxOption("Saturn", value="saturn")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-fit mx-auto",
+    "name": "combobox_8",
+    "type": "Combobox",
+    "placeholder": "Pick one...",
+    "disabled": false,
+    "invalid": false,
+    "children": [
+      {
+        "type": "ComboboxOption",
+        "value": "earth",
+        "label": "Earth",
+        "disabled": false
+      },
+      {"type": "ComboboxOption", "value": "mars", "label": "Mars", "disabled": false},
+      {"type": "ComboboxSeparator"},
+      {
+        "type": "ComboboxOption",
+        "value": "jupiter",
+        "label": "Jupiter",
+        "disabled": false
+      },
+      {
+        "type": "ComboboxOption",
+        "value": "saturn",
+        "label": "Saturn",
+        "disabled": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Option Groups
 
 Organize related options with `ComboboxGroup` and `ComboboxLabel`. Each group gets a non-selectable header label, and groups are automatically separated by dividers in the dropdown:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_8","type":"Combobox","placeholder":"Choose a destination...","disabled":false,"invalid":false,"children":[{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Inner Planets"},{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false}]},{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Outer Reaches"},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false},{"type":"ComboboxOption","value":"lamuella","label":"Lamuella","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29tYm9ib3gsCiAgICBDb21ib2JveEdyb3VwLAogICAgQ29tYm9ib3hMYWJlbCwKICAgIENvbWJvYm94T3B0aW9uLAopCgp3aXRoIENvbWJvYm94KAogICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIGRlc3RpbmF0aW9uLi4uIiwKICAgIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIsCik6CiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJJbm5lciBQbGFuZXRzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIlZvZ3NwaGVyZSIsIHZhbHVlPSJ2b2dzcGhlcmUiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJPdXRlciBSZWFjaGVzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiQmV0ZWxnZXVzZSBWIiwgdmFsdWU9ImJldGVsZ2V1c2UiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJLcmlra2l0IiwgdmFsdWU9ImtyaWtraXQiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJMYW11ZWxsYSIsIHZhbHVlPSJsYW11ZWxsYSIpCg==">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_9","type":"Combobox","placeholder":"Choose a destination...","disabled":false,"invalid":false,"children":[{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Inner Planets"},{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false}]},{"type":"ComboboxGroup","children":[{"type":"ComboboxLabel","label":"Outer Reaches"},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false},{"type":"ComboboxOption","value":"lamuella","label":"Lamuella","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29tYm9ib3gsCiAgICBDb21ib2JveEdyb3VwLAogICAgQ29tYm9ib3hMYWJlbCwKICAgIENvbWJvYm94T3B0aW9uLAopCgp3aXRoIENvbWJvYm94KAogICAgcGxhY2Vob2xkZXI9IkNob29zZSBhIGRlc3RpbmF0aW9uLi4uIiwKICAgIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIsCik6CiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJJbm5lciBQbGFuZXRzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIlZvZ3NwaGVyZSIsIHZhbHVlPSJ2b2dzcGhlcmUiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICB3aXRoIENvbWJvYm94R3JvdXAoKToKICAgICAgICBDb21ib2JveExhYmVsKCJPdXRlciBSZWFjaGVzIikKICAgICAgICBDb21ib2JveE9wdGlvbigiQmV0ZWxnZXVzZSBWIiwgdmFsdWU9ImJldGVsZ2V1c2UiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJLcmlra2l0IiwgdmFsdWU9ImtyaWtraXQiKQogICAgICAgIENvbWJvYm94T3B0aW9uKCJMYW11ZWxsYSIsIHZhbHVlPSJsYW11ZWxsYSIpCg==">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -465,7 +518,7 @@ with Combobox(
 {
   "view": {
     "cssClass": "w-fit mx-auto",
-    "name": "combobox_8",
+    "name": "combobox_9",
     "type": "Combobox",
     "placeholder": "Choose a destination...",
     "disabled": false,
@@ -518,59 +571,6 @@ with Combobox(
             "disabled": false
           }
         ]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Separators
-
-Use `ComboboxSeparator` to add visual dividers between flat options without needing full group containers. Separators are lightweight — they just draw a line to create logical sections:
-
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"combobox_9","type":"Combobox","placeholder":"Pick one...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"earth","label":"Earth","disabled":false},{"type":"ComboboxOption","value":"mars","label":"Mars","disabled":false},{"type":"ComboboxSeparator"},{"type":"ComboboxOption","value":"jupiter","label":"Jupiter","disabled":false},{"type":"ComboboxOption","value":"saturn","label":"Saturn","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29tYm9ib3gsIENvbWJvYm94T3B0aW9uLCBDb21ib2JveFNlcGFyYXRvcgoKd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iUGljayBvbmUuLi4iLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENvbWJvYm94T3B0aW9uKCJFYXJ0aCIsIHZhbHVlPSJlYXJ0aCIpCiAgICBDb21ib2JveE9wdGlvbigiTWFycyIsIHZhbHVlPSJtYXJzIikKICAgIENvbWJvYm94U2VwYXJhdG9yKCkKICAgIENvbWJvYm94T3B0aW9uKCJKdXBpdGVyIiwgdmFsdWU9Imp1cGl0ZXIiKQogICAgQ29tYm9ib3hPcHRpb24oIlNhdHVybiIsIHZhbHVlPSJzYXR1cm4iKQo=">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Combobox, ComboboxOption, ComboboxSeparator
-
-with Combobox(placeholder="Pick one...", css_class="w-fit mx-auto"):
-    ComboboxOption("Earth", value="earth")
-    ComboboxOption("Mars", value="mars")
-    ComboboxSeparator()
-    ComboboxOption("Jupiter", value="jupiter")
-    ComboboxOption("Saturn", value="saturn")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "w-fit mx-auto",
-    "name": "combobox_9",
-    "type": "Combobox",
-    "placeholder": "Pick one...",
-    "disabled": false,
-    "invalid": false,
-    "children": [
-      {
-        "type": "ComboboxOption",
-        "value": "earth",
-        "label": "Earth",
-        "disabled": false
-      },
-      {"type": "ComboboxOption", "value": "mars", "label": "Mars", "disabled": false},
-      {"type": "ComboboxSeparator"},
-      {
-        "type": "ComboboxOption",
-        "value": "jupiter",
-        "label": "Jupiter",
-        "disabled": false
-      },
-      {
-        "type": "ComboboxOption",
-        "value": "saturn",
-        "label": "Saturn",
-        "disabled": false
       }
     ]
   }
