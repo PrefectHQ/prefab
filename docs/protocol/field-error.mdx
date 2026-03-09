@@ -1,0 +1,43 @@
+---
+title: FieldError
+description: JSON Schema for the FieldError component.
+---
+
+Error message text for invalid fields.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "FieldError",
+      "default": "FieldError",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "content": {
+      "description": "Error message text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "content"
+  ]
+}
+```

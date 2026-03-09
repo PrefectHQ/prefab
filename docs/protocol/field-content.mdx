@@ -1,17 +1,17 @@
 ---
-title: Field
-description: JSON Schema for the Field component.
+title: FieldContent
+description: JSON Schema for the FieldContent component.
 ---
 
-Composable form field wrapper.
+Groups title and description in horizontal field layouts.
 
 ```json
 {
   "type": "object",
   "properties": {
     "type": {
-      "const": "Field",
-      "default": "Field",
+      "const": "FieldContent",
+      "default": "FieldContent",
       "type": "string"
     },
     "id": {
@@ -44,25 +44,6 @@ Composable form field wrapper.
       ],
       "default": null,
       "description": "Scoped bindings available to children. Values are template strings."
-    },
-    "invalid": {
-      "default": false,
-      "description": "Whether the field is in an error state",
-      "type": "boolean"
-    },
-    "disabled": {
-      "default": false,
-      "description": "Whether the field is dimmed and non-interactive",
-      "type": "boolean"
-    },
-    "orientation": {
-      "default": "vertical",
-      "description": "Layout direction: vertical for forms, horizontal for choice cards",
-      "enum": [
-        "vertical",
-        "horizontal"
-      ],
-      "type": "string"
     }
   },
   "required": [
