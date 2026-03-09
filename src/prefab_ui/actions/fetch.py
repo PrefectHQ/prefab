@@ -51,7 +51,7 @@ class Fetch(Action):
         description="Request body. Dicts are JSON-serialized automatically.",
     )
 
-    def __init__(self, url: str, **kwargs: Any) -> None:
+    def __init__(self, url: RxStr, **kwargs: Any) -> None:
         kwargs["url"] = url
         super().__init__(**kwargs)
 
