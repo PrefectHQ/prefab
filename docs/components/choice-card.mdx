@@ -1,0 +1,337 @@
+---
+title: ChoiceCard
+description: Bordered, clickable card for toggle controls.
+icon: toggle-right
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+ChoiceCard is a [Field](/components/field) that renders as a bordered card. Clicking anywhere on the card — the title, description, or empty space — toggles the wrapped control. When toggled on, the card highlights with a subtle border and background tint.
+
+## Basic Usage
+
+Place a `FieldContent` (with title and description) alongside a toggle control like Switch or Checkbox.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Marketing emails"},{"type":"FieldDescription","content":"Receive emails about new products and features."}]},{"name":"switch_1","type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Security emails"},{"type":"FieldDescription","content":"Receive emails about your account activity."}]},{"name":"switch_2","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiTWFya2V0aW5nIGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgbmV3IHByb2R1Y3RzIGFuZCBmZWF0dXJlcy4iCiAgICAgICAgICAgICkKICAgICAgICBTd2l0Y2goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlNlY3VyaXR5IGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgeW91ciBhY2NvdW50IGFjdGl2aXR5LiIKICAgICAgICAgICAgKQogICAgICAgIFN3aXRjaChjaGVja2VkPVRydWUpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    ChoiceCard, Column, FieldContent, FieldDescription, FieldTitle, Switch,
+)
+
+with Column(gap=4):
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Marketing emails")
+            FieldDescription(
+                "Receive emails about new products and features."
+            )
+        Switch()
+
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Security emails")
+            FieldDescription(
+                "Receive emails about your account activity."
+            )
+        Switch(checked=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": false,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Marketing emails"},
+              {
+                "type": "FieldDescription",
+                "content": "Receive emails about new products and features."
+              }
+            ]
+          },
+          {
+            "name": "switch_1",
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": false,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Security emails"},
+              {
+                "type": "FieldDescription",
+                "content": "Receive emails about your account activity."
+              }
+            ]
+          },
+          {
+            "name": "switch_2",
+            "type": "Switch",
+            "checked": true,
+            "size": "default",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"switch_1": false, "switch_2": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## With Checkbox
+
+ChoiceCard works with any toggle control.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Accept terms"},{"type":"FieldDescription","content":"You agree to our Terms of Service and Privacy Policy."}]},{"name":"checkbox_10","type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Subscribe to newsletter"},{"type":"FieldDescription","content":"Get weekly updates on new features."}]},{"name":"checkbox_11","type":"Checkbox","checked":true,"disabled":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsIENob2ljZUNhcmQsIENvbHVtbiwgRmllbGRDb250ZW50LCBGaWVsZERlc2NyaXB0aW9uLCBGaWVsZFRpdGxlLAopCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENob2ljZUNhcmQoKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJBY2NlcHQgdGVybXMiKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKAogICAgICAgICAgICAgICAgIllvdSBhZ3JlZSB0byBvdXIgVGVybXMgb2YgU2VydmljZSBhbmQgUHJpdmFjeSBQb2xpY3kuIgogICAgICAgICAgICApCiAgICAgICAgQ2hlY2tib3goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlN1YnNjcmliZSB0byBuZXdzbGV0dGVyIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiR2V0IHdlZWtseSB1cGRhdGVzIG9uIG5ldyBmZWF0dXJlcy4iKQogICAgICAgIENoZWNrYm94KGNoZWNrZWQ9VHJ1ZSkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    Checkbox, ChoiceCard, Column, FieldContent, FieldDescription, FieldTitle,
+)
+
+with Column(gap=4):
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Accept terms")
+            FieldDescription(
+                "You agree to our Terms of Service and Privacy Policy."
+            )
+        Checkbox()
+
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Subscribe to newsletter")
+            FieldDescription("Get weekly updates on new features.")
+        Checkbox(checked=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": false,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Accept terms"},
+              {
+                "type": "FieldDescription",
+                "content": "You agree to our Terms of Service and Privacy Policy."
+              }
+            ]
+          },
+          {
+            "name": "checkbox_10",
+            "type": "Checkbox",
+            "checked": false,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": false,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Subscribe to newsletter"},
+              {"type": "FieldDescription", "content": "Get weekly updates on new features."}
+            ]
+          },
+          {
+            "name": "checkbox_11",
+            "type": "Checkbox",
+            "checked": true,
+            "disabled": false,
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Disabled
+
+A disabled ChoiceCard dims the entire card and prevents interaction.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Enabled option"},{"type":"FieldDescription","content":"You can toggle this."}]},{"name":"switch_3","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":true,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Disabled option"},{"type":"FieldDescription","content":"This cannot be changed."}]},{"name":"switch_4","type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiRW5hYmxlZCBvcHRpb24iKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKCJZb3UgY2FuIHRvZ2dsZSB0aGlzLiIpCiAgICAgICAgU3dpdGNoKGNoZWNrZWQ9VHJ1ZSkKCiAgICB3aXRoIENob2ljZUNhcmQoZGlzYWJsZWQ9VHJ1ZSk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiRGlzYWJsZWQgb3B0aW9uIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiVGhpcyBjYW5ub3QgYmUgY2hhbmdlZC4iKQogICAgICAgIFN3aXRjaChkaXNhYmxlZD1UcnVlKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    ChoiceCard, Column, FieldContent, FieldDescription, FieldTitle, Switch,
+)
+
+with Column(gap=4):
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Enabled option")
+            FieldDescription("You can toggle this.")
+        Switch(checked=True)
+
+    with ChoiceCard(disabled=True):
+        with FieldContent():
+            FieldTitle("Disabled option")
+            FieldDescription("This cannot be changed.")
+        Switch(disabled=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": false,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Enabled option"},
+              {"type": "FieldDescription", "content": "You can toggle this."}
+            ]
+          },
+          {
+            "name": "switch_3",
+            "type": "Switch",
+            "checked": true,
+            "size": "default",
+            "disabled": false,
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": "ChoiceCard",
+        "invalid": false,
+        "disabled": true,
+        "children": [
+          {
+            "type": "FieldContent",
+            "children": [
+              {"type": "FieldTitle", "content": "Disabled option"},
+              {"type": "FieldDescription", "content": "This cannot be changed."}
+            ]
+          },
+          {
+            "name": "switch_4",
+            "type": "Switch",
+            "checked": false,
+            "size": "default",
+            "disabled": true,
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"switch_3": true, "switch_4": false}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="ChoiceCard">
+  ChoiceCard inherits all props from [Field](/components/field).
+
+<ParamField body="invalid" type="bool | str" default="False">
+  Whether the card is in an error state. Cascades red text to all children.
+</ParamField>
+
+<ParamField body="disabled" type="bool | str" default="False">
+  Whether the card is dimmed and non-interactive.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldTitle">
+<ParamField body="content" type="str" required>
+  Title text.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldDescription">
+<ParamField body="content" type="str" required>
+  Description text.
+</ParamField>
+</Card>
+
+<Card icon="code" title="FieldContent">
+  Container that groups FieldTitle and FieldDescription on the left side of the card.
+</Card>
+
+## Protocol Reference
+
+```json ChoiceCard
+{
+  "type": "ChoiceCard",
+  "children?": "[Component]",
+  "let?": "object",
+  "invalid?": false,
+  "disabled?": false,
+  "cssClass?": "string"
+}
+```
+
+```json FieldTitle
+{
+  "type": "FieldTitle",
+  "content": "string (required)"
+}
+```
+
+```json FieldDescription
+{
+  "type": "FieldDescription",
+  "content": "string (required)"
+}
+```
+
+```json FieldContent
+{
+  "type": "FieldContent",
+  "children?": "[Component]"
+}
+```
+
+For the complete protocol schema, see [ChoiceCard](/protocol/choice-card).

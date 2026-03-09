@@ -1,13 +1,11 @@
 /**
- * Field wrapper — composable form field with data-invalid propagation.
+ * Field and ChoiceCard wrappers.
  *
- * Vertical (default): renders a plain <div> for form validation layouts.
- * Horizontal: renders a bordered choice card wrapped in a <label> for
- * click-to-toggle behavior.
+ * Field: plain <div> that groups label + control + error, propagates
+ * data-invalid via CSS cascade.
  *
- * Sub-components (FieldTitle, FieldDescription, FieldContent, FieldError)
- * render as simple styled elements — all error styling is handled by CSS
- * cascade from data-invalid on the parent .cn-field div.
+ * ChoiceCard: Field subclass wrapped in a <label> for click-anywhere-
+ * to-toggle behavior, with a bordered card appearance.
  */
 
 import * as React from "react";
@@ -16,43 +14,49 @@ import { cn } from "@/lib/utils";
 interface PrefabFieldProps {
   invalid?: boolean;
   disabled?: boolean;
-  orientation?: "vertical" | "horizontal";
   className?: string;
   children?: React.ReactNode;
 }
 
-const ORIENTATION_CLASSES = {
-  vertical: "flex flex-col gap-1.5",
-  horizontal: "flex items-center justify-between gap-2",
-};
-
 export function PrefabField({
   invalid,
   disabled,
-  orientation = "vertical",
   className,
   children,
 }: PrefabFieldProps) {
-  const inner = (
+  return (
     <div
       data-slot="field"
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
-      className={cn(
-        "cn-field group/field",
-        ORIENTATION_CLASSES[orientation],
-        className,
-      )}
+      className={cn("cn-field group/field flex flex-col gap-1.5", className)}
     >
       {children}
     </div>
   );
+}
 
-  if (orientation === "horizontal") {
-    return <label className="cn-field-label">{inner}</label>;
-  }
-
-  return inner;
+export function PrefabChoiceCard({
+  invalid,
+  disabled,
+  className,
+  children,
+}: PrefabFieldProps) {
+  return (
+    <label className="cn-field-label">
+      <div
+        data-slot="field"
+        data-invalid={invalid || undefined}
+        data-disabled={disabled || undefined}
+        className={cn(
+          "cn-field group/field flex items-center justify-between gap-2",
+          className,
+        )}
+      >
+        {children}
+      </div>
+    </label>
+  );
 }
 
 interface PrefabFieldTextProps {

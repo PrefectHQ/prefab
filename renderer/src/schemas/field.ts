@@ -3,9 +3,14 @@ import { componentBase, containerBase } from "./base.ts";
 
 export const fieldSchema = containerBase.extend({
   type: z.literal("Field"),
-  invalid: z.boolean().optional(),
-  disabled: z.boolean().optional(),
-  orientation: z.enum(["vertical", "horizontal"]).optional(),
+  invalid: z.union([z.boolean(), z.string()]).optional(),
+  disabled: z.union([z.boolean(), z.string()]).optional(),
+});
+
+export const choiceCardSchema = containerBase.extend({
+  type: z.literal("ChoiceCard"),
+  invalid: z.union([z.boolean(), z.string()]).optional(),
+  disabled: z.union([z.boolean(), z.string()]).optional(),
 });
 
 export const fieldTitleSchema = componentBase.extend({
@@ -28,6 +33,7 @@ export const fieldErrorSchema = componentBase.extend({
 });
 
 export type FieldWire = z.infer<typeof fieldSchema>;
+export type ChoiceCardWire = z.infer<typeof choiceCardSchema>;
 export type FieldTitleWire = z.infer<typeof fieldTitleSchema>;
 export type FieldDescriptionWire = z.infer<typeof fieldDescriptionSchema>;
 export type FieldContentWire = z.infer<typeof fieldContentSchema>;
