@@ -16,6 +16,6 @@ class OpenLink(Action):
     action: Literal["openLink"] = "openLink"
     url: RxStr = Field(description="URL to open")
 
-    def __init__(self, url: str, **kwargs: Any) -> None:
+    def __init__(self, url: RxStr, **kwargs: Any) -> None:
         kwargs["url"] = url
         super().__init__(**kwargs)
