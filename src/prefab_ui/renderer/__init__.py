@@ -63,7 +63,12 @@ def get_renderer_head() -> str:
         return _EXTERNAL_HEAD.format(base_url=override.rstrip("/"))
     html = _BUNDLED_HTML.read_text(encoding="utf-8")
     head_start = html.index("<head>") + len("<head>")
-    head_end = html.index("</head>")
+    # The bundled JS contains HTML string literals (e.g. "<head></head><body>"),
+    # so we must search for </head> *after* the first real </script> tag.
+    # Vite escapes </script> inside inline scripts as <\/script>, so the first
+    # literal </script> in the file is always the actual closing tag.
+    script_end = html.index("</script>")
+    head_end = html.index("</head>", script_end)
     return html[head_start:head_end].rstrip()
 
 
