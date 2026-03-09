@@ -174,7 +174,10 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
 
   // Form wrappers (Python API → shadcn multi-part)
   Combobox: PrefabCombobox,
+  ComboboxGroup: () => null, // consumed by parent Combobox
+  ComboboxLabel: () => null, // consumed by parent Combobox
   ComboboxOption: () => null, // consumed by parent Combobox via _items
+  ComboboxSeparator: () => null, // consumed by parent Combobox
   Select: PrefabSelect,
   SelectGroup: () => null, // consumed by parent Select via _selectChildren
   SelectLabel: () => null, // consumed by parent Select via _selectChildren

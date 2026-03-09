@@ -23,7 +23,6 @@ export const ACTION_PROPS = new Set(["onClick", "onChange", "onSubmit"]);
 export const ITEM_CHILD_TYPES: Record<string, string[]> = {
   Select: ["value", "label", "selected", "disabled"],
   RadioGroup: ["value", "label", "checked", "disabled"],
-  Combobox: ["value", "label", "disabled"],
 };
 
 /** Child types used for Select option groups. */
@@ -265,8 +264,11 @@ export function mapProps(
     }
   }
 
-  // Select/RadioGroup: onChange → onValueChange
-  if ((type === "Select" || type === "RadioGroup") && "onChange" in mapped) {
+  // Select/RadioGroup/Combobox: onChange → onValueChange
+  if (
+    (type === "Select" || type === "RadioGroup" || type === "Combobox") &&
+    "onChange" in mapped
+  ) {
     mapped.onValueChange = mapped.onChange;
     delete mapped.onChange;
   }

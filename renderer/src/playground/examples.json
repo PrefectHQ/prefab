@@ -537,7 +537,42 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Combobox, ComboboxOption, Label\n\nwith Column(gap=2, css_class=\"w-fit mx-auto\"):\n    Label(\"Destination\")\n    with Combobox(placeholder=\"Search planets...\"):\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n        ComboboxOption(\"Krikkit\", value=\"krikkit\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Search planets...\",\n    disabled=True,\n    css_class=\"w-fit mx-auto\",\n):\n    ComboboxOption(\"Magrathea\", value=\"magrathea\")\n    ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n    ComboboxOption(\"Vogsphere\", value=\"vogsphere\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(placeholder=\"Select a planet...\", css_class=\"w-fit mx-auto\"):\n    ComboboxOption(\"Magrathea\", value=\"magrathea\")\n    ComboboxOption(\"Earth\", value=\"earth\", disabled=True)\n    ComboboxOption(\"Betelgeuse\", value=\"betelgeuse\")\n    ComboboxOption(\"Vogsphere\", value=\"vogsphere\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Combobox, ComboboxOption, Label, Text\n\nwith Column(gap=2, css_class=\"w-fit mx-auto\"):\n    Label(\"Home planet\")\n    with Combobox(placeholder=\"Select a planet...\", invalid=True):\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n    Text(\n        \"Please select your home planet\",\n        css_class=\"text-sm text-destructive\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Combobox, ComboboxOption, ComboboxSeparator\n\nwith Combobox(placeholder=\"Pick one...\", css_class=\"w-fit mx-auto\"):\n    ComboboxOption(\"Earth\", value=\"earth\")\n    ComboboxOption(\"Mars\", value=\"mars\")\n    ComboboxSeparator()\n    ComboboxOption(\"Jupiter\", value=\"jupiter\")\n    ComboboxOption(\"Saturn\", value=\"saturn\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    Combobox,\n    ComboboxGroup,\n    ComboboxLabel,\n    ComboboxOption,\n)\n\nwith Combobox(\n    placeholder=\"Choose a destination...\",\n    css_class=\"w-fit mx-auto\",\n):\n    with ComboboxGroup():\n        ComboboxLabel(\"Inner Planets\")\n        ComboboxOption(\"Magrathea\", value=\"magrathea\")\n        ComboboxOption(\"Vogsphere\", value=\"vogsphere\")\n        ComboboxOption(\"Earth\", value=\"earth\")\n    with ComboboxGroup():\n        ComboboxLabel(\"Outer Reaches\")\n        ComboboxOption(\"Betelgeuse V\", value=\"betelgeuse\")\n        ComboboxOption(\"Krikkit\", value=\"krikkit\")\n        ComboboxOption(\"Lamuella\", value=\"lamuella\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Combobox, ComboboxOption, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    with Combobox(\n        placeholder=\"Choose a ship...\",\n        on_change=SetState(\n            \"ship_status\",\n            \"Boarding: {{ $event }}\",\n        ),\n    ):\n        ComboboxOption(\"Heart of Gold\", value=\"heart-of-gold\")\n        ComboboxOption(\"Bistromath\", value=\"bistromath\")\n        ComboboxOption(\"Starship Titanic\", value=\"starship-titanic\")\n    Text(\n        \"{{ ship_status | default:'No ship selected' }}\",\n        css_class=\"text-muted-foreground\",\n    )"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Combobox, ComboboxOption\n\nwith Combobox(\n    placeholder=\"Choose a ship...\",\n    side=\"top\",\n    align=\"end\",\n    css_class=\"w-fit mx-auto\",\n):\n    ComboboxOption(\"Heart of Gold\", value=\"heart-of-gold\")\n    ComboboxOption(\"Bistromath\", value=\"bistromath\")\n    ComboboxOption(\"Starship Titanic\", value=\"starship-titanic\")"
   },
   {
     "title": "Python icon=\"python\"",

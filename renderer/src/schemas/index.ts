@@ -58,7 +58,13 @@ import {
 } from "./card.ts";
 import { checkboxSchema } from "./checkbox.ts";
 import { codeSchema } from "./code.ts";
-import { comboboxSchema, comboboxOptionSchema } from "./combobox.ts";
+import {
+  comboboxSchema,
+  comboboxOptionSchema,
+  comboboxGroupSchema,
+  comboboxLabelSchema,
+  comboboxSeparatorSchema,
+} from "./combobox.ts";
 import { conditionSchema } from "./conditional.ts";
 import { columnSchema } from "./column.ts";
 import { containerSchema } from "./container.ts";
@@ -159,7 +165,10 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Checkbox: checkboxSchema,
   Code: codeSchema,
   Combobox: comboboxSchema,
+  ComboboxGroup: comboboxGroupSchema,
+  ComboboxLabel: comboboxLabelSchema,
   ComboboxOption: comboboxOptionSchema,
+  ComboboxSeparator: comboboxSeparatorSchema,
   Condition: conditionSchema,
   Column: columnSchema,
   Container: containerSchema,

@@ -32,7 +32,13 @@ from prefab_ui.components.card import (
     CardTitle,
 )
 from prefab_ui.components.checkbox import Checkbox
-from prefab_ui.components.combobox import Combobox, ComboboxOption
+from prefab_ui.components.combobox import (
+    Combobox,
+    ComboboxGroup,
+    ComboboxLabel,
+    ComboboxOption,
+    ComboboxSeparator,
+)
 from prefab_ui.components.code import Code
 from prefab_ui.components.column import Column
 from prefab_ui.components.container import Container
@@ -138,7 +144,10 @@ __all__ = [
     "Code",
     "Column",
     "Combobox",
+    "ComboboxGroup",
+    "ComboboxLabel",
     "ComboboxOption",
+    "ComboboxSeparator",
     "Component",
     "Container",
     "ContainerComponent",
