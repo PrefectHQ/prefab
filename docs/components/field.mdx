@@ -75,92 +75,35 @@ with Column(gap=4):
 
 ## Validation
 
-Set `invalid` to highlight a field as having an error. Since `invalid` accepts reactive expressions, you can tie it to state — here the field turns red only when the select is empty:
+Set `invalid` to highlight a field as having an error. Since `invalid` accepts reactive expressions, you can tie it to state. Toggle the checkbox below — the label turns red and the error message appears automatically when the field becomes invalid.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Choose a username","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":"{{ !destination }}","disabled":false,"children":[{"type":"Label","text":"Destination"},{"name":"destination","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"mars","label":"Mars","selected":false,"disabled":false},{"type":"SelectOption","value":"jupiter","label":"Jupiter","selected":false,"disabled":false},{"type":"SelectOption","value":"saturn","label":"Saturn","selected":false,"disabled":false}]},{"type":"FieldError","content":"Please select a destination."}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLCBGaWVsZCwgRmllbGRFcnJvciwgSW5wdXQsIExhYmVsLCBSeCwgU2VsZWN0LCBTZWxlY3RPcHRpb24sCikKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiVXNlcm5hbWUiKQogICAgICAgIElucHV0KG5hbWU9InVzZXJuYW1lIiwgcGxhY2Vob2xkZXI9IkNob29zZSBhIHVzZXJuYW1lIikKCiAgICB3aXRoIEZpZWxkKGludmFsaWQ9UngoIiFkZXN0aW5hdGlvbiIpKToKICAgICAgICBMYWJlbCgiRGVzdGluYXRpb24iKQogICAgICAgIHdpdGggU2VsZWN0KG5hbWU9ImRlc3RpbmF0aW9uIiwgcGxhY2Vob2xkZXI9IkNob29zZSBhIHBsYW5ldC4uLiIpOgogICAgICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hcnMiLCBsYWJlbD0iTWFycyIpCiAgICAgICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0ianVwaXRlciIsIGxhYmVsPSJKdXBpdGVyIikKICAgICAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJzYXR1cm4iLCBsYWJlbD0iU2F0dXJuIikKICAgICAgICBGaWVsZEVycm9yKCJQbGVhc2Ugc2VsZWN0IGEgZGVzdGluYXRpb24uIikK">
+<ComponentPreview json={{"view":{"type":"Field","invalid":"{{ !agree }}","disabled":false,"children":[{"type":"Label","text":"Terms and conditions"},{"name":"agree","type":"Checkbox","label":"I accept the terms of service","checked":false,"disabled":false,"required":false},{"type":"FieldError","content":"You must accept the terms to continue."}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIEZpZWxkLCBGaWVsZEVycm9yLCBMYWJlbCwgUngKCndpdGggRmllbGQoaW52YWxpZD1SeCgiIWFncmVlIikpOgogICAgTGFiZWwoIlRlcm1zIGFuZCBjb25kaXRpb25zIikKICAgIENoZWNrYm94KG5hbWU9ImFncmVlIiwgbGFiZWw9IkkgYWNjZXB0IHRoZSB0ZXJtcyBvZiBzZXJ2aWNlIikKICAgIEZpZWxkRXJyb3IoIllvdSBtdXN0IGFjY2VwdCB0aGUgdGVybXMgdG8gY29udGludWUuIikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    Column, Field, FieldError, Input, Label, Rx, Select, SelectOption,
-)
+from prefab_ui.components import Checkbox, Field, FieldError, Label, Rx
 
-with Column(gap=4):
-    with Field():
-        Label("Username")
-        Input(name="username", placeholder="Choose a username")
-
-    with Field(invalid=Rx("!destination")):
-        Label("Destination")
-        with Select(name="destination", placeholder="Choose a planet..."):
-            SelectOption(value="mars", label="Mars")
-            SelectOption(value="jupiter", label="Jupiter")
-            SelectOption(value="saturn", label="Saturn")
-        FieldError("Please select a destination.")
+with Field(invalid=Rx("!agree")):
+    Label("Terms and conditions")
+    Checkbox(name="agree", label="I accept the terms of service")
+    FieldError("You must accept the terms to continue.")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
+    "type": "Field",
+    "invalid": "{{ !agree }}",
+    "disabled": false,
     "children": [
+      {"type": "Label", "text": "Terms and conditions"},
       {
-        "type": "Field",
-        "invalid": false,
+        "name": "agree",
+        "type": "Checkbox",
+        "label": "I accept the terms of service",
+        "checked": false,
         "disabled": false,
-        "children": [
-          {"type": "Label", "text": "Username"},
-          {
-            "name": "username",
-            "type": "Input",
-            "inputType": "text",
-            "placeholder": "Choose a username",
-            "disabled": false,
-            "readOnly": false,
-            "required": false
-          }
-        ]
+        "required": false
       },
-      {
-        "type": "Field",
-        "invalid": "{{ !destination }}",
-        "disabled": false,
-        "children": [
-          {"type": "Label", "text": "Destination"},
-          {
-            "name": "destination",
-            "type": "Select",
-            "placeholder": "Choose a planet...",
-            "size": "default",
-            "disabled": false,
-            "required": false,
-            "invalid": false,
-            "children": [
-              {
-                "type": "SelectOption",
-                "value": "mars",
-                "label": "Mars",
-                "selected": false,
-                "disabled": false
-              },
-              {
-                "type": "SelectOption",
-                "value": "jupiter",
-                "label": "Jupiter",
-                "selected": false,
-                "disabled": false
-              },
-              {
-                "type": "SelectOption",
-                "value": "saturn",
-                "label": "Saturn",
-                "selected": false,
-                "disabled": false
-              }
-            ]
-          },
-          {"type": "FieldError", "content": "Please select a destination."}
-        ]
-      }
+      {"type": "FieldError", "content": "You must accept the terms to continue."}
     ]
   }
 }
@@ -168,7 +111,7 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-The `data-invalid` attribute on the Field cascades via CSS to all text descendants. The label turns red, and the `FieldError` message is always styled in the error color. Select a value and the red styling disappears.
+The `data-invalid` attribute on the Field cascades via CSS to all text descendants — the label turns red automatically. `FieldError` is hidden by default and only appears when its parent Field is invalid, so you don't need to wrap it in a conditional.
 
 ## Choice Cards
 

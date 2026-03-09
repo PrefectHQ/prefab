@@ -817,7 +817,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Column, Field, FieldError, Input, Label, Rx, Select, SelectOption,\n)\n\nwith Column(gap=4):\n    with Field():\n        Label(\"Username\")\n        Input(name=\"username\", placeholder=\"Choose a username\")\n\n    with Field(invalid=Rx(\"!destination\")):\n        Label(\"Destination\")\n        with Select(name=\"destination\", placeholder=\"Choose a planet...\"):\n            SelectOption(value=\"mars\", label=\"Mars\")\n            SelectOption(value=\"jupiter\", label=\"Jupiter\")\n            SelectOption(value=\"saturn\", label=\"Saturn\")\n        FieldError(\"Please select a destination.\")"
+    "code": "from prefab_ui.components import Checkbox, Field, FieldError, Label, Rx\n\nwith Field(invalid=Rx(\"!agree\")):\n    Label(\"Terms and conditions\")\n    Checkbox(name=\"agree\", label=\"I accept the terms of service\")\n    FieldError(\"You must accept the terms to continue.\")"
   },
   {
     "title": "Python icon=\"python\"",
