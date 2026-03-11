@@ -2347,6 +2347,6 @@
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row\n\nset_initial_state(name=\"world\")\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            H3(\"Hello, {{ name }}!\")\n            Muted(\"Type below and watch this update in real time.\")\n            Input(name=\"name\", placeholder=\"Your name...\")\n    with CardFooter():\n        with Row(gap=2):\n            Badge(\"Name: {{ name }}\", variant=\"default\")\n            Badge(\"Prefab\", variant=\"success\")"
+    "code": "from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row\nfrom prefab_ui.rx import Rx\n\nname = Rx(\"name\").default(\"world\")\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            H3(f\"Hello, {name}!\")\n            Muted(\"Type below and watch this update in real time.\")\n            Input(name=\"name\", placeholder=\"Your name...\")\n    with CardFooter():\n        with Row(gap=2):\n            Badge(f\"Name: {name}\", variant=\"default\")\n            Badge(\"Prefab\", variant=\"success\")"
   }
 ]
