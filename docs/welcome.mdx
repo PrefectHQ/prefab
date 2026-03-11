@@ -1421,23 +1421,23 @@ State flows through templates. When you write `{{ query }}`, the renderer interp
 
 Here's a simpler example — type in the input and watch the heading update in real time:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]},"state":{"name":"world"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEZvb3RlciwgQ29sdW1uLCBIMywgTXV0ZWQsIElucHV0LCBCYWRnZSwgUm93CgpzZXRfaW5pdGlhbF9zdGF0ZShuYW1lPSJ3b3JsZCIpCgp3aXRoIENhcmQoKToKICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICB3aXRoIENvbHVtbihnYXA9Myk6CiAgICAgICAgICAgIEgzKCJIZWxsbywge3sgbmFtZSB9fSEiKQogICAgICAgICAgICBNdXRlZCgiVHlwZSBiZWxvdyBhbmQgd2F0Y2ggdGhpcyB1cGRhdGUgaW4gcmVhbCB0aW1lLiIpCiAgICAgICAgICAgIElucHV0KG5hbWU9Im5hbWUiLCBwbGFjZWhvbGRlcj0iWW91ciBuYW1lLi4uIikKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIHdpdGggUm93KGdhcD0yKToKICAgICAgICAgICAgQmFkZ2UoIk5hbWU6IHt7IG5hbWUgfX0iLCB2YXJpYW50PSJkZWZhdWx0IikKICAgICAgICAgICAgQmFkZ2UoIlByZWZhYiIsIHZhcmlhbnQ9InN1Y2Nlc3MiKQo=">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRGb290ZXIsIENvbHVtbiwgSDMsIE11dGVkLCBJbnB1dCwgQmFkZ2UsIFJvdwpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShmIk5hbWU6IHtuYW1lfSIsIHZhcmlhbnQ9ImRlZmF1bHQiKQogICAgICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIpCg==">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
+from prefab_ui.rx import Rx
 
-set_initial_state(name="world")
+name = Rx("name").default("world")
 
 with Card():
     with CardContent():
         with Column(gap=3):
-            H3("Hello, {{ name }}!")
+            H3(f"Hello, {name}!")
             Muted("Type below and watch this update in real time.")
             Input(name="name", placeholder="Your name...")
     with CardFooter():
         with Row(gap=2):
-            Badge("Name: {{ name }}", variant="default")
+            Badge(f"Name: {name}", variant="default")
             Badge("Prefab", variant="success")
 ```
 ```json Protocol icon="brackets-curly"
@@ -1452,7 +1452,7 @@ with Card():
             "cssClass": "gap-3",
             "type": "Column",
             "children": [
-              {"content": "Hello, {{ name }}!", "type": "H3"},
+              {"content": "Hello, {{ name | default:world }}!", "type": "H3"},
               {"content": "Type below and watch this update in real time.", "type": "Muted"},
               {
                 "name": "name",
@@ -1474,15 +1474,18 @@ with Card():
             "cssClass": "gap-2",
             "type": "Row",
             "children": [
-              {"type": "Badge", "label": "Name: {{ name }}", "variant": "default"},
+              {
+                "type": "Badge",
+                "label": "Name: {{ name | default:world }}",
+                "variant": "default"
+              },
               {"type": "Badge", "label": "Prefab", "variant": "success"}
             ]
           }
         ]
       }
     ]
-  },
-  "state": {"name": "world"}
+  }
 }
 ```
 </CodeGroup>
