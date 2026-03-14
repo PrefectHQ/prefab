@@ -161,12 +161,19 @@ export async function executeAction(
           break;
         }
         // Extract result data — available as $result in onSuccess callbacks.
-        // Prefer structuredContent (typed response). If the action spec
-        // includes unwrapResult (set by the server framework's callable
-        // resolver), dig into the "result" envelope automatically.
+        // Prefer structuredContent (typed response). FastMCP wraps
+        // non-object results in a {"result": ...} envelope and signals
+        // this via _meta.fastmcp.wrap_result on the tool result.
+        // The unwrapResult flag from the callable resolver handles the
+        // host-initiated case; _meta handles CallTool from within the UI.
         if (toolResult?.structuredContent != null) {
           const sc = toolResult.structuredContent as Record<string, unknown>;
-          resultData = resolved.unwrapResult && "result" in sc ? sc.result : sc;
+          const meta = (toolResult as Record<string, unknown>)._meta as
+            | Record<string, unknown>
+            | undefined;
+          const fmMeta = meta?.fastmcp as Record<string, unknown> | undefined;
+          const shouldUnwrap = resolved.unwrapResult || fmMeta?.wrap_result;
+          resultData = shouldUnwrap && "result" in sc ? sc.result : sc;
         } else {
           resultData = toolResult
             ? extractToolResultData(toolResult)
