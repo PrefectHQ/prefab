@@ -391,27 +391,27 @@ State keys must be identifiers: letters, numbers, and underscores, starting with
 ## API Reference
 
 <Card icon="code" title="SetState Parameters">
-<ParamField body="key" type="str" required>
-  State key or dot-path to set (e.g. `"count"` or `"todos.0.done"`).
+<ParamField body="key" type="str | Rx | StatefulComponent" required>
+  State key, dot-path, `Rx` reference, or a stateful component (Slider, Input, Pages, etc.). When a component is passed, its state key is extracted automatically.
 </ParamField>
 
-<ParamField body="value" type="Any" default='"{{ $event }}"'>
-  Value to assign. Defaults to the value from the triggering interaction (slider position, input text, checkbox state, etc.).
+<ParamField body="value" type="Any" default="EVENT">
+  Value to assign. Defaults to `EVENT` — the value from the triggering interaction (slider position, input text, checkbox state, etc.).
 </ParamField>
 </Card>
 
 <Card icon="code" title="ToggleState Parameters">
-<ParamField body="key" type="str" required>
-  State key or dot-path to toggle.
+<ParamField body="key" type="str | Rx | StatefulComponent" required>
+  State key, dot-path, `Rx` reference, or a stateful component.
 </ParamField>
 </Card>
 
 <Card icon="code" title="AppendState Parameters">
-<ParamField body="key" type="str" required>
-  State key or dot-path to the target array.
+<ParamField body="key" type="str | Rx | StatefulComponent" required>
+  State key, dot-path, `Rx` reference, or a stateful component.
 </ParamField>
 
-<ParamField body="value" type="Any" default='"{{ $event }}"'>
+<ParamField body="value" type="Any" default="EVENT">
   Value to append.
 </ParamField>
 
@@ -421,8 +421,8 @@ State keys must be identifiers: letters, numbers, and underscores, starting with
 </Card>
 
 <Card icon="code" title="PopState Parameters">
-<ParamField body="key" type="str" required>
-  State key or dot-path to the target array.
+<ParamField body="key" type="str | Rx | StatefulComponent" required>
+  State key, dot-path, `Rx` reference, or a stateful component.
 </ParamField>
 
 <ParamField body="index" type="int | str" required>

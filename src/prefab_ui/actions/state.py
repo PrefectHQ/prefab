@@ -8,9 +8,21 @@ from typing import Any, Literal
 from pydantic import Field, field_validator
 
 from prefab_ui.actions.base import Action
+from prefab_ui.components.base import StatefulMixin
 from prefab_ui.rx import Rx
 
 _KEY_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
+
+_KeyLike = str | Rx | StatefulMixin
+
+
+def _resolve_key(key: _KeyLike) -> str:
+    """Extract a string state key from a str, Rx, or stateful component."""
+    if isinstance(key, StatefulMixin):
+        return key.rx.key
+    if isinstance(key, Rx):
+        return key.key
+    return key
 
 
 def _validate_path(path: str) -> str:
@@ -52,8 +64,8 @@ class SetState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str | Rx, value: Any, **kwargs: Any) -> None:
-        kwargs["key"] = key.key if isinstance(key, Rx) else key
+    def __init__(self, key: _KeyLike, value: Any, **kwargs: Any) -> None:
+        kwargs["key"] = _resolve_key(key)
         kwargs["value"] = value
         super().__init__(**kwargs)
 
@@ -69,8 +81,8 @@ class ToggleState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str | Rx, **kwargs: Any) -> None:
-        kwargs["key"] = key.key if isinstance(key, Rx) else key
+    def __init__(self, key: _KeyLike, **kwargs: Any) -> None:
+        kwargs["key"] = _resolve_key(key)
         super().__init__(**kwargs)
 
 
@@ -98,13 +110,13 @@ class AppendState(Action):
 
     def __init__(
         self,
-        key: str | Rx,
+        key: _KeyLike,
         value: Any,
         *,
         index: int | str | Rx | None = None,
         **kwargs: Any,
     ) -> None:
-        kwargs["key"] = key.key if isinstance(key, Rx) else key
+        kwargs["key"] = _resolve_key(key)
         kwargs["value"] = value
         kwargs["index"] = str(index) if isinstance(index, Rx) else index
         super().__init__(**kwargs)
@@ -127,7 +139,7 @@ class PopState(Action):
     def _validate_key(cls, v: str) -> str:
         return _validate_path(v)
 
-    def __init__(self, key: str | Rx, index: int | str | Rx, **kwargs: Any) -> None:
-        kwargs["key"] = key.key if isinstance(key, Rx) else key
+    def __init__(self, key: _KeyLike, index: int | str | Rx, **kwargs: Any) -> None:
+        kwargs["key"] = _resolve_key(key)
         kwargs["index"] = str(index) if isinstance(index, Rx) else index
         super().__init__(**kwargs)
