@@ -47,3 +47,10 @@ jobs:
 
       - run: npm publish --access public --tag latest
         working-directory: renderer
+
+      - name: Purge jsDelivr @latest cache
+        run: |
+          # The docs loader imports from @latest on jsDelivr. After publishing
+          # a new version, purge the CDN cache so the @latest alias resolves
+          # to the just-published version immediately.
+          curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/dist/_renderer/embed.mjs"
