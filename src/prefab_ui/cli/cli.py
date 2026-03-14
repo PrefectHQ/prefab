@@ -471,7 +471,6 @@ def build_docs() -> None:
                 str(build_dir / "input.css"),
                 "-o",
                 "/tmp/prefab-preview-raw.css",
-                "--minify",
             ],
             tailwind_env,
         ),
