@@ -25,6 +25,7 @@ import {
   PolarGrid,
   PolarAngleAxis,
 } from "recharts";
+import { cn } from "@/lib/utils";
 import {
   ChartContainer,
   ChartTooltip,
@@ -41,6 +42,7 @@ import type {
   RadarChartWire,
   RadialChartWire,
   ScatterChartWire,
+  SparklineWire,
 } from "@/schemas/chart";
 
 const compactFormatter = (value: number) =>
@@ -547,5 +549,171 @@ export function PrefabScatterChart({
         })}
       </ScatterChart>
     </ChartContainer>
+  );
+}
+
+// -- Sparkline --
+
+const SPARKLINE_VARIANT_CLASS: Record<string, string> = {
+  default: "cn-sparkline-variant-default",
+  success: "cn-sparkline-variant-success",
+  warning: "cn-sparkline-variant-warning",
+  destructive: "cn-sparkline-variant-destructive",
+  info: "cn-sparkline-variant-info",
+  muted: "cn-sparkline-variant-muted",
+};
+
+function sparkPoints(
+  data: number[],
+  w: number,
+  h: number,
+  strokeWidth: number,
+): string {
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const pad = strokeWidth / 2;
+  // Reserve 30% of height so the minimum value still has visible fill beneath it
+  const usableH = h * 0.7 - pad;
+  const topPad = pad;
+  return data
+    .map((v, i) => {
+      const x = data.length === 1 ? w / 2 : (i / (data.length - 1)) * w;
+      const y = topPad + usableH * (1 - (v - min) / range);
+      return `${x},${y}`;
+    })
+    .join(" ");
+}
+
+function stepPoints(
+  data: number[],
+  w: number,
+  h: number,
+  strokeWidth: number,
+): string {
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const pad = strokeWidth / 2;
+  const usableH = h * 0.7 - pad;
+  const topPad = pad;
+  const pts: string[] = [];
+  for (let i = 0; i < data.length; i++) {
+    const x = data.length === 1 ? w / 2 : (i / (data.length - 1)) * w;
+    const y = topPad + usableH * (1 - (data[i] - min) / range);
+    if (i > 0) {
+      const prevY = topPad + usableH * (1 - (data[i - 1] - min) / range);
+      pts.push(`${x},${prevY}`);
+    }
+    pts.push(`${x},${y}`);
+  }
+  return pts.join(" ");
+}
+
+// Unique ID counter for gradient defs
+let sparkId = 0;
+
+export function PrefabSparkline({
+  data = [],
+  height,
+  variant = "default",
+  indicatorClass,
+  fill = false,
+  curve = "linear",
+  strokeWidth = 1.5,
+  mode = "line",
+  className,
+  cssClass,
+}: SparklineWire & { className?: string }) {
+  if (typeof data === "string" || data.length === 0) return null;
+
+  const variantClass =
+    SPARKLINE_VARIANT_CLASS[variant ?? "default"] ??
+    SPARKLINE_VARIANT_CLASS.default;
+
+  // Stable gradient ID per instance
+  const gradientId = `spark-${++sparkId}`;
+
+  // Use a fixed viewBox — the SVG scales to fill its container via CSS
+  const vw = 100;
+  const vh = 40;
+
+  if (mode === "bar") {
+    const min = Math.min(0, ...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+    const gap = 1;
+    const barW = (vw - gap * (data.length - 1)) / data.length;
+    return (
+      <svg
+        className={cn(
+          "cn-sparkline w-full",
+          height == null && "h-6",
+          variantClass,
+          className,
+          cssClass,
+        )}
+        viewBox={`0 0 ${vw} ${vh}`}
+        preserveAspectRatio="none"
+        style={height != null ? { height } : undefined}
+      >
+        {data.map((v, i) => {
+          const barH = ((v - min) / range) * (vh - 1);
+          return (
+            <rect
+              key={i}
+              x={i * (barW + gap)}
+              y={vh - barH}
+              width={barW}
+              height={barH}
+              fill="currentColor"
+              opacity={0.7}
+              rx={0.5}
+              className={indicatorClass}
+            />
+          );
+        })}
+      </svg>
+    );
+  }
+
+  // Line / area mode
+  const useStep = curve === "step";
+  const pts = useStep
+    ? stepPoints(data, vw, vh, strokeWidth)
+    : sparkPoints(data, vw, vh, strokeWidth);
+
+  // Build fill polygon (line points + bottom-right + bottom-left)
+  const fillPts = fill ? `${pts} ${vw},${vh} 0,${vh}` : "";
+
+  return (
+    <svg
+      className={cn("cn-sparkline w-full", variantClass, className, cssClass)}
+      viewBox={`0 0 ${vw} ${vh}`}
+      preserveAspectRatio="none"
+      style={{ height }}
+    >
+      {fill && (
+        <>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" className="cn-sparkline-fill-stop-start" />
+              <stop offset="100%" className="cn-sparkline-fill-stop-end" />
+            </linearGradient>
+          </defs>
+          <polygon points={fillPts} fill={`url(#${gradientId})`} />
+        </>
+      )}
+      <polyline
+        points={pts}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        className={cn("cn-sparkline-line", indicatorClass)}
+      />
+    </svg>
   );
 }

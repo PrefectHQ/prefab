@@ -132,7 +132,7 @@ def _execute_and_serialize(
             # Extract the initial value from the component's model fields.
             val = None
             for field_name in ("value", "checked", "default_value"):
-                if field_name in c.model_fields:
+                if field_name in type(c).model_fields:
                     val = c.__dict__.get(field_name)
                     break
             if val is None or isinstance(val, Rx):

@@ -47,6 +47,7 @@ import {
   radarChartSchema,
   radialChartSchema,
   scatterChartSchema,
+  sparklineSchema,
 } from "./chart.ts";
 import {
   cardSchema,
@@ -227,6 +228,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Ring: ringSchema,
   Row: rowSchema,
   ScatterChart: scatterChartSchema,
+  Sparkline: sparklineSchema,
   Select: selectSchema,
   SelectGroup: selectGroupSchema,
   SelectLabel: selectLabelSchema,

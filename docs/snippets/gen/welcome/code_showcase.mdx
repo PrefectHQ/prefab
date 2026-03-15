@@ -197,14 +197,15 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
     # ── Cols 3–4: summary row, chart, then 2-col grid below ─────────
     with GridItem(css_class="md:col-span-2"):
         with Column(gap=4):
-            with Grid(columns=2, gap=4):
+            with Grid(columns=2, gap=4, css_class="h-32"):
                 with Card():
                     with CardHeader():
-                        with Row(gap=2, align="center"):
-                            CardTitle("Context Window")
-                            Loader(variant="bars", size="sm")
+                        CardTitle("Context Window")
                     with CardContent():
-                        with Column(gap=2):
+                        with Column(gap=6, justify="center", css_class="h-full"):
+                            # with Row(gap=2):
+                            #     Loader(variant="bars", size="sm")
+                            #     Text("Processing...")
                             with Row(
                                 align="center",
                                 css_class="justify-between",
@@ -216,13 +217,18 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                 delay=0,
                             ):
                                 Progress(value=45, max=100)
-                with Card():
-                    with CardContent():
+                with Card(css_class="pb-0 gap-0"):
+                    with CardContent(css_class="pb-0"):
                         Metric(
                             label="Fjords designed",
                             value="1,847",
                             delta="+3 coastlines",
                         )
+                    Sparkline(
+                        data=[820, 950, 1100, 980, 1250, 1400, 1350, 1500, 1680, 1847],
+                        variant="success", fill=True, css_class="h-16"
+                        
+                    )
             with Card():
                 with CardHeader():
                     CardTitle("Towel Incidents")
@@ -925,7 +931,7 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             "type": "Column",
             "children": [
               {
-                "cssClass": "gap-4 grid-cols-2",
+                "cssClass": "gap-4 grid-cols-2 h-32",
                 "type": "Grid",
                 "children": [
                   {
@@ -933,22 +939,13 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "children": [
                       {
                         "type": "CardHeader",
-                        "children": [
-                          {
-                            "cssClass": "gap-2 items-center",
-                            "type": "Row",
-                            "children": [
-                              {"type": "CardTitle", "content": "Context Window"},
-                              {"type": "Loader", "variant": "bars", "size": "sm"}
-                            ]
-                          }
-                        ]
+                        "children": [{"type": "CardTitle", "content": "Context Window"}]
                       },
                       {
                         "type": "CardContent",
                         "children": [
                           {
-                            "cssClass": "gap-2",
+                            "cssClass": "gap-6 justify-center h-full",
                             "type": "Column",
                             "children": [
                               {
@@ -980,9 +977,11 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     ]
                   },
                   {
+                    "cssClass": "pb-0 gap-0",
                     "type": "Card",
                     "children": [
                       {
+                        "cssClass": "pb-0",
                         "type": "CardContent",
                         "children": [
                           {
@@ -992,6 +991,15 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             "delta": "+3 coastlines"
                           }
                         ]
+                      },
+                      {
+                        "cssClass": "h-16",
+                        "type": "Sparkline",
+                        "data": [820, 950, 1100, 980, 1250, 1400, 1350, 1500, 1680, 1847],
+                        "variant": "success",
+                        "fill": true,
+                        "curve": "linear",
+                        "strokeWidth": 1.5
                       }
                     ]
                   }

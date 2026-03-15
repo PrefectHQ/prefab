@@ -1,4 +1,4 @@
-"""Chart components — BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ScatterChart.
+"""Chart components — BarChart, LineChart, AreaChart, PieChart, RadarChart, RadialChart, ScatterChart, Sparkline.
 
 Built on Recharts + shadcn ChartContainer in the renderer.
 
@@ -17,6 +17,11 @@ Example::
         ],
         x_axis="month",
     )
+
+    from prefab_ui.components.charts import Sparkline
+
+    Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+    Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
 """
 
 from __future__ import annotations
@@ -345,3 +350,67 @@ class RadialChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+
+
+SparklineVariant = Literal[
+    "default", "success", "warning", "destructive", "info", "muted"
+]
+SparklineCurve = Literal["linear", "smooth", "step"]
+SparklineMode = Literal["line", "bar"]
+
+
+class Sparkline(Component):
+    """Compact inline chart for showing trends at a glance.
+
+    Takes a flat list of numbers and renders a tiny line (or area) chart
+    with no axes, labels, or tooltips. Designed to sit inline next to text.
+
+    Example::
+
+        Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+        Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+        Sparkline(data=[5, 12, 8, 3, 15], indicator_class="stroke-blue-500")
+        Sparkline(data=[5, 12, 8, 3, 15], curve="smooth", css_class="w-24")
+    """
+
+    type: Literal["Sparkline"] = "Sparkline"
+    data: list[int | float] | RxStr = Field(
+        description="Flat list of numeric values or {{ interpolation }} reference",
+    )
+    height: int | None = Field(
+        default=None, description="Chart height in pixels (default 24px via CSS)"
+    )
+    variant: SparklineVariant = Field(
+        default="default",
+        description="Visual variant: default, success, warning, destructive, info, muted",
+    )
+    indicator_class: RxStr | None = Field(
+        default=None,
+        alias="indicatorClass",
+        description="Tailwind classes for the line/fill (e.g. 'stroke-blue-500')",
+    )
+    fill: bool = Field(
+        default=False,
+        description="Show area fill under the line",
+    )
+    curve: SparklineCurve = Field(
+        default="linear",
+        description="Line interpolation: linear, smooth, or step",
+    )
+    stroke_width: float = Field(
+        default=1.5,
+        alias="strokeWidth",
+        description="Line thickness in pixels",
+    )
+    mode: SparklineMode = Field(
+        default="line",
+        description="Chart mode: line or bar",
+    )
+
+    def to_json(self) -> dict[str, Any]:
+        d = super().to_json()
+        if self.variant == "default":
+            d.pop("variant", None)
+        if self.mode == "line":
+            d.pop("mode", None)
+        return d
