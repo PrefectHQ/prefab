@@ -27,6 +27,29 @@ import { Editor } from "./editor";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { EXAMPLES, type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
+import pako from "pako";
+
+function gzipEncode(str: string): string {
+  const compressed = pako.gzip(new TextEncoder().encode(str));
+  let binary = "";
+  for (const byte of compressed) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+function gzipDecode(encoded: string): string | null {
+  try {
+    const padded = encoded.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(padded);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder().decode(pako.ungzip(bytes));
+  } catch {
+    return null;
+  }
+}
 
 type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
@@ -188,19 +211,13 @@ export function Playground() {
         const params = new URLSearchParams(hash);
         const encodedCode = params.get("code");
         if (encodedCode) {
-          try {
-            setCode(decodeURIComponent(escape(atob(encodedCode))));
-          } catch {
-            // ignore malformed hash
-          }
+          const decoded = gzipDecode(encodedCode);
+          if (decoded) setCode(decoded);
         }
         const encodedTheme = params.get("theme");
         if (encodedTheme) {
-          try {
-            setThemeCss(decodeURIComponent(escape(atob(encodedTheme))));
-          } catch {
-            // ignore malformed hash
-          }
+          const decoded = gzipDecode(encodedTheme);
+          if (decoded) setThemeCss(decoded);
         }
       }
       return;
@@ -208,18 +225,12 @@ export function Playground() {
     function onMessage(e: MessageEvent) {
       if (e.data?.type === "pg-init-code") {
         if (typeof e.data.encoded === "string") {
-          try {
-            setCode(decodeURIComponent(escape(atob(e.data.encoded))));
-          } catch {
-            // ignore malformed payload
-          }
+          const decoded = gzipDecode(e.data.encoded);
+          if (decoded) setCode(decoded);
         }
         if (typeof e.data.theme === "string" && e.data.theme) {
-          try {
-            setThemeCss(decodeURIComponent(escape(atob(e.data.theme))));
-          } catch {
-            // ignore malformed payload
-          }
+          const decoded = gzipDecode(e.data.theme);
+          if (decoded) setThemeCss(decoded);
         }
       }
     }
@@ -230,16 +241,12 @@ export function Playground() {
 
   // Build the full hash string from code + theme.
   const buildHash = useCallback((codeStr: string, themeStr: string) => {
-    try {
-      const parts: string[] = [];
-      parts.push(`code=${btoa(unescape(encodeURIComponent(codeStr)))}`);
-      if (themeStr) {
-        parts.push(`theme=${btoa(unescape(encodeURIComponent(themeStr)))}`);
-      }
-      return parts.join("&");
-    } catch {
-      return null;
+    const parts: string[] = [];
+    parts.push(`code=${gzipEncode(codeStr)}`);
+    if (themeStr) {
+      parts.push(`theme=${gzipEncode(themeStr)}`);
     }
+    return parts.join("&");
   }, []);
 
   // Post code changes to parent so it can update the page URL hash.
