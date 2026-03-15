@@ -27,6 +27,7 @@ import {
 } from "@/ui/table";
 import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
+import { useRenderNode, isComponentNode } from "../render-context";
 
 interface DataTableColumnSpec {
   key: string;
@@ -55,6 +56,7 @@ export function PrefabDataTable({
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const renderNode = useRenderNode();
 
   // Build @tanstack/react-table column defs from our flat spec
   const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
@@ -85,10 +87,13 @@ export function PrefabDataTable({
         },
         cell: ({ getValue }) => {
           const value = getValue();
+          if (renderNode && isComponentNode(value)) {
+            return renderNode(value);
+          }
           return value != null ? String(value) : "";
         },
       })),
-    [columnSpecs],
+    [columnSpecs, renderNode],
   );
 
   const table = useReactTable({
