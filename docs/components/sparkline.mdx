@@ -1,0 +1,633 @@
+---
+title: Sparkline
+description: Compact inline chart for showing trends at a glance.
+icon: chart-line-up
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Sparklines are tiny charts designed to sit inline next to text. They communicate trend and shape rather than precise values — no axes, no labels, no tooltips. Pass a flat list of numbers and Sparkline auto-scales the Y axis to fit.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"cssClass":"w-48","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"linear","strokeWidth":1.5}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKU3BhcmtsaW5lKGRhdGE9WzEwLCAxNSwgOCwgMjIsIDE4LCAyNSwgMjAsIDE2LCAyNCwgMTJdLCBjc3NfY2xhc3M9InctNDgiKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components.charts import Sparkline
+
+Sparkline(data=[10, 15, 8, 22, 18, 25, 20, 16, 24, 12], css_class="w-48")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-48",
+    "type": "Sparkline",
+    "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+    "fill": false,
+    "curve": "linear",
+    "strokeWidth": 1.5
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Variants
+
+Semantic variants color the line to match the rest of your UI. These are the same six variants used by Progress, Slider, and Ring.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"linear","strokeWidth":1.5},{"content":"default","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"success","fill":false,"curve":"linear","strokeWidth":1.5},{"content":"success","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"warning","fill":false,"curve":"linear","strokeWidth":1.5},{"content":"warning","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"destructive","fill":false,"curve":"linear","strokeWidth":1.5},{"content":"destructive","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"info","fill":false,"curve":"linear","strokeWidth":1.5},{"content":"info","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"muted","fill":false,"curve":"linear","strokeWidth":1.5},{"content":"muted","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBUZXh0LCBDb2x1bW4KZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKZGF0YSA9IFsxMCwgMTUsIDgsIDIyLCAxOCwgMjUsIDIwLCAxNiwgMjQsIDEyXQoKd2l0aCBDb2x1bW4oZ2FwPTMsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBjc3NfY2xhc3M9InctMjQiKQogICAgICAgIFRleHQoImRlZmF1bHQiKQogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgICAgICBUZXh0KCJzdWNjZXNzIikKICAgIHdpdGggUm93KGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIGdhcC0zIik6CiAgICAgICAgU3BhcmtsaW5lKGRhdGE9ZGF0YSwgdmFyaWFudD0id2FybmluZyIsIGNzc19jbGFzcz0idy0yNCIpCiAgICAgICAgVGV4dCgid2FybmluZyIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMyIpOgogICAgICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgICAgICBUZXh0KCJkZXN0cnVjdGl2ZSIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMyIpOgogICAgICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIHZhcmlhbnQ9ImluZm8iLCBjc3NfY2xhc3M9InctMjQiKQogICAgICAgIFRleHQoImluZm8iKQogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCB2YXJpYW50PSJtdXRlZCIsIGNzc19jbGFzcz0idy0yNCIpCiAgICAgICAgVGV4dCgibXV0ZWQiKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Text, Column
+from prefab_ui.components.charts import Sparkline
+
+data = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]
+
+with Column(gap=3, css_class="w-fit mx-auto"):
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, css_class="w-24")
+        Text("default")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, variant="success", css_class="w-24")
+        Text("success")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, variant="warning", css_class="w-24")
+        Text("warning")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, variant="destructive", css_class="w-24")
+        Text("destructive")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, variant="info", css_class="w-24")
+        Text("info")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, variant="muted", css_class="w-24")
+        Text("muted")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "default", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "variant": "success",
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "success", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "variant": "warning",
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "warning", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "variant": "destructive",
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "destructive", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "variant": "info",
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "info", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "variant": "muted",
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "muted", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Area Fill
+
+Set `fill=True` to shade the area under the line. The fill color inherits from the variant with a gradient that fades to transparent.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":true,"curve":"linear","strokeWidth":1.5},{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5},{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"variant":"info","fill":true,"curve":"linear","strokeWidth":1.5}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY2hhcnRzIGltcG9ydCBTcGFya2xpbmUKCmRhdGEgPSBbMTAsIDE1LCA4LCAyMiwgMTgsIDI1LCAyMCwgMTYsIDI0LCAxMl0KCndpdGggUm93KGNzc19jbGFzcz0iZ2FwLTYiKToKICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGZpbGw9VHJ1ZSwgY3NzX2NsYXNzPSJ3LTI0IikKICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGZpbGw9VHJ1ZSwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0idy0yNCIpCiAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBmaWxsPVRydWUsIHZhcmlhbnQ9ImluZm8iLCBjc3NfY2xhc3M9InctMjQiKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row
+from prefab_ui.components.charts import Sparkline
+
+data = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]
+
+with Row(css_class="gap-6"):
+    Sparkline(data=data, fill=True, css_class="w-24")
+    Sparkline(data=data, fill=True, variant="success", css_class="w-24")
+    Sparkline(data=data, fill=True, variant="info", css_class="w-24")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "fill": true,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      },
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "variant": "success",
+        "fill": true,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      },
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "variant": "info",
+        "fill": true,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Step Curve
+
+Set `curve="step"` to connect points with discrete jumps instead of straight lines.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"linear","strokeWidth":1.5},{"content":"linear","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"step","strokeWidth":1.5},{"content":"step","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBUZXh0LCBDb2x1bW4KZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKZGF0YSA9IFsxMCwgMTUsIDgsIDIyLCAxOCwgMjUsIDIwLCAxNiwgMjQsIDEyXQoKd2l0aCBDb2x1bW4oZ2FwPTMsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBjc3NfY2xhc3M9InctMjQiKQogICAgICAgIFRleHQoImxpbmVhciIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMyIpOgogICAgICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGN1cnZlPSJzdGVwIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgICAgICBUZXh0KCJzdGVwIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Text, Column
+from prefab_ui.components.charts import Sparkline
+
+data = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]
+
+with Column(gap=3, css_class="w-fit mx-auto"):
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, css_class="w-24")
+        Text("linear")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, curve="step", css_class="w-24")
+        Text("step")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "linear", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "fill": false,
+            "curve": "step",
+            "strokeWidth": 1.5
+          },
+          {"content": "step", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Colors
+
+Use `indicator_class` for colors beyond the built-in variants. Since the sparkline line is an SVG stroke, use `stroke-*` classes.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"indicatorClass":"stroke-blue-500","fill":false,"curve":"linear","strokeWidth":1.5},{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"indicatorClass":"stroke-emerald-500","fill":false,"curve":"linear","strokeWidth":1.5},{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"indicatorClass":"stroke-orange-500","fill":false,"curve":"linear","strokeWidth":1.5}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY2hhcnRzIGltcG9ydCBTcGFya2xpbmUKCmRhdGEgPSBbMTAsIDE1LCA4LCAyMiwgMTgsIDI1LCAyMCwgMTYsIDI0LCAxMl0KCndpdGggUm93KGNzc19jbGFzcz0iZ2FwLTYiKToKICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGluZGljYXRvcl9jbGFzcz0ic3Ryb2tlLWJsdWUtNTAwIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGluZGljYXRvcl9jbGFzcz0ic3Ryb2tlLWVtZXJhbGQtNTAwIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGluZGljYXRvcl9jbGFzcz0ic3Ryb2tlLW9yYW5nZS01MDAiLCBjc3NfY2xhc3M9InctMjQiKQo=">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row
+from prefab_ui.components.charts import Sparkline
+
+data = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]
+
+with Row(css_class="gap-6"):
+    Sparkline(data=data, indicator_class="stroke-blue-500", css_class="w-24")
+    Sparkline(data=data, indicator_class="stroke-emerald-500", css_class="w-24")
+    Sparkline(data=data, indicator_class="stroke-orange-500", css_class="w-24")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "indicatorClass": "stroke-blue-500",
+        "fill": false,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      },
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "indicatorClass": "stroke-emerald-500",
+        "fill": false,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      },
+      {
+        "cssClass": "w-24",
+        "type": "Sparkline",
+        "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+        "indicatorClass": "stroke-orange-500",
+        "fill": false,
+        "curve": "linear",
+        "strokeWidth": 1.5
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Size and Stroke
+
+Control dimensions with `height` and `css_class` for width. Use `stroke_width` to adjust line thickness.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-16","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"height":16,"fill":false,"curve":"linear","strokeWidth":1.0},{"content":"compact","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"height":24,"fill":false,"curve":"linear","strokeWidth":1.5},{"content":"default","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-32","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"height":40,"fill":false,"curve":"linear","strokeWidth":2.5},{"content":"large","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBUZXh0LCBDb2x1bW4KZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKZGF0YSA9IFsxMCwgMTUsIDgsIDIyLCAxOCwgMjUsIDIwLCAxNiwgMjQsIDEyXQoKd2l0aCBDb2x1bW4oZ2FwPTMsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBoZWlnaHQ9MTYsIHN0cm9rZV93aWR0aD0xLCBjc3NfY2xhc3M9InctMTYiKQogICAgICAgIFRleHQoImNvbXBhY3QiKQogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBoZWlnaHQ9MjQsIGNzc19jbGFzcz0idy0yNCIpCiAgICAgICAgVGV4dCgiZGVmYXVsdCIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMyIpOgogICAgICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGhlaWdodD00MCwgc3Ryb2tlX3dpZHRoPTIuNSwgY3NzX2NsYXNzPSJ3LTMyIikKICAgICAgICBUZXh0KCJsYXJnZSIpCg==">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Row, Text, Column
+from prefab_ui.components.charts import Sparkline
+
+data = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]
+
+with Column(gap=3, css_class="w-fit mx-auto"):
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, height=16, stroke_width=1, css_class="w-16")
+        Text("compact")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, height=24, css_class="w-24")
+        Text("default")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, height=40, stroke_width=2.5, css_class="w-32")
+        Text("large")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3 w-fit mx-auto",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-16",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "height": 16,
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.0
+          },
+          {"content": "compact", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-24",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "height": 24,
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 1.5
+          },
+          {"content": "default", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "items-center gap-3",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "w-32",
+            "type": "Sparkline",
+            "data": [10, 15, 8, 22, 18, 25, 20, 16, 24, 12],
+            "height": 40,
+            "fill": false,
+            "curve": "linear",
+            "strokeWidth": 2.5
+          },
+          {"content": "large", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## In a Table
+
+Sparklines sit naturally in table cells. Use `Table` (not `DataTable`) since sparklines are components, not plain values.
+
+<ComponentPreview json={{"view":{"type":"Table","children":[{"type":"TableHeader","children":[{"type":"TableRow","children":[{"type":"TableHead","content":"Metric"},{"type":"TableHead","content":"Trend"},{"type":"TableHead","content":"Current"}]}]},{"type":"TableBody","children":[{"type":"TableRow","children":[{"type":"TableCell","content":"Revenue"},{"type":"TableCell","children":[{"cssClass":"w-24","type":"Sparkline","data":[45,52,49,60,55,72,68,75],"variant":"success","fill":true,"curve":"smooth","strokeWidth":1.5}]},{"type":"TableCell","content":"$75K"}]},{"type":"TableRow","children":[{"type":"TableCell","content":"Churn"},{"type":"TableCell","children":[{"cssClass":"w-24","type":"Sparkline","data":[12,15,18,14,20,22,19,25],"variant":"destructive","fill":false,"curve":"smooth","strokeWidth":1.5}]},{"type":"TableCell","content":"2.5%"}]},{"type":"TableRow","children":[{"type":"TableCell","content":"Users"},{"type":"TableCell","children":[{"cssClass":"w-24","type":"Sparkline","data":[200,220,215,240,260,255,270,290],"variant":"info","fill":true,"curve":"smooth","strokeWidth":1.5}]},{"type":"TableCell","content":"290"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgVGFibGUsIFRhYmxlSGVhZGVyLCBUYWJsZUJvZHksIFRhYmxlUm93LAogICAgVGFibGVIZWFkLCBUYWJsZUNlbGwsIFRleHQsCikKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKd2l0aCBUYWJsZSgpOgogICAgd2l0aCBUYWJsZUhlYWRlcigpOgogICAgICAgIHdpdGggVGFibGVSb3coKToKICAgICAgICAgICAgVGFibGVIZWFkKCJNZXRyaWMiKQogICAgICAgICAgICBUYWJsZUhlYWQoIlRyZW5kIikKICAgICAgICAgICAgVGFibGVIZWFkKCJDdXJyZW50IikKICAgIHdpdGggVGFibGVCb2R5KCk6CiAgICAgICAgd2l0aCBUYWJsZVJvdygpOgogICAgICAgICAgICBUYWJsZUNlbGwoIlJldmVudWUiKQogICAgICAgICAgICB3aXRoIFRhYmxlQ2VsbCgpOgogICAgICAgICAgICAgICAgU3BhcmtsaW5lKAogICAgICAgICAgICAgICAgICAgIGRhdGE9WzQ1LCA1MiwgNDksIDYwLCA1NSwgNzIsIDY4LCA3NV0sCiAgICAgICAgICAgICAgICAgICAgdmFyaWFudD0ic3VjY2VzcyIsIGZpbGw9VHJ1ZSwgY3VydmU9InNtb290aCIsCiAgICAgICAgICAgICAgICAgICAgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgVGFibGVDZWxsKCIkNzVLIikKICAgICAgICB3aXRoIFRhYmxlUm93KCk6CiAgICAgICAgICAgIFRhYmxlQ2VsbCgiQ2h1cm4iKQogICAgICAgICAgICB3aXRoIFRhYmxlQ2VsbCgpOgogICAgICAgICAgICAgICAgU3BhcmtsaW5lKAogICAgICAgICAgICAgICAgICAgIGRhdGE9WzEyLCAxNSwgMTgsIDE0LCAyMCwgMjIsIDE5LCAyNV0sCiAgICAgICAgICAgICAgICAgICAgdmFyaWFudD0iZGVzdHJ1Y3RpdmUiLCBjdXJ2ZT0ic21vb3RoIiwKICAgICAgICAgICAgICAgICAgICBjc3NfY2xhc3M9InctMjQiLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICBUYWJsZUNlbGwoIjIuNSUiKQogICAgICAgIHdpdGggVGFibGVSb3coKToKICAgICAgICAgICAgVGFibGVDZWxsKCJVc2VycyIpCiAgICAgICAgICAgIHdpdGggVGFibGVDZWxsKCk6CiAgICAgICAgICAgICAgICBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICAgICAgZGF0YT1bMjAwLCAyMjAsIDIxNSwgMjQwLCAyNjAsIDI1NSwgMjcwLCAyOTBdLAogICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImluZm8iLCBmaWxsPVRydWUsIGN1cnZlPSJzbW9vdGgiLAogICAgICAgICAgICAgICAgICAgIGNzc19jbGFzcz0idy0yNCIsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIFRhYmxlQ2VsbCgiMjkwIikK">
+<CodeGroup>
+```python Python expandable icon="python"
+from prefab_ui.components import (
+    Table, TableHeader, TableBody, TableRow,
+    TableHead, TableCell, Text,
+)
+from prefab_ui.components.charts import Sparkline
+
+with Table():
+    with TableHeader():
+        with TableRow():
+            TableHead("Metric")
+            TableHead("Trend")
+            TableHead("Current")
+    with TableBody():
+        with TableRow():
+            TableCell("Revenue")
+            with TableCell():
+                Sparkline(
+                    data=[45, 52, 49, 60, 55, 72, 68, 75],
+                    variant="success", fill=True, curve="smooth",
+                    css_class="w-24",
+                )
+            TableCell("$75K")
+        with TableRow():
+            TableCell("Churn")
+            with TableCell():
+                Sparkline(
+                    data=[12, 15, 18, 14, 20, 22, 19, 25],
+                    variant="destructive", curve="smooth",
+                    css_class="w-24",
+                )
+            TableCell("2.5%")
+        with TableRow():
+            TableCell("Users")
+            with TableCell():
+                Sparkline(
+                    data=[200, 220, 215, 240, 260, 255, 270, 290],
+                    variant="info", fill=True, curve="smooth",
+                    css_class="w-24",
+                )
+            TableCell("290")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Table",
+    "children": [
+      {
+        "type": "TableHeader",
+        "children": [
+          {
+            "type": "TableRow",
+            "children": [
+              {"type": "TableHead", "content": "Metric"},
+              {"type": "TableHead", "content": "Trend"},
+              {"type": "TableHead", "content": "Current"}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TableBody",
+        "children": [
+          {
+            "type": "TableRow",
+            "children": [
+              {"type": "TableCell", "content": "Revenue"},
+              {
+                "type": "TableCell",
+                "children": [
+                  {
+                    "cssClass": "w-24",
+                    "type": "Sparkline",
+                    "data": [45, 52, 49, 60, 55, 72, 68, 75],
+                    "variant": "success",
+                    "fill": true,
+                    "curve": "smooth",
+                    "strokeWidth": 1.5
+                  }
+                ]
+              },
+              {"type": "TableCell", "content": "$75K"}
+            ]
+          },
+          {
+            "type": "TableRow",
+            "children": [
+              {"type": "TableCell", "content": "Churn"},
+              {
+                "type": "TableCell",
+                "children": [
+                  {
+                    "cssClass": "w-24",
+                    "type": "Sparkline",
+                    "data": [12, 15, 18, 14, 20, 22, 19, 25],
+                    "variant": "destructive",
+                    "fill": false,
+                    "curve": "smooth",
+                    "strokeWidth": 1.5
+                  }
+                ]
+              },
+              {"type": "TableCell", "content": "2.5%"}
+            ]
+          },
+          {
+            "type": "TableRow",
+            "children": [
+              {"type": "TableCell", "content": "Users"},
+              {
+                "type": "TableCell",
+                "children": [
+                  {
+                    "cssClass": "w-24",
+                    "type": "Sparkline",
+                    "data": [200, 220, 215, 240, 260, 255, 270, 290],
+                    "variant": "info",
+                    "fill": true,
+                    "curve": "smooth",
+                    "strokeWidth": 1.5
+                  }
+                ]
+              },
+              {"type": "TableCell", "content": "290"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Sparkline Parameters">
+<ParamField body="data" type="list[int | float] | str" required>
+  Flat list of numeric values, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="height" type="int" default="24">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="variant" type="str" default="default">
+  Visual variant: `"default"`, `"success"`, `"warning"`, `"destructive"`, `"info"`, `"muted"`.
+</ParamField>
+
+<ParamField body="indicator_class" type="str | None" default="None">
+  Tailwind classes for the line/fill. Use `stroke-*` classes for color overrides.
+</ParamField>
+
+<ParamField body="fill" type="bool" default="False">
+  Show a gradient area fill under the line.
+</ParamField>
+
+<ParamField body="curve" type='Literal["linear", "step"]' default='"linear"'>
+  Line interpolation style between data points.
+</ParamField>
+
+<ParamField body="stroke_width" type="float" default="1.5">
+  Line thickness in pixels.
+</ParamField>
+
+<ParamField body="mode" type='Literal["line", "bar"]' default='"line"'>
+  Chart mode: `"line"` draws a polyline, `"bar"` draws vertical bars.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Tailwind classes for the outer container. Use `w-*` classes to control width.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Sparkline
+{
+  "type": "Sparkline",
+  "data": "[number] | string (required)",
+  "height?": 24,
+  "variant?": "default | success | warning | destructive | info | muted",
+  "indicatorClass?": "string",
+  "fill?": false,
+  "curve?": "linear | step",
+  "strokeWidth?": 1.5,
+  "mode?": "line | bar",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Sparkline](/protocol/sparkline).

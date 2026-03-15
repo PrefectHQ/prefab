@@ -101,6 +101,20 @@ export const scatterChartSchema = componentBase.extend({
   showGrid: z.boolean().optional(),
 });
 
+export const sparklineSchema = componentBase.extend({
+  type: z.literal("Sparkline"),
+  data: z.union([z.array(z.number()), z.string()]).optional(),
+  height: z.number().int().optional(),
+  variant: z
+    .enum(["default", "success", "warning", "destructive", "info", "muted"])
+    .optional(),
+  indicatorClass: z.string().optional(),
+  fill: z.boolean().optional(),
+  curve: z.enum(["linear", "smooth", "step"]).optional(),
+  strokeWidth: z.number().optional(),
+  mode: z.enum(["line", "bar"]).optional(),
+});
+
 export type BarChartWire = z.infer<typeof barChartSchema>;
 export type LineChartWire = z.infer<typeof lineChartSchema>;
 export type AreaChartWire = z.infer<typeof areaChartSchema>;
@@ -108,3 +122,4 @@ export type PieChartWire = z.infer<typeof pieChartSchema>;
 export type RadarChartWire = z.infer<typeof radarChartSchema>;
 export type RadialChartWire = z.infer<typeof radialChartSchema>;
 export type ScatterChartWire = z.infer<typeof scatterChartSchema>;
+export type SparklineWire = z.infer<typeof sparklineSchema>;

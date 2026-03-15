@@ -44,6 +44,7 @@ from prefab_ui.components.charts import (
     RadarChart,
     RadialChart,
     ScatterChart,
+    Sparkline,
 )
 from prefab_ui.components.control_flow import ForEach
 from prefab_ui.rx import reset_counter
@@ -183,6 +184,7 @@ def discover_components() -> dict[str, type[Component]]:
         RadarChart,
         RadialChart,
         ScatterChart,
+        Sparkline,
         ForEach,
     ]
     for cls in _SUBMODULE_COMPONENTS:
