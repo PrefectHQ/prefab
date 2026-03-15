@@ -23,6 +23,22 @@ const sliderRangeVariants = cva(
   }
 )
 
+const sliderThumbVariants = cva("", {
+  variants: {
+    variant: {
+      default: "cn-slider-thumb-variant-default",
+      success: "cn-slider-thumb-variant-success",
+      warning: "cn-slider-thumb-variant-warning",
+      destructive: "cn-slider-thumb-variant-destructive",
+      info: "cn-slider-thumb-variant-info",
+      muted: "cn-slider-thumb-variant-muted",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+})
+
 function Slider({
   className,
   defaultValue,
@@ -85,7 +101,8 @@ function Slider({
             key={index}
             className={cn(
               "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
-              handleStyle === "bar" && "cn-slider-thumb-bar"
+              handleStyle === "bar" && "cn-slider-thumb-bar",
+              sliderThumbVariants({ variant })
             )}
           />
         ))}
