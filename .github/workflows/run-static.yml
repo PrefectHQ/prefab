@@ -44,7 +44,8 @@ jobs:
       - name: Check docs are up to date
         run: |
           uv run prefab dev build-docs
-          git diff --exit-code docs/ || {
+          git diff --name-only docs/
+          git diff --quiet docs/ || {
             echo "::error::docs/ is out of date. Run 'prefab dev build-docs' and commit the result."
             exit 1
           }
