@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
   useReactTable,
   getCoreRowModel,
@@ -23,7 +24,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableCaption,
 } from "@/ui/table";
 import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
@@ -41,7 +41,6 @@ interface DataTableProps {
   searchable?: boolean;
   paginated?: boolean;
   pageSize?: number;
-  caption?: string;
   className?: string;
 }
 
@@ -51,7 +50,6 @@ export function PrefabDataTable({
   searchable = false,
   paginated = false,
   pageSize = 10,
-  caption,
   className,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -110,7 +108,7 @@ export function PrefabDataTable({
   });
 
   return (
-    <div className={className}>
+    <div className={cn("w-full min-w-0", className)}>
       {searchable && (
         <div className="mb-4">
           <Input
@@ -123,7 +121,6 @@ export function PrefabDataTable({
       )}
 
       <Table>
-        {caption && <TableCaption>{caption}</TableCaption>}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

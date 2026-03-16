@@ -25,7 +25,6 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from prefab_ui.components.base import Component
-from prefab_ui.rx import RxStr
 
 
 def _serialize_cell_value(value: Any) -> Any:
@@ -74,7 +73,6 @@ class DataTable(Component):
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
     )
-    caption: RxStr | None = Field(default=None, description="Optional table caption")
 
     def to_json(self) -> dict[str, Any]:
         d = super().to_json()
