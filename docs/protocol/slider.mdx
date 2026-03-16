@@ -88,17 +88,24 @@ Range slider input component.
       "type": "boolean"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant for the filled track: default, success, warning, destructive, info, muted",
-      "enum": [
-        "default",
-        "success",
-        "warning",
-        "destructive",
-        "info",
-        "muted"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "success",
+            "warning",
+            "destructive",
+            "info",
+            "muted"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant for the filled track: default, success, warning, destructive, info, muted"
     },
     "indicatorClass": {
       "type": [

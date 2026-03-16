@@ -46,16 +46,23 @@ An alert container for important messages.
       "description": "Scoped bindings available to children. Values are template strings."
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default or destructive",
-      "enum": [
-        "default",
-        "destructive",
-        "success",
-        "warning",
-        "info"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "destructive",
+            "success",
+            "warning",
+            "info"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default or destructive"
     },
     "icon": {
       "type": [

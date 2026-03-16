@@ -76,17 +76,24 @@ A circular progress indicator with an optional centered label.
       "description": "Text displayed in the center of the ring"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default, success, warning, destructive, info, muted",
-      "enum": [
-        "default",
-        "success",
-        "warning",
-        "destructive",
-        "info",
-        "muted"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "success",
+            "warning",
+            "destructive",
+            "info",
+            "muted"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default, success, warning, destructive, info, muted"
     },
     "size": {
       "default": "default",

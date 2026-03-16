@@ -54,13 +54,20 @@ Tab container — children must be `Tab` components.
       "description": "State key for reactive binding. Auto-generated if omitted."
     },
     "variant": {
-      "default": "default",
-      "description": "Visual style \u2014 'default' (pill) or 'line' (underline)",
-      "enum": [
-        "default",
-        "line"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "line"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual style \u2014 'default' (pill) or 'line' (underline)"
     },
     "defaultValue": {
       "type": [
