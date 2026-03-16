@@ -14,7 +14,7 @@ This is the counterpart to [DropZone](/components/drop-zone). Where DropZone giv
   All file reading happens in the browser. Files are never sent to a server unless you explicitly wire up an `on_success` action (like `CallTool`) to do so.
 </Info>
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}} playground="H4sIAAAAAAACE0srys9VKChKTUtMii_N1EvOzy3Iz0vNKylWyASyikoUnEpLSvLzuNJQ1SUml2Tm58EV-Rek5rll5qQGZCZnpxZxcUE0aSiFFuTkJ6YogKSUdBTy8-KTc4AqbFGVa2hqcgEAuYEODYcAAAA">
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload File","variant":"default","size":"default","disabled":false,"onClick":{"action":"openFilePicker","multiple":false}}}} playground="H4sIAAAAAAAC_0srys9VKChKTUtMii_N1EvOzy3Iz0vNKylWyASyikoUnEpLSvLzuNJQ1SUml2Tm58EV-Rek5rll5qQGZCZnpxZxcUE0aSiFFuTkJ6YogKSUdBTy8-KTc4AqbFGVa2hqcgEAuYEODYcAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -41,7 +41,7 @@ Button("Upload File", on_click=OpenFilePicker())
 
 Files are read client-side, but they don't go anywhere until you tell them to. The typical pattern is to nest a `CallTool` inside `on_success` — pick the file, then send its base64 data to your MCP server for processing.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}} playground="H4sIAAAAAAACE3WQywrCMBBF9_mKEFwoSD9AyEbBrYKPbYljKsF0JuTRTem_m76ULpxNhjv33BlSeaq587pSjzKZAqh2hBpj4CZ3PvJ9ipGQVUufgmgIv6aT03g0Vp8NvLX_Yy5qcDNwUNZeiSxjY_6a8Vzi5iypJz9c7mI7KAYIpUiDPEmN8kZhlIJStAb1JBOWYPN6ubxlDO5LAWiXsQJCMzETF1IehSDno37McJTz1I_LJTdE-leq-8-SrajySrHjom35SjdZ5F0nup9_M7b52bAP38yvDnUBAAA">
+<ComponentPreview json={{"view":{"type":"Button","label":"Upload CSV","icon":"upload","variant":"outline","size":"default","disabled":false,"onClick":{"onSuccess":{"action":"toolCall","tool":"process_csv","arguments":{"file":"{{ $event }}"}},"action":"openFilePicker","accept":".csv","multiple":false}}}} playground="H4sIAAAAAAAC_3WQywrCMBBF9_mKEFwoSD9AyEbBrYKPbYljKsF0JuTRTem_m76ULpxNhjv33BlSeaq587pSjzKZAqh2hBpj4CZ3PvJ9ipGQVUufgmgIv6aT03g0Vp8NvLX_Yy5qcDNwUNZeiSxjY_6a8Vzi5iypJz9c7mI7KAYIpUiDPEmN8kZhlIJStAb1JBOWYPN6ubxlDO5LAWiXsQJCMzETF1IehSDno37McJTz1I_LJTdE-leq-8-SrajySrHjom35SjdZ5F0nup9_M7b52bAP38yvDnUBAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
