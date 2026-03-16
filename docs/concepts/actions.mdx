@@ -291,3 +291,13 @@ with ForEach("todos"):
 ```
 
 The checkbox updates instantly. If the server fails, the `on_error` branch flips it back and shows a toast.
+
+## Reacting to any change
+
+Component event handlers like `on_change` and `on_click` fire when a user interacts with that specific component. But state can also change from server responses, other actions, or cascading effects. If you need to react to a state change regardless of its source, use [`Watch`](/components/watch):
+
+```python
+Watch("total", on_change=ShowToast("Total is now {{ total }}"))
+```
+
+The watcher fires its actions whenever the watched key's value changes between renders. See [Watching for changes](/concepts/state#watching-for-changes) for the full guide.

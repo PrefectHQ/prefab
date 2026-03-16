@@ -130,6 +130,7 @@ import { tabsSchema, tabSchema } from "./tabs.ts";
 import { textSchema } from "./typography.ts";
 import { textareaSchema } from "./textarea.ts";
 import { tooltipSchema } from "./tooltip.ts";
+import { watchSchema } from "./watch.ts";
 import {
   h1Schema,
   h2Schema,
@@ -256,4 +257,5 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Textarea: textareaSchema,
   Tooltip: tooltipSchema,
   Video: videoSchema,
+  Watch: watchSchema,
 };

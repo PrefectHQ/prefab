@@ -662,12 +662,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"id\", header=\"ID\"),\n        DataTableColumn(key=\"task\", header=\"Task\", sortable=True),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\"id\": \"T-001\", \"task\": \"Design system\", \"status\": \"Complete\"},\n        {\"id\": \"T-002\", \"task\": \"API integration\", \"status\": \"In Progress\"},\n        {\"id\": \"T-003\", \"task\": \"Testing\", \"status\": \"Pending\"},\n        {\"id\": \"T-004\", \"task\": \"Documentation\", \"status\": \"In Progress\"},\n        {\"id\": \"T-005\", \"task\": \"Deployment\", \"status\": \"Pending\"},\n    ],\n    paginated=True,\n    page_size=3,\n    caption=\"Sprint tasks\",\n)"
+    "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"id\", header=\"ID\"),\n        DataTableColumn(key=\"task\", header=\"Task\", sortable=True),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\"id\": \"T-001\", \"task\": \"Design system\", \"status\": \"Complete\"},\n        {\"id\": \"T-002\", \"task\": \"API integration\", \"status\": \"In Progress\"},\n        {\"id\": \"T-003\", \"task\": \"Testing\", \"status\": \"Pending\"},\n        {\"id\": \"T-004\", \"task\": \"Documentation\", \"status\": \"In Progress\"},\n        {\"id\": \"T-005\", \"task\": \"Deployment\", \"status\": \"Pending\"},\n    ],\n    paginated=True,\n    page_size=3,\n)"
   },
   {
     "title": "Python expandable icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import DataTable, DataTableColumn, Badge, Progress\nfrom prefab_ui.components.charts import Sparkline\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"metric\", header=\"Metric\", sortable=True),\n        DataTableColumn(key=\"trend\", header=\"Trend\"),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\n            \"metric\": \"Revenue\",\n            \"trend\": Sparkline(\n                data=[45, 52, 49, 60, 55, 72, 68, 75],\n                variant=\"success\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Growing\", variant=\"success\"),\n        },\n        {\n            \"metric\": \"Churn\",\n            \"trend\": Sparkline(\n                data=[12, 15, 18, 14, 20, 22, 19, 25],\n                variant=\"destructive\", css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"At risk\", variant=\"destructive\"),\n        },\n        {\n            \"metric\": \"Users\",\n            \"trend\": Sparkline(\n                data=[200, 220, 215, 240, 260, 255, 270, 290],\n                variant=\"info\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Stable\", variant=\"secondary\"),\n        },\n    ],\n)"
+    "code": "from prefab_ui.components import DataTable, DataTableColumn, Badge, Progress\nfrom prefab_ui.components.charts import Sparkline\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"metric\", header=\"Metric\", sortable=True),\n        DataTableColumn(key=\"trend\", header=\"Trend\"),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\n            \"metric\": \"Revenue\",\n            \"trend\": Sparkline(\n                data=[45, 52, 49, 60, 55, 72, 68, 75],\n                variant=\"success\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Growing\", variant=\"success\"),\n        },\n        {\n            \"metric\": \"Churn\",\n            \"trend\": Sparkline(\n                data=[12, 15, 18, 14, 20, 22, 19, 25],\n                variant=\"destructive\", css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"At risk\", variant=\"destructive\"),\n        },\n        {\n            \"metric\": \"Users\",\n            \"trend\": Sparkline(\n                data=[250, 248, 252, 249, 253, 251, 250, 252],\n                variant=\"info\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Stable\", variant=\"secondary\"),\n        },\n    ],\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1527,11 +1527,6 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Variant (colors track + handle border)\")\n        Slider(value=65, variant=\"success\")\n    with Column(gap=2):\n        Label(\"Colored handle\")\n        Slider(value=50, handle_class=\"bg-emerald-500 border-emerald-500\")\n    with Column(gap=2):\n        Label(\"Colored handle + indicator\")\n        Slider(\n            value=70,\n            indicator_class=\"bg-gray-500\",\n            handle_class=\"bg-blue-500 border-blue-500\",\n        )"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Heading, Slot\n\nset_initial_state(\n    info={\n        \"type\": \"Card\",\n        \"children\": [\n            {\n                \"type\": \"CardHeader\",\n                \"children\": [\n                    {\"type\": \"CardTitle\", \"content\": \"Heart of Gold\"},\n                    {\n                        \"type\": \"CardDescription\",\n                        \"content\": \"Infinite Improbability Drive equipped\",\n                    },\n                ],\n            }\n        ],\n    }\n)\n\nwith Column(gap=4):\n    Heading(\"Starship Registry\", level=3)\n    Slot(\"info\")"
   },
   {
@@ -1557,7 +1552,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Row, Text, Column\nfrom prefab_ui.components.charts import Sparkline\n\ndata = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, css_class=\"w-24\")\n        Text(\"linear\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"smooth\", css_class=\"w-24\")\n        Text(\"smooth\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"step\", css_class=\"w-24\")\n        Text(\"step\")"
+    "code": "from prefab_ui.components import Row, Text, Column\nfrom prefab_ui.components.charts import Sparkline\n\ndata = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, css_class=\"w-24\")\n        Text(\"linear\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"step\", css_class=\"w-24\")\n        Text(\"step\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1745,6 +1740,21 @@
     "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://example.com/presentation.mp4\",\n    poster=\"https://example.com/thumbnail.jpg\",\n    width=\"640px\",\n)"
   },
   {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Slider, Text, Watch\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", label=\"Brightness\", min=0, max=100)\n    Watch(\"brightness\", on_change=SetState(\"brightness_pct\", \"{{ brightness / 100 }}\"))\n    Text(\"Brightness: {{ brightness_pct | percent }}\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Row, Slider, Text, Watch\n\nstate = set_initial_state(width=50, height=30, area=1500)\n\nwith Column(gap=3):\n    Slider(name=\"width\", label=\"Width\", min=1, max=100)\n    Slider(name=\"height\", label=\"Height\", min=1, max=100)\n    Watch(\"width\", on_change=SetState(\"area\", \"{{ width * height }}\"))\n    Watch(\"height\", on_change=SetState(\"area\", \"{{ width * height }}\"))\n    Text(\"Area: {{ area }} sq units\")"
+  },
+  {
+    "title": "Watch(\"width\", on_change=SetState(\"area\", \"{{ width * height }}\"))",
+    "category": "Components",
+    "code": "Watch(\"height\", on_change=SetState(\"area\", \"{{ width * height }}\"))\nWatch(\"area\", on_change=SetState(\"status\", \"{{ area > 5000 ? 'Too large' : 'OK' }}\"))"
+  },
+  {
     "title": "from prefab_ui.actions import SetState",
     "category": "Concepts",
     "code": "from prefab_ui.actions.mcp import CallTool\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(on_change=CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}))"
@@ -1877,7 +1887,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Text(\"{{ count }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Badge\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Badge(\"{{ count }}\", variant=\"{{ count > 0 ? 'success' : 'destructive' }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
   },
   {
     "title": "from prefab_ui.rx import Rx",
@@ -2063,6 +2073,11 @@
     "title": "# Correct",
     "category": "Expressions",
     "code": "(score > 0) & (score < 100)\n\n# Wrong — parsed as score > (0 & score) < 100\nscore > 0 & score < 100"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Text\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Text(\"{{ count }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
   },
   {
     "title": "Python icon=\"python\"",

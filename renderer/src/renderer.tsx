@@ -13,6 +13,8 @@
 import type { App } from "@modelcontextprotocol/ext-apps";
 import { useRef } from "react";
 import { REGISTRY } from "./components/registry";
+import { Watch as WatchComponent } from "./components/watch";
+import type { ActionSpec } from "./actions";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
 import { useOverlayClose } from "./overlay-context";
@@ -555,6 +557,24 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       );
     }
     return null;
+  }
+
+  // Handle Watch — observe a state key and fire actions on change.
+  // Watch receives raw (uninterpolated) action specs so they can
+  // reference $event at execution time, plus the state/app/scope.
+  if (type === "Watch") {
+    const watchKey = rawProps.key as string;
+    const onChange = rawProps.onChange as ActionSpec | ActionSpec[] | undefined;
+    return (
+      <WatchComponent
+        watchKey={watchKey}
+        onChange={onChange}
+        app={app}
+        state={state}
+        scope={scope}
+        overlayClose={overlayClose}
+      />
+    );
   }
 
   // Evaluate let bindings — scoped variables available to children
