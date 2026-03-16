@@ -193,6 +193,10 @@ _json.dumps(_pg_result)
     // Extract the last line of Python tracebacks for a cleaner message
     const lines = message.split("\n").filter((l) => l.trim());
     const short = lines[lines.length - 1] || message;
-    return { error: short };
+    // Parse `File "<string>", line N` from the traceback to surface the line number
+    const lineMatch = message.match(/File "<string>", line (\d+)/g);
+    const lastLineRef = lineMatch ? lineMatch[lineMatch.length - 1] : null;
+    const lineNum = lastLineRef ? lastLineRef.match(/line (\d+)/)?.[1] : null;
+    return { error: lineNum ? `Line ${lineNum}: ${short}` : short };
   }
 }
