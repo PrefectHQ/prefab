@@ -206,6 +206,69 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## Cell Formatting
+
+The `format` field on `DataTableColumn` formats numeric and date values without requiring a component cell. Use `'type'` or `'type:arg'` syntax to control the output.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"product","header":"Product","sortable":false},{"key":"revenue","header":"Revenue","sortable":true,"format":"currency"},{"key":"growth","header":"Growth","sortable":true,"format":"percent:1"},{"key":"units","header":"Units","sortable":true,"format":"number"},{"key":"launched","header":"Launched","sortable":false,"format":"date:medium"}],"rows":[{"product":"Widget Pro","revenue":128450,"growth":0.142,"units":3210,"launched":"2023-03-15"},{"product":"Gadget Plus","revenue":84200,"growth":0.087,"units":1980,"launched":"2022-11-01"},{"product":"Doohickey","revenue":52100,"growth":-0.031,"units":870,"launched":"2024-01-20"}],"searchable":false,"paginated":false,"pageSize":10}}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="product", header="Product"),
+        DataTableColumn(key="revenue", header="Revenue", sortable=True, format="currency"),
+        DataTableColumn(key="growth", header="Growth", sortable=True, format="percent:1"),
+        DataTableColumn(key="units", header="Units", sortable=True, format="number"),
+        DataTableColumn(key="launched", header="Launched", format="date:medium"),
+    ],
+    rows=[
+        {"product": "Widget Pro", "revenue": 128450, "growth": 0.142, "units": 3210, "launched": "2023-03-15"},
+        {"product": "Gadget Plus", "revenue": 84200, "growth": 0.087, "units": 1980, "launched": "2022-11-01"},
+        {"product": "Doohickey", "revenue": 52100, "growth": -0.031, "units": 870, "launched": "2024-01-20"},
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "product", "header": "Product"},
+      {"key": "revenue", "header": "Revenue", "sortable": true, "format": "currency"},
+      {"key": "growth", "header": "Growth", "sortable": true, "format": "percent:1"},
+      {"key": "units", "header": "Units", "sortable": true, "format": "number"},
+      {"key": "launched", "header": "Launched", "format": "date:medium"}
+    ],
+    "rows": [
+      {"product": "Widget Pro", "revenue": 128450, "growth": 0.142, "units": 3210, "launched": "2023-03-15"},
+      {"product": "Gadget Plus", "revenue": 84200, "growth": 0.087, "units": 1980, "launched": "2022-11-01"},
+      {"product": "Doohickey", "revenue": 52100, "growth": -0.031, "units": 870, "launched": "2024-01-20"}
+    ],
+    "searchable": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Supported format strings:
+
+| Format | Example output | Notes |
+|--------|---------------|-------|
+| `number` | `1,234,567` | Locale thousands separator |
+| `number:2` | `1,234.50` | Fixed decimal places |
+| `currency` | `$1,234.50` | USD by default |
+| `currency:EUR` | `€1,234.50` | Any ISO 4217 code |
+| `percent` | `14%` | Value should be `0.14`, not `14` |
+| `percent:1` | `14.2%` | Fixed decimal places |
+| `date` | `Mar 15, 2023` | Medium style by default |
+| `date:short` | `3/15/23` | short / medium / long / full |
+| `date:long` | `March 15, 2023` | |
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">
@@ -246,6 +309,11 @@ DataTable(
 <ParamField body="sortable" type="bool" default="False">
   Enable click-to-sort on this column.
 </ParamField>
+
+<ParamField body="format" type="str | None" default="None">
+  Format string for cell values. Accepts `number`, `number:N`, `currency`, `currency:CODE`,
+  `percent`, `percent:N`, `date`, `date:short|medium|long|full`. Ignored when the cell value is a component.
+</ParamField>
 </Card>
 
 ## Protocol Reference
@@ -266,7 +334,8 @@ DataTable(
 {
   "key": "string (required)",
   "header": "string (required)",
-  "sortable?": false
+  "sortable?": false,
+  "format?": "string"
 }
 ```
 

@@ -33,6 +33,54 @@ interface DataTableColumnSpec {
   key: string;
   header: string;
   sortable?: boolean;
+  format?: string;
+}
+
+function formatCellValue(value: unknown, format: string): string {
+  const [type, arg] = format.split(":") as [string, string | undefined];
+
+  if (type === "number") {
+    const fractionDigits = arg !== undefined ? parseInt(arg, 10) : undefined;
+    return new Intl.NumberFormat(undefined, {
+      ...(fractionDigits !== undefined && {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
+      }),
+    }).format(Number(value));
+  }
+
+  if (type === "currency") {
+    const currency = arg ?? "USD";
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+    }).format(Number(value));
+  }
+
+  if (type === "percent") {
+    const fractionDigits = arg !== undefined ? parseInt(arg, 10) : undefined;
+    return new Intl.NumberFormat(undefined, {
+      style: "percent",
+      ...(fractionDigits !== undefined && {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
+      }),
+    }).format(Number(value));
+  }
+
+  if (type === "date") {
+    const styleMap: Record<string, Intl.DateTimeFormatOptions["dateStyle"]> = {
+      short: "short",
+      medium: "medium",
+      long: "long",
+      full: "full",
+    };
+    const dateStyle = arg !== undefined ? styleMap[arg] ?? "medium" : "medium";
+    const date = value instanceof Date ? value : new Date(String(value));
+    return new Intl.DateTimeFormat(undefined, { dateStyle }).format(date);
+  }
+
+  return value != null ? String(value) : "";
 }
 
 interface DataTableProps {
@@ -87,6 +135,9 @@ export function PrefabDataTable({
           const value = getValue();
           if (renderNode && isComponentNode(value)) {
             return renderNode(value);
+          }
+          if (spec.format !== undefined && value != null) {
+            return formatCellValue(value, spec.format);
           }
           return value != null ? String(value) : "";
         },
