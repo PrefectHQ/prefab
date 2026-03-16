@@ -230,6 +230,10 @@ export function mapProps(
       mapped.indicatorClassName = mapped.indicatorClass;
       delete mapped.indicatorClass;
     }
+    if ("handleClass" in mapped) {
+      mapped.handleClassName = mapped.handleClass;
+      delete mapped.handleClass;
+    }
   }
 
   // Progress: normalize value to 0-100 percentage from min/max range,
