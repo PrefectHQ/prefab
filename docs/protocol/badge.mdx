@@ -54,19 +54,26 @@ A badge component for displaying status or labels.
       "description": "Badge text"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info",
-      "enum": [
-        "default",
-        "secondary",
-        "destructive",
-        "success",
-        "warning",
-        "info",
-        "outline",
-        "ghost"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "secondary",
+            "destructive",
+            "success",
+            "warning",
+            "info",
+            "outline",
+            "ghost"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default, secondary, destructive, outline, ghost, success, warning, or info"
     }
   },
   "required": [

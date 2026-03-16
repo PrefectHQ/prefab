@@ -15,7 +15,7 @@ The expression language is intentionally bounded. Prefab UIs are designed to be 
 
 The `{{ }}` syntax is the protocol-level unit of reactivity. Any string prop on any component can contain `{{ }}` expressions, and the renderer treats each one as a live dependency.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"type":"Badge","label":"{{ count }}","variant":"success"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIFJvdywgQmFkZ2UKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKCnNldF9pbml0aWFsX3N0YXRlKGNvdW50PTApCgp3aXRoIFJvdyhnYXA9MywgYWxpZ249ImNlbnRlciIpOgogICAgQnV0dG9uKCItIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCAtIDEgfX0iKSkKICAgIEJhZGdlKCJ7eyBjb3VudCB9fSIsIHZhcmlhbnQ9InN1Y2Nlc3MiKQogICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCArIDEgfX0iKSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"type":"Badge","label":"{{ count }}","variant":"{{ count > 0 ? 'success' : 'destructive' }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIFJvdywgQmFkZ2UKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKCnNldF9pbml0aWFsX3N0YXRlKGNvdW50PTApCgp3aXRoIFJvdyhnYXA9MywgYWxpZ249ImNlbnRlciIpOgogICAgQnV0dG9uKCItIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCAtIDEgfX0iKSkKICAgIEJhZGdlKCJ7eyBjb3VudCB9fSIsIHZhcmlhbnQ9Int7IGNvdW50ID4gMCA_ICdzdWNjZXNzJyA6ICdkZXN0cnVjdGl2ZScgfX0iKQogICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCArIDEgfX0iKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -43,7 +43,11 @@ with Row(gap=3, align="center"):
         "disabled": false,
         "onClick": {"action": "setState", "key": "count", "value": "{{ count - 1 }}"}
       },
-      {"type": "Badge", "label": "{{ count }}", "variant": "success"},
+      {
+        "type": "Badge",
+        "label": "{{ count }}",
+        "variant": "{{ count > 0 ? 'success' : 'destructive' }}"
+      },
       {
         "type": "Button",
         "label": "+",

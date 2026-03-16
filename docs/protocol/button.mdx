@@ -43,20 +43,27 @@ A button component with multiple variants and sizes.
       "description": "Lucide icon name (kebab-case, e.g. 'arrow-right')"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default, destructive, outline, secondary, ghost, link",
-      "enum": [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-        "success",
-        "warning",
-        "info"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "destructive",
+            "outline",
+            "secondary",
+            "ghost",
+            "link",
+            "success",
+            "warning",
+            "info"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default, destructive, outline, secondary, ghost, link"
     },
     "size": {
       "default": "default",
