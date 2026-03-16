@@ -13,7 +13,7 @@ Example::
             DataTableColumn(key="role", header="Role"),
         ],
         rows="{{ users }}",
-        searchable=True,
+        search=True,
         paginated=True,
     )
 """
@@ -34,6 +34,9 @@ def _serialize_cell_value(value: Any) -> Any:
     return value
 
 
+DataTableAlign = Literal["left", "center", "right"]
+
+
 class DataTableColumn(BaseModel):
     """Column definition for DataTable."""
 
@@ -42,6 +45,24 @@ class DataTableColumn(BaseModel):
     key: str = Field(description="Data key to display in this column")
     header: str = Field(description="Column header text")
     sortable: bool = Field(default=False, description="Enable sorting for this column")
+    width: str | None = Field(
+        default=None,
+        description="Column width as CSS value (e.g. '200px', '30%')",
+    )
+    min_width: str | None = Field(
+        default=None,
+        alias="minWidth",
+        description="Minimum column width as CSS value",
+    )
+    max_width: str | None = Field(
+        default=None,
+        alias="maxWidth",
+        description="Maximum column width as CSS value",
+    )
+    align: DataTableAlign | None = Field(
+        default=None,
+        description="Cell text alignment: left, center, or right",
+    )
 
 
 class DataTable(Component):
@@ -57,7 +78,7 @@ class DataTable(Component):
                 DataTableColumn(key="email", header="Email"),
             ],
             rows=data["users"],
-            searchable=True,
+            search=True,
             paginated=True,
         )
     """
@@ -68,7 +89,7 @@ class DataTable(Component):
         default_factory=list,
         description="Row data or {{ interpolation }} reference",
     )
-    searchable: bool = Field(default=False, description="Show search/filter input")
+    search: bool = Field(default=False, description="Show search/filter input")
     paginated: bool = Field(default=False, description="Show pagination controls")
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
