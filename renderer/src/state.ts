@@ -1,4 +1,10 @@
 import { useCallback, useRef, useState } from "react";
+import {
+  type ComputedEntry,
+  extractComputed,
+  sortComputed,
+  evaluateComputed,
+} from "./computed";
 
 export interface StateStore {
   get(key: string): unknown;
@@ -6,6 +12,8 @@ export interface StateStore {
   set(key: string, value: unknown): void;
   merge(values: Record<string, unknown>): void;
   reset(initial?: Record<string, unknown>): void;
+  /** The sorted list of computed entries (empty if none). */
+  readonly computed: ComputedEntry[];
 }
 
 // ── Path utilities ───────────────────────────────────────────────────
@@ -128,9 +136,46 @@ export function setByPath(
  * `seconds` as undefined.
  */
 export function useStateStore(initial?: Record<string, unknown>): StateStore {
-  const [state, setState] = useState<Record<string, unknown>>(initial ?? {});
+  // Process initial state for computed markers on first call.
+  const [processedInitial] = useState(() => {
+    if (!initial) return { state: {}, entries: [] as ComputedEntry[] };
+    const raw = { ...initial };
+    const entries = sortComputed(extractComputed(raw));
+    const state =
+      entries.length > 0 ? { ...raw, ...evaluateComputed(entries, raw) } : raw;
+    return { state, entries };
+  });
+
+  const [state, setState] = useState<Record<string, unknown>>(
+    processedInitial.state,
+  );
   const stateRef = useRef(state);
   stateRef.current = state;
+  const computedRef = useRef<ComputedEntry[]>(processedInitial.entries);
+  const computedKeysRef = useRef<Set<string>>(
+    new Set(processedInitial.entries.map((e) => e.key)),
+  );
+
+  /** Re-evaluate computed entries and merge into state. */
+  const recompute = useCallback(
+    (base: Record<string, unknown>): Record<string, unknown> => {
+      const entries = computedRef.current;
+      if (entries.length === 0) return base;
+      const values = evaluateComputed(entries, base);
+      return { ...base, ...values };
+    },
+    [],
+  );
+
+  /** Commit state: apply computed values, update ref + React state. */
+  const commit = useCallback(
+    (base: Record<string, unknown>) => {
+      const next = recompute(base);
+      stateRef.current = next;
+      setState(next);
+    },
+    [recompute],
+  );
 
   const get = useCallback(
     (key: string): unknown =>
@@ -145,25 +190,53 @@ export function useStateStore(initial?: Record<string, unknown>): StateStore {
     [],
   );
 
-  const set = useCallback((key: string, value: unknown) => {
-    const next = key.includes(".")
-      ? setByPath(stateRef.current, key, value)
-      : { ...stateRef.current, [key]: value };
-    stateRef.current = next;
-    setState(next);
-  }, []);
+  const set = useCallback(
+    (key: string, value: unknown) => {
+      // Guard computed keys from direct writes
+      const topKey = key.includes(".") ? key.split(".")[0] : key;
+      if (computedKeysRef.current.has(topKey)) {
+        console.warn(
+          `[Prefab] Cannot set computed state key "${topKey}" — computed values are read-only`,
+        );
+        return;
+      }
+      const next = key.includes(".")
+        ? setByPath(stateRef.current, key, value)
+        : { ...stateRef.current, [key]: value };
+      commit(next);
+    },
+    [commit],
+  );
 
-  const merge = useCallback((values: Record<string, unknown>) => {
-    const next = { ...stateRef.current, ...values };
-    stateRef.current = next;
-    setState(next);
-  }, []);
+  const merge = useCallback(
+    (values: Record<string, unknown>) => {
+      const next = { ...stateRef.current, ...values };
+      commit(next);
+    },
+    [commit],
+  );
 
   const reset = useCallback((init?: Record<string, unknown>) => {
-    const next = init ?? {};
+    const raw = init ? { ...init } : {};
+    const entries = sortComputed(extractComputed(raw));
+    computedRef.current = entries;
+    computedKeysRef.current = new Set(entries.map((e) => e.key));
+    // raw now has computed markers removed — start with literal values
+    // then evaluate computed entries on top
+    const next =
+      entries.length > 0 ? { ...raw, ...evaluateComputed(entries, raw) } : raw;
     stateRef.current = next;
     setState(next);
   }, []);
 
-  return { get, getAll, set, merge, reset };
+  return {
+    get,
+    getAll,
+    set,
+    merge,
+    reset,
+    get computed() {
+      return computedRef.current;
+    },
+  };
 }

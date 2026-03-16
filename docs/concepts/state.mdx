@@ -203,4 +203,115 @@ If any segment along a path is missing or the wrong type, the expression resolve
 
 Two things write to state: interactive controls (automatically, via the `name` prop) and [actions](/concepts/actions) (explicitly, in response to events). `SetState` assigns a value. `ToggleState` flips a boolean. `AppendState` and `PopState` manipulate arrays. `CallTool` and `Fetch` make their results available as `$result` in `on_success` callbacks, where you can write them to state with `SetState`.
 
-State is deliberately simple: a flat map with dot-path addressing for nesting. There are no computed properties, no watchers, no derived state in the store itself. Derived values belong in [expressions](/concepts/expressions), where they're computed at render time from whatever state holds. Complex computations belong in Python, run before you return the component tree, or in a server action.
+State is deliberately simple: a flat map with dot-path addressing for nesting. Inline expressions like `{{ price * quantity }}` handle most derived values, but when the same calculation appears in multiple places, repeating it everywhere becomes fragile. That's where computed state comes in.
+
+## Computed state
+
+Computed state declares named, read-only keys whose values are expressions that recompute reactively. Wrap an expression string in `Computed()` when calling `set_initial_state`. Here, `subtotal`, `tax`, and `total` each derive from earlier values, and the renderer evaluates them in dependency order:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"price","type":"Slider","min":0.0,"max":500.0,"disabled":false},{"name":"quantity","type":"Slider","min":1.0,"max":20.0,"disabled":false},{"content":"Subtotal: {{ subtotal | currency }} \u00b7 Tax: {{ tax | currency }} \u00b7 Total: {{ total | currency }}","type":"Text"}]},"state":{"price":100,"quantity":2,"subtotal":{"__computed__":"{{ price * quantity }}"},"tax":{"__computed__":"{{ subtotal * 0.08 }}"},"total":{"__computed__":"{{ subtotal + tax }}"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFNsaWRlciwgVGV4dApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgQ29tcHV0ZWQKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcmljZT0xMDAsCiAgICBxdWFudGl0eT0yLAogICAgc3VidG90YWw9Q29tcHV0ZWQoInt7IHByaWNlICogcXVhbnRpdHkgfX0iKSwKICAgIHRheD1Db21wdXRlZCgie3sgc3VidG90YWwgKiAwLjA4IH19IiksCiAgICB0b3RhbD1Db21wdXRlZCgie3sgc3VidG90YWwgKyB0YXggfX0iKSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgU2xpZGVyKG5hbWU9InByaWNlIiwgbGFiZWw9IlByaWNlIiwgbWluPTAsIG1heD01MDApCiAgICBTbGlkZXIobmFtZT0icXVhbnRpdHkiLCBsYWJlbD0iUXVhbnRpdHkiLCBtaW49MSwgbWF4PTIwKQogICAgVGV4dChmIlN1YnRvdGFsOiB7c3RhdGUuc3VidG90YWwuY3VycmVuY3koKX0gwrcgVGF4OiB7c3RhdGUudGF4LmN1cnJlbmN5KCl9IMK3IFRvdGFsOiB7c3RhdGUudG90YWwuY3VycmVuY3koKX0iKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Slider, Text
+from prefab_ui.rx import Computed
+
+state = set_initial_state(
+    price=100,
+    quantity=2,
+    subtotal=Computed("{{ price * quantity }}"),
+    tax=Computed("{{ subtotal * 0.08 }}"),
+    total=Computed("{{ subtotal + tax }}"),
+)
+
+with Column(gap=3):
+    Slider(name="price", label="Price", min=0, max=500)
+    Slider(name="quantity", label="Quantity", min=1, max=20)
+    Text(f"Subtotal: {state.subtotal.currency()} · Tax: {state.tax.currency()} · Total: {state.total.currency()}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {"name": "price", "type": "Slider", "min": 0.0, "max": 500.0, "disabled": false},
+      {
+        "name": "quantity",
+        "type": "Slider",
+        "min": 1.0,
+        "max": 20.0,
+        "disabled": false
+      },
+      {
+        "content": "Subtotal: {{ subtotal | currency }} \u00b7 Tax: {{ tax | currency }} \u00b7 Total: {{ total | currency }}",
+        "type": "Text"
+      }
+    ]
+  },
+  "state": {
+    "price": 100,
+    "quantity": 2,
+    "subtotal": {"__computed__": "{{ price * quantity }}"},
+    "tax": {"__computed__": "{{ subtotal * 0.08 }}"},
+    "total": {"__computed__": "{{ subtotal + tax }}"}
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag either slider: `subtotal` recomputes, which cascades to `tax` and `total`. `state.total` returns an `Rx("total")` reference just like a regular state key, so you can use it in expressions, conditions, or action values.
+
+Computed state is also useful for normalizing independent inputs. Four unconstrained sliders, with percentages derived from a computed sum:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"a","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"name":"b","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"name":"c","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"name":"d","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"content":"A: {{ a / total * 100 | round:1 }}% \u00b7 B: {{ b / total * 100 | round:1 }}% \u00b7 C: {{ c / total * 100 | round:1 }}% \u00b7 D: {{ d / total * 100 | round:1 }}%","type":"Text"}]},"state":{"a":25,"b":25,"c":25,"d":25,"total":{"__computed__":"{{ a + b + c + d }}"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFNsaWRlciwgVGV4dApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgQ29tcHV0ZWQKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICBhPTI1LCBiPTI1LCBjPTI1LCBkPTI1LAogICAgdG90YWw9Q29tcHV0ZWQoInt7IGEgKyBiICsgYyArIGQgfX0iKSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgU2xpZGVyKG5hbWU9ImEiLCBsYWJlbD0iQSIsIG1pbj0wLCBtYXg9MTAwKQogICAgU2xpZGVyKG5hbWU9ImIiLCBsYWJlbD0iQiIsIG1pbj0wLCBtYXg9MTAwKQogICAgU2xpZGVyKG5hbWU9ImMiLCBsYWJlbD0iQyIsIG1pbj0wLCBtYXg9MTAwKQogICAgU2xpZGVyKG5hbWU9ImQiLCBsYWJlbD0iRCIsIG1pbj0wLCBtYXg9MTAwKQogICAgVGV4dChmIkE6IHsoc3RhdGUuYSAvIHN0YXRlLnRvdGFsICogMTAwKS5yb3VuZCgxKX0lIMK3IEI6IHsoc3RhdGUuYiAvIHN0YXRlLnRvdGFsICogMTAwKS5yb3VuZCgxKX0lIMK3IEM6IHsoc3RhdGUuYyAvIHN0YXRlLnRvdGFsICogMTAwKS5yb3VuZCgxKX0lIMK3IEQ6IHsoc3RhdGUuZCAvIHN0YXRlLnRvdGFsICogMTAwKS5yb3VuZCgxKX0lIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.components import Column, Slider, Text
+from prefab_ui.rx import Computed
+
+state = set_initial_state(
+    a=25, b=25, c=25, d=25,
+    total=Computed("{{ a + b + c + d }}"),
+)
+
+with Column(gap=3):
+    Slider(name="a", label="A", min=0, max=100)
+    Slider(name="b", label="B", min=0, max=100)
+    Slider(name="c", label="C", min=0, max=100)
+    Slider(name="d", label="D", min=0, max=100)
+    Text(f"A: {(state.a / state.total * 100).round(1)}% · B: {(state.b / state.total * 100).round(1)}% · C: {(state.c / state.total * 100).round(1)}% · D: {(state.d / state.total * 100).round(1)}%")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {"name": "a", "type": "Slider", "min": 0.0, "max": 100.0, "disabled": false},
+      {"name": "b", "type": "Slider", "min": 0.0, "max": 100.0, "disabled": false},
+      {"name": "c", "type": "Slider", "min": 0.0, "max": 100.0, "disabled": false},
+      {"name": "d", "type": "Slider", "min": 0.0, "max": 100.0, "disabled": false},
+      {
+        "content": "A: {{ a / total * 100 | round:1 }}% \u00b7 B: {{ b / total * 100 | round:1 }}% \u00b7 C: {{ c / total * 100 | round:1 }}% \u00b7 D: {{ d / total * 100 | round:1 }}%",
+        "type": "Text"
+      }
+    ]
+  },
+  "state": {
+    "a": 25,
+    "b": 25,
+    "c": 25,
+    "d": 25,
+    "total": {"__computed__": "{{ a + b + c + d }}"}
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The sliders don't constrain each other; each one is independent. The normalization happens entirely in the display expressions. Drag any slider and all four percentages update because `total` changes.
+
+Computed keys are read-only on the client. `SetState` targeting a computed key is a no-op with a console warning. Their values are controlled entirely by the expression, not by user interaction or actions.

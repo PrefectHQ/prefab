@@ -132,6 +132,7 @@ def _execute_and_serialize(
 
     # Collect state: explicit set_initial_state() + initial values from
     # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
+    from prefab_ui.app import _serialize_state
     from prefab_ui.rx import Rx
 
     state: dict[str, Any] = {}
@@ -155,7 +156,7 @@ def _execute_and_serialize(
 
     envelope: dict[str, Any] = {"view": tree}
     if state:
-        envelope["state"] = state
+        envelope["state"] = _serialize_state(state)
 
     return envelope
 
