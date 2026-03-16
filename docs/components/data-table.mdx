@@ -105,6 +105,66 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## Component Cells
+
+Cell values can be Prefab components — not just strings. Put a Badge, Sparkline, Progress bar, or any other component directly in the row data and it renders inline.
+
+<ComponentPreview json={{"view":{"cssClass":"w-24","type":"Sparkline","data":[45,52,49,60,55,72,68,75],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEJhZGdlLCBQcm9ncmVzcwpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNoYXJ0cyBpbXBvcnQgU3BhcmtsaW5lCgpEYXRhVGFibGUoCiAgICBjb2x1bW5zPVsKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJtZXRyaWMiLCBoZWFkZXI9Ik1ldHJpYyIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRyZW5kIiwgaGVhZGVyPSJUcmVuZCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InN0YXR1cyIsIGhlYWRlcj0iU3RhdHVzIiksCiAgICBdLAogICAgcm93cz1bCiAgICAgICAgewogICAgICAgICAgICAibWV0cmljIjogIlJldmVudWUiLAogICAgICAgICAgICAidHJlbmQiOiBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICBkYXRhPVs0NSwgNTIsIDQ5LCA2MCwgNTUsIDcyLCA2OCwgNzVdLAogICAgICAgICAgICAgICAgdmFyaWFudD0ic3VjY2VzcyIsIGZpbGw9VHJ1ZSwgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgKSwKICAgICAgICAgICAgInN0YXR1cyI6IEJhZGdlKCJHcm93aW5nIiwgdmFyaWFudD0ic3VjY2VzcyIpLAogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgICAibWV0cmljIjogIkNodXJuIiwKICAgICAgICAgICAgInRyZW5kIjogU3BhcmtsaW5lKAogICAgICAgICAgICAgICAgZGF0YT1bMTIsIDE1LCAxOCwgMTQsIDIwLCAyMiwgMTksIDI1XSwKICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgKSwKICAgICAgICAgICAgInN0YXR1cyI6IEJhZGdlKCJBdCByaXNrIiwgdmFyaWFudD0iZGVzdHJ1Y3RpdmUiKSwKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICAgIm1ldHJpYyI6ICJVc2VycyIsCiAgICAgICAgICAgICJ0cmVuZCI6IFNwYXJrbGluZSgKICAgICAgICAgICAgICAgIGRhdGE9WzIwMCwgMjIwLCAyMTUsIDI0MCwgMjYwLCAyNTUsIDI3MCwgMjkwXSwKICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImluZm8iLCBmaWxsPVRydWUsIGNzc19jbGFzcz0idy0yNCIsCiAgICAgICAgICAgICksCiAgICAgICAgICAgICJzdGF0dXMiOiBCYWRnZSgiU3RhYmxlIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiksCiAgICAgICAgfSwKICAgIF0sCikK">
+<CodeGroup>
+```python Python expandable icon="python"
+from prefab_ui.components import DataTable, DataTableColumn, Badge, Progress
+from prefab_ui.components.charts import Sparkline
+
+DataTable(
+    columns=[
+        DataTableColumn(key="metric", header="Metric", sortable=True),
+        DataTableColumn(key="trend", header="Trend"),
+        DataTableColumn(key="status", header="Status"),
+    ],
+    rows=[
+        {
+            "metric": "Revenue",
+            "trend": Sparkline(
+                data=[45, 52, 49, 60, 55, 72, 68, 75],
+                variant="success", fill=True, css_class="w-24",
+            ),
+            "status": Badge("Growing", variant="success"),
+        },
+        {
+            "metric": "Churn",
+            "trend": Sparkline(
+                data=[12, 15, 18, 14, 20, 22, 19, 25],
+                variant="destructive", css_class="w-24",
+            ),
+            "status": Badge("At risk", variant="destructive"),
+        },
+        {
+            "metric": "Users",
+            "trend": Sparkline(
+                data=[200, 220, 215, 240, 260, 255, 270, 290],
+                variant="info", fill=True, css_class="w-24",
+            ),
+            "status": Badge("Stable", variant="secondary"),
+        },
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-24",
+    "type": "Sparkline",
+    "data": [45, 52, 49, 60, 55, 72, 68, 75],
+    "variant": "success",
+    "fill": true,
+    "curve": "linear",
+    "strokeWidth": 1.5
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">
