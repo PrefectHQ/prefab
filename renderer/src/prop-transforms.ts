@@ -13,7 +13,12 @@ import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 
 /** Props that carry action specs (serialized from Python Action types). */
-export const ACTION_PROPS = new Set(["onClick", "onChange", "onSubmit"]);
+export const ACTION_PROPS = new Set([
+  "onClick",
+  "onChange",
+  "onSubmit",
+  "onRowClick",
+]);
 
 /**
  * Types whose children represent data items rather than nested components.

@@ -2,7 +2,7 @@
  * Data display components — DataTable wrapper around @tanstack/react-table.
  *
  * Renders a flat columns + rows API with optional sorting, filtering,
- * and pagination using shadcn Table primitives.
+ * pagination, and row click actions using shadcn Table primitives.
  */
 
 import { useState, useMemo } from "react";
@@ -89,6 +89,7 @@ interface DataTableProps {
   searchable?: boolean;
   paginated?: boolean;
   pageSize?: number;
+  onRowClick?: (rowData: Record<string, unknown>) => void;
   className?: string;
 }
 
@@ -98,14 +99,14 @@ export function PrefabDataTable({
   searchable = false,
   paginated = false,
   pageSize = 10,
+  onRowClick,
   className,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const renderNode = useRenderNode();
 
-  // Build @tanstack/react-table column defs from our flat spec
-  const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
+  const dataColumns = useMemo<ColumnDef<Record<string, unknown>>[]>(
     () =>
       columnSpecs.map((spec) => ({
         accessorKey: spec.key,
@@ -147,7 +148,7 @@ export function PrefabDataTable({
 
   const table = useReactTable({
     data: rows,
-    columns,
+    columns: dataColumns,
     state: { sorting, globalFilter },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
@@ -157,6 +158,9 @@ export function PrefabDataTable({
     getPaginationRowModel: paginated ? getPaginationRowModel() : undefined,
     initialState: paginated ? { pagination: { pageSize } } : undefined,
   });
+
+  const colCount = dataColumns.length;
+  const isClickable = !!onRowClick;
 
   return (
     <div className={cn("w-full min-w-0", className)}>
@@ -192,7 +196,15 @@ export function PrefabDataTable({
           {table.getRowModel().rows.length ? (
             <>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className={
+                    isClickable ? "cursor-pointer hover:bg-muted/50" : undefined
+                  }
+                  onClick={
+                    isClickable ? () => onRowClick(row.original) : undefined
+                  }
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -210,13 +222,13 @@ export function PrefabDataTable({
                   length: pageSize - table.getRowModel().rows.length,
                 }).map((_, i) => (
                   <TableRow key={`pad-${i}`} className="border-transparent">
-                    <TableCell colSpan={columns.length}>&nbsp;</TableCell>
+                    <TableCell colSpan={colCount}>&nbsp;</TableCell>
                   </TableRow>
                 ))}
             </>
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={colCount} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>
