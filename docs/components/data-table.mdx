@@ -208,48 +208,51 @@ DataTable(
 
 ## Row Selection
 
-Enable `selectable` to add checkboxes for multi-row selection. Rows accumulate selection state locally — no action fires per selection. Use this for bulk operations where you want the user to pick a set of rows before acting.
+Add checkboxes for multi-row selection with `selectable=True`. The header checkbox toggles select-all. Selection is client-side state — no action fires per checkbox, so users can build up a selection before acting on it with a button or other control.
 
 <ComponentPreview>
-```python
-from prefab_ui.components import DataTable, DataTableColumn
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn, Badge
 
 DataTable(
     columns=[
-        DataTableColumn(key="name", header="Name"),
-        DataTableColumn(key="role", header="Role"),
+        DataTableColumn(key="name", header="Employee", sortable=True),
+        DataTableColumn(key="department", header="Department"),
         DataTableColumn(key="status", header="Status"),
     ],
     rows=[
-        {"name": "Alice Johnson", "role": "Admin", "status": "Active"},
-        {"name": "Bob Smith", "role": "Editor", "status": "Active"},
-        {"name": "Carol White", "role": "Viewer", "status": "Inactive"},
+        {"name": "Alice Johnson", "department": "Engineering", "status": Badge("Active", variant="success")},
+        {"name": "Bob Smith", "department": "Marketing", "status": Badge("Active", variant="success")},
+        {"name": "Carol White", "department": "Engineering", "status": Badge("On Leave", variant="warning")},
+        {"name": "Dan Lee", "department": "Sales", "status": Badge("Active", variant="success")},
     ],
     selectable=True,
+    filter=True,
 )
 ```
 </ComponentPreview>
 
 ## Row Click
 
-Use `on_row_click` to make rows clickable. Clicking any row fires the action with the row's data dict available as `$event`. Use this for navigation or detail views where each row leads somewhere.
+Make rows clickable with `on_row_click`. Clicking fires the action with the row's data as `$event` — use it for navigation, detail panels, or updating other components on the page.
 
 <ComponentPreview>
-```python
+```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
-from prefab_ui.actions import ShowToast
+from prefab_ui.actions.ui import ShowToast
 
 DataTable(
     columns=[
-        DataTableColumn(key="name", header="Name"),
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
         DataTableColumn(key="role", header="Role"),
     ],
     rows=[
-        {"name": "Alice Johnson", "role": "Admin"},
-        {"name": "Bob Smith", "role": "Editor"},
-        {"name": "Carol White", "role": "Viewer"},
+        {"name": "Alice Johnson", "email": "alice@example.com", "role": "Admin"},
+        {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
+        {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"},
     ],
-    on_row_click=ShowToast("Selected: {{ $event.name }}"),
+    on_row_click=ShowToast("{{ $event.name }} ({{ $event.email }})"),
 )
 ```
 </ComponentPreview>
