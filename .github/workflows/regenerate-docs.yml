@@ -1,0 +1,38 @@
+name: Regenerate docs
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate_docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup uv
+        uses: ./.github/actions/setup-uv
+        with:
+          resolution: locked
+
+      - name: Install renderer dependencies
+        run: cd renderer && npm ci
+
+      - name: Regenerate docs
+        run: uv run prefab dev build-docs
+
+      - name: Commit regenerated docs
+        run: |
+          git diff --quiet docs/ && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "Regenerate docs"
+          git push
