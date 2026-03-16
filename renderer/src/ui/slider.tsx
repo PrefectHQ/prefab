@@ -92,7 +92,7 @@ function Slider({
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
-            className={cn(sliderRangeVariants({ variant }), indicatorClassName)}
+            className={cn(sliderRangeVariants({}), indicatorClassName)}
           />
         </SliderPrimitive.Track>
         {Array.from({ length: _values.length }, (_, index) => (
