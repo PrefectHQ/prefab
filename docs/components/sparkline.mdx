@@ -228,9 +228,9 @@ with Row(css_class="gap-6"):
 </CodeGroup>
 </ComponentPreview>
 
-## Step Curve
+## Curve Interpolation
 
-Set `curve="step"` to connect points with discrete jumps instead of straight lines.
+The `curve` prop controls how points are connected. `"smooth"` uses catmull-rom splines for natural flowing lines, `"step"` creates discrete jumps.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"linear","strokeWidth":1.5},{"content":"linear","type":"Text"}]},{"cssClass":"items-center gap-3","type":"Row","children":[{"cssClass":"w-24","type":"Sparkline","data":[10,15,8,22,18,25,20,16,24,12],"fill":false,"curve":"step","strokeWidth":1.5},{"content":"step","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUm93LCBUZXh0LCBDb2x1bW4KZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFNwYXJrbGluZQoKZGF0YSA9IFsxMCwgMTUsIDgsIDIyLCAxOCwgMjUsIDIwLCAxNiwgMjQsIDEyXQoKd2l0aCBDb2x1bW4oZ2FwPTMsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTMiKToKICAgICAgICBTcGFya2xpbmUoZGF0YT1kYXRhLCBjc3NfY2xhc3M9InctMjQiKQogICAgICAgIFRleHQoImxpbmVhciIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMyIpOgogICAgICAgIFNwYXJrbGluZShkYXRhPWRhdGEsIGN1cnZlPSJzdGVwIiwgY3NzX2NsYXNzPSJ3LTI0IikKICAgICAgICBUZXh0KCJzdGVwIikK">
 <CodeGroup>
@@ -244,6 +244,9 @@ with Column(gap=3, css_class="w-fit mx-auto"):
     with Row(css_class="items-center gap-3"):
         Sparkline(data=data, css_class="w-24")
         Text("linear")
+    with Row(css_class="items-center gap-3"):
+        Sparkline(data=data, curve="smooth", css_class="w-24")
+        Text("smooth")
     with Row(css_class="items-center gap-3"):
         Sparkline(data=data, curve="step", css_class="w-24")
         Text("step")
@@ -596,7 +599,7 @@ with Table():
   Show a gradient area fill under the line.
 </ParamField>
 
-<ParamField body="curve" type='Literal["linear", "step"]' default='"linear"'>
+<ParamField body="curve" type='Literal["linear", "smooth", "step"]' default='"linear"'>
   Line interpolation style between data points.
 </ParamField>
 
@@ -623,7 +626,7 @@ with Table():
   "variant?": "default | success | warning | destructive | info | muted",
   "indicatorClass?": "string",
   "fill?": false,
-  "curve?": "linear | step",
+  "curve?": "linear | smooth | step",
   "strokeWidth?": 1.5,
   "mode?": "line | bar",
   "cssClass?": "string"
