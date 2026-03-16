@@ -78,7 +78,7 @@ with Column(gap=2, let={"greeting": "Don't Panic", "name": "Arthur"}):
 
 The first `Text` renders "Don't Panic, Arthur". The second renders "Don't Panic, Ford" — the inner `let` **shadows** `name` with a new value, but `greeting` is inherited from the outer scope unchanged. This is the same scoping model you'd find in nested function calls or block scoping in most programming languages.
 
-The rule of thumb: use `set_initial_state()` for anything the user can change (form inputs, toggles, lists that get edited). Use `let` for fixed data you're passing into a section — labels, configuration, computed values that don't change at runtime. `let` bindings are read-only; user interactions cannot modify them.
+The rule of thumb: use `set_initial_state()` for anything the user can change (form inputs, toggles, lists that get edited). Use `let` for fixed data you're passing into a section: labels, configuration, static values that don't change at runtime. `let` bindings are read-only; user interactions cannot modify them.
 
 ### Capturing Loop Variables
 
