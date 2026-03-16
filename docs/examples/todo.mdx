@@ -336,11 +336,11 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
 
 ## How It Works
 
-The state is an array of groups, each containing a `name`, a `todos` array, and a `new_todo` input buffer. [ForEach](/components/for-each) iterates the groups, and a nested ForEach iterates each group's todos.
+The state is an array of groups, each containing a `name`, a `todos` array, and a `new_todo` input buffer. [ForEach](/components/foreach) iterates the groups, and a nested ForEach iterates each group's todos.
 
 **Nested loops** — `with ForEach("groups") as (gi, group)` destructures the loop binding into an index (`gi`) and item (`group`), matching Python's `enumerate` convention. Each ForEach automatically captures `$item` and `$index` into scoped `let` bindings, so the outer loop's `group` and `gi` survive even after the inner loop shadows `$item` and `$index`. The inner `ForEach(f"groups.{gi}.todos") as (ti, todo)` uses `gi` to target the right group and `ti` to target individual todos.
 
-**Inline editing** — instead of showing todo text as a `Text` component, each item uses a borderless `Input` styled with `border-0 shadow-none p-0` so it looks like plain text but is directly editable. [Dot-path auto-binding](/actions/set-state#dot-paths) handles the read and write — the input's `name` points at the exact item in state (`f"groups.{gi}.todos.{ti}.text"`).
+**Inline editing** — instead of showing todo text as a `Text` component, each item uses a borderless `Input` styled with `border-0 shadow-none p-0` so it looks like plain text but is directly editable. [Dot-path auto-binding](/actions/update-state#dot-paths) handles the read and write — the input's `name` points at the exact item in state (`f"groups.{gi}.todos.{ti}.text"`).
 
 **Disabling the Add button** — `disabled=~group.new_todo` evaluates to true when the input is empty, so the button stays disabled until you type something. `group` is the outer ForEach's item, so `group.new_todo` accesses the group's input buffer.
 
