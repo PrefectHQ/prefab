@@ -25,11 +25,11 @@ Progress(value=60)
 </CodeGroup>
 </ComponentPreview>
 
-## Custom Max
+## Range
 
-By default `max` is 100, but you can set it to any positive number. The renderer normalizes the value to a percentage automatically.
+By default `max` is 100 and `min` is 0, but you can set either to define a custom range. The renderer normalizes the value to a percentage automatically. Set `max` for step-style counting, or use both `min` and `max` when the range doesn't start at zero.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"min":0,"max":5.0,"variant":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"75%"},{"type":"Progress","value":75.0,"min":0,"max":100,"variant":"default"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiMyBvZiA1IHN0ZXBzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0zLCBtYXg9NSkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiNzUlIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT03NSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"min":0,"max":5.0,"variant":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature: 72\u00b0F (range 60\u2013100)"},{"type":"Progress","value":72.0,"min":60.0,"max":100.0,"variant":"warning"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiMyBvZiA1IHN0ZXBzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0zLCBtYXg9NSkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVGVtcGVyYXR1cmU6IDcyXHUwMGIwRiAocmFuZ2UgNjBcdTIwMTMxMDApIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT03MiwgbWluPTYwLCBtYXg9MTAwLCB2YXJpYW50PSJ3YXJuaW5nIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -39,8 +39,8 @@ with Column(gap=4):
         Label("3 of 5 steps")
         Progress(value=3, max=5)
     with Column(gap=2):
-        Label("75%")
-        Progress(value=75)
+        Label("Temperature: 72\u00b0F (range 60\u2013100)")
+        Progress(value=72, min=60, max=100, variant="warning")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -60,8 +60,14 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "75%"},
-          {"type": "Progress", "value": 75.0, "min": 0, "max": 100, "variant": "default"}
+          {"type": "Label", "text": "Temperature: 72\u00b0F (range 60\u2013100)"},
+          {
+            "type": "Progress",
+            "value": 72.0,
+            "min": 60.0,
+            "max": 100.0,
+            "variant": "warning"
+          }
         ]
       }
     ]
@@ -167,58 +173,6 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-## Min and Max
-
-Set `min` and `max` to define a custom range. The renderer normalizes the value to a percentage automatically.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature: 72\u00b0F (range 60\u2013100)"},{"type":"Progress","value":72.0,"min":60.0,"max":100.0,"variant":"warning"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"min":0,"max":5.0,"variant":"info"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVGVtcGVyYXR1cmU6IDcywrBGIChyYW5nZSA2MOKAkzEwMCkiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTcyLCBtaW49NjAsIG1heD0xMDAsIHZhcmlhbnQ9Indhcm5pbmciKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCIzIG9mIDUgc3RlcHMiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTMsIG1heD01LCB2YXJpYW50PSJpbmZvIikK">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Column, Label, Progress
-
-with Column(gap=4):
-    with Column(gap=2):
-        Label("Temperature: 72°F (range 60–100)")
-        Progress(value=72, min=60, max=100, variant="warning")
-    with Column(gap=2):
-        Label("3 of 5 steps")
-        Progress(value=3, max=5, variant="info")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "cssClass": "gap-2",
-        "type": "Column",
-        "children": [
-          {"type": "Label", "text": "Temperature: 72\u00b0F (range 60\u2013100)"},
-          {
-            "type": "Progress",
-            "value": 72.0,
-            "min": 60.0,
-            "max": 100.0,
-            "variant": "warning"
-          }
-        ]
-      },
-      {
-        "cssClass": "gap-2",
-        "type": "Column",
-        "children": [
-          {"type": "Label", "text": "3 of 5 steps"},
-          {"type": "Progress", "value": 3.0, "min": 0, "max": 5.0, "variant": "info"}
-        ]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
 ## Custom Colors
 
 Use `indicator_class` for arbitrary colors beyond the built-in variants:
@@ -297,9 +251,49 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
+## Target Marker
+
+The `target` prop renders a vertical line on the bar at a given position, letting you compare actual progress against a goal. Use `target_class` to style the marker line.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Actual: 4,147 / Target: 6,006"},{"type":"Progress","value":69.0,"min":0,"max":100,"variant":"default","target":100.0,"indicatorClass":"bg-indigo-400"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIExhYmVsKCJBY3R1YWw6IDQsMTQ3IC8gVGFyZ2V0OiA2LDAwNiIpCiAgICBQcm9ncmVzcygKICAgICAgICB2YWx1ZT02OSwKICAgICAgICB0YXJnZXQ9MTAwLAogICAgICAgIGluZGljYXRvcl9jbGFzcz0iYmctaW5kaWdvLTQwMCIsCiAgICApCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Label, Progress
+
+with Column(gap=2):
+    Label("Actual: 4,147 / Target: 6,006")
+    Progress(
+        value=69,
+        target=100,
+        indicator_class="bg-indigo-400",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Actual: 4,147 / Target: 6,006"},
+      {
+        "type": "Progress",
+        "value": 69.0,
+        "min": 0,
+        "max": 100,
+        "variant": "default",
+        "target": 100.0,
+        "indicatorClass": "bg-indigo-400"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## Vertical Orientation
 
-Set `orientation="vertical"` for vertical progress bars. The default height is set by the theme — wrap in a sized container for custom heights:
+Set `orientation="vertical"` for vertical progress bars. The default height is set by the theme \u2014 wrap in a sized container for custom heights:
 
 <ComponentPreview json={{"view":{"cssClass":"gap-8 h-48 items-end justify-center","type":"Row","children":[{"type":"Progress","value":75.0,"min":0,"max":100,"variant":"default","orientation":"vertical"},{"type":"Progress","value":50.0,"min":0,"max":100,"variant":"success","orientation":"vertical"},{"type":"Progress","value":25.0,"min":0,"max":100,"variant":"info","orientation":"vertical"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUHJvZ3Jlc3MsIFJvdwoKd2l0aCBSb3coY3NzX2NsYXNzPSJnYXAtOCBoLTQ4IGl0ZW1zLWVuZCBqdXN0aWZ5LWNlbnRlciIpOgogICAgUHJvZ3Jlc3ModmFsdWU9NzUsIG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIpCiAgICBQcm9ncmVzcyh2YWx1ZT01MCwgdmFyaWFudD0ic3VjY2VzcyIsIG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIpCiAgICBQcm9ncmVzcyh2YWx1ZT0yNSwgdmFyaWFudD0iaW5mbyIsIG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIpCg">
 <CodeGroup>
@@ -413,7 +407,7 @@ with Column(gap=3):
 </ParamField>
 
 <ParamField body="min" type="float" default="0">
-  Minimum value. The renderer normalizes `(value - min) / (max - min)` to a 0–100 percentage.
+  Minimum value. The renderer normalizes `(value - min) / (max - min)` to a 0\u2013100 percentage.
 </ParamField>
 
 <ParamField body="max" type="float" default="100">
@@ -424,8 +418,16 @@ with Column(gap=3):
   Visual variant: `"default"`, `"success"`, `"warning"`, `"destructive"`, `"info"`, `"muted"`.
 </ParamField>
 
+<ParamField body="target" type="float | str | None" default="None">
+  Target marker position on the bar. Renders a vertical line at this value within the min/max range. Can be a template expression for dynamic binding.
+</ParamField>
+
 <ParamField body="indicator_class" type="str | None" default="None">
   Tailwind classes for the indicator fill bar. Overrides variant coloring.
+</ParamField>
+
+<ParamField body="target_class" type="str | None" default="None">
+  Tailwind classes for the target marker line.
 </ParamField>
 
 <ParamField body="orientation" type="str" default="horizontal">
@@ -446,7 +448,9 @@ with Column(gap=3):
   "min?": 0,
   "max?": 100,
   "variant?": "default | success | warning | destructive | info | muted",
+  "target?": "number | string",
   "indicatorClass?": "string",
+  "targetClass?": "string",
   "orientation?": "horizontal | vertical",
   "cssClass?": "string"
 }

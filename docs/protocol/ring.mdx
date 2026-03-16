@@ -110,6 +110,21 @@ A circular progress indicator with an optional centered label.
       "description": "Stroke width of the ring in pixels",
       "type": "number"
     },
+    "target": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Target marker position (renders a tick mark on the ring at this value)"
+    },
     "indicatorClass": {
       "type": [
         "string",
@@ -117,6 +132,14 @@ A circular progress indicator with an optional centered label.
       ],
       "default": null,
       "description": "Tailwind classes for the filled arc (e.g. 'hover:drop-shadow-lg')"
+    },
+    "targetClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Tailwind classes for the target marker"
     }
   },
   "required": [

@@ -772,6 +772,36 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Dot\n\nDot(variant=\"success\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Dot, Row, Text\n\nwith Row(gap=6, css_class=\"items-center\"):\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot()\n        Text(\"Default\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"secondary\")\n        Text(\"Secondary\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"success\")\n        Text(\"Success\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"warning\")\n        Text(\"Warning\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"destructive\")\n        Text(\"Destructive\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"info\")\n        Text(\"Info\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"muted\")\n        Text(\"Muted\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Dot, Row, Text\n\nwith Row(gap=6, css_class=\"items-center\"):\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"info\")\n        Text(\"Circle\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"info\", shape=\"square\")\n        Text(\"Square\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"info\", shape=\"rounded\")\n        Text(\"Rounded\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Dot, Row, Text\n\nwith Row(gap=6, css_class=\"items-center\"):\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"success\", size=\"sm\")\n        Text(\"Small\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"success\")\n        Text(\"Default\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(variant=\"success\", size=\"lg\")\n        Text(\"Large\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Dot, Row, Text\n\nwith Row(gap=6, css_class=\"items-center\"):\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(css_class=\"bg-[var(--chart-1)]\")\n        Text(\"Sector ZZ9\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(css_class=\"bg-[var(--chart-2)]\")\n        Text(\"Sector ZZ Alpha\")\n    with Row(gap=2, css_class=\"items-center\"):\n        Dot(css_class=\"bg-[var(--chart-3)]\")\n        Text(\"Western Spiral Arm\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Card, CardContent, Column, Dot, Row, Text\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            with Row(gap=2, css_class=\"items-center\"):\n                Dot(variant=\"success\")\n                Text(\"Heart of Gold — Operational\")\n            with Row(gap=2, css_class=\"items-center\"):\n                Dot(variant=\"warning\")\n                Text(\"Bistromath — Maintenance\")\n            with Row(gap=2, css_class=\"items-center\"):\n                Dot(variant=\"destructive\")\n                Text(\"Starship Titanic — Crashed\")\n            with Row(gap=2, css_class=\"items-center\"):\n                Dot(variant=\"muted\")\n                Text(\"Krikkit One — Decommissioned\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import DropZone\n\nDropZone()"
   },
   {
@@ -1242,7 +1272,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"3 of 5 steps\")\n        Progress(value=3, max=5)\n    with Column(gap=2):\n        Label(\"75%\")\n        Progress(value=75)"
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"3 of 5 steps\")\n        Progress(value=3, max=5)\n    with Column(gap=2):\n        Label(\"Temperature: 72\\u00b0F (range 60\\u2013100)\")\n        Progress(value=72, min=60, max=100, variant=\"warning\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1252,12 +1282,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Temperature: 72°F (range 60–100)\")\n        Progress(value=72, min=60, max=100, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"3 of 5 steps\")\n        Progress(value=3, max=5, variant=\"info\")"
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Progress(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Progress(value=45, indicator_class=\"bg-blue-500\")\n    with Column(gap=2):\n        Label(\"Tasks Complete\")\n        Progress(value=100, indicator_class=\"bg-green-500\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Progress(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Progress(value=45, indicator_class=\"bg-blue-500\")\n    with Column(gap=2):\n        Label(\"Tasks Complete\")\n        Progress(value=100, indicator_class=\"bg-green-500\")"
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=2):\n    Label(\"Actual: 4,147 / Target: 6,006\")\n    Progress(\n        value=69,\n        target=100,\n        indicator_class=\"bg-indigo-400\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1775,21 +1805,6 @@
     "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://example.com/presentation.mp4\",\n    poster=\"https://example.com/thumbnail.jpg\",\n    width=\"640px\",\n)"
   },
   {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Slider, Text, Watch\n\nwith Column(gap=3):\n    Slider(name=\"brightness\", label=\"Brightness\", min=0, max=100)\n    Watch(\"brightness\", on_change=SetState(\"brightness_pct\", \"{{ brightness / 100 }}\"))\n    Text(\"Brightness: {{ brightness_pct | percent }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Row, Slider, Text, Watch\n\nstate = set_initial_state(width=50, height=30, area=1500)\n\nwith Column(gap=3):\n    Slider(name=\"width\", label=\"Width\", min=1, max=100)\n    Slider(name=\"height\", label=\"Height\", min=1, max=100)\n    Watch(\"width\", on_change=SetState(\"area\", \"{{ width * height }}\"))\n    Watch(\"height\", on_change=SetState(\"area\", \"{{ width * height }}\"))\n    Text(\"Area: {{ area }} sq units\")"
-  },
-  {
-    "title": "Watch(\"width\", on_change=SetState(\"area\", \"{{ width * height }}\"))",
-    "category": "Components",
-    "code": "Watch(\"height\", on_change=SetState(\"area\", \"{{ width * height }}\"))\nWatch(\"area\", on_change=SetState(\"status\", \"{{ area > 5000 ? 'Too large' : 'OK' }}\"))"
-  },
-  {
     "title": "from prefab_ui.actions import SetState",
     "category": "Concepts",
     "code": "from prefab_ui.actions.mcp import CallTool\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(on_change=CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}))"
@@ -1967,7 +1982,7 @@
   {
     "title": "from prefab_ui.rx import Rx",
     "category": "Concepts",
-    "code": "revenue = Rx(\"revenue\")   # state value: 2847500\n\nrevenue.currency()         # {{ revenue | currency }}       → $2,847,500.00\nrevenue.currency(\"EUR\")    # {{ revenue | currency:EUR }}   → €2,847,500.00\nrevenue.number()           # {{ revenue | number }}         → 2,847,500\nrevenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0\nrevenue.percent()          # {{ revenue | percent }}        → 284,750,000%\nrevenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%\nrevenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00\nrevenue.abs()              # {{ revenue | abs }}            → absolute value"
+    "code": "revenue = Rx(\"revenue\")   # state value: 2847500\n\nrevenue.currency()         # {{ revenue | currency }}       → $2,847,500.00\nrevenue.currency(\"EUR\")    # {{ revenue | currency:EUR }}   → €2,847,500.00\nrevenue.number()           # {{ revenue | number }}         → 2,847,500\nrevenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0\nrevenue.percent()          # {{ revenue | percent }}        → 284,750,000%\nrevenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%\nrevenue.compact()          # {{ revenue | compact }}        → 2.8M\nrevenue.compact(0)         # {{ revenue | compact:0 }}      → 3M\nrevenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00\nrevenue.abs()              # {{ revenue | abs }}            → absolute value"
   },
   {
     "title": "starts = Rx(\"starts\")      # state value: \"2025-03-15T09:30:00Z\"",
@@ -2018,26 +2033,6 @@
     "title": "Python icon=\"python\"",
     "category": "Concepts",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input, Label,\n)\n\nset_initial_state(\n    profile={\n        \"name\": \"Arthur Dent\",\n        \"title\": \"Sandwich Maker, Lamuella\",\n    },\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field():\n        Label(\"Name\")\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field():\n        Label(\"Title\")\n        Input(name=\"profile.title\", placeholder=\"Title\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Slider, Text\nfrom prefab_ui.rx import Computed\n\nstate = set_initial_state(\n    price=100,\n    quantity=2,\n    subtotal=Computed(\"{{ price * quantity }}\"),\n    tax=Computed(\"{{ subtotal * 0.08 }}\"),\n    total=Computed(\"{{ subtotal + tax }}\"),\n)\n\nwith Column(gap=3):\n    Slider(name=\"price\", label=\"Price\", min=0, max=500)\n    Slider(name=\"quantity\", label=\"Quantity\", min=1, max=20)\n    Text(f\"Subtotal: {state.subtotal.currency()} · Tax: {state.tax.currency()} · Total: {state.total.currency()}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Slider, Text\nfrom prefab_ui.rx import Computed\n\nstate = set_initial_state(\n    a=25, b=25, c=25, d=25,\n    total=Computed(\"{{ a + b + c + d }}\"),\n)\n\nwith Column(gap=3):\n    Slider(name=\"a\", label=\"A\", min=0, max=100)\n    Slider(name=\"b\", label=\"B\", min=0, max=100)\n    Slider(name=\"c\", label=\"C\", min=0, max=100)\n    Slider(name=\"d\", label=\"D\", min=0, max=100)\n    Text(f\"A: {(state.a / state.total * 100).round(1)}% · B: {(state.b / state.total * 100).round(1)}% · C: {(state.c / state.total * 100).round(1)}% · D: {(state.d / state.total * 100).round(1)}%\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Slider, Text, Watch\n\nwith Column():\n    Slider(name=\"brightness\", min=0, max=100)\n    Watch(\"brightness\", on_change=SetState(\"brightness_pct\", \"{{ brightness / 100 }}\"))\n    Text(\"{{ brightness_pct | percent }}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.actions import SetState, ShowToast\nfrom prefab_ui.components import Column, Slider, Watch\n\nwith Column():\n    Slider(name=\"slider_a\", min=0, max=100, value=50)\n    Slider(name=\"slider_b\", min=0, max=100, value=50)\n    Watch(\"slider_a\", on_change=SetState(\"total\", \"{{ slider_a + slider_b }}\"))\n    Watch(\"slider_b\", on_change=SetState(\"total\", \"{{ slider_a + slider_b }}\"))\n    Watch(\"total\", on_change=ShowToast(\"Total updated: {{ total }}\"))"
   },
   {
     "title": "Python icon=\"python\" expandable",

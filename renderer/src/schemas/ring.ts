@@ -13,7 +13,9 @@ export const ringSchema = containerBase.extend({
     .optional(),
   size: z.enum(["sm", "default", "lg"]).optional(),
   thickness: z.number().optional(),
+  target: z.union([z.number(), z.string()]).optional(),
   indicatorClass: z.string().optional(),
+  targetClass: z.string().optional(),
 });
 
 export type RingWire = z.infer<typeof ringSchema>;

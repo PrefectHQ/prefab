@@ -385,6 +385,18 @@ describe("evaluate", () => {
       expect(evaluate("val | number:2", { val: 1234 })).toBe("1,234.00");
     });
 
+    it("compact", () => {
+      expect(evaluate("val | compact", { val: 1800000 })).toBe("1.8M");
+    });
+
+    it("compact with decimals", () => {
+      expect(evaluate("val | compact:0", { val: 1800000 })).toBe("2M");
+    });
+
+    it("compact small number", () => {
+      expect(evaluate("val | compact", { val: 42 })).toBe("42");
+    });
+
     it("currency default USD", () => {
       expect(evaluate("val | currency", { val: 1234 })).toBe("$1,234.00");
     });

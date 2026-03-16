@@ -1,0 +1,430 @@
+---
+title: Dot
+description: Colored indicator dot for status, categories, and legends.
+icon: circle
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A small filled shape used as a visual marker next to text in tables, legends, and labels. Dot is the smallest possible visual encoding of "this item has a color" — useful anywhere a Badge would be too heavy.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"Dot","variant":"success","size":"default","shape":"circle"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRG90CgpEb3QodmFyaWFudD0ic3VjY2VzcyIpCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Dot
+
+Dot(variant="success")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {"type": "Dot", "variant": "success", "size": "default", "shape": "circle"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Variants
+
+Seven semantic variants map to the same color palette used by Badge and other status-aware components.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"default","size":"default","shape":"circle"},{"content":"Default","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"secondary","size":"default","shape":"circle"},{"content":"Secondary","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"success","size":"default","shape":"circle"},{"content":"Success","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"warning","size":"default","shape":"circle"},{"content":"Warning","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"destructive","size":"default","shape":"circle"},{"content":"Destructive","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"info","size":"default","shape":"circle"},{"content":"Info","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"muted","size":"default","shape":"circle"},{"content":"Muted","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRG90LCBSb3csIFRleHQKCndpdGggUm93KGdhcD02LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KCkKICAgICAgICBUZXh0KCJEZWZhdWx0IikKICAgIHdpdGggUm93KGdhcD0yLCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgICAgIERvdCh2YXJpYW50PSJzZWNvbmRhcnkiKQogICAgICAgIFRleHQoIlNlY29uZGFyeSIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QodmFyaWFudD0ic3VjY2VzcyIpCiAgICAgICAgVGV4dCgiU3VjY2VzcyIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QodmFyaWFudD0id2FybmluZyIpCiAgICAgICAgVGV4dCgiV2FybmluZyIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QodmFyaWFudD0iZGVzdHJ1Y3RpdmUiKQogICAgICAgIFRleHQoIkRlc3RydWN0aXZlIikKICAgIHdpdGggUm93KGdhcD0yLCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgICAgIERvdCh2YXJpYW50PSJpbmZvIikKICAgICAgICBUZXh0KCJJbmZvIikKICAgIHdpdGggUm93KGdhcD0yLCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgICAgIERvdCh2YXJpYW50PSJtdXRlZCIpCiAgICAgICAgVGV4dCgiTXV0ZWQiKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Dot, Row, Text
+
+with Row(gap=6, css_class="items-center"):
+    with Row(gap=2, css_class="items-center"):
+        Dot()
+        Text("Default")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="secondary")
+        Text("Secondary")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="success")
+        Text("Success")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="warning")
+        Text("Warning")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="destructive")
+        Text("Destructive")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="info")
+        Text("Info")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="muted")
+        Text("Muted")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "default", "size": "default", "shape": "circle"},
+          {"content": "Default", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "secondary", "size": "default", "shape": "circle"},
+          {"content": "Secondary", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "success", "size": "default", "shape": "circle"},
+          {"content": "Success", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "warning", "size": "default", "shape": "circle"},
+          {"content": "Warning", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "destructive", "size": "default", "shape": "circle"},
+          {"content": "Destructive", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "info", "size": "default", "shape": "circle"},
+          {"content": "Info", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "muted", "size": "default", "shape": "circle"},
+          {"content": "Muted", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Shapes
+
+Dots come in three shapes. Circle is the default, square gives a hard-edged block, and rounded splits the difference.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"info","size":"default","shape":"circle"},{"content":"Circle","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"info","size":"default","shape":"square"},{"content":"Square","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"info","size":"default","shape":"rounded"},{"content":"Rounded","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRG90LCBSb3csIFRleHQKCndpdGggUm93KGdhcD02LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KHZhcmlhbnQ9ImluZm8iKQogICAgICAgIFRleHQoIkNpcmNsZSIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QodmFyaWFudD0iaW5mbyIsIHNoYXBlPSJzcXVhcmUiKQogICAgICAgIFRleHQoIlNxdWFyZSIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QodmFyaWFudD0iaW5mbyIsIHNoYXBlPSJyb3VuZGVkIikKICAgICAgICBUZXh0KCJSb3VuZGVkIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Dot, Row, Text
+
+with Row(gap=6, css_class="items-center"):
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="info")
+        Text("Circle")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="info", shape="square")
+        Text("Square")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="info", shape="rounded")
+        Text("Rounded")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "info", "size": "default", "shape": "circle"},
+          {"content": "Circle", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "info", "size": "default", "shape": "square"},
+          {"content": "Square", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "info", "size": "default", "shape": "rounded"},
+          {"content": "Rounded", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Sizes
+
+Three sizes let you match the Dot's visual weight to surrounding content.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"success","size":"sm","shape":"circle"},{"content":"Small","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"success","size":"default","shape":"circle"},{"content":"Default","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"success","size":"lg","shape":"circle"},{"content":"Large","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRG90LCBSb3csIFRleHQKCndpdGggUm93KGdhcD02LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KHZhcmlhbnQ9InN1Y2Nlc3MiLCBzaXplPSJzbSIpCiAgICAgICAgVGV4dCgiU21hbGwiKQogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KHZhcmlhbnQ9InN1Y2Nlc3MiKQogICAgICAgIFRleHQoIkRlZmF1bHQiKQogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KHZhcmlhbnQ9InN1Y2Nlc3MiLCBzaXplPSJsZyIpCiAgICAgICAgVGV4dCgiTGFyZ2UiKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Dot, Row, Text
+
+with Row(gap=6, css_class="items-center"):
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="success", size="sm")
+        Text("Small")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="success")
+        Text("Default")
+    with Row(gap=2, css_class="items-center"):
+        Dot(variant="success", size="lg")
+        Text("Large")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "success", "size": "sm", "shape": "circle"},
+          {"content": "Small", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "success", "size": "default", "shape": "circle"},
+          {"content": "Default", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {"type": "Dot", "variant": "success", "size": "lg", "shape": "circle"},
+          {"content": "Large", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Colors
+
+When the semantic variants don't fit — chart legends, category palettes — use `css_class` with any background color.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"bg-[var(--chart-1)]","type":"Dot","variant":"default","size":"default","shape":"circle"},{"content":"Sector ZZ9","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"bg-[var(--chart-2)]","type":"Dot","variant":"default","size":"default","shape":"circle"},{"content":"Sector ZZ Alpha","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"bg-[var(--chart-3)]","type":"Dot","variant":"default","size":"default","shape":"circle"},{"content":"Western Spiral Arm","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRG90LCBSb3csIFRleHQKCndpdGggUm93KGdhcD02LCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KGNzc19jbGFzcz0iYmctW3ZhcigtLWNoYXJ0LTEpXSIpCiAgICAgICAgVGV4dCgiU2VjdG9yIFpaOSIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICBEb3QoY3NzX2NsYXNzPSJiZy1bdmFyKC0tY2hhcnQtMildIikKICAgICAgICBUZXh0KCJTZWN0b3IgWlogQWxwaGEiKQogICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgRG90KGNzc19jbGFzcz0iYmctW3ZhcigtLWNoYXJ0LTMpXSIpCiAgICAgICAgVGV4dCgiV2VzdGVybiBTcGlyYWwgQXJtIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Dot, Row, Text
+
+with Row(gap=6, css_class="items-center"):
+    with Row(gap=2, css_class="items-center"):
+        Dot(css_class="bg-[var(--chart-1)]")
+        Text("Sector ZZ9")
+    with Row(gap=2, css_class="items-center"):
+        Dot(css_class="bg-[var(--chart-2)]")
+        Text("Sector ZZ Alpha")
+    with Row(gap=2, css_class="items-center"):
+        Dot(css_class="bg-[var(--chart-3)]")
+        Text("Western Spiral Arm")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6 items-center",
+    "type": "Row",
+    "children": [
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "bg-[var(--chart-1)]",
+            "type": "Dot",
+            "variant": "default",
+            "size": "default",
+            "shape": "circle"
+          },
+          {"content": "Sector ZZ9", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "bg-[var(--chart-2)]",
+            "type": "Dot",
+            "variant": "default",
+            "size": "default",
+            "shape": "circle"
+          },
+          {"content": "Sector ZZ Alpha", "type": "Text"}
+        ]
+      },
+      {
+        "cssClass": "gap-2 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "cssClass": "bg-[var(--chart-3)]",
+            "type": "Dot",
+            "variant": "default",
+            "size": "default",
+            "shape": "circle"
+          },
+          {"content": "Western Spiral Arm", "type": "Text"}
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## With Text
+
+The most common pattern: a Dot paired with a label inside a Row. This works in table cells, card content, legend entries, and anywhere else you need a compact status indicator.
+
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"success","size":"default","shape":"circle"},{"content":"Heart of Gold \u2014 Operational","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"warning","size":"default","shape":"circle"},{"content":"Bistromath \u2014 Maintenance","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"destructive","size":"default","shape":"circle"},{"content":"Starship Titanic \u2014 Crashed","type":"Text"}]},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Dot","variant":"muted","size":"default","shape":"circle"},{"content":"Krikkit One \u2014 Decommissioned","type":"Text"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FyZCwgQ2FyZENvbnRlbnQsIENvbHVtbiwgRG90LCBSb3csIFRleHQKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgICAgICAgICBEb3QodmFyaWFudD0ic3VjY2VzcyIpCiAgICAgICAgICAgICAgICBUZXh0KCJIZWFydCBvZiBHb2xkIOKAlCBPcGVyYXRpb25hbCIpCiAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgICAgICAgICAgICAgRG90KHZhcmlhbnQ9Indhcm5pbmciKQogICAgICAgICAgICAgICAgVGV4dCgiQmlzdHJvbWF0aCDigJQgTWFpbnRlbmFuY2UiKQogICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgICAgICAgICAgICAgIERvdCh2YXJpYW50PSJkZXN0cnVjdGl2ZSIpCiAgICAgICAgICAgICAgICBUZXh0KCJTdGFyc2hpcCBUaXRhbmljIOKAlCBDcmFzaGVkIikKICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICAgICAgICAgICAgICBEb3QodmFyaWFudD0ibXV0ZWQiKQogICAgICAgICAgICAgICAgVGV4dCgiS3Jpa2tpdCBPbmUg4oCUIERlY29tbWlzc2lvbmVkIikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Card, CardContent, Column, Dot, Row, Text
+
+with Card():
+    with CardContent():
+        with Column(gap=3):
+            with Row(gap=2, css_class="items-center"):
+                Dot(variant="success")
+                Text("Heart of Gold — Operational")
+            with Row(gap=2, css_class="items-center"):
+                Dot(variant="warning")
+                Text("Bistromath — Maintenance")
+            with Row(gap=2, css_class="items-center"):
+                Dot(variant="destructive")
+                Text("Starship Titanic — Crashed")
+            with Row(gap=2, css_class="items-center"):
+                Dot(variant="muted")
+                Text("Krikkit One — Decommissioned")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {"type": "Dot", "variant": "success", "size": "default", "shape": "circle"},
+                  {"content": "Heart of Gold \u2014 Operational", "type": "Text"}
+                ]
+              },
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {"type": "Dot", "variant": "warning", "size": "default", "shape": "circle"},
+                  {"content": "Bistromath \u2014 Maintenance", "type": "Text"}
+                ]
+              },
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {"type": "Dot", "variant": "destructive", "size": "default", "shape": "circle"},
+                  {"content": "Starship Titanic \u2014 Crashed", "type": "Text"}
+                ]
+              },
+              {
+                "cssClass": "gap-2 items-center",
+                "type": "Row",
+                "children": [
+                  {"type": "Dot", "variant": "muted", "size": "default", "shape": "circle"},
+                  {"content": "Krikkit One \u2014 Decommissioned", "type": "Text"}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Dot Parameters">
+<ParamField body="variant" type="str" default="default">
+  Semantic color: `"default"`, `"secondary"`, `"success"`, `"warning"`, `"destructive"`, `"info"`, `"muted"`.
+</ParamField>
+
+<ParamField body="size" type="str" default="default">
+  Dot size: `"sm"`, `"default"`, `"lg"`.
+</ParamField>
+
+<ParamField body="shape" type="str" default="circle">
+  Dot shape: `"circle"`, `"square"`, `"rounded"`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes. Use a `bg-*` class to override the variant color.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Dot
+{
+  "type": "Dot",
+  "variant?": "default | secondary | success | warning | destructive | info | muted",
+  "size?": "sm | default | lg",
+  "shape?": "circle | square | rounded",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Dot](/protocol/dot).

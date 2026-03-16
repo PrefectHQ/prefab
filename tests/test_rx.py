@@ -290,6 +290,12 @@ class TestPipes:
     def test_number_decimals(self) -> None:
         assert Rx("val").number(2).key == "val | number:2"
 
+    def test_compact(self) -> None:
+        assert Rx("revenue").compact().key == "revenue | compact"
+
+    def test_compact_decimals(self) -> None:
+        assert Rx("revenue").compact(0).key == "revenue | compact:0"
+
     def test_round(self) -> None:
         assert Rx("pi").round(2).key == "pi | round:2"
 

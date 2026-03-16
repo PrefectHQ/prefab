@@ -39,10 +39,19 @@ class Progress(Component):
         default="default",
         description="Visual variant: default, success, warning, destructive, info, muted",
     )
+    target: float | RxStr | None = Field(
+        default=None,
+        description="Target marker position (renders a vertical line at this value)",
+    )
     indicator_class: RxStr | None = Field(
         default=None,
         alias="indicatorClass",
         description="Tailwind classes for the indicator bar (e.g. 'bg-green-500')",
+    )
+    target_class: RxStr | None = Field(
+        default=None,
+        alias="targetClass",
+        description="Tailwind classes for the target marker line",
     )
     orientation: ProgressOrientation = Field(
         default="horizontal",

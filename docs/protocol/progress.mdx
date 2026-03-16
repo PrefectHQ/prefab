@@ -72,6 +72,21 @@ A progress bar showing completion status.
       "default": "default",
       "description": "Visual variant: default, success, warning, destructive, info, muted"
     },
+    "target": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Target marker position (renders a vertical line at this value)"
+    },
     "indicatorClass": {
       "type": [
         "string",
@@ -79,6 +94,14 @@ A progress bar showing completion status.
       ],
       "default": null,
       "description": "Tailwind classes for the indicator bar (e.g. 'bg-green-500')"
+    },
+    "targetClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Tailwind classes for the target marker line"
     },
     "orientation": {
       "default": "horizontal",

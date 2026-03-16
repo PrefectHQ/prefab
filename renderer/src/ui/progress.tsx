@@ -25,6 +25,8 @@ const progressVariants = cva(
 function Progress({
   className,
   indicatorClassName,
+  target,
+  targetClassName,
   variant,
   value,
   orientation = "horizontal",
@@ -32,9 +34,13 @@ function Progress({
 }: ProgressPrimitive.Root.Props &
   VariantProps<typeof progressVariants> & {
     indicatorClassName?: string;
+    target?: number;
+    targetClassName?: string;
     orientation?: "horizontal" | "vertical";
   }) {
   const isVertical = orientation === "vertical";
+  const clampedTarget =
+    target != null ? Math.max(0, Math.min(100, target)) : undefined;
 
   return (
     <ProgressPrimitive.Root
@@ -57,6 +63,16 @@ function Progress({
               : { transform: `translateX(-${100 - (value || 0)}%)` }
           }
         />
+        {clampedTarget != null && (
+          <span
+            className={cn("cn-progress-target", targetClassName)}
+            style={
+              isVertical
+                ? { bottom: `${clampedTarget}%` }
+                : { left: `${clampedTarget}%` }
+            }
+          />
+        )}
       </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>
   );

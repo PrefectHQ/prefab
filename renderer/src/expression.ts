@@ -49,6 +49,16 @@ const pipes: Record<string, PipeFn> = {
     });
   },
 
+  compact(value, arg) {
+    const num = Number(value);
+    if (isNaN(num)) return String(value);
+    const decimals = arg ? parseInt(arg) : undefined;
+    return num.toLocaleString("en-US", {
+      notation: "compact",
+      maximumFractionDigits: decimals,
+    });
+  },
+
   currency(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return String(value);
