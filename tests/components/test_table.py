@@ -132,3 +132,30 @@ class TestDataTableComponent:
         )
         j = dt.to_json()
         assert j["rows"] == "{{ users }}"
+
+    def test_data_table_column_format_in_json(self):
+        dt = DataTable(
+            columns=[
+                DataTableColumn(key="revenue", header="Revenue", format="currency"),
+                DataTableColumn(key="growth", header="Growth", format="percent:1"),
+                DataTableColumn(key="units", header="Units", format="number:0"),
+                DataTableColumn(key="date", header="Date", format="date:long"),
+            ],
+            rows=[],
+        )
+        j = dt.to_json()
+        cols = {c["key"]: c for c in j["columns"]}
+        assert cols["revenue"]["format"] == "currency"
+        assert cols["growth"]["format"] == "percent:1"
+        assert cols["units"]["format"] == "number:0"
+        assert cols["date"]["format"] == "date:long"
+
+    def test_data_table_column_format_none_by_default(self):
+        col = DataTableColumn(key="name", header="Name")
+        j = col.model_dump(exclude_none=True)
+        assert "format" not in j
+
+    def test_data_table_column_format_serialized(self):
+        col = DataTableColumn(key="price", header="Price", format="currency:EUR")
+        j = col.model_dump()
+        assert j["format"] == "currency:EUR"

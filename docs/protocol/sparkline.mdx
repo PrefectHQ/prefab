@@ -1,0 +1,111 @@
+---
+title: Sparkline
+description: JSON Schema for the Sparkline component.
+---
+
+A compact inline chart for showing trends at a glance — no axes, labels, or tooltips.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Sparkline",
+      "default": "Sparkline",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Use w-* classes to control width."
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Flat list of numeric values, or a {{ field }} interpolation reference."
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Chart height in pixels. Defaults to 24px via CSS."
+    },
+    "variant": {
+      "default": "default",
+      "description": "Visual variant: default, success, warning, destructive, info, muted",
+      "enum": [
+        "default",
+        "success",
+        "warning",
+        "destructive",
+        "info",
+        "muted"
+      ],
+      "type": "string"
+    },
+    "indicatorClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Tailwind classes for the line or fill color. Use stroke-* classes for color overrides."
+    },
+    "fill": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show a gradient area fill under the line."
+    },
+    "curve": {
+      "default": "linear",
+      "description": "Line interpolation style between data points.",
+      "enum": [
+        "linear",
+        "smooth",
+        "step"
+      ],
+      "type": "string"
+    },
+    "strokeWidth": {
+      "type": "number",
+      "default": 1.5,
+      "description": "Line thickness in pixels."
+    },
+    "mode": {
+      "default": "line",
+      "description": "Chart mode: line draws a polyline, bar draws vertical bars.",
+      "enum": [
+        "line",
+        "bar"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "data"
+  ]
+}
+```

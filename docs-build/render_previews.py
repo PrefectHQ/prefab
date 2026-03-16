@@ -14,7 +14,6 @@ Run via: uv run docs-build/render_previews.py
 from __future__ import annotations
 
 import base64
-import gzip
 import json
 import re
 import shutil
@@ -274,9 +273,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         # Build new opening tag with inline JSON and playground link
         attrs = _extract_attrs(opening_tag)
         pg_encoded = (
-            base64.urlsafe_b64encode(gzip.compress(python_source.encode()))
-            .rstrip(b"=")
-            .decode()
+            base64.urlsafe_b64encode(python_source.encode()).rstrip(b"=").decode()
         )
         new_opening = _build_opening_tag(attrs, inline_json, pg_encoded)
 

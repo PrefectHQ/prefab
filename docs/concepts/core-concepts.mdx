@@ -22,7 +22,7 @@ They compose into a cycle: components display state through expressions, users t
 
 Components are the building blocks of every interface. `Text` renders content. A `Button` triggers actions. A `Card` wraps other components in a visual container. Components form a tree where parents contain children, and in Python, the `with` statement expresses that nesting naturally:
 
-<ComponentPreview json={{"view":{"cssClass":"w-48","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"content":"Uptime: 99.97%","type":"Text"}]}]}}} playground="H4sIAL5FuGkC_1WPQYvCMBCF7_0VQ0BIoXoQYa3Qg3rRm7h6ljEdNdA2JTO27r_faKToHMIk75uXeRfvamg9XfB8utuJcXXrGmqEwYbOC6ywvFIGa_RlPNeukQDEy4awJB_7g5UqkHvXZ3CghyRJb-X2krRhPpkKmQvVj2dzlQIydJb6RQKhBjD66TQ-D1Lw1Fdsi-mH8KzhW62Wuy38ku_Iq_SLeQXQKjhXcvtTGXToLTZSKL4bQ8xvftjhHfBziWccrY6t2JoWkOeT_GcUxv4BnaI_Gj0BAAA">
+<ComponentPreview json={{"view":{"cssClass":"w-48","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"content":"Uptime: 99.97%","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIENhcmQsIENhcmRDb250ZW50LCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsIFJvdywgVGV4dAoKd2l0aCBDYXJkKGNzc19jbGFzcz0idy00OCIpIGFzIHZpZXc6CiAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgICAgIENhcmRUaXRsZSgiQVBJIFNlcnZlciIpCiAgICAgICAgICAgIEJhZGdlKCJIZWFsdGh5IiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgVGV4dCgiVXB0aW1lOiA5OS45NyUiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Row, Text
@@ -65,7 +65,7 @@ with Card(css_class="w-48") as view:
 </CodeGroup>
 </ComponentPreview>
 
-`Row` arranges children horizontally, `Column` stacks them vertically, `Grid` places them in a grid, and they all nest freely. Switch to the Protocol tab to see the JSON that this Python produces; that's what the renderer actually receives. The [Composition](/guides/composition) guide covers layout primitives, cards, grids, loops, and forward references.
+`Row` arranges children horizontally, `Column` stacks them vertically, `Grid` places them in a grid, and they all nest freely. Switch to the Protocol tab to see the JSON that this Python produces; that's what the renderer actually receives. The [Composition](/concepts/composition) guide covers layout primitives, cards, grids, loops, and forward references.
 
 ## State
 
@@ -73,7 +73,7 @@ State is a key-value store that the renderer maintains for the lifetime of your 
 
 Interactive components are the most natural source of state. An `Input(name="city")` writes its current text to the `city` key on every keystroke. A `Slider(name="volume")` writes its position on every drag. Components with a `value` prop also seed their state key automatically: `Input(value="London")` means the key starts with `"London"` before the user types anything.
 
-The [State](/guides/state) guide covers seeding, form bindings, dot paths for nested data, and how state gets written.
+The [State](/concepts/state) guide covers seeding, form bindings, dot paths for nested data, and how state gets written.
 
 ## Expressions
 
@@ -83,7 +83,7 @@ Beyond reading, expressions can compute: `{{ price * quantity }}` multiplies two
 
 In Python, you write expressions using the `Rx` class. `Rx("count")` compiles to `{{ count }}`, and operators chain naturally: `(price * quantity).currency()` compiles to `{{ price * quantity | currency }}`. Stateful components have a `.rx` shorthand; `slider.rx` returns an `Rx` bound to the slider's state key, so you can wire components together without writing key names by hand.
 
-The [Expressions](/guides/expressions) guide covers the Rx DSL, operators, and formatting. The [Expression Reference](/guides/expression-reference) is the lookup page for every operator, pipe, and special variable.
+The [Expressions](/concepts/expressions) guide covers the Rx DSL, operators, and formatting. The [Expression Reference](/concepts/expression-reference) is the lookup page for every operator, pipe, and special variable.
 
 ## Actions
 
@@ -93,7 +93,7 @@ Actions are what happen when users interact. Click a button, change a slider, su
 
 Most real interactions use both. A "Save" button sets a loading flag (instant), calls the server (async), then shows success or failure (instant, based on the outcome). Actions can be sequenced as lists and chained through callbacks.
 
-The [Actions](/guides/actions) guide covers both families, chaining, the `$event` variable, and common patterns like loading state and optimistic updates.
+The [Actions](/concepts/actions) guide covers both families, chaining, the `$event` variable, and common patterns like loading state and optimistic updates.
 
 ## How it runs
 
