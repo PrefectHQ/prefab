@@ -9,7 +9,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Expressions are how components read and compute from state. Every `{{ }}` you write is a live binding: the renderer evaluates it against current state, tracks which keys it depends on, and re-evaluates whenever any of them change. The display stays current automatically, so you write the expression once and the renderer handles the rest.
 
-The expression language is intentionally bounded. Prefab UIs are designed to be safely serializable, so the expression grammar covers arithmetic, comparisons, boolean logic, conditionals, and formatting. That's enough to drive any display while keeping business logic where it belongs: in your Python code or in a [server action](/guides/actions).
+The expression language is intentionally bounded. Prefab UIs are designed to be safely serializable, so the expression grammar covers arithmetic, comparisons, boolean logic, conditionals, and formatting. That's enough to drive any display while keeping business logic where it belongs: in your Python code or in a [server action](/concepts/actions).
 
 ## Template expressions
 
@@ -220,7 +220,7 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-`price * quantity` compiles to `{{ price * quantity }}`, and `.currency()` formats the result for display. The [Expression Reference](/guides/expression-reference) has the complete operator table.
+`price * quantity` compiles to `{{ price * quantity }}`, and `.currency()` formats the result for display. The [Expression Reference](/concepts/expression-reference) has the complete operator table.
 
 ### String concatenation
 
@@ -273,7 +273,7 @@ score > 0 & score < 100
 This is a Python quirk. The `{{ }}` protocol expressions use standard precedence and don't require extra parentheses.
 </Warning>
 
-The `||` operator short-circuits, which makes it useful as a falsy default: `{{ name || 'Anonymous' }}` returns `'Anonymous'` when `name` is falsy (empty string, `false`, `0`, or undefined). For null/undefined-only defaults, use the `default` pipe instead; see [Expression Reference](/guides/expression-reference).
+The `||` operator short-circuits, which makes it useful as a falsy default: `{{ name || 'Anonymous' }}` returns `'Anonymous'` when `name` is falsy (empty string, `false`, `0`, or undefined). For null/undefined-only defaults, use the `default` pipe instead; see [Expression Reference](/concepts/expression-reference).
 
 ### Ternary
 
@@ -405,7 +405,7 @@ Rx("score").default(0).number()
 
 The `.default()` pipe provides a fallback value when the key is null or undefined. Unlike `||`, which triggers on any falsy value (including `0` and empty string), `.default()` only triggers on null/undefined. Use `.default()` when `0` or `""` are valid values you want to preserve.
 
-The [Expression Reference](/guides/expression-reference) has the complete pipe catalog with detailed examples for every formatter.
+The [Expression Reference](/concepts/expression-reference) has the complete pipe catalog with detailed examples for every formatter.
 
 ## Type preservation
 
