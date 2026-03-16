@@ -315,3 +315,120 @@ with Column(gap=3):
 The sliders don't constrain each other; each one is independent. The normalization happens entirely in the display expressions. Drag any slider and all four percentages update because `total` changes.
 
 Computed keys are read-only on the client. `SetState` targeting a computed key is a no-op with a console warning. Their values are controlled entirely by the expression, not by user interaction or actions.
+
+## Watching for changes
+
+Sometimes you need to react to a state change from any source: recalculate a dependent value, validate a field, or show a notification. Rather than attaching `on_change` to every component that might write a key, place a `Watch` in the tree and let it centralize the reaction.
+
+`Watch` is a non-visual component. It monitors a state key and fires its `on_change` actions whenever the value differs from the previous render. The new value is available as `$event` inside those actions:
+
+<ComponentPreview json={{"view":{"type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"type":"Watch","key":"brightness","onChange":{"action":"setState","key":"brightness_pct","value":"{{ brightness / 100 }}"}},{"content":"{{ brightness_pct | percent }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTbGlkZXIsIFRleHQsIFdhdGNoCgp3aXRoIENvbHVtbigpOgogICAgU2xpZGVyKG5hbWU9ImJyaWdodG5lc3MiLCBtaW49MCwgbWF4PTEwMCkKICAgIFdhdGNoKCJicmlnaHRuZXNzIiwgb25fY2hhbmdlPVNldFN0YXRlKCJicmlnaHRuZXNzX3BjdCIsICJ7eyBicmlnaHRuZXNzIC8gMTAwIH19IikpCiAgICBUZXh0KCJ7eyBicmlnaHRuZXNzX3BjdCB8IHBlcmNlbnQgfX0iKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Slider, Text, Watch
+
+with Column():
+    Slider(name="brightness", min=0, max=100)
+    Watch("brightness", on_change=SetState("brightness_pct", "{{ brightness / 100 }}"))
+    Text("{{ brightness_pct | percent }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Column",
+    "children": [
+      {
+        "name": "brightness",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "brightness",
+        "onChange": {
+          "action": "setState",
+          "key": "brightness_pct",
+          "value": "{{ brightness / 100 }}"
+        }
+      },
+      {"content": "{{ brightness_pct | percent }}", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The watcher fires regardless of what caused the change: a slider drag, a `SetState` from a button click, or a server response that wrote to the key. One watcher handles the reaction for all sources.
+
+### Multiple watchers
+
+You can place multiple watchers in the tree, each monitoring a different key. They're independent, lightweight declarations:
+
+<ComponentPreview json={{"view":{"type":"Column","children":[{"name":"slider_a","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"name":"slider_b","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"type":"Watch","key":"slider_a","onChange":{"action":"setState","key":"total","value":"{{ slider_a + slider_b }}"}},{"type":"Watch","key":"slider_b","onChange":{"action":"setState","key":"total","value":"{{ slider_a + slider_b }}"}},{"type":"Watch","key":"total","onChange":{"action":"showToast","message":"Total updated: {{ total }}"}}]},"state":{"slider_a":50.0,"slider_b":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUsIFNob3dUb2FzdApmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFNsaWRlciwgV2F0Y2gKCndpdGggQ29sdW1uKCk6CiAgICBTbGlkZXIobmFtZT0ic2xpZGVyX2EiLCBtaW49MCwgbWF4PTEwMCwgdmFsdWU9NTApCiAgICBTbGlkZXIobmFtZT0ic2xpZGVyX2IiLCBtaW49MCwgbWF4PTEwMCwgdmFsdWU9NTApCiAgICBXYXRjaCgic2xpZGVyX2EiLCBvbl9jaGFuZ2U9U2V0U3RhdGUoInRvdGFsIiwgInt7IHNsaWRlcl9hICsgc2xpZGVyX2IgfX0iKSkKICAgIFdhdGNoKCJzbGlkZXJfYiIsIG9uX2NoYW5nZT1TZXRTdGF0ZSgidG90YWwiLCAie3sgc2xpZGVyX2EgKyBzbGlkZXJfYiB9fSIpKQogICAgV2F0Y2goInRvdGFsIiwgb25fY2hhbmdlPVNob3dUb2FzdCgiVG90YWwgdXBkYXRlZDoge3sgdG90YWwgfX0iKSkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.components import Column, Slider, Watch
+
+with Column():
+    Slider(name="slider_a", min=0, max=100, value=50)
+    Slider(name="slider_b", min=0, max=100, value=50)
+    Watch("slider_a", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+    Watch("slider_b", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+    Watch("total", on_change=ShowToast("Total updated: {{ total }}"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Column",
+    "children": [
+      {
+        "name": "slider_a",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "value": 50.0,
+        "disabled": false
+      },
+      {
+        "name": "slider_b",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "value": 50.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "slider_a",
+        "onChange": {"action": "setState", "key": "total", "value": "{{ slider_a + slider_b }}"}
+      },
+      {
+        "type": "Watch",
+        "key": "slider_b",
+        "onChange": {"action": "setState", "key": "total", "value": "{{ slider_a + slider_b }}"}
+      },
+      {
+        "type": "Watch",
+        "key": "total",
+        "onChange": {"action": "showToast", "message": "Total updated: {{ total }}"}
+      }
+    ]
+  },
+  "state": {"slider_a": 50.0, "slider_b": 50.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Cascading watchers
+
+Watcher A can update a key that triggers Watcher B. In the example above, changing `slider_a` triggers the first watcher, which updates `total`, which triggers the third watcher. The renderer's depth limit (10 levels) prevents infinite loops.
+
+### Batching
+
+When an action chain writes to multiple keys in sequence, watchers fire once after all writes settle, not after each individual write. This is because watchers run after React commits the render, so intermediate states are never observed.
