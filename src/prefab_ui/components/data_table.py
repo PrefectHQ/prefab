@@ -24,6 +24,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from prefab_ui.actions import Action
 from prefab_ui.components.base import Component
 
 
@@ -72,6 +73,12 @@ class DataTable(Component):
     paginated: bool = Field(default=False, description="Show pagination controls")
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
+    )
+    selectable: bool = Field(default=False, description="Show row selection checkboxes")
+    on_select: Action | list[Action] | None = Field(
+        default=None,
+        alias="onSelect",
+        description="Action(s) when selection changes. $event is the list of selected row indices.",
     )
 
     def to_json(self) -> dict[str, Any]:

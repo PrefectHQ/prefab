@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from prefab_ui.actions import SetState
 from prefab_ui.components import (
     Badge,
     DataTable,
@@ -132,3 +133,56 @@ class TestDataTableComponent:
         )
         j = dt.to_json()
         assert j["rows"] == "{{ users }}"
+
+    def test_data_table_selectable_default_false(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+        )
+        j = dt.to_json()
+        assert j.get("selectable") is False
+
+    def test_data_table_selectable_true(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            selectable=True,
+        )
+        j = dt.to_json()
+        assert j["selectable"] is True
+
+    def test_data_table_on_select_single_action(self):
+        action = SetState(key="selection", value="{{ $event }}")
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            selectable=True,
+            on_select=action,
+        )
+        j = dt.to_json()
+        assert "onSelect" in j
+        assert j["onSelect"]["action"] == "setState"
+        assert j["onSelect"]["key"] == "selection"
+
+    def test_data_table_on_select_list_of_actions(self):
+        actions = [
+            SetState(key="selection", value="{{ $event }}"),
+            SetState(key="count", value="{{ $event | length }}"),
+        ]
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            selectable=True,
+            on_select=actions,
+        )
+        j = dt.to_json()
+        assert isinstance(j["onSelect"], list)
+        assert len(j["onSelect"]) == 2
+
+    def test_data_table_on_select_none_by_default(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+        )
+        j = dt.to_json()
+        assert j.get("onSelect") is None

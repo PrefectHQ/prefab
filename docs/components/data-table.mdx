@@ -206,6 +206,33 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## Row Selection
+
+Set `selectable=True` to add a checkbox column. The header checkbox selects all visible rows; individual row checkboxes select single rows. When the selection changes, `on_select` fires with `$event` set to the list of selected row indices.
+
+<ComponentPreview json={{}}>
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+from prefab_ui.actions import SetState
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name"),
+        DataTableColumn(key="role", header="Role"),
+    ],
+    rows=[
+        {"name": "Alice Johnson", "role": "Admin"},
+        {"name": "Bob Smith", "role": "Editor"},
+        {"name": "Carol White", "role": "Viewer"},
+    ],
+    selectable=True,
+    on_select=SetState(key="selected_rows", value="{{ $event }}"),
+)
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">
@@ -228,6 +255,15 @@ DataTable(
 <ParamField body="page_size" type="int" default="10">
   Number of rows per page when `paginated=True`.
 </ParamField>
+
+<ParamField body="selectable" type="bool" default="False">
+  Show a checkbox column for multi-row selection.
+</ParamField>
+
+<ParamField body="on_select" type="Action | list[Action] | None" default="None">
+  Action(s) fired when the selection changes. `$event` is the list of selected row indices.
+</ParamField>
+
 
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes.
@@ -258,6 +294,8 @@ DataTable(
   "searchable?": false,
   "paginated?": false,
   "pageSize?": 10,
+  "selectable?": false,
+  "onSelect?": "Action | Action[]",
   "cssClass?": "string"
 }
 ```

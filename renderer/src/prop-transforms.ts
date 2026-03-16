@@ -13,7 +13,12 @@ import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 
 /** Props that carry action specs (serialized from Python Action types). */
-export const ACTION_PROPS = new Set(["onClick", "onChange", "onSubmit"]);
+export const ACTION_PROPS = new Set([
+  "onClick",
+  "onChange",
+  "onSubmit",
+  "onSelect",
+]);
 
 /**
  * Types whose children represent data items rather than nested components.
@@ -84,9 +89,14 @@ export function bindActions(
           eventValue = target.value;
         }
       }
-      // Slider returns an array — unwrap single-thumb to scalar,
-      // keep array for range mode (two thumbs)
-      if (Array.isArray(event) && typeof event[0] === "number") {
+      // Slider (onChange) returns an array — unwrap single-thumb to scalar,
+      // keep array for range mode (two thumbs). Skip for onSelect which
+      // intentionally passes an array of selected indices.
+      if (
+        propName === "onChange" &&
+        Array.isArray(event) &&
+        typeof event[0] === "number"
+      ) {
         eventValue = props.range ? event : event[0];
       }
       await executeActions(
