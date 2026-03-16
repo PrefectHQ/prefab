@@ -206,6 +206,31 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## From DataFrame
+
+If you have a pandas DataFrame, pass it directly as `rows`. Columns are generated automatically from `df.columns`, or supply `columns` explicitly for full control.
+
+```python
+import pandas as pd
+from prefab_ui.components import DataTable
+
+df = pd.DataFrame({
+    "name": ["Alice", "Bob", "Carol"],
+    "age": [30, 25, 35],
+    "role": ["Admin", "Editor", "Viewer"],
+})
+
+DataTable(rows=df, searchable=True)
+```
+
+Use `from_dataframe` when you want to control sortability across all columns at once:
+
+```python
+DataTable.from_dataframe(df, sortable=True, paginated=True, page_size=20)
+```
+
+pandas is an optional dependency — if it is not installed, `rows` behaves as usual and only accepts lists of dicts.
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">
@@ -213,8 +238,8 @@ DataTable(
   Column definitions. Each column specifies a `key`, `header`, and optional `sortable` flag.
 </ParamField>
 
-<ParamField body="rows" type="list[dict] | str" default="[]">
-  Row data as a list of dicts, or a `{{ field }}` interpolation reference.
+<ParamField body="rows" type="list[dict] | DataFrame | str" default="[]">
+  Row data as a list of dicts, a pandas DataFrame (columns auto-generated), or a `{{ field }}` interpolation reference.
 </ParamField>
 
 <ParamField body="searchable" type="bool" default="False">

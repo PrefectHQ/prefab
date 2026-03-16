@@ -104,6 +104,14 @@ unknown-argument = "ignore"
 missing-argument = "ignore"
 invalid-argument-type = "ignore"
 
+# pandas is an optional dependency not installed in the dev environment;
+# suppress the unresolved-import diagnostic for this file only.
+[[tool.ty.overrides]]
+include = ["src/prefab_ui/components/data_table.py"]
+
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"
+
 [tool.ruff.lint]
 fixable = ["ALL"]
 ignore = ["COM812", "PLR0913", "SIM102"]

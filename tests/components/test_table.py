@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from unittest.mock import patch
+
+import pytest
+
 from prefab_ui.components import (
     Badge,
     DataTable,
@@ -132,3 +136,58 @@ class TestDataTableComponent:
         )
         j = dt.to_json()
         assert j["rows"] == "{{ users }}"
+
+
+class TestDataTableDataFrame:
+    def test_from_dataframe_columns_and_rows(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame({"name": ["Alice", "Bob"], "age": [30, 25]})
+        dt = DataTable.from_dataframe(df)
+        j = dt.to_json()
+        assert [c["key"] for c in j["columns"]] == ["name", "age"]
+        assert [c["header"] for c in j["columns"]] == ["name", "age"]
+        assert all(c["sortable"] is False for c in j["columns"])
+        assert j["rows"] == [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
+
+    def test_from_dataframe_sortable(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame({"x": [1, 2], "y": [3, 4]})
+        dt = DataTable.from_dataframe(df, sortable=True)
+        j = dt.to_json()
+        assert all(c["sortable"] is True for c in j["columns"])
+
+    def test_from_dataframe_extra_kwargs(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame({"val": [10, 20]})
+        dt = DataTable.from_dataframe(df, searchable=True, paginated=True, page_size=5)
+        j = dt.to_json()
+        assert j["searchable"] is True
+        assert j["paginated"] is True
+        assert j["pageSize"] == 5
+
+    def test_rows_dataframe_auto_converts(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame({"name": ["Alice", "Bob"], "age": [30, 25]})
+        dt = DataTable(rows=df)
+        j = dt.to_json()
+        assert [c["key"] for c in j["columns"]] == ["name", "age"]
+        assert j["rows"] == [{"name": "Alice", "age": 30}, {"name": "Bob", "age": 25}]
+
+    def test_rows_dataframe_explicit_columns_preserved(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame({"name": ["Alice"], "age": [30]})
+        explicit_cols = [DataTableColumn(key="name", header="Full Name", sortable=True)]
+        dt = DataTable(columns=explicit_cols, rows=df)
+        j = dt.to_json()
+        assert j["columns"][0]["header"] == "Full Name"
+        assert j["columns"][0]["sortable"] is True
+        assert len(j["columns"]) == 1
+
+    def test_rows_dataframe_pandas_not_installed(self):
+        with patch.dict("sys.modules", {"pandas": None}):
+            # Without pandas, passing a non-DataFrame rows value still works normally
+            dt = DataTable(
+                columns=[DataTableColumn(key="x", header="X")],
+                rows=[{"x": 1}],
+            )
+            assert dt.rows == [{"x": 1}]

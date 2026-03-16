@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.components.base import Component
 
@@ -48,6 +48,7 @@ class DataTable(Component):
     """High-level data table with sorting, filtering, and pagination.
 
     Accepts flat ``columns`` and ``rows`` — the renderer handles the rest.
+    Pass a pandas DataFrame as ``rows`` and columns are auto-generated.
 
     Example::
 
@@ -63,7 +64,9 @@ class DataTable(Component):
     """
 
     type: Literal["DataTable"] = "DataTable"
-    columns: list[DataTableColumn] = Field(description="Column definitions")
+    columns: list[DataTableColumn] = Field(
+        default_factory=list, description="Column definitions"
+    )
     rows: list[dict[str, Any]] | str = Field(
         default_factory=list,
         description="Row data or {{ interpolation }} reference",
@@ -73,6 +76,48 @@ class DataTable(Component):
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_dataframe(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+        rows = data.get("rows")
+        if rows is None:
+            return data
+        try:
+            import pandas as pd
+        except ImportError:
+            return data
+        if not isinstance(rows, pd.DataFrame):
+            return data
+        if not data.get("columns"):
+            data = dict(data)
+            data["columns"] = [
+                DataTableColumn(key=str(col), header=str(col)) for col in rows.columns
+            ]
+        data["rows"] = rows.to_dict(orient="records")
+        return data
+
+    @classmethod
+    def from_dataframe(
+        cls,
+        df: Any,
+        sortable: bool = False,
+        **kwargs: Any,
+    ) -> DataTable:
+        """Create a DataTable from a pandas DataFrame.
+
+        All columns are generated from ``df.columns``. Pass ``sortable=True``
+        to enable sorting on every column, or build ``columns`` manually for
+        per-column control.
+        """
+        columns = [
+            DataTableColumn(key=str(col), header=str(col), sortable=sortable)
+            for col in df.columns
+        ]
+        rows = df.to_dict(orient="records")
+        return cls(columns=columns, rows=rows, **kwargs)
 
     def to_json(self) -> dict[str, Any]:
         d = super().to_json()
