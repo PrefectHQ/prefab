@@ -107,6 +107,7 @@ export const sparklineSchema = componentBase.extend({
   height: z.number().int().optional(),
   variant: z
     .enum(["default", "success", "warning", "destructive", "info", "muted"])
+    .or(z.string())
     .optional(),
   indicatorClass: z.string().optional(),
   fill: z.boolean().optional(),

@@ -29,17 +29,20 @@ from prefab_ui.actions import Action
 from prefab_ui.components.base import Component
 from prefab_ui.rx import RxStr
 
-ButtonVariant = Literal[
-    "default",
-    "destructive",
-    "outline",
-    "secondary",
-    "ghost",
-    "link",
-    "success",
-    "warning",
-    "info",
-]
+ButtonVariant = (
+    Literal[
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link",
+        "success",
+        "warning",
+        "info",
+    ]
+    | RxStr
+)
 ButtonSize = Literal[
     "default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"
 ]

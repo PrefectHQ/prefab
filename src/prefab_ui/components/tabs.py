@@ -25,7 +25,7 @@ from prefab_ui.actions import Action
 from prefab_ui.components.base import ContainerComponent, StatefulMixin
 from prefab_ui.rx import RxStr
 
-TabsVariant = Literal["default", "line"]
+TabsVariant = Literal["default", "line"] | RxStr
 TabsOrientation = Literal["horizontal", "vertical"]
 
 

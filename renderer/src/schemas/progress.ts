@@ -8,6 +8,7 @@ export const progressSchema = componentBase.extend({
   max: z.number().optional(),
   variant: z
     .enum(["default", "success", "warning", "destructive", "info", "muted"])
+    .or(z.string())
     .optional(),
   indicatorClass: z.string().optional(),
   orientation: z.enum(["horizontal", "vertical"]).optional(),

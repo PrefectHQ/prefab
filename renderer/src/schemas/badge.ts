@@ -15,6 +15,7 @@ export const badgeSchema = containerBase.extend({
       "outline",
       "ghost",
     ])
+    .or(z.string())
     .optional(),
 });
 

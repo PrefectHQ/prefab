@@ -11,7 +11,7 @@ export const tabSchema = containerBase.extend({
 
 export const tabsSchema = containerBase.extend({
   type: z.literal("Tabs"),
-  variant: z.enum(["default", "line"]).optional(),
+  variant: z.enum(["default", "line"]).or(z.string()).optional(),
   orientation: z.enum(["horizontal", "vertical"]).optional(),
   defaultValue: z.string().optional(),
   name: z.string().optional(),
