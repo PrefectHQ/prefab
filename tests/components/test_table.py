@@ -62,7 +62,7 @@ class TestDataTableComponent:
                 DataTableColumn(key="email", header="Email"),
             ],
             rows=[{"name": "Alice", "email": "alice@example.com"}],
-            searchable=True,
+            filter=True,
             paginated=True,
             page_size=25,
         )
@@ -72,7 +72,7 @@ class TestDataTableComponent:
         assert j["columns"][0]["key"] == "name"
         assert j["columns"][0]["sortable"] is True
         assert j["columns"][1]["sortable"] is False
-        assert j["searchable"] is True
+        assert j["filter"] is True
         assert j["paginated"] is True
         assert j["pageSize"] == 25
         assert len(j["rows"]) == 1
@@ -159,3 +159,50 @@ class TestDataTableComponent:
         col = DataTableColumn(key="price", header="Price", format="currency:EUR")
         j = col.model_dump()
         assert j["format"] == "currency:EUR"
+
+    def test_data_table_column_align_resolves_to_cell_class(self):
+        col_right = DataTableColumn(key="amount", header="Amount", align="right")
+        j = col_right.model_dump(by_alias=True, exclude_none=True)
+        assert j["cellClass"] == "text-right"
+        assert "align" not in j
+
+    def test_data_table_column_align_center(self):
+        col = DataTableColumn(key="status", header="Status", align="center")
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert j["cellClass"] == "text-center"
+
+    def test_data_table_column_align_left(self):
+        col = DataTableColumn(key="name", header="Name", align="left")
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert j["cellClass"] == "text-left"
+
+    def test_data_table_column_align_merges_with_cell_class(self):
+        col = DataTableColumn(
+            key="amount", header="Amount", align="right", cell_class="font-mono"
+        )
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert "text-right" in j["cellClass"]
+        assert "font-mono" in j["cellClass"]
+
+    def test_data_table_column_width_fields(self):
+        col = DataTableColumn(
+            key="name",
+            header="Name",
+            width="200px",
+            min_width="100px",
+            max_width="300px",
+        )
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert j["width"] == "200px"
+        assert j["minWidth"] == "100px"
+        assert j["maxWidth"] == "300px"
+
+    def test_data_table_column_header_class(self):
+        col = DataTableColumn(key="name", header="Name", header_class="text-blue-500")
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert j["headerClass"] == "text-blue-500"
+
+    def test_data_table_column_align_not_in_protocol(self):
+        col = DataTableColumn(key="amount", header="Amount", align="right")
+        j = col.model_dump(by_alias=True, exclude_none=True)
+        assert "align" not in j

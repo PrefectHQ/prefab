@@ -13,7 +13,7 @@ Example::
             DataTableColumn(key="role", header="Role"),
         ],
         rows="{{ users }}",
-        searchable=True,
+        filter=True,
         paginated=True,
     )
 """
@@ -24,7 +24,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, _merge_css_classes
 
 
 def _serialize_cell_value(value: Any) -> Any:
@@ -49,6 +49,39 @@ class DataTableColumn(BaseModel):
             " 'percent', 'percent:1', 'date', 'date:long'"
         ),
     )
+    width: str | None = Field(
+        default=None, description="Column width CSS value (e.g. '200px', '30%')"
+    )
+    min_width: str | None = Field(
+        default=None,
+        alias="minWidth",
+        description="Minimum column width CSS value",
+    )
+    max_width: str | None = Field(
+        default=None,
+        alias="maxWidth",
+        description="Maximum column width CSS value",
+    )
+    align: Literal["left", "center", "right"] | None = Field(
+        default=None,
+        exclude=True,
+        description="Cell text alignment — resolves to cell_class",
+    )
+    header_class: str | None = Field(
+        default=None,
+        alias="headerClass",
+        description="Tailwind classes for header cells",
+    )
+    cell_class: str | None = Field(
+        default=None,
+        alias="cellClass",
+        description="Tailwind classes for data cells",
+    )
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.align is not None:
+            align_class = f"text-{self.align}"
+            self.cell_class = _merge_css_classes(align_class, self.cell_class)
 
 
 class DataTable(Component):
@@ -64,7 +97,7 @@ class DataTable(Component):
                 DataTableColumn(key="email", header="Email"),
             ],
             rows=data["users"],
-            searchable=True,
+            filter=True,
             paginated=True,
         )
     """
@@ -75,7 +108,7 @@ class DataTable(Component):
         default_factory=list,
         description="Row data or {{ interpolation }} reference",
     )
-    searchable: bool = Field(default=False, description="Show search/filter input")
+    filter: bool = Field(default=False, description="Show search/filter input")
     paginated: bool = Field(default=False, description="Show pagination controls")
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"

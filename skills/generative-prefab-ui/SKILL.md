@@ -181,7 +181,7 @@ reference with `{"$ref": "name"}`:
             {"key": "role", "header": "Role", "sortable": true}
           ],
           "rows": "{{ results }}",
-          "searchable": true, "paginated": true, "pageSize": 20
+          "filter": true, "paginated": true, "pageSize": 20
         }
       ]}, {"when": "query && results.length == 0", "children": [
         {"type": "Muted", "content": "No results."}

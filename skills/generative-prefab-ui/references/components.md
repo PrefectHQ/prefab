@@ -93,7 +93,7 @@ Compose: **Card** > **CardHeader** > **CardTitle** (`content`) + **CardDescripti
 
 ## Data Display
 
-**DataTable** — `columns` **(req)** (array of `{key, header, sortable?}`), `rows` **(req)** (array or `"{{ key }}"`), `searchable`, `paginated`, `pageSize` (default 10), `caption`.
+**DataTable** — `columns` **(req)** (array of `{key, header, sortable?, width?, minWidth?, maxWidth?, align?, headerClass?, cellClass?}`), `rows` **(req)** (array or `"{{ key }}"`), `filter`, `paginated`, `pageSize` (default 10).
 
 **Table** [container] — manual table. Nest: Table > TableHeader > TableRow > **TableHead** (`content`), Table > TableBody > TableRow > **TableCell** (`content`). Also TableFooter, **TableCaption** (`content`).
 
