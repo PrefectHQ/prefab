@@ -67,7 +67,7 @@ Every form control automatically syncs its value to client-side state. When a us
 
 The `.rx` property on any stateful component returns a reactive reference to that state key. Use it in f-strings or pass it directly to any string prop — it serializes to `{{ key }}` at build time and re-evaluates at render time as the user interacts.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}} playground="H4sIAL5FuGkC_2WQQUvEMBCF7_kVQ04tlFy8LeTiIuJd8FjGOG2DSSZkJ6wi_neb1nUV32UeGb7Hm0yFI-RCEz6P1RvHMXOiJCfwqysCt1WE0wBHDjWu8yHlKmr6i6ETz-lkossX7oghPDIHpc5elm-8mzHbm_6gYJXz8j76Fgd2j-0SRrK6LfQAOaCjhcMLFavvklAB3CBjjO63iL1ct_kmfU8CT4SyUNHDzzOn0QXvXu2l1JXYqJlkPP-jmrDMNbbvsB86sMN2pj78qm7K2-cV6Xfbqy9h9TGYVwEAAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"city","type":"Input","inputType":"text","placeholder":"Enter a city...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Get Weather","variant":"default","size":"default","disabled":false,"onClick":{"action":"toolCall","tool":"get_weather","arguments":{"location":"{{ city }}"}}}]}}} playground="H4sIAAAAAAACE2WQQUvEMBCF7_kVQ04tlFy8LeTiIuJd8FjGOG2DSSZkJ6wi_neb1nUV32UeGb7Hm0yFI-RCEz6P1RvHMXOiJCfwqysCt1WE0wBHDjWu8yHlKmr6i6ETz-lkossX7oghPDIHpc5elm-8mzHbm_6gYJXz8j76Fgd2j-0SRrK6LfQAOaCjhcMLFavvklAB3CBjjO63iL1ct_kmfU8CT4SyUNHDzzOn0QXvXu2l1JXYqJlkPP-jmrDMNbbvsB86sMN2pj78qm7K2-cV6Xfbqy9h9TGYVwEAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, Input
@@ -142,7 +142,7 @@ Actions define what happens when a user interacts with a component. There are tw
 
 Pass a list to compose multiple actions from a single interaction:
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"saving","value":true},{"action":"toolCall","tool":"save_data","arguments":{"item":"{{ item }}"}},{"action":"setState","key":"saving","value":false}]}}} playground="H4sIAL5FuGkC_3WPQQrCMBBF9zlFyKqF4gGEbhQ8gO1OpIwxLcEkU9JJKYh3N22NoOisPsyb_5jWo-W9Vy1cmqA3Em2PTjkauI7JE98FInSs_eRAkkb3hipFFQGpP9jGyj6hezCmRjTfqJ8ScZwYW62ZqGBUouDoGmm0vJUnxuMkXSYGGLXrIlH7oPJi2SbDslXNFQgiAL4Ldn6svAtNyoptFGVrzB-v0x_FBzDD3HzO2RO9bRYQLAEAAA">
+<ComponentPreview json={{"view":{"type":"Button","label":"Save","variant":"default","size":"default","disabled":false,"onClick":[{"action":"setState","key":"saving","value":true},{"action":"toolCall","tool":"save_data","arguments":{"item":"{{ item }}"}},{"action":"setState","key":"saving","value":false}]}}} playground="H4sIAAAAAAACE3WPQQrCMBBF9zlFyKqF4gGEbhQ8gO1OpIwxLcEkU9JJKYh3N22NoOisPsyb_5jWo-W9Vy1cmqA3Em2PTjkauI7JE98FInSs_eRAkkb3hipFFQGpP9jGyj6hezCmRjTfqJ8ScZwYW62ZqGBUouDoGmm0vJUnxuMkXSYGGLXrIlH7oPJi2SbDslXNFQgiAL4Ldn6svAtNyoptFGVrzB-v0x_FBzDD3HzO2RO9bRYQLAEAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -181,7 +181,7 @@ Actions execute in order. This pattern lets you show a loading indicator before 
 
 FastMCP includes 30+ components spanning layout, form controls, data display, and feedback. Layout containers use Python context managers for nesting:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"input_21","type":"Input","inputType":"text","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}} playground="H4sIAL5FuGkC_1WOPQrDMAyF95xCZHKgdOlWCJRm6twDBCdRGoNtGVtu2tvXsUt_3iAkfXoPzZ4MOI-zHPqo9iMZRxYtB1Cp8wznyEx2B530U6kdWU4XaSAdTUIX6yJX1ap4yQeiARngrnA9VpD0AW-naMr-y3KQuEnXHn7YppwtnJYjLqQn9G39pHjChzRO4_Zv3fwZyr-ivsYhjF4NmPgL1e2GsuUAAAA">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"input_21","type":"Input","inputType":"text","placeholder":"you@example.com","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Subscribe","variant":"default","size":"default","disabled":false}]}]}]}}} playground="H4sIAAAAAAACE1WOPQrDMAyF95xCZHKgdOlWCJRm6twDBCdRGoNtGVtu2tvXsUt_3iAkfXoPzZ4MOI-zHPqo9iMZRxYtB1Cp8wznyEx2B530U6kdWU4XaSAdTUIX6yJX1ap4yQeiARngrnA9VpD0AW-naMr-y3KQuEnXHn7YppwtnJYjLqQn9G39pHjChzRO4_Zv3fwZyr-ivsYhjF4NmPgL1e2GsuUAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Card, CardContent, Column, Input
