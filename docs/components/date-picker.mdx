@@ -10,7 +10,7 @@ DatePicker combines a trigger button with a popover calendar. The button display
 
 ## Basic Usage
 
-<ComponentPreview height="400px" json={{"view":{"cssClass":"w-fit mx-auto","name":"datepicker_1","type":"DatePicker","placeholder":"Select deadline"}}} playground="H4sIALNZt2kC_0XGwQ3CMAwAwH-msPICibJBfwyAxACVcRxh4cRR7IqODz_udXVagzG54nPb5UrWhnXu4SC_zYAbBt-F3jxT-v80FIlfpoXnmh-sTAGFsah0zhcg940U3df8WaoEtGPBPSyf0xcKyiEScgAAAA">
+<ComponentPreview height="400px" json={{"view":{"cssClass":"w-fit mx-auto","name":"datepicker_1","type":"DatePicker","placeholder":"Select deadline"}}} playground="H4sIAL5FuGkC_0XGwQ3CMAwAwH-msPICibJBfwyAxACVcRxh4cRR7IqODz_udXVagzG54nPb5UrWhnXu4SC_zYAbBt-F3jxT-v80FIlfpoXnmh-sTAGFsah0zhcg940U3df8WaoEtGPBPSyf0xcKyiEScgAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DatePicker
@@ -34,7 +34,7 @@ DatePicker(placeholder="Select deadline", css_class="w-fit mx-auto")
 
 Use `.rx` to get a reactive reference to the selected date. The value is an ISO date string once a date is picked, but starts as `undefined` when nothing is selected. Use `.then()` to handle both states — showing formatted text when a date exists, and fallback text otherwise:
 
-<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"name":"datepicker_2","type":"DatePicker","placeholder":"When does the whale arrive?"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"cssClass":"italic","content":"{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}","type":"Text"}]}]}}} playground="H4sIALNZt2kC_12QsU7EMBBE-3zFypUjWSkoKJAsCigRQnASJfI5m9iHY1ubDbn7e2wfxYmpdiTvvFlPlBbIhJM5fm1-sGnJKWLkFXyZiOEphW2JCp4N45u330gKXswRg4L3tCs44Jm7bvfsqpezyfpegQl-jlrYkoQk-ocOinJbB32TJXMwFl0KI5IWnw4jjAlXYIewOxMQDJH_wUfRt4jGuVZqqDsFp21lP13-w6paTyk-MKBlHGEs3L-gqlpdXksNdB4KM97Y-liKkOIsegXitXwLXJCr8Vzus_pAG_bdL7SymuJCAQAA">
+<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"name":"datepicker_2","type":"DatePicker","placeholder":"When does the whale arrive?"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"cssClass":"italic","content":"{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}","type":"Text"}]}]}}} playground="H4sIAL5FuGkC_12QsU7EMBBE-3zFypUjWSkoKJAsCigRQnASJfI5m9iHY1ubDbn7e2wfxYmpdiTvvFlPlBbIhJM5fm1-sGnJKWLkFXyZiOEphW2JCp4N45u330gKXswRg4L3tCs44Jm7bvfsqpezyfpegQl-jlrYkoQk-ocOinJbB32TJXMwFl0KI5IWnw4jjAlXYIewOxMQDJH_wUfRt4jGuVZqqDsFp21lP13-w6paTyk-MKBlHGEs3L-gqlpdXksNdB4KM97Y-liKkOIsegXitXwLXJCr8Vzus_pAG_bdL7SymuJCAQAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, DatePicker, Label, Row, Text
@@ -81,7 +81,7 @@ Before a date is picked, the text shows "None yet". Pick a date and it updates i
 
 DatePicker works naturally alongside other form controls. Each component's value syncs to state automatically — use `.rx` to reference it elsewhere:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"input_3","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"datepicker_3","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}} playground="H4sIALNZt2kC_11RwW7DIAy95ysQJyJVu-xWqZdlmzapqnbofXITd0UDjKhZf3-UkJCUk_38_PxszoGs8AHPcPqO-qkn68mh46vQKQosVCPSe4nM5DY57iAMNerIceJX4J2IMdT8A2FY5kfNBktKJtqi-gqMX7r_naifzseiuocTmk3TNs1N8yWLqHabSzMwTpng1SwlD3gTb3_JpWzXXcX8sm2sZWPqB_zueVGbzSiZ5cQBLBbN6WXfyhvo8UImedrJI4IVVwY3RP_ALmr35R8q9R5rsTsmQAy1Y95mvPxymfHblOwCJv58g3_kWQzq9QEAAA">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"input_3","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"datepicker_3","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}} playground="H4sIAL5FuGkC_11RwW7DIAy95ysQJyJVu-xWqZdlmzapqnbofXITd0UDjKhZf3-UkJCUk_38_PxszoGs8AHPcPqO-qkn68mh46vQKQosVCPSe4nM5DY57iAMNerIceJX4J2IMdT8A2FY5kfNBktKJtqi-gqMX7r_naifzseiuocTmk3TNs1N8yWLqHabSzMwTpng1SwlD3gTb3_JpWzXXcX8sm2sZWPqB_zueVGbzSiZ5cQBLBbN6WXfyhvo8UImedrJI4IVVwY3RP_ALmr35R8q9R5rsTsmQAy1Y95mvPxymfHblOwCJv58g3_kWQzq9QEAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (

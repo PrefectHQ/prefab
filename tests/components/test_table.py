@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from prefab_ui.components import (
+    Badge,
     DataTable,
     DataTableColumn,
     Table,
@@ -13,6 +14,7 @@ from prefab_ui.components import (
     TableHeader,
     TableRow,
 )
+from prefab_ui.components.charts import Sparkline
 
 
 class TestTableComponents:
@@ -74,3 +76,59 @@ class TestDataTableComponent:
         assert j["paginated"] is True
         assert j["pageSize"] == 25
         assert len(j["rows"]) == 1
+
+    def test_data_table_component_cell(self):
+        badge = Badge("Active")
+        dt = DataTable(
+            columns=[
+                DataTableColumn(key="name", header="Name"),
+                DataTableColumn(key="status", header="Status"),
+            ],
+            rows=[{"name": "Alice", "status": badge}],
+        )
+        j = dt.to_json()
+        row = j["rows"][0]
+        assert row["name"] == "Alice"
+        assert isinstance(row["status"], dict)
+        assert row["status"]["type"] == "Badge"
+
+    def test_data_table_sparkline_cell(self):
+        sparkline = Sparkline(data=[1, 2, 3, 4, 5])
+        dt = DataTable(
+            columns=[
+                DataTableColumn(key="trend", header="Trend"),
+            ],
+            rows=[{"trend": sparkline}],
+        )
+        j = dt.to_json()
+        cell = j["rows"][0]["trend"]
+        assert isinstance(cell, dict)
+        assert cell["type"] == "Sparkline"
+        assert cell["data"] == [1, 2, 3, 4, 5]
+
+    def test_data_table_mixed_cells(self):
+        dt = DataTable(
+            columns=[
+                DataTableColumn(key="name", header="Name"),
+                DataTableColumn(key="score", header="Score"),
+                DataTableColumn(key="badge", header="Badge"),
+            ],
+            rows=[
+                {"name": "Alice", "score": 95, "badge": Badge("gold")},
+                {"name": "Bob", "score": 80, "badge": "silver"},
+            ],
+        )
+        j = dt.to_json()
+        assert j["rows"][0]["name"] == "Alice"
+        assert j["rows"][0]["score"] == 95
+        assert isinstance(j["rows"][0]["badge"], dict)
+        assert j["rows"][0]["badge"]["type"] == "Badge"
+        assert j["rows"][1]["badge"] == "silver"
+
+    def test_data_table_string_rows_unchanged(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows="{{ users }}",
+        )
+        j = dt.to_json()
+        assert j["rows"] == "{{ users }}"

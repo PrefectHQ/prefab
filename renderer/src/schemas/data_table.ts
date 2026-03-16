@@ -16,7 +16,6 @@ export const dataTableSchema = componentBase.extend({
   searchable: z.boolean().optional(),
   paginated: z.boolean().optional(),
   pageSize: z.number().int().optional(),
-  caption: z.string().optional(),
 });
 
 export type DataTableWire = z.infer<typeof dataTableSchema>;
