@@ -33,11 +33,13 @@ function Slider({
   variant,
   indicatorClassName,
   handleStyle,
+  handleClassName,
   ...props
 }: SliderPrimitive.Root.Props &
   VariantProps<typeof sliderRangeVariants> & {
     indicatorClassName?: string;
     handleStyle?: "circle" | "bar";
+    handleClassName?: string;
   }) {
   const resolvedStep = step ?? (max - min) / 100
   const _values = React.useMemo(
@@ -85,7 +87,9 @@ function Slider({
             key={index}
             className={cn(
               "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
-              handleStyle === "bar" && "cn-slider-thumb-bar"
+              handleStyle === "bar" && "cn-slider-thumb-bar",
+              `cn-slider-thumb-variant-${variant ?? "default"}`,
+              handleClassName,
             )}
           />
         ))}

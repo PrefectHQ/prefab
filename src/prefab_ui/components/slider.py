@@ -106,6 +106,11 @@ class Slider(StatefulMixin, Component):
         alias="handleStyle",
         description="Thumb shape: circle (default round) or bar (tall rounded rectangle)",
     )
+    handle_class: RxStr | None = Field(
+        default=None,
+        alias="handleClass",
+        description="Tailwind classes for the thumb (e.g. 'bg-blue-500')",
+    )
     on_change: Action | list[Action] | None = Field(
         default=None,
         alias="onChange",
