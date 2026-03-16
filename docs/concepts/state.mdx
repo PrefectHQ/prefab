@@ -38,7 +38,7 @@ Either way, those keys are immediately available to every expression in your com
 
 Interactive components with a `name` prop are the most natural state source. They automatically sync their current value to that key on every interaction.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name_input","type":"Input","inputType":"text","placeholder":"Type your name..","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name_input | 'stranger' }}!","type":"Text"}]}}} playground="H4sIAL5FuGkC_02NMQ-CMBCFd37F2QVIGhY3k04uurOTigc0aXvN0UYJ8t8FNNGbXu69772OyUFg7PStSaZqyQXy6OMIZlUc4Uw2OS_h6kOKEmp8xix7mDh8naLXQR3LUwbree2wMVsS1IcotpcSP0NICFa3OJC9IytRTwFhosQ7XFWi3Ju2nUJc0FqSMM__zS_Ix8ja98g5LMthJd7bs9etxgAAAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name_input","type":"Input","inputType":"text","placeholder":"Type your name..","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name_input | 'stranger' }}!","type":"Text"}]}}} playground="H4sIAP9SuGkC_02NMQ-CMBCFd37F2QVIGhY3k04uurOTigc0aXvN0UYJ8t8FNNGbXu69772OyUFg7PStSaZqyQXy6OMIZlUc4Uw2OS_h6kOKEmp8xix7mDh8naLXQR3LUwbree2wMVsS1IcotpcSP0NICFa3OJC9IytRTwFhosQ7XFWi3Ju2nUJc0FqSMM__zS_Ix8ja98g5LMthJd7bs9etxgAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Input, Text
@@ -107,7 +107,7 @@ For keys not tied to initial state (like `let` bindings or forward references), 
 
 State values can be nested objects, and you reach into them with dot notation. `{{ profile.name }}` reads the `name` field of the `profile` object. The `name` prop accepts dot paths too, so inputs can bind directly to nested fields:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Name"},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Title"},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="H4sIAL5FuGkC_4VQS2uEMBC--ytCThFkL70teChdSgvbXtq7zOpYh8YkxMgexP_ePBTdLrQ5hGRmvvkerdU9MxZbuFQjHcAYRr3R1rEBXUWKHIGsBgcOs_Z2ttZ-UKFywwoRGfPnCWxTxPuEQ23JONIqFV4QGrTp_UlOYpEQWo69H3kmlB76qszoCnaGC8oiy7PsTkoiMla3JLGc4i8crqBHfmT80bputOzk1fFia7vAGfofoJor1R17g-8g6Az9iFLCMjxH2iu5btEmvsCUD_kxdlPdWxBL4aaYPO5bayjRseDTtCo_BLlsnnl-N7uL7gYRHWyQyBpj2xPG5AR_D2Fsq2OsIlCWfC-AF8xIqLHT0gsv97A_10c7_-xPgf8iWIE_ETpRiHwCAAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Name"},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Title"},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="H4sIAP9SuGkC_4VQS2uEMBC--ytCThFkL70teChdSgvbXtq7zOpYh8YkxMgexP_ePBTdLrQ5hGRmvvkerdU9MxZbuFQjHcAYRr3R1rEBXUWKHIGsBgcOs_Z2ttZ-UKFywwoRGfPnCWxTxPuEQ23JONIqFV4QGrTp_UlOYpEQWo69H3kmlB76qszoCnaGC8oiy7PsTkoiMla3JLGc4i8crqBHfmT80bputOzk1fFia7vAGfofoJor1R17g-8g6Az9iFLCMjxH2iu5btEmvsCUD_kxdlPdWxBL4aaYPO5bayjRseDTtCo_BLlsnnl-N7uL7gYRHWyQyBpj2xPG5AR_D2Fsq2OsIlCWfC-AF8xIqLHT0gsv97A_10c7_-xPgf8iWIE_ETpRiHwCAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -211,7 +211,9 @@ Sometimes you need to react to a state change from any source: recalculate a dep
 
 `Watch` is a non-visual component. It monitors a state key and fires its `on_change` actions whenever the value differs from the previous render. The new value is available as `$event` inside those actions:
 
-```python
+<ComponentPreview json={{"view":{"type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"type":"Watch","key":"brightness","onChange":{"action":"setState","key":"brightness_pct","value":"{{ brightness / 100 }}"}},{"content":"{{ brightness_pct | percent }}","type":"Text"}]}}} playground="H4sIAP9SuGkC_1XPzQqDMAwH8HufIniqIJu7DjztERzsKLWLWrCp1MgE57uv6r7sJZD88ietvLPQeaxUWQzmoDQbRz0Y2znPkCPnrBhFtWfahTkh8VdeXDtYSiBvzR19AlccOYGbYt0I8TDcvIWMzwLC25wkZTGLSm_qhgn7PkrAGsrSUNSYndI0XvWaI_fOUaEbRTVmnyv_QdFpDiiaJvg14QghEuY5irfc5Uq5N8siPKFDr8P_VitecN455CUBAAA">
+<CodeGroup>
+```python Python icon="python"
 from prefab_ui.actions import SetState
 from prefab_ui.components import Column, Slider, Text, Watch
 
@@ -220,6 +222,34 @@ with Column():
     Watch("brightness", on_change=SetState("brightness_pct", "{{ brightness / 100 }}"))
     Text("{{ brightness_pct | percent }}")
 ```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Column",
+    "children": [
+      {
+        "name": "brightness",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "brightness",
+        "onChange": {
+          "action": "setState",
+          "key": "brightness_pct",
+          "value": "{{ brightness / 100 }}"
+        }
+      },
+      {"content": "{{ brightness_pct | percent }}", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 The watcher fires regardless of what caused the change: a slider drag, a `SetState` from a button click, or a server response that wrote to the key. One watcher handles the reaction for all sources.
 
@@ -227,14 +257,62 @@ The watcher fires regardless of what caused the change: a slider drag, a `SetSta
 
 You can place multiple watchers in the tree, each monitoring a different key. They're independent, lightweight declarations:
 
-```python
+<ComponentPreview json={{"view":{"type":"Column","children":[{"name":"slider_a","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"name":"slider_b","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"type":"Watch","key":"slider_a","onChange":{"action":"setState","key":"total","value":"{{ slider_a + slider_b }}"}},{"type":"Watch","key":"slider_b","onChange":{"action":"setState","key":"total","value":"{{ slider_a + slider_b }}"}},{"type":"Watch","key":"total","onChange":{"action":"showToast","message":"Total updated: {{ total }}"}}]},"state":{"slider_a":50.0,"slider_b":50.0}}} playground="H4sIAP9SuGkC_62QsQrCMBCG9z7FkSnFInVwETL5CC04lmub2kCTK-1VBfHdjdWIguJilly4__suSTOQhX7QDZbFZJZYsSE3grE9DQyZ5oyRdQJZS8eccOSoeScq8lGnHT-hLXWTdR7pTK2HBHbIVRtFR8PtoyfjTQR-3RPSodVKjPOhQJGANU6lfsOTWqW-OGA3abVO469U-ZOabyFfp5ArqhbdXqvwTCmYGDvfE-czhCgsQlnC5SLiT77yX74AvMjCz0uR35ow9bV31xvwzjn-sFwB-luA1csBAAA">
+<CodeGroup>
+```python Python icon="python"
 from prefab_ui.actions import SetState, ShowToast
-from prefab_ui.components import Watch
+from prefab_ui.components import Column, Slider, Watch
 
-Watch("slider_a", on_change=SetState("total", "{{ slider_a + slider_b }}"))
-Watch("slider_b", on_change=SetState("total", "{{ slider_a + slider_b }}"))
-Watch("total", on_change=ShowToast("Total updated: {{ total }}"))
+with Column():
+    Slider(name="slider_a", min=0, max=100, value=50)
+    Slider(name="slider_b", min=0, max=100, value=50)
+    Watch("slider_a", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+    Watch("slider_b", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+    Watch("total", on_change=ShowToast("Total updated: {{ total }}"))
 ```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Column",
+    "children": [
+      {
+        "name": "slider_a",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "value": 50.0,
+        "disabled": false
+      },
+      {
+        "name": "slider_b",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "value": 50.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "slider_a",
+        "onChange": {"action": "setState", "key": "total", "value": "{{ slider_a + slider_b }}"}
+      },
+      {
+        "type": "Watch",
+        "key": "slider_b",
+        "onChange": {"action": "setState", "key": "total", "value": "{{ slider_a + slider_b }}"}
+      },
+      {
+        "type": "Watch",
+        "key": "total",
+        "onChange": {"action": "showToast", "message": "Total updated: {{ total }}"}
+      }
+    ]
+  },
+  "state": {"slider_a": 50.0, "slider_b": 50.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 ### Cascading watchers
 

@@ -1,0 +1,48 @@
+---
+title: Watch
+description: JSON Schema for the Watch component.
+---
+
+Trigger actions when a state key changes.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Watch",
+      "default": "Watch",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "key": {
+      "description": "State key or template expression to watch for changes.",
+      "type": "string"
+    },
+    "onChange": {
+      "$ref": "Action",
+      "description": "Action(s) to run when the watched value changes.",
+      "default": null
+    }
+  },
+  "required": [
+    "type",
+    "key"
+  ]
+}
+```
