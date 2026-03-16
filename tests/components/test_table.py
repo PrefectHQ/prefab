@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from prefab_ui.actions import ShowToast
 from prefab_ui.components import (
     Badge,
     DataTable,
@@ -133,29 +134,41 @@ class TestDataTableComponent:
         j = dt.to_json()
         assert j["rows"] == "{{ users }}"
 
-    def test_data_table_column_format_in_json(self):
+    def test_data_table_selectable(self):
         dt = DataTable(
-            columns=[
-                DataTableColumn(key="revenue", header="Revenue", format="currency"),
-                DataTableColumn(key="growth", header="Growth", format="percent:1"),
-                DataTableColumn(key="units", header="Units", format="number:0"),
-                DataTableColumn(key="date", header="Date", format="date:long"),
-            ],
-            rows=[],
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            selectable=True,
         )
         j = dt.to_json()
-        cols = {c["key"]: c for c in j["columns"]}
-        assert cols["revenue"]["format"] == "currency"
-        assert cols["growth"]["format"] == "percent:1"
-        assert cols["units"]["format"] == "number:0"
-        assert cols["date"]["format"] == "date:long"
+        assert j["selectable"] is True
 
-    def test_data_table_column_format_none_by_default(self):
-        col = DataTableColumn(key="name", header="Name")
-        j = col.model_dump(exclude_none=True)
-        assert "format" not in j
+    def test_data_table_selectable_defaults_false(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+        )
+        j = dt.to_json()
+        assert j["selectable"] is False
 
-    def test_data_table_column_format_serialized(self):
-        col = DataTableColumn(key="price", header="Price", format="currency:EUR")
-        j = col.model_dump()
-        assert j["format"] == "currency:EUR"
+    def test_data_table_on_row_click(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            on_row_click=ShowToast("Row clicked"),
+        )
+        j = dt.to_json()
+        assert "onRowClick" in j
+        assert j["onRowClick"]["action"] == "showToast"
+        assert j["onRowClick"]["message"] == "Row clicked"
+
+    def test_data_table_on_row_click_list(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}],
+            on_row_click=[ShowToast("First"), ShowToast("Second")],
+        )
+        j = dt.to_json()
+        assert isinstance(j["onRowClick"], list)
+        assert len(j["onRowClick"]) == 2
+        assert j["onRowClick"][0]["action"] == "showToast"

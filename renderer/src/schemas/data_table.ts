@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { componentBase } from "./base.ts";
+import { actionOrList } from "./actions.ts";
 
 const dataTableColumnSchema = z.object({
   key: z.string(),
@@ -17,6 +18,8 @@ export const dataTableSchema = componentBase.extend({
   searchable: z.boolean().optional(),
   paginated: z.boolean().optional(),
   pageSize: z.number().int().optional(),
+  selectable: z.boolean().optional(),
+  onRowClick: actionOrList.optional(),
 });
 
 export type DataTableWire = z.infer<typeof dataTableSchema>;
