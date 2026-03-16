@@ -203,4 +203,42 @@ If any segment along a path is missing or the wrong type, the expression resolve
 
 Two things write to state: interactive controls (automatically, via the `name` prop) and [actions](/concepts/actions) (explicitly, in response to events). `SetState` assigns a value. `ToggleState` flips a boolean. `AppendState` and `PopState` manipulate arrays. `CallTool` and `Fetch` make their results available as `$result` in `on_success` callbacks, where you can write them to state with `SetState`.
 
-State is deliberately simple: a flat map with dot-path addressing for nesting. There are no computed properties, no watchers, no derived state in the store itself. Derived values belong in [expressions](/concepts/expressions), where they're computed at render time from whatever state holds. Complex computations belong in Python, run before you return the component tree, or in a server action.
+State is deliberately simple: a flat map with dot-path addressing for nesting. Inline expressions like `{{ price * quantity }}` handle most derived values, but when the same calculation appears in multiple places, repeating it everywhere becomes fragile. That's where computed state comes in.
+
+## Computed state
+
+Computed state declares named, read-only keys whose values are expressions that recompute reactively. Wrap an expression string in `Computed()` when calling `set_initial_state`:
+
+```python
+from prefab_ui.app import set_initial_state
+from prefab_ui.rx import Computed
+
+state = set_initial_state(
+    a=1, b=1, c=1, d=1, e=1,
+    total=Computed("{{ a + b + c + d + e }}"),
+)
+```
+
+`state.total` returns an `Rx("total")` reference, just like any other state key. In the rendered app, `{{ total }}` resolves to the current sum of all five values and updates automatically whenever any of them changes.
+
+This is useful when the same derived value feeds into multiple components. Instead of duplicating `{{ a + b + c + d + e }}` across text labels, conditions, and action thresholds, you define it once and reference the result by name:
+
+```python
+# Five sliders, each showing its normalized percentage
+Slider(name="a", min=0, max=100)
+Text(f"{state.a} / {state.total} = {(state.a / state.total * 100).round(1)}%")
+```
+
+Computed keys compose with each other. One computed value can reference another, and the renderer evaluates them in dependency order:
+
+```python
+state = set_initial_state(
+    price=100,
+    quantity=2,
+    subtotal=Computed("{{ price * quantity }}"),
+    tax=Computed("{{ subtotal * 0.08 }}"),
+    total=Computed("{{ subtotal + tax }}"),
+)
+```
+
+Computed keys are read-only on the client. `SetState` targeting a computed key is a no-op with a console warning. Their values are controlled entirely by the expression, not by user interaction or actions.
