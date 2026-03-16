@@ -9,9 +9,9 @@ from pydantic import Field
 from prefab_ui.components.base import Component
 from prefab_ui.rx import RxStr
 
-ProgressVariant = Literal[
-    "default", "success", "warning", "destructive", "info", "muted"
-]
+ProgressVariant = (
+    Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
+)
 
 ProgressOrientation = Literal["horizontal", "vertical"]
 

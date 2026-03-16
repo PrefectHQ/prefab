@@ -9,6 +9,7 @@ export const alertSchema = containerBase.extend({
   type: z.literal("Alert"),
   variant: z
     .enum(["default", "destructive", "success", "warning", "info"])
+    .or(z.string())
     .optional(),
   icon: z.string().nullable().optional(),
 });

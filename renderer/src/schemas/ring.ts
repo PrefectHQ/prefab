@@ -9,6 +9,7 @@ export const ringSchema = containerBase.extend({
   label: z.string().optional(),
   variant: z
     .enum(["default", "success", "warning", "destructive", "info", "muted"])
+    .or(z.string())
     .optional(),
   size: z.enum(["sm", "default", "lg"]).optional(),
   thickness: z.number().optional(),

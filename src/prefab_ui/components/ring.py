@@ -9,7 +9,9 @@ from pydantic import Field
 from prefab_ui.components.base import ContainerComponent
 from prefab_ui.rx import RxStr
 
-RingVariant = Literal["default", "success", "warning", "destructive", "info", "muted"]
+RingVariant = (
+    Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
+)
 RingSize = Literal["sm", "default", "lg"]
 
 
