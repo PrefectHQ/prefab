@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
   useReactTable,
   getCoreRowModel,
@@ -110,7 +111,7 @@ export function PrefabDataTable({
   });
 
   return (
-    <div className={className}>
+    <div className={cn("w-full", className)}>
       {searchable && (
         <div className="mb-4">
           <Input
