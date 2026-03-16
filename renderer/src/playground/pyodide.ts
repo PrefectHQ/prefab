@@ -157,12 +157,19 @@ try:
 finally:
     _PgComponent.model_post_init = _pg_real_post_init
 
-# Find root components (not children of any container)
+# Find root components (not children of any container or DataTable row)
+from prefab_ui.components.data_table import DataTable as _PgDataTable
 _pg_all_children = set()
 for _c in _pg_created:
     if isinstance(_c, ContainerComponent):
         for _ch in _c.children:
             _pg_all_children.add(id(_ch))
+    if isinstance(_c, _PgDataTable) and isinstance(_c.rows, list):
+        for _row in _c.rows:
+            if isinstance(_row, dict):
+                for _v in _row.values():
+                    if isinstance(_v, _PgComponent):
+                        _pg_all_children.add(id(_v))
 
 _pg_roots = [_c for _c in _pg_created if id(_c) not in _pg_all_children]
 

@@ -665,6 +665,11 @@
     "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"id\", header=\"ID\"),\n        DataTableColumn(key=\"task\", header=\"Task\", sortable=True),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\"id\": \"T-001\", \"task\": \"Design system\", \"status\": \"Complete\"},\n        {\"id\": \"T-002\", \"task\": \"API integration\", \"status\": \"In Progress\"},\n        {\"id\": \"T-003\", \"task\": \"Testing\", \"status\": \"Pending\"},\n        {\"id\": \"T-004\", \"task\": \"Documentation\", \"status\": \"In Progress\"},\n        {\"id\": \"T-005\", \"task\": \"Deployment\", \"status\": \"Pending\"},\n    ],\n    paginated=True,\n    page_size=3,\n    caption=\"Sprint tasks\",\n)"
   },
   {
+    "title": "Python expandable icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import DataTable, DataTableColumn, Badge, Progress\nfrom prefab_ui.components.charts import Sparkline\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"metric\", header=\"Metric\", sortable=True),\n        DataTableColumn(key=\"trend\", header=\"Trend\"),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\n            \"metric\": \"Revenue\",\n            \"trend\": Sparkline(\n                data=[45, 52, 49, 60, 55, 72, 68, 75],\n                variant=\"success\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Growing\", variant=\"success\"),\n        },\n        {\n            \"metric\": \"Churn\",\n            \"trend\": Sparkline(\n                data=[12, 15, 18, 14, 20, 22, 19, 25],\n                variant=\"destructive\", css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"At risk\", variant=\"destructive\"),\n        },\n        {\n            \"metric\": \"Users\",\n            \"trend\": Sparkline(\n                data=[200, 220, 215, 240, 260, 255, 270, 290],\n                variant=\"info\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Stable\", variant=\"secondary\"),\n        },\n    ],\n)"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import DatePicker\n\nDatePicker(placeholder=\"Select deadline\", css_class=\"w-fit mx-auto\")"
@@ -1552,7 +1557,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Row, Text, Column\nfrom prefab_ui.components.charts import Sparkline\n\ndata = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, css_class=\"w-24\")\n        Text(\"linear\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"step\", css_class=\"w-24\")\n        Text(\"step\")"
+    "code": "from prefab_ui.components import Row, Text, Column\nfrom prefab_ui.components.charts import Sparkline\n\ndata = [10, 15, 8, 22, 18, 25, 20, 16, 24, 12]\n\nwith Column(gap=3, css_class=\"w-fit mx-auto\"):\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, css_class=\"w-24\")\n        Text(\"linear\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"smooth\", css_class=\"w-24\")\n        Text(\"smooth\")\n    with Row(css_class=\"items-center gap-3\"):\n        Sparkline(data=data, curve=\"step\", css_class=\"w-24\")\n        Text(\"step\")"
   },
   {
     "title": "Python icon=\"python\"",

@@ -6,6 +6,7 @@
  */
 
 import { useState, useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
   useReactTable,
   getCoreRowModel,
@@ -23,10 +24,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableCaption,
 } from "@/ui/table";
 import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
+import { useRenderNode, isComponentNode } from "../render-context";
 
 interface DataTableColumnSpec {
   key: string;
@@ -40,7 +41,6 @@ interface DataTableProps {
   searchable?: boolean;
   paginated?: boolean;
   pageSize?: number;
-  caption?: string;
   className?: string;
 }
 
@@ -50,11 +50,11 @@ export function PrefabDataTable({
   searchable = false,
   paginated = false,
   pageSize = 10,
-  caption,
   className,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const renderNode = useRenderNode();
 
   // Build @tanstack/react-table column defs from our flat spec
   const columns = useMemo<ColumnDef<Record<string, unknown>>[]>(
@@ -85,10 +85,13 @@ export function PrefabDataTable({
         },
         cell: ({ getValue }) => {
           const value = getValue();
+          if (renderNode && isComponentNode(value)) {
+            return renderNode(value);
+          }
           return value != null ? String(value) : "";
         },
       })),
-    [columnSpecs],
+    [columnSpecs, renderNode],
   );
 
   const table = useReactTable({
@@ -105,7 +108,7 @@ export function PrefabDataTable({
   });
 
   return (
-    <div className={className}>
+    <div className={cn("w-full min-w-0", className)}>
       {searchable && (
         <div className="mb-4">
           <Input
@@ -118,7 +121,6 @@ export function PrefabDataTable({
       )}
 
       <Table>
-        {caption && <TableCaption>{caption}</TableCaption>}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

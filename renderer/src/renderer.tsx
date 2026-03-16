@@ -16,6 +16,7 @@ import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
 import { useOverlayClose } from "./overlay-context";
+import { RenderProvider } from "./render-context";
 import { evaluateCondition } from "./conditions";
 import { validateNode } from "./validation";
 import { ValidationError } from "./components/validation-error";
@@ -635,5 +636,12 @@ export function RenderTree({
   }
 
   const scope: Record<string, unknown> = defs ? { $defs: defs } : {};
-  return <RenderNode node={tree} scope={scope} state={state} app={app} />;
+  const renderNodeFn = (node: ComponentNode) => (
+    <RenderNode node={node} scope={scope} state={state} app={app} />
+  );
+  return (
+    <RenderProvider renderNode={renderNodeFn}>
+      <RenderNode node={tree} scope={scope} state={state} app={app} />
+    </RenderProvider>
+  );
 }
