@@ -269,6 +269,25 @@ Supported format strings:
 | `date:short` | `3/15/23` | short / medium / long / full |
 | `date:long` | `March 15, 2023` | |
 
+## From DataFrame
+
+DataTable accepts a pandas or polars DataFrame directly as `rows`. Column definitions are generated automatically from the DataFrame's column names, or you can pass explicit `columns` to override them.
+
+```python
+import pandas as pd
+from prefab_ui.components import DataTable
+
+df = pd.DataFrame({
+    "name": ["Alice", "Bob", "Carol"],
+    "revenue": [42000, 28000, 15000],
+    "region": ["US", "EU", "US"],
+})
+
+DataTable(rows=df)
+```
+
+This is equivalent to constructing the table with explicit rows and columns — the conversion happens in Python before any data is serialized. Any object with `.columns` and `.to_dict(orient="records")` works, including polars DataFrames and pyarrow tables.
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">

@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pandas as pd
+import polars as pl
+
 from prefab_ui.components import (
     Badge,
     DataTable,
@@ -159,3 +162,59 @@ class TestDataTableComponent:
         col = DataTableColumn(key="price", header="Price", format="currency:EUR")
         j = col.model_dump()
         assert j["format"] == "currency:EUR"
+
+
+class TestDataTableDataFrame:
+    def test_pandas_dataframe_auto_converts_rows(self):
+        df = pd.DataFrame({"name": ["Alice", "Bob"], "score": [90, 85]})
+        dt = DataTable(rows=df)
+        j = dt.to_json()
+        assert j["rows"] == [
+            {"name": "Alice", "score": 90},
+            {"name": "Bob", "score": 85},
+        ]
+
+    def test_pandas_dataframe_auto_generates_columns(self):
+        df = pd.DataFrame({"name": ["Alice"], "region": ["US"]})
+        dt = DataTable(rows=df)
+        j = dt.to_json()
+        assert j["columns"] == [
+            {"key": "name", "header": "name", "sortable": False},
+            {"key": "region", "header": "region", "sortable": False},
+        ]
+
+    def test_pandas_dataframe_preserves_explicit_columns(self):
+        df = pd.DataFrame({"name": ["Alice"], "score": [90]})
+        explicit_cols = [DataTableColumn(key="name", header="Full Name", sortable=True)]
+        dt = DataTable(rows=df, columns=explicit_cols)
+        j = dt.to_json()
+        assert len(j["columns"]) == 1
+        assert j["columns"][0]["header"] == "Full Name"
+        assert j["columns"][0]["sortable"] is True
+
+    def test_polars_dataframe_auto_converts_rows(self):
+        df = pl.DataFrame({"name": ["Carol", "Dave"], "revenue": [15000, 22000]})
+        dt = DataTable(rows=df)
+        j = dt.to_json()
+        assert j["rows"] == [
+            {"name": "Carol", "revenue": 15000},
+            {"name": "Dave", "revenue": 22000},
+        ]
+
+    def test_polars_dataframe_auto_generates_columns(self):
+        df = pl.DataFrame({"product": ["Widget"], "units": [42]})
+        dt = DataTable(rows=df)
+        j = dt.to_json()
+        assert j["columns"] == [
+            {"key": "product", "header": "product", "sortable": False},
+            {"key": "units", "header": "units", "sortable": False},
+        ]
+
+    def test_polars_dataframe_preserves_explicit_columns(self):
+        df = pl.DataFrame({"product": ["Widget"], "units": [42]})
+        explicit_cols = [DataTableColumn(key="product", header="Item", sortable=True)]
+        dt = DataTable(rows=df, columns=explicit_cols)
+        j = dt.to_json()
+        assert len(j["columns"]) == 1
+        assert j["columns"][0]["header"] == "Item"
+        assert j["columns"][0]["sortable"] is True

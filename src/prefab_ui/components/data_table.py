@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.components.base import Component
 
@@ -67,9 +67,35 @@ class DataTable(Component):
             searchable=True,
             paginated=True,
         )
+
+    Also accepts a pandas, polars, or any DataFrame-like object as ``rows``.
+    Columns are auto-generated from the DataFrame's column names if not provided.
     """
 
     type: Literal["DataTable"] = "DataTable"
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_dataframe(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            rows = data.get("rows")
+        else:
+            return data
+        if rows is None:
+            return data
+        if hasattr(rows, "columns") and hasattr(rows, "to_dict"):
+            if hasattr(rows, "to_dicts"):
+                # polars-style API
+                data["rows"] = rows.to_dicts()
+            else:
+                # pandas-style API
+                data["rows"] = rows.to_dict(orient="records")
+            if not data.get("columns"):
+                data["columns"] = [
+                    {"key": str(col), "header": str(col)} for col in rows.columns
+                ]
+        return data
+
     columns: list[DataTableColumn] = Field(description="Column definitions")
     rows: list[dict[str, Any]] | str = Field(
         default_factory=list,
