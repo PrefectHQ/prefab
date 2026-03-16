@@ -269,31 +269,98 @@ Supported format strings:
 | `date:short` | `3/15/23` | short / medium / long / full |
 | `date:long` | `March 15, 2023` | |
 
-## Column Width and Alignment
+## Column Widths
 
-Control column sizing with `width`, `min_width`, and `max_width`, and align cell content with `align`. The `align` convenience field resolves to `cell_class` Python-side — it never appears in the protocol.
+Set explicit widths on columns to control the table layout. Without widths, columns auto-size to their content — which is fine for text, but numbers and compact values like IDs benefit from fixed widths.
 
-```python
+<ComponentPreview>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
 DataTable(
     columns=[
-        DataTableColumn(key="id", header="ID", width="80px", align="center"),
-        DataTableColumn(key="name", header="Name", min_width="150px"),
-        DataTableColumn(
-            key="amount",
-            header="Amount",
-            align="right",
-            cell_class="font-mono",
-            header_class="text-right",
-        ),
+        DataTableColumn(key="id", header="ID", width="80px"),
+        DataTableColumn(key="name", header="Name"),
+        DataTableColumn(key="amount", header="Amount", width="120px"),
     ],
     rows=[
         {"id": "001", "name": "Alice Johnson", "amount": "$1,200.00"},
         {"id": "002", "name": "Bob Smith", "amount": "$850.50"},
+        {"id": "003", "name": "Carol White", "amount": "$2,100.00"},
     ],
 )
 ```
+</ComponentPreview>
 
-Use `header_class` and `cell_class` for arbitrary Tailwind styling on individual columns — truncation, font weights, color coding, and so on.
+## Column Alignment
+
+Right-align numbers and currency so decimal points line up. Center short values like status codes or icons. The `align` prop is a convenience that compiles to `cell_class` Python-side — the protocol only sees the CSS class.
+
+<ComponentPreview>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name"),
+        DataTableColumn(key="region", header="Region", align="center"),
+        DataTableColumn(key="revenue", header="Revenue", align="right"),
+        DataTableColumn(key="growth", header="Growth", align="right"),
+    ],
+    rows=[
+        {"name": "Acme Corp", "region": "US", "revenue": "$4.2M", "growth": "+12%"},
+        {"name": "Globex", "region": "EU", "revenue": "$2.8M", "growth": "-3%"},
+        {"name": "Initech", "region": "US", "revenue": "$1.5M", "growth": "+28%"},
+    ],
+)
+```
+</ComponentPreview>
+
+## Column Styling
+
+Use `header_class` and `cell_class` for arbitrary Tailwind on individual columns — font weights, colors, truncation, monospace for numbers. These are the escape hatches when `align` and `width` aren't enough.
+
+<ComponentPreview>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(
+            key="name", header="Name",
+            cell_class="font-semibold",
+        ),
+        DataTableColumn(key="email", header="Email", cell_class="text-muted-foreground"),
+        DataTableColumn(
+            key="amount", header="Amount",
+            align="right",
+            cell_class="font-mono",
+        ),
+    ],
+    rows=[
+        {"name": "Alice Johnson", "email": "alice@example.com", "amount": "$1,200.00"},
+        {"name": "Bob Smith", "email": "bob@example.com", "amount": "$850.50"},
+        {"name": "Carol White", "email": "carol@example.com", "amount": "$2,100.00"},
+    ],
+)
+```
+</ComponentPreview>
+
+## Column Pattern
+
+`DataTableColumn` defines everything about a column in one place — what data to show, how to display it, and how it behaves. Here's the full set of options:
+
+```python
+DataTableColumn(
+    key="revenue",          # which field from row data
+    header="Revenue ($)",   # display header
+    sortable=True,          # click-to-sort
+    width="150px",          # fixed width
+    align="right",          # text alignment (→ cell_class)
+    cell_class="font-mono", # arbitrary Tailwind on cells
+    header_class="text-right font-bold",  # arbitrary Tailwind on header
+)
+```
 
 ## API Reference
 
