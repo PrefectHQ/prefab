@@ -291,3 +291,7 @@ with ForEach("todos"):
 ```
 
 The checkbox updates instantly. If the server fails, the `on_error` branch flips it back and shows a toast.
+
+### Reacting to any change
+
+When the same key can change from multiple sources (different buttons, server responses, user inputs), attaching `on_change` to each component that writes it becomes tedious. `Watch` centralizes the reaction: it fires its `on_change` actions whenever the watched key changes, regardless of what caused the change. See [Watching for changes](/concepts/state#watching-for-changes) for details.

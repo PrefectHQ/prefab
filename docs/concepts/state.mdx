@@ -203,4 +203,43 @@ If any segment along a path is missing or the wrong type, the expression resolve
 
 Two things write to state: interactive controls (automatically, via the `name` prop) and [actions](/concepts/actions) (explicitly, in response to events). `SetState` assigns a value. `ToggleState` flips a boolean. `AppendState` and `PopState` manipulate arrays. `CallTool` and `Fetch` make their results available as `$result` in `on_success` callbacks, where you can write them to state with `SetState`.
 
-State is deliberately simple: a flat map with dot-path addressing for nesting. There are no computed properties, no watchers, no derived state in the store itself. Derived values belong in [expressions](/concepts/expressions), where they're computed at render time from whatever state holds. Complex computations belong in Python, run before you return the component tree, or in a server action.
+State is deliberately simple: a flat map with dot-path addressing for nesting. Derived display values belong in [expressions](/concepts/expressions), where they're computed at render time from whatever state holds. For side effects that should run when a key changes, use watchers.
+
+## Watching for changes
+
+Sometimes you need to react to a state change from any source: recalculate a dependent value, validate a field, or show a notification. Rather than attaching `on_change` to every component that might write a key, place a `Watch` in the tree and let it centralize the reaction.
+
+`Watch` is a non-visual component. It monitors a state key and fires its `on_change` actions whenever the value differs from the previous render. The new value is available as `$event` inside those actions:
+
+```python
+from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Slider, Text, Watch
+
+with Column():
+    Slider(name="brightness", min=0, max=100)
+    Watch("brightness", on_change=SetState("brightness_pct", "{{ brightness / 100 }}"))
+    Text("{{ brightness_pct | percent }}")
+```
+
+The watcher fires regardless of what caused the change: a slider drag, a `SetState` from a button click, or a server response that wrote to the key. One watcher handles the reaction for all sources.
+
+### Multiple watchers
+
+You can place multiple watchers in the tree, each monitoring a different key. They're independent, lightweight declarations:
+
+```python
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.components import Watch
+
+Watch("slider_a", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+Watch("slider_b", on_change=SetState("total", "{{ slider_a + slider_b }}"))
+Watch("total", on_change=ShowToast("Total updated: {{ total }}"))
+```
+
+### Cascading watchers
+
+Watcher A can update a key that triggers Watcher B. In the example above, changing `slider_a` triggers the first watcher, which updates `total`, which triggers the third watcher. The renderer's depth limit (10 levels) prevents infinite loops.
+
+### Batching
+
+When an action chain writes to multiple keys in sequence, watchers fire once after all writes settle, not after each individual write. This is because watchers run after React commits the render, so intermediate states are never observed.

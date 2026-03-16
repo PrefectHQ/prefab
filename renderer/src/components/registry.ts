@@ -118,6 +118,7 @@ import { Video, Audio } from "./media";
 import { PrefabMetric } from "./metric";
 import { Ring } from "./ring";
 import { Condition, ForEach, Slot } from "./control-flow";
+import { Watch } from "./watch";
 import { PrefabDataTable } from "./data-display";
 import {
   PrefabTabs,
@@ -280,6 +281,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Condition,
   ForEach,
   Slot,
+  Watch,
 
   // Compound containers (wrapper components decompose children into parts)
   Tabs: PrefabTabs,
