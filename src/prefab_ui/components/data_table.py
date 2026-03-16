@@ -28,6 +28,13 @@ from prefab_ui.components.base import Component
 from prefab_ui.rx import RxStr
 
 
+def _serialize_cell_value(value: Any) -> Any:
+    """Serialize a cell value, recursively calling to_json() for Component instances."""
+    if isinstance(value, Component):
+        return value.to_json()
+    return value
+
+
 class DataTableColumn(BaseModel):
     """Column definition for DataTable."""
 
@@ -68,3 +75,12 @@ class DataTable(Component):
         default=10, alias="pageSize", description="Rows per page when paginated"
     )
     caption: RxStr | None = Field(default=None, description="Optional table caption")
+
+    def to_json(self) -> dict[str, Any]:
+        d = super().to_json()
+        if isinstance(self.rows, list):
+            d["rows"] = [
+                {k: _serialize_cell_value(v) for k, v in row.items()}
+                for row in self.rows
+            ]
+        return d
