@@ -41,5 +41,13 @@ jobs:
         env:
           SKIP: no-commit-to-branch
 
+      - name: Check docs are up to date
+        run: |
+          uv run prefab dev build-docs
+          git diff --exit-code docs/ || {
+            echo "::error::docs/ is out of date. Run 'prefab dev build-docs' and commit the result."
+            exit 1
+          }
+
       - name: Check for broken docs links
         run: cd docs && npx mint@latest broken-links
