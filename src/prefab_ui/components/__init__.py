@@ -48,6 +48,7 @@ from prefab_ui.components.data_table import DataTable, DataTableColumn
 from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
 from prefab_ui.components.div import Div, Span
+from prefab_ui.components.dot import Dot
 from prefab_ui.components.drop_zone import DropZone
 from prefab_ui.components.embed import Embed
 from prefab_ui.components.accordion import Accordion, AccordionItem
@@ -166,6 +167,7 @@ __all__ = [
     "DatePicker",
     "Dialog",
     "Div",
+    "Dot",
     "DropZone",
     "Elif",
     "Else",

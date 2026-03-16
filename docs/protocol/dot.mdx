@@ -1,0 +1,79 @@
+---
+title: Dot
+description: JSON Schema for the Dot component.
+---
+
+A colored dot indicator.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Dot",
+      "default": "Dot",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "variant": {
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "secondary",
+            "success",
+            "warning",
+            "destructive",
+            "info",
+            "muted"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": "default",
+      "description": "Visual variant: default, secondary, success, warning, destructive, info, muted"
+    },
+    "size": {
+      "default": "default",
+      "description": "Dot size: sm, default, lg",
+      "enum": [
+        "sm",
+        "default",
+        "lg"
+      ],
+      "type": "string"
+    },
+    "shape": {
+      "default": "circle",
+      "description": "Dot shape: circle, square, rounded",
+      "enum": [
+        "circle",
+        "square",
+        "rounded"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

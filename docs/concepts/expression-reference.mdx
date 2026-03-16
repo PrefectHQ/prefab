@@ -150,10 +150,11 @@ with Card():
 | `currency` | `.currency()` / `.currency("EUR")` | `{{ x \| currency }}` / `{{ x \| currency:EUR }}` | `$1,234.00` / `€1,234.00` |
 | `percent` | `.percent()` / `.percent(1)` | `{{ x \| percent }}` / `{{ x \| percent:1 }}` | `76%` / `75.6%` |
 | `number` | `.number()` / `.number(2)` | `{{ x \| number }}` / `{{ x \| number:2 }}` | `1,234` / `1,234.00` |
+| `compact` | `.compact()` / `.compact(0)` | `{{ x \| compact }}` / `{{ x \| compact:0 }}` | `1.8M` / `2M` |
 | `round` | `.round(2)` | `{{ x \| round:2 }}` | `3.14` |
 | `abs` | `.abs()` | `{{ x \| abs }}` | `42` |
 
-`percent` multiplies by 100 before formatting. A value of `0.756` becomes `75.6%`, not `0.756%`. `number` and `currency` produce locale-formatted output (en-US by default).
+`percent` multiplies by 100 before formatting. A value of `0.756` becomes `75.6%`, not `0.756%`. `number` and `currency` produce locale-formatted output (en-US by default). `compact` uses compact notation to abbreviate large numbers: `1800000` becomes `1.8M`, `470000` becomes `470K`, and small values like `42` pass through unchanged. The optional decimals argument controls precision.
 
 ### Date and Time
 

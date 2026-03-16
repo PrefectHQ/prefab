@@ -436,6 +436,9 @@ class Rx:
     def round(self, decimals: int = 0) -> Rx:
         return self._pipe("round", decimals)
 
+    def compact(self, decimals: int | None = None) -> Rx:
+        return self._pipe("compact", decimals)
+
     def abs(self) -> Rx:
         return self._pipe("abs")
 

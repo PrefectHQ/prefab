@@ -344,11 +344,13 @@ revenue.number()           # {{ revenue | number }}         → 2,847,500
 revenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0
 revenue.percent()          # {{ revenue | percent }}        → 284,750,000%
 revenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%
+revenue.compact()          # {{ revenue | compact }}        → 2.8M
+revenue.compact(0)         # {{ revenue | compact:0 }}      → 3M
 revenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00
 revenue.abs()              # {{ revenue | abs }}            → absolute value
 ```
 
-`.currency()` and `.number()` add locale-aware grouping separators. `.round()` rounds without adding separators, which is useful for computations that feed into other expressions.
+`.currency()` and `.number()` add locale-aware grouping separators. `.compact()` abbreviates large numbers using compact notation (`1.8M`, `470K`); small values pass through unchanged. `.round()` rounds without adding separators, which is useful for computations that feed into other expressions.
 
 ### Date and time formatting
 

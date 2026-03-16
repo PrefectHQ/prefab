@@ -23,11 +23,13 @@ const VARIANT_CLASS: Record<string, string> = {
 
 interface RingProps {
   value?: number;
+  target?: number;
   label?: string;
   variant?: string;
   size?: string;
   thickness?: number;
   indicatorClassName?: string;
+  targetClassName?: string;
   className?: string;
   cssClass?: string;
   children?: React.ReactNode;
@@ -35,11 +37,13 @@ interface RingProps {
 
 export function Ring({
   value = 0,
+  target,
   label,
   variant = "default",
   size = "default",
   thickness = 6,
   indicatorClassName,
+  targetClassName,
   className,
   cssClass,
   children,
@@ -50,6 +54,30 @@ export function Ring({
   const circumference = 2 * Math.PI * radius;
   const clamped = Math.max(0, Math.min(100, value));
   const offset = circumference * (1 - clamped / 100);
+
+  // Target tick mark: a short line at the target angle on the ring.
+  // The SVG is rotated -90deg so angle 0 in SVG space = 12 o'clock visually.
+  const clampedTarget =
+    target != null ? Math.max(0, Math.min(100, target)) : undefined;
+  let targetLine: React.ReactNode = null;
+  if (clampedTarget != null) {
+    const angle = (clampedTarget / 100) * 360;
+    const rad = (angle * Math.PI) / 180;
+    const tickLen = thickness + 4;
+    const innerR = radius - tickLen / 2;
+    const outerR = radius + tickLen / 2;
+    targetLine = (
+      <line
+        className={cn("cn-ring-target", targetClassName)}
+        x1={half + innerR * Math.cos(rad)}
+        y1={half + innerR * Math.sin(rad)}
+        x2={half + outerR * Math.cos(rad)}
+        y2={half + outerR * Math.sin(rad)}
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+    );
+  }
 
   return (
     <div
@@ -94,6 +122,7 @@ export function Ring({
           strokeDashoffset={offset}
           strokeLinecap="round"
         />
+        {targetLine}
       </svg>
       {children ? (
         <div className="cn-ring-label-overlay absolute inset-0 flex items-center justify-center">

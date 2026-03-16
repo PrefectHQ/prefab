@@ -74,6 +74,7 @@ import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
 import { divSchema, spanSchema } from "./div.ts";
+import { dotSchema } from "./dot.ts";
 import { dropZoneSchema } from "./drop_zone.ts";
 import { embedSchema } from "./embed.ts";
 import {
@@ -187,6 +188,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   DatePicker: datePickerSchema,
   Dialog: dialogSchema,
   Div: divSchema,
+  Dot: dotSchema,
   DropZone: dropZoneSchema,
   Embed: embedSchema,
   Field: fieldSchema,

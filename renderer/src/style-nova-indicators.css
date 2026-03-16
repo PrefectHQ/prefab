@@ -1,0 +1,121 @@
+/* Data visualization indicator styles — Dot, Ring, Sparkline.
+ * Split from style-nova.css for file size limits. */
+
+/* MARK: Dot */
+.cn-dot-sm {
+  @apply size-1.5;
+}
+.cn-dot-default {
+  @apply size-2;
+}
+.cn-dot-lg {
+  @apply size-3;
+}
+.cn-dot-rounded {
+  @apply rounded-sm;
+}
+.cn-dot-variant-default {
+  @apply bg-primary;
+}
+.cn-dot-variant-secondary {
+  @apply bg-secondary-foreground;
+}
+.cn-dot-variant-success {
+  @apply bg-[var(--success)];
+}
+.cn-dot-variant-warning {
+  @apply bg-[var(--warning)];
+}
+.cn-dot-variant-destructive {
+  @apply bg-destructive;
+}
+.cn-dot-variant-info {
+  @apply bg-[var(--info)];
+}
+.cn-dot-variant-muted {
+  @apply bg-muted-foreground;
+}
+
+/* MARK: Ring */
+.cn-ring {
+  @apply relative;
+}
+.cn-ring-svg {
+  @apply block;
+}
+.cn-ring-track {
+  stroke: var(--muted);
+  fill: none;
+}
+.cn-ring-fill {
+  fill: none;
+  transition:
+    stroke-dashoffset 0.3s ease,
+    filter 0.2s ease;
+}
+.cn-ring-variant-default {
+  stroke: var(--primary);
+}
+.cn-ring-variant-success {
+  stroke: var(--success);
+}
+.cn-ring-variant-warning {
+  stroke: var(--warning);
+}
+.cn-ring-variant-destructive {
+  stroke: var(--destructive);
+}
+.cn-ring-variant-info {
+  stroke: var(--info);
+}
+.cn-ring-variant-muted {
+  stroke: var(--muted-foreground);
+}
+.cn-ring-target {
+  stroke: var(--foreground);
+}
+
+/* ── Sparkline ─────────────────────────────────────────────────────── */
+/* stroke="currentColor" on the Recharts <Line>/<Area> inherits color */
+.cn-sparkline-variant-default {
+  color: var(--primary);
+}
+.cn-sparkline-variant-success {
+  color: var(--success);
+}
+.cn-sparkline-variant-warning {
+  color: var(--warning);
+}
+.cn-sparkline-variant-destructive {
+  color: var(--destructive);
+}
+.cn-sparkline-variant-info {
+  color: var(--info);
+}
+.cn-sparkline-variant-muted {
+  color: var(--muted-foreground);
+}
+.cn-sparkline-fill-stop-start {
+  stop-color: currentColor;
+  stop-opacity: 0.3;
+}
+.cn-sparkline-fill-stop-end {
+  stop-color: currentColor;
+  stop-opacity: 0.05;
+}
+
+.cn-ring-label-overlay {
+  @apply pointer-events-none;
+}
+.cn-ring-label {
+  @apply font-semibold;
+}
+.cn-ring-label-sm {
+  @apply text-xs;
+}
+.cn-ring-label-default {
+  @apply text-base;
+}
+.cn-ring-label-lg {
+  @apply text-3xl;
+}

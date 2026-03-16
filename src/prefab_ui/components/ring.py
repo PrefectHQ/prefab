@@ -54,8 +54,17 @@ class Ring(ContainerComponent):
         default=6,
         description="Stroke width of the ring in pixels",
     )
+    target: float | RxStr | None = Field(
+        default=None,
+        description="Target marker position (renders a tick mark on the ring at this value)",
+    )
     indicator_class: RxStr | None = Field(
         default=None,
         alias="indicatorClass",
         description="Tailwind classes for the filled arc (e.g. 'hover:drop-shadow-lg')",
+    )
+    target_class: RxStr | None = Field(
+        default=None,
+        alias="targetClass",
+        description="Tailwind classes for the target marker",
     )

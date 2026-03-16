@@ -241,8 +241,8 @@ export function mapProps(
     }
   }
 
-  // Progress: normalize value to 0-100 percentage from min/max range,
-  // and map indicatorClass → indicatorClassName
+  // Progress: normalize value/target to 0-100 percentage from min/max range,
+  // and map indicatorClass/targetClass → className variants
   if (type === "Progress") {
     const min = (mapped.min as number) ?? 0;
     const max = (mapped.max as number) ?? 100;
@@ -250,6 +250,9 @@ export function mapProps(
     const range = max - min;
     if (range > 0) {
       mapped.value = ((val - min) / range) * 100;
+      if (mapped.target != null) {
+        mapped.target = (((mapped.target as number) - min) / range) * 100;
+      }
     }
     delete mapped.min;
     delete mapped.max;
@@ -257,9 +260,13 @@ export function mapProps(
       mapped.indicatorClassName = mapped.indicatorClass;
       delete mapped.indicatorClass;
     }
+    if ("targetClass" in mapped) {
+      mapped.targetClassName = mapped.targetClass;
+      delete mapped.targetClass;
+    }
   }
 
-  // Ring: normalize value to 0-100 percentage from min/max range
+  // Ring: normalize value/target to 0-100 percentage from min/max range
   if (type === "Ring") {
     const min = (mapped.min as number) ?? 0;
     const max = (mapped.max as number) ?? 100;
@@ -267,12 +274,19 @@ export function mapProps(
     const range = max - min;
     if (range > 0) {
       mapped.value = ((val - min) / range) * 100;
+      if (mapped.target != null) {
+        mapped.target = (((mapped.target as number) - min) / range) * 100;
+      }
     }
     delete mapped.min;
     delete mapped.max;
     if ("indicatorClass" in mapped) {
       mapped.indicatorClassName = mapped.indicatorClass;
       delete mapped.indicatorClass;
+    }
+    if ("targetClass" in mapped) {
+      mapped.targetClassName = mapped.targetClass;
+      delete mapped.targetClass;
     }
   }
 
