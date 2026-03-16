@@ -1,0 +1,136 @@
+---
+title: Watch
+description: React to state changes from any source with centralized watchers.
+icon: bell
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Interactive components fire `on_change` when a user interacts with them, but that only covers one source of state changes. What if state is updated by a `SetState` action, a server response, or another watcher? `Watch` fills that gap: it monitors a state key and fires actions whenever the value changes, regardless of what caused the change.
+
+`Watch` is a non-visual component. It renders nothing — place it anywhere in the tree and it observes a key in the background.
+
+## Basic usage
+
+Pass the state key to watch and the action(s) to run when it changes. The new value is available as `$event`:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"type":"Watch","key":"brightness","onChange":{"action":"setState","key":"brightness_pct","value":"{{ brightness / 100 }}"}},{"content":"Brightness: {{ brightness_pct | percent }}","type":"Text"}]}}} playground="H4sIAAAAAAACE1WQTYrDMAyF9z6F8CqB0EmZXcGb6REyMMuguEpiiGXjqEyh7d3rpvOTaCN4-t6TUJ-Ch5iox649ux1acYFncD6GJNCQNIJCqt9iNuQ5E8sfeQzT2XMFzeROlCr4pItU8IViR6W-nYw_RDFgNO_lQUGuF1wwejK6S24YhWmedQUTdjQZ_bHWvGNT54YXs6_rcklYFhRbb-DWjsgDmd_z10AbrWRIX6_wL8Ib5Ei433X5yn2eX6zWH2DDP0PgBpGSzU9YfOoBMRpfJ0oBAAA">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Slider, Text, Watch
+
+with Column(gap=3):
+    Slider(name="brightness", label="Brightness", min=0, max=100)
+    Watch("brightness", on_change=SetState("brightness_pct", "{{ brightness / 100 }}"))
+    Text("Brightness: {{ brightness_pct | percent }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "name": "brightness",
+        "type": "Slider",
+        "min": 0.0,
+        "max": 100.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "brightness",
+        "onChange": {
+          "action": "setState",
+          "key": "brightness_pct",
+          "value": "{{ brightness / 100 }}"
+        }
+      },
+      {"content": "Brightness: {{ brightness_pct | percent }}", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Drag the slider: the watcher detects the change to `brightness`, computes `brightness_pct`, and the text updates. The watcher fires whether the change came from the slider, a button action, or a server response.
+
+## Watching multiple keys
+
+Place one watcher per key. They're independent, lightweight declarations that can coexist anywhere in the tree:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"width","type":"Slider","min":1.0,"max":100.0,"disabled":false},{"name":"height","type":"Slider","min":1.0,"max":100.0,"disabled":false},{"type":"Watch","key":"width","onChange":{"action":"setState","key":"area","value":"{{ width * height }}"}},{"type":"Watch","key":"height","onChange":{"action":"setState","key":"area","value":"{{ width * height }}"}},{"content":"Area: {{ area }} sq units","type":"Text"}]},"state":{"width":50,"height":30,"area":1500}}} playground="H4sIAAAAAAACE52QMWvDMBCFd_2KQ5NcTLEJWQIaSpbOdSGjuThnS2BLrn3GgZD_XtmxU9pkqhbpuO-9d7qy8w20HZV4zAf7im0Ltml9x9AT59ZZtljnPSOTKP-wBVvv-pXPiLNnWOFD35HjO7n39dC4GD78GENW2xN1MXzSmWM4IBdGiDkP9OMMarQnNnqbxGDIVob1JjyxI9TpNkkiIUbLZklQFbZ6E-0EhHPLUQ4b0nJ2kTHUeKRay8NSNtbpNFx41ulk9qC7Zf4I39f6mXL-i7pneZcXBl1Fet2UktPgoSUvF5gxeFm-BderjH7Z3KP_6zMtWMm3QO4gcJMkdKH_giFsuJeR-AaLtDM9DAIAAA">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import set_initial_state
+from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Row, Slider, Text, Watch
+
+state = set_initial_state(width=50, height=30, area=1500)
+
+with Column(gap=3):
+    Slider(name="width", label="Width", min=1, max=100)
+    Slider(name="height", label="Height", min=1, max=100)
+    Watch("width", on_change=SetState("area", "{{ width * height }}"))
+    Watch("height", on_change=SetState("area", "{{ width * height }}"))
+    Text("Area: {{ area }} sq units")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {"name": "width", "type": "Slider", "min": 1.0, "max": 100.0, "disabled": false},
+      {
+        "name": "height",
+        "type": "Slider",
+        "min": 1.0,
+        "max": 100.0,
+        "disabled": false
+      },
+      {
+        "type": "Watch",
+        "key": "width",
+        "onChange": {"action": "setState", "key": "area", "value": "{{ width * height }}"}
+      },
+      {
+        "type": "Watch",
+        "key": "height",
+        "onChange": {"action": "setState", "key": "area", "value": "{{ width * height }}"}
+      },
+      {"content": "Area: {{ area }} sq units", "type": "Text"}
+    ]
+  },
+  "state": {"width": 50, "height": 30, "area": 1500}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Either slider triggers the area recalculation. You don't need to wire `on_change` on both sliders — the watchers handle it centrally.
+
+## Cascading watchers
+
+A watcher's action can update a key that another watcher is monitoring. In this example, changing either dimension triggers the area watcher, which triggers the status watcher:
+
+```python
+Watch("width", on_change=SetState("area", "{{ width * height }}"))
+Watch("height", on_change=SetState("area", "{{ width * height }}"))
+Watch("area", on_change=SetState("status", "{{ area > 5000 ? 'Too large' : 'OK' }}"))
+```
+
+The renderer's depth limit (10 levels) prevents infinite loops. If a cascade exceeds this, it stops and logs a warning.
+
+## Batching
+
+When an action chain writes to multiple state keys in sequence, watchers fire once after all writes settle — not after each individual write. This is because watchers evaluate after React commits the render, so intermediate states are never observed. You don't need to worry about a watcher seeing a half-updated state.
+
+## API reference
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `key` | `str \| Rx` | State key or template expression to watch. |
+| `on_change` | `Action \| list[Action]` | Action(s) to fire when the value changes. The new value is available as `$event`. |
