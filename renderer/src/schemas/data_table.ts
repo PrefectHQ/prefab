@@ -5,6 +5,7 @@ const dataTableColumnSchema = z.object({
   key: z.string(),
   header: z.string(),
   sortable: z.boolean().optional(),
+  format: z.string().optional(),
 });
 
 export const dataTableSchema = componentBase.extend({

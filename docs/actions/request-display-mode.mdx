@@ -9,7 +9,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 `RequestDisplayMode` asks the host to change how the app is displayed — switching between inline, fullscreen, or picture-in-picture. The host decides whether to honor the request, so the actual mode may differ from what you asked for.
 
-<ComponentPreview json={{"view":{"type":"Button","label":"Go Fullscreen","variant":"default","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}}} playground="H4sIABtduGkC_2XLMQpCMQyA4b2nCJ3eA3k3cBHRycULPGpMIdgmtUkHb68gIuL2D9-fu1ZonXK6rIMX1NpUSNyAX9UddsNdJeRfl9BZxZaK7QPPdB9kvmdrJT1OeqUQ3vMUjwqHUYphJ5K4AZUVC-Nt-z9NMX_lPIcnYDuUlaEAAAA">
+<ComponentPreview json={{"view":{"type":"Button","label":"Go Fullscreen","variant":"default","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBSZXF1ZXN0RGlzcGxheU1vZGUKCkJ1dHRvbigiR28gRnVsbHNjcmVlbiIsIG9uX2NsaWNrPVJlcXVlc3REaXNwbGF5TW9kZSgiZnVsbHNjcmVlbiIpKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button
@@ -36,7 +36,7 @@ Button("Go Fullscreen", on_click=RequestDisplayMode("fullscreen"))
 
 Use the `HOST` reactive variable to show the right button based on the current display mode. The host context is automatically available as `$host` in the renderer's state:
 
-<ComponentPreview json={{"view":{"type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ $host.displayMode == 'fullscreen' }}","children":[{"type":"Button","label":"Exit Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"inline"}}]}],"else":[{"type":"Button","label":"Go Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}]}]}}} playground="H4sIABtduGkC_62QwU7DMAyG73kKK6dUqvoASL0AA3ZAk8buU8gSYZHaXeJs4-1pR6FD48h_iWX9n387IXEHffLBvm4LNo67nsmTZMChSgK3RYSphjuOpRveZahhEbNX4TdpnSBTbjrXf6Nrvy8-yz3mPtqPZ95dQel06X9avWyUOqK8TWmmulEw6NxaBjMamt08DtoWdCgxZpe8Jz3ZR32tbfTihAIPs6WGg01oSVrNRSKS1_UPNIlp6yK69_b6AKORzlBVzZuN32H-yH7kf02-PLRSnyU7pLG5AQAA">
+<ComponentPreview json={{"view":{"type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ $host.displayMode == 'fullscreen' }}","children":[{"type":"Button","label":"Exit Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"inline"}}]}],"else":[{"type":"Button","label":"Go Fullscreen","variant":"outline","size":"default","disabled":false,"onClick":{"action":"requestDisplayMode","mode":"fullscreen"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIElmLCBFbHNlCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBSZXF1ZXN0RGlzcGxheU1vZGUKZnJvbSBwcmVmYWJfdWkucngubWNwIGltcG9ydCBIT1NUCgp3aXRoIENvbHVtbigpOgogICAgd2l0aCBJZihIT1NULmRpc3BsYXlNb2RlID09ICJmdWxsc2NyZWVuIik6CiAgICAgICAgQnV0dG9uKCJFeGl0IEZ1bGxzY3JlZW4iLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9UmVxdWVzdERpc3BsYXlNb2RlKCJpbmxpbmUiKSkKICAgIHdpdGggRWxzZSgpOgogICAgICAgIEJ1dHRvbigiR28gRnVsbHNjcmVlbiIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICBvbl9jbGljaz1SZXF1ZXN0RGlzcGxheU1vZGUoImZ1bGxzY3JlZW4iKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Button, Column, If, Else

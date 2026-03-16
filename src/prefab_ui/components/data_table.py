@@ -42,6 +42,13 @@ class DataTableColumn(BaseModel):
     key: str = Field(description="Data key to display in this column")
     header: str = Field(description="Column header text")
     sortable: bool = Field(default=False, description="Enable sorting for this column")
+    format: str | None = Field(
+        default=None,
+        description=(
+            "Cell format: 'number', 'number:2' (decimals), 'currency', 'currency:EUR',"
+            " 'percent', 'percent:1', 'date', 'date:long'"
+        ),
+    )
 
 
 class DataTable(Component):

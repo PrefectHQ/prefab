@@ -1,0 +1,25 @@
+name: Check docs links
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "docs/**"
+  pull_request:
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check_links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check for broken docs links
+        run: cd docs && npx mint@latest broken-links
