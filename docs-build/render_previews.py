@@ -274,7 +274,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         # Build new opening tag with inline JSON and playground link
         attrs = _extract_attrs(opening_tag)
         pg_encoded = (
-            base64.urlsafe_b64encode(gzip.compress(python_source.encode()))
+            base64.urlsafe_b64encode(gzip.compress(python_source.encode(), mtime=0))
             .rstrip(b"=")
             .decode()
         )
