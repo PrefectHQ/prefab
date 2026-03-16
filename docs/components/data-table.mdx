@@ -210,7 +210,7 @@ DataTable(
 
 The `format` field on `DataTableColumn` formats numeric and date values without requiring a component cell. Use `'type'` or `'type:arg'` syntax to control the output.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"product","header":"Product","sortable":false},{"key":"revenue","header":"Revenue","sortable":true,"format":"currency"},{"key":"growth","header":"Growth","sortable":true,"format":"percent:1"},{"key":"units","header":"Units","sortable":true,"format":"number"},{"key":"launched","header":"Launched","sortable":false,"format":"date:medium"}],"rows":[{"product":"Widget Pro","revenue":128450,"growth":0.142,"units":3210,"launched":"2023-03-15"},{"product":"Gadget Plus","revenue":84200,"growth":0.087,"units":1980,"launched":"2022-11-01"},{"product":"Doohickey","revenue":52100,"growth":-0.031,"units":870,"launched":"2024-01-20"}],"searchable":false,"paginated":false,"pageSize":10}}}>
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"product","header":"Product","sortable":false},{"key":"revenue","header":"Revenue","sortable":true,"format":"currency"},{"key":"growth","header":"Growth","sortable":true,"format":"percent:1"},{"key":"units","header":"Units","sortable":true,"format":"number"},{"key":"launched","header":"Launched","sortable":false,"format":"date:medium"}],"rows":[{"product":"Widget Pro","revenue":128450,"growth":0.142,"units":3210,"launched":"2023-03-15"},{"product":"Gadget Plus","revenue":84200,"growth":0.087,"units":1980,"launched":"2022-11-01"},{"product":"Doohickey","revenue":52100,"growth":-0.031,"units":870,"launched":"2024-01-20"}],"searchable":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InByb2R1Y3QiLCBoZWFkZXI9IlByb2R1Y3QiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJyZXZlbnVlIiwgaGVhZGVyPSJSZXZlbnVlIiwgc29ydGFibGU9VHJ1ZSwgZm9ybWF0PSJjdXJyZW5jeSIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Imdyb3d0aCIsIGhlYWRlcj0iR3Jvd3RoIiwgc29ydGFibGU9VHJ1ZSwgZm9ybWF0PSJwZXJjZW50OjEiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJ1bml0cyIsIGhlYWRlcj0iVW5pdHMiLCBzb3J0YWJsZT1UcnVlLCBmb3JtYXQ9Im51bWJlciIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImxhdW5jaGVkIiwgaGVhZGVyPSJMYXVuY2hlZCIsIGZvcm1hdD0iZGF0ZTptZWRpdW0iKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7InByb2R1Y3QiOiAiV2lkZ2V0IFBybyIsICJyZXZlbnVlIjogMTI4NDUwLCAiZ3Jvd3RoIjogMC4xNDIsICJ1bml0cyI6IDMyMTAsICJsYXVuY2hlZCI6ICIyMDIzLTAzLTE1In0sCiAgICAgICAgeyJwcm9kdWN0IjogIkdhZGdldCBQbHVzIiwgInJldmVudWUiOiA4NDIwMCwgImdyb3d0aCI6IDAuMDg3LCAidW5pdHMiOiAxOTgwLCAibGF1bmNoZWQiOiAiMjAyMi0xMS0wMSJ9LAogICAgICAgIHsicHJvZHVjdCI6ICJEb29oaWNrZXkiLCAicmV2ZW51ZSI6IDUyMTAwLCAiZ3Jvd3RoIjogLTAuMDMxLCAidW5pdHMiOiA4NzAsICJsYXVuY2hlZCI6ICIyMDI0LTAxLTIwIn0sCiAgICBdLAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -235,16 +235,39 @@ DataTable(
   "view": {
     "type": "DataTable",
     "columns": [
-      {"key": "product", "header": "Product"},
+      {"key": "product", "header": "Product", "sortable": false},
       {"key": "revenue", "header": "Revenue", "sortable": true, "format": "currency"},
       {"key": "growth", "header": "Growth", "sortable": true, "format": "percent:1"},
       {"key": "units", "header": "Units", "sortable": true, "format": "number"},
-      {"key": "launched", "header": "Launched", "format": "date:medium"}
+      {
+        "key": "launched",
+        "header": "Launched",
+        "sortable": false,
+        "format": "date:medium"
+      }
     ],
     "rows": [
-      {"product": "Widget Pro", "revenue": 128450, "growth": 0.142, "units": 3210, "launched": "2023-03-15"},
-      {"product": "Gadget Plus", "revenue": 84200, "growth": 0.087, "units": 1980, "launched": "2022-11-01"},
-      {"product": "Doohickey", "revenue": 52100, "growth": -0.031, "units": 870, "launched": "2024-01-20"}
+      {
+        "product": "Widget Pro",
+        "revenue": 128450,
+        "growth": 0.142,
+        "units": 3210,
+        "launched": "2023-03-15"
+      },
+      {
+        "product": "Gadget Plus",
+        "revenue": 84200,
+        "growth": 0.087,
+        "units": 1980,
+        "launched": "2022-11-01"
+      },
+      {
+        "product": "Doohickey",
+        "revenue": 52100,
+        "growth": -0.031,
+        "units": 870,
+        "launched": "2024-01-20"
+      }
     ],
     "searchable": false,
     "paginated": false,
