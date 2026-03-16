@@ -111,11 +111,19 @@ def _execute_and_serialize(
     if not created:
         raise ValueError("No component found in code block")
 
+    from prefab_ui.components.data_table import DataTable
+
     all_children: set[int] = set()
     for c in created:
         if isinstance(c, ContainerComponent):
             for child in c.children:
                 all_children.add(id(child))
+        if isinstance(c, DataTable) and isinstance(c.rows, list):
+            for row in c.rows:
+                if isinstance(row, dict):
+                    for v in row.values():
+                        if isinstance(v, Component):
+                            all_children.add(id(v))
 
     roots = [c for c in created if id(c) not in all_children]
     if not roots:
