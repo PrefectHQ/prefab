@@ -6,11 +6,11 @@ icon: table-cells
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-DataTable takes flat `columns` and `rows` and renders a full-featured table with optional sorting, search filtering, and pagination. Use it when you have structured data and want interactive table features without building the markup yourself.
+DataTable wraps tanstack/react-table with a flat Python API. Hand it columns and rows, and it handles sorting, filtering, pagination, and formatting — no manual `<TableRow>` assembly required. For static display tables without interactivity, use [Table](/components/table) instead.
 
 ## Basic Usage
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":true,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJlbWFpbCIsIGhlYWRlcj0iRW1haWwiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJyb2xlIiwgaGVhZGVyPSJSb2xlIiwgc29ydGFibGU9VHJ1ZSksCiAgICBdLAogICAgcm93cz1bCiAgICAgICAgeyJuYW1lIjogIkFsaWNlIEpvaG5zb24iLCAiZW1haWwiOiAiYWxpY2VAZXhhbXBsZS5jb20iLCAicm9sZSI6ICJBZG1pbiJ9LAogICAgICAgIHsibmFtZSI6ICJCb2IgU21pdGgiLCAiZW1haWwiOiAiYm9iQGV4YW1wbGUuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIkNhcm9sIFdoaXRlIiwgImVtYWlsIjogImNhcm9sQGV4YW1wbGUuY29tIiwgInJvbGUiOiAiVmlld2VyIn0sCiAgICBdLAogICAgc2VhcmNoYWJsZT1UcnVlLAopCg">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":true}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJlbWFpbCIsIGhlYWRlcj0iRW1haWwiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJyb2xlIiwgaGVhZGVyPSJSb2xlIiwgc29ydGFibGU9VHJ1ZSksCiAgICBdLAogICAgcm93cz1bCiAgICAgICAgeyJuYW1lIjogIkFsaWNlIEpvaG5zb24iLCAiZW1haWwiOiAiYWxpY2VAZXhhbXBsZS5jb20iLCAicm9sZSI6ICJBZG1pbiJ9LAogICAgICAgIHsibmFtZSI6ICJCb2IgU21pdGgiLCAiZW1haWwiOiAiYm9iQGV4YW1wbGUuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIkNhcm9sIFdoaXRlIiwgImVtYWlsIjogImNhcm9sQGV4YW1wbGUuY29tIiwgInJvbGUiOiAiVmlld2VyIn0sCiAgICBdLAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -26,7 +26,6 @@ DataTable(
         {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
         {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"},
     ],
-    searchable=True,
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -43,7 +42,7 @@ DataTable(
       {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
       {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"}
     ],
-    "searchable": true,
+    "search": false,
     "paginated": false,
     "pageSize": 10
   }
@@ -54,9 +53,9 @@ DataTable(
 
 ## Pagination
 
-Enable pagination to handle large datasets. The table shows page controls and displays `page_size` rows at a time.
+For large datasets, `paginated=True` shows page controls and displays `page_size` rows at a time. Sorting and filtering still work across the full dataset — pagination just controls how many rows are visible.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"searchable":false,"paginated":true,"pageSize":3}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImlkIiwgaGVhZGVyPSJJRCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRhc2siLCBoZWFkZXI9IlRhc2siLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzdGF0dXMiLCBoZWFkZXI9IlN0YXR1cyIpLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsiaWQiOiAiVC0wMDEiLCAidGFzayI6ICJEZXNpZ24gc3lzdGVtIiwgInN0YXR1cyI6ICJDb21wbGV0ZSJ9LAogICAgICAgIHsiaWQiOiAiVC0wMDIiLCAidGFzayI6ICJBUEkgaW50ZWdyYXRpb24iLCAic3RhdHVzIjogIkluIFByb2dyZXNzIn0sCiAgICAgICAgeyJpZCI6ICJULTAwMyIsICJ0YXNrIjogIlRlc3RpbmciLCAic3RhdHVzIjogIlBlbmRpbmcifSwKICAgICAgICB7ImlkIjogIlQtMDA0IiwgInRhc2siOiAiRG9jdW1lbnRhdGlvbiIsICJzdGF0dXMiOiAiSW4gUHJvZ3Jlc3MifSwKICAgICAgICB7ImlkIjogIlQtMDA1IiwgInRhc2siOiAiRGVwbG95bWVudCIsICJzdGF0dXMiOiAiUGVuZGluZyJ9LAogICAgXSwKICAgIHBhZ2luYXRlZD1UcnVlLAogICAgcGFnZV9zaXplPTMsCikK">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false},{"key":"task","header":"Task","sortable":true},{"key":"status","header":"Status","sortable":false}],"rows":[{"id":"T-001","task":"Design system","status":"Complete"},{"id":"T-002","task":"API integration","status":"In Progress"},{"id":"T-003","task":"Testing","status":"Pending"},{"id":"T-004","task":"Documentation","status":"In Progress"},{"id":"T-005","task":"Deployment","status":"Pending"}],"search":false,"paginated":true,"pageSize":3}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImlkIiwgaGVhZGVyPSJJRCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRhc2siLCBoZWFkZXI9IlRhc2siLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzdGF0dXMiLCBoZWFkZXI9IlN0YXR1cyIpLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsiaWQiOiAiVC0wMDEiLCAidGFzayI6ICJEZXNpZ24gc3lzdGVtIiwgInN0YXR1cyI6ICJDb21wbGV0ZSJ9LAogICAgICAgIHsiaWQiOiAiVC0wMDIiLCAidGFzayI6ICJBUEkgaW50ZWdyYXRpb24iLCAic3RhdHVzIjogIkluIFByb2dyZXNzIn0sCiAgICAgICAgeyJpZCI6ICJULTAwMyIsICJ0YXNrIjogIlRlc3RpbmciLCAic3RhdHVzIjogIlBlbmRpbmcifSwKICAgICAgICB7ImlkIjogIlQtMDA0IiwgInRhc2siOiAiRG9jdW1lbnRhdGlvbiIsICJzdGF0dXMiOiAiSW4gUHJvZ3Jlc3MifSwKICAgICAgICB7ImlkIjogIlQtMDA1IiwgInRhc2siOiAiRGVwbG95bWVudCIsICJzdGF0dXMiOiAiUGVuZGluZyJ9LAogICAgXSwKICAgIHBhZ2luYXRlZD1UcnVlLAogICAgcGFnZV9zaXplPTMsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -94,7 +93,7 @@ DataTable(
       {"id": "T-004", "task": "Documentation", "status": "In Progress"},
       {"id": "T-005", "task": "Deployment", "status": "Pending"}
     ],
-    "searchable": false,
+    "search": false,
     "paginated": true,
     "pageSize": 3
   }
@@ -103,14 +102,344 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
-## Component Cells
+## Search
 
-Cell values can be Prefab components — not just strings. Put a Badge, Sparkline, Progress bar, or any other component directly in the row data and it renders inline.
+Set `search=True` to show a text input above the table that narrows visible rows across all columns. Search works alongside sorting and pagination — the search applies first, then sort order, then page boundaries.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"metric","header":"Metric","sortable":true},{"key":"trend","header":"Trend","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"metric":"Revenue","trend":{"cssClass":"w-24","type":"Sparkline","data":[45,52,49,60,55,72,68,75],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"Growing","variant":"success"}},{"metric":"Churn","trend":{"cssClass":"w-24","type":"Sparkline","data":[12,15,18,14,20,22,19,25],"variant":"destructive","fill":false,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"At risk","variant":"destructive"}},{"metric":"Users","trend":{"cssClass":"w-24","type":"Sparkline","data":[250,248,252,249,253,251,250,252],"variant":"info","fill":true,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"Stable","variant":"secondary"}}],"searchable":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEJhZGdlLCBQcm9ncmVzcwpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNoYXJ0cyBpbXBvcnQgU3BhcmtsaW5lCgpEYXRhVGFibGUoCiAgICBjb2x1bW5zPVsKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJtZXRyaWMiLCBoZWFkZXI9Ik1ldHJpYyIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRyZW5kIiwgaGVhZGVyPSJUcmVuZCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InN0YXR1cyIsIGhlYWRlcj0iU3RhdHVzIiksCiAgICBdLAogICAgcm93cz1bCiAgICAgICAgewogICAgICAgICAgICAibWV0cmljIjogIlJldmVudWUiLAogICAgICAgICAgICAidHJlbmQiOiBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICBkYXRhPVs0NSwgNTIsIDQ5LCA2MCwgNTUsIDcyLCA2OCwgNzVdLAogICAgICAgICAgICAgICAgdmFyaWFudD0ic3VjY2VzcyIsIGZpbGw9VHJ1ZSwgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgKSwKICAgICAgICAgICAgInN0YXR1cyI6IEJhZGdlKCJHcm93aW5nIiwgdmFyaWFudD0ic3VjY2VzcyIpLAogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgICAibWV0cmljIjogIkNodXJuIiwKICAgICAgICAgICAgInRyZW5kIjogU3BhcmtsaW5lKAogICAgICAgICAgICAgICAgZGF0YT1bMTIsIDE1LCAxOCwgMTQsIDIwLCAyMiwgMTksIDI1XSwKICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgKSwKICAgICAgICAgICAgInN0YXR1cyI6IEJhZGdlKCJBdCByaXNrIiwgdmFyaWFudD0iZGVzdHJ1Y3RpdmUiKSwKICAgICAgICB9LAogICAgICAgIHsKICAgICAgICAgICAgIm1ldHJpYyI6ICJVc2VycyIsCiAgICAgICAgICAgICJ0cmVuZCI6IFNwYXJrbGluZSgKICAgICAgICAgICAgICAgIGRhdGE9WzI1MCwgMjQ4LCAyNTIsIDI0OSwgMjUzLCAyNTEsIDI1MCwgMjUyXSwKICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImluZm8iLCBmaWxsPVRydWUsIGNzc19jbGFzcz0idy0yNCIsCiAgICAgICAgICAgICksCiAgICAgICAgICAgICJzdGF0dXMiOiBCYWRnZSgiU3RhYmxlIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiksCiAgICAgICAgfSwKICAgIF0sCikK">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"species","header":"Species","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"name":"Arthur Dent","species":"Human","status":"Confused"},{"name":"Ford Prefect","species":"Betelgeusian","status":"Drinking"},{"name":"Zaphod","species":"Betelgeusian","status":"Presidential"},{"name":"Trillian","species":"Human","status":"Navigating"},{"name":"Marvin","species":"Android","status":"Depressed"}],"search":true,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzcGVjaWVzIiwgaGVhZGVyPSJTcGVjaWVzIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAic3BlY2llcyI6ICJIdW1hbiIsICJzdGF0dXMiOiAiQ29uZnVzZWQifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgInNwZWNpZXMiOiAiQmV0ZWxnZXVzaWFuIiwgInN0YXR1cyI6ICJEcmlua2luZyJ9LAogICAgICAgIHsibmFtZSI6ICJaYXBob2QiLCAic3BlY2llcyI6ICJCZXRlbGdldXNpYW4iLCAic3RhdHVzIjogIlByZXNpZGVudGlhbCJ9LAogICAgICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJzcGVjaWVzIjogIkh1bWFuIiwgInN0YXR1cyI6ICJOYXZpZ2F0aW5nIn0sCiAgICAgICAgeyJuYW1lIjogIk1hcnZpbiIsICJzcGVjaWVzIjogIkFuZHJvaWQiLCAic3RhdHVzIjogIkRlcHJlc3NlZCJ9LAogICAgXSwKICAgIHNlYXJjaD1UcnVlLAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="species", header="Species"),
+        DataTableColumn(key="status", header="Status"),
+    ],
+    rows=[
+        {"name": "Arthur Dent", "species": "Human", "status": "Confused"},
+        {"name": "Ford Prefect", "species": "Betelgeusian", "status": "Drinking"},
+        {"name": "Zaphod", "species": "Betelgeusian", "status": "Presidential"},
+        {"name": "Trillian", "species": "Human", "status": "Navigating"},
+        {"name": "Marvin", "species": "Android", "status": "Depressed"},
+    ],
+    search=True,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "name", "header": "Name", "sortable": true},
+      {"key": "species", "header": "Species", "sortable": false},
+      {"key": "status", "header": "Status", "sortable": false}
+    ],
+    "rows": [
+      {"name": "Arthur Dent", "species": "Human", "status": "Confused"},
+      {"name": "Ford Prefect", "species": "Betelgeusian", "status": "Drinking"},
+      {"name": "Zaphod", "species": "Betelgeusian", "status": "Presidential"},
+      {"name": "Trillian", "species": "Human", "status": "Navigating"},
+      {"name": "Marvin", "species": "Android", "status": "Depressed"}
+    ],
+    "search": true,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Columns
+
+`DataTableColumn` defines everything about a column: what data to show, how to size it, and how to style it.
+
+### Widths
+
+Set `width` for fixed sizing, or `min_width`/`max_width` for flexible constraints. Without widths, columns auto-size to content.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"id","header":"ID","sortable":false,"width":"80px"},{"key":"name","header":"Name","sortable":false,"minWidth":"150px","maxWidth":"300px"},{"key":"amount","header":"Amount","sortable":false,"width":"120px","headerClass":"text-right","cellClass":"text-right"}],"rows":[{"id":"001","name":"Arthur Dent","amount":"$1,200.00"},{"id":"002","name":"Ford Prefect","amount":"$850.50"},{"id":"003","name":"Trillian","amount":"$2,100.00"}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImlkIiwgaGVhZGVyPSJJRCIsIHdpZHRoPSI4MHB4IiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLAogICAgICAgICAgICBtaW5fd2lkdGg9IjE1MHB4IiwgbWF4X3dpZHRoPSIzMDBweCIsCiAgICAgICAgKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oCiAgICAgICAgICAgIGtleT0iYW1vdW50IiwgaGVhZGVyPSJBbW91bnQiLAogICAgICAgICAgICB3aWR0aD0iMTIwcHgiLCBhbGlnbj0icmlnaHQiLAogICAgICAgICksCiAgICBdLAogICAgcm93cz1bCiAgICAgICAgeyJpZCI6ICIwMDEiLCAibmFtZSI6ICJBcnRodXIgRGVudCIsICJhbW91bnQiOiAiJDEsMjAwLjAwIn0sCiAgICAgICAgeyJpZCI6ICIwMDIiLCAibmFtZSI6ICJGb3JkIFByZWZlY3QiLCAiYW1vdW50IjogIiQ4NTAuNTAifSwKICAgICAgICB7ImlkIjogIjAwMyIsICJuYW1lIjogIlRyaWxsaWFuIiwgImFtb3VudCI6ICIkMiwxMDAuMDAifSwKICAgIF0sCikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="id", header="ID", width="80px"),
+        DataTableColumn(
+            key="name", header="Name",
+            min_width="150px", max_width="300px",
+        ),
+        DataTableColumn(
+            key="amount", header="Amount",
+            width="120px", align="right",
+        ),
+    ],
+    rows=[
+        {"id": "001", "name": "Arthur Dent", "amount": "$1,200.00"},
+        {"id": "002", "name": "Ford Prefect", "amount": "$850.50"},
+        {"id": "003", "name": "Trillian", "amount": "$2,100.00"},
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "id", "header": "ID", "sortable": false, "width": "80px"},
+      {
+        "key": "name",
+        "header": "Name",
+        "sortable": false,
+        "minWidth": "150px",
+        "maxWidth": "300px"
+      },
+      {
+        "key": "amount",
+        "header": "Amount",
+        "sortable": false,
+        "width": "120px",
+        "headerClass": "text-right",
+        "cellClass": "text-right"
+      }
+    ],
+    "rows": [
+      {"id": "001", "name": "Arthur Dent", "amount": "$1,200.00"},
+      {"id": "002", "name": "Ford Prefect", "amount": "$850.50"},
+      {"id": "003", "name": "Trillian", "amount": "$2,100.00"}
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Alignment
+
+Right-align numbers so decimal points line up. Center short values like region codes. `align` applies to both the header and cells — it compiles to `header_class` and `cell_class` Python-side, so the protocol only sees CSS classes.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":false},{"key":"region","header":"Region","sortable":false,"headerClass":"text-center","cellClass":"text-center"},{"key":"revenue","header":"Revenue","sortable":false,"headerClass":"text-right","cellClass":"text-right"},{"key":"growth","header":"Growth","sortable":false,"headerClass":"text-right","cellClass":"text-right"}],"rows":[{"name":"Milliways Inc","region":"Galaxy","revenue":"$4.2M","growth":"+12%"},{"name":"Sirius Corp","region":"Sector ZZ9","revenue":"$2.8M","growth":"-3%"},{"name":"Magrathea Ltd","region":"Horsehead","revenue":"$1.5M","growth":"+28%"}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJyZWdpb24iLCBoZWFkZXI9IlJlZ2lvbiIsIGFsaWduPSJjZW50ZXIiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJyZXZlbnVlIiwgaGVhZGVyPSJSZXZlbnVlIiwgYWxpZ249InJpZ2h0IiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0iZ3Jvd3RoIiwgaGVhZGVyPSJHcm93dGgiLCBhbGlnbj0icmlnaHQiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiTWlsbGl3YXlzIEluYyIsICJyZWdpb24iOiAiR2FsYXh5IiwgInJldmVudWUiOiAiJDQuMk0iLCAiZ3Jvd3RoIjogIisxMiUifSwKICAgICAgICB7Im5hbWUiOiAiU2lyaXVzIENvcnAiLCAicmVnaW9uIjogIlNlY3RvciBaWjkiLCAicmV2ZW51ZSI6ICIkMi44TSIsICJncm93dGgiOiAiLTMlIn0sCiAgICAgICAgeyJuYW1lIjogIk1hZ3JhdGhlYSBMdGQiLCAicmVnaW9uIjogIkhvcnNlaGVhZCIsICJyZXZlbnVlIjogIiQxLjVNIiwgImdyb3d0aCI6ICIrMjglIn0sCiAgICBdLAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name"),
+        DataTableColumn(key="region", header="Region", align="center"),
+        DataTableColumn(key="revenue", header="Revenue", align="right"),
+        DataTableColumn(key="growth", header="Growth", align="right"),
+    ],
+    rows=[
+        {"name": "Milliways Inc", "region": "Galaxy", "revenue": "$4.2M", "growth": "+12%"},
+        {"name": "Sirius Corp", "region": "Sector ZZ9", "revenue": "$2.8M", "growth": "-3%"},
+        {"name": "Magrathea Ltd", "region": "Horsehead", "revenue": "$1.5M", "growth": "+28%"},
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "name", "header": "Name", "sortable": false},
+      {
+        "key": "region",
+        "header": "Region",
+        "sortable": false,
+        "headerClass": "text-center",
+        "cellClass": "text-center"
+      },
+      {
+        "key": "revenue",
+        "header": "Revenue",
+        "sortable": false,
+        "headerClass": "text-right",
+        "cellClass": "text-right"
+      },
+      {
+        "key": "growth",
+        "header": "Growth",
+        "sortable": false,
+        "headerClass": "text-right",
+        "cellClass": "text-right"
+      }
+    ],
+    "rows": [
+      {
+        "name": "Milliways Inc",
+        "region": "Galaxy",
+        "revenue": "$4.2M",
+        "growth": "+12%"
+      },
+      {
+        "name": "Sirius Corp",
+        "region": "Sector ZZ9",
+        "revenue": "$2.8M",
+        "growth": "-3%"
+      },
+      {
+        "name": "Magrathea Ltd",
+        "region": "Horsehead",
+        "revenue": "$1.5M",
+        "growth": "+28%"
+      }
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Styling
+
+`header_class` and `cell_class` apply arbitrary Tailwind to individual columns — font weights, colors, monospace formatting, truncation. These are the escape hatches when `align` and `width` aren't enough.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":false,"headerClass":"text-emerald-600","cellClass":"font-semibold text-emerald-600"},{"key":"email","header":"Email","sortable":false,"cellClass":"text-muted-foreground"},{"key":"amount","header":"Amount","sortable":false,"headerClass":"text-right","cellClass":"font-mono text-right"}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","amount":"$1,200.00"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","amount":"$850.50"},{"name":"Trillian","email":"trillian@hog.com","amount":"$2,100.00"}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbigKICAgICAgICAgICAga2V5PSJuYW1lIiwgaGVhZGVyPSJOYW1lIiwKICAgICAgICAgICAgaGVhZGVyX2NsYXNzPSJ0ZXh0LWVtZXJhbGQtNjAwIiwKICAgICAgICAgICAgY2VsbF9jbGFzcz0iZm9udC1zZW1pYm9sZCB0ZXh0LWVtZXJhbGQtNjAwIiwKICAgICAgICApLAogICAgICAgIERhdGFUYWJsZUNvbHVtbigKICAgICAgICAgICAga2V5PSJlbWFpbCIsIGhlYWRlcj0iRW1haWwiLAogICAgICAgICAgICBjZWxsX2NsYXNzPSJ0ZXh0LW11dGVkLWZvcmVncm91bmQiLAogICAgICAgICksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9ImFtb3VudCIsIGhlYWRlcj0iQW1vdW50IiwKICAgICAgICAgICAgYWxpZ249InJpZ2h0IiwgY2VsbF9jbGFzcz0iZm9udC1tb25vIiwKICAgICAgICApLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJlbWFpbCI6ICJhcnRodXJAZWFydGguY29tIiwgImFtb3VudCI6ICIkMSwyMDAuMDAifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgImVtYWlsIjogImZvcmRAYmV0ZWxnZXVzZS5jb20iLCAiYW1vdW50IjogIiQ4NTAuNTAifSwKICAgICAgICB7Im5hbWUiOiAiVHJpbGxpYW4iLCAiZW1haWwiOiAidHJpbGxpYW5AaG9nLmNvbSIsICJhbW91bnQiOiAiJDIsMTAwLjAwIn0sCiAgICBdLAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(
+            key="name", header="Name",
+            header_class="text-emerald-600",
+            cell_class="font-semibold text-emerald-600",
+        ),
+        DataTableColumn(
+            key="email", header="Email",
+            cell_class="text-muted-foreground",
+        ),
+        DataTableColumn(
+            key="amount", header="Amount",
+            align="right", cell_class="font-mono",
+        ),
+    ],
+    rows=[
+        {"name": "Arthur Dent", "email": "arthur@earth.com", "amount": "$1,200.00"},
+        {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "amount": "$850.50"},
+        {"name": "Trillian", "email": "trillian@hog.com", "amount": "$2,100.00"},
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {
+        "key": "name",
+        "header": "Name",
+        "sortable": false,
+        "headerClass": "text-emerald-600",
+        "cellClass": "font-semibold text-emerald-600"
+      },
+      {
+        "key": "email",
+        "header": "Email",
+        "sortable": false,
+        "cellClass": "text-muted-foreground"
+      },
+      {
+        "key": "amount",
+        "header": "Amount",
+        "sortable": false,
+        "headerClass": "text-right",
+        "cellClass": "font-mono text-right"
+      }
+    ],
+    "rows": [
+      {"name": "Arthur Dent", "email": "arthur@earth.com", "amount": "$1,200.00"},
+      {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "amount": "$850.50"},
+      {"name": "Trillian", "email": "trillian@hog.com", "amount": "$2,100.00"}
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Cells
+
+### Formatting
+
+The `format` field applies an [expression pipe](/expressions/pipes) to every value in a column. Any pipe that works in `{{ value | pipe }}` expressions works here — `currency`, `percent:1`, `number:2`, `date:long`, and any future pipes you add.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"product","header":"Product","sortable":false},{"key":"revenue","header":"Revenue","sortable":true,"format":"currency"},{"key":"growth","header":"Growth","sortable":true,"format":"percent:1"},{"key":"units","header":"Units","sortable":true,"format":"number"}],"rows":[{"product":"Widget Pro","revenue":128450,"growth":0.142,"units":3210},{"product":"Gadget Plus","revenue":84200,"growth":0.087,"units":1980},{"product":"Doohickey","revenue":52100,"growth":-0.031,"units":870}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InByb2R1Y3QiLCBoZWFkZXI9IlByb2R1Y3QiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oCiAgICAgICAgICAgIGtleT0icmV2ZW51ZSIsIGhlYWRlcj0iUmV2ZW51ZSIsCiAgICAgICAgICAgIHNvcnRhYmxlPVRydWUsIGZvcm1hdD0iY3VycmVuY3kiLAogICAgICAgICksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9Imdyb3d0aCIsIGhlYWRlcj0iR3Jvd3RoIiwKICAgICAgICAgICAgc29ydGFibGU9VHJ1ZSwgZm9ybWF0PSJwZXJjZW50OjEiLAogICAgICAgICksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9InVuaXRzIiwgaGVhZGVyPSJVbml0cyIsCiAgICAgICAgICAgIHNvcnRhYmxlPVRydWUsIGZvcm1hdD0ibnVtYmVyIiwKICAgICAgICApLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsicHJvZHVjdCI6ICJXaWRnZXQgUHJvIiwgInJldmVudWUiOiAxMjg0NTAsICJncm93dGgiOiAwLjE0MiwgInVuaXRzIjogMzIxMH0sCiAgICAgICAgeyJwcm9kdWN0IjogIkdhZGdldCBQbHVzIiwgInJldmVudWUiOiA4NDIwMCwgImdyb3d0aCI6IDAuMDg3LCAidW5pdHMiOiAxOTgwfSwKICAgICAgICB7InByb2R1Y3QiOiAiRG9vaGlja2V5IiwgInJldmVudWUiOiA1MjEwMCwgImdyb3d0aCI6IC0wLjAzMSwgInVuaXRzIjogODcwfSwKICAgIF0sCikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn
+
+DataTable(
+    columns=[
+        DataTableColumn(key="product", header="Product"),
+        DataTableColumn(
+            key="revenue", header="Revenue",
+            sortable=True, format="currency",
+        ),
+        DataTableColumn(
+            key="growth", header="Growth",
+            sortable=True, format="percent:1",
+        ),
+        DataTableColumn(
+            key="units", header="Units",
+            sortable=True, format="number",
+        ),
+    ],
+    rows=[
+        {"product": "Widget Pro", "revenue": 128450, "growth": 0.142, "units": 3210},
+        {"product": "Gadget Plus", "revenue": 84200, "growth": 0.087, "units": 1980},
+        {"product": "Doohickey", "revenue": 52100, "growth": -0.031, "units": 870},
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "product", "header": "Product", "sortable": false},
+      {"key": "revenue", "header": "Revenue", "sortable": true, "format": "currency"},
+      {"key": "growth", "header": "Growth", "sortable": true, "format": "percent:1"},
+      {"key": "units", "header": "Units", "sortable": true, "format": "number"}
+    ],
+    "rows": [
+      {"product": "Widget Pro", "revenue": 128450, "growth": 0.142, "units": 3210},
+      {"product": "Gadget Plus", "revenue": 84200, "growth": 0.087, "units": 1980},
+      {"product": "Doohickey", "revenue": 52100, "growth": -0.031, "units": 870}
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+See [Pipes](/expressions/pipes) for the full list of available format pipes.
+
+### Components
+
+Cell values can be full Prefab components — Badges, Sparklines, Progress bars, anything. Put a component instance directly in the row dict and it renders inline.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"metric","header":"Metric","sortable":true},{"key":"trend","header":"Trend","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"metric":"Revenue","trend":{"cssClass":"w-24","type":"Sparkline","data":[45,52,49,60,55,72,68,75],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"Growing","variant":"success"}},{"metric":"Churn","trend":{"cssClass":"w-24","type":"Sparkline","data":[12,15,18,14,20,22,19,25],"variant":"destructive","fill":false,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"At risk","variant":"destructive"}},{"metric":"Users","trend":{"cssClass":"w-24","type":"Sparkline","data":[250,248,252,249,253,251,250,252],"variant":"info","fill":true,"curve":"linear","strokeWidth":1.5},"status":{"type":"Badge","label":"Stable","variant":"secondary"}}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEJhZGdlCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY2hhcnRzIGltcG9ydCBTcGFya2xpbmUKCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im1ldHJpYyIsIGhlYWRlcj0iTWV0cmljIiwgc29ydGFibGU9VHJ1ZSksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0idHJlbmQiLCBoZWFkZXI9IlRyZW5kIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7CiAgICAgICAgICAgICJtZXRyaWMiOiAiUmV2ZW51ZSIsCiAgICAgICAgICAgICJ0cmVuZCI6IFNwYXJrbGluZSgKICAgICAgICAgICAgICAgIGRhdGE9WzQ1LCA1MiwgNDksIDYwLCA1NSwgNzIsIDY4LCA3NV0sCiAgICAgICAgICAgICAgICB2YXJpYW50PSJzdWNjZXNzIiwgZmlsbD1UcnVlLCBjc3NfY2xhc3M9InctMjQiLAogICAgICAgICAgICApLAogICAgICAgICAgICAic3RhdHVzIjogQmFkZ2UoIkdyb3dpbmciLCB2YXJpYW50PSJzdWNjZXNzIiksCiAgICAgICAgfSwKICAgICAgICB7CiAgICAgICAgICAgICJtZXRyaWMiOiAiQ2h1cm4iLAogICAgICAgICAgICAidHJlbmQiOiBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICBkYXRhPVsxMiwgMTUsIDE4LCAxNCwgMjAsIDIyLCAxOSwgMjVdLAogICAgICAgICAgICAgICAgdmFyaWFudD0iZGVzdHJ1Y3RpdmUiLCBjc3NfY2xhc3M9InctMjQiLAogICAgICAgICAgICApLAogICAgICAgICAgICAic3RhdHVzIjogQmFkZ2UoIkF0IHJpc2siLCB2YXJpYW50PSJkZXN0cnVjdGl2ZSIpLAogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgICAibWV0cmljIjogIlVzZXJzIiwKICAgICAgICAgICAgInRyZW5kIjogU3BhcmtsaW5lKAogICAgICAgICAgICAgICAgZGF0YT1bMjUwLCAyNDgsIDI1MiwgMjQ5LCAyNTMsIDI1MSwgMjUwLCAyNTJdLAogICAgICAgICAgICAgICAgdmFyaWFudD0iaW5mbyIsIGZpbGw9VHJ1ZSwgY3NzX2NsYXNzPSJ3LTI0IiwKICAgICAgICAgICAgKSwKICAgICAgICAgICAgInN0YXR1cyI6IEJhZGdlKCJTdGFibGUiLCB2YXJpYW50PSJzZWNvbmRhcnkiKSwKICAgICAgICB9LAogICAgXSwKKQo">
 <CodeGroup>
 ```python Python expandable icon="python"
-from prefab_ui.components import DataTable, DataTableColumn, Badge, Progress
+from prefab_ui.components import DataTable, DataTableColumn, Badge
 from prefab_ui.components.charts import Sparkline
 
 DataTable(
@@ -197,7 +526,7 @@ DataTable(
         "status": {"type": "Badge", "label": "Stable", "variant": "secondary"}
       }
     ],
-    "searchable": false,
+    "search": false,
     "paginated": false,
     "pageSize": 10
   }
@@ -208,12 +537,12 @@ DataTable(
 
 ## Row Click
 
-Make rows clickable with `on_row_click`. Clicking fires the action with the row's data as `$event` — use it for navigation, detail panels, or updating other components on the page.
+Make rows clickable with `on_row_click`. The clicked row highlights and the action fires with the row's data as `$event`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Alice Johnson","email":"alice@example.com","role":"Admin"},{"name":"Bob Smith","email":"bob@example.com","role":"Editor"},{"name":"Carol White","email":"carol@example.com","role":"Viewer"}],"searchable":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KZnJvbSBwcmVmYWJfdWkuYWN0aW9ucy51aSBpbXBvcnQgU2hvd1RvYXN0CgpEYXRhVGFibGUoCiAgICBjb2x1bW5zPVsKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJuYW1lIiwgaGVhZGVyPSJOYW1lIiwgc29ydGFibGU9VHJ1ZSksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0iZW1haWwiLCBoZWFkZXI9IkVtYWlsIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0icm9sZSIsIGhlYWRlcj0iUm9sZSIpLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsibmFtZSI6ICJBbGljZSBKb2huc29uIiwgImVtYWlsIjogImFsaWNlQGV4YW1wbGUuY29tIiwgInJvbGUiOiAiQWRtaW4ifSwKICAgICAgICB7Im5hbWUiOiAiQm9iIFNtaXRoIiwgImVtYWlsIjogImJvYkBleGFtcGxlLmNvbSIsICJyb2xlIjogIkVkaXRvciJ9LAogICAgICAgIHsibmFtZSI6ICJDYXJvbCBXaGl0ZSIsICJlbWFpbCI6ICJjYXJvbEBleGFtcGxlLmNvbSIsICJyb2xlIjogIlZpZXdlciJ9LAogICAgXSwKICAgIG9uX3Jvd19jbGljaz1TaG93VG9hc3QoInt7ICRldmVudC5uYW1lIH19ICh7eyAkZXZlbnQuZW1haWwgfX0pIiksCikK">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","role":"Admin"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","role":"Editor"},{"name":"Trillian","email":"trillian@hog.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEVWRU5UCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMudWkgaW1wb3J0IFNob3dUb2FzdAoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ibmFtZSIsIGhlYWRlcj0iTmFtZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImVtYWlsIiwgaGVhZGVyPSJFbWFpbCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InJvbGUiLCBoZWFkZXI9IlJvbGUiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAiZW1haWwiOiAiYXJ0aHVyQGVhcnRoLmNvbSIsICJyb2xlIjogIkFkbWluIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJlbWFpbCI6ICJmb3JkQGJldGVsZ2V1c2UuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImVtYWlsIjogInRyaWxsaWFuQGhvZy5jb20iLCAicm9sZSI6ICJWaWV3ZXIifSwKICAgIF0sCiAgICBvbl9yb3dfY2xpY2s9U2hvd1RvYXN0KGYie0VWRU5ULm5hbWV9ICh7RVZFTlQuZW1haWx9KSIpLAopCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import DataTable, DataTableColumn
+from prefab_ui.components import DataTable, DataTableColumn, EVENT
 from prefab_ui.actions.ui import ShowToast
 
 DataTable(
@@ -223,11 +552,11 @@ DataTable(
         DataTableColumn(key="role", header="Role"),
     ],
     rows=[
-        {"name": "Alice Johnson", "email": "alice@example.com", "role": "Admin"},
-        {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
-        {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"},
+        {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
+        {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
+        {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"},
     ],
-    on_row_click=ShowToast("{{ $event.name }} ({{ $event.email }})"),
+    on_row_click=ShowToast(f"{EVENT.name} ({EVENT.email})"),
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -240,11 +569,11 @@ DataTable(
       {"key": "role", "header": "Role", "sortable": false}
     ],
     "rows": [
-      {"name": "Alice Johnson", "email": "alice@example.com", "role": "Admin"},
-      {"name": "Bob Smith", "email": "bob@example.com", "role": "Editor"},
-      {"name": "Carol White", "email": "carol@example.com", "role": "Viewer"}
+      {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
+      {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
+      {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"}
     ],
-    "searchable": false,
+    "search": false,
     "paginated": false,
     "pageSize": 10,
     "onRowClick": {"action": "showToast", "message": "{{ $event.name }} ({{ $event.email }})"}
@@ -254,19 +583,50 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## From DataFrame
+
+Pass a pandas or polars DataFrame directly as `rows`. Columns auto-generate from the DataFrame's column names — each column in the DataFrame becomes a `DataTableColumn` with `key` and `header` set to the column name.
+
+When you pass explicit `columns`, the `key` on each column must match a DataFrame column name — that's how the table knows which data goes where. This lets you control headers, sorting, formatting, and alignment while the DataFrame provides the raw data.
+
+```python
+import pandas as pd
+from prefab_ui.components import DataTable, DataTableColumn
+
+df = pd.DataFrame({
+    "name": ["Arthur Dent", "Ford Prefect", "Trillian"],
+    "score": [42, 87, 99],
+    "region": ["Earth", "Betelgeuse", "Earth"],
+})
+
+# Auto-generate columns from df.columns
+DataTable(rows=df)
+
+# Custom columns — you control headers, sorting, formatting
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Hitchhiker", sortable=True),
+        DataTableColumn(key="score", header="Score", align="right", format="number"),
+    ],
+    rows=df,
+)
+```
+
+Works with any object that has `.columns` and `.to_dict(orient="records")` (pandas) or `.to_dicts()` (polars).
+
 ## API Reference
 
 <Card icon="code" title="DataTable Parameters">
 <ParamField body="columns" type="list[DataTableColumn]" required>
-  Column definitions. Each column specifies a `key`, `header`, and optional `sortable` flag.
+  Column definitions. Auto-generated from DataFrame column names when `rows` is a DataFrame and `columns` is omitted.
 </ParamField>
 
-<ParamField body="rows" type="list[dict] | str" default="[]">
-  Row data as a list of dicts, or a `{{ field }}` interpolation reference.
+<ParamField body="rows" type="list[dict] | str | DataFrame" default="[]">
+  Row data as a list of dicts, a `{{ field }}` interpolation reference, or a pandas/polars DataFrame.
 </ParamField>
 
-<ParamField body="searchable" type="bool" default="False">
-  Show a search/filter input above the table.
+<ParamField body="search" type="bool" default="False">
+  Show a search input above the table for narrowing visible rows.
 </ParamField>
 
 <ParamField body="paginated" type="bool" default="False">
@@ -278,11 +638,11 @@ DataTable(
 </ParamField>
 
 <ParamField body="on_row_click" type="Action | list[Action] | None" default="None">
-  Action(s) to fire when a row is clicked. `$event` is the row's data dict.
+  Action(s) to fire when a row is clicked. `$event` is the row's data dict. The clicked row highlights visually.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
+  Additional Tailwind CSS classes for the table wrapper.
 </ParamField>
 </Card>
 
@@ -298,6 +658,34 @@ DataTable(
 <ParamField body="sortable" type="bool" default="False">
   Enable click-to-sort on this column.
 </ParamField>
+
+<ParamField body="format" type="str | None" default="None">
+  Expression pipe to apply to every cell value (e.g. `"currency"`, `"percent:1"`, `"date:long"`). Uses the same pipe system as `{{ value | pipe }}` expressions. Ignored when the cell value is a component.
+</ParamField>
+
+<ParamField body="width" type="str | None" default="None">
+  Column width as a CSS value (e.g. `"200px"`, `"30%"`).
+</ParamField>
+
+<ParamField body="min_width" type="str | None" default="None">
+  Minimum column width as a CSS value.
+</ParamField>
+
+<ParamField body="max_width" type="str | None" default="None">
+  Maximum column width as a CSS value.
+</ParamField>
+
+<ParamField body="align" type="str | None" default="None">
+  Text alignment for both header and cells: `"left"`, `"center"`, or `"right"`. Resolves to `header_class` and `cell_class` Python-side.
+</ParamField>
+
+<ParamField body="header_class" type="str | None" default="None">
+  Tailwind classes applied to the header cell for this column.
+</ParamField>
+
+<ParamField body="cell_class" type="str | None" default="None">
+  Tailwind classes applied to every data cell in this column.
+</ParamField>
 </Card>
 
 ## Protocol Reference
@@ -306,8 +694,8 @@ DataTable(
 {
   "type": "DataTable",
   "columns": "[DataTableColumn] (required)",
-  "rows?": "Action[] | string",
-  "searchable?": false,
+  "rows?": "dict[] | string",
+  "search?": false,
   "paginated?": false,
   "pageSize?": 10,
   "onRowClick?": "Action | Action[]",
@@ -319,7 +707,13 @@ DataTable(
 {
   "key": "string (required)",
   "header": "string (required)",
-  "sortable?": false
+  "sortable?": false,
+  "format?": "string",
+  "width?": "string",
+  "minWidth?": "string",
+  "maxWidth?": "string",
+  "headerClass?": "string",
+  "cellClass?": "string"
 }
 ```
 

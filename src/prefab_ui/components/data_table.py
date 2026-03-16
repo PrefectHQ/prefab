@@ -13,19 +13,23 @@ Example::
             DataTableColumn(key="role", header="Role"),
         ],
         rows="{{ users }}",
-        searchable=True,
+        search=True,
         paginated=True,
     )
+
+    # DataFrame support — auto-generates columns from df.columns
+    import pandas as pd
+    DataTable(rows=pd.DataFrame({"name": ["Alice"], "score": [90]}))
 """
 
 from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, _merge_css_classes
 
 
 def _serialize_cell_value(value: Any) -> Any:
@@ -33,6 +37,15 @@ def _serialize_cell_value(value: Any) -> Any:
     if isinstance(value, Component):
         return value.to_json()
     return value
+
+
+DataTableAlign = Literal["left", "center", "right"]
+
+_ALIGN_CSS: dict[str, str] = {
+    "left": "text-left",
+    "center": "text-center",
+    "right": "text-right",
+}
 
 
 class DataTableColumn(BaseModel):
@@ -50,12 +63,49 @@ class DataTableColumn(BaseModel):
             " 'percent', 'percent:1', 'date', 'date:long'"
         ),
     )
+    width: str | None = Field(
+        default=None,
+        description="Column width as CSS value (e.g. '200px', '30%')",
+    )
+    min_width: str | None = Field(
+        default=None,
+        alias="minWidth",
+        description="Minimum column width as CSS value",
+    )
+    max_width: str | None = Field(
+        default=None,
+        alias="maxWidth",
+        description="Maximum column width as CSS value",
+    )
+    align: DataTableAlign | None = Field(
+        default=None,
+        exclude=True,
+        description="Cell text alignment — resolves to cell_class",
+    )
+    header_class: str | None = Field(
+        default=None,
+        alias="headerClass",
+        description="Tailwind classes for header cells",
+    )
+    cell_class: str | None = Field(
+        default=None,
+        alias="cellClass",
+        description="Tailwind classes for data cells",
+    )
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.align is not None:
+            css = _ALIGN_CSS[self.align]
+            self.cell_class = _merge_css_classes(self.cell_class, css)
+            self.header_class = _merge_css_classes(self.header_class, css)
 
 
 class DataTable(Component):
     """High-level data table with sorting, filtering, and pagination.
 
     Accepts flat ``columns`` and ``rows`` — the renderer handles the rest.
+    Also accepts a pandas, polars, or any DataFrame-like object as ``rows``.
+    Columns are auto-generated from the DataFrame's column names if not provided.
 
     Example::
 
@@ -65,18 +115,39 @@ class DataTable(Component):
                 DataTableColumn(key="email", header="Email"),
             ],
             rows=data["users"],
-            searchable=True,
+            search=True,
             paginated=True,
         )
     """
 
     type: Literal["DataTable"] = "DataTable"
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_dataframe(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            rows = data.get("rows")
+        else:
+            return data
+        if rows is None:
+            return data
+        if hasattr(rows, "columns") and hasattr(rows, "to_dict"):
+            if hasattr(rows, "to_dicts"):
+                data["rows"] = rows.to_dicts()
+            else:
+                data["rows"] = rows.to_dict(orient="records")
+            if not data.get("columns"):
+                data["columns"] = [
+                    {"key": str(col), "header": str(col)} for col in rows.columns
+                ]
+        return data
+
     columns: list[DataTableColumn] = Field(description="Column definitions")
     rows: list[dict[str, Any]] | str = Field(
         default_factory=list,
-        description="Row data or {{ interpolation }} reference",
+        description="Row data, {{ interpolation }} reference, or DataFrame",
     )
-    searchable: bool = Field(default=False, description="Show search/filter input")
+    search: bool = Field(default=False, description="Show search input")
     paginated: bool = Field(default=False, description="Show pagination controls")
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
