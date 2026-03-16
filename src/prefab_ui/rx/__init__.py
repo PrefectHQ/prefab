@@ -611,6 +611,57 @@ class _BoundStateProxy(_StateProxy):
 STATE: _StateProxy = _StateProxy()
 
 
+# ── Computed state ────────────────────────────────────────────────────
+
+
+class Computed:
+    """A read-only derived state value that recomputes from an expression.
+
+    Wraps a template expression string (with ``{{ }}`` delimiters) that the
+    renderer evaluates reactively whenever its dependencies change::
+
+        from prefab_ui.app import set_initial_state
+        from prefab_ui.rx import Computed
+
+        state = set_initial_state(
+            a=1, b=2,
+            total=Computed("{{ a + b }}"),
+        )
+
+    The ``total`` key then works like any other state key in expressions,
+    conditions, and action thresholds — but it's read-only on the client.
+    ``SetState`` targeting a computed key is a no-op with a console warning.
+    """
+
+    __slots__ = ("_expression",)
+
+    def __init__(self, expression: str) -> None:
+        if not isinstance(expression, str):
+            raise TypeError(
+                f"Computed() requires a string expression, got {type(expression).__name__}"
+            )
+        object.__setattr__(self, "_expression", expression)
+
+    def __setattr__(self, name: str, value: object) -> None:
+        raise AttributeError("Computed objects are immutable")
+
+    @property
+    def expression(self) -> str:
+        """The raw expression string (including ``{{ }}`` delimiters)."""
+        return object.__getattribute__(self, "_expression")
+
+    def __repr__(self) -> str:
+        return f"Computed({self.expression!r})"
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Computed):
+            return self.expression == other.expression
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(("Computed", self.expression))
+
+
 # ── Built-in reactive variables ──────────────────────────────────────
 
 #: The current iteration item inside a :class:`ForEach` loop.
