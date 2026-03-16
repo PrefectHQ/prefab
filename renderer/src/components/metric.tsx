@@ -5,6 +5,7 @@
 
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/ui/badge";
 
 type TrendDirection = "up" | "down" | "neutral";
 type TrendSentiment = "positive" | "negative" | "neutral";
@@ -47,10 +48,10 @@ function inferSentiment(direction: TrendDirection): TrendSentiment {
   return "neutral";
 }
 
-const SENTIMENT_CLASSES: Record<TrendSentiment, string> = {
-  positive: "text-green-600 dark:text-green-500",
-  negative: "text-red-600 dark:text-red-500",
-  neutral: "text-muted-foreground",
+const SENTIMENT_BADGE_VARIANT: Record<TrendSentiment, string> = {
+  positive: "success",
+  negative: "destructive",
+  neutral: "secondary",
 };
 
 const TREND_ICONS: Record<TrendDirection, typeof TrendingUp> = {
@@ -76,26 +77,26 @@ export function PrefabMetric({
     (resolvedTrend != null ? inferSentiment(resolvedTrend) : undefined);
 
   const TrendIcon = resolvedTrend != null ? TREND_ICONS[resolvedTrend] : null;
-  const sentimentClass =
-    resolvedSentiment != null ? SENTIMENT_CLASSES[resolvedSentiment] : "";
+  const badgeVariant =
+    resolvedSentiment != null
+      ? SENTIMENT_BADGE_VARIANT[resolvedSentiment]
+      : "secondary";
 
   return (
     <div className={cn("flex flex-col gap-1", className, cssClass)}>
       <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-bold tracking-tight">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-3xl font-bold tracking-tight leading-none">
           {String(value)}
         </span>
         {delta != null && (
-          <span
-            className={cn(
-              "inline-flex items-center gap-0.5 text-sm font-medium",
-              sentimentClass,
-            )}
+          <Badge
+            variant={badgeVariant as "success" | "destructive" | "secondary"}
+            className="gap-1 text-xs font-medium translate-y-px"
           >
-            {TrendIcon && <TrendIcon className="size-3.5" />}
+            {TrendIcon && <TrendIcon className="size-3" />}
             {String(delta)}
-          </span>
+          </Badge>
         )}
       </div>
       {description && (
