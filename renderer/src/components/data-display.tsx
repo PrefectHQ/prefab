@@ -2,8 +2,7 @@
  * Data display components — DataTable wrapper around @tanstack/react-table.
  *
  * Renders a flat columns + rows API with optional sorting, filtering,
- * pagination, row selection checkboxes, and row click actions using
- * shadcn Table primitives.
+ * pagination, and row click actions using shadcn Table primitives.
  */
 
 import { useState, useMemo } from "react";
@@ -17,7 +16,6 @@ import {
   flexRender,
   type ColumnDef,
   type SortingState,
-  type RowSelectionState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -91,7 +89,6 @@ interface DataTableProps {
   searchable?: boolean;
   paginated?: boolean;
   pageSize?: number;
-  selectable?: boolean;
   onRowClick?: (rowData: Record<string, unknown>) => void;
   className?: string;
 }
@@ -102,50 +99,12 @@ export function PrefabDataTable({
   searchable = false,
   paginated = false,
   pageSize = 10,
-  selectable = false,
   onRowClick,
   className,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const renderNode = useRenderNode();
-
-  // Build @tanstack/react-table column defs from our flat spec
-  const selectionColumn = useMemo<ColumnDef<Record<string, unknown>>>(
-    () => ({
-      id: "_select",
-      header: ({ table }) => {
-        const allSelected = table.getIsAllPageRowsSelected();
-        const someSelected = table.getIsSomePageRowsSelected();
-        return (
-          <input
-            type="checkbox"
-            className="size-4 cursor-pointer accent-primary"
-            checked={allSelected}
-            ref={(el) => {
-              if (el) el.indeterminate = !allSelected && someSelected;
-            }}
-            onChange={table.getToggleAllPageRowsSelectedHandler()}
-            aria-label="Select all"
-          />
-        );
-      },
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="size-4 cursor-pointer accent-primary"
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-          onClick={(e) => e.stopPropagation()}
-          aria-label="Select row"
-        />
-      ),
-      size: 40,
-    }),
-    [],
-  );
 
   const dataColumns = useMemo<ColumnDef<Record<string, unknown>>[]>(
     () =>
@@ -187,19 +146,12 @@ export function PrefabDataTable({
     [columnSpecs, renderNode],
   );
 
-  const columns = useMemo(
-    () => (selectable ? [selectionColumn, ...dataColumns] : dataColumns),
-    [selectable, selectionColumn, dataColumns],
-  );
-
   const table = useReactTable({
     data: rows,
-    columns,
-    state: { sorting, globalFilter, rowSelection },
+    columns: dataColumns,
+    state: { sorting, globalFilter },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
-    onRowSelectionChange: setRowSelection,
-    enableRowSelection: selectable,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: searchable ? getFilteredRowModel() : undefined,
@@ -207,7 +159,7 @@ export function PrefabDataTable({
     initialState: paginated ? { pagination: { pageSize } } : undefined,
   });
 
-  const colCount = columns.length;
+  const colCount = dataColumns.length;
   const isClickable = !!onRowClick;
 
   return (
@@ -246,7 +198,6 @@ export function PrefabDataTable({
               {table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() ? "selected" : undefined}
                   className={
                     isClickable ? "cursor-pointer hover:bg-muted/50" : undefined
                   }

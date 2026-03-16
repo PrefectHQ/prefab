@@ -81,7 +81,6 @@ class DataTable(Component):
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"
     )
-    selectable: bool = Field(default=False, description="Show row selection checkboxes")
     on_row_click: Action | list[Action] | None = Field(
         default=None,
         alias="onRowClick",

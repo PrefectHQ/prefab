@@ -18,7 +18,6 @@ export const dataTableSchema = componentBase.extend({
   searchable: z.boolean().optional(),
   paginated: z.boolean().optional(),
   pageSize: z.number().int().optional(),
-  selectable: z.boolean().optional(),
   onRowClick: actionOrList.optional(),
 });
 

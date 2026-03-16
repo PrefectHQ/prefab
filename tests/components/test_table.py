@@ -134,23 +134,6 @@ class TestDataTableComponent:
         j = dt.to_json()
         assert j["rows"] == "{{ users }}"
 
-    def test_data_table_selectable(self):
-        dt = DataTable(
-            columns=[DataTableColumn(key="name", header="Name")],
-            rows=[{"name": "Alice"}],
-            selectable=True,
-        )
-        j = dt.to_json()
-        assert j["selectable"] is True
-
-    def test_data_table_selectable_defaults_false(self):
-        dt = DataTable(
-            columns=[DataTableColumn(key="name", header="Name")],
-            rows=[{"name": "Alice"}],
-        )
-        j = dt.to_json()
-        assert j["selectable"] is False
-
     def test_data_table_on_row_click(self):
         dt = DataTable(
             columns=[DataTableColumn(key="name", header="Name")],

@@ -206,32 +206,6 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
-## Row Selection
-
-Add checkboxes for multi-row selection with `selectable=True`. The header checkbox toggles select-all. Selection is client-side state — no action fires per checkbox, so users can build up a selection before acting on it with a button or other control.
-
-<ComponentPreview>
-```python Python icon="python"
-from prefab_ui.components import DataTable, DataTableColumn, Badge
-
-DataTable(
-    columns=[
-        DataTableColumn(key="name", header="Employee", sortable=True),
-        DataTableColumn(key="department", header="Department"),
-        DataTableColumn(key="status", header="Status"),
-    ],
-    rows=[
-        {"name": "Alice Johnson", "department": "Engineering", "status": Badge("Active", variant="success")},
-        {"name": "Bob Smith", "department": "Marketing", "status": Badge("Active", variant="success")},
-        {"name": "Carol White", "department": "Engineering", "status": Badge("On Leave", variant="warning")},
-        {"name": "Dan Lee", "department": "Sales", "status": Badge("Active", variant="success")},
-    ],
-    selectable=True,
-    filter=True,
-)
-```
-</ComponentPreview>
-
 ## Row Click
 
 Make rows clickable with `on_row_click`. Clicking fires the action with the row's data as `$event` — use it for navigation, detail panels, or updating other components on the page.
@@ -280,10 +254,6 @@ DataTable(
   Number of rows per page when `paginated=True`.
 </ParamField>
 
-<ParamField body="selectable" type="bool" default="False">
-  Show row selection checkboxes. Selection is visual state only — no action fires per selection.
-</ParamField>
-
 <ParamField body="on_row_click" type="Action | list[Action] | None" default="None">
   Action(s) to fire when a row is clicked. `$event` is the row's data dict.
 </ParamField>
@@ -317,7 +287,6 @@ DataTable(
   "searchable?": false,
   "paginated?": false,
   "pageSize?": 10,
-  "selectable?": false,
   "onRowClick?": "Action | Action[]",
   "cssClass?": "string"
 }
