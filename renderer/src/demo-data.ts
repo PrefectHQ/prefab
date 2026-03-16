@@ -572,7 +572,7 @@ export const DEMO_TREE: ComponentNode = {
           status: "Active",
         },
       ],
-      searchable: true,
+      search: true,
       paginated: true,
       pageSize: 3,
       caption: "Team members",

@@ -63,7 +63,7 @@ class TestDataTableComponent:
                 DataTableColumn(key="email", header="Email"),
             ],
             rows=[{"name": "Alice", "email": "alice@example.com"}],
-            searchable=True,
+            search=True,
             paginated=True,
             page_size=25,
         )
@@ -73,7 +73,7 @@ class TestDataTableComponent:
         assert j["columns"][0]["key"] == "name"
         assert j["columns"][0]["sortable"] is True
         assert j["columns"][1]["sortable"] is False
-        assert j["searchable"] is True
+        assert j["search"] is True
         assert j["paginated"] is True
         assert j["pageSize"] == 25
         assert len(j["rows"]) == 1

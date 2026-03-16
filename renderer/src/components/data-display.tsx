@@ -5,8 +5,9 @@
  * pagination, and row click actions using shadcn Table primitives.
  */
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { interpolateString } from "../interpolation";
 import {
   useReactTable,
   getCoreRowModel,
@@ -34,59 +35,22 @@ interface DataTableColumnSpec {
   header: string;
   sortable?: boolean;
   format?: string;
+  width?: string;
+  minWidth?: string;
+  maxWidth?: string;
+  headerClass?: string;
+  cellClass?: string;
 }
 
-function formatCellValue(value: unknown, format: string): string {
-  const [type, arg] = format.split(":") as [string, string | undefined];
-
-  if (type === "number") {
-    const fractionDigits = arg !== undefined ? parseInt(arg, 10) : undefined;
-    return new Intl.NumberFormat(undefined, {
-      ...(fractionDigits !== undefined && {
-        minimumFractionDigits: fractionDigits,
-        maximumFractionDigits: fractionDigits,
-      }),
-    }).format(Number(value));
-  }
-
-  if (type === "currency") {
-    const currency = arg ?? "USD";
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency,
-    }).format(Number(value));
-  }
-
-  if (type === "percent") {
-    const fractionDigits = arg !== undefined ? parseInt(arg, 10) : undefined;
-    return new Intl.NumberFormat(undefined, {
-      style: "percent",
-      ...(fractionDigits !== undefined && {
-        minimumFractionDigits: fractionDigits,
-        maximumFractionDigits: fractionDigits,
-      }),
-    }).format(Number(value));
-  }
-
-  if (type === "date") {
-    const styleMap: Record<string, Intl.DateTimeFormatOptions["dateStyle"]> = {
-      short: "short",
-      medium: "medium",
-      long: "long",
-      full: "full",
-    };
-    const dateStyle = arg !== undefined ? styleMap[arg] ?? "medium" : "medium";
-    const date = value instanceof Date ? value : new Date(String(value));
-    return new Intl.DateTimeFormat(undefined, { dateStyle }).format(date);
-  }
-
-  return value != null ? String(value) : "";
+/** Format a cell value using the expression pipe system. */
+function formatCellValue(value: unknown, format: string): unknown {
+  return interpolateString(`{{ _v | ${format} }}`, { _v: value });
 }
 
 interface DataTableProps {
   columns: DataTableColumnSpec[];
   rows: Record<string, unknown>[];
-  searchable?: boolean;
+  search?: boolean;
   paginated?: boolean;
   pageSize?: number;
   onRowClick?: (rowData: Record<string, unknown>) => void;
@@ -96,7 +60,7 @@ interface DataTableProps {
 export function PrefabDataTable({
   columns: columnSpecs,
   rows,
-  searchable = false,
+  search = false,
   paginated = false,
   pageSize = 10,
   onRowClick,
@@ -104,45 +68,59 @@ export function PrefabDataTable({
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [clickedRowId, setClickedRowId] = useState<string | null>(null);
   const renderNode = useRenderNode();
 
   const dataColumns = useMemo<ColumnDef<Record<string, unknown>>[]>(
     () =>
-      columnSpecs.map((spec) => ({
-        accessorKey: spec.key,
-        header: ({ column }) => {
-          if (spec.sortable) {
-            return (
-              <button
-                className="flex items-center gap-1 hover:text-foreground"
-                onClick={() =>
-                  column.toggleSorting(column.getIsSorted() === "asc")
-                }
-              >
-                {spec.header}
-                {column.getIsSorted() === "asc" ? (
-                  <span className="text-xs">▲</span>
-                ) : column.getIsSorted() === "desc" ? (
-                  <span className="text-xs">▼</span>
-                ) : (
-                  <span className="text-xs text-muted-foreground/50">⇅</span>
-                )}
-              </button>
-            );
-          }
-          return spec.header;
-        },
-        cell: ({ getValue }) => {
-          const value = getValue();
-          if (renderNode && isComponentNode(value)) {
-            return renderNode(value);
-          }
-          if (spec.format !== undefined && value != null) {
-            return formatCellValue(value, spec.format);
-          }
-          return value != null ? String(value) : "";
-        },
-      })),
+      columnSpecs.map((spec) => {
+        const colStyle: React.CSSProperties = {};
+        if (spec.width) colStyle.width = spec.width;
+        if (spec.minWidth) colStyle.minWidth = spec.minWidth;
+        if (spec.maxWidth) colStyle.maxWidth = spec.maxWidth;
+        const hasColStyle = Object.keys(colStyle).length > 0;
+
+        return {
+          accessorKey: spec.key,
+          header: ({ column }) => {
+            if (spec.sortable) {
+              return (
+                <button
+                  className="flex items-center gap-1 hover:text-foreground"
+                  onClick={() =>
+                    column.toggleSorting(column.getIsSorted() === "asc")
+                  }
+                >
+                  {spec.header}
+                  {column.getIsSorted() === "asc" ? (
+                    <span className="text-xs">▲</span>
+                  ) : column.getIsSorted() === "desc" ? (
+                    <span className="text-xs">▼</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground/50">⇅</span>
+                  )}
+                </button>
+              );
+            }
+            return spec.header;
+          },
+          cell: ({ getValue }) => {
+            const value = getValue();
+            if (renderNode && isComponentNode(value)) {
+              return renderNode(value);
+            }
+            if (spec.format !== undefined && value != null) {
+              return formatCellValue(value, spec.format);
+            }
+            return value != null ? String(value) : "";
+          },
+          meta: {
+            headerClass: spec.headerClass,
+            cellClass: spec.cellClass,
+            colStyle: hasColStyle ? colStyle : undefined,
+          },
+        };
+      }),
     [columnSpecs, renderNode],
   );
 
@@ -154,7 +132,7 @@ export function PrefabDataTable({
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: searchable ? getFilteredRowModel() : undefined,
+    getFilteredRowModel: search ? getFilteredRowModel() : undefined,
     getPaginationRowModel: paginated ? getPaginationRowModel() : undefined,
     initialState: paginated ? { pagination: { pageSize } } : undefined,
   });
@@ -164,7 +142,7 @@ export function PrefabDataTable({
 
   return (
     <div className={cn("w-full min-w-0", className)}>
-      {searchable && (
+      {search && (
         <div className="mb-4">
           <Input
             placeholder="Filter..."
@@ -179,42 +157,67 @@ export function PrefabDataTable({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
+              {headerGroup.headers.map((header) => {
+                const meta = header.column.columnDef.meta as
+                  | { headerClass?: string; colStyle?: React.CSSProperties }
+                  | undefined;
+                return (
+                  <TableHead
+                    key={header.id}
+                    className={meta?.headerClass}
+                    style={meta?.colStyle}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                );
+              })}
             </TableRow>
           ))}
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.length ? (
             <>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className={
-                    isClickable ? "cursor-pointer hover:bg-muted/50" : undefined
-                  }
-                  onClick={
-                    isClickable ? () => onRowClick(row.original) : undefined
-                  }
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {table.getRowModel().rows.map((row) => {
+                const isSelected = clickedRowId === row.id;
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={isSelected ? "selected" : undefined}
+                    className={isClickable ? "cursor-pointer" : undefined}
+                    onClick={
+                      isClickable
+                        ? () => {
+                            setClickedRowId(row.id);
+                            onRowClick(row.original);
+                          }
+                        : undefined
+                    }
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      const meta = cell.column.columnDef.meta as
+                        | { cellClass?: string; colStyle?: React.CSSProperties }
+                        | undefined;
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={meta?.cellClass}
+                          style={meta?.colStyle}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
               {/* Pad short pages with empty rows so auto-resize stays stable */}
               {paginated &&
                 table.getRowModel().rows.length < pageSize &&
