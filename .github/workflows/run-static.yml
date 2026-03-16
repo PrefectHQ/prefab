@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   static_analysis:
@@ -40,18 +40,6 @@ jobs:
         uses: j178/prek-action@v1
         env:
           SKIP: no-commit-to-branch
-
-      - name: Regenerate docs
-        run: uv run prefab dev build-docs
-
-      - name: Commit regenerated docs
-        run: |
-          git diff --quiet docs/ && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git commit -m "Regenerate docs"
-          git push
 
       - name: Check for broken docs links
         run: cd docs && npx mint@latest broken-links
