@@ -11,7 +11,7 @@ Prefab UIs are built around a simple loop: you declare **state**, you write **ex
 
 That might sound abstract, so here's what it looks like in practice:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="H4sIAAAAAAACE6WOzW7CMAzH73kKK6dUFATiNqmXPQLsXnlRCtaKHaXuQEJ996VFBQHH-WT5__Fzk-QEMYUGv-ueVhgj0ClKUuiC1sSkhG3dKWowzbPXSzZyYO3myGevKlzCTs4lfIWLvkbQKwnf_fug-6nZvMGcl561WhfGnEmPY6U7YKy2JWBLB66sz-SQbPFhIM8N7ezSlvCLiTCHrfTaEod8Eq59S_6nmpHOToAs2esVph2WsIFhsEUxNY7_u4c4Ck-kxT9IizvpD3GawUiAAQAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"content":"{{ count }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]},"state":{"count":0}}} playground="H4sIAAAAAAAC_6WOzW7CMAzH73kKK6dUFATiNqmXPQLsXnlRCtaKHaXuQEJ996VFBQHH-WT5__Fzk-QEMYUGv-ueVhgj0ClKUuiC1sSkhG3dKWowzbPXSzZyYO3myGevKlzCTs4lfIWLvkbQKwnf_fug-6nZvMGcl561WhfGnEmPY6U7YKy2JWBLB66sz-SQbPFhIM8N7ezSlvCLiTCHrfTaEod8Eq59S_6nmpHOToAs2esVph2WsIFhsEUxNY7_u4c4Ck-kxT9IizvpD3GawUiAAQAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -70,7 +70,7 @@ That's the complete model: state holds values, expressions read them, actions ch
 
 The counter above creates state explicitly with `set_initial_state()`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}} playground="H4sIAAAAAAACE2WNuwrCQBBF-_2KcasEFhs7IYXYaG9jFcY4MQv7GDazKIT8u8mihTjFbc65d_oUPXCiHm9ttltkBus5JoGRpLXBikXXjoJCqv91u7iIgYKM38oxuuyDgXPgLAYu9BKl_naqgJ4afUgy5KRrpZ5Whk-3eiA3u3qvYLky87HX1AbYYUdDdHdKjb7GnKCAuvjrv0qfyLloYJoKgnneLPgNdsPwa-cAAAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]},"state":{"name":"Arthur"}}} playground="H4sIAAAAAAAC_2WNuwrCQBBF-_2KcasEFhs7IYXYaG9jFcY4MQv7GDazKIT8u8mihTjFbc65d_oUPXCiHm9ttltkBus5JoGRpLXBikXXjoJCqv91u7iIgYKM38oxuuyDgXPgLAYu9BKl_naqgJ4afUgy5KRrpZ5Whk-3eiA3u3qvYLky87HX1AbYYUdDdHdKjb7GnKCAuvjrv0qfyLloYJoKgnneLPgNdsPwa-cAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -155,7 +155,7 @@ slider.rx > 80         # → {{ volume > 80 }}
 
 Here's the slider example rewritten with `.rx` and f-strings. Compare it to the counter above, which used raw `{{ }}` — same reactive model, just more Pythonic syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_23","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_23 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_23 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_23":50.0}}} playground="H4sIAAAAAAACEz3NTQrCMBAF4H1OMRSEBEKJiJtCVl6goLiVqJMaaJIySbUg3t3-6WxmFt97Yyl66AituV56V96i72LAkBO48aIMh9j2PkioKTaEKUk4tu6OJOGEQ2bs5fJjRbwxnd6JisE4aVagV86fpu1R75UE74Kelhn0Vikx66mL2-I89WAF7yVd0vDZFIv4_V-L_kCwLwwpKzDDAAAA">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_23","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false},{"content":"Volume: {{ slider_23 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_23 }}","min":0,"max":100,"variant":"default"}]},"state":{"slider_23":50.0}}} playground="H4sIAAAAAAAC_z3NTQrCMBAF4H1OMRSEBEKJiJtCVl6goLiVqJMaaJIySbUg3t3-6WxmFt97Yyl66AituV56V96i72LAkBO48aIMh9j2PkioKTaEKUk4tu6OJOGEQ2bs5fJjRbwxnd6JisE4aVagV86fpu1R75UE74Kelhn0Vikx66mL2-I89WAF7yVd0vDZFIv4_V-L_kCwLwwpKzDDAAAA">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text
