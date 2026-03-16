@@ -14,6 +14,7 @@ import {
   keymap,
   highlightSpecialChars,
   drawSelection,
+  lineNumbers,
 } from "@codemirror/view";
 import {
   defaultKeymap,
@@ -139,16 +140,27 @@ const baseEditorStyles = {
     fontFamily: "inherit",
     fontSize: "inherit",
     lineHeight: "inherit",
-    padding: "1rem",
+    paddingTop: "1rem",
+    paddingBottom: "1rem",
+    paddingLeft: "0.5rem",
+    paddingRight: "1rem",
   },
-  ".cm-gutters": { display: "none" },
+  ".cm-gutters": {
+    backgroundColor: "transparent",
+    border: "none",
+    paddingLeft: "0.5rem",
+    paddingRight: "0.25rem",
+    userSelect: "none",
+  },
   ".cm-activeLine": { backgroundColor: "transparent" },
+  ".cm-activeLineGutter": { backgroundColor: "transparent" },
   ".cm-scroller": { overflow: "auto" },
 };
 
 const darkChrome = EditorView.theme(
   {
     ...baseEditorStyles,
+    ".cm-lineNumbers .cm-gutterElement": { color: "#606580" },
     ".cm-selectionBackground": {
       backgroundColor: "rgba(255, 255, 255, 0.15) !important",
     },
@@ -162,6 +174,7 @@ const darkChrome = EditorView.theme(
 
 const lightChrome = EditorView.theme({
   ...baseEditorStyles,
+  ".cm-lineNumbers .cm-gutterElement": { color: "#8c959f" },
   ".cm-selectionBackground": {
     backgroundColor: "rgba(0, 0, 0, 0.1) !important",
   },
@@ -204,6 +217,7 @@ export function Editor({ value, onChange, language, dark }: EditorProps) {
     const state = EditorState.create({
       doc: value,
       extensions: [
+        lineNumbers(),
         highlightSpecialChars(),
         history(),
         drawSelection(),

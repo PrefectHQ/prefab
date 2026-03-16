@@ -72,10 +72,49 @@ Deploy previews (Mintlify) load chunks from the CDN (`@latest`). If a branch cha
 
 ## Playground
 
-- `docs/playground.mdx` uses `mode: wide` (NOT `mode: frame` — frame breaks nested iframes)
-- Playground HTML is fetched from CDN and loaded via blob URL
-- `npm run --prefix renderer build:playground` builds `dist/playground.html`
-- Playground also uses `@latest` CDN URL
+The playground is a self-contained HTML file (all JS/CSS inlined via `vite-plugin-singlefile`) that runs Python in the browser via Pyodide.
+
+### How it loads Python
+
+There are two paths for loading `prefab_ui` into Pyodide:
+
+**Bundled mode (`__LOCAL_BUNDLE__ = true`):** All 76+ prefab_ui Python source files are serialized into `renderer/src/playground/bundle.json` and inlined into the playground HTML at build time. At runtime, the files are written directly to Pyodide's virtual filesystem (`/lib/python3.12/site-packages/prefab_ui/...`). No network requests needed.
+
+**Micropip mode (`__LOCAL_BUNDLE__ = false`):** Falls back to `micropip.install("prefab-ui", deps=False)` from PyPI. **This path is broken** because pydantic-core is a Rust extension with no WASM wheel on PyPI. It exists only as a dev fallback and should never be used in production.
+
+The `VITE_LOCAL_PLAYGROUND=1` environment variable controls which path Vite compiles in. When set, `__LOCAL_BUNDLE__` is `true` and the micropip code is tree-shaken out entirely.
+
+### Pydantic handling
+
+Pydantic is always loaded from Pyodide's built-in WASM packages (`py.loadPackage(["pydantic"])`), never from PyPI. This happens before either the bundle or micropip path runs.
+
+### Build variants
+
+| Context | Command | `__LOCAL_BUNDLE__` | Source |
+|---|---|---|---|
+| Local docs (`prefab dev build-docs`) | `VITE_LOCAL_PLAYGROUND=1 npm run build:playground` | `true` | Bundle inlined |
+| npm publish (`build:publish`) | `VITE_LOCAL_PLAYGROUND=1 npm run build:playground` | `true` | Bundle inlined |
+| Dev (direct) | `npm run build:playground` | `false` | micropip (broken) |
+
+### How published docs serve it
+
+`docs/playground.mdx` loads the playground HTML via fetch + blob URL:
+- **localhost:** fetches `/playground.html` (local docs build)
+- **production:** fetches `https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/dist/playground.html` (npm-published version)
+
+The npm-published version must be built with `VITE_LOCAL_PLAYGROUND=1` (handled by `build:publish` in `package.json`). If it isn't, the published playground will fail with a micropip error.
+
+### Bundle generation
+
+`docs-build/generate_playground_bundle.py` reads all `.py` files from `src/prefab_ui/` and serializes them as JSON into `renderer/src/playground/bundle.json`. This runs as part of `prefab dev build-docs`.
+
+When adding new Python subpackages to prefab_ui, make sure they're included in the bundle generator's source paths.
+
+### Common issues
+
+- **"attempted to install wheel before downloading it"** — means the published playground was built without `VITE_LOCAL_PLAYGROUND=1`. Fix: rebuild and republish the renderer npm package.
+- **New module not found in playground** — the bundle generator didn't pick it up. Check `generate_playground_bundle.py` for the source paths.
+- **`docs/playground.mdx` uses `mode: wide`** (NOT `mode: frame` — frame breaks nested iframes).
 
 ## Key Files
 
