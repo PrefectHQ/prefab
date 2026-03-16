@@ -105,7 +105,6 @@ from prefab_ui.components.table import (
 from prefab_ui.components.text import Text
 from prefab_ui.components.textarea import Textarea
 from prefab_ui.components.video import Video
-from prefab_ui.components.watch import Watch
 from prefab_ui.components.typography import (
     H1,
     H2,
@@ -233,7 +232,6 @@ __all__ = [
     "Textarea",
     "Tooltip",
     "Video",
-    "Watch",
     "defer",
     "insert",
 ]
