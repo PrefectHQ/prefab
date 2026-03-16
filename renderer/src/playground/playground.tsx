@@ -51,6 +51,22 @@ function gzipDecode(encoded: string): string | null {
   }
 }
 
+function base64Decode(encoded: string): string | null {
+  try {
+    const padded = encoded.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(padded);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  } catch {
+    return null;
+  }
+}
+
+function decodePgParam(encoded: string): string | null {
+  return gzipDecode(encoded) ?? base64Decode(encoded);
+}
+
 type EditorMode = "python" | "json";
 type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
@@ -211,12 +227,12 @@ export function Playground() {
         const params = new URLSearchParams(hash);
         const encodedCode = params.get("code");
         if (encodedCode) {
-          const decoded = gzipDecode(encodedCode);
+          const decoded = decodePgParam(encodedCode);
           if (decoded) setCode(decoded);
         }
         const encodedTheme = params.get("theme");
         if (encodedTheme) {
-          const decoded = gzipDecode(encodedTheme);
+          const decoded = decodePgParam(encodedTheme);
           if (decoded) setThemeCss(decoded);
         }
       }
@@ -225,11 +241,11 @@ export function Playground() {
     function onMessage(e: MessageEvent) {
       if (e.data?.type === "pg-init-code") {
         if (typeof e.data.encoded === "string") {
-          const decoded = gzipDecode(e.data.encoded);
+          const decoded = decodePgParam(e.data.encoded);
           if (decoded) setCode(decoded);
         }
         if (typeof e.data.theme === "string" && e.data.theme) {
-          const decoded = gzipDecode(e.data.theme);
+          const decoded = decodePgParam(e.data.theme);
           if (decoded) setThemeCss(decoded);
         }
       }
