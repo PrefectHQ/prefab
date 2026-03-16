@@ -28,6 +28,9 @@ Mintlify inlines ALL `.js` files from `docs/` as `<script>` tags on every page. 
 ## Local Development
 
 ```bash
+# First time / after a fresh clone: install renderer deps
+npm ci --prefix renderer
+
 # Build renderer (from repo root)
 npm run --prefix renderer build:renderer
 
@@ -133,6 +136,7 @@ When adding new Python subpackages to prefab_ui, make sure they're included in t
 
 ## Common Pitfalls
 
+- **`sh: vite: command not found`** — `renderer/node_modules` is missing. Run `npm ci --prefix renderer` (or `cd renderer && npm ci`) before any build command.
 - **`package.json` version is always `0.0.0`** — don't try to read version from there. Use `git describe --tags`.
 - **`docs/_renderer/` is gitignored** — after a fresh clone, run `prefab dev build-docs` to copy chunks from `renderer/dist/`. The CLI detects missing chunks and copies them even if the renderer source hasn't changed.
 - **Mintlify caches renderer** at `~/.mintlify/mint/apps/client/public/renderer.js`. After rebuilding, you may need to restart `mintlify dev` or clear this cache.
