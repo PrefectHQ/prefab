@@ -105,7 +105,7 @@ set_initial_state(users=[
 
 DataTable(
     rows="{{ users }}",
-    searchable=True,
+    search=True,
     columns=[
         DataTableColumn(key="name", header="Name"),
         DataTableColumn(key="email", header="Email"),
