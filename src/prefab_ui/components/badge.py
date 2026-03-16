@@ -22,16 +22,19 @@ from pydantic import Field
 from prefab_ui.components.base import ContainerComponent
 from prefab_ui.rx import RxStr
 
-BadgeVariant = Literal[
-    "default",
-    "secondary",
-    "destructive",
-    "success",
-    "warning",
-    "info",
-    "outline",
-    "ghost",
-]
+BadgeVariant = (
+    Literal[
+        "default",
+        "secondary",
+        "destructive",
+        "success",
+        "warning",
+        "info",
+        "outline",
+        "ghost",
+    ]
+    | RxStr
+)
 
 
 class Badge(ContainerComponent):

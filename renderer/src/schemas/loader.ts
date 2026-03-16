@@ -3,7 +3,10 @@ import { componentBase } from "./base.ts";
 
 export const loaderSchema = componentBase.extend({
   type: z.literal("Loader"),
-  variant: z.enum(["spin", "dots", "pulse", "bars", "ios"]).optional(),
+  variant: z
+    .enum(["spin", "dots", "pulse", "bars", "ios"])
+    .or(z.string())
+    .optional(),
   size: z.enum(["sm", "default", "lg"]).optional(),
 });
 

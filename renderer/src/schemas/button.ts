@@ -18,6 +18,7 @@ export const buttonSchema = componentBase.extend({
       "warning",
       "info",
     ])
+    .or(z.string())
     .optional(),
   size: z
     .enum([

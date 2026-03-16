@@ -35,7 +35,9 @@ from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, StatefulMixin
 from prefab_ui.rx import RxStr
 
-SliderVariant = Literal["default", "success", "warning", "destructive", "info", "muted"]
+SliderVariant = (
+    Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
+)
 
 SliderHandleStyle = Literal["circle", "bar"]
 
