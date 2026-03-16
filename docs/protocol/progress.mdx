@@ -53,17 +53,24 @@ A progress bar showing completion status.
       "type": "number"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default, success, warning, destructive, info, muted",
-      "enum": [
-        "default",
-        "success",
-        "warning",
-        "destructive",
-        "info",
-        "muted"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "success",
+            "warning",
+            "destructive",
+            "info",
+            "muted"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default, success, warning, destructive, info, muted"
     },
     "indicatorClass": {
       "type": [

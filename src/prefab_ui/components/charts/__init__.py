@@ -352,9 +352,9 @@ class RadialChart(Component):
     )
 
 
-SparklineVariant = Literal[
-    "default", "success", "warning", "destructive", "info", "muted"
-]
+SparklineVariant = (
+    Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
+)
 SparklineCurve = Literal["linear", "smooth", "step"]
 SparklineMode = Literal["line", "bar"]
 

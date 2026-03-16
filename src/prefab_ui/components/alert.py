@@ -30,7 +30,7 @@ from pydantic import Field
 from prefab_ui.components.base import Component, ContainerComponent
 from prefab_ui.rx import RxStr
 
-AlertVariant = Literal["default", "destructive", "success", "warning", "info"]
+AlertVariant = Literal["default", "destructive", "success", "warning", "info"] | RxStr
 
 
 class Alert(ContainerComponent):
