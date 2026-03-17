@@ -31,9 +31,21 @@ class TestProgressComponent:
         p = Progress(value=50)
         j = p.to_json()
         assert j["value"] == 50
-        assert j["min"] == 0
-        assert j["max"] == 100
+        assert "min" not in j
+        assert "max" not in j
         assert j["variant"] == "default"
+
+    def test_progress_target(self):
+        p = Progress(value=50, target=80, max=100)
+        j = p.to_json()
+        assert j["value"] == 50
+        assert j["target"] == 80
+        assert j["max"] == 100
+
+    def test_progress_target_class(self):
+        p = Progress(value=50, target=80, target_class="bg-red-500")
+        j = p.to_json()
+        assert j["targetClass"] == "bg-red-500"
 
     @pytest.mark.parametrize(
         "variant",

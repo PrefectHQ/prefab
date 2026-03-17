@@ -46,7 +46,7 @@ function Progress({
     <ProgressPrimitive.Root
       value={value}
       className={cn(
-        "cn-progress relative overflow-hidden rounded-full",
+        "cn-progress relative overflow-visible rounded-full",
         isVertical
           ? "cn-progress-vertical flex flex-col-reverse"
           : "w-full",
@@ -54,7 +54,12 @@ function Progress({
       )}
       {...props}
     >
-      <ProgressPrimitive.Track className="cn-progress relative flex w-full items-center overflow-hidden rounded-full">
+      <ProgressPrimitive.Track
+        className={cn(
+          "cn-progress relative flex items-center overflow-hidden rounded-full",
+          isVertical ? "h-full w-full" : "w-full",
+        )}
+      >
         <ProgressPrimitive.Indicator
           className={cn(progressVariants({ variant }), indicatorClassName)}
           style={
@@ -63,17 +68,17 @@ function Progress({
               : { transform: `translateX(-${100 - (value || 0)}%)` }
           }
         />
-        {clampedTarget != null && (
-          <span
-            className={cn("cn-progress-target", targetClassName)}
-            style={
-              isVertical
-                ? { bottom: `${clampedTarget}%` }
-                : { left: `${clampedTarget}%` }
-            }
-          />
-        )}
       </ProgressPrimitive.Track>
+      {clampedTarget != null && (
+        <span
+          className={cn("cn-progress-target", targetClassName)}
+          style={
+            isVertical
+              ? { bottom: `${clampedTarget}%` }
+              : { left: `${clampedTarget}%` }
+          }
+        />
+      )}
     </ProgressPrimitive.Root>
   );
 }

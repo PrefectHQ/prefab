@@ -33,8 +33,8 @@ class Progress(Component):
         default=0,
         description="Current progress value",
     )
-    min: float = Field(default=0, description="Minimum value")
-    max: float = Field(default=100, description="Maximum value (progress is value/max)")
+    min: float | None = Field(default=None, description="Minimum value (default 0)")
+    max: float | None = Field(default=None, description="Maximum value (default 100)")
     variant: ProgressVariant = Field(
         default="default",
         description="Visual variant: default, success, warning, destructive, info, muted",

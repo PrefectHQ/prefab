@@ -124,7 +124,7 @@ These components compose with Row and Column exactly the way the colored placeho
 
 Here's the same Column and Row pattern, with real content:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"content":"API Server","type":"H3"},{"type":"Badge","label":"Healthy","variant":"success"}]},{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIENvbHVtbiwgSDMsIE11dGVkLCBQcm9ncmVzcywgUm93Cgp3aXRoIENvbHVtbihnYXA9NCwgY3NzX2NsYXNzPSJ3LWF1dG8iKToKICAgIHdpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgSDMoIkFQSSBTZXJ2ZXIiKQogICAgICAgIEJhZGdlKCJIZWFsdGh5IiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICBNdXRlZCgiVXB0aW1lOiA5OS45NyUiKQogICAgUHJvZ3Jlc3ModmFsdWU9OTkuOTcpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-auto","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"content":"API Server","type":"H3"},{"type":"Badge","label":"Healthy","variant":"success"}]},{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"variant":"default"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIENvbHVtbiwgSDMsIE11dGVkLCBQcm9ncmVzcywgUm93Cgp3aXRoIENvbHVtbihnYXA9NCwgY3NzX2NsYXNzPSJ3LWF1dG8iKToKICAgIHdpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgSDMoIkFQSSBTZXJ2ZXIiKQogICAgICAgIEJhZGdlKCJIZWFsdGh5IiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICBNdXRlZCgiVXB0aW1lOiA5OS45NyUiKQogICAgUHJvZ3Jlc3ModmFsdWU9OTkuOTcpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Badge, Column, H3, Muted, Progress, Row
@@ -151,7 +151,7 @@ with Column(gap=4, css_class="w-auto"):
         ]
       },
       {"content": "Uptime: 99.97%", "type": "Muted"},
-      {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
+      {"type": "Progress", "value": 99.97, "variant": "default"}
     ]
   }
 }
@@ -165,7 +165,7 @@ Some Prefab components are designed to be composed from sub-components. [Card](/
 
 Cards are the most common compound component, wrapping related content in a bordered container with distinct header, content, and footer sections. The card below wraps the same status content from the previous example.
 
-<ComponentPreview json={{"view":{"cssClass":"w-72","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"View Logs","variant":"outline","size":"default","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsCiAgICBCdXR0b24sCiAgICBDYXJkLAogICAgQ2FyZENvbnRlbnQsCiAgICBDYXJkRm9vdGVyLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENvbHVtbiwKICAgIE11dGVkLAogICAgUHJvZ3Jlc3MsCiAgICBSb3csCikKCndpdGggQ2FyZChjc3NfY2xhc3M9InctNzIiKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIHdpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgIENhcmRUaXRsZSgiQVBJIFNlcnZlciIpCiAgICAgICAgICAgIEJhZGdlKCJIZWFsdGh5IiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgICAgICAgICBNdXRlZCgiVXB0aW1lOiA5OS45NyUiKQogICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT05OS45NykKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIEJ1dHRvbigiVmlldyBMb2dzIiwgdmFyaWFudD0ib3V0bGluZSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"w-72","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"CardTitle","content":"API Server"},{"type":"Badge","label":"Healthy","variant":"success"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Uptime: 99.97%","type":"Muted"},{"type":"Progress","value":99.97,"variant":"default"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"View Logs","variant":"outline","size":"default","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsCiAgICBCdXR0b24sCiAgICBDYXJkLAogICAgQ2FyZENvbnRlbnQsCiAgICBDYXJkRm9vdGVyLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENvbHVtbiwKICAgIE11dGVkLAogICAgUHJvZ3Jlc3MsCiAgICBSb3csCikKCndpdGggQ2FyZChjc3NfY2xhc3M9InctNzIiKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIHdpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgIENhcmRUaXRsZSgiQVBJIFNlcnZlciIpCiAgICAgICAgICAgIEJhZGdlKCJIZWFsdGh5IiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgICAgICAgICBNdXRlZCgiVXB0aW1lOiA5OS45NyUiKQogICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT05OS45NykKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIEJ1dHRvbigiVmlldyBMb2dzIiwgdmFyaWFudD0ib3V0bGluZSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -221,7 +221,7 @@ with Card(css_class="w-72"):
             "type": "Column",
             "children": [
               {"content": "Uptime: 99.97%", "type": "Muted"},
-              {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
+              {"type": "Progress", "value": 99.97, "variant": "default"}
             ]
           }
         ]
@@ -255,7 +255,7 @@ When you need to arrange multiple items in a uniform layout, [Grid](/components/
 
 Since the DSL is plain Python, you can use a `for` loop to produce components from data. The loop runs once when the component tree is constructed, and the result is baked into the output: the renderer never sees the loop, just the components it produced. This works well when the data is static and known at build time.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"API Server"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.97%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.97,"min":0,"max":100,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Worker"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"94.2%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":94.2,"min":0,"max":100,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Scheduler"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.8%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.8,"min":0,"max":100,"variant":"default"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwKICAgIENhcmRDb250ZW50LAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENvbHVtbiwKICAgIEdyaWQsCiAgICBMYXJnZSwKICAgIE11dGVkLAogICAgUHJvZ3Jlc3MsCikKCnNlcnZpY2VzID0gWwogICAgeyJuYW1lIjogIkFQSSBTZXJ2ZXIiLCAidXB0aW1lIjogOTkuOTd9LAogICAgeyJuYW1lIjogIldvcmtlciIsICJ1cHRpbWUiOiA5NC4yfSwKICAgIHsibmFtZSI6ICJTY2hlZHVsZXIiLCAidXB0aW1lIjogOTkuOH0sCl0KCndpdGggR3JpZChjb2x1bW5zPTMsIGdhcD00KToKICAgIGZvciBzdmMgaW4gc2VydmljZXM6CiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICAgICAgQ2FyZFRpdGxlKHN2Y1sibmFtZSJdKQogICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgTGFyZ2UoZiJ7c3ZjWyd1cHRpbWUnXX0lIikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgidXB0aW1lIikKICAgICAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT1zdmNbInVwdGltZSJdKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"API Server"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.97%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.97,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Worker"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"94.2%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":94.2,"variant":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Scheduler"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"content":"99.8%","type":"Large"},{"content":"uptime","type":"Muted"},{"type":"Progress","value":99.8,"variant":"default"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwKICAgIENhcmRDb250ZW50LAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENvbHVtbiwKICAgIEdyaWQsCiAgICBMYXJnZSwKICAgIE11dGVkLAogICAgUHJvZ3Jlc3MsCikKCnNlcnZpY2VzID0gWwogICAgeyJuYW1lIjogIkFQSSBTZXJ2ZXIiLCAidXB0aW1lIjogOTkuOTd9LAogICAgeyJuYW1lIjogIldvcmtlciIsICJ1cHRpbWUiOiA5NC4yfSwKICAgIHsibmFtZSI6ICJTY2hlZHVsZXIiLCAidXB0aW1lIjogOTkuOH0sCl0KCndpdGggR3JpZChjb2x1bW5zPTMsIGdhcD00KToKICAgIGZvciBzdmMgaW4gc2VydmljZXM6CiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICAgICAgQ2FyZFRpdGxlKHN2Y1sibmFtZSJdKQogICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgTGFyZ2UoZiJ7c3ZjWyd1cHRpbWUnXX0lIikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgidXB0aW1lIikKICAgICAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT1zdmNbInVwdGltZSJdKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -309,7 +309,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "99.97%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 99.97, "min": 0, "max": 100, "variant": "default"}
+                  {"type": "Progress", "value": 99.97, "variant": "default"}
                 ]
               }
             ]
@@ -329,7 +329,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "94.2%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 94.2, "min": 0, "max": 100, "variant": "default"}
+                  {"type": "Progress", "value": 94.2, "variant": "default"}
                 ]
               }
             ]
@@ -352,7 +352,7 @@ with Grid(columns=3, gap=4):
                 "children": [
                   {"content": "99.8%", "type": "Large"},
                   {"content": "uptime", "type": "Muted"},
-                  {"type": "Progress", "value": 99.8, "min": 0, "max": 100, "variant": "default"}
+                  {"type": "Progress", "value": 99.8, "variant": "default"}
                 ]
               }
             ]
