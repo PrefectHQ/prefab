@@ -299,17 +299,81 @@ with Row(css_class="gap-6"):
 </CodeGroup>
 </ComponentPreview>
 
-## Custom Range
+## Target Marker
 
-Set `min` and `max` to define a range other than 0–100. The renderer normalizes the value to a percentage automatically.
+The `target` prop renders a tick mark on the ring at a specific position. Use `target_class` to style it.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Ring","value":72.0,"min":60.0,"max":100.0,"label":"72\u00b0F","variant":"warning","size":"default","thickness":6},{"type":"Ring","value":3.0,"min":0,"max":5.0,"label":"3/5","variant":"info","size":"default","thickness":6}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmluZywgUm93Cgp3aXRoIFJvdyhjc3NfY2xhc3M9ImdhcC02Iik6CiAgICBSaW5nKHZhbHVlPTcyLCBtaW49NjAsIG1heD0xMDAsIHZhcmlhbnQ9Indhcm5pbmciLCBsYWJlbD0iNzJcdTAwYjBGIikKICAgIFJpbmcodmFsdWU9MywgbWF4PTUsIHZhcmlhbnQ9ImluZm8iLCBsYWJlbD0iMy81IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Ring","value":55.0,"min":0,"max":100,"label":"55%","variant":"default","size":"default","thickness":6,"target":75.0},{"type":"Ring","value":90.0,"min":0,"max":100,"label":"90%","variant":"success","size":"default","thickness":6,"target":75.0},{"type":"Ring","value":60.0,"min":0,"max":100,"label":"60%","variant":"info","size":"default","thickness":6,"target":80.0,"targetClass":"stroke-red-500"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmluZywgUm93Cgp3aXRoIFJvdyhjc3NfY2xhc3M9ImdhcC02Iik6CiAgICBSaW5nKHZhbHVlPTU1LCB0YXJnZXQ9NzUsIGxhYmVsPSI1NSUiKQogICAgUmluZyh2YWx1ZT05MCwgdGFyZ2V0PTc1LCB2YXJpYW50PSJzdWNjZXNzIiwgbGFiZWw9IjkwJSIpCiAgICBSaW5nKAogICAgICAgIHZhbHVlPTYwLCB0YXJnZXQ9ODAsIHZhcmlhbnQ9ImluZm8iLAogICAgICAgIGxhYmVsPSI2MCUiLCB0YXJnZXRfY2xhc3M9InN0cm9rZS1yZWQtNTAwIiwKICAgICkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Ring, Row
 
 with Row(css_class="gap-6"):
-    Ring(value=72, min=60, max=100, variant="warning", label="72\u00b0F")
+    Ring(value=55, target=75, label="55%")
+    Ring(value=90, target=75, variant="success", label="90%")
+    Ring(
+        value=60, target=80, variant="info",
+        label="60%", target_class="stroke-red-500",
+    )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Row",
+    "children": [
+      {
+        "type": "Ring",
+        "value": 55.0,
+        "min": 0,
+        "max": 100,
+        "label": "55%",
+        "variant": "default",
+        "size": "default",
+        "thickness": 6,
+        "target": 75.0
+      },
+      {
+        "type": "Ring",
+        "value": 90.0,
+        "min": 0,
+        "max": 100,
+        "label": "90%",
+        "variant": "success",
+        "size": "default",
+        "thickness": 6,
+        "target": 75.0
+      },
+      {
+        "type": "Ring",
+        "value": 60.0,
+        "min": 0,
+        "max": 100,
+        "label": "60%",
+        "variant": "info",
+        "size": "default",
+        "thickness": 6,
+        "target": 80.0,
+        "targetClass": "stroke-red-500"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Range
+
+Set `min` and `max` to define a range other than 0–100. The renderer normalizes the value to a percentage automatically.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Row","children":[{"type":"Ring","value":72.0,"min":60.0,"max":100.0,"label":"72\u00b0F","variant":"warning","size":"default","thickness":6},{"type":"Ring","value":3.0,"min":0,"max":5.0,"label":"3/5","variant":"info","size":"default","thickness":6}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmluZywgUm93Cgp3aXRoIFJvdyhjc3NfY2xhc3M9ImdhcC02Iik6CiAgICBSaW5nKHZhbHVlPTcyLCBtaW49NjAsIG1heD0xMDAsIHZhcmlhbnQ9Indhcm5pbmciLCBsYWJlbD0iNzLCsEYiKQogICAgUmluZyh2YWx1ZT0zLCBtYXg9NSwgdmFyaWFudD0iaW5mbyIsIGxhYmVsPSIzLzUiKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Ring, Row
+
+with Row(css_class="gap-6"):
+    Ring(value=72, min=60, max=100, variant="warning", label="72°F")
     Ring(value=3, max=5, variant="info", label="3/5")
 ```
 ```json Protocol icon="brackets-curly"
@@ -443,8 +507,16 @@ with Row(css_class="gap-6"):
   Stroke width of the ring arc in pixels.
 </ParamField>
 
+<ParamField body="target" type="float | str | None" default="None">
+  Target marker position. Renders a tick mark on the ring at this value.
+</ParamField>
+
 <ParamField body="indicator_class" type="str | None" default="None">
   Tailwind classes applied to the filled arc. The Ring wrapper is a `group`, so `group-hover:` classes trigger on hover anywhere on the ring.
+</ParamField>
+
+<ParamField body="target_class" type="str | None" default="None">
+  Tailwind classes for the target tick mark.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
