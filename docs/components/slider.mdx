@@ -73,7 +73,7 @@ with Column(gap=2):
 
 When the display needs to appear *above* the slider in the layout, forward-declare the reference with `Rx(lambda: ...)` so it resolves at render time:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"cssClass":"font-bold","content":"{{ slider_4 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0,"max":100,"variant":"default"},{"name":"slider_4","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"cssClass":"font-bold","content":"{{ slider_4 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","variant":"default"},{"name":"slider_4","type":"Slider","min":0.0,"max":1.0,"value":0.42,"disabled":false}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwpCiAgICBzID0gU2xpZGVyKHZhbHVlPTAuNDIsIG1pbj0wLCBtYXg9MSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
@@ -102,13 +102,7 @@ with Column(gap=4):
           {"cssClass": "font-bold", "content": "{{ slider_4 | percent }}", "type": "Text"}
         ]
       },
-      {
-        "type": "Progress",
-        "value": "{{ slider_4 }}",
-        "min": 0,
-        "max": 100,
-        "variant": "default"
-      },
+      {"type": "Progress", "value": "{{ slider_4 }}", "variant": "default"},
       {
         "name": "slider_4",
         "type": "Slider",
