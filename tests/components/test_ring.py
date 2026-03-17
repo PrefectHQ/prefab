@@ -13,7 +13,7 @@ class TestRingComponent:
         j = r.to_json()
         assert j["type"] == "Ring"
         assert j["value"] == 50
-        assert j["min"] == 0
+        assert "min" not in j
         assert j["max"] == 100
         assert j["variant"] == "default"
         assert j["size"] == "default"
@@ -24,12 +24,12 @@ class TestRingComponent:
         j = r.to_json()
         assert j["label"] == "75%"
 
-    def test_ring_with_min_max(self):
+    def test_ring_min_normalized_python_side(self):
         r = Ring(value=30, min=10, max=50)
         j = r.to_json()
-        assert j["value"] == 30
-        assert j["min"] == 10
-        assert j["max"] == 50
+        assert j["value"] == 20
+        assert "min" not in j
+        assert j["max"] == 40
 
     @pytest.mark.parametrize(
         "variant",

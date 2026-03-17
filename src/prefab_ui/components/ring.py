@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field
 
@@ -36,7 +36,11 @@ class Ring(ContainerComponent):
         default=0,
         description="Current value (number or template expression)",
     )
-    min: float = Field(default=0, description="Minimum value")
+    min: float = Field(
+        default=0,
+        exclude=True,
+        description="Minimum value — resolved Python-side, not sent to renderer",
+    )
     max: float = Field(default=100, description="Maximum value")
     label: RxStr | None = Field(
         default=None,
@@ -68,3 +72,13 @@ class Ring(ContainerComponent):
         alias="targetClass",
         description="Tailwind classes for the target marker",
     )
+
+    def to_json(self) -> dict[str, Any]:
+        d = super().to_json()
+        # Normalize min offset Python-side so the renderer only sees 0-based values
+        if self.min != 0 and isinstance(self.value, (int, float)):
+            d["value"] = self.value - self.min
+            d["max"] = self.max - self.min
+            if isinstance(self.target, (int, float)):
+                d["target"] = self.target - self.min
+        return d

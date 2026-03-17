@@ -241,20 +241,18 @@ export function mapProps(
     }
   }
 
-  // Progress: normalize value/target to 0-100 percentage from min/max range,
-  // and map indicatorClass/targetClass → className variants
+  // Progress: normalize value/target to 0-100 percentage from max,
+  // and map indicatorClass/targetClass → className variants.
+  // min is resolved Python-side before reaching the renderer.
   if (type === "Progress") {
-    const min = (mapped.min as number) ?? 0;
     const max = (mapped.max as number) ?? 100;
     const val = (mapped.value as number) ?? 0;
-    const range = max - min;
-    if (range > 0) {
-      mapped.value = ((val - min) / range) * 100;
+    if (max > 0) {
+      mapped.value = (val / max) * 100;
       if (mapped.target != null) {
-        mapped.target = (((mapped.target as number) - min) / range) * 100;
+        mapped.target = ((mapped.target as number) / max) * 100;
       }
     }
-    delete mapped.min;
     delete mapped.max;
     if ("indicatorClass" in mapped) {
       mapped.indicatorClassName = mapped.indicatorClass;
@@ -266,19 +264,17 @@ export function mapProps(
     }
   }
 
-  // Ring: normalize value/target to 0-100 percentage from min/max range
+  // Ring: normalize value/target to 0-100 percentage from max.
+  // min is resolved Python-side before reaching the renderer.
   if (type === "Ring") {
-    const min = (mapped.min as number) ?? 0;
     const max = (mapped.max as number) ?? 100;
     const val = (mapped.value as number) ?? 0;
-    const range = max - min;
-    if (range > 0) {
-      mapped.value = ((val - min) / range) * 100;
+    if (max > 0) {
+      mapped.value = (val / max) * 100;
       if (mapped.target != null) {
-        mapped.target = (((mapped.target as number) - min) / range) * 100;
+        mapped.target = ((mapped.target as number) / max) * 100;
       }
     }
-    delete mapped.min;
     delete mapped.max;
     if ("indicatorClass" in mapped) {
       mapped.indicatorClassName = mapped.indicatorClass;

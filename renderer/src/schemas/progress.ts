@@ -4,7 +4,6 @@ import { componentBase } from "./base.ts";
 export const progressSchema = componentBase.extend({
   type: z.literal("Progress"),
   value: z.union([z.number(), z.string()]).optional(),
-  min: z.number().optional(),
   max: z.number().optional(),
   target: z.union([z.number(), z.string()]).optional(),
   variant: z

@@ -33,7 +33,11 @@ class Progress(Component):
         default=0,
         description="Current progress value",
     )
-    min: float | None = Field(default=None, description="Minimum value (default 0)")
+    min: float = Field(
+        default=0,
+        exclude=True,
+        description="Minimum value — resolved Python-side, not sent to renderer",
+    )
     max: float | None = Field(default=None, description="Maximum value (default 100)")
     variant: ProgressVariant = Field(
         default="default",
@@ -62,4 +66,11 @@ class Progress(Component):
         d = super().to_json()
         if self.orientation == "horizontal":
             d.pop("orientation", None)
+        # Normalize min offset Python-side so the renderer only sees 0-based values
+        if self.min != 0 and isinstance(self.value, (int, float)):
+            d["value"] = self.value - self.min
+            if self.max is not None:
+                d["max"] = self.max - self.min
+            if isinstance(self.target, (int, float)):
+                d["target"] = self.target - self.min
         return d

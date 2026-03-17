@@ -20,12 +20,19 @@ class TestProgressComponent:
         assert j["value"] == 3
         assert j["max"] == 10
 
-    def test_progress_with_min(self):
+    def test_progress_min_normalized_python_side(self):
         p = Progress(value=50, min=20, max=80)
         j = p.to_json()
-        assert j["value"] == 50
-        assert j["min"] == 20
-        assert j["max"] == 80
+        assert j["value"] == 30
+        assert "min" not in j
+        assert j["max"] == 60
+
+    def test_progress_min_with_target(self):
+        p = Progress(value=50, min=20, max=80, target=70)
+        j = p.to_json()
+        assert j["value"] == 30
+        assert j["target"] == 50
+        assert j["max"] == 60
 
     def test_progress_defaults(self):
         p = Progress(value=50)
