@@ -49,15 +49,18 @@ class Basic(Theme):
     def to_json(self) -> dict[str, Any]:
         """Emit accent-driven CSS only when accent is set."""
         if self.accent is None:
-            # No accent → no color overrides, renderer defaults show through
             return Theme(
                 mode=self.mode,
                 css=self.css,
+                font=self.font,
+                font_mono=self.font_mono,
             ).to_json()
         return Theme(
             light_css=_BASIC_LIGHT_CSS,
             dark_css=_BASIC_DARK_CSS,
-            css=self.css,
-            mode=self.mode,
             accent=self.accent,
+            mode=self.mode,
+            css=self.css,
+            font=self.font,
+            font_mono=self.font_mono,
         ).to_json()

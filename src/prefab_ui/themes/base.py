@@ -103,6 +103,12 @@ def _vars_to_css(d: dict[str, str]) -> str:
     return " ".join(f"--{k}: {v};" for k, v in d.items())
 
 
+def _google_font_import(family: str) -> str:
+    """Generate a Google Fonts `@import` for the given family name."""
+    encoded = family.replace(" ", "+")
+    return f"@import url('https://fonts.googleapis.com/css2?family={encoded}:wght@400;500;600;700&display=swap');\n"
+
+
 class Theme(BaseModel):
     """CSS theme with light/dark variable declarations and freeform CSS.
 
@@ -130,6 +136,8 @@ class Theme(BaseModel):
     css: str = ""
     mode: Literal["light", "dark"] | None = None
     accent: float | str | None = None
+    font: str | None = None
+    font_mono: str | None = None
 
     @field_validator("accent", mode="before")
     @classmethod
@@ -169,7 +177,21 @@ class Theme(BaseModel):
             light = f"{hue_var} {light}".strip() if light else hue_var
             dark = f"{hue_var} {dark}".strip() if dark else hue_var
 
-        result: dict[str, str] = {"light": light, "dark": dark, "css": self.css}
+        css = self.css
+        font_vars = ""
+        if self.font is not None:
+            font_vars += (
+                f" --font-sans: '{self.font}', ui-sans-serif, system-ui, sans-serif;"
+            )
+            css = _google_font_import(self.font) + css
+        if self.font_mono is not None:
+            font_vars += f" --font-mono: '{self.font_mono}', ui-monospace, monospace;"
+            css = _google_font_import(self.font_mono) + css
+        if font_vars:
+            light = (light + font_vars).strip()
+            dark = (dark + font_vars).strip()
+
+        result: dict[str, str] = {"light": light, "dark": dark, "css": css}
         if self.mode is not None:
             result["mode"] = self.mode
         return result

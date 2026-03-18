@@ -75,15 +75,30 @@ export function buildThemeCss(
   const lightSelector = shadowDom ? ":host" : ":root";
   const darkSelector = shadowDom ? ":host(.dark)" : ".dark";
 
-  let result = "";
+  // Hoist @import rules to the top (CSS requires them before other rules)
+  const imports: string[] = [];
+  let css = theme.css || "";
+  if (css) {
+    const lines = css.split("\n");
+    const rest: string[] = [];
+    for (const line of lines) {
+      if (line.trim().startsWith("@import")) {
+        imports.push(line);
+      } else {
+        rest.push(line);
+      }
+    }
+    css = rest.join("\n");
+  }
+
+  let result = imports.length ? imports.join("\n") + "\n" : "";
   if (theme.light) {
     result += `${lightSelector} {\n  ${theme.light}\n}\n`;
   }
   if (theme.dark) {
     result += `${darkSelector} {\n  ${theme.dark}\n}\n`;
   }
-  if (theme.css) {
-    let css = theme.css;
+  if (css.trim()) {
     if (shadowDom) {
       css = css
         .replace(/\.dark\s*\{/g, ":host(.dark) {")
