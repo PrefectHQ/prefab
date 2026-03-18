@@ -29,9 +29,9 @@ from __future__ import annotations
 
 import importlib.metadata
 
-from prefab_ui.themes import Theme, blue, green, orange, red, rose, violet
+from prefab_ui.app import PrefabApp
 
-__all__ = ["Theme", "blue", "green", "orange", "red", "rose", "violet"]
+__all__ = ["PrefabApp"]
 
 try:
     __version__ = importlib.metadata.version("prefab-ui")

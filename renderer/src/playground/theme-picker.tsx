@@ -10,31 +10,52 @@ import { Palette } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 import { buildThemeCss, type ThemeDefinition } from "../themes";
 
-// Port of Python's _basic_theme(hue) + _chart_colors()
+// Port of Python's Basic(accent=hue).to_json()
 function basicTheme(hue: number): ThemeDefinition {
-  const offsets = [0, 72, 144, 216, 288];
-  const charts = (l: number, c: number) =>
-    Object.fromEntries(
-      offsets.map((off, i) => [
-        `chart-${i + 1}`,
-        `oklch(${l} ${c} ${(hue + off) % 360})`,
-      ]),
-    );
+  const a = `--accent-hue: ${hue};`;
   return {
-    light: {
-      primary: `oklch(0.6 0.24 ${hue})`,
-      "primary-foreground": "oklch(0.985 0 0)",
-      ring: `oklch(0.6 0.24 ${hue})`,
-      ...charts(0.6, 0.2),
-    },
-    dark: {
-      primary: `oklch(0.7 0.18 ${hue})`,
-      "primary-foreground": "oklch(0.205 0 0)",
-      ring: `oklch(0.7 0.18 ${hue})`,
-      ...charts(0.7, 0.15),
-    },
+    light: `${a} --primary: oklch(0.6 0.24 var(--accent-hue)); --primary-foreground: oklch(0.985 0 0); --ring: oklch(0.6 0.24 var(--accent-hue)); --chart-1: oklch(0.65 0.25 var(--accent-hue)); --chart-2: oklch(0.65 0.25 calc(var(--accent-hue) + 72)); --chart-3: oklch(0.65 0.25 calc(var(--accent-hue) + 144)); --chart-4: oklch(0.65 0.25 calc(var(--accent-hue) + 216)); --chart-5: oklch(0.65 0.25 calc(var(--accent-hue) + 288));`,
+    dark: `${a} --primary: oklch(0.7 0.18 var(--accent-hue)); --primary-foreground: oklch(0.205 0 0); --ring: oklch(0.7 0.18 var(--accent-hue)); --chart-1: oklch(0.72 0.22 var(--accent-hue)); --chart-2: oklch(0.72 0.22 calc(var(--accent-hue) + 72)); --chart-3: oklch(0.72 0.22 calc(var(--accent-hue) + 144)); --chart-4: oklch(0.72 0.22 calc(var(--accent-hue) + 216)); --chart-5: oklch(0.72 0.22 calc(var(--accent-hue) + 288));`,
+    css: "",
   };
 }
+
+const dashboardVars =
+  "--background: #0f1117; --foreground: #e2e8f0; --card: #1a1d2e; --card-foreground: #f1f5f9; --popover: #1a1d2e; --popover-foreground: #f1f5f9; --secondary: #252840; --secondary-foreground: #e2e8f0; --muted: #252840; --muted-foreground: #94a3b8; --accent: #2a2d3e; --accent-foreground: #e2e8f0; --destructive: #f472b6; --success: #34d399; --warning: #f59e0b; --info: #818cf8; --border: #1e2235; --input: #2a2d3e; --primary: oklch(0.7 0.18 275); --primary-foreground: oklch(0.205 0 0); --ring: oklch(0.7 0.18 275); --chart-1: #818cf8; --chart-2: #34d399; --chart-3: #f59e0b; --chart-4: #f472b6; --chart-5: #38bdf8;";
+
+const dashboardCss = `
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+.cn-card, .cn-table { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+.cn-progress, .cn-progress-track { background: #252840; }
+.cn-progress-variant-default { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.cn-progress-variant-success { background: linear-gradient(90deg, #059669, #34d399); }
+.cn-progress-variant-warning { background: linear-gradient(90deg, #d97706, #f59e0b); }
+.cn-progress-variant-destructive { background: linear-gradient(90deg, #db2777, #f472b6); }
+.cn-progress-target { background: #f1f5f9; opacity: 0.5; }
+.cn-slider-track { background: #252840; }
+.cn-slider-variant-default { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.cn-slider-variant-success { background: linear-gradient(90deg, #059669, #34d399); }
+.cn-slider-variant-warning { background: linear-gradient(90deg, #d97706, #f59e0b); }
+.cn-slider-variant-destructive { background: linear-gradient(90deg, #db2777, #f472b6); }
+.cn-ring-variant-default { stroke: url(#ring-gradient-default); }
+.cn-ring-variant-success { stroke: url(#ring-gradient-success); }
+.cn-ring-variant-warning { stroke: url(#ring-gradient-warning); }
+.cn-ring-variant-destructive { stroke: url(#ring-gradient-destructive); }
+.cn-ring-variant-info { stroke: url(#ring-gradient-info); }
+.cn-badge { border-radius: 6px; font-weight: 600; font-size: 0.9rem; padding: 0.2em 0.6em; }
+.cn-badge-variant-default { color: #a5b4fc; background: rgba(129, 140, 248, 0.12); }
+.cn-badge-variant-warning { color: #fcd34d; background: rgba(245, 158, 11, 0.12); }
+.cn-badge-variant-destructive { color: #f9a8d4; background: rgba(244, 114, 182, 0.12); }
+.cn-table-cell { padding: 0.85rem 0.75rem; font-size: 0.9rem; font-variant-numeric: tabular-nums; color: #cbd5e1; }
+.cn-table-row { border-color: #1e2235; }
+.cn-table-row:hover { background: rgba(99, 102, 241, 0.06); }
+`;
+
+const dashboardTheme: ThemeDefinition = {
+  light: dashboardVars,
+  dark: dashboardVars,
+  css: dashboardCss,
+};
 
 interface Preset {
   name: string;
@@ -44,7 +65,8 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { name: "Default", css: "", hue: null },
+  { name: "Code", css: "", hue: null },
+  { name: "Dashboard", css: buildThemeCss(dashboardTheme, false), hue: 275 },
   { name: "Blue", css: buildThemeCss(basicTheme(260), false), hue: 260 },
   { name: "Green", css: buildThemeCss(basicTheme(155), false), hue: 155 },
   { name: "Red", css: buildThemeCss(basicTheme(25), false), hue: 25 },

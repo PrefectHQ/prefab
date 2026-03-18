@@ -108,7 +108,11 @@ await micropip.install("prefab-ui", deps=False)
 export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
+  theme?: { light: string; dark: string; css: string; mode?: string };
+  /** Short summary (last line + line number). */
   error?: string;
+  /** Full Python traceback for expandable details. */
+  errorDetail?: string;
 }
 
 /**
@@ -141,21 +145,41 @@ def set_initial_state(**kwargs):
 import prefab_ui.app as _pg_app
 _pg_app.set_initial_state = set_initial_state
 
-# Track all created components
+# Track all created components and PrefabApp instances, with creation order
 _pg_created = []
+_pg_apps = []
+_pg_order: dict = {}
+_pg_counter = [0]
 from prefab_ui.components.base import Component as _PgComponent
+from prefab_ui.app import PrefabApp as _PrefabApp
 _pg_real_post_init = _PgComponent.model_post_init
 
 def _pg_tracking_post_init(self, ctx):
     _pg_real_post_init(self, ctx)
     _pg_created.append(self)
+    _pg_order[id(self)] = _pg_counter[0]
+    _pg_counter[0] += 1
 
 _PgComponent.model_post_init = _pg_tracking_post_init
 
+# Pydantic v2's Rust validator caches model_post_init at class creation,
+# so patching it on PrefabApp has no effect. Patch __init__ instead.
+_pg_real_app_init = _PrefabApp.__init__
+
+def _pg_app_tracking_init(self, /, **data):
+    _pg_real_app_init(self, **data)
+    _pg_apps.append(self)
+    _pg_order[id(self)] = _pg_counter[0]
+    _pg_counter[0] += 1
+
+_PrefabApp.__init__ = _pg_app_tracking_init
+
+globals().pop("main", None)
 try:
     exec(${JSON.stringify(code)})
 finally:
     _PgComponent.model_post_init = _pg_real_post_init
+    _PrefabApp.__init__ = _pg_real_app_init
 
 # Find root components (not children of any container or DataTable row)
 from prefab_ui.components.data_table import DataTable as _PgDataTable
@@ -173,17 +197,31 @@ for _c in _pg_created:
 
 _pg_roots = [_c for _c in _pg_created if id(_c) not in _pg_all_children]
 
-if not _pg_roots:
+# If main() is defined, call it — the return value is the render target.
+# Otherwise pick whichever was created LAST: a root component or a PrefabApp.
+_pg_main = globals().get("main")
+if callable(_pg_main):
+    _pg_target = _pg_main()
+else:
+    _pg_candidates = _pg_roots + _pg_apps
+    _pg_candidates.sort(key=lambda _c: _pg_order.get(id(_c), -1))
+    _pg_target = _pg_candidates[-1] if _pg_candidates else None
+
+if _pg_target is None:
     raise ValueError("No components created")
 
-_pg_tree = _pg_roots[0].to_json() if len(_pg_roots) == 1 else {
-    "type": "Column",
-    "children": [r.to_json() for r in _pg_roots],
-}
-
-_pg_result = {"tree": _pg_tree}
-if _pg_state:
-    _pg_result["state"] = _pg_state
+if isinstance(_pg_target, _PrefabApp):
+    _pg_wire = _pg_target.to_json()
+    _pg_tree = _pg_wire["view"]
+    _pg_result = {"tree": _pg_tree}
+    if _pg_state:
+        _pg_result["state"] = _pg_state
+    if "theme" in _pg_wire:
+        _pg_result["theme"] = _pg_wire["theme"]
+else:
+    _pg_result = {"tree": _pg_target.to_json()}
+    if _pg_state:
+        _pg_result["state"] = _pg_state
 
 _json.dumps(_pg_result)
 `;
@@ -194,16 +232,26 @@ _json.dumps(_pg_result)
     return {
       tree: result.tree as ComponentNode,
       state: result.state ?? {},
+      theme: result.theme,
     };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
-    // Extract the last line of Python tracebacks for a cleaner message
-    const lines = message.split("\n").filter((l) => l.trim());
-    const short = lines[lines.length - 1] || message;
-    // Parse `File "<string>", line N` from the traceback to surface the line number
+    const allLines = message.split("\n");
+
+    // Extract the Python traceback portion
+    const pyStart = allLines.findIndex((l) =>
+      l.trimStart().startsWith("Traceback"),
+    );
+    const pyTrace = pyStart >= 0 ? allLines.slice(pyStart).join("\n") : message;
+
+    // Short summary: last non-empty line + line number from user code
+    const nonEmpty = allLines.filter((l) => l.trim());
+    const short = nonEmpty[nonEmpty.length - 1] || message;
     const lineMatch = message.match(/File "<string>", line (\d+)/g);
-    const lastLineRef = lineMatch ? lineMatch[lineMatch.length - 1] : null;
-    const lineNum = lastLineRef ? lastLineRef.match(/line (\d+)/)?.[1] : null;
-    return { error: lineNum ? `Line ${lineNum}: ${short}` : short };
+    const lastRef = lineMatch ? lineMatch[lineMatch.length - 1] : null;
+    const lineNum = lastRef ? lastRef.match(/line (\d+)/)?.[1] : null;
+    const summary = lineNum ? `Line ${lineNum}: ${short}` : short;
+
+    return { error: summary, errorDetail: pyTrace };
   }
 }

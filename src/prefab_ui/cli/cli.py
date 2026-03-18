@@ -383,24 +383,19 @@ def _should_rebuild_renderer(repo_root: Path) -> bool:
 
 def _should_rebuild_playground(repo_root: Path) -> bool:
     """Check whether the playground HTML needs rebuilding."""
-    playground_html = repo_root / "docs" / "playground.html"
-    if not playground_html.exists():
+    if not (repo_root / "docs" / "playground.html").exists():
         return True
-    hash_file = repo_root / "renderer" / ".playground-hash"
-    playground_src = repo_root / "renderer" / "src" / "playground"
-    current_hash = _source_content_hash(playground_src)
-    return not (hash_file.exists() and hash_file.read_text().strip() == current_hash)
+    hf = repo_root / "renderer" / ".playground-hash"
+    return not (
+        hf.exists()
+        and hf.read_text().strip()
+        == _source_content_hash(repo_root / "renderer" / "src" / "playground")
+    )
 
 
 @dev_app.command(name="build-docs")
 def build_docs() -> None:
-    """Regenerate all doc assets: previews, CSS, playground, and protocol ref.
-
-    Runs the full build pipeline so Mintlify docs are up to date.
-
-    Example:
-        prefab dev build-docs
-    """
+    """Regenerate all doc assets: previews, CSS, playground, and protocol ref."""
     repo_root = _find_repo_root()
     build_dir = repo_root / "docs-build"
 
@@ -548,6 +543,51 @@ def build_docs() -> None:
         hash_file.write_text(_source_content_hash(playground_src))
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
+
+
+@dev_app.command(name="build-playground")
+def build_playground() -> None:
+    """Rebuild only the playground HTML (skips previews, Tailwind, protocol)."""
+    repo_root = _find_repo_root()
+    build_dir = repo_root / "docs-build"
+    renderer_dir = repo_root / "renderer"
+
+    if not shutil.which("npm"):
+        console.print("[bold red]Error:[/bold red] npm not found.")
+        raise SystemExit(1)
+
+    for desc, cmd, env in [
+        (
+            "Bundling playground source",
+            ["uv", "run", str(build_dir / "generate_playground_bundle.py")],
+            None,
+        ),
+        (
+            "Extracting playground examples",
+            ["uv", "run", str(build_dir / "extract_examples.py")],
+            None,
+        ),
+        (
+            "Building playground",
+            ["npm", "run", "--prefix", str(renderer_dir), "build:playground"],
+            {**os.environ, "VITE_LOCAL_PLAYGROUND": "1"},
+        ),
+    ]:
+        console.print(f"  [dim]→[/dim] {desc}...")
+        r = subprocess.run(cmd, cwd=repo_root, env=env)
+        if r.returncode != 0:
+            console.print(f"[bold red]Error:[/bold red] {desc} failed")
+            raise SystemExit(r.returncode)
+
+    shutil.copy2(
+        renderer_dir / "dist" / "playground.html",
+        repo_root / "docs" / "playground.html",
+    )
+    hash_file = repo_root / "renderer" / ".playground-hash"
+    hash_file.write_text(
+        _source_content_hash(repo_root / "renderer" / "src" / "playground")
+    )
+    console.print("[bold green]✓[/bold green] Playground rebuilt")
 
 
 def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
