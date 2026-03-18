@@ -21,7 +21,7 @@ from prefab_ui.components import (
 
 set_initial_state(infra=40, people=35, tools=25)
 
-with Card():
+with Card() as card:
     with CardHeader():
         Text("Budget Allocator", bold=True)
         Text("Move any slider — the others adjust to keep the total at 100%.")
@@ -53,6 +53,7 @@ with Card():
 
 app = PrefabApp(
     title="Budget Allocator",
+    view=card,
     js_actions={
         "constrain": """(ctx) => {
             const keys = ['infra', 'people', 'tools'];
