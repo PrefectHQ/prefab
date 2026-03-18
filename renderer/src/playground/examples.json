@@ -1,5 +1,25 @@
 [
   {
+    "title": "from prefab_ui.components import Slider",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import CallHandler\n\nSlider(name=\"infra\", on_change=CallHandler(\"constrainBudget\"))"
+  },
+  {
+    "title": "from prefab_ui.components import Button",
+    "category": "Actions",
+    "code": "from prefab_ui.actions import CallHandler\n\nButton(\"Recalculate\", on_click=CallHandler(\n    \"recalculate\",\n    arguments={\"mode\": \"aggressive\", \"total\": \"{{ budget }}\"},\n))"
+  },
+  {
+    "title": "from prefab_ui.actions import CallHandler, SetState, ShowToast",
+    "category": "Actions",
+    "code": "from prefab_ui.rx import RESULT\n\nButton(\"Validate\", on_click=CallHandler(\n    \"validate\",\n    on_success=ShowToast(\"Valid!\", variant=\"success\"),\n    on_error=ShowToast(\"Validation failed\", variant=\"error\"),\n))"
+  },
+  {
+    "title": "from prefab_ui.actions import CallHandler, SetState",
+    "category": "Actions",
+    "code": "Slider(name=\"infra\", on_change=[\n    SetState(\"dirty\", True),\n    CallHandler(\"constrainBudget\"),\n])"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Actions",
     "code": "from prefab_ui.components import Button\nfrom prefab_ui.actions.mcp import CallTool\n\nButton(\"Refresh Data\", on_click=CallTool(\"get_latest_data\"))"
@@ -1840,6 +1860,11 @@
     "code": "\"get_user\",\n    arguments={\"id\": Rx(\"user_id\")},\n    on_success=[\n        SetState(\"user\", RESULT),\n        CallTool(\n            \"get_permissions\",\n            arguments={\"role\": \"{{ user.role }}\"},\n            on_success=SetState(\"permissions\", RESULT),\n        ),\n    ],\n)"
   },
   {
+    "title": "from prefab_ui.actions import CallHandler",
+    "category": "Concepts",
+    "code": "Slider(name=\"infra\", on_change=CallHandler(\"constrainBudget\"))"
+  },
+  {
     "title": "from prefab_ui.rx import Rx",
     "category": "Concepts",
     "code": "saving = Rx(\"saving\")\n\nButton(\n    saving.then(\"Saving...\", \"Save\"),\n    disabled=saving,\n    on_click=[\n        SetState(\"saving\", True),\n        CallTool(\n            \"save\",\n            arguments={\"data\": Rx(\"form\")},\n            on_success=[\n                SetState(\"saving\", False),\n                ShowToast(\"Saved!\", variant=\"success\"),\n            ],\n            on_error=[\n                SetState(\"saving\", False),\n                ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ],\n        ),\n    ],\n)"
@@ -1908,6 +1933,36 @@
     "title": "Python icon=\"python\"",
     "category": "Concepts",
     "code": "from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Row, Text\n\nwith Card(css_class=\"w-48\") as view:\n    with CardHeader():\n        with Row(gap=2):\n            CardTitle(\"API Server\")\n            Badge(\"Healthy\", variant=\"success\")\n    with CardContent():\n        Text(\"Uptime: 99.97%\")"
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "Concepts",
+    "code": "app = PrefabApp(\n    js_pipes={\n        \"ratio\": \"(value) => Math.round(value) + ':1'\",\n        \"initials\": \"\"\"(value) => {\n            return String(value).split(' ').map(w => w[0]).join('');\n        }\"\"\",\n    },\n    ...\n)"
+  },
+  {
+    "title": "Text(\"{{ task_runs / flow_runs | ratio }}\")    # \"10:1\"",
+    "category": "Concepts",
+    "code": "Text(\"{{ user_name | initials }}\")              # \"JL\""
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "Concepts",
+    "code": "from prefab_ui.actions import CallHandler\nfrom prefab_ui.components import Slider\n\napp = PrefabApp(\n    js_actions={\n        \"constrainBudget\": \"\"\"(ctx) => {\n            const keys = ['infra', 'people', 'tools'];\n            const changed = ctx.arguments.key;\n            const newVal = ctx.event;\n            const others = keys.filter(k => k !== changed);\n            const remaining = 100 - newVal;\n            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);\n            const updates = {};\n            for (const k of others) {\n                updates[k] = otherTotal > 0\n                    ? Math.round((ctx.state[k] / otherTotal) * remaining)\n                    : Math.round(remaining / others.length);\n            }\n            return updates;\n        }\"\"\",\n    },\n    ...\n)\n\n# In your UI — pass the slider's key so the handler knows which changed:\nSlider(\n    name=\"infra\",\n    on_change=CallHandler(\"constrainBudget\", arguments={\"key\": \"infra\"}),\n)"
+  },
+  {
+    "title": "from prefab_ui.actions import CallHandler",
+    "category": "Concepts",
+    "code": "# Basic usage\nButton(on_click=CallHandler(\"refresh\"))\n\n# With extra arguments\nButton(on_click=CallHandler(\n    \"processData\",\n    arguments={\"format\": \"csv\"},\n))\n\n# Chained with other actions\nButton(on_click=[\n    SetState(\"loading\", True),\n    CallHandler(\"validate\"),\n])"
+  },
+  {
+    "title": "Button(on_click=CallHandler(",
+    "category": "Concepts",
+    "code": "\"compute\",\n    on_success=SetState(\"result\", \"{{ $result.total }}\"),\n    on_error=ShowToast(\"Computation failed\", variant=\"error\"),\n))"
+  },
+  {
+    "title": "from prefab_ui.app import PrefabApp, set_initial_state",
+    "category": "Concepts",
+    "code": "from prefab_ui.actions import CallHandler\nfrom prefab_ui.components import Card, CardContent, Column, Row, Slider, Text\n\nset_initial_state(infra=40, people=35, tools=25)\n\nwith Card():\n    with CardContent():\n        with Column(gap=4):\n            for label, key in [\n                (\"Infrastructure\", \"infra\"),\n                (\"People\", \"people\"),\n                (\"Tools\", \"tools\"),\n            ]:\n                with Column(gap=1):\n                    with Row(css_class=\"justify-between\"):\n                        Text(label)\n                        Text(f\"{{{{ {key} | round }}}}%\", bold=True)\n                    Slider(\n                        name=key, max=100, step=1,\n                        on_change=CallHandler(\n                            \"constrain\",\n                            arguments={\"key\": key},\n                        ),\n                    )\n\n            with Row(css_class=\"justify-between pt-4 border-t\"):\n                Text(\"Total\", bold=True)\n                Text(\"{{ infra + people + tools | round }}%\", bold=True)\n\napp = PrefabApp(\n    js_actions={\n        \"constrain\": \"\"\"(ctx) => {\n            const keys = ['infra', 'people', 'tools'];\n            const changed = ctx.arguments.key;\n            const newVal = ctx.event;\n            const others = keys.filter(k => k !== changed);\n            const remaining = 100 - newVal;\n            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);\n            const updates = {};\n            for (const k of others) {\n                updates[k] = otherTotal > 0\n                    ? Math.round((ctx.state[k] / otherTotal) * remaining)\n                    : Math.round(remaining / others.length);\n            }\n            return updates;\n        }\"\"\",\n    },\n)"
   },
   {
     "title": "Python icon=\"python\"",

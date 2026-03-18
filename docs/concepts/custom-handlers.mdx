@@ -48,16 +48,16 @@ app = PrefabApp(
     js_actions={
         "constrainBudget": """(ctx) => {
             const keys = ['infra', 'people', 'tools'];
-            const changed = ctx.event.key;
-            const newVal = ctx.event.value;
+            const changed = ctx.arguments.key;
+            const newVal = ctx.event;
             const others = keys.filter(k => k !== changed);
             const remaining = 100 - newVal;
             const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
             const updates = {};
             for (const k of others) {
                 updates[k] = otherTotal > 0
-                    ? (ctx.state[k] / otherTotal) * remaining
-                    : remaining / others.length;
+                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                    : Math.round(remaining / others.length);
             }
             return updates;
         }""",
@@ -65,8 +65,11 @@ app = PrefabApp(
     ...
 )
 
-# In your UI:
-Slider(name="infra", on_change=CallHandler("constrainBudget"))
+# In your UI — pass the slider's key so the handler knows which changed:
+Slider(
+    name="infra",
+    on_change=CallHandler("constrainBudget", arguments={"key": "infra"}),
+)
 ```
 
 The handler context has three fields:
@@ -111,6 +114,64 @@ Button(on_click=CallHandler(
     on_error=ShowToast("Computation failed", variant="error"),
 ))
 ```
+
+## Example: Linked Sliders
+
+Three budget sliders constrained to sum to 100%. Moving one redistributes the others proportionally. This is the kind of client-side coordination that expressions can't do — you need a function that knows about all the sliders and can compute the redistribution.
+
+```python
+from prefab_ui.app import PrefabApp, set_initial_state
+from prefab_ui.actions import CallHandler
+from prefab_ui.components import Card, CardContent, Column, Row, Slider, Text
+
+set_initial_state(infra=40, people=35, tools=25)
+
+with Card():
+    with CardContent():
+        with Column(gap=4):
+            for label, key in [
+                ("Infrastructure", "infra"),
+                ("People", "people"),
+                ("Tools", "tools"),
+            ]:
+                with Column(gap=1):
+                    with Row(css_class="justify-between"):
+                        Text(label)
+                        Text(f"{{{{ {key} | round }}}}%", bold=True)
+                    Slider(
+                        name=key, max=100, step=1,
+                        on_change=CallHandler(
+                            "constrain",
+                            arguments={"key": key},
+                        ),
+                    )
+
+            with Row(css_class="justify-between pt-4 border-t"):
+                Text("Total", bold=True)
+                Text("{{ infra + people + tools | round }}%", bold=True)
+
+app = PrefabApp(
+    js_actions={
+        "constrain": """(ctx) => {
+            const keys = ['infra', 'people', 'tools'];
+            const changed = ctx.arguments.key;
+            const newVal = ctx.event;
+            const others = keys.filter(k => k !== changed);
+            const remaining = 100 - newVal;
+            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+            const updates = {};
+            for (const k of others) {
+                updates[k] = otherTotal > 0
+                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                    : Math.round(remaining / others.length);
+            }
+            return updates;
+        }""",
+    },
+)
+```
+
+Run it with `uv run python examples/linked_sliders.py` to see it in action. The handler runs client-side on every drag — no server round-trip, no lag.
 
 ## API Reference
 
