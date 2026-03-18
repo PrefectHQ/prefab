@@ -27,7 +27,58 @@ import { Editor } from "./editor";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { EXAMPLES, type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
+import { buildThemeCss } from "../themes";
 import pako from "pako";
+
+/**
+ * Tailwind v4's `@theme inline` declares `--color-*: var(--*)` aliases at
+ * `:root`.  When we scope a theme to `#pg-preview` by setting e.g.
+ * `--background: #0f1117`, Tailwind utilities like `bg-background` still
+ * read `--color-background` which was inherited from `:root` with the
+ * *original* value.  Redeclaring the aliases inside `#pg-preview` forces
+ * them to re-resolve against the overridden `--*` values in this scope.
+ */
+const COLOR_REBIND = `
+#pg-preview, #pg-preview.dark {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}`;
+
+/** Rewrite theme CSS selectors to scope to #pg-preview, and rebind
+ *  Tailwind's --color-* aliases so they resolve in that scope. */
+function scopeThemeCss(css: string): string {
+  if (!css) return "";
+  const scoped = css
+    .replace(/:root/g, "#pg-preview")
+    .replace(/\.dark\s*\{/g, "#pg-preview.dark {")
+    .replace(/\.dark\s+\./g, "#pg-preview.dark .")
+    .replace(/\.dark\s+:/g, "#pg-preview.dark :");
+  return scoped + "\n" + COLOR_REBIND;
+}
 
 function gzipEncode(str: string): string {
   const compressed = pako.gzip(new TextEncoder().encode(str));
@@ -173,6 +224,7 @@ export function Playground() {
   const [code, setCode] = useState(DEFAULT_PYTHON);
   const [tree, setTree] = useState<ComponentNode | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [pyStatus, setPyStatus] = useState<PyodideStatus>("idle");
   const [running, setRunning] = useState(false);
   const [mode, setMode] = useState<EditorMode>("python");
@@ -181,6 +233,7 @@ export function Playground() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [themeCss, setThemeCss] = useState("");
+  const [codeThemeCss, setCodeThemeCss] = useState("");
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
@@ -202,16 +255,36 @@ export function Playground() {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
-  // Inject theme CSS into the page
+  // Inject theme CSS scoped to the preview pane.
+  // Rewrite `:root` → `#pg-preview` and `.dark` → `#pg-preview.dark`
+  // so theme variables don't bleed into the editor.
+  // Always remove + re-append so #pg-theme stays last in <head> and
+  // the picker overrides any code-defined theme (same specificity, later wins).
   useEffect(() => {
-    let el = document.getElementById("pg-theme") as HTMLStyleElement | null;
+    const existing = document.getElementById("pg-theme");
+    if (existing) existing.remove();
+    const el = document.createElement("style");
+    el.id = "pg-theme";
+    document.head.appendChild(el);
+    el.textContent = scopeThemeCss(themeCss);
+  }, [themeCss]);
+
+  // Inject theme from PrefabApp in code, scoped to the preview pane.
+  // When the picker has a selection, suppress the code theme entirely
+  // so its variables don't bleed through (e.g. Presentation's dark
+  // background showing under a Basic accent picker selection).
+  // When the picker is empty ("Default"), the code theme is active.
+  useEffect(() => {
+    let el = document.getElementById(
+      "pg-code-theme",
+    ) as HTMLStyleElement | null;
     if (!el) {
       el = document.createElement("style");
-      el.id = "pg-theme";
+      el.id = "pg-code-theme";
       document.head.appendChild(el);
     }
-    el.textContent = themeCss;
-  }, [themeCss]);
+    el.textContent = themeCss ? "" : scopeThemeCss(codeThemeCss);
+  }, [codeThemeCss, themeCss]);
 
   useEffect(() => {
     loadPyodideRuntime(setPyStatus);
@@ -312,10 +385,16 @@ export function Playground() {
 
     if (result.error) {
       setError(result.error);
+      setErrorDetail(result.errorDetail ?? null);
     } else if (result.tree) {
       setTree(result.tree);
       stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
+      setCodeThemeCss(result.theme ? buildThemeCss(result.theme, false) : "");
+      if (result.theme?.mode) {
+        setDark(result.theme.mode === "dark");
+      }
       setError(null);
+      setErrorDetail(null);
     }
   }, []);
 
@@ -506,12 +585,27 @@ export function Playground() {
             <Alert variant="destructive" className="m-2">
               <AlertDescription className="font-mono text-xs">
                 {error}
+                {errorDetail && (
+                  <details className="mt-1">
+                    <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
+                      Traceback
+                    </summary>
+                    <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
+                      {errorDetail}
+                    </pre>
+                  </details>
+                )}
               </AlertDescription>
             </Alert>
           )}
         </div>
 
-        <div className="w-1/2 overflow-auto bg-background p-6">
+        <div
+          id="pg-preview"
+          className={`w-1/2 overflow-auto bg-background p-6${
+            dark ? " dark" : ""
+          }`}
+        >
           {tree ? (
             <RenderTree tree={tree} state={state} app={null} />
           ) : (

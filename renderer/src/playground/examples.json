@@ -1282,6 +1282,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Small\")\n        Progress(value=60, size=\"sm\")\n    with Column(gap=2):\n        Label(\"Default\")\n        Progress(value=60)\n    with Column(gap=2):\n        Label(\"Large\")\n        Progress(value=60, size=\"lg\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import Column, Label, Progress\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Storage Used\")\n        Progress(value=85, indicator_class=\"bg-red-500\")\n    with Column(gap=2):\n        Label(\"Upload Progress\")\n        Progress(value=45, indicator_class=\"bg-blue-500\")\n    with Column(gap=2):\n        Label(\"Tasks Complete\")\n        Progress(value=100, indicator_class=\"bg-green-500\")"
   },
   {
@@ -1557,7 +1562,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Label, Progress, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: s)\n\nwith Column(gap=4):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Brightness\")\n        Text(val.percent(), bold=True)\n    Progress(value=val)\n    s = Slider(value=0.42, min=0, max=1)"
+    "code": "from prefab_ui.components import Column, Label, Progress, Row, Slider, Text\nfrom prefab_ui.rx import Rx\n\nval = Rx(lambda: s)\n\nwith Column(gap=4):\n    with Row(css_class=\"justify-between\"):\n        Label(\"Brightness\")\n        Text(val.percent(), bold=True)\n    Progress(value=val, min=0, max=1)\n    s = Slider(value=0.42, min=0, max=1)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1578,6 +1583,11 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Default\")\n        Slider(value=60)\n    with Column(gap=2):\n        Label(\"Success\")\n        Slider(value=100, variant=\"success\")\n    with Column(gap=2):\n        Label(\"Warning\")\n        Slider(value=72, variant=\"warning\")\n    with Column(gap=2):\n        Label(\"Destructive\")\n        Slider(value=90, variant=\"destructive\")\n    with Column(gap=2):\n        Label(\"Info\")\n        Slider(value=45, variant=\"info\")\n    with Column(gap=2):\n        Label(\"Muted\")\n        Slider(value=30, variant=\"muted\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Label, Slider\n\nwith Column(gap=4):\n    with Column(gap=2):\n        Label(\"Small\")\n        Slider(value=60, size=\"sm\")\n    with Column(gap=2):\n        Label(\"Default\")\n        Slider(value=60)\n    with Column(gap=2):\n        Label(\"Large\")\n        Slider(value=60, size=\"lg\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -2210,6 +2220,11 @@
     "code": "from prefab_ui.components import Button, Card, CardContent, Column, Input\n\nwith Card() as view:\n    with CardContent():\n        with Column(gap=3):\n            Input(placeholder=\"you@example.com\")\n            Button(\"Subscribe\")"
   },
   {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "General",
+    "code": "from prefab_ui.themes import Presentation, Accent\nfrom prefab_ui.components import Column, Heading\n\ndef main():\n    with Column() as view:\n        Heading(\"Dashboard\")\n    return PrefabApp(view=view, theme=Presentation(accent=Accent.CYAN))"
+  },
+  {
     "title": "from prefab_ui.components import Button",
     "category": "Reactive",
     "code": "from prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import ERROR\n\nButton(\n    \"Save\",\n    on_click=CallTool(\n        \"save_data\",\n        on_error=ShowToast(\n            f\"Failed: {ERROR}\",\n            variant=\"error\",\n        ),\n    ),\n)"
@@ -2452,17 +2467,37 @@
   {
     "title": "from prefab_ui.app import PrefabApp",
     "category": "Styling",
-    "code": "from prefab_ui.themes import blue\n\napp = PrefabApp(view=my_view, theme=blue)"
+    "code": "from prefab_ui.themes import Basic, Accent\n\napp = PrefabApp(view=my_view, theme=Basic(accent=Accent.GREEN))"
   },
   {
-    "title": "from prefab_ui import Theme",
+    "title": "from prefab_ui.themes import Basic, Accent",
     "category": "Styling",
-    "code": "my_theme = Theme(\n    light=dict(\n        primary=\"oklch(0.72 0.19 149)\",\n        background=\"oklch(0.97 0.01 244)\",\n        ring=\"oklch(0.72 0.19 149)\",\n    ),\n    dark=dict(\n        primary=\"oklch(0.77 0.15 163)\",\n        background=\"oklch(0.21 0.04 265)\",\n        ring=\"oklch(0.77 0.15 163)\",\n    ),\n)\n\napp = PrefabApp(view=my_view, theme=my_theme)"
+    "code": "theme = Basic(accent=Accent.BLUE)"
+  },
+  {
+    "title": "from prefab_ui.themes import Presentation, Accent",
+    "category": "Styling",
+    "code": "theme = Presentation(accent=Accent.INDIGO)"
+  },
+  {
+    "title": "Basic(accent=Accent.BLUE, mode=\"dark\")   # always dark",
+    "category": "Styling",
+    "code": "Basic(accent=Accent.BLUE, mode=\"light\")  # always light"
+  },
+  {
+    "title": "from prefab_ui.themes import Theme",
+    "category": "Styling",
+    "code": "my_theme = Theme(\n    light_css=(\n        \"--primary: oklch(0.60 0.24 260);\"\n        \" --ring: oklch(0.60 0.24 260);\"\n    ),\n    dark_css=(\n        \"--primary: oklch(0.70 0.18 260);\"\n        \" --ring: oklch(0.70 0.18 260);\"\n    ),\n)"
+  },
+  {
+    "title": "theme = Theme(",
+    "category": "Styling",
+    "code": "css=\"\"\"\n    @import url('https://fonts.googleapis.com/css2?family=Inter');\n    .cn-card { font-family: 'Inter', sans-serif; }\n    \"\"\"\n)"
   },
   {
     "title": "app = PrefabApp(",
     "category": "Styling",
-    "code": "view=my_view,\n    stylesheets=[\"\"\"\n        :root {\n            --primary: oklch(0.7227 0.1920 149.5793);\n            --primary-foreground: oklch(1.0000 0 0);\n            --ring: oklch(0.7227 0.1920 149.5793);\n        }\n        .dark {\n            --primary: oklch(0.7729 0.1535 163.2231);\n            --primary-foreground: oklch(0.2077 0.0398 265.7549);\n            --ring: oklch(0.7729 0.1535 163.2231);\n        }\n    \"\"\"],\n)"
+    "code": "view=my_view,\n    stylesheets=[\"\"\"\n        :root { --primary: oklch(0.72 0.19 149); --ring: oklch(0.72 0.19 149); }\n        .dark { --primary: oklch(0.77 0.15 163); --ring: oklch(0.77 0.15 163); }\n    \"\"\"],\n)"
   },
   {
     "title": "Python icon=\"python\"",

@@ -1,52 +1,71 @@
 /**
  * Theme resolution and CSS injection.
  *
- * Themes arrive as a `{light: Record<string,string>, dark: Record<string,string>}`
- * object on the protocol envelope.  Keys are CSS variable names without the
- * `--` prefix (e.g. `primary-foreground`).  This module prefixes them and
- * generates a `<style>` block that overrides the default variables.
+ * Themes arrive on the protocol envelope as:
+ *   { light: string, dark: string, css: string }
+ *
+ * - `light` / `dark` are CSS declarations (no selectors) wrapped in
+ *   `:root {}` and `.dark {}` respectively.
+ * - `css` is injected as-is for mode-agnostic rules (component overrides, etc.).
+ *
+ * For backwards compatibility, `light` and `dark` also accept the legacy
+ * dict format (`Record<string, string>`), which is converted to declaration
+ * strings automatically.
  */
 
 export interface ThemeDefinition {
-  light: Record<string, string>;
-  dark: Record<string, string>;
+  light: string;
+  dark: string;
+  css: string;
+}
+
+/**
+ * Convert a legacy dict `{ primary: "oklch(...)" }` to a CSS declaration
+ * string `--primary: oklch(...);`.
+ */
+function dictToCss(obj: Record<string, string>): string {
+  return Object.entries(obj)
+    .map(([k, v]) => `--${k}: ${v};`)
+    .join(" ");
+}
+
+/** Coerce a field value (string or legacy dict) to a CSS declaration string. */
+function coerceField(val: unknown, fallback: string): string {
+  if (typeof val === "string") return val;
+  if (typeof val === "object" && val !== null && !Array.isArray(val)) {
+    return dictToCss(val as Record<string, string>);
+  }
+  return fallback;
 }
 
 /**
  * Resolve a theme from the protocol `"theme"` field.
  *
- * Expects `{light: {...}, dark: {...}}` — returns it directly if valid,
- * or null if the shape is unexpected.
+ * Accepts both the new string format and the legacy dict format.
+ * Returns null if the shape is invalid.
  */
 export function resolveTheme(theme: unknown): ThemeDefinition | null {
   if (
     typeof theme !== "object" ||
     theme === null ||
-    !("light" in theme) ||
-    typeof (theme as Record<string, unknown>).light !== "object"
+    !("light" in theme || "dark" in theme || "css" in theme)
   ) {
-    console.warn("[Prefab] Invalid theme format — expected {light, dark}");
+    console.warn("[Prefab] Invalid theme format — expected {light, dark, css}");
     return null;
   }
-  const t = theme as {
-    light: Record<string, string>;
-    dark?: Record<string, string>;
-  };
+  const t = theme as Record<string, unknown>;
+  const light = coerceField(t.light, "");
   return {
-    light: t.light,
-    dark: t.dark ?? t.light,
+    light,
+    dark: coerceField(t.dark, light),
+    css: typeof t.css === "string" ? t.css : "",
   };
-}
-
-/** Prefix a variable name with `--` to form a CSS custom property. */
-function toCssVar(name: string): string {
-  return `--${name}`;
 }
 
 /**
- * Build a `<style>` block that overrides theme CSS variables.
+ * Build a `<style>` block from a resolved theme.
  *
- * @param theme - Resolved theme definition with light/dark overrides
+ * @param theme - Resolved theme definition
  * @param shadowDom - If true, targets `:host`/`:host(.dark)` instead of `:root`/`.dark`
  */
 export function buildThemeCss(
@@ -56,20 +75,22 @@ export function buildThemeCss(
   const lightSelector = shadowDom ? ":host" : ":root";
   const darkSelector = shadowDom ? ":host(.dark)" : ".dark";
 
-  const lightVars = Object.entries(theme.light)
-    .map(([k, v]) => `  ${toCssVar(k)}: ${v};`)
-    .join("\n");
-
-  const darkVars = Object.entries(theme.dark)
-    .map(([k, v]) => `  ${toCssVar(k)}: ${v};`)
-    .join("\n");
-
-  let css = "";
-  if (lightVars) {
-    css += `${lightSelector} {\n${lightVars}\n}\n`;
+  let result = "";
+  if (theme.light) {
+    result += `${lightSelector} {\n  ${theme.light}\n}\n`;
   }
-  if (darkVars) {
-    css += `${darkSelector} {\n${darkVars}\n}\n`;
+  if (theme.dark) {
+    result += `${darkSelector} {\n  ${theme.dark}\n}\n`;
   }
-  return css;
+  if (theme.css) {
+    let css = theme.css;
+    if (shadowDom) {
+      css = css
+        .replace(/\.dark\s*\{/g, ":host(.dark) {")
+        .replace(/\.dark\s+\./g, ":host(.dark) .")
+        .replace(/\.dark\s+:/g, ":host(.dark) :");
+    }
+    result += css + "\n";
+  }
+  return result;
 }

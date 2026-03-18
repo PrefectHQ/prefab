@@ -1,104 +1,147 @@
 ---
 title: Theming
-description: Customize colors with built-in themes or your own palette.
+description: Apply colors and styles with built-in themes or raw CSS variables.
 ---
 
-Prefab uses [shadcn/ui](https://ui.shadcn.com/docs/theming) CSS variables for all colors. The default theme is shadcn's zinc palette — achromatic surfaces with neutral accents. Pass a `theme` to `PrefabApp` to override any color variable in the system.
-
-## Built-in Themes
-
-Six color themes shift the primary, ring, and chart colors while keeping surfaces neutral:
+Prefab uses [shadcn/ui](https://ui.shadcn.com/docs/theming) CSS variables throughout. Pass a `theme` to `PrefabApp` to apply colors across every component in the view:
 
 ```python
 from prefab_ui.app import PrefabApp
-from prefab_ui.themes import blue
+from prefab_ui.themes import Basic, Accent
 
-app = PrefabApp(view=my_view, theme=blue)
+app = PrefabApp(view=my_view, theme=Basic(accent=Accent.GREEN))
 ```
 
-Available themes:
+## Built-in Themes
 
-| Import | Hue |
-|--------|-----|
-| `blue` | Blue — buttons, focus rings, charts |
-| `green` | Emerald green |
-| `red` | Warm red |
-| `orange` | Bright orange |
-| `violet` | Purple / violet |
-| `rose` | Pink / rose |
+### Basic
 
-All built-in themes are `Theme` instances — you can inspect their `light` and `dark` dicts to see the exact values.
+`Basic` is an accent-driven theme that responds to the user's system color scheme. A single hue controls primary buttons, focus rings, and all five chart colors. Light and dark mode are both handled automatically.
+
+```python
+from prefab_ui.themes import Basic, Accent
+
+theme = Basic(accent=Accent.BLUE)
+```
+
+Chart colors are distributed evenly around the hue wheel — 72° apart — so visualizations stay legible in both modes without extra configuration.
+
+### Presentation
+
+`Presentation` is an always-dark, data-dense theme with blue-tinted slate surfaces. It suits dashboards and analytics UIs where a dark chrome is the right default.
+
+```python
+from prefab_ui.themes import Presentation, Accent
+
+theme = Presentation(accent=Accent.INDIGO)
+```
+
+The accent hue drives chart-1, progress and slider fills, badge tints, and table row hover. Charts 2–5 are fixed to emerald, amber, pink, and sky for maximum contrast against the dark background.
+
+## Accent Colors
+
+`Basic` and `Presentation` both accept an `accent` argument: an OKLCH hue in the 0–360 range. The `Accent` enum provides named presets:
+
+| Constant | Hue |
+|----------|-----|
+| `Accent.BLUE` | 260 |
+| `Accent.INDIGO` | 275 |
+| `Accent.VIOLET` | 295 |
+| `Accent.CYAN` | 215 |
+| `Accent.TEAL` | 185 |
+| `Accent.GREEN` | 155 |
+| `Accent.YELLOW` | 85 |
+| `Accent.ORANGE` | 55 |
+| `Accent.RED` | 25 |
+| `Accent.ROSE` | 350 |
+| `Accent.PINK` | 340 |
+
+You can also pass any hue directly: `Basic(accent=200)`.
+
+## Forced Mode
+
+By default, themes respond to the user's system color preference. Set `mode` to pin a specific scheme regardless of OS settings:
+
+```python
+Basic(accent=Accent.BLUE, mode="dark")   # always dark
+Basic(accent=Accent.BLUE, mode="light")  # always light
+```
+
+`mode=None` (the default) follows the system preference. `Presentation` defaults to `mode=None` — if you want to enforce dark mode rather than just defaulting to it, set `mode="dark"` explicitly.
 
 ## Custom Themes
 
-A `Theme` is a pair of dictionaries mapping shadcn variable names to CSS color values. The `light` dict applies to light mode, `dark` to dark mode:
+`Theme` accepts raw CSS variable declarations. `light_css` is applied under `:root {}`, `dark_css` under `.dark {}`. Omit `dark_css` and the light values apply in both modes:
 
 ```python
-from prefab_ui import Theme
+from prefab_ui.themes import Theme
 
 my_theme = Theme(
-    light=dict(
-        primary="oklch(0.72 0.19 149)",
-        background="oklch(0.97 0.01 244)",
-        ring="oklch(0.72 0.19 149)",
+    light_css=(
+        "--primary: oklch(0.60 0.24 260);"
+        " --ring: oklch(0.60 0.24 260);"
     ),
-    dark=dict(
-        primary="oklch(0.77 0.15 163)",
-        background="oklch(0.21 0.04 265)",
-        ring="oklch(0.77 0.15 163)",
+    dark_css=(
+        "--primary: oklch(0.70 0.18 260);"
+        " --ring: oklch(0.70 0.18 260);"
     ),
 )
-
-app = PrefabApp(view=my_view, theme=my_theme)
 ```
 
-If you omit `dark`, the `light` values are used for both modes.
+### CSS Overrides
 
-### Variable Names
+The `css` field accepts any CSS and is injected as-is, without wrapping in a color-scheme selector. Use it for component class overrides, font imports, or rules that apply in both modes:
 
-Keys are the standard [shadcn CSS variable names](https://ui.shadcn.com/docs/theming) without the `--` prefix:
+```python
+theme = Theme(
+    css="""
+    @import url('https://fonts.googleapis.com/css2?family=Inter');
+    .cn-card { font-family: 'Inter', sans-serif; }
+    """
+)
+```
 
-| Key | Controls |
-|-----|----------|
+The built-in `Presentation` theme uses this for Inter, custom badge styles, and gradient progress fills.
+
+### Variable Reference
+
+Keys are standard [shadcn CSS variable names](https://ui.shadcn.com/docs/theming) without the `--` prefix:
+
+| Variable | Controls |
+|----------|----------|
 | `primary` / `primary-foreground` | Primary buttons, active states |
 | `secondary` / `secondary-foreground` | Secondary buttons |
 | `accent` / `accent-foreground` | Highlighted surfaces |
 | `background` / `foreground` | Page background and text |
 | `card` / `card-foreground` | Card surfaces |
 | `muted` / `muted-foreground` | Subdued text and surfaces |
-| `destructive` / `destructive-foreground` | Delete / error actions |
+| `destructive` | Delete and error states |
 | `border` | Borders and dividers |
 | `input` | Input field borders |
 | `ring` | Focus rings |
 | `chart-1` through `chart-5` | Chart color palette |
-| `radius` | Border radius (`0.5rem`, etc.) |
+| `radius` | Border radius |
 
-Values can be any valid CSS color — `oklch()`, `hsl()`, hex, named colors.
+Values can be any valid CSS color: `oklch()`, `hsl()`, hex, or named colors.
 
-## Using shadcn Theme Generators
+## shadcn Generators
 
-The [shadcn themes page](https://ui.shadcn.com/themes) and other community theme generators produce CSS with the same variable names Prefab uses. You can paste their output directly as an inline stylesheet:
+Any tool that outputs shadcn CSS variables is compatible with Prefab. Copy the blocks directly into `stylesheets` as an inline CSS string:
 
 ```python
 app = PrefabApp(
     view=my_view,
     stylesheets=["""
-        :root {
-            --primary: oklch(0.7227 0.1920 149.5793);
-            --primary-foreground: oklch(1.0000 0 0);
-            --ring: oklch(0.7227 0.1920 149.5793);
-        }
-        .dark {
-            --primary: oklch(0.7729 0.1535 163.2231);
-            --primary-foreground: oklch(0.2077 0.0398 265.7549);
-            --ring: oklch(0.7729 0.1535 163.2231);
-        }
+        :root { --primary: oklch(0.72 0.19 149); --ring: oklch(0.72 0.19 149); }
+        .dark { --primary: oklch(0.77 0.15 163); --ring: oklch(0.77 0.15 163); }
     """],
 )
 ```
 
-The `stylesheets` field accepts both URLs and inline CSS strings. Inline CSS (detected by the presence of `{`) is injected as a `<style>` tag; URLs are loaded as `<link>` tags.
-
 <Tip>
-When copying from a shadcn theme generator, you only need the `:root { ... }` and `.dark { ... }` blocks. Strip out `@import`, `@theme inline`, and `@layer base` directives — Prefab's renderer already handles those.
+Paste only the `:root { ... }` and `.dark { ... }` blocks. Strip out `@import`, `@theme inline`, and `@layer base` — Prefab's renderer already handles the layer structure.
 </Tip>
+
+## Themes in the Playground
+
+Themes defined in your code apply in the [playground](/playground) exactly as they do in production. See the playground page for how render targets and the theme picker interact.
