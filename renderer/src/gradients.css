@@ -1,0 +1,232 @@
+/* Gradient fills for progress, slider, and ring components.
+ *
+ * Uses CSS relative color syntax (oklch(from ...)) to derive gradient
+ * endpoints from theme variables automatically. Browsers that don't
+ * support relative color syntax ignore these declarations and keep
+ * the flat fills from style.css.
+ *
+ * Uses background-image (not background shorthand) so indicator_class
+ * overrides via background-color still work.
+ *
+ * Cascade order:
+ *   1. Base gradients (this file) — ON by default
+ *   2. Theme gradient=False — turns OFF globally via _NO_GRADIENT_CSS
+ *   3. Component gradient=True — forces ON via cn-*-gradient class
+ *   4. Component gradient=False — forces OFF via cn-*-flat class
+ */
+
+/* Progress gradients */
+.cn-progress-variant-default {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--primary) calc(l - 0.12) c h),
+    var(--primary)
+  );
+}
+.cn-progress-variant-success {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--success) calc(l - 0.12) c h),
+    var(--success)
+  );
+}
+.cn-progress-variant-warning {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--warning) calc(l - 0.12) c h),
+    var(--warning)
+  );
+}
+.cn-progress-variant-destructive {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--destructive) calc(l - 0.12) c h),
+    var(--destructive)
+  );
+}
+.cn-progress-variant-info {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--info) calc(l - 0.12) c h),
+    var(--info)
+  );
+}
+
+/* Progress: force gradient ON (overrides theme gradient=False) */
+.cn-progress-gradient .cn-progress-variant-default {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--primary) calc(l - 0.12) c h),
+    var(--primary)
+  );
+}
+.cn-progress-gradient .cn-progress-variant-success {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--success) calc(l - 0.12) c h),
+    var(--success)
+  );
+}
+.cn-progress-gradient .cn-progress-variant-warning {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--warning) calc(l - 0.12) c h),
+    var(--warning)
+  );
+}
+.cn-progress-gradient .cn-progress-variant-destructive {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--destructive) calc(l - 0.12) c h),
+    var(--destructive)
+  );
+}
+.cn-progress-gradient .cn-progress-variant-info {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--info) calc(l - 0.12) c h),
+    var(--info)
+  );
+}
+
+/* Progress: force flat (overrides everything) */
+.cn-progress-flat .cn-progress-variant-default {
+  background-image: none;
+}
+.cn-progress-flat .cn-progress-variant-success {
+  background-image: none;
+}
+.cn-progress-flat .cn-progress-variant-warning {
+  background-image: none;
+}
+.cn-progress-flat .cn-progress-variant-destructive {
+  background-image: none;
+}
+.cn-progress-flat .cn-progress-variant-info {
+  background-image: none;
+}
+
+/* Slider gradients */
+.cn-slider-variant-default {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--primary) calc(l - 0.12) c h),
+    var(--primary)
+  );
+}
+.cn-slider-variant-success {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--success) calc(l - 0.12) c h),
+    var(--success)
+  );
+}
+.cn-slider-variant-warning {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--warning) calc(l - 0.12) c h),
+    var(--warning)
+  );
+}
+.cn-slider-variant-destructive {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--destructive) calc(l - 0.12) c h),
+    var(--destructive)
+  );
+}
+.cn-slider-variant-info {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--info) calc(l - 0.12) c h),
+    var(--info)
+  );
+}
+
+/* Slider: force gradient ON */
+.cn-slider-gradient .cn-slider-variant-default {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--primary) calc(l - 0.12) c h),
+    var(--primary)
+  );
+}
+.cn-slider-gradient .cn-slider-variant-success {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--success) calc(l - 0.12) c h),
+    var(--success)
+  );
+}
+.cn-slider-gradient .cn-slider-variant-warning {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--warning) calc(l - 0.12) c h),
+    var(--warning)
+  );
+}
+.cn-slider-gradient .cn-slider-variant-destructive {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--destructive) calc(l - 0.12) c h),
+    var(--destructive)
+  );
+}
+.cn-slider-gradient .cn-slider-variant-info {
+  background-image: linear-gradient(
+    90deg,
+    oklch(from var(--info) calc(l - 0.12) c h),
+    var(--info)
+  );
+}
+
+/* Slider: force flat */
+.cn-slider-flat .cn-slider-variant-default {
+  background-image: none;
+}
+.cn-slider-flat .cn-slider-variant-success {
+  background-image: none;
+}
+.cn-slider-flat .cn-slider-variant-warning {
+  background-image: none;
+}
+.cn-slider-flat .cn-slider-variant-destructive {
+  background-image: none;
+}
+.cn-slider-flat .cn-slider-variant-info {
+  background-image: none;
+}
+
+/* Ring: force gradient ON */
+.cn-ring-gradient .cn-ring-variant-default {
+  stroke: url(#ring-gradient-default);
+}
+.cn-ring-gradient .cn-ring-variant-success {
+  stroke: url(#ring-gradient-success);
+}
+.cn-ring-gradient .cn-ring-variant-warning {
+  stroke: url(#ring-gradient-warning);
+}
+.cn-ring-gradient .cn-ring-variant-destructive {
+  stroke: url(#ring-gradient-destructive);
+}
+.cn-ring-gradient .cn-ring-variant-info {
+  stroke: url(#ring-gradient-info);
+}
+
+/* Ring: force flat */
+.cn-ring-flat .cn-ring-variant-default {
+  stroke: var(--primary);
+}
+.cn-ring-flat .cn-ring-variant-success {
+  stroke: var(--success);
+}
+.cn-ring-flat .cn-ring-variant-warning {
+  stroke: var(--warning);
+}
+.cn-ring-flat .cn-ring-variant-destructive {
+  stroke: var(--destructive);
+}
+.cn-ring-flat .cn-ring-variant-info {
+  stroke: var(--info);
+}

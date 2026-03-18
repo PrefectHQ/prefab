@@ -6,7 +6,8 @@ from prefab_ui.themes.base import Theme
 
 _PRESENTATION_VARS = (
     # Blue-tinted dark chrome (Tailwind Slate palette)
-    "--background: #0f1117;"
+    "--card-padding: 3rem; --layout-gap: 1.5rem;"
+    " --background: #0f1117;"
     " --foreground: #e2e8f0;"
     " --card: #1a1d2e;"
     " --card-foreground: #f1f5f9;"
@@ -44,60 +45,26 @@ _PRESENTATION_CSS = """\
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Progress — gradient fills, navy track */
+/* Card — generous padding for slide-like presentation.
+   Uses a CSS variable so user css_class overrides still win. */
+.cn-card-header,
+.cn-card-content,
+.cn-card-footer {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Progress/Slider — dark navy tracks */
 .cn-progress,
 .cn-progress-track {
   background: #252840;
 }
-.cn-progress-variant-default {
-  background: linear-gradient(90deg, oklch(0.55 0.25 var(--accent-hue, 275)), oklch(0.72 0.22 var(--accent-hue, 275)));
-}
-.cn-progress-variant-success {
-  background: linear-gradient(90deg, #059669, #34d399);
-}
-.cn-progress-variant-warning {
-  background: linear-gradient(90deg, #d97706, #f59e0b);
-}
-.cn-progress-variant-destructive {
-  background: linear-gradient(90deg, #db2777, #f472b6);
+.cn-slider-track {
+  background: #252840;
 }
 .cn-progress-target {
   background: #f1f5f9;
   opacity: 0.5;
-}
-
-/* Slider — gradient fills, navy track */
-.cn-slider-track {
-  background: #252840;
-}
-.cn-slider-variant-default {
-  background: linear-gradient(90deg, oklch(0.55 0.25 var(--accent-hue, 275)), oklch(0.72 0.22 var(--accent-hue, 275)));
-}
-.cn-slider-variant-success {
-  background: linear-gradient(90deg, #059669, #34d399);
-}
-.cn-slider-variant-warning {
-  background: linear-gradient(90deg, #d97706, #f59e0b);
-}
-.cn-slider-variant-destructive {
-  background: linear-gradient(90deg, #db2777, #f472b6);
-}
-
-/* Ring — gradient strokes (refs to <defs> in the Ring SVG) */
-.cn-ring-variant-default {
-  stroke: url(#ring-gradient-default);
-}
-.cn-ring-variant-success {
-  stroke: url(#ring-gradient-success);
-}
-.cn-ring-variant-warning {
-  stroke: url(#ring-gradient-warning);
-}
-.cn-ring-variant-destructive {
-  stroke: url(#ring-gradient-destructive);
-}
-.cn-ring-variant-info {
-  stroke: url(#ring-gradient-info);
 }
 
 /* Badge — tinted backgrounds, consistent border-radius */

@@ -1,0 +1,74 @@
+---
+title: PrefabApp
+description: The application object that ties together view, state, theme, and assets.
+icon: box
+---
+
+`PrefabApp` is a pure data object that describes a complete Prefab UI. It holds the component tree, initial state, theme, and any external assets. Every delivery mechanism (MCP, REST, `prefab serve`) ultimately produces a `PrefabApp`.
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.themes import Dashboard
+from prefab_ui.components import Column, Heading, Text
+
+with Column() as view:
+    Heading("Hello")
+    Text("World")
+
+app = PrefabApp(
+    view=view,
+    state={"greeting": "Hello"},
+    theme=Dashboard(accent="blue"),
+)
+```
+
+## Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `view` | `Component` | Component tree to render |
+| `state` | `dict` | Initial client-side state |
+| `theme` | `Theme` | Theme to apply — see [Themes](/styling/themes) |
+| `defs` | `list[Define]` | Reusable component definitions |
+| `stylesheets` | `list[str]` | CSS URLs or inline CSS strings to load in `<head>` |
+| `scripts` | `list[str]` | External JS URLs to load in `<head>` |
+| `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` (for Fetch actions) |
+| `title` | `str` | HTML page title (default: `"Prefab"`) |
+
+## Methods
+
+**`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all application data baked in. This is what `prefab serve` uses internally, and what any transport integration (FastMCP, FastAPI, etc.) ultimately delivers.
+
+**`app.to_json()`** returns the Prefab wire-format envelope: a dict with `version`, `view`, `state`, `defs`, and `theme`. This is the data structure the renderer consumes.
+
+**`app.csp()`** computes Content Security Policy domains from the app's asset configuration. It merges the renderer's base CSP with origins extracted from `stylesheets`, `scripts`, and `connect_domains`.
+
+## Stylesheets
+
+The `stylesheets` field accepts both URLs and inline CSS strings. URLs are loaded as `<link>` tags; inline CSS (detected by the presence of `{`) is injected as a `<style>` tag:
+
+```python
+app = PrefabApp(
+    view=view,
+    stylesheets=[
+        "https://fonts.googleapis.com/css2?family=Inter",
+        ":root { --primary: oklch(0.72 0.19 149); }",
+    ],
+)
+```
+
+For theming, prefer `theme=` over inline stylesheets. The `stylesheets` field is best suited for loading third-party CSS that isn't part of the Prefab theme system.
+
+## State
+
+`state` sets the initial values that template expressions like `{{ count }}` resolve against. You can set it directly or use `set_initial_state()` alongside component construction:
+
+```python
+from prefab_ui.app import PrefabApp, set_initial_state
+
+state = set_initial_state(count=0, items=[])
+
+app = PrefabApp(view=view)  # state is picked up automatically
+```
+
+Both approaches can be combined; explicit `state=` values take precedence over `set_initial_state()` for the same key.

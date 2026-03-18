@@ -76,7 +76,7 @@ def _execute_and_serialize(
     shared_ns: dict[str, object] | None = None,
 ) -> dict[str, Any]:
     """Execute a Python snippet and return the JSON envelope as a dict."""
-    from prefab_ui.app import clear_initial_state, get_initial_state
+    from prefab_ui.app import PrefabApp, clear_initial_state, get_initial_state
     from prefab_ui.components.base import (
         Component,
         ContainerComponent,
@@ -88,13 +88,20 @@ def _execute_and_serialize(
     clear_initial_state()
 
     created: list[Component] = []
+    apps: list[PrefabApp] = []
     original = Component.model_post_init
+    original_app_init = PrefabApp.__init__
 
     def _tracking_post_init(self: Component, context: object) -> None:
         original(self, context)
         created.append(self)
 
+    def _app_tracking_init(self: PrefabApp, /, **data: Any) -> None:
+        original_app_init(self, **data)
+        apps.append(self)
+
     Component.model_post_init = _tracking_post_init  # type: ignore[assignment]
+    PrefabApp.__init__ = _app_tracking_init  # type: ignore[assignment]
     try:
         ns: dict[str, object] = {}
         if shared_ns:
@@ -106,6 +113,7 @@ def _execute_and_serialize(
                     shared_ns[k] = v
     finally:
         Component.model_post_init = original  # type: ignore[assignment]
+        PrefabApp.__init__ = original_app_init  # type: ignore[assignment]
 
     if not created:
         raise ValueError("No component found in code block")
@@ -125,10 +133,16 @@ def _execute_and_serialize(
                             all_children.add(id(v))
 
     roots = [c for c in created if id(c) not in all_children]
-    if not roots:
+    if not roots and not apps:
         raise ValueError("No root component found")
 
-    tree = roots[0].to_json()
+    # If a PrefabApp was created, use it as the render target.
+    app = apps[-1] if apps else None
+    if app is not None:
+        wire = app.to_json()
+        tree = wire.get("view", roots[0].to_json() if roots else {})
+    else:
+        tree = roots[0].to_json()
 
     # Collect state: explicit set_initial_state() + initial values from
     # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
@@ -157,6 +171,8 @@ def _execute_and_serialize(
     envelope: dict[str, Any] = {"view": tree}
     if state:
         envelope["state"] = _serialize_state(state)
+    if app is not None and "theme" in wire:
+        envelope["theme"] = wire["theme"]
 
     return envelope
 

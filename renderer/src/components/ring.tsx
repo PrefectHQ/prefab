@@ -101,6 +101,77 @@ export function Ring({
         overflow="visible"
         style={{ transform: "rotate(-90deg)" }}
       >
+        <defs>
+          <linearGradient
+            id="ring-gradient-default"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop offset="0%" style={{ stopColor: "var(--primary)" }} />
+            <stop
+              offset="100%"
+              style={{
+                stopColor: "oklch(from var(--primary) calc(l - 0.12) c h)",
+              }}
+            />
+          </linearGradient>
+          <linearGradient
+            id="ring-gradient-success"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop offset="0%" style={{ stopColor: "var(--success)" }} />
+            <stop
+              offset="100%"
+              style={{
+                stopColor: "oklch(from var(--success) calc(l - 0.12) c h)",
+              }}
+            />
+          </linearGradient>
+          <linearGradient
+            id="ring-gradient-warning"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop offset="0%" style={{ stopColor: "var(--warning)" }} />
+            <stop
+              offset="100%"
+              style={{
+                stopColor: "oklch(from var(--warning) calc(l - 0.12) c h)",
+              }}
+            />
+          </linearGradient>
+          <linearGradient
+            id="ring-gradient-destructive"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop offset="0%" style={{ stopColor: "var(--destructive)" }} />
+            <stop
+              offset="100%"
+              style={{
+                stopColor: "oklch(from var(--destructive) calc(l - 0.12) c h)",
+              }}
+            />
+          </linearGradient>
+          <linearGradient id="ring-gradient-info" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" style={{ stopColor: "var(--info)" }} />
+            <stop
+              offset="100%"
+              style={{
+                stopColor: "oklch(from var(--info) calc(l - 0.12) c h)",
+              }}
+            />
+          </linearGradient>
+        </defs>
         <circle
           className="cn-ring-track"
           cx={half}

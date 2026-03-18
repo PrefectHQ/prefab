@@ -57,35 +57,4 @@ This watches all `.py` files in the same directory as your target file. When a c
 
 If the requested port is in use, `prefab serve` automatically finds the next available one.
 
-## PrefabApp
-
-`PrefabApp` is a pure data object describing a complete UI application. It holds the view tree, initial state, reusable definitions, and external asset URLs.
-
-```python
-from prefab_ui.app import PrefabApp
-
-app = PrefabApp(
-    view=view,
-    state={"count": 0},
-    stylesheets=["https://fonts.googleapis.com/css2?family=Inter"],
-    scripts=["https://cdn.example.com/chart.js"],
-)
-```
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `view` | `Component` | Component tree to render |
-| `state` | `dict` | Initial client-side state |
-| `defs` | `list[Define]` | Reusable component definitions |
-| `stylesheets` | `list[str]` | External CSS URLs to load |
-| `scripts` | `list[str]` | External JS URLs to load |
-| `theme` | `Theme` | Theme to apply — see [Theming](/styling/theming) |
-| `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` |
-
-### Methods
-
-**`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all application data baked in. This is what `prefab serve` uses internally, and it's also what any transport integration (FastMCP, FastAPI, etc.) ultimately delivers.
-
-**`app.to_json()`** returns the Prefab wire-format envelope — a dict with `version`, `view`, `state`, and `defs`. This is the data structure the renderer consumes.
-
-**`app.csp()`** computes Content Security Policy domains from the app's asset configuration. It merges the renderer's base CSP with origins extracted from `stylesheets`, `scripts`, and `connect_domains`.
+See [PrefabApp](/reference/app) for the full API reference.

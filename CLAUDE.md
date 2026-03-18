@@ -86,4 +86,4 @@ PRs are documentation. Structure them as:
 
 ### Renderer
 
-Prefab ships a TypeScript/React renderer (`renderer/`) alongside the Python library. Changes to the wire protocol or component props require coordinated updates on both sides. CSS styling is done via Tailwind utility classes in `style-nova.css` using the `cn-*` class naming convention, not inline styles or component-level Tailwind classes. Consult `dev-docs/` for renderer build and release details.
+Prefab ships a TypeScript/React renderer (`renderer/`) alongside the Python library. Changes to the wire protocol or component props require coordinated updates on both sides. CSS styling is done via Tailwind utility classes in `style.css` using the `cn-*` class naming convention, not inline styles or component-level Tailwind classes. Consult `dev-docs/` for renderer build and release details.

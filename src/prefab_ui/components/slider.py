@@ -32,12 +32,14 @@ from typing import Any, ClassVar, Literal
 from pydantic import Field
 
 from prefab_ui.actions import Action
-from prefab_ui.components.base import Component, StatefulMixin
+from prefab_ui.components.base import Component, StatefulMixin, _merge_css_classes
 from prefab_ui.rx import RxStr
 
 SliderVariant = (
     Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
 )
+
+SliderSize = Literal["sm", "default", "lg"]
 
 SliderHandleStyle = Literal["circle", "bar"]
 
@@ -94,6 +96,10 @@ class Slider(StatefulMixin, Component):
         default="default",
         description="Visual variant for the filled track: default, success, warning, destructive, info, muted",
     )
+    size: SliderSize = Field(
+        default="default",
+        description="Track thickness: sm (4px), default (6px), lg (10px)",
+    )
     indicator_class: RxStr | None = Field(
         default=None,
         alias="indicatorClass",
@@ -118,8 +124,17 @@ class Slider(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when value changes",
     )
+    gradient: bool | None = Field(
+        default=None,
+        exclude=True,
+        description="Gradient fill: None (inherit from theme), True (force on), False (force off)",
+    )
 
     def model_post_init(self, __context: Any) -> None:
+        if self.indicator_class is not None or self.gradient is False:
+            self.css_class = _merge_css_classes("cn-slider-flat", self.css_class)
+        elif self.gradient is True:
+            self.css_class = _merge_css_classes("cn-slider-gradient", self.css_class)
         if self.step is not None and isinstance(self.value, (int, float)):
             self.value = self._snap(self.value)
         elif self.step is not None and isinstance(self.value, list):

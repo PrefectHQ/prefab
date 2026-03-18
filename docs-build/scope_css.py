@@ -81,7 +81,17 @@ raw_css = raw_css_path.read_text()
 # This scopes every utility to only match inside preview containers.
 scoped_css = f".prefab-preview {{\n{raw_css}\n}}"
 
-final = f"{_THEME_CSS}\n{_INFRASTRUCTURE_CSS}\n/* ── Scoped Tailwind v4 utilities ─────────────────────────── */\n{scoped_css}\n"
+# Gradient CSS uses oklch(from ...) relative color syntax which Tailwind's
+# compiler strips. Append it raw, scoped under .prefab-preview.
+_gradients_path = (
+    Path(__file__).resolve().parents[1] / "renderer" / "src" / "gradients.css"
+)
+_gradients_raw = _gradients_path.read_text() if _gradients_path.exists() else ""
+_gradients_scoped = (
+    f".prefab-preview {{\n{_gradients_raw}\n}}" if _gradients_raw else ""
+)
+
+final = f"{_THEME_CSS}\n{_INFRASTRUCTURE_CSS}\n/* ── Scoped Tailwind v4 utilities ─────────────────────────── */\n{scoped_css}\n{_gradients_scoped}\n"
 
 build_dir = Path(__file__).parent
 out = build_dir.parent / "docs" / "css" / "preview.css"

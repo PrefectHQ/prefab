@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field
 
-from prefab_ui.components.base import ContainerComponent
+from prefab_ui.components.base import ContainerComponent, _merge_css_classes
 from prefab_ui.rx import RxStr
 
 RingVariant = (
@@ -68,3 +68,15 @@ class Ring(ContainerComponent):
         alias="targetClass",
         description="Tailwind classes for the target marker",
     )
+    gradient: bool | None = Field(
+        default=None,
+        exclude=True,
+        description="Gradient stroke: None (inherit from theme), True (force on), False (force off)",
+    )
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.gradient is False:
+            self.css_class = _merge_css_classes("cn-ring-flat", self.css_class)
+        elif self.gradient is True:
+            self.css_class = _merge_css_classes("cn-ring-gradient", self.css_class)
+        super().model_post_init(__context)

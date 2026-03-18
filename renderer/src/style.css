@@ -1,3 +1,14 @@
+/* MARK: Layout defaults — sensible gaps so cards don't touch */
+.flex.flex-col:has(> .cn-card) {
+  gap: var(--layout-gap, 1rem);
+}
+.flex.flex-row:has(> .cn-card) {
+  gap: var(--layout-gap, 1rem);
+}
+.grid:has(> .cn-card) {
+  gap: var(--layout-gap, 1rem);
+}
+
 /* MARK: Accordion */
 .cn-accordion-item {
   @apply not-last:border-b;
@@ -276,6 +287,7 @@
 /* MARK: Card */
 .cn-card {
   @apply ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-xl text-sm ring-1 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl;
+  padding: var(--card-padding, 1.5rem);
 }
 
 .cn-card-header {
@@ -943,15 +955,30 @@
 
 /* MARK: Progress */
 .cn-progress {
-  @apply bg-muted h-1 rounded-full;
+  @apply bg-muted h-1.5 rounded-full;
 }
 
 .cn-progress-vertical {
-  @apply h-40 w-1;
+  @apply h-40 w-1.5;
 }
 
 .cn-progress-track {
-  @apply bg-muted h-1 rounded-full;
+  @apply bg-muted h-1.5 rounded-full;
+}
+
+.cn-progress-size-sm,
+.cn-progress-size-sm .cn-progress-track {
+  @apply h-1;
+}
+.cn-progress-size-lg,
+.cn-progress-size-lg .cn-progress-track {
+  @apply h-2.5;
+}
+.cn-progress-vertical.cn-progress-size-sm {
+  @apply w-1;
+}
+.cn-progress-vertical.cn-progress-size-lg {
+  @apply w-2.5;
 }
 
 .cn-progress-indicator {
@@ -1248,7 +1275,14 @@
 }
 
 .cn-slider-track {
-  @apply bg-muted rounded-full data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1;
+  @apply bg-muted rounded-full data-horizontal:h-1.5 data-horizontal:w-full data-vertical:h-full data-vertical:w-1.5;
+}
+
+.cn-slider-size-sm .cn-slider-track {
+  @apply data-horizontal:h-1 data-vertical:w-1;
+}
+.cn-slider-size-lg .cn-slider-track {
+  @apply data-horizontal:h-2.5 data-vertical:w-2.5;
 }
 
 .cn-slider-range {
@@ -1345,7 +1379,7 @@
 }
 
 .cn-table-head {
-  @apply text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0;
+  @apply text-muted-foreground h-10 px-2 text-left align-middle font-semibold text-xs uppercase tracking-wide whitespace-nowrap [&:has([role=checkbox])]:pr-0;
 }
 
 .cn-table-cell {

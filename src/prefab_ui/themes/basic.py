@@ -54,6 +54,7 @@ class Basic(Theme):
                 css=self.css,
                 font=self.font,
                 font_mono=self.font_mono,
+                gradient=self.gradient,
             ).to_json()
         return Theme(
             light_css=_BASIC_LIGHT_CSS,
@@ -63,4 +64,5 @@ class Basic(Theme):
             css=self.css,
             font=self.font,
             font_mono=self.font_mono,
+            gradient=self.gradient,
         ).to_json()

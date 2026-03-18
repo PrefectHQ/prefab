@@ -112,6 +112,34 @@ with Column(gap=4) as view:
 
 Only the root needs `as` (to pass to UIResponse).
 
+### Monty sandbox
+
+Monty doesn't yet support context managers. Use `children=` instead of
+`with` blocks — everything else is identical:
+
+```python
+view = Column(
+    gap=4,
+    children=[
+        Heading("Title"),
+        Card(
+            children=[
+                CardContent(
+                    children=[
+                        Input(name="email", placeholder="Email"),
+                    ],
+                ),
+                CardFooter(
+                    children=[
+                        Button("Save", on_click=CallTool("save")),
+                    ],
+                ),
+            ],
+        ),
+    ],
+)
+```
+
 ## Naming Convention
 
 Python uses `snake_case`; wire protocol uses `camelCase`. The mapping is

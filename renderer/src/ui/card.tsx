@@ -11,7 +11,7 @@ function Card({
     <div
       data-slot="card"
       data-size={size}
-      className={cn("cn-card group/card flex flex-col py-4 has-data-[slot=card-footer]:pb-0", className)}
+      className={cn("cn-card group/card flex flex-col has-data-[slot=card-footer]:pb-0", className)}
       {...props}
     />
   )

@@ -66,6 +66,7 @@ const COLOR_REBIND = `
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
 }`;
 
 /** Rewrite theme CSS selectors to scope to #pg-preview, and rebind

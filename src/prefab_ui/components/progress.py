@@ -6,12 +6,14 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from prefab_ui.components.base import Component
+from prefab_ui.components.base import Component, _merge_css_classes
 from prefab_ui.rx import RxStr
 
 ProgressVariant = (
     Literal["default", "success", "warning", "destructive", "info", "muted"] | RxStr
 )
+
+ProgressSize = Literal["sm", "default", "lg"]
 
 ProgressOrientation = Literal["horizontal", "vertical"]
 
@@ -39,6 +41,10 @@ class Progress(Component):
         default="default",
         description="Visual variant: default, success, warning, destructive, info, muted",
     )
+    size: ProgressSize = Field(
+        default="default",
+        description="Bar thickness: sm (4px), default (6px), lg (10px)",
+    )
     target: float | RxStr | None = Field(
         default=None,
         description="Target marker position (renders a vertical line at this value)",
@@ -57,6 +63,18 @@ class Progress(Component):
         default="horizontal",
         description="Layout direction: horizontal or vertical",
     )
+    gradient: bool | None = Field(
+        default=None,
+        exclude=True,
+        description="Gradient fill: None (inherit from theme), True (force on), False (force off)",
+    )
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.indicator_class is not None or self.gradient is False:
+            self.css_class = _merge_css_classes("cn-progress-flat", self.css_class)
+        elif self.gradient is True:
+            self.css_class = _merge_css_classes("cn-progress-gradient", self.css_class)
+        super().model_post_init(__context)
 
     def to_json(self) -> dict[str, Any]:
         d = super().to_json()
