@@ -12,7 +12,7 @@ State is client-side data that your UI can read and write. Components display st
 
 Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `.rx` or `Rx()` references:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBTbGlkZXIsIE11dGVkLCBDb2x1bW4KCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoYnJpZ2h0bmVzcz01MCkKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIFNsaWRlcihuYW1lPSJicmlnaHRuZXNzIiwgbWluPTAsIG1heD0xMDApCiAgICBNdXRlZChmIkJyaWdodG5lc3M6IHtzdGF0ZS5icmlnaHRuZXNzfSUiKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBTbGlkZXIsIE11dGVkLCBDb2x1bW4KCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoYnJpZ2h0bmVzcz01MCkKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIFNsaWRlcihuYW1lPSJicmlnaHRuZXNzIiwgbWluPTAsIG1heD0xMDApCiAgICBNdXRlZChmIkJyaWdodG5lc3M6IHtzdGF0ZS5icmlnaHRuZXNzfSUiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -35,7 +35,8 @@ with Column(gap=3):
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "disabled": false
+        "disabled": false,
+        "size": "default"
       },
       {"content": "Brightness: {{ brightness }}%", "type": "Muted"}
     ]

@@ -7,17 +7,16 @@ three CSS layers:
 - `dark_css` -- CSS declarations scoped to dark mode (injected inside `.dark {}`)
 - `css` -- arbitrary CSS injected as-is (for component class overrides, gradients, etc.)
 
-The `accent` field accepts an OKLCH hue (0-360) and injects `--accent-hue`
-into both light and dark, making it available as `var(--accent-hue)` throughout
-the theme CSS.  Use `Accent` constants for named hues.
+The `accent` field accepts a Tailwind color name (`"blue"`, `"amber-500"`),
+a CSS color string (`"#3b82f6"`), or an OKLCH hue number (0-360).
 
 Usage::
 
     from prefab_ui import PrefabApp
-    from prefab_ui.themes import Accent, Basic, Presentation, Theme
+    from prefab_ui.themes import Basic, Presentation, Theme
 
     # Single-hue theme
-    app = PrefabApp(view=my_view, theme=Basic(accent=Accent.GREEN))
+    app = PrefabApp(view=my_view, theme=Basic(accent="green"))
 
     # Always-dark data dashboard theme
     app = PrefabApp(view=my_view, theme=Presentation())
@@ -38,8 +37,10 @@ of CSS variable overrides (`{"primary": "oklch(...)"}``), which are
 automatically converted to declaration strings.
 """
 
-from prefab_ui.themes.base import Accent, Theme
+from prefab_ui.themes.base import Theme
 from prefab_ui.themes.basic import Basic
+from prefab_ui.themes.dashboard import Dashboard
+from prefab_ui.themes.minimal import Minimal
 from prefab_ui.themes.presentation import Presentation
 
-__all__ = ["Accent", "Basic", "Presentation", "Theme"]
+__all__ = ["Basic", "Dashboard", "Minimal", "Presentation", "Theme"]

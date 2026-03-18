@@ -6,35 +6,6 @@ icon: play
 mode: wide
 ---
 
-The playground runs Python code directly in your browser using Pyodide and renders the result live. No server, no install — just write Python and see the UI.
-
-## Render Target
-
-The playground renders whichever thing was created last — a standalone component or a `PrefabApp`. Write some components and the last one in creation order becomes the output. Create a `PrefabApp` after your components and it becomes the output instead, bringing its theme and mode along.
-
-For explicit control, define `main()` and return whatever you want rendered:
-
-```python
-from prefab_ui.app import PrefabApp
-from prefab_ui.themes import Presentation, Accent
-from prefab_ui.components import Column, Heading
-
-def main():
-    with Column() as view:
-        Heading("Dashboard")
-    return PrefabApp(view=view, theme=Presentation(accent=Accent.CYAN))
-```
-
-`main()` always takes priority, so use it whenever your code creates multiple components or apps and you need a clear entry point.
-
-## Themes
-
-Themes from `PrefabApp` apply in the playground the same as in production. The toolbar's theme picker adds an additional layer on top: selecting a swatch overrides the code-defined theme, and clearing it restores whatever the code specifies.
-
-See the [theming docs](/styling/theming) for `Basic`, `Presentation`, `Accent`, and custom themes.
-
----
-
 export const PlaygroundFrame = () => {
   const ref = React.useRef(null);
   const [src, setSrc] = React.useState(null);
@@ -84,3 +55,30 @@ export const PlaygroundFrame = () => {
 };
 
 <PlaygroundFrame />
+
+---
+
+## Render Target
+
+The playground renders whichever thing was created last: a standalone component or a `PrefabApp`. Create a `PrefabApp` after your components and it becomes the output, bringing its theme and mode along.
+
+For explicit control, define `main()` and return whatever you want rendered:
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.themes import Presentation
+from prefab_ui.components import Column, Heading
+
+def main():
+    with Column() as view:
+        Heading("Dashboard")
+    return PrefabApp(view=view, theme=Presentation(accent="cyan"))
+```
+
+`main()` always takes priority when your code creates multiple components or apps.
+
+## Themes
+
+Themes from `PrefabApp` apply in the playground the same as in production. The toolbar's theme picker overrides the code-defined theme when active; selecting "Code" restores it.
+
+See the [themes docs](/styling/themes) for `Basic`, `Dashboard`, `Presentation`, and custom themes.

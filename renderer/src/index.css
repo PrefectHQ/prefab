@@ -1,7 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./style-nova.css" layer(components);
-@import "./style-nova-indicators.css" layer(components);
+@import "./style.css" layer(components);
+@import "./style-indicators.css" layer(components);
+@import "./gradients.css" layer(components);
 
 /* Safelist: classes used via css_class in runtime JSON (doc previews, playground).
    Tailwind v4 JIT only generates classes found in source files — these come from
@@ -170,7 +171,8 @@
     margin: 0;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
-    font-family:
+    font-family: var(
+      --font-sans,
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -179,7 +181,8 @@
       Roboto,
       "Helvetica Neue",
       Arial,
-      sans-serif;
+      sans-serif
+    );
   }
 }
 

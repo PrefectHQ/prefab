@@ -1,28 +1,10 @@
-"""Base theme class and accent hue presets."""
+"""Base theme class and Tailwind color palette."""
 
 from __future__ import annotations
 
-from enum import IntEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, field_validator
-
-
-class Accent(IntEnum):
-    """OKLCH hue presets for use with `Basic(accent=Accent.BLUE)` etc."""
-
-    BLUE = 260
-    GREEN = 155
-    RED = 25
-    ORANGE = 55
-    VIOLET = 295
-    ROSE = 350
-    INDIGO = 275
-    CYAN = 215
-    TEAL = 185
-    YELLOW = 85
-    PINK = 340
-
 
 # fmt: off
 _TAILWIND_COLORS: dict[str, str] = {
@@ -103,6 +85,25 @@ def _vars_to_css(d: dict[str, str]) -> str:
     return " ".join(f"--{k}: {v};" for k, v in d.items())
 
 
+_NO_GRADIENT_CSS = """
+.cn-progress-variant-default,
+.cn-progress-variant-success,
+.cn-progress-variant-warning,
+.cn-progress-variant-destructive,
+.cn-progress-variant-info,
+.cn-slider-variant-default,
+.cn-slider-variant-success,
+.cn-slider-variant-warning,
+.cn-slider-variant-destructive,
+.cn-slider-variant-info { background-image: none; }
+.cn-ring-variant-default { stroke: var(--primary); }
+.cn-ring-variant-success { stroke: var(--success); }
+.cn-ring-variant-warning { stroke: var(--warning); }
+.cn-ring-variant-destructive { stroke: var(--destructive); }
+.cn-ring-variant-info { stroke: var(--info); }
+"""
+
+
 def _google_font_import(family: str) -> str:
     """Generate a Google Fonts `@import` for the given family name."""
     encoded = family.replace(" ", "+")
@@ -138,6 +139,7 @@ class Theme(BaseModel):
     accent: float | str | None = None
     font: str | None = None
     font_mono: str | None = None
+    gradient: bool = True
 
     @field_validator("accent", mode="before")
     @classmethod
@@ -190,6 +192,9 @@ class Theme(BaseModel):
         if font_vars:
             light = (light + font_vars).strip()
             dark = (dark + font_vars).strip()
+
+        if not self.gradient:
+            css += _NO_GRADIENT_CSS
 
         result: dict[str, str] = {"light": light, "dark": dark, "css": css}
         if self.mode is not None:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Text
-from prefab_ui.themes import Accent, Basic, Presentation, Theme
+from prefab_ui.themes import Basic, Dashboard, Presentation, Theme
 
 
 class TestThemeModel:
@@ -54,7 +54,7 @@ class TestThemeModel:
 
 
 class TestAccentField:
-    def test_accent_injects_hue_var(self):
+    def test_numeric_accent_injects_hue_var(self):
         theme = Theme(accent=260)
         result = theme.to_json()
         assert "--accent-hue:" in result["light"]
@@ -90,10 +90,26 @@ class TestAccentField:
         result = theme.to_json()
         assert result["light"] == result["dark"]
 
-    def test_accent_enum(self):
-        theme = Theme(accent=Accent.GREEN)
+    def test_string_accent_overrides_primary_and_ring(self):
+        theme = Theme(accent="#ff0000")
         result = theme.to_json()
-        assert str(int(Accent.GREEN)) in result["light"]
+        assert "--primary: #ff0000;" in result["light"]
+        assert "--ring: #ff0000;" in result["light"]
+        assert "--accent-hue" not in result["light"]
+
+    def test_tailwind_color_name_resolved(self):
+        theme = Theme(accent="amber-500")
+        assert theme.accent == "#f59e0b"
+
+    def test_tailwind_bare_name_defaults_to_500(self):
+        theme = Theme(accent="amber")
+        assert theme.accent == "#f59e0b"
+
+    def test_accent_none(self):
+        theme = Theme(accent=None)
+        result = theme.to_json()
+        assert "--accent-hue" not in result["light"]
+        assert "--primary" not in result["light"]
 
 
 class TestModeField:
@@ -111,6 +127,29 @@ class TestModeField:
         theme = Theme(mode="light")
         result = theme.to_json()
         assert result["mode"] == "light"
+
+
+class TestFontField:
+    def test_font_sets_css_var(self):
+        theme = Theme(font="Inter")
+        result = theme.to_json()
+        assert "--font-sans: 'Inter'" in result["light"]
+
+    def test_font_generates_import(self):
+        theme = Theme(font="Inter")
+        result = theme.to_json()
+        assert "@import" in result["css"]
+        assert "Inter" in result["css"]
+
+    def test_font_mono_sets_css_var(self):
+        theme = Theme(font_mono="JetBrains Mono")
+        result = theme.to_json()
+        assert "--font-mono: 'JetBrains Mono'" in result["light"]
+
+    def test_no_font_no_var(self):
+        theme = Theme()
+        result = theme.to_json()
+        assert "--font-sans" not in result["light"]
 
 
 class TestDictBackwardsCompat:
@@ -154,38 +193,65 @@ class TestBasicTheme:
         theme = Basic()
         result = theme.to_json()
         assert "--accent-hue:" not in result["light"]
-        # No OKLCH templates emitted — renderer defaults show through
         assert "oklch" not in result["light"]
 
-    def test_basic_uses_accent_hue_var(self):
-        theme = Basic(accent=Accent.GREEN)
+    def test_basic_with_numeric_accent(self):
+        theme = Basic(accent=155)
         result = theme.to_json()
         assert "var(--accent-hue)" in result["light"]
         assert "var(--accent-hue)" in result["dark"]
 
     def test_basic_has_primary(self):
-        theme = Basic(accent=Accent.BLUE)
+        theme = Basic(accent=260)
         result = theme.to_json()
         assert "--primary:" in result["light"]
         assert "--primary:" in result["dark"]
 
     def test_basic_has_chart_colors(self):
-        theme = Basic(accent=Accent.BLUE)
+        theme = Basic(accent=260)
         result = theme.to_json()
         for i in range(1, 6):
             assert f"--chart-{i}:" in result["light"]
             assert f"--chart-{i}:" in result["dark"]
 
     def test_basic_chart_colors_use_calc_offsets(self):
-        theme = Basic(accent=Accent.BLUE)
+        theme = Basic(accent=260)
         result = theme.to_json()
         assert "calc(var(--accent-hue) + 72)" in result["light"]
         assert "calc(var(--accent-hue) + 288)" in result["dark"]
 
     def test_basic_different_accents_produce_different_css(self):
-        t1 = Basic(accent=Accent.BLUE)
-        t2 = Basic(accent=Accent.GREEN)
+        t1 = Basic(accent=260)
+        t2 = Basic(accent=155)
         assert t1.to_json()["light"] != t2.to_json()["light"]
+
+    def test_basic_with_tailwind_accent(self):
+        theme = Basic(accent="blue")
+        result = theme.to_json()
+        assert "--primary: #3b82f6;" in result["light"]
+
+
+class TestDashboardTheme:
+    def test_dashboard_defaults_to_inter(self):
+        theme = Dashboard()
+        result = theme.to_json()
+        assert "--font-sans: 'Inter'" in result["light"]
+
+    def test_dashboard_has_inter_font(self):
+        theme = Dashboard()
+        result = theme.to_json()
+        assert "--font-sans" in result["light"]
+        assert "Inter" in result["light"]
+
+    def test_dashboard_has_table_styling(self):
+        theme = Dashboard()
+        result = theme.to_json()
+        assert "tabular-nums" in result["css"]
+
+    def test_dashboard_with_accent(self):
+        theme = Dashboard(accent="green")
+        result = theme.to_json()
+        assert "--primary: #22c55e;" in result["light"]
 
 
 class TestPresentationTheme:
@@ -210,6 +276,10 @@ class TestPresentationTheme:
         result = Presentation().to_json()
         assert result["light"] == result["dark"]
 
+    def test_presentation_with_accent(self):
+        result = Presentation(accent="cyan").to_json()
+        assert "--primary: #06b6d4;" in result["light"]
+
 
 class TestPrefabAppTheme:
     def test_theme_in_wire_format(self):
@@ -223,7 +293,7 @@ class TestPrefabAppTheme:
         assert result["theme"]["css"] == ""
 
     def test_builtin_theme_in_wire_format(self):
-        app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=Accent.BLUE))
+        app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=260))
         result = app.to_json()
         assert "--primary:" in result["theme"]["light"]
         assert "--primary:" in result["theme"]["dark"]
@@ -234,7 +304,7 @@ class TestPrefabAppTheme:
         assert "theme" not in result
 
     def test_theme_in_html_output(self):
-        app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=Accent.BLUE))
+        app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=260))
         html = app.html()
         assert '"theme":{' in html
 
@@ -305,7 +375,7 @@ class TestThemeImport:
 
         assert ThemesPresentation is Presentation
 
-    def test_accent_importable_from_themes(self):
-        from prefab_ui.themes import Accent as ThemesAccent
+    def test_dashboard_importable_from_themes(self):
+        from prefab_ui.themes import Dashboard as ThemesDashboard
 
-        assert ThemesAccent is Accent
+        assert ThemesDashboard is Dashboard

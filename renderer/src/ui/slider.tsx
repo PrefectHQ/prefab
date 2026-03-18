@@ -31,6 +31,7 @@ function Slider({
   max = 100,
   step,
   variant,
+  size = "default",
   indicatorClassName,
   handleStyle,
   handleClassName,
@@ -38,6 +39,7 @@ function Slider({
 }: SliderPrimitive.Root.Props &
   VariantProps<typeof sliderRangeVariants> & {
     indicatorClassName?: string;
+    size?: "sm" | "default" | "lg";
     handleStyle?: "circle" | "bar";
     handleClassName?: string;
   }) {
@@ -71,7 +73,7 @@ function Slider({
       thumbAlignment="edge"
       {...props}
     >
-      <SliderPrimitive.Control className="cn-slider relative flex w-full cursor-pointer touch-none items-center select-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col">
+      <SliderPrimitive.Control className={cn("cn-slider relative flex w-full cursor-pointer touch-none items-center select-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col", `cn-slider-size-${size}`)}>
         <SliderPrimitive.Track
           data-slot="slider-track"
           className="cn-slider-track bg-muted relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"

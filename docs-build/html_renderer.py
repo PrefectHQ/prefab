@@ -4,7 +4,7 @@ Takes the dict output of Component.to_json() and produces HTML with Tailwind
 utility classes matching what the real React/shadcn renderer produces. Used by
 render_previews.py and generate_content.py.
 
-Class strings are derived from mcp-apps-renderer/src/style-nova.css (the
+Class strings are derived from mcp-apps-renderer/src/style.css (the
 @apply content of each cn-* class) plus the component TSX files. When shadcn
 is upgraded, update the class mappings here to match.
 """
@@ -15,7 +15,7 @@ from html import escape
 from typing import Any
 
 # ---------------------------------------------------------------------------
-#  Class string constants (from style-nova.css @apply + component cva bases)
+#  Class string constants (from style.css @apply + component cva bases)
 # ---------------------------------------------------------------------------
 
 # Button -------------------------------------------------------------------

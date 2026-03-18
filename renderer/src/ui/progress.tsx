@@ -28,6 +28,7 @@ function Progress({
   target,
   targetClassName,
   variant,
+  size = "default",
   value,
   orientation = "horizontal",
   ...props
@@ -36,17 +37,20 @@ function Progress({
     indicatorClassName?: string;
     target?: number;
     targetClassName?: string;
+    size?: "sm" | "default" | "lg";
     orientation?: "horizontal" | "vertical";
   }) {
   const isVertical = orientation === "vertical";
   const clampedTarget =
     target != null ? Math.max(0, Math.min(100, target)) : undefined;
+  const sizeClass = `cn-progress-size-${size}`;
 
   return (
     <ProgressPrimitive.Root
       value={value}
       className={cn(
         "cn-progress relative overflow-visible rounded-full",
+        sizeClass,
         isVertical
           ? "cn-progress-vertical flex flex-col-reverse"
           : "w-full",
@@ -57,6 +61,7 @@ function Progress({
       <ProgressPrimitive.Track
         className={cn(
           "cn-progress relative flex items-center overflow-hidden rounded-full",
+          sizeClass,
           isVertical ? "h-full w-full" : "w-full",
         )}
       >
