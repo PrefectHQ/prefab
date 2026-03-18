@@ -1,0 +1,135 @@
+---
+title: Custom Handlers
+description: Extend Prefab with developer-authored JavaScript for custom pipes and client-side logic.
+icon: code
+---
+
+Prefab's expression engine and action system cover most UI interactions declaratively. But some patterns — like sliders that sum to 100%, or domain-specific formatting — need custom client-side logic. Custom handlers let you write JavaScript functions that plug into the expression engine (as pipes) and the action dispatcher (as handlers), without breaking the protocol's declarative boundary.
+
+Custom handlers are **host-level configuration**, not protocol. You write the JS as part of your app setup. The protocol references handlers by name only — the generated JSON never contains raw JavaScript.
+
+## Custom Pipes
+
+Register formatting functions that become available in `{{ }}` expressions. Each pipe receives the current value and an optional colon-separated argument, just like built-in pipes.
+
+```python
+from prefab_ui.app import PrefabApp
+
+app = PrefabApp(
+    js_pipes={
+        "ratio": "(value) => Math.round(value) + ':1'",
+        "initials": """(value) => {
+            return String(value).split(' ').map(w => w[0]).join('');
+        }""",
+    },
+    ...
+)
+```
+
+Then use them in any expression:
+
+```python
+Text("{{ task_runs / flow_runs | ratio }}")    # "10:1"
+Text("{{ user_name | initials }}")              # "JL"
+```
+
+Custom pipes follow the same rules as built-in ones — they're synchronous, pure functions. Built-in pipes always take priority, so you can't accidentally shadow `number` or `currency`.
+
+## Custom Action Handlers
+
+Register functions that transform state in response to events. Handlers receive a context object with the current state snapshot and the triggering event, and return an object of state updates to merge.
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.actions import CallHandler
+from prefab_ui.components import Slider
+
+app = PrefabApp(
+    js_actions={
+        "constrainBudget": """(ctx) => {
+            const keys = ['infra', 'people', 'tools'];
+            const changed = ctx.event.key;
+            const newVal = ctx.event.value;
+            const others = keys.filter(k => k !== changed);
+            const remaining = 100 - newVal;
+            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+            const updates = {};
+            for (const k of others) {
+                updates[k] = otherTotal > 0
+                    ? (ctx.state[k] / otherTotal) * remaining
+                    : remaining / others.length;
+            }
+            return updates;
+        }""",
+    },
+    ...
+)
+
+# In your UI:
+Slider(name="infra", on_change=CallHandler("constrainBudget"))
+```
+
+The handler context has three fields:
+
+| Field | Description |
+|-------|-------------|
+| `ctx.state` | Snapshot of the full state at the time the handler fires. Read-only — return updates instead of mutating. |
+| `ctx.event` | The `$event` value from the triggering interaction (slider value, click event, etc.). |
+| `ctx.arguments` | Optional extra arguments from the `CallHandler` action spec. |
+
+The return value is merged into state using the same mechanism as `SetState`. If the handler returns nothing (void/undefined), no state changes happen.
+
+## CallHandler Action
+
+`CallHandler` is the action that invokes a registered handler. It mirrors `CallTool` — where `CallTool` calls a server-side MCP tool, `CallHandler` calls a client-side JavaScript function.
+
+```python
+from prefab_ui.actions import CallHandler
+
+# Basic usage
+Button(on_click=CallHandler("refresh"))
+
+# With extra arguments
+Button(on_click=CallHandler(
+    "processData",
+    arguments={"format": "csv"},
+))
+
+# Chained with other actions
+Button(on_click=[
+    SetState("loading", True),
+    CallHandler("validate"),
+])
+```
+
+The handler's return value is available as `$result` in `onSuccess` callbacks, just like `CallTool`:
+
+```python
+Button(on_click=CallHandler(
+    "compute",
+    on_success=SetState("result", "{{ $result.total }}"),
+    on_error=ShowToast("Computation failed", variant="error"),
+))
+```
+
+## API Reference
+
+<Card icon="code" title="PrefabApp Fields">
+<ParamField body="js_pipes" type="dict[str, str] | None" default="None">
+  Custom pipe functions. Keys are pipe names, values are JavaScript function expressions. Each function receives `(value, arg?)` and returns the transformed value.
+</ParamField>
+
+<ParamField body="js_actions" type="dict[str, str] | None" default="None">
+  Custom action handlers. Keys are handler names, values are JavaScript function expressions. Each function receives `(ctx)` with `{state, event, arguments}` and returns state updates to merge.
+</ParamField>
+</Card>
+
+<Card icon="code" title="CallHandler Parameters">
+<ParamField body="handler" type="str" required>
+  Name of the registered handler function.
+</ParamField>
+
+<ParamField body="arguments" type="dict | None" default="None">
+  Extra arguments passed to the handler via `ctx.arguments`. Supports template expressions.
+</ParamField>
+</Card>

@@ -27,6 +27,8 @@
  *   `name | 'Anonymous'` → use 'Anonymous' if name is null/undefined.
  */
 
+import { getCustomPipe } from "./custom-handlers";
+
 // ── Pipe Registry ──────────────────────────────────────────────────────
 
 type PipeFn = (value: unknown, arg?: string) => unknown;
@@ -402,7 +404,7 @@ class Parser {
           const argTok = this.advance();
           arg = argTok.value;
         }
-        const fn = pipes[name];
+        const fn = pipes[name] ?? getCustomPipe(name);
         if (fn) {
           value = fn(value, arg);
         }

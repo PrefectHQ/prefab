@@ -128,6 +128,13 @@ export const setIntervalSchema = z.object({
   ...actionCallbacks,
 });
 
+export const callHandlerSchema = z.object({
+  action: z.literal("callHandler"),
+  handler: z.string(),
+  arguments: z.record(z.string(), z.unknown()).optional(),
+  ...actionCallbacks,
+});
+
 // ── Union + helpers ─────────────────────────────────────────────────
 
 export const actionSchema = z.discriminatedUnion("action", [
@@ -145,6 +152,7 @@ export const actionSchema = z.discriminatedUnion("action", [
   openFilePickerSchema,
   fetchSchema,
   setIntervalSchema,
+  callHandlerSchema,
 ]);
 
 /** Single action or array of actions — the shape of onClick / onChange / etc. */
@@ -166,6 +174,7 @@ export const HANDLED_ACTIONS = new Set([
   "openFilePicker",
   "fetch",
   "setInterval",
+  "callHandler",
 ] as const);
 
 /**
@@ -187,6 +196,7 @@ export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   openFilePicker: openFilePickerSchema,
   fetch: fetchSchema,
   setInterval: setIntervalSchema,
+  callHandler: callHandlerSchema,
 };
 
 export type ToolCallWire = z.infer<typeof toolCallSchema>;
@@ -203,5 +213,6 @@ export type CloseOverlayWire = z.infer<typeof closeOverlaySchema>;
 export type OpenFilePickerWire = z.infer<typeof openFilePickerSchema>;
 export type FetchWire = z.infer<typeof fetchSchema>;
 export type SetIntervalWire = z.infer<typeof setIntervalSchema>;
+export type CallHandlerWire = z.infer<typeof callHandlerSchema>;
 export type ActionWire = z.infer<typeof actionSchema>;
 export type ActionOrListWire = z.infer<typeof actionOrList>;

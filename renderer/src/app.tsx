@@ -74,6 +74,11 @@ function readInitialData(): {
   }
 }
 
+import { initHandlers } from "./custom-handlers";
+
+// Initialize custom handlers from window.__prefab_handlers.
+initHandlers();
+
 // Parse baked-in data once before React mounts.
 const INITIAL = readInitialData();
 
