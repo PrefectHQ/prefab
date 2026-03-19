@@ -103,11 +103,7 @@ with Column(gap=3):
 </CodeGroup>
 </ComponentPreview>
 
-For rich text with links, lists, or images, use `Markdown` with standard markdown syntax:
-
-```python
-Markdown("**Bold** and *italic* text with [links](https://example.com).")
-```
+For rich text with lists, tables, or images, use `Markdown` with standard markdown syntax.
 
 ## Inline Formatting
 
@@ -147,22 +143,22 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-### Span
+### Span and Link
 
-`Span` is the inline formatting primitive. It carries all the same modifiers as Text, plus `code` for monospace styling and `style` for inline CSS. Use it inside `Text` to style individual words within a sentence.
+`Span` is the inline formatting primitive. It carries all the same modifiers as Text, plus `code` for monospace styling and `style` for inline CSS. `Link` works the same way but renders as an anchor tag with `href`.
 
-Pass mixed strings and Spans to `Text` as positional arguments. Strings auto-wrap as plain spans; you only need `Span` for the parts that need styling:
+Pass mixed strings, Spans, and Links to `Text` as positional arguments. Strings auto-wrap as plain spans:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","children":[{"content":"Click ","code":false,"type":"Span"},{"cssClass":"font-bold underline","content":"here","code":false,"type":"Span"},{"content":" to continue","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Price: ","code":false,"type":"Span"},{"cssClass":"line-through","content":"$9.99","code":false,"type":"Span"},{"content":" ","code":false,"type":"Span"},{"cssClass":"font-bold","content":"$4.99","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Run ","code":false,"type":"Span"},{"cssClass":"font-mono","content":"pip install prefab-ui","code":true,"type":"Span"},{"content":" to get started","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Status: ","code":false,"type":"Span"},{"cssClass":"text-green-500 font-medium","content":"deployed","code":false,"type":"Span"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dCwgU3BhbiwgQ29sdW1uCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KCJDbGljayAiLCBTcGFuKCJoZXJlIiwgYm9sZD1UcnVlLCB1bmRlcmxpbmU9VHJ1ZSksICIgdG8gY29udGludWUiKQogICAgVGV4dCgiUHJpY2U6ICIsIFNwYW4oIiQ5Ljk5Iiwgc3RyaWtldGhyb3VnaD1UcnVlKSwgIiAiLCBTcGFuKCIkNC45OSIsIGJvbGQ9VHJ1ZSkpCiAgICBUZXh0KCJSdW4gIiwgU3BhbigicGlwIGluc3RhbGwgcHJlZmFiLXVpIiwgY29kZT1UcnVlKSwgIiB0byBnZXQgc3RhcnRlZCIpCiAgICBUZXh0KCJTdGF0dXM6ICIsIFNwYW4oImRlcGxveWVkIiwgY3NzX2NsYXNzPSJ0ZXh0LWdyZWVuLTUwMCBmb250LW1lZGl1bSIpKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","children":[{"content":"Click ","code":false,"type":"Span"},{"cssClass":"font-bold underline","content":"here","code":false,"type":"Span"},{"content":" to continue","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Price: ","code":false,"type":"Span"},{"cssClass":"line-through","content":"$9.99","code":false,"type":"Span"},{"content":" ","code":false,"type":"Span"},{"cssClass":"font-bold","content":"$4.99","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Run ","code":false,"type":"Span"},{"cssClass":"font-mono","content":"pip install prefab-ui","code":true,"type":"Span"},{"content":" to get started","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Read the ","code":false,"type":"Span"},{"content":"documentation","code":false,"type":"Link","href":"https://prefab.prefect.io","target":"_blank"},{"content":" for more","code":false,"type":"Span"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dCwgU3BhbiwgTGluaywgQ29sdW1uCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KCJDbGljayAiLCBTcGFuKCJoZXJlIiwgYm9sZD1UcnVlLCB1bmRlcmxpbmU9VHJ1ZSksICIgdG8gY29udGludWUiKQogICAgVGV4dCgiUHJpY2U6ICIsIFNwYW4oIiQ5Ljk5Iiwgc3RyaWtldGhyb3VnaD1UcnVlKSwgIiAiLCBTcGFuKCIkNC45OSIsIGJvbGQ9VHJ1ZSkpCiAgICBUZXh0KCJSdW4gIiwgU3BhbigicGlwIGluc3RhbGwgcHJlZmFiLXVpIiwgY29kZT1UcnVlKSwgIiB0byBnZXQgc3RhcnRlZCIpCiAgICBUZXh0KCJSZWFkIHRoZSAiLCBMaW5rKCJkb2N1bWVudGF0aW9uIiwgaHJlZj0iaHR0cHM6Ly9wcmVmYWIucHJlZmVjdC5pbyIpLCAiIGZvciBtb3JlIikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Text, Span, Column
+from prefab_ui.components import Text, Span, Link, Column
 
 with Column(gap=2):
     Text("Click ", Span("here", bold=True, underline=True), " to continue")
     Text("Price: ", Span("$9.99", strikethrough=True), " ", Span("$4.99", bold=True))
     Text("Run ", Span("pip install prefab-ui", code=True), " to get started")
-    Text("Status: ", Span("deployed", css_class="text-green-500 font-medium"))
+    Text("Read the ", Link("documentation", href="https://prefab.prefect.io"), " for more")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -208,13 +204,15 @@ with Column(gap=2):
       {
         "type": "Text",
         "children": [
-          {"content": "Status: ", "code": false, "type": "Span"},
+          {"content": "Read the ", "code": false, "type": "Span"},
           {
-            "cssClass": "text-green-500 font-medium",
-            "content": "deployed",
+            "content": "documentation",
             "code": false,
-            "type": "Span"
-          }
+            "type": "Link",
+            "href": "https://prefab.prefect.io",
+            "target": "_blank"
+          },
+          {"content": " for more", "code": false, "type": "Span"}
         ]
       }
     ]
@@ -290,6 +288,21 @@ Text("Click ", Span("here", bold=True), " to continue")
 </ParamField>
 <ParamField body="style" type="dict[str, str] | None" default="None">
   Inline CSS styles as a dict of property/value pairs.
+</ParamField>
+</Card>
+
+<Card icon="code" title="Link">
+<ParamField body="href" type="str" required>
+  URL to navigate to.
+</ParamField>
+<ParamField body="target" type="str | None" default="'_blank'">
+  Link target: `_blank` (new tab) or `_self` (same tab).
+</ParamField>
+<ParamField body="code" type="bool" default="False">
+  Render as inline code link.
+</ParamField>
+<ParamField body="style" type="dict[str, str] | None" default="None">
+  Inline CSS styles.
 </ParamField>
 </Card>
 

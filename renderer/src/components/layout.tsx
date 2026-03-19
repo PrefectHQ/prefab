@@ -141,6 +141,11 @@ interface SpanProps extends DivProps {
   italic?: boolean;
 }
 
+interface LinkProps extends SpanProps {
+  href?: string;
+  target?: string;
+}
+
 interface DashboardProps extends LayoutProps {
   columns?: number;
   rowHeight?: number | string;
@@ -227,5 +232,40 @@ export function Span({
     >
       {children ?? content ?? text}
     </Tag>
+  );
+}
+
+export function Link({
+  className,
+  cssClass,
+  style,
+  children,
+  content,
+  text,
+  href,
+  target,
+  code,
+  bold,
+  italic,
+}: LinkProps) {
+  const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+  return (
+    <a
+      href={href}
+      target={target ?? undefined}
+      rel={rel}
+      className={cn(
+        "font-medium text-primary underline underline-offset-4",
+        code &&
+          "cn-code relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+      style={style}
+    >
+      {children ?? content ?? text}
+    </a>
   );
 }
