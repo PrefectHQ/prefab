@@ -15,7 +15,13 @@ const typographyBase = componentBase.extend({
   italic: z.boolean().optional(),
 });
 
-export const textSchema = typographyBase.extend({ type: z.literal("Text") });
+export const textSchema = componentBase.extend({
+  type: z.literal("Text"),
+  content: z.string().optional(),
+  bold: z.boolean().optional(),
+  italic: z.boolean().optional(),
+  children: z.array(z.any()).optional(),
+});
 
 export const headingSchema = typographyBase.extend({
   type: z.literal("Heading"),

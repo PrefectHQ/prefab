@@ -6,8 +6,8 @@ from typing import Any, Literal, overload
 
 from pydantic import Field
 
-from prefab_ui.components.base import Component, ContainerComponent
-from prefab_ui.rx import RxStr
+from prefab_ui.components.base import ContainerComponent
+from prefab_ui.components.typography import _text_init, _TextComponent
 
 
 class Div(ContainerComponent):
@@ -35,16 +35,19 @@ class Div(ContainerComponent):
     )
 
 
-class Span(Component):
-    """An inline text element with no default styling.
+class Span(_TextComponent):
+    """An inline text element with text modifiers.
+
+    Supports bold, italic, underline, strikethrough, uppercase, lowercase,
+    plus arbitrary CSS via `css_class` or `style`.
 
     Example::
 
         Span("14m ago", css_class="text-sm text-muted-foreground")
+        Span("important", bold=True, underline=True)
     """
 
     type: Literal["Span"] = "Span"
-    content: RxStr = Field(description="Text content")
     style: dict[str, str] | None = Field(
         default=None, description="Inline CSS styles as a dict of property/value pairs."
     )
@@ -56,6 +59,4 @@ class Span(Component):
     def __init__(self, *, content: str, **kwargs: Any) -> None: ...
 
     def __init__(self, content: str | None = None, **kwargs: Any) -> None:
-        if content is not None:
-            kwargs["content"] = content
-        super().__init__(**kwargs)
+        _text_init(self, content, **kwargs)

@@ -30,6 +30,10 @@ class _TextComponent(Component):
     content: RxStr = Field(description="Text content")
     bold: bool | None = Field(default=None, exclude=True)
     italic: bool | None = Field(default=None, exclude=True)
+    underline: bool | None = Field(default=None, exclude=True)
+    strikethrough: bool | None = Field(default=None, exclude=True)
+    uppercase: bool | None = Field(default=None, exclude=True)
+    lowercase: bool | None = Field(default=None, exclude=True)
     align: TextAlign = Field(default=None, exclude=True)
 
     @overload
@@ -50,6 +54,14 @@ class _TextComponent(Component):
             parts.append("font-bold")
         if self.italic:
             parts.append("italic")
+        if self.underline:
+            parts.append("underline")
+        if self.strikethrough:
+            parts.append("line-through")
+        if self.uppercase:
+            parts.append("uppercase")
+        if self.lowercase:
+            parts.append("lowercase")
         if self.align is not None:
             parts.append(f"text-{self.align}")
         if parts:

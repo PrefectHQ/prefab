@@ -1762,47 +1762,52 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    H1,\n    H2,\n    P,\n    Lead,\n    Muted,\n    Column,\n)\n\nwith Column(gap=4):\n    H1(\"Dashboard\")\n    Lead(\"Monitor your application metrics and performance.\")\n    P(\"Everything you need to manage your MCP server, organized in one place.\")\n    Muted(\"Last updated 5 minutes ago\")"
+    "code": "from prefab_ui.components import H1, Lead, P, Muted, Column\n\nwith Column(gap=4):\n    H1(\"Dashboard\")\n    Lead(\"Monitor your application metrics and performance.\")\n    P(\"Everything you need to manage your MCP server, organized in one place.\")\n    Muted(\"Last updated 5 minutes ago\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    H1,\n    H2,\n    H3,\n    H4,\n    Column,\n)\n\nwith Column(gap=4):\n    H1(\"H1 — Page Title\")\n    H2(\"H2 — Section Heading\")\n    H3(\"H3 — Subsection\")\n    H4(\"H4 — Detail Heading\")"
+    "code": "from prefab_ui.components import H1, H2, H3, H4, Column\n\nwith Column(gap=4):\n    H1(\"H1: Page Title\")\n    H2(\"H2: Section Heading\")\n    H3(\"H3: Subsection\")\n    H4(\"H4: Detail Heading\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    P,\n    Lead,\n    Large,\n    Column,\n)\n\nwith Column(gap=4):\n    Lead(\"A comprehensive guide to building MCP applications with FastMCP.\")\n    P(\"FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.\")\n    Large(\"Key Takeaway: Components compose naturally.\")"
+    "code": "from prefab_ui.components import P, Lead, Large, Text, Column\n\nwith Column(gap=3):\n    Lead(\"A comprehensive guide to building with Prefab.\")\n    P(\"Prefab provides a complete toolkit for building interactive frontends.\")\n    Large(\"Key Takeaway: Components compose naturally.\")\n    Text(\"Plain unstyled text for when you need full control.\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    Small,\n    Muted,\n    Column,\n)\n\nwith Column(gap=3):\n    Small(\"Terms and conditions apply\")\n    Muted(\"Last updated 5 minutes ago\")"
+    "code": "from prefab_ui.components import Small, Muted, BlockQuote, Column\n\nwith Column(gap=3):\n    Small(\"Terms and conditions apply\")\n    Muted(\"Last updated 5 minutes ago\")\n    BlockQuote(\"The best way to predict the future is to invent it.\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import BlockQuote\n\nBlockQuote(\"The best way to predict the future is to invent it.\")"
+    "code": "from prefab_ui.components import Text, InlineCode, Span\n\nText(\"Run \", InlineCode(\"pip install prefab-ui\"), \" to get started.\")"
+  },
+  {
+    "title": "from prefab_ui.components import Markdown",
+    "category": "Components",
+    "code": "Markdown(\"**Bold** and *italic* text with [links](https://example.com).\")"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    InlineCode,\n    P,\n    Row,\n)\n\nwith Row(gap=2, css_class=\"items-center\"):\n    P(\"Run\")\n    InlineCode(\"pip install prefab-ui\")\n    P(\"to get started.\")"
-  },
-  {
-    "title": "Simpler Alternatives",
-    "category": "Components",
-    "code": "from prefab_ui.components import (\n    Text,\n    Markdown,\n    Heading,\n)\n\nText(\"Plain paragraph with no default styling.\")\nHeading(\"Section Title\", level=2)\nMarkdown(\"**Bold** and *italic* text with [links](https://example.com).\")"
+    "code": "from prefab_ui.components import P, Text, Column\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    P(\"Underlined text.\", underline=True)\n    Text(\"Strikethrough text.\", strikethrough=True)\n    Text(\"UPPERCASE\", uppercase=True)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    P,\n    Text,\n    Column,\n)\n\nwith Column(gap=2):\n    P(\"Regular paragraph text.\")\n    P(\"This is bold.\", bold=True)\n    P(\"This is italic.\", italic=True)\n    Text(\"Bold and italic combined.\", bold=True, italic=True)"
+    "code": "from prefab_ui.components import Text, Span, Column\n\nwith Column(gap=2):\n    Text(\"Click \", Span(\"here\", bold=True, underline=True), \" to continue\")\n    Text(\"Price: \", Span(\"$9.99\", strikethrough=True), \" \", Span(\"$4.99\", bold=True))\n    Text(\"Status: \", Span(\"deployed\", css_class=\"text-green-500 font-medium\"))"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import (\n    H2,\n    P,\n    Muted,\n    Column,\n)\n\nwith Column(gap=2):\n    H2(\"Welcome Back\", align=\"center\")\n    P(\n        \"Your dashboard is ready.\",\n        align=\"center\",\n    )\n    Muted(\n        \"Last login: February 19, 2026\",\n        align=\"right\",\n    )"
+    "code": "from prefab_ui.components import H2, P, Muted, Column\n\nwith Column(gap=2):\n    H2(\"Welcome Back\", align=\"center\")\n    P(\"Your dashboard is ready.\", align=\"center\")\n    Muted(\"Last login: February 19, 2026\", align=\"right\")"
+  },
+  {
+    "title": "Text(\"plain string\")",
+    "category": "Components",
+    "code": "Text(\"Click \", Span(\"here\", bold=True), \" to continue\")"
   },
   {
     "title": "Python icon=\"python\"",
