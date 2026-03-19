@@ -30,6 +30,7 @@ import { interpolateProps } from "./interpolation";
 import { validateAction } from "./validation";
 import { readFiles, filterByAccept } from "./file-utils";
 import { evaluateCondition } from "./conditions";
+import { getCustomActionHandler } from "./custom-handlers";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -469,6 +470,27 @@ export async function executeAction(
         activeIntervals.add(intervalId);
 
         // Fire-and-forget: return immediately
+        break;
+      }
+
+      case "callHandler": {
+        const handlerName = resolved.handler as string;
+        const handlerFn = getCustomActionHandler(handlerName);
+        if (!handlerFn) {
+          success = false;
+          errorMessage = `Unknown handler: "${handlerName}"`;
+          break;
+        }
+        const handlerCtx = {
+          state: { ...state.getAll() },
+          event,
+          arguments: resolved.arguments as Record<string, unknown> | undefined,
+        };
+        const updates = handlerFn(handlerCtx);
+        if (updates && typeof updates === "object") {
+          state.merge(updates);
+          resultData = updates;
+        }
         break;
       }
     }

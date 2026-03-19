@@ -22,6 +22,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import Action
+from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
 from prefab_ui.actions.mcp import (
@@ -197,6 +198,7 @@ def discover_components() -> dict[str, type[Component]]:
 def discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
+        CallHandler,
         CallTool,
         RequestDisplayMode,
         SendMessage,

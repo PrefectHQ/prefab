@@ -31,6 +31,7 @@ Most real interactions use both. A "Save" button typically sets a loading flag (
 | `ShowToast` | Display a brief notification |
 | `OpenLink` | Open a URL |
 | `SetInterval` | Schedule an action to repeat on a timer |
+| `CallHandler` | Invoke a developer-registered JavaScript handler |
 
 | Server actions | Purpose |
 |----------------|---------|
@@ -207,6 +208,20 @@ CallTool(
     ],
 )
 ```
+
+## Custom handlers
+
+`CallHandler` invokes a developer-registered JavaScript function client-side. Where `CallTool` crosses the network to your server, `CallHandler` runs instantly in the browser — useful for state transformations that are too complex for expressions but don't need server involvement.
+
+Register handlers via `js_actions` on `PrefabApp`, then reference them by name:
+
+```python
+from prefab_ui.actions import CallHandler
+
+Slider(name="infra", on_change=CallHandler("constrainBudget"))
+```
+
+The handler receives `{state, event, arguments}` and returns state updates to merge. See [Custom Handlers](/concepts/custom-handlers) for the full API, including custom pipes.
 
 ## Common patterns
 

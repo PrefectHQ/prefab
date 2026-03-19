@@ -1,0 +1,36 @@
+---
+title: CallHandler
+description: JSON Schema for the CallHandler action.
+---
+
+Invoke a developer-registered JavaScript handler by name.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "callHandler",
+      "default": "callHandler",
+      "type": "string"
+    },
+    "handler": {
+      "description": "Name of the registered handler function",
+      "type": "string"
+    },
+    "arguments": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Extra arguments passed to the handler"
+    }
+  },
+  "required": [
+    "action",
+    "handler"
+  ]
+}
+```

@@ -157,6 +157,14 @@ class PrefabApp(BaseModel):
         default=None,
         description="Domains to allow in CSP connect-src (for Fetch actions)",
     )
+    js_pipes: dict[str, str] | None = Field(
+        default=None,
+        description="Custom JS pipe functions: name → function expression",
+    )
+    js_actions: dict[str, str] | None = Field(
+        default=None,
+        description="Custom JS action handlers: name → function expression",
+    )
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -238,6 +246,23 @@ class PrefabApp(BaseModel):
         if self.scripts:
             for url in self.scripts:
                 head_parts.append(f'  <script src="{url}"></script>')
+
+        if self.js_pipes or self.js_actions:
+            handler_parts = []
+            if self.js_pipes:
+                pipe_entries = ",\n    ".join(
+                    f"{name}: {body}" for name, body in self.js_pipes.items()
+                )
+                handler_parts.append(f"  pipes: {{\n    {pipe_entries}\n  }}")
+            if self.js_actions:
+                action_entries = ",\n    ".join(
+                    f"{name}: {body}" for name, body in self.js_actions.items()
+                )
+                handler_parts.append(f"  actions: {{\n    {action_entries}\n  }}")
+            obj = ",\n".join(handler_parts)
+            head_parts.append(
+                f"  <script>\nwindow.__prefab_handlers = {{\n{obj}\n}};\n  </script>"
+            )
 
         data_json = json.dumps(
             self.to_json(tool_resolver=tool_resolver),

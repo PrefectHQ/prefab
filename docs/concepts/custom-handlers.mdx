@@ -1,0 +1,354 @@
+---
+title: Custom Handlers
+description: Extend Prefab with developer-authored JavaScript for custom pipes and client-side logic.
+icon: code
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Prefab's expression engine and action system cover most UI interactions declaratively. But some patterns — like sliders that sum to 100%, or domain-specific formatting — need custom client-side logic. Custom handlers let you write JavaScript functions that plug into the expression engine (as pipes) and the action dispatcher (as handlers), without breaking the protocol's declarative boundary.
+
+Custom handlers are **host-level configuration**, not protocol. You write the JS as part of your app setup. The protocol references handlers by name only — the generated JSON never contains raw JavaScript.
+
+## Custom Pipes
+
+Register formatting functions that become available in `{{ }}` expressions. Each pipe receives the current value and an optional colon-separated argument, just like built-in pipes. Drag the slider to see the `stars` pipe update live:
+
+{/* NOTE: The js_pipes shown in these previews are auto-injected on this docs
+   page via custom-pipes-demo.js (Mintlify limitation — previews can't run
+   PrefabApp.html()). The code below is what you'd write in a real app.
+   Do not remove the js_pipes from the Python examples — they show users the
+   full picture even though the preview ignores them. */}
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":3.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJyYXRpbmciLCB2YWx1ZT0zLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgICAgIFRleHQoInt7IHJhdGluZyB8IHN0YXJzIH19IiwgYm9sZD1UcnVlKQoKYXBwID0gUHJlZmFiQXBwKAogICAgdmlldz12aWV3LAogICAganNfcGlwZXM9ewogICAgICAgICJzdGFycyI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBuID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgY29uc3QgZnVsbCA9IE1hdGguZmxvb3Iobik7CiAgICAgICAgICAgIGNvbnN0IGhhbGYgPSBuICUgMSA-PSAwLjUgPyAxIDogMDsKICAgICAgICAgICAgY29uc3QgZW1wdHkgPSA1IC0gZnVsbCAtIGhhbGY7CiAgICAgICAgICAgIHJldHVybiAn4piFJy5yZXBlYXQoZnVsbCkgKyAoaGFsZiA_ICfCvScgOiAnJykgKyAn4piGJy5yZXBlYXQoZW1wdHkpOwogICAgICAgIH0iIiIsCiAgICB9LAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Row, Slider, Text
+
+with Column(gap=2) as view:
+    with Row(css_class="items-center gap-4"):
+        Slider(name="rating", value=3, min=0, max=5, step=0.5)
+        Text("{{ rating | stars }}", bold=True)
+
+app = PrefabApp(
+    view=view,
+    js_pipes={
+        "stars": """(value) => {
+            const n = Number(value);
+            const full = Math.floor(n);
+            const half = n % 1 >= 0.5 ? 1 : 0;
+            const empty = 5 - full - half;
+            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+        }""",
+    },
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-4",
+        "type": "Row",
+        "children": [
+          {
+            "name": "rating",
+            "type": "Slider",
+            "min": 0.0,
+            "max": 5.0,
+            "value": 3.0,
+            "step": 0.5,
+            "disabled": false,
+            "size": "default"
+          },
+          {"cssClass": "font-bold", "content": "{{ rating | stars }}", "type": "Text"}
+        ]
+      }
+    ]
+  },
+  "state": {"rating": 3.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The `tempColor` pipe adds contextual emoji based on the value:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","type":"Slider","min":32.0,"max":120.0,"value":72.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJ0ZW1wIiwgdmFsdWU9NzIsIG1pbj0zMiwgbWF4PTEyMCwgc3RlcD0xKQogICAgICAgIFRleHQoInt7IHRlbXAgfCB0ZW1wQ29sb3IgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgInRlbXBDb2xvciI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBmID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgaWYgKGYgPj0gMTAwKSByZXR1cm4gZiArICfCsEYg8J-UpSc7CiAgICAgICAgICAgIGlmIChmID49IDgwKSByZXR1cm4gZiArICfCsEYg4piA77iPJzsKICAgICAgICAgICAgaWYgKGYgPj0gNjApIHJldHVybiBmICsgJ8KwRiDwn4yk77iPJzsKICAgICAgICAgICAgcmV0dXJuIGYgKyAnwrBGIOKdhO-4jyc7CiAgICAgICAgfSIiIiwKICAgIH0sCikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Row, Slider, Text
+
+with Column(gap=2) as view:
+    with Row(css_class="items-center gap-4"):
+        Slider(name="temp", value=72, min=32, max=120, step=1)
+        Text("{{ temp | tempColor }}", bold=True)
+
+app = PrefabApp(
+    view=view,
+    js_pipes={
+        "tempColor": """(value) => {
+            const f = Number(value);
+            if (f >= 100) return f + '°F 🔥';
+            if (f >= 80) return f + '°F ☀️';
+            if (f >= 60) return f + '°F 🌤️';
+            return f + '°F ❄️';
+        }""",
+    },
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-4",
+        "type": "Row",
+        "children": [
+          {
+            "name": "temp",
+            "type": "Slider",
+            "min": 32.0,
+            "max": 120.0,
+            "value": 72.0,
+            "step": 1.0,
+            "disabled": false,
+            "size": "default"
+          },
+          {"cssClass": "font-bold", "content": "{{ temp | tempColor }}", "type": "Text"}
+        ]
+      }
+    ]
+  },
+  "state": {"temp": 72.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The `initials` pipe extracts first letters. Type a name to see it update:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","type":"Input","inputType":"text","placeholder":"Type a name...","value":"Arthur Dent","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MikgYXMgdmlldzoKICAgIElucHV0KG5hbWU9ImZ1bGxfbmFtZSIsIHZhbHVlPSJBcnRodXIgRGVudCIsIHBsYWNlaG9sZGVyPSJUeXBlIGEgbmFtZS4uLiIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMiIpOgogICAgICAgIFRleHQoIkluaXRpYWxzOiIpCiAgICAgICAgVGV4dCgie3sgZnVsbF9uYW1lIHwgaW5pdGlhbHMgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgImluaXRpYWxzIjogIiIiKHZhbHVlKSA9PiB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmcodmFsdWUpLnNwbGl0KCcgJykubWFwKHcgPT4gd1swXSkuam9pbignJykudG9VcHBlckNhc2UoKTsKICAgICAgICB9IiIiLAogICAgfSwKKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Input, Row, Text
+
+with Column(gap=2) as view:
+    Input(name="full_name", value="Arthur Dent", placeholder="Type a name...")
+    with Row(css_class="items-center gap-2"):
+        Text("Initials:")
+        Text("{{ full_name | initials }}", bold=True)
+
+app = PrefabApp(
+    view=view,
+    js_pipes={
+        "initials": """(value) => {
+            return String(value).split(' ').map(w => w[0]).join('').toUpperCase();
+        }""",
+    },
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "name": "full_name",
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Type a name...",
+        "value": "Arthur Dent",
+        "disabled": false,
+        "readOnly": false,
+        "required": false
+      },
+      {
+        "cssClass": "items-center gap-2",
+        "type": "Row",
+        "children": [
+          {"content": "Initials:", "type": "Text"},
+          {
+            "cssClass": "font-bold",
+            "content": "{{ full_name | initials }}",
+            "type": "Text"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"full_name": "Arthur Dent"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Custom pipes follow the same rules as built-in ones — they're synchronous, pure functions. Built-in pipes always take priority, so you can't accidentally shadow `number` or `currency`.
+
+## Custom Action Handlers
+
+Register functions that transform state in response to events. Handlers receive a context object with the current state snapshot and the triggering event, and return an object of state updates to merge.
+
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.actions import CallHandler
+from prefab_ui.components import Slider
+
+app = PrefabApp(
+    js_actions={
+        "constrainBudget": """(ctx) => {
+            const keys = ['infra', 'people', 'tools'];
+            const changed = ctx.arguments.key;
+            const newVal = ctx.event;
+            const others = keys.filter(k => k !== changed);
+            const remaining = 100 - newVal;
+            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+            const updates = {};
+            for (const k of others) {
+                updates[k] = otherTotal > 0
+                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                    : Math.round(remaining / others.length);
+            }
+            return updates;
+        }""",
+    },
+    ...
+)
+
+# In your UI — pass the slider's key so the handler knows which changed:
+Slider(
+    name="infra",
+    on_change=CallHandler("constrainBudget", arguments={"key": "infra"}),
+)
+```
+
+The handler context has three fields:
+
+| Field | Description |
+|-------|-------------|
+| `ctx.state` | Snapshot of the full state at the time the handler fires. Read-only — return updates instead of mutating. |
+| `ctx.event` | The `$event` value from the triggering interaction (slider value, click event, etc.). |
+| `ctx.arguments` | Optional extra arguments from the `CallHandler` action spec. |
+
+The return value is merged into state using the same mechanism as `SetState`. If the handler returns nothing (void/undefined), no state changes happen.
+
+## CallHandler Action
+
+`CallHandler` is the action that invokes a registered handler. It mirrors `CallTool` — where `CallTool` calls a server-side MCP tool, `CallHandler` calls a client-side JavaScript function.
+
+```python
+from prefab_ui.actions import CallHandler
+
+# Basic usage
+Button(on_click=CallHandler("refresh"))
+
+# With extra arguments
+Button(on_click=CallHandler(
+    "processData",
+    arguments={"format": "csv"},
+))
+
+# Chained with other actions
+Button(on_click=[
+    SetState("loading", True),
+    CallHandler("validate"),
+])
+```
+
+The handler's return value is available as `$result` in `onSuccess` callbacks, just like `CallTool`:
+
+```python
+Button(on_click=CallHandler(
+    "compute",
+    on_success=SetState("result", "{{ $result.total }}"),
+    on_error=ShowToast("Computation failed", variant="error"),
+))
+```
+
+## Example: Linked Sliders
+
+Three budget sliders constrained to sum to 100%. Moving one redistributes the others proportionally. This is the kind of client-side coordination that expressions can't do — you need a function that knows about all the sliders and can compute the redistribution.
+
+```python
+from prefab_ui.app import PrefabApp, set_initial_state
+from prefab_ui.actions import CallHandler
+from prefab_ui.components import Card, CardContent, Column, Row, Slider, Text
+
+set_initial_state(infra=40, people=35, tools=25)
+
+with Card():
+    with CardContent():
+        with Column(gap=4):
+            for label, key in [
+                ("Infrastructure", "infra"),
+                ("People", "people"),
+                ("Tools", "tools"),
+            ]:
+                with Column(gap=1):
+                    with Row(css_class="justify-between"):
+                        Text(label)
+                        Text(f"{{{{ {key} | round }}}}%", bold=True)
+                    Slider(
+                        name=key, max=100, step=1,
+                        on_change=CallHandler(
+                            "constrain",
+                            arguments={"key": key},
+                        ),
+                    )
+
+            with Row(css_class="justify-between pt-4 border-t"):
+                Text("Total", bold=True)
+                Text("{{ infra + people + tools | round }}%", bold=True)
+
+app = PrefabApp(
+    js_actions={
+        "constrain": """(ctx) => {
+            const keys = ['infra', 'people', 'tools'];
+            const changed = ctx.arguments.key;
+            const newVal = ctx.event;
+            const others = keys.filter(k => k !== changed);
+            const remaining = 100 - newVal;
+            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+            const updates = {};
+            for (const k of others) {
+                updates[k] = otherTotal > 0
+                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                    : Math.round(remaining / others.length);
+            }
+            return updates;
+        }""",
+    },
+)
+```
+
+Run it with `uv run python examples/linked_sliders.py` to see it in action. The handler runs client-side on every drag — no server round-trip, no lag.
+
+## API Reference
+
+<Card icon="code" title="PrefabApp Fields">
+<ParamField body="js_pipes" type="dict[str, str] | None" default="None">
+  Custom pipe functions. Keys are pipe names, values are JavaScript function expressions. Each function receives `(value, arg?)` and returns the transformed value.
+</ParamField>
+
+<ParamField body="js_actions" type="dict[str, str] | None" default="None">
+  Custom action handlers. Keys are handler names, values are JavaScript function expressions. Each function receives `(ctx)` with `{state, event, arguments}` and returns state updates to merge.
+</ParamField>
+</Card>
+
+<Card icon="code" title="CallHandler Parameters">
+<ParamField body="handler" type="str" required>
+  Name of the registered handler function.
+</ParamField>
+
+<ParamField body="arguments" type="dict | None" default="None">
+  Extra arguments passed to the handler via `ctx.arguments`. Supports template expressions.
+</ParamField>
+</Card>
