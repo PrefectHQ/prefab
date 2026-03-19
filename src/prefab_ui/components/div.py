@@ -8,6 +8,7 @@ from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent
 from prefab_ui.components.typography import _text_init, _TextComponent
+from prefab_ui.rx import RxStr
 
 
 class Div(ContainerComponent):
@@ -51,6 +52,41 @@ class Span(_TextComponent):
     type: Literal["Span"] = "Span"
     # Override _TextComponent.code: Span sends it to the renderer (changes <span> to <code>),
     # while other text components just get font-mono via CSS.
+    code: bool = Field(
+        default=False, description="Render as inline code with monospace font"
+    )
+    align: None = Field(default=None, exclude=True)
+    style: dict[str, str] | None = Field(
+        default=None, description="Inline CSS styles as a dict of property/value pairs."
+    )
+
+    @overload
+    def __init__(self, content: str, /, **kwargs: Any) -> None: ...
+
+    @overload
+    def __init__(self, *, content: str, **kwargs: Any) -> None: ...
+
+    def __init__(self, content: str | None = None, **kwargs: Any) -> None:
+        _text_init(self, content, **kwargs)
+
+
+class Link(_TextComponent):
+    """An inline link that renders as an anchor tag.
+
+    Use inside Text for inline links within prose:
+
+    Example::
+
+        Link("Prefab docs", href="https://prefab.prefect.io")
+        Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    """
+
+    type: Literal["Link"] = "Link"
+    href: RxStr = Field(description="URL to navigate to")
+    target: str | None = Field(
+        default="_blank",
+        description="Link target: '_blank' (new tab), '_self' (same tab)",
+    )
     code: bool = Field(
         default=False, description="Render as inline code with monospace font"
     )
