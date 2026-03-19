@@ -1972,46 +1972,6 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Column, Progress, Row, Text,\n)\n\nstate = set_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(state.revenue.currency())\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=(state.revenue / state.target * 100), max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(f\"{(state.revenue / state.target).percent(1)} of target\")\n                Badge(f\"{state.growth.percent(1)} YoY\", variant=\"secondary\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Row, Text,\n)\n\nstate = set_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(state.starts.date(\"long\"))\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(state.starts.time(), variant=\"outline\")\n            Text(state.starts.datetime())"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardHeader, CardTitle, Column, Text,\n)\n\nstate = set_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house\"\n    \" was about to be demolished, his planet destroyed, and his best friend\"\n    \" was an alien from Betelgeuse.\",\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(state.name.upper())\n    with CardContent():\n        with Column(gap=2):\n            Badge(state.name.lower(), variant=\"secondary\")\n            Text(state.bio.truncate(80))"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {state.todos.selectattr('name').first()}\")\n    Text(f\"All: {state.todos.selectattr('name').join(', ')}\")"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Text\n\nwith Column(gap=2, let={\"greeting\": \"Don't Panic\", \"name\": \"Arthur\"}):\n    Text(\"{{ greeting }}, {{ name }}\")\n    with Column(let={\"name\": \"Ford\"}):\n        Text(\"{{ greeting }}, {{ name }}\")"
-  },
-  {
-    "title": "from prefab_ui.components import Text",
-    "category": "Concepts",
-    "code": "from prefab_ui.components.control_flow import ForEach\n\nwith ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
-  },
-  {
-    "title": "CallTool(",
-    "category": "Concepts",
-    "code": "\"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n)"
-  },
-  {
-    "title": "with ForEach(\"users\"):",
-    "category": "Concepts",
-    "code": "Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=CallTool(\"edit_user\", arguments={\"user\": \"{{ $item }}\"}))"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Button, Row, Badge\nfrom prefab_ui.actions import SetState\n\nset_initial_state(count=0)\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Badge(\"{{ count }}\", variant=\"{{ count > 0 ? 'success' : 'destructive' }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
   },
   {
@@ -2055,29 +2015,44 @@
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Column, Row, Switch, Text\n\nstate = set_initial_state(active=True)\n\nwith Column(gap=2):\n    with Row(gap=3, align=\"center\"):\n        Switch(name=\"active\")\n        Text(state.active.then(\"Online\", \"Offline\"))"
   },
   {
-    "title": "from prefab_ui.rx import Rx",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "revenue = Rx(\"revenue\")   # state value: 2847500\n\nrevenue.currency()         # {{ revenue | currency }}       → $2,847,500.00\nrevenue.currency(\"EUR\")    # {{ revenue | currency:EUR }}   → €2,847,500.00\nrevenue.number()           # {{ revenue | number }}         → 2,847,500\nrevenue.number(1)          # {{ revenue | number:1 }}       → 2,847,500.0\nrevenue.percent()          # {{ revenue | percent }}        → 284,750,000%\nrevenue.percent(2)         # {{ revenue | percent:2 }}      → 284,750,000.00%\nrevenue.compact()          # {{ revenue | compact }}        → 2.8M\nrevenue.compact(0)         # {{ revenue | compact:0 }}      → 3M\nrevenue.round(2)           # {{ revenue | round:2 }}        → 2847500.00\nrevenue.abs()              # {{ revenue | abs }}            → absolute value"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Column, Progress, Row, Text,\n)\n\nstate = set_initial_state(revenue=2847500, target=3000000, growth=0.124)\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Q4 Revenue\")\n        CardDescription(state.revenue.currency())\n    with CardContent():\n        with Column(gap=2):\n            Progress(value=(state.revenue / state.target * 100), max=100)\n            with Row(gap=2, align=\"center\"):\n                Text(f\"{(state.revenue / state.target).percent(1)} of target\")\n                Badge(f\"{state.growth.percent(1)} YoY\", variant=\"secondary\")"
   },
   {
-    "title": "starts = Rx(\"starts\")      # state value: \"2025-03-15T09:30:00Z\"",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "starts.date()              # {{ starts | date }}           → Mar 15, 2025\nstarts.date(\"short\")       # {{ starts | date:short }}     → 3/15/25\nstarts.date(\"long\")        # {{ starts | date:long }}      → March 15, 2025\nstarts.time()              # {{ starts | time }}           → 9:30 AM\nstarts.datetime()          # {{ starts | datetime }}       → Mar 15, 2025, 9:30 AM"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardDescription,\n    CardHeader, CardTitle, Row, Text,\n)\n\nstate = set_initial_state(starts=\"2025-01-15T14:30:00Z\")\n\nwith Card():\n    with CardHeader():\n        CardTitle(\"Team Standup\")\n        CardDescription(state.starts.date(\"long\"))\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Badge(state.starts.time(), variant=\"outline\")\n            Text(state.starts.datetime())"
   },
   {
-    "title": "name = Rx(\"name\")          # state value: \"arthur dent\"",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "name.upper()               # {{ name | upper }}            → ARTHUR DENT\nname.lower()               # {{ name | lower }}            → arthur dent\nname.truncate(10)          # {{ name | truncate:10 }}      → arthur den…"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge, Card, CardContent, CardHeader, CardTitle, Column, Text,\n)\n\nstate = set_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house\"\n    \" was about to be demolished, his planet destroyed, and his best friend\"\n    \" was an alien from Betelgeuse.\",\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(state.name.upper())\n    with CardContent():\n        with Column(gap=2):\n            Badge(state.name.lower(), variant=\"secondary\")\n            Text(state.bio.truncate(80))"
   },
   {
-    "title": "todos = Rx(\"todos\")        # state value: [{done: true, text: \"...\"}, ...]",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "todos.length()             # {{ todos | length }}           → 3\ntodos.first()              # {{ todos | first }}            → first item\ntodos.last()               # {{ todos | last }}             → last item\ntodos.join(\", \")           # {{ todos | join:', ' }}        → items as string\ntodos.selectattr(\"done\")   # {{ todos | selectattr:done }}  → truthy items\ntodos.rejectattr(\"done\")   # {{ todos | rejectattr:done }}  → falsy items"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {state.todos.selectattr('name').first()}\")\n    Text(f\"All: {state.todos.selectattr('name').join(', ')}\")"
   },
   {
-    "title": "todos = Rx(\"todos\")",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "# Count incomplete items\ntodos.rejectattr(\"done\").length()\n# → {{ todos | rejectattr:done | length }}\n\n# Format with default\nRx(\"score\").default(0).number()\n# → {{ score | default:0 | number }}"
+    "code": "from prefab_ui.components import Column, Text\n\nwith Column(gap=2, let={\"greeting\": \"Don't Panic\", \"name\": \"Arthur\"}):\n    Text(\"{{ greeting }}, {{ name }}\")\n    with Column(let={\"name\": \"Ford\"}):\n        Text(\"{{ greeting }}, {{ name }}\")"
+  },
+  {
+    "title": "from prefab_ui.components import Text",
+    "category": "Concepts",
+    "code": "from prefab_ui.components.control_flow import ForEach\n\nwith ForEach(\"groups\", let={\"gi\": \"{{ $index }}\"}):\n    with ForEach(\"groups.{{ gi }}.todos\"):\n        Text(\"Group {{ gi }}, item {{ $index }}\")"
+  },
+  {
+    "title": "CallTool(",
+    "category": "Concepts",
+    "code": "\"save_data\",\n    on_error=ShowToast(\"Failed: {{ $error }}\", variant=\"error\"),\n)"
+  },
+  {
+    "title": "with ForEach(\"users\"):",
+    "category": "Concepts",
+    "code": "Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=CallTool(\"edit_user\", arguments={\"user\": \"{{ $item }}\"}))"
   },
   {
     "title": "from prefab_ui.app import set_initial_state",
