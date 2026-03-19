@@ -136,6 +136,9 @@ export function Div({ className, cssClass, style, children }: DivProps) {
 interface SpanProps extends DivProps {
   content?: string;
   text?: string;
+  code?: boolean;
+  bold?: boolean;
+  italic?: boolean;
 }
 
 interface DashboardProps extends LayoutProps {
@@ -205,10 +208,24 @@ export function Span({
   children,
   content,
   text,
+  code,
+  bold,
+  italic,
 }: SpanProps) {
+  const Tag = code ? "code" : "span";
   return (
-    <span className={cn(className, cssClass)} style={style}>
+    <Tag
+      className={cn(
+        code &&
+          "cn-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
+        bold && "font-bold",
+        italic && "italic",
+        className,
+        cssClass,
+      )}
+      style={style}
+    >
       {children ?? content ?? text}
-    </span>
+    </Tag>
   );
 }

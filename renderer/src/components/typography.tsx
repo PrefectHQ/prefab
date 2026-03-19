@@ -210,29 +210,6 @@ export function Muted({
   );
 }
 
-export function InlineCode({
-  className,
-  cssClass,
-  bold,
-  italic,
-  children,
-  ...props
-}: TextProps) {
-  return (
-    <code
-      className={cn(
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
-        bold && "font-bold",
-        italic && "italic",
-        className,
-        cssClass,
-      )}
-    >
-      {children ?? props.text ?? props.content}
-    </code>
-  );
-}
-
 export function BlockQuote({
   className,
   cssClass,

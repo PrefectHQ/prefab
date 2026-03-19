@@ -110,7 +110,6 @@ import {
   Large,
   Small,
   Muted,
-  InlineCode,
   BlockQuote,
 } from "./typography";
 import { Embed } from "./embed";
@@ -263,7 +262,6 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Large,
   Small,
   Muted,
-  InlineCode,
   BlockQuote,
 
   // Content (lazy — highlight.js, react-markdown)

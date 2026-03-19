@@ -139,7 +139,6 @@ export function mapProps(
     type === "Large" ||
     type === "Small" ||
     type === "Muted" ||
-    type === "InlineCode" ||
     type === "BlockQuote" ||
     type === "H1" ||
     type === "H2" ||

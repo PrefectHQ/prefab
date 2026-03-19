@@ -15,7 +15,13 @@ const typographyBase = componentBase.extend({
   italic: z.boolean().optional(),
 });
 
-export const textSchema = typographyBase.extend({ type: z.literal("Text") });
+export const textSchema = componentBase.extend({
+  type: z.literal("Text"),
+  content: z.string().optional(),
+  bold: z.boolean().optional(),
+  italic: z.boolean().optional(),
+  children: z.array(z.any()).optional(),
+});
 
 export const headingSchema = typographyBase.extend({
   type: z.literal("Heading"),
@@ -36,10 +42,6 @@ export const mutedSchema = typographyBase.extend({ type: z.literal("Muted") });
 export const blockQuoteSchema = typographyBase.extend({
   type: z.literal("BlockQuote"),
 });
-export const inlineCodeSchema = typographyBase.extend({
-  type: z.literal("InlineCode"),
-});
-
 export type H1Wire = z.infer<typeof h1Schema>;
 export type H2Wire = z.infer<typeof h2Schema>;
 export type H3Wire = z.infer<typeof h3Schema>;
@@ -50,4 +52,3 @@ export type LargeWire = z.infer<typeof largeSchema>;
 export type SmallWire = z.infer<typeof smallSchema>;
 export type MutedWire = z.infer<typeof mutedSchema>;
 export type BlockQuoteWire = z.infer<typeof blockQuoteSchema>;
-export type InlineCodeWire = z.infer<typeof inlineCodeSchema>;

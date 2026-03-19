@@ -181,11 +181,15 @@ finally:
     _PgComponent.model_post_init = _pg_real_post_init
     _PrefabApp.__init__ = _pg_real_app_init
 
-# Find root components (not children of any container or DataTable row)
+# Find root components (not children of any container, Text, or DataTable row)
 from prefab_ui.components.data_table import DataTable as _PgDataTable
+from prefab_ui.components.text import Text as _PgText
 _pg_all_children = set()
 for _c in _pg_created:
     if isinstance(_c, ContainerComponent):
+        for _ch in _c.children:
+            _pg_all_children.add(id(_ch))
+    if isinstance(_c, _PgText) and _c.children:
         for _ch in _c.children:
             _pg_all_children.add(id(_ch))
     if isinstance(_c, _PgDataTable) and isinstance(_c.rows, list):

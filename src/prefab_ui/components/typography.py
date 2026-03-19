@@ -30,6 +30,11 @@ class _TextComponent(Component):
     content: RxStr = Field(description="Text content")
     bold: bool | None = Field(default=None, exclude=True)
     italic: bool | None = Field(default=None, exclude=True)
+    underline: bool | None = Field(default=None, exclude=True)
+    strikethrough: bool | None = Field(default=None, exclude=True)
+    uppercase: bool | None = Field(default=None, exclude=True)
+    lowercase: bool | None = Field(default=None, exclude=True)
+    code: bool | None = Field(default=None, exclude=True)
     align: TextAlign = Field(default=None, exclude=True)
 
     @overload
@@ -50,6 +55,16 @@ class _TextComponent(Component):
             parts.append("font-bold")
         if self.italic:
             parts.append("italic")
+        if self.underline:
+            parts.append("underline")
+        if self.strikethrough:
+            parts.append("line-through")
+        if self.uppercase:
+            parts.append("uppercase")
+        if self.lowercase:
+            parts.append("lowercase")
+        if self.code:
+            parts.append("font-mono")
         if self.align is not None:
             parts.append(f"text-{self.align}")
         if parts:
@@ -257,27 +272,6 @@ class BlockQuote(_TextComponent):
     """
 
     type: Literal["BlockQuote"] = "BlockQuote"
-
-    @overload
-    def __init__(self, content: str, /, **kwargs: Any) -> None: ...
-
-    @overload
-    def __init__(self, *, content: str, **kwargs: Any) -> None: ...
-
-    def __init__(self, content: str | None = None, **kwargs: Any) -> None:
-        _text_init(self, content, **kwargs)
-
-
-class InlineCode(_TextComponent):
-    """Inline code snippet.
-
-    Example::
-
-        InlineCode("npm install")
-        InlineCode("{{ command }}")
-    """
-
-    type: Literal["InlineCode"] = "InlineCode"
 
     @overload
     def __init__(self, content: str, /, **kwargs: Any) -> None: ...

@@ -386,10 +386,12 @@ def _should_rebuild_playground(repo_root: Path) -> bool:
     if not (repo_root / "docs" / "playground.html").exists():
         return True
     hf = repo_root / "renderer" / ".playground-hash"
+    # Hash ALL renderer source, not just playground/ — CSS, components, and
+    # themes all affect the compiled playground.html.
     return not (
         hf.exists()
         and hf.read_text().strip()
-        == _source_content_hash(repo_root / "renderer" / "src" / "playground")
+        == _source_content_hash(repo_root / "renderer" / "src")
     )
 
 
@@ -538,9 +540,8 @@ def build_docs() -> None:
             renderer_dir / "dist" / "playground.html",
             repo_root / "docs" / "playground.html",
         )
-        playground_src = repo_root / "renderer" / "src" / "playground"
         hash_file = repo_root / "renderer" / ".playground-hash"
-        hash_file.write_text(_source_content_hash(playground_src))
+        hash_file.write_text(_source_content_hash(renderer_dir / "src"))
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
@@ -584,9 +585,7 @@ def build_playground() -> None:
         repo_root / "docs" / "playground.html",
     )
     hash_file = repo_root / "renderer" / ".playground-hash"
-    hash_file.write_text(
-        _source_content_hash(repo_root / "renderer" / "src" / "playground")
-    )
+    hash_file.write_text(_source_content_hash(repo_root / "renderer" / "src"))
     console.print("[bold green]✓[/bold green] Playground rebuilt")
 
 

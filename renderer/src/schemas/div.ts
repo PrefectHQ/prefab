@@ -10,6 +10,9 @@ export const spanSchema = componentBase.extend({
   type: z.literal("Span"),
   content: z.string(),
   style: z.record(z.string(), z.string()).optional(),
+  code: z.boolean().optional(),
+  bold: z.boolean().optional(),
+  italic: z.boolean().optional(),
 });
 
 export type DivWire = z.infer<typeof divSchema>;
