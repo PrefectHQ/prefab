@@ -2,9 +2,9 @@
  * Custom handler registry — developer-registered pipes and action handlers.
  *
  * The host app registers custom handlers by assigning `window.__prefab_handlers`
- * before the renderer initializes. This module reads that global once at startup
- * and exposes lookup functions for the expression engine (pipes) and action
- * dispatcher (action handlers).
+ * before the renderer initializes. Lookup functions read from the global lazily
+ * on each call, so handlers can be registered at any time (before or after the
+ * renderer mounts).
  *
  * Custom pipes extend the `{{ value | pipeName }}` syntax.
  * Custom action handlers are invoked by the `callHandler` action.
@@ -30,36 +30,29 @@ interface PrefabHandlers {
   actions?: Record<string, ActionHandlerFn>;
 }
 
-let handlers: PrefabHandlers = {};
-
-/**
- * Read custom handlers from `window.__prefab_handlers`.
- * Call once at startup before React mounts.
- */
-export function initHandlers(): void {
+/** Read the handler registry from the global. */
+function getHandlers(): PrefabHandlers {
   const w = globalThis as unknown as Record<string, unknown>;
-  const raw = w.__prefab_handlers as PrefabHandlers | undefined;
-  if (raw && typeof raw === "object") {
-    handlers = raw;
-  }
+  return (w.__prefab_handlers as PrefabHandlers) ?? {};
 }
 
 /** Look up a custom pipe by name. Returns undefined if not registered. */
 export function getCustomPipe(name: string): PipeFn | undefined {
-  return handlers.pipes?.[name];
+  return getHandlers().pipes?.[name];
 }
 
 /** Look up a custom action handler by name. Returns undefined if not registered. */
 export function getCustomActionHandler(
   name: string,
 ): ActionHandlerFn | undefined {
-  return handlers.actions?.[name];
+  return getHandlers().actions?.[name];
 }
 
 /**
- * Reset handlers (for testing).
+ * Override handlers (for testing).
  * @internal
  */
 export function _resetHandlers(overrides?: PrefabHandlers): void {
-  handlers = overrides ?? {};
+  const w = globalThis as unknown as Record<string, unknown>;
+  w.__prefab_handlers = overrides ?? {};
 }

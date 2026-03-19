@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
-  initHandlers,
   getCustomPipe,
   getCustomActionHandler,
   _resetHandlers,
@@ -10,17 +9,15 @@ import { evaluate } from "./expression";
 describe("custom-handlers", () => {
   afterEach(() => {
     _resetHandlers();
-    delete (globalThis as Record<string, unknown>).__prefab_handlers;
   });
 
-  describe("initHandlers", () => {
+  describe("lazy lookup", () => {
     it("reads pipes from window.__prefab_handlers", () => {
       (globalThis as Record<string, unknown>).__prefab_handlers = {
         pipes: {
           double: (value: unknown) => Number(value) * 2,
         },
       };
-      initHandlers();
       const fn = getCustomPipe("double");
       expect(fn).toBeDefined();
       expect(fn!(10)).toBe(20);
@@ -34,7 +31,6 @@ describe("custom-handlers", () => {
           }),
         },
       };
-      initHandlers();
       const fn = getCustomActionHandler("myAction");
       expect(fn).toBeDefined();
       expect(fn!({ state: { x: 42 }, event: undefined })).toEqual({
@@ -43,17 +39,14 @@ describe("custom-handlers", () => {
     });
 
     it("returns undefined for unregistered pipe", () => {
-      initHandlers();
       expect(getCustomPipe("nonexistent")).toBeUndefined();
     });
 
     it("returns undefined for unregistered action", () => {
-      initHandlers();
       expect(getCustomActionHandler("nonexistent")).toBeUndefined();
     });
 
     it("handles missing window.__prefab_handlers gracefully", () => {
-      initHandlers();
       expect(getCustomPipe("anything")).toBeUndefined();
       expect(getCustomActionHandler("anything")).toBeUndefined();
     });

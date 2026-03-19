@@ -1,7 +1,7 @@
 """Linked sliders that sum to 100% — demonstrates CallHandler.
 
 Run with:
-    uv run prefab serve examples/linked_sliders.py
+    uv run prefab serve examples/budget-allocator/app.py
 
 Five budget sliders. Moving one proportionally adjusts the others
 so the total always equals 100.

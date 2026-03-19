@@ -22,7 +22,8 @@ window.__prefab_handlers = {
       return String(value)
         .split(" ")
         .map((w) => w[0])
-        .join("");
+        .join("")
+        .toUpperCase();
     },
   },
 };

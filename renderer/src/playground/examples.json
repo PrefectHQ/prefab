@@ -1935,24 +1935,19 @@
     "code": "from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Row, Text\n\nwith Card(css_class=\"w-48\") as view:\n    with CardHeader():\n        with Row(gap=2):\n            CardTitle(\"API Server\")\n            Badge(\"Healthy\", variant=\"success\")\n    with CardContent():\n        Text(\"Uptime: 99.97%\")"
   },
   {
-    "title": "from prefab_ui.app import PrefabApp",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "app = PrefabApp(\n    js_pipes={\n        \"stars\": \"\"\"(value) => {\n            const n = Number(value);\n            const full = Math.floor(n);\n            const half = n % 1 >= 0.5 ? 1 : 0;\n            const empty = 5 - full - half;\n            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);\n        }\"\"\",\n        \"tempColor\": \"\"\"(value) => {\n            const f = Number(value);\n            if (f >= 100) return f + '°F 🔥';\n            if (f >= 80) return f + '°F ☀️';\n            if (f >= 60) return f + '°F 🌤️';\n            return f + '°F ❄️';\n        }\"\"\",\n        \"initials\": \"\"\"(value) => {\n            return String(value).split(' ').map(w => w[0]).join('');\n        }\"\"\",\n    },\n    ...\n)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2) as view:\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"rating\", value=3, min=0, max=5, step=0.5)\n        Text(\"{{ rating | stars }}\", bold=True)\n\napp = PrefabApp(\n    view=view,\n    js_pipes={\n        \"stars\": \"\"\"(value) => {\n            const n = Number(value);\n            const full = Math.floor(n);\n            const half = n % 1 >= 0.5 ? 1 : 0;\n            const empty = 5 - full - half;\n            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);\n        }\"\"\",\n    },\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2):\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"rating\", value=3, min=0, max=5, step=0.5)\n        Text(\"{{ rating | stars }}\", bold=True)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2) as view:\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"temp\", value=72, min=32, max=120, step=1)\n        Text(\"{{ temp | tempColor }}\", bold=True)\n\napp = PrefabApp(\n    view=view,\n    js_pipes={\n        \"tempColor\": \"\"\"(value) => {\n            const f = Number(value);\n            if (f >= 100) return f + '°F 🔥';\n            if (f >= 80) return f + '°F ☀️';\n            if (f >= 60) return f + '°F 🌤️';\n            return f + '°F ❄️';\n        }\"\"\",\n    },\n)"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2):\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"temp\", value=72, min=32, max=120, step=1)\n        Text(\"{{ temp | tempColor }}\", bold=True)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Concepts",
-    "code": "from prefab_ui.components import Column, Input, Row, Text\n\nwith Column(gap=2):\n    Input(name=\"full_name\", value=\"Arthur Dent\", placeholder=\"Type a name...\")\n    with Row(css_class=\"items-center gap-2\"):\n        Text(\"Initials:\")\n        Text(\"{{ full_name | initials }}\", bold=True)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Input, Row, Text\n\nwith Column(gap=2) as view:\n    Input(name=\"full_name\", value=\"Arthur Dent\", placeholder=\"Type a name...\")\n    with Row(css_class=\"items-center gap-2\"):\n        Text(\"Initials:\")\n        Text(\"{{ full_name | initials }}\", bold=True)\n\napp = PrefabApp(\n    view=view,\n    js_pipes={\n        \"initials\": \"\"\"(value) => {\n            return String(value).split(' ').map(w => w[0]).join('').toUpperCase();\n        }\"\"\",\n    },\n)"
   },
   {
     "title": "from prefab_ui.app import PrefabApp",

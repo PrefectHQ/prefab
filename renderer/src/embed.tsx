@@ -13,11 +13,7 @@ import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
-import { initHandlers } from "./custom-handlers";
 import { resolveTheme, buildThemeCss } from "./themes";
-
-// Read custom pipes/actions from window.__prefab_handlers (if set by host page).
-initHandlers();
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
