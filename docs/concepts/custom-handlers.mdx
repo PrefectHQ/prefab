@@ -17,7 +17,20 @@ from prefab_ui.app import PrefabApp
 
 app = PrefabApp(
     js_pipes={
-        "ratio": "(value) => Math.round(value) + ':1'",
+        "stars": """(value) => {
+            const n = Number(value);
+            const full = Math.floor(n);
+            const half = n % 1 >= 0.5 ? 1 : 0;
+            const empty = 5 - full - half;
+            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+        }""",
+        "tempColor": """(value) => {
+            const f = Number(value);
+            if (f >= 100) return f + '°F 🔥';
+            if (f >= 80) return f + '°F ☀️';
+            if (f >= 60) return f + '°F 🌤️';
+            return f + '°F ❄️';
+        }""",
         "initials": """(value) => {
             return String(value).split(' ').map(w => w[0]).join('');
         }""",
@@ -26,12 +39,140 @@ app = PrefabApp(
 )
 ```
 
-Then use them in any expression:
+Then use them in any expression. Drag the slider to see `stars` update live:
 
-```python
-Text("{{ task_runs / flow_runs | ratio }}")    # "10:1"
-Text("{{ user_name | initials }}")              # "JL"
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","type":"Slider","min":0.0,"max":5.0,"value":3.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTQiKToKICAgICAgICBTbGlkZXIobmFtZT0icmF0aW5nIiwgdmFsdWU9MywgbWluPTAsIG1heD01LCBzdGVwPTAuNSkKICAgICAgICBUZXh0KCJ7eyByYXRpbmcgfCBzdGFycyB9fSIsIGJvbGQ9VHJ1ZSkK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Row, Slider, Text
+
+with Column(gap=2):
+    with Row(css_class="items-center gap-4"):
+        Slider(name="rating", value=3, min=0, max=5, step=0.5)
+        Text("{{ rating | stars }}", bold=True)
 ```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-4",
+        "type": "Row",
+        "children": [
+          {
+            "name": "rating",
+            "type": "Slider",
+            "min": 0.0,
+            "max": 5.0,
+            "value": 3.0,
+            "step": 0.5,
+            "disabled": false,
+            "size": "default"
+          },
+          {"cssClass": "font-bold", "content": "{{ rating | stars }}", "type": "Text"}
+        ]
+      }
+    ]
+  },
+  "state": {"rating": 3.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The `tempColor` pipe adds contextual emoji based on the value:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","type":"Slider","min":32.0,"max":120.0,"value":72.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTQiKToKICAgICAgICBTbGlkZXIobmFtZT0idGVtcCIsIHZhbHVlPTcyLCBtaW49MzIsIG1heD0xMjAsIHN0ZXA9MSkKICAgICAgICBUZXh0KCJ7eyB0ZW1wIHwgdGVtcENvbG9yIH19IiwgYm9sZD1UcnVlKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Row, Slider, Text
+
+with Column(gap=2):
+    with Row(css_class="items-center gap-4"):
+        Slider(name="temp", value=72, min=32, max=120, step=1)
+        Text("{{ temp | tempColor }}", bold=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "items-center gap-4",
+        "type": "Row",
+        "children": [
+          {
+            "name": "temp",
+            "type": "Slider",
+            "min": 32.0,
+            "max": 120.0,
+            "value": 72.0,
+            "step": 1.0,
+            "disabled": false,
+            "size": "default"
+          },
+          {"cssClass": "font-bold", "content": "{{ temp | tempColor }}", "type": "Text"}
+        ]
+      }
+    ]
+  },
+  "state": {"temp": 72.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The `initials` pipe extracts first letters. Type a name to see it update:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","type":"Input","inputType":"text","placeholder":"Type a name...","value":"Arthur Dent","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBJbnB1dChuYW1lPSJmdWxsX25hbWUiLCB2YWx1ZT0iQXJ0aHVyIERlbnQiLCBwbGFjZWhvbGRlcj0iVHlwZSBhIG5hbWUuLi4iKQogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIgZ2FwLTIiKToKICAgICAgICBUZXh0KCJJbml0aWFsczoiKQogICAgICAgIFRleHQoInt7IGZ1bGxfbmFtZSB8IGluaXRpYWxzIH19IiwgYm9sZD1UcnVlKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Row, Text
+
+with Column(gap=2):
+    Input(name="full_name", value="Arthur Dent", placeholder="Type a name...")
+    with Row(css_class="items-center gap-2"):
+        Text("Initials:")
+        Text("{{ full_name | initials }}", bold=True)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {
+        "name": "full_name",
+        "type": "Input",
+        "inputType": "text",
+        "placeholder": "Type a name...",
+        "value": "Arthur Dent",
+        "disabled": false,
+        "readOnly": false,
+        "required": false
+      },
+      {
+        "cssClass": "items-center gap-2",
+        "type": "Row",
+        "children": [
+          {"content": "Initials:", "type": "Text"},
+          {
+            "cssClass": "font-bold",
+            "content": "{{ full_name | initials }}",
+            "type": "Text"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"full_name": "Arthur Dent"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
 
 Custom pipes follow the same rules as built-in ones — they're synchronous, pure functions. Built-in pipes always take priority, so you can't accidentally shadow `number` or `currency`.
 

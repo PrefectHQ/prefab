@@ -1937,12 +1937,22 @@
   {
     "title": "from prefab_ui.app import PrefabApp",
     "category": "Concepts",
-    "code": "app = PrefabApp(\n    js_pipes={\n        \"ratio\": \"(value) => Math.round(value) + ':1'\",\n        \"initials\": \"\"\"(value) => {\n            return String(value).split(' ').map(w => w[0]).join('');\n        }\"\"\",\n    },\n    ...\n)"
+    "code": "app = PrefabApp(\n    js_pipes={\n        \"stars\": \"\"\"(value) => {\n            const n = Number(value);\n            const full = Math.floor(n);\n            const half = n % 1 >= 0.5 ? 1 : 0;\n            const empty = 5 - full - half;\n            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);\n        }\"\"\",\n        \"tempColor\": \"\"\"(value) => {\n            const f = Number(value);\n            if (f >= 100) return f + '°F 🔥';\n            if (f >= 80) return f + '°F ☀️';\n            if (f >= 60) return f + '°F 🌤️';\n            return f + '°F ❄️';\n        }\"\"\",\n        \"initials\": \"\"\"(value) => {\n            return String(value).split(' ').map(w => w[0]).join('');\n        }\"\"\",\n    },\n    ...\n)"
   },
   {
-    "title": "Text(\"{{ task_runs / flow_runs | ratio }}\")    # \"10:1\"",
+    "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "Text(\"{{ user_name | initials }}\")              # \"JL\""
+    "code": "from prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2):\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"rating\", value=3, min=0, max=5, step=0.5)\n        Text(\"{{ rating | stars }}\", bold=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Concepts",
+    "code": "from prefab_ui.components import Column, Row, Slider, Text\n\nwith Column(gap=2):\n    with Row(css_class=\"items-center gap-4\"):\n        Slider(name=\"temp\", value=72, min=32, max=120, step=1)\n        Text(\"{{ temp | tempColor }}\", bold=True)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Concepts",
+    "code": "from prefab_ui.components import Column, Input, Row, Text\n\nwith Column(gap=2):\n    Input(name=\"full_name\", value=\"Arthur Dent\", placeholder=\"Type a name...\")\n    with Row(css_class=\"items-center gap-2\"):\n        Text(\"Initials:\")\n        Text(\"{{ full_name | initials }}\", bold=True)"
   },
   {
     "title": "from prefab_ui.app import PrefabApp",
