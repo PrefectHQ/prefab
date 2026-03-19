@@ -93,7 +93,7 @@ export const DEMO_TREE: ComponentNode = {
     { type: "Large", content: "Large text for emphasis." },
     { type: "Small", content: "Small text for fine print and metadata." },
     { type: "Muted", content: "Muted text for secondary information." },
-    { type: "InlineCode", content: "InlineCode: const x = 42" },
+    { type: "Span", content: "const x = 42", code: true },
     {
       type: "BlockQuote",
       content: "BlockQuote — Design is not just what it looks like.",

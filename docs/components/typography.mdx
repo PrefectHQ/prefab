@@ -1,26 +1,17 @@
 ---
 title: Typography
-description: Semantic text components styled with shadcn/ui conventions.
+description: Text components for headings, body copy, and inline formatting.
 icon: font
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Typography components give you semantic heading and body text styles that follow shadcn/ui conventions — proper font sizes, weights, tracking, and color that automatically adapts to dark mode. Every component accepts a content string as a positional argument and supports `{{ field }}` interpolation.
+Every text component accepts a content string as a positional argument and supports `{{ field }}` interpolation. Styles adapt automatically to dark mode.
 
-## Basic Usage
-
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgSDEsCiAgICBIMiwKICAgIFAsCiAgICBMZWFkLAogICAgTXV0ZWQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD00KToKICAgIEgxKCJEYXNoYm9hcmQiKQogICAgTGVhZCgiTW9uaXRvciB5b3VyIGFwcGxpY2F0aW9uIG1ldHJpY3MgYW5kIHBlcmZvcm1hbmNlLiIpCiAgICBQKCJFdmVyeXRoaW5nIHlvdSBuZWVkIHRvIG1hbmFnZSB5b3VyIE1DUCBzZXJ2ZXIsIG9yZ2FuaXplZCBpbiBvbmUgcGxhY2UuIikKICAgIE11dGVkKCJMYXN0IHVwZGF0ZWQgNSBtaW51dGVzIGFnbyIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"Dashboard","type":"H1"},{"content":"Monitor your application metrics and performance.","type":"Lead"},{"content":"Everything you need to manage your MCP server, organized in one place.","type":"P"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgSDEsIExlYWQsIFAsIE11dGVkLCBDb2x1bW4KCndpdGggQ29sdW1uKGdhcD00KToKICAgIEgxKCJEYXNoYm9hcmQiKQogICAgTGVhZCgiTW9uaXRvciB5b3VyIGFwcGxpY2F0aW9uIG1ldHJpY3MgYW5kIHBlcmZvcm1hbmNlLiIpCiAgICBQKCJFdmVyeXRoaW5nIHlvdSBuZWVkIHRvIG1hbmFnZSB5b3VyIE1DUCBzZXJ2ZXIsIG9yZ2FuaXplZCBpbiBvbmUgcGxhY2UuIikKICAgIE11dGVkKCJMYXN0IHVwZGF0ZWQgNSBtaW51dGVzIGFnbyIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    H1,
-    H2,
-    P,
-    Lead,
-    Muted,
-    Column,
-)
+from prefab_ui.components import H1, Lead, P, Muted, Column
 
 with Column(gap=4):
     H1("Dashboard")
@@ -48,101 +39,38 @@ with Column(gap=4):
 </CodeGroup>
 </ComponentPreview>
 
-## Headings
+## Text Components
 
-Four heading levels with decreasing size and weight. H2 includes a subtle bottom border for section separation.
+Prefab has a text component for every level of the visual hierarchy. They all share the same API: positional content, formatting kwargs (bold, italic, underline, etc.), and `css_class` for anything else.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"H1 \u2014 Page Title","type":"H1"},{"content":"H2 \u2014 Section Heading","type":"H2"},{"content":"H3 \u2014 Subsection","type":"H3"},{"content":"H4 \u2014 Detail Heading","type":"H4"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgSDEsCiAgICBIMiwKICAgIEgzLAogICAgSDQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD00KToKICAgIEgxKCJIMSDigJQgUGFnZSBUaXRsZSIpCiAgICBIMigiSDIg4oCUIFNlY3Rpb24gSGVhZGluZyIpCiAgICBIMygiSDMg4oCUIFN1YnNlY3Rpb24iKQogICAgSDQoIkg0IOKAlCBEZXRhaWwgSGVhZGluZyIpCg">
+| Component | Purpose |
+|-----------|---------|
+| `H1`, `H2`, `H3`, `H4` | Headings with decreasing size and weight |
+| `Heading(level=n)` | Dynamic heading level from a variable |
+| `P` | Standard paragraph text |
+| `Lead` | Larger, muted text for introductions |
+| `Large` | Emphasized text with bolder weight |
+| `Small` | Smaller text for metadata and fine print |
+| `Muted` | Secondary-color text for less prominent information |
+| `Text` | Unstyled span, the most flexible building block |
+| `BlockQuote` | Indented border for quotations |
+| `Markdown` | Renders markdown syntax (bold, links, lists, images) |
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Page Title","type":"H1"},{"content":"Section Heading","type":"H2"},{"content":"Subsection","type":"H3"},{"content":"Introductory text that sets context for what follows.","type":"Lead"},{"content":"Standard paragraph text for the main content of your UI.","type":"P"},{"content":"Key Takeaway: Components compose naturally.","type":"Large"},{"content":"Terms and conditions apply","type":"Small"},{"content":"Last updated 5 minutes ago","type":"Muted"},{"content":"The best way to predict the future is to invent it.","type":"BlockQuote"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgSDEsIEgyLCBIMywgUCwgTGVhZCwgTGFyZ2UsIFNtYWxsLCBNdXRlZCwgQmxvY2tRdW90ZSwgQ29sdW1uCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBIMSgiUGFnZSBUaXRsZSIpCiAgICBIMigiU2VjdGlvbiBIZWFkaW5nIikKICAgIEgzKCJTdWJzZWN0aW9uIikKICAgIExlYWQoIkludHJvZHVjdG9yeSB0ZXh0IHRoYXQgc2V0cyBjb250ZXh0IGZvciB3aGF0IGZvbGxvd3MuIikKICAgIFAoIlN0YW5kYXJkIHBhcmFncmFwaCB0ZXh0IGZvciB0aGUgbWFpbiBjb250ZW50IG9mIHlvdXIgVUkuIikKICAgIExhcmdlKCJLZXkgVGFrZWF3YXk6IENvbXBvbmVudHMgY29tcG9zZSBuYXR1cmFsbHkuIikKICAgIFNtYWxsKCJUZXJtcyBhbmQgY29uZGl0aW9ucyBhcHBseSIpCiAgICBNdXRlZCgiTGFzdCB1cGRhdGVkIDUgbWludXRlcyBhZ28iKQogICAgQmxvY2tRdW90ZSgiVGhlIGJlc3Qgd2F5IHRvIHByZWRpY3QgdGhlIGZ1dHVyZSBpcyB0byBpbnZlbnQgaXQuIikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    H1,
-    H2,
-    H3,
-    H4,
-    Column,
-)
-
-with Column(gap=4):
-    H1("H1 — Page Title")
-    H2("H2 — Section Heading")
-    H3("H3 — Subsection")
-    H4("H4 — Detail Heading")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {"content": "H1 \u2014 Page Title", "type": "H1"},
-      {"content": "H2 \u2014 Section Heading", "type": "H2"},
-      {"content": "H3 \u2014 Subsection", "type": "H3"},
-      {"content": "H4 \u2014 Detail Heading", "type": "H4"}
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Body Text
-
-`P` gives you standard paragraph text with comfortable line height. `Lead` is larger and muted for introductory text, while `Large` emphasizes key information with bolder weight.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"content":"A comprehensive guide to building MCP applications with FastMCP.","type":"Lead"},{"content":"FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.","type":"P"},{"content":"Key Takeaway: Components compose naturally.","type":"Large"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgUCwKICAgIExlYWQsCiAgICBMYXJnZSwKICAgIENvbHVtbiwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgTGVhZCgiQSBjb21wcmVoZW5zaXZlIGd1aWRlIHRvIGJ1aWxkaW5nIE1DUCBhcHBsaWNhdGlvbnMgd2l0aCBGYXN0TUNQLiIpCiAgICBQKCJGYXN0TUNQIHByb3ZpZGVzIGEgY29tcGxldGUgdG9vbGtpdCBmb3IgYnVpbGRpbmcgYW5kIGRlcGxveWluZyBNQ1Agc2VydmVycy4gRWFjaCBjb21wb25lbnQgZm9sbG93cyBzaGFkY24vdWkgY29udmVudGlvbnMgZm9yIGNvbnNpc3RlbnQgc3R5bGluZy4iKQogICAgTGFyZ2UoIktleSBUYWtlYXdheTogQ29tcG9uZW50cyBjb21wb3NlIG5hdHVyYWxseS4iKQo">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    P,
-    Lead,
-    Large,
-    Column,
-)
-
-with Column(gap=4):
-    Lead("A comprehensive guide to building MCP applications with FastMCP.")
-    P("FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.")
-    Large("Key Takeaway: Components compose naturally.")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-4",
-    "type": "Column",
-    "children": [
-      {
-        "content": "A comprehensive guide to building MCP applications with FastMCP.",
-        "type": "Lead"
-      },
-      {
-        "content": "FastMCP provides a complete toolkit for building and deploying MCP servers. Each component follows shadcn/ui conventions for consistent styling.",
-        "type": "P"
-      },
-      {"content": "Key Takeaway: Components compose naturally.", "type": "Large"}
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Small and Muted Text
-
-`Small` renders smaller text suited for metadata, while `Muted` uses the secondary foreground color for less prominent information. Both are useful for timestamps, disclaimers, and supplementary details.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"content":"Terms and conditions apply","type":"Small"},{"content":"Last updated 5 minutes ago","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU21hbGwsCiAgICBNdXRlZCwKICAgIENvbHVtbiwKKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgU21hbGwoIlRlcm1zIGFuZCBjb25kaXRpb25zIGFwcGx5IikKICAgIE11dGVkKCJMYXN0IHVwZGF0ZWQgNSBtaW51dGVzIGFnbyIpCg">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    Small,
-    Muted,
-    Column,
-)
+from prefab_ui.components import H1, H2, H3, P, Lead, Large, Small, Muted, BlockQuote, Column
 
 with Column(gap=3):
+    H1("Page Title")
+    H2("Section Heading")
+    H3("Subsection")
+    Lead("Introductory text that sets context for what follows.")
+    P("Standard paragraph text for the main content of your UI.")
+    Large("Key Takeaway: Components compose naturally.")
     Small("Terms and conditions apply")
     Muted("Last updated 5 minutes ago")
+    BlockQuote("The best way to predict the future is to invent it.")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -150,119 +78,23 @@ with Column(gap=3):
     "cssClass": "gap-3",
     "type": "Column",
     "children": [
-      {"content": "Terms and conditions apply", "type": "Small"},
-      {"content": "Last updated 5 minutes ago", "type": "Muted"}
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Block Quotes
-
-<ComponentPreview json={{"view":{"content":"The best way to predict the future is to invent it.","type":"BlockQuote"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmxvY2tRdW90ZQoKQmxvY2tRdW90ZSgiVGhlIGJlc3Qgd2F5IHRvIHByZWRpY3QgdGhlIGZ1dHVyZSBpcyB0byBpbnZlbnQgaXQuIikK">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import BlockQuote
-
-BlockQuote("The best way to predict the future is to invent it.")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "content": "The best way to predict the future is to invent it.",
-    "type": "BlockQuote"
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Inline Code
-
-Renders text with a monospace font and subtle background, ideal for referencing code within prose.
-
-<ComponentPreview json={{"view":{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Run","type":"P"},{"content":"pip install prefab-ui","type":"InlineCode"},{"content":"to get started.","type":"P"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgSW5saW5lQ29kZSwKICAgIFAsCiAgICBSb3csCikKCndpdGggUm93KGdhcD0yLCBjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciIpOgogICAgUCgiUnVuIikKICAgIElubGluZUNvZGUoInBpcCBpbnN0YWxsIHByZWZhYi11aSIpCiAgICBQKCJ0byBnZXQgc3RhcnRlZC4iKQo">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    InlineCode,
-    P,
-    Row,
-)
-
-with Row(gap=2, css_class="items-center"):
-    P("Run")
-    InlineCode("pip install prefab-ui")
-    P("to get started.")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-2 items-center",
-    "type": "Row",
-    "children": [
-      {"content": "Run", "type": "P"},
-      {"content": "pip install prefab-ui", "type": "InlineCode"},
-      {"content": "to get started.", "type": "P"}
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
-## Text and Markdown
-
-`Text` and `Markdown` are simpler alternatives to the styled components above. `Text` renders an unstyled `<p>`, while `Markdown` parses and renders markdown syntax. `Heading` is a parametric heading that takes a `level` kwarg instead of using separate H1-H4 classes. `Text` and `Heading` support the same `bold`, `italic`, and `align` props as the styled components.
-
-```python Simpler Alternatives
-from prefab_ui.components import (
-    Text,
-    Markdown,
-    Heading,
-)
-
-Text("Plain paragraph with no default styling.")
-Heading("Section Title", level=2)
-Markdown("**Bold** and *italic* text with [links](https://example.com).")
-```
-
-These are handy for data-driven UIs where the styling comes from the container rather than the text itself, or when you want exact control via `css_class`.
-
-## Bold & Italic
-
-All text components accept `bold` and `italic` props for quick emphasis without reaching for CSS classes:
-
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Regular paragraph text.","type":"P"},{"cssClass":"font-bold","content":"This is bold.","type":"P"},{"cssClass":"italic","content":"This is italic.","type":"P"},{"cssClass":"font-bold italic","content":"Bold and italic combined.","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgUCwKICAgIFRleHQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIFAoIlJlZ3VsYXIgcGFyYWdyYXBoIHRleHQuIikKICAgIFAoIlRoaXMgaXMgYm9sZC4iLCBib2xkPVRydWUpCiAgICBQKCJUaGlzIGlzIGl0YWxpYy4iLCBpdGFsaWM9VHJ1ZSkKICAgIFRleHQoIkJvbGQgYW5kIGl0YWxpYyBjb21iaW5lZC4iLCBib2xkPVRydWUsIGl0YWxpYz1UcnVlKQo">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import (
-    P,
-    Text,
-    Column,
-)
-
-with Column(gap=2):
-    P("Regular paragraph text.")
-    P("This is bold.", bold=True)
-    P("This is italic.", italic=True)
-    Text("Bold and italic combined.", bold=True, italic=True)
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
-    "children": [
-      {"content": "Regular paragraph text.", "type": "P"},
-      {"cssClass": "font-bold", "content": "This is bold.", "type": "P"},
-      {"cssClass": "italic", "content": "This is italic.", "type": "P"},
+      {"content": "Page Title", "type": "H1"},
+      {"content": "Section Heading", "type": "H2"},
+      {"content": "Subsection", "type": "H3"},
       {
-        "cssClass": "font-bold italic",
-        "content": "Bold and italic combined.",
-        "type": "Text"
+        "content": "Introductory text that sets context for what follows.",
+        "type": "Lead"
+      },
+      {
+        "content": "Standard paragraph text for the main content of your UI.",
+        "type": "P"
+      },
+      {"content": "Key Takeaway: Components compose naturally.", "type": "Large"},
+      {"content": "Terms and conditions apply", "type": "Small"},
+      {"content": "Last updated 5 minutes ago", "type": "Muted"},
+      {
+        "content": "The best way to predict the future is to invent it.",
+        "type": "BlockQuote"
       }
     ]
   }
@@ -271,30 +103,30 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
-## Alignment
+For rich text with links, lists, or images, use `Markdown` with standard markdown syntax:
 
-All text components accept an `align` prop to control horizontal text alignment. This compiles to Tailwind's `text-left`, `text-center`, `text-right`, or `text-justify` classes.
+```python
+Markdown("**Bold** and *italic* text with [links](https://example.com).")
+```
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"text-center","content":"Welcome Back","type":"H2"},{"cssClass":"text-center","content":"Your dashboard is ready.","type":"P"},{"cssClass":"text-right","content":"Last login: February 19, 2026","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgSDIsCiAgICBQLAogICAgTXV0ZWQsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIEgyKCJXZWxjb21lIEJhY2siLCBhbGlnbj0iY2VudGVyIikKICAgIFAoCiAgICAgICAgIllvdXIgZGFzaGJvYXJkIGlzIHJlYWR5LiIsCiAgICAgICAgYWxpZ249ImNlbnRlciIsCiAgICApCiAgICBNdXRlZCgKICAgICAgICAiTGFzdCBsb2dpbjogRmVicnVhcnkgMTksIDIwMjYiLAogICAgICAgIGFsaWduPSJyaWdodCIsCiAgICApCg">
+## Inline Formatting
+
+### Modifiers
+
+All text components accept formatting kwargs that compile to Tailwind classes: `bold`, `italic`, `underline`, `strikethrough`, `uppercase`, `lowercase`, and `align`.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"font-bold","content":"Bold text","type":"Text"},{"cssClass":"italic","content":"Italic text","type":"Text"},{"cssClass":"underline","content":"Underlined","type":"Text"},{"cssClass":"line-through","content":"Strikethrough","type":"Text"},{"cssClass":"uppercase","content":"UPPERCASE","type":"Text"},{"cssClass":"text-center","content":"Centered","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dCwgQ29sdW1uCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KCJCb2xkIHRleHQiLCBib2xkPVRydWUpCiAgICBUZXh0KCJJdGFsaWMgdGV4dCIsIGl0YWxpYz1UcnVlKQogICAgVGV4dCgiVW5kZXJsaW5lZCIsIHVuZGVybGluZT1UcnVlKQogICAgVGV4dCgiU3RyaWtldGhyb3VnaCIsIHN0cmlrZXRocm91Z2g9VHJ1ZSkKICAgIFRleHQoIlVQUEVSQ0FTRSIsIHVwcGVyY2FzZT1UcnVlKQogICAgVGV4dCgiQ2VudGVyZWQiLCBhbGlnbj0iY2VudGVyIikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import (
-    H2,
-    P,
-    Muted,
-    Column,
-)
+from prefab_ui.components import Text, Column
 
 with Column(gap=2):
-    H2("Welcome Back", align="center")
-    P(
-        "Your dashboard is ready.",
-        align="center",
-    )
-    Muted(
-        "Last login: February 19, 2026",
-        align="right",
-    )
+    Text("Bold text", bold=True)
+    Text("Italic text", italic=True)
+    Text("Underlined", underline=True)
+    Text("Strikethrough", strikethrough=True)
+    Text("UPPERCASE", uppercase=True)
+    Text("Centered", align="center")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -302,12 +134,88 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {"cssClass": "text-center", "content": "Welcome Back", "type": "H2"},
-      {"cssClass": "text-center", "content": "Your dashboard is ready.", "type": "P"},
+      {"cssClass": "font-bold", "content": "Bold text", "type": "Text"},
+      {"cssClass": "italic", "content": "Italic text", "type": "Text"},
+      {"cssClass": "underline", "content": "Underlined", "type": "Text"},
+      {"cssClass": "line-through", "content": "Strikethrough", "type": "Text"},
+      {"cssClass": "uppercase", "content": "UPPERCASE", "type": "Text"},
+      {"cssClass": "text-center", "content": "Centered", "type": "Text"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Span
+
+`Span` is the inline formatting primitive. It carries all the same modifiers as Text, plus `code` for monospace styling and `style` for inline CSS. Use it inside `Text` to style individual words within a sentence.
+
+Pass mixed strings and Spans to `Text` as positional arguments. Strings auto-wrap as plain spans; you only need `Span` for the parts that need styling:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Text","children":[{"content":"Click ","code":false,"type":"Span"},{"cssClass":"font-bold underline","content":"here","code":false,"type":"Span"},{"content":" to continue","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Price: ","code":false,"type":"Span"},{"cssClass":"line-through","content":"$9.99","code":false,"type":"Span"},{"content":" ","code":false,"type":"Span"},{"cssClass":"font-bold","content":"$4.99","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Run ","code":false,"type":"Span"},{"cssClass":"font-mono","content":"pip install prefab-ui","code":true,"type":"Span"},{"content":" to get started","code":false,"type":"Span"}]},{"type":"Text","children":[{"content":"Status: ","code":false,"type":"Span"},{"cssClass":"text-green-500 font-medium","content":"deployed","code":false,"type":"Span"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dCwgU3BhbiwgQ29sdW1uCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KCJDbGljayAiLCBTcGFuKCJoZXJlIiwgYm9sZD1UcnVlLCB1bmRlcmxpbmU9VHJ1ZSksICIgdG8gY29udGludWUiKQogICAgVGV4dCgiUHJpY2U6ICIsIFNwYW4oIiQ5Ljk5Iiwgc3RyaWtldGhyb3VnaD1UcnVlKSwgIiAiLCBTcGFuKCIkNC45OSIsIGJvbGQ9VHJ1ZSkpCiAgICBUZXh0KCJSdW4gIiwgU3BhbigicGlwIGluc3RhbGwgcHJlZmFiLXVpIiwgY29kZT1UcnVlKSwgIiB0byBnZXQgc3RhcnRlZCIpCiAgICBUZXh0KCJTdGF0dXM6ICIsIFNwYW4oImRlcGxveWVkIiwgY3NzX2NsYXNzPSJ0ZXh0LWdyZWVuLTUwMCBmb250LW1lZGl1bSIpKQo">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Text, Span, Column
+
+with Column(gap=2):
+    Text("Click ", Span("here", bold=True, underline=True), " to continue")
+    Text("Price: ", Span("$9.99", strikethrough=True), " ", Span("$4.99", bold=True))
+    Text("Run ", Span("pip install prefab-ui", code=True), " to get started")
+    Text("Status: ", Span("deployed", css_class="text-green-500 font-medium"))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
       {
-        "cssClass": "text-right",
-        "content": "Last login: February 19, 2026",
-        "type": "Muted"
+        "type": "Text",
+        "children": [
+          {"content": "Click ", "code": false, "type": "Span"},
+          {
+            "cssClass": "font-bold underline",
+            "content": "here",
+            "code": false,
+            "type": "Span"
+          },
+          {"content": " to continue", "code": false, "type": "Span"}
+        ]
+      },
+      {
+        "type": "Text",
+        "children": [
+          {"content": "Price: ", "code": false, "type": "Span"},
+          {"cssClass": "line-through", "content": "$9.99", "code": false, "type": "Span"},
+          {"content": " ", "code": false, "type": "Span"},
+          {"cssClass": "font-bold", "content": "$4.99", "code": false, "type": "Span"}
+        ]
+      },
+      {
+        "type": "Text",
+        "children": [
+          {"content": "Run ", "code": false, "type": "Span"},
+          {
+            "cssClass": "font-mono",
+            "content": "pip install prefab-ui",
+            "code": true,
+            "type": "Span"
+          },
+          {"content": " to get started", "code": false, "type": "Span"}
+        ]
+      },
+      {
+        "type": "Text",
+        "children": [
+          {"content": "Status: ", "code": false, "type": "Span"},
+          {
+            "cssClass": "text-green-500 font-medium",
+            "content": "deployed",
+            "code": false,
+            "type": "Span"
+          }
+        ]
       }
     ]
   }
@@ -318,42 +226,36 @@ with Column(gap=2):
 
 ## API Reference
 
-<Card icon="code" title="Styled Text Components">
+<Card icon="code" title="Common Parameters">
 
-`H1`, `H2`, `H3`, `H4`, `P`, `Lead`, `Large`, `Small`, `Muted`, `BlockQuote`, `InlineCode` all share this interface:
+All text components share this interface:
 
 <ParamField body="content" type="str" required>
-  Text content. Can be passed as a positional argument.
+  Text content. Accepts `{{ field }}` interpolation. Can be passed as a positional argument.
 </ParamField>
 
 <ParamField body="bold" type="bool | None" default="None">
-  Render text in bold weight.
+  Bold weight.
 </ParamField>
 
 <ParamField body="italic" type="bool | None" default="None">
-  Render text in italic style.
+  Italic style.
 </ParamField>
 
-<ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
-  Horizontal text alignment. Compiles to a Tailwind `text-*` class.
+<ParamField body="underline" type="bool | None" default="None">
+  Underline decoration.
 </ParamField>
 
-<ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes appended to the component's built-in styles.
-</ParamField>
-</Card>
-
-<Card icon="code" title="Text Parameters">
-<ParamField body="content" type="str" required>
-  Text content with `{{ field }}` interpolation. Renders as an unstyled `<p>`.
+<ParamField body="strikethrough" type="bool | None" default="None">
+  Strikethrough decoration.
 </ParamField>
 
-<ParamField body="bold" type="bool | None" default="None">
-  Render text in bold weight.
+<ParamField body="uppercase" type="bool | None" default="None">
+  Transform text to uppercase.
 </ParamField>
 
-<ParamField body="italic" type="bool | None" default="None">
-  Render text in italic style.
+<ParamField body="lowercase" type="bool | None" default="None">
+  Transform text to lowercase.
 </ParamField>
 
 <ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
@@ -365,39 +267,29 @@ with Column(gap=2):
 </ParamField>
 </Card>
 
-<Card icon="code" title="Heading Parameters">
-<ParamField body="content" type="str" required>
-  Heading text with `{{ field }}` interpolation.
-</ParamField>
+<Card icon="code" title="Text">
 
+Accepts mixed positional args for inline formatting:
+
+```python
+Text("plain string")
+Text("Click ", Span("here", bold=True), " to continue")
+```
+
+</Card>
+
+<Card icon="code" title="Heading">
 <ParamField body="level" type="int" default="1">
   Heading level: `1` (h1), `2` (h2), `3` (h3), or `4` (h4).
 </ParamField>
-
-<ParamField body="bold" type="bool | None" default="None">
-  Render text in bold weight.
-</ParamField>
-
-<ParamField body="italic" type="bool | None" default="None">
-  Render text in italic style.
-</ParamField>
-
-<ParamField body="align" type='"left" | "center" | "right" | "justify" | None' default="None">
-  Horizontal text alignment.
-</ParamField>
-
-<ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
-</ParamField>
 </Card>
 
-<Card icon="code" title="Markdown Parameters">
-<ParamField body="content" type="str" required>
-  Markdown content with `{{ field }}` interpolation. Parses markdown syntax to HTML.
+<Card icon="code" title="Span">
+<ParamField body="code" type="bool" default="False">
+  Render as inline code with monospace font and background.
 </ParamField>
-
-<ParamField body="css_class" type="str | None" default="None">
-  Additional Tailwind CSS classes.
+<ParamField body="style" type="dict[str, str] | None" default="None">
+  Inline CSS styles as a dict of property/value pairs.
 </ParamField>
 </Card>
 
@@ -406,7 +298,8 @@ with Column(gap=2):
 ```json Text
 {
   "type": "Text",
-  "content": "string (required)",
+  "content?": "string",
+  "children?": [{"type": "Span", "content": "...", "code?": true}],
   "bold?": "boolean",
   "italic?": "boolean",
   "align?": "left | center | right | justify",
@@ -418,20 +311,11 @@ with Column(gap=2):
 {
   "type": "Heading",
   "content": "string (required)",
+  "level?": "1 | 2 | 3 | 4",
   "bold?": "boolean",
   "italic?": "boolean",
-  "align?": "left | center | right | justify",
-  "level?": "1 | 2 | 3 | 4",
   "cssClass?": "string"
 }
 ```
 
-```json Markdown
-{
-  "type": "Markdown",
-  "content": "string (required)",
-  "cssClass?": "string"
-}
-```
-
-For the complete protocol schema, see [Text](/protocol/text), [Heading](/protocol/heading), [Markdown](/protocol/markdown).
+For the complete protocol schema, see [Text](/protocol/text), [Heading](/protocol/heading), [Span](/protocol/span), [Markdown](/protocol/markdown).

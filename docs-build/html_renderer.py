@@ -698,7 +698,7 @@ _RENDERERS: dict[str, Any] = {
     "Muted": lambda n: _render_typography("p", "text-sm text-muted-foreground", n),
     "InlineCode": lambda n: _render_typography(
         "code",
-        "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+        "cn-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
         n,
     ),
     "BlockQuote": lambda n: _render_typography(

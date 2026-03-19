@@ -142,7 +142,6 @@ import {
   smallSchema,
   mutedSchema,
   blockQuoteSchema,
-  inlineCodeSchema,
 } from "./typography.ts";
 
 /**
@@ -208,7 +207,6 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   HoverCard: hoverCardSchema,
   Icon: iconSchema,
   Image: imageSchema,
-  InlineCode: inlineCodeSchema,
   Input: inputSchema,
   Label: labelSchema,
   Large: largeSchema,

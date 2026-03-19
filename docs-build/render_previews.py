@@ -119,10 +119,14 @@ def _execute_and_serialize(
         raise ValueError("No component found in code block")
 
     from prefab_ui.components.data_table import DataTable
+    from prefab_ui.components.text import Text as TextComponent
 
     all_children: set[int] = set()
     for c in created:
         if isinstance(c, ContainerComponent):
+            for child in c.children:
+                all_children.add(id(child))
+        if isinstance(c, TextComponent) and c.children:
             for child in c.children:
                 all_children.add(id(child))
         if isinstance(c, DataTable) and isinstance(c.rows, list):

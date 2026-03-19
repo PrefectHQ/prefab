@@ -603,7 +603,7 @@ export function Playground() {
 
         <div
           id="pg-preview"
-          className={`w-1/2 overflow-auto bg-background p-6${
+          className={`w-1/2 overflow-auto bg-background text-foreground p-6${
             dark ? " dark" : ""
           }`}
         >

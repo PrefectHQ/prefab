@@ -40,7 +40,6 @@ from prefab_ui.components import (
     Column,
     Div,
     Grid,
-    InlineCode,
     Input,
     Label,
     Large,
@@ -68,8 +67,9 @@ def add(component: object) -> None:
 
 
 # Typography — every variant
-for Cls in (H1, H2, H3, H4, P, Lead, Large, Small, Muted, BlockQuote, InlineCode):
+for Cls in (H1, H2, H3, H4, P, Lead, Large, Small, Muted, BlockQuote):
     add(Cls("text"))
+add(Span("code", code=True))
 
 # Button — every variant × every size
 for variant in (
