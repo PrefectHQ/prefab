@@ -576,7 +576,11 @@ with Card():
 
 ### Array Operations
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ todos | rejectattr:done | length }} remaining","type":"Text"},{"type":"Badge","label":"{{ todos | length }} total","variant":"outline"}]},{"content":"Completed: {{ todos | selectattr:done | length }}","type":"Text"}]},"state":{"todos":[{"name":"Learn Prefab","done":true},{"name":"Build dashboard","done":false},{"name":"Deploy to production","done":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgQ29sdW1uLCBSb3csIFRleHQKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICB0b2Rvcz1bCiAgICAgICAgeyJuYW1lIjogIkxlYXJuIFByZWZhYiIsICJkb25lIjogVHJ1ZX0sCiAgICAgICAgeyJuYW1lIjogIkJ1aWxkIGRhc2hib2FyZCIsICJkb25lIjogRmFsc2V9LAogICAgICAgIHsibmFtZSI6ICJEZXBsb3kgdG8gcHJvZHVjdGlvbiIsICJkb25lIjogRmFsc2V9LAogICAgXQopCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgIFRleHQoZiJ7c3RhdGUudG9kb3MucmVqZWN0YXR0cignZG9uZScpLmxlbmd0aCgpfSByZW1haW5pbmciKQogICAgICAgIEJhZGdlKGYie3N0YXRlLnRvZG9zLmxlbmd0aCgpfSB0b3RhbCIsIHZhcmlhbnQ9Im91dGxpbmUiKQogICAgVGV4dChmIkNvbXBsZXRlZDoge3N0YXRlLnRvZG9zLnNlbGVjdGF0dHIoJ2RvbmUnKS5sZW5ndGgoKX0iKQo">
+Array pipes filter and summarize lists stored in state. Given a list of todo items, each with a `done` flag, you can count how many are complete, how many remain, and how many there are total — all reactively.
+
+`selectattr("done")` keeps only items where `done` is truthy. `rejectattr("done")` keeps items where it's falsy. Chain `.length()` to count the filtered results. These pipes work together to turn a raw array into meaningful summary numbers.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Total items: {{ todos | length }}","type":"Text"},{"content":"Done: {{ todos | selectattr:done | length }}","type":"Text"},{"content":"Remaining: {{ todos | rejectattr:done | length }}","type":"Text"}]},"state":{"todos":[{"name":"Learn Prefab","done":true},{"name":"Build dashboard","done":false},{"name":"Deploy to production","done":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgQ29sdW1uLCBSb3csIFRleHQKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICB0b2Rvcz1bCiAgICAgICAgeyJuYW1lIjogIkxlYXJuIFByZWZhYiIsICJkb25lIjogVHJ1ZX0sCiAgICAgICAgeyJuYW1lIjogIkJ1aWxkIGRhc2hib2FyZCIsICJkb25lIjogRmFsc2V9LAogICAgICAgIHsibmFtZSI6ICJEZXBsb3kgdG8gcHJvZHVjdGlvbiIsICJkb25lIjogRmFsc2V9LAogICAgXQopCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KGYiVG90YWwgaXRlbXM6IHtzdGF0ZS50b2Rvcy5sZW5ndGgoKX0iKQogICAgVGV4dChmIkRvbmU6IHtzdGF0ZS50b2Rvcy5zZWxlY3RhdHRyKCdkb25lJykubGVuZ3RoKCl9IikKICAgIFRleHQoZiJSZW1haW5pbmc6IHtzdGF0ZS50b2Rvcy5yZWplY3RhdHRyKCdkb25lJykubGVuZ3RoKCl9IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -591,10 +595,9 @@ state = set_initial_state(
 )
 
 with Column(gap=2):
-    with Row(gap=2, align="center"):
-        Text(f"{state.todos.rejectattr('done').length()} remaining")
-        Badge(f"{state.todos.length()} total", variant="outline")
-    Text(f"Completed: {state.todos.selectattr('done').length()}")
+    Text(f"Total items: {state.todos.length()}")
+    Text(f"Done: {state.todos.selectattr('done').length()}")
+    Text(f"Remaining: {state.todos.rejectattr('done').length()}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -602,15 +605,9 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {
-        "cssClass": "gap-2 items-center",
-        "type": "Row",
-        "children": [
-          {"content": "{{ todos | rejectattr:done | length }} remaining", "type": "Text"},
-          {"type": "Badge", "label": "{{ todos | length }} total", "variant": "outline"}
-        ]
-      },
-      {"content": "Completed: {{ todos | selectattr:done | length }}", "type": "Text"}
+      {"content": "Total items: {{ todos | length }}", "type": "Text"},
+      {"content": "Done: {{ todos | selectattr:done | length }}", "type": "Text"},
+      {"content": "Remaining: {{ todos | rejectattr:done | length }}", "type": "Text"}
     ]
   },
   "state": {

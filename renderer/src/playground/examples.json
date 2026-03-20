@@ -2017,7 +2017,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"Completed: {state.todos.selectattr('done').length()}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    Text(f\"Total items: {state.todos.length()}\")\n    Text(f\"Done: {state.todos.selectattr('done').length()}\")\n    Text(f\"Remaining: {state.todos.rejectattr('done').length()}\")"
   },
   {
     "title": "Python icon=\"python\"",
