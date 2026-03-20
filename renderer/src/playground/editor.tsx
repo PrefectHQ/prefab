@@ -146,7 +146,8 @@ const baseEditorStyles = {
     paddingRight: "1rem",
   },
   ".cm-gutters": {
-    backgroundColor: "transparent",
+    backgroundColor:
+      "color-mix(in srgb, var(--color-muted) 30%, var(--color-background))",
     border: "none",
     paddingLeft: "0.5rem",
     paddingRight: "0.25rem",
