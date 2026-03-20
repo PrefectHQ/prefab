@@ -117,21 +117,19 @@ class TestCallToolResolver:
         d = action.model_dump(by_alias=True, exclude_none=True)
         assert d["tool"] == "my_tool"
 
-    def test_string_tool_unaffected_by_resolver(self):
-        from prefab_ui.app import PrefabApp
+    def test_string_tool_resolved_by_resolver(self):
+        from prefab_ui.app import PrefabApp, ResolvedTool
         from prefab_ui.components import Column
 
-        action = CallTool("explicit_name")
+        action = CallTool("save_contact")
         view = Column()
         view.children = [Button(label="Go", on_click=action)]
         app = PrefabApp(view=view)
 
-        from prefab_ui.app import ResolvedTool
-
         j = app.to_json(
-            tool_resolver=lambda fn: ResolvedTool(name="should_not_be_called")
+            tool_resolver=lambda ref: ResolvedTool(name="save_contact-a1b2c3d4")
         )
-        assert j["view"]["children"][0]["onClick"]["tool"] == "explicit_name"
+        assert j["view"]["children"][0]["onClick"]["tool"] == "save_contact-a1b2c3d4"
 
 
 class TestActionOnComponents:

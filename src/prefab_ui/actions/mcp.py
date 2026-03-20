@@ -55,13 +55,13 @@ class CallTool(Action):
     @model_serializer(mode="wrap")
     def _serialize_with_resolver(self, handler: Any) -> dict[str, Any]:
         data: dict[str, Any] = _coerce_rx(handler(self))  # type: ignore[assignment]
-        if self._tool_ref is not None:
-            resolver = get_tool_resolver()
-            if resolver is not None:
-                resolved = resolver(self._tool_ref)
-                data["tool"] = resolved.name
-                if resolved.unwrap_result:
-                    data["unwrapResult"] = True
+        resolver = get_tool_resolver()
+        if resolver is not None:
+            ref = self._tool_ref if self._tool_ref is not None else self.tool
+            resolved = resolver(ref)
+            data["tool"] = resolved.name
+            if resolved.unwrap_result:
+                data["unwrapResult"] = True
         return {k: v for k, v in data.items() if v is not None}
 
 
