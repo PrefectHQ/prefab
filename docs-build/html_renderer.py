@@ -5,7 +5,7 @@ utility classes matching what the real React/shadcn renderer produces. Used by
 render_previews.py and generate_content.py.
 
 Class strings are derived from mcp-apps-renderer/src/style.css (the
-@apply content of each cn-* class) plus the component TSX files. When shadcn
+@apply content of each pf-* class) plus the component TSX files. When shadcn
 is upgraded, update the class mappings here to match.
 """
 
@@ -122,7 +122,7 @@ _BADGE_BASE = (
     " focus-visible:ring-ring/50 focus-visible:ring-[3px]"
     " aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40"
     " aria-invalid:border-destructive overflow-hidden group/badge"
-    # cn-badge
+    # pf-badge
     " h-5 gap-1 rounded-4xl border border-transparent px-2 py-0.5"
     " text-xs font-medium transition-all"
     " has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5"
@@ -158,7 +158,7 @@ _CARD_HEADER_CLS = (
     " has-data-[slot=card-action]:grid-cols-[1fr_auto]"
     " has-data-[slot=card-description]:grid-rows-[auto_auto]"
     " @container/card-header"
-    # cn-card-header
+    # pf-card-header
     " gap-1 rounded-t-xl px-4"
 )
 _CARD_TITLE_CLS = "text-base leading-snug font-medium"
@@ -698,7 +698,7 @@ _RENDERERS: dict[str, Any] = {
     "Muted": lambda n: _render_typography("p", "text-sm text-muted-foreground", n),
     "InlineCode": lambda n: _render_typography(
         "code",
-        "cn-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
+        "pf-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
         n,
     ),
     "BlockQuote": lambda n: _render_typography(

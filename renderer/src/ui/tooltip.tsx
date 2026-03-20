@@ -32,7 +32,7 @@ function SimpleTooltip({
       </TooltipPrimitive.Trigger>
       <TooltipPrimitive.Portal container={container}>
         <TooltipPrimitive.Positioner side={side} sideOffset={6}>
-          <TooltipPrimitive.Popup className="cn-tooltip-content">
+          <TooltipPrimitive.Popup className="pf-tooltip-content">
             {content}
           </TooltipPrimitive.Popup>
         </TooltipPrimitive.Positioner>

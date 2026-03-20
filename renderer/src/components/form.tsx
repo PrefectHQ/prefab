@@ -430,10 +430,10 @@ export function PrefabButtonGroup({
       data-slot="button-group"
       data-orientation={orientation}
       className={cn(
-        "cn-button-group flex w-fit items-stretch",
+        "pf-button-group flex w-fit items-stretch",
         orientation === "horizontal"
-          ? "cn-button-group-orientation-horizontal"
-          : "cn-button-group-orientation-vertical flex-col",
+          ? "pf-button-group-orientation-horizontal"
+          : "pf-button-group-orientation-vertical flex-col",
         className,
       )}
     >

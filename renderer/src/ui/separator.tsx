@@ -12,8 +12,8 @@ function Separator({
       data-slot="separator"
       orientation={orientation}
       className={cn(
-        "cn-separator",
-        orientation === "horizontal" ? "cn-separator-horizontal" : "cn-separator-vertical",
+        "pf-separator",
+        orientation === "horizontal" ? "pf-separator-horizontal" : "pf-separator-vertical",
         className
       )}
       {...props}

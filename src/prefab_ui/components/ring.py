@@ -76,7 +76,7 @@ class Ring(ContainerComponent):
 
     def model_post_init(self, __context: Any) -> None:
         if self.gradient is False:
-            self.css_class = _merge_css_classes("cn-ring-flat", self.css_class)
+            self.css_class = _merge_css_classes("pf-ring-flat", self.css_class)
         elif self.gradient is True:
-            self.css_class = _merge_css_classes("cn-ring-gradient", self.css_class)
+            self.css_class = _merge_css_classes("pf-ring-gradient", self.css_class)
         super().model_post_init(__context)

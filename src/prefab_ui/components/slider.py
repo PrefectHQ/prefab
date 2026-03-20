@@ -132,9 +132,9 @@ class Slider(StatefulMixin, Component):
 
     def model_post_init(self, __context: Any) -> None:
         if self.indicator_class is not None or self.gradient is False:
-            self.css_class = _merge_css_classes("cn-slider-flat", self.css_class)
+            self.css_class = _merge_css_classes("pf-slider-flat", self.css_class)
         elif self.gradient is True:
-            self.css_class = _merge_css_classes("cn-slider-gradient", self.css_class)
+            self.css_class = _merge_css_classes("pf-slider-gradient", self.css_class)
         if self.step is not None and isinstance(self.value, (int, float)):
             self.value = self._snap(self.value)
         elif self.step is not None and isinstance(self.value, list):

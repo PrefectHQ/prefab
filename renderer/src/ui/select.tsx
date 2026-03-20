@@ -79,7 +79,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        "cn-select-trigger flex w-full cursor-pointer items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "pf-select-trigger flex w-full cursor-pointer items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -87,7 +87,7 @@ function SelectTrigger({
       {children}
       <SelectPrimitive.Icon
         render={
-          <ChevronDown className="cn-select-trigger-icon pointer-events-none" />
+          <ChevronDown className="pf-select-trigger-icon pointer-events-none" />
         }
       />
     </SelectPrimitive.Trigger>
@@ -133,7 +133,7 @@ function SelectContent({
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            "cn-select-content relative isolate z-50 max-h-(--available-height) origin-(--transform-origin) overflow-x-hidden overflow-y-auto",
+            "pf-select-content relative isolate z-50 max-h-(--available-height) origin-(--transform-origin) overflow-x-hidden overflow-y-auto",
             className
           )}
           {...props}
@@ -155,7 +155,7 @@ function SelectGroup({
   return (
     <SelectPrimitive.Group
       data-slot="select-group"
-      className={cn("cn-select-group scroll-my-1 p-1", className)}
+      className={cn("pf-select-group scroll-my-1 p-1", className)}
       {...props}
     >
       {children}
@@ -172,7 +172,7 @@ function SelectGroupLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-group-label"
       className={cn(
-        "cn-select-group-label px-1.5 py-1.5 text-xs text-muted-foreground/70 pointer-events-none select-none",
+        "pf-select-group-label px-1.5 py-1.5 text-xs text-muted-foreground/70 pointer-events-none select-none",
         className
       )}
       {...props}
@@ -191,16 +191,16 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "cn-select-item relative flex w-full cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "pf-select-item relative flex w-full cursor-pointer items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
-        render={<span className="cn-select-item-indicator" />}
+        render={<span className="pf-select-item-indicator" />}
       >
-        <Check className="cn-select-item-indicator-icon pointer-events-none" />
+        <Check className="pf-select-item-indicator-icon pointer-events-none" />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   )
@@ -213,7 +213,7 @@ function SelectSeparator({
   return (
     <div
       data-slot="select-separator"
-      className={cn("cn-select-separator -mx-1 my-1 h-px bg-border", className)}
+      className={cn("pf-select-separator -mx-1 my-1 h-px bg-border", className)}
       {...props}
     />
   )
@@ -226,7 +226,7 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpArrow
       data-slot="select-scroll-up-button"
-      className={cn("cn-select-scroll-up-button", className)}
+      className={cn("pf-select-scroll-up-button", className)}
       {...props}
     >
       <ChevronUp />
@@ -241,7 +241,7 @@ function SelectScrollDownButton({
   return (
     <SelectPrimitive.ScrollDownArrow
       data-slot="select-scroll-down-button"
-      className={cn("cn-select-scroll-down-button", className)}
+      className={cn("pf-select-scroll-down-button", className)}
       {...props}
     >
       <ChevronDown />

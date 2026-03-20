@@ -6,7 +6,7 @@ from prefab_ui.themes.base import Theme
 
 _PRESENTATION_VARS = (
     # Blue-tinted dark chrome (Tailwind Slate palette)
-    "--card-padding-y: 2.5rem; --layout-gap: 1.5rem;"
+    "--card-padding: 3rem; --layout-gap: 1.5rem;"
     " --background: #0f1117;"
     " --foreground: #e2e8f0;"
     " --card: #1a1d2e;"
@@ -41,52 +41,54 @@ _PRESENTATION_CSS = """\
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* Font */
-.cn-card, .cn-table {
+.pf-card, .pf-table {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Card — generous horizontal padding for slide-like presentation */
-.cn-card-header,
-.cn-card-content {
-  padding-left: 2rem;
-  padding-right: 2rem;
+/* Card — generous padding for slide-like presentation.
+   Uses a CSS variable so user css_class overrides still win. */
+.pf-card-header,
+.pf-card-content,
+.pf-card-footer {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Progress/Slider — dark navy tracks */
-.cn-progress,
-.cn-progress-track {
+.pf-progress,
+.pf-progress-track {
   background: #252840;
 }
-.cn-slider-track {
+.pf-slider-track {
   background: #252840;
 }
-.cn-progress-target {
+.pf-progress-target {
   background: #f1f5f9;
   opacity: 0.5;
 }
 
 /* Badge — tinted backgrounds, consistent border-radius */
-.cn-badge {
+.pf-badge {
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.2em 0.6em;
 }
-.cn-badge-variant-default {
+.pf-badge-variant-default {
   color: oklch(0.78 0.15 var(--accent-hue, 275));
   background: oklch(0.72 0.22 var(--accent-hue, 275) / 0.12);
 }
-.cn-badge-variant-warning {
+.pf-badge-variant-warning {
   color: #fcd34d;
   background: rgba(245, 158, 11, 0.12);
 }
-.cn-badge-variant-destructive {
+.pf-badge-variant-destructive {
   color: #f9a8d4;
   background: rgba(244, 114, 182, 0.12);
 }
 
 /* Table cells — taller rows, tabular numerals, dimmer number color */
-.cn-table-cell {
+.pf-table-cell {
   padding: 0.85rem 0.75rem;
   font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
@@ -94,10 +96,10 @@ _PRESENTATION_CSS = """\
 }
 
 /* Table rows — subtle borders, accent hover */
-.cn-table-row {
+.pf-table-row {
   border-color: #1e2235;
 }
-.cn-table-row:hover {
+.pf-table-row:hover {
   background: oklch(0.72 0.22 var(--accent-hue, 275) / 0.06);
 }
 """

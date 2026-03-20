@@ -71,9 +71,9 @@ class Progress(Component):
 
     def model_post_init(self, __context: Any) -> None:
         if self.indicator_class is not None or self.gradient is False:
-            self.css_class = _merge_css_classes("cn-progress-flat", self.css_class)
+            self.css_class = _merge_css_classes("pf-progress-flat", self.css_class)
         elif self.gradient is True:
-            self.css_class = _merge_css_classes("cn-progress-gradient", self.css_class)
+            self.css_class = _merge_css_classes("pf-progress-gradient", self.css_class)
         super().model_post_init(__context)
 
     def to_json(self) -> dict[str, Any]:

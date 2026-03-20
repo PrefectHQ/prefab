@@ -235,7 +235,7 @@ with Column(gap=4):
 
 Use `indicator_class` for arbitrary colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"cssClass":"cn-progress-flat","type":"Progress","value":85.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"cssClass":"cn-progress-flat","type":"Progress","value":45.0,"variant":"default","size":"default","indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"cssClass":"cn-progress-flat","type":"Progress","value":100.0,"variant":"default","size":"default","indicatorClass":"bg-green-500"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3RvcmFnZSBVc2VkIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT04NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1yZWQtNTAwIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVXBsb2FkIFByb2dyZXNzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlRhc2tzIENvbXBsZXRlIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0xMDAsIGluZGljYXRvcl9jbGFzcz0iYmctZ3JlZW4tNTAwIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"cssClass":"pf-progress-flat","type":"Progress","value":85.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"cssClass":"pf-progress-flat","type":"Progress","value":45.0,"variant":"default","size":"default","indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"variant":"default","size":"default","indicatorClass":"bg-green-500"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3RvcmFnZSBVc2VkIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT04NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1yZWQtNTAwIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVXBsb2FkIFByb2dyZXNzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlRhc2tzIENvbXBsZXRlIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0xMDAsIGluZGljYXRvcl9jbGFzcz0iYmctZ3JlZW4tNTAwIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -263,7 +263,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Storage Used"},
           {
-            "cssClass": "cn-progress-flat",
+            "cssClass": "pf-progress-flat",
             "type": "Progress",
             "value": 85.0,
             "variant": "default",
@@ -278,7 +278,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Upload Progress"},
           {
-            "cssClass": "cn-progress-flat",
+            "cssClass": "pf-progress-flat",
             "type": "Progress",
             "value": 45.0,
             "variant": "default",
@@ -293,7 +293,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Tasks Complete"},
           {
-            "cssClass": "cn-progress-flat",
+            "cssClass": "pf-progress-flat",
             "type": "Progress",
             "value": 100.0,
             "variant": "default",
@@ -313,7 +313,7 @@ with Column(gap=4):
 
 The `target` prop renders a vertical marker line on the bar at a specific position, so you can compare actual progress against a goal. Set `max` to the ceiling of the gauge so both `value` and `target` land at meaningful positions. Use `target_class` to style the marker.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Below target"},{"type":"Progress","value":55.0,"variant":"default","size":"default","target":75.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Custom target style"},{"cssClass":"cn-progress-flat","type":"Progress","value":50.0,"variant":"default","size":"default","target":75.0,"indicatorClass":"bg-pink-400","targetClass":"bg-pink-400"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmVsb3cgdGFyZ2V0IikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT01NSwgdGFyZ2V0PTc1KQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJDdXN0b20gdGFyZ2V0IHN0eWxlIikKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9NTAsIAogICAgICAgICAgICB0YXJnZXQ9NzUsCiAgICAgICAgICAgIGluZGljYXRvcl9jbGFzcz0iYmctcGluay00MDAiLAogICAgICAgICAgICB0YXJnZXRfY2xhc3M9ImJnLXBpbmstNDAwIiwKICAgICAgICApCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Below target"},{"type":"Progress","value":55.0,"variant":"default","size":"default","target":75.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Custom target style"},{"cssClass":"pf-progress-flat","type":"Progress","value":50.0,"variant":"default","size":"default","target":75.0,"indicatorClass":"bg-pink-400","targetClass":"bg-pink-400"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmVsb3cgdGFyZ2V0IikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT01NSwgdGFyZ2V0PTc1KQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJDdXN0b20gdGFyZ2V0IHN0eWxlIikKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9NTAsIAogICAgICAgICAgICB0YXJnZXQ9NzUsCiAgICAgICAgICAgIGluZGljYXRvcl9jbGFzcz0iYmctcGluay00MDAiLAogICAgICAgICAgICB0YXJnZXRfY2xhc3M9ImJnLXBpbmstNDAwIiwKICAgICAgICApCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -357,7 +357,7 @@ with Column(gap=4):
         "children": [
           {"type": "Label", "text": "Custom target style"},
           {
-            "cssClass": "cn-progress-flat",
+            "cssClass": "pf-progress-flat",
             "type": "Progress",
             "value": 50.0,
             "variant": "default",

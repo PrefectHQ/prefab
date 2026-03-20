@@ -9,6 +9,7 @@ Themes are Python objects that generate CSS. The wire format is simple: `{"light
 ```
 Theme (base)
 ├── Basic (accent-driven colors, no layout opinions)
+│   └── Dashboard (Inter font, tabular numerals, thicker progress)
 ├── Presentation (dark chrome, generous padding, styled badges/tables)
 └── Minimal (strips all renderer defaults)
 ```
@@ -23,11 +24,11 @@ The renderer uses CSS custom properties with fallback defaults so themes can ove
 
 Set in `style.css` with fallback defaults:
 ```css
-.cn-card { padding: var(--card-padding-y, 1.5rem); }
-.flex.flex-col:has(> .cn-card) { gap: var(--layout-gap, 1rem); }
+.pf-card { padding: var(--card-padding, 1.5rem); }
+.flex.flex-col:has(> .pf-card) { gap: var(--layout-gap, 1rem); }
 ```
 
-Themes override: `Presentation` sets `--card-padding-y: 3rem; --layout-gap: 1.5rem;`. `Minimal` sets both to `0`.
+Themes override: `Presentation` sets `--card-padding: 3rem; --layout-gap: 1.5rem;`. `Minimal` sets both to `0`.
 
 User `css_class` on components (e.g. `Card(css_class="p-2")`) wins over the variable because Tailwind utilities have higher specificity than `var()` fallbacks.
 
@@ -55,10 +56,10 @@ Tailwind color names (`"amber"`, `"blue-600"`) are resolved to hex in `_coerce_a
 
 Gradient fills use CSS relative color syntax (`oklch(from var(--success) calc(l - 0.12) c h)`) in `gradients.css`. The cascade order:
 
-1. **Base** (`gradients.css`): gradients ON via bare `.cn-progress-variant-*` selectors
+1. **Base** (`gradients.css`): gradients ON via bare `.pf-progress-variant-*` selectors
 2. **Theme** `gradient=False`: emits CSS with same selectors setting `background-image: none` (wins by source order since theme CSS is injected after base)
-3. **Component** `gradient=True`: emits `cn-progress-gradient` class (`.cn-progress-gradient .cn-progress-variant-*` wins by higher specificity)
-4. **Component** `gradient=False`: emits `cn-progress-flat` class (wins by source order at same specificity as gradient class)
+3. **Component** `gradient=True`: emits `pf-progress-gradient` class (`.pf-progress-gradient .pf-progress-variant-*` wins by higher specificity)
+4. **Component** `gradient=False`: emits `pf-progress-flat` class (wins by source order at same specificity as gradient class)
 
 ### Why a separate gradients.css?
 
@@ -101,6 +102,7 @@ renderer/src/
     └── theme-picker.tsx    Preset themes, custom CSS textarea
 
 src/prefab_ui/themes/
+├── __init__.py             Exports: Basic, Dashboard, Minimal, Presentation, Theme
 ├── base.py                 Theme base class, _TAILWIND_COLORS, _NO_GRADIENT_CSS
 ├── basic.py                Accent-only theme
 ├── dashboard.py            Inter + tabular numerals

@@ -222,7 +222,7 @@ export function Span({
     <Tag
       className={cn(
         code &&
-          "cn-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
+          "pf-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
         bold && "font-bold",
         italic && "italic",
         className,
@@ -257,7 +257,7 @@ export function Link({
       className={cn(
         "font-medium text-primary underline underline-offset-4",
         code &&
-          "cn-code relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
+          "pf-code relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
         bold && "font-bold",
         italic && "italic",
         className,

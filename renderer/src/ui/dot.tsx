@@ -2,26 +2,26 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-const dotVariants = cva("cn-dot inline-block shrink-0", {
+const dotVariants = cva("pf-dot inline-block shrink-0", {
   variants: {
     variant: {
-      default: "cn-dot-variant-default",
-      secondary: "cn-dot-variant-secondary",
-      success: "cn-dot-variant-success",
-      warning: "cn-dot-variant-warning",
-      destructive: "cn-dot-variant-destructive",
-      info: "cn-dot-variant-info",
-      muted: "cn-dot-variant-muted",
+      default: "pf-dot-variant-default",
+      secondary: "pf-dot-variant-secondary",
+      success: "pf-dot-variant-success",
+      warning: "pf-dot-variant-warning",
+      destructive: "pf-dot-variant-destructive",
+      info: "pf-dot-variant-info",
+      muted: "pf-dot-variant-muted",
     },
     size: {
-      sm: "cn-dot-sm",
-      default: "cn-dot-default",
-      lg: "cn-dot-lg",
+      sm: "pf-dot-sm",
+      default: "pf-dot-default",
+      lg: "pf-dot-lg",
     },
     shape: {
       circle: "rounded-full",
       square: "rounded-none",
-      rounded: "cn-dot-rounded",
+      rounded: "pf-dot-rounded",
     },
   },
   defaultVariants: {
