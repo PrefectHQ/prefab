@@ -13,5 +13,5 @@ class Minimal(Theme):
     via component kwargs (`gap`, `css_class`, etc.).
     """
 
-    light_css: str = "--card-padding: 0; --layout-gap: 0;"
+    light_css: str = "--card-padding-y: 0; --layout-gap: 0;"
     gradient: bool = False

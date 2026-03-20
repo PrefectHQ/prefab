@@ -6,7 +6,7 @@ from prefab_ui.themes.base import Theme
 
 _PRESENTATION_VARS = (
     # Blue-tinted dark chrome (Tailwind Slate palette)
-    "--card-padding: 3rem; --layout-gap: 1.5rem;"
+    "--card-padding-y: 2.5rem; --layout-gap: 1.5rem;"
     " --background: #0f1117;"
     " --foreground: #e2e8f0;"
     " --card: #1a1d2e;"
@@ -45,13 +45,11 @@ _PRESENTATION_CSS = """\
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Card — generous padding for slide-like presentation.
-   Uses a CSS variable so user css_class overrides still win. */
+/* Card — generous horizontal padding for slide-like presentation */
 .cn-card-header,
-.cn-card-content,
-.cn-card-footer {
-  padding-left: 0;
-  padding-right: 0;
+.cn-card-content {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 /* Progress/Slider — dark navy tracks */
