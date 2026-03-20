@@ -45,7 +45,7 @@ from prefab_ui.components.charts import (
     Sparkline,
 )
 
-SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
+SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "renderer" / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
 COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"
@@ -70,7 +70,7 @@ ALL_ACTION_CLASSES: list[type[Action]] = [
 
 
 # ---------------------------------------------------------------------------
-# Helpers: minimal instance construction (also used by scripts/generate_schemas.py)
+# Helpers: minimal instance construction (also used by tools/generate_schemas.py)
 # ---------------------------------------------------------------------------
 
 
@@ -264,7 +264,7 @@ def test_action_json_validates_against_own_schema(cls: type[Action]) -> None:
 def test_manifest_exists() -> None:
     manifest_path = SCHEMAS_DIR / "manifest.json"
     assert manifest_path.exists(), (
-        "Run `uv run python scripts/generate_schemas.py` to generate fixtures"
+        "Run `uv run python tools/generate_schemas.py` to generate fixtures"
     )
 
 

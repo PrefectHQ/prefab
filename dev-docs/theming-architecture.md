@@ -109,7 +109,7 @@ src/prefab_ui/themes/
 ├── minimal.py              Strips all defaults
 └── presentation.py         Dark chrome, generous padding, styled components
 
-docs-build/
+tools/
 ├── render_previews.py      Executes Python, detects PrefabApp, extracts theme
 └── scope_css.py            Scopes Tailwind output + appends gradients.css raw
 ```

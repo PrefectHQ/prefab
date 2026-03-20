@@ -1,6 +1,6 @@
 """Extract Python examples from MDX docs for the playground.
 
-Run via: uv run docs-build/extract_examples.py
+Run via: uv run tools/extract_examples.py
 
 Scans docs/apps/**/*.mdx for Python code blocks, extracts the title
 (from the code fence info string) and category (from the file path),

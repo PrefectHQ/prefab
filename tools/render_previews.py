@@ -8,7 +8,7 @@ live preview.
 The authored Python code block stays as-is inside the tag — the build only
 touches the opening ``<ComponentPreview ...>`` line and manages imports.
 
-Run via: uv run docs-build/render_previews.py
+Run via: uv run tools/render_previews.py
 """
 
 from __future__ import annotations

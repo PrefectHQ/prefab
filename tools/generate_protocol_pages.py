@@ -4,7 +4,7 @@ Introspects all Component and Action subclasses, calls model_json_schema(),
 cleans up the output, and writes one MDX page per class into
 docs/apps/protocol/.
 
-Run via: uv run docs-build/generate_protocol_pages.py
+Run via: uv run tools/generate_protocol_pages.py
 """
 
 from __future__ import annotations
