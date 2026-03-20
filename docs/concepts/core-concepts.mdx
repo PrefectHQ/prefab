@@ -65,7 +65,7 @@ with Card(css_class="w-48") as view:
 </CodeGroup>
 </ComponentPreview>
 
-`Row` arranges children horizontally, `Column` stacks them vertically, `Grid` places them in a grid, and they all nest freely. Switch to the Protocol tab to see the JSON that this Python produces; that's what the renderer actually receives. The [Composition](/concepts/composition) guide covers layout primitives, cards, grids, loops, and forward references.
+`Row` arranges children horizontally, `Column` stacks them vertically, `Grid` places them in a grid, and they all nest freely. Switch to the Protocol tab to see the JSON that this Python produces; that's what the renderer actually receives. The [Composition](/concepts/components) guide covers layout primitives, cards, grids, loops, and forward references.
 
 ## State
 
@@ -83,7 +83,7 @@ Beyond reading, expressions can compute: `{{ price * quantity }}` multiplies two
 
 In Python, you write expressions using the `Rx` class. `Rx("count")` compiles to `{{ count }}`, and operators chain naturally: `(price * quantity).currency()` compiles to `{{ price * quantity | currency }}`. Stateful components have a `.rx` shorthand; `slider.rx` returns an `Rx` bound to the slider's state key, so you can wire components together without writing key names by hand.
 
-The [Expressions](/concepts/expressions) guide covers the Rx DSL, operators, and formatting. The [Expression Reference](/concepts/expression-reference) is the lookup page for every operator, pipe, and special variable.
+The [Expressions](/concepts/expressions) guide covers the Rx DSL, operators, pipes, and special variables.
 
 ## Actions
 
