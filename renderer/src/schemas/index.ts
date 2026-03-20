@@ -73,7 +73,7 @@ import { dashboardSchema, dashboardItemSchema } from "./dashboard.ts";
 import { dataTableSchema } from "./data_table.ts";
 import { datePickerSchema } from "./date_picker.ts";
 import { dialogSchema } from "./dialog.ts";
-import { divSchema, spanSchema } from "./div.ts";
+import { divSchema, linkSchema, spanSchema } from "./div.ts";
 import { dotSchema } from "./dot.ts";
 import { dropZoneSchema } from "./drop_zone.ts";
 import { embedSchema } from "./embed.ts";
@@ -210,6 +210,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Input: inputSchema,
   Label: labelSchema,
   Large: largeSchema,
+  Link: linkSchema,
   Lead: leadSchema,
   LineChart: lineChartSchema,
   Markdown: markdownSchema,

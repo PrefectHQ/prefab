@@ -47,7 +47,7 @@ from prefab_ui.components.dashboard import Dashboard, DashboardItem
 from prefab_ui.components.data_table import DataTable, DataTableColumn
 from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
-from prefab_ui.components.div import Div, Span
+from prefab_ui.components.div import Div, Link, Span
 from prefab_ui.components.dot import Dot
 from prefab_ui.components.drop_zone import DropZone
 from prefab_ui.components.embed import Embed
@@ -190,6 +190,7 @@ __all__ = [
     "Label",
     "Large",
     "Lead",
+    "Link",
     "Loader",
     "Markdown",
     "Metric",

@@ -15,5 +15,17 @@ export const spanSchema = componentBase.extend({
   italic: z.boolean().optional(),
 });
 
+export const linkSchema = componentBase.extend({
+  type: z.literal("Link"),
+  content: z.string(),
+  href: z.string(),
+  target: z.string().optional(),
+  style: z.record(z.string(), z.string()).optional(),
+  code: z.boolean().optional(),
+  bold: z.boolean().optional(),
+  italic: z.boolean().optional(),
+});
+
 export type DivWire = z.infer<typeof divSchema>;
 export type SpanWire = z.infer<typeof spanSchema>;
+export type LinkWire = z.infer<typeof linkSchema>;

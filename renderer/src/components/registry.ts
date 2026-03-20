@@ -95,6 +95,7 @@ import {
   DashboardItem,
   Div,
   Span,
+  Link,
   PrefabForm,
   GridItem,
 } from "./layout";
@@ -248,6 +249,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Dashboard,
   DashboardItem,
   Div,
+  Link,
   Span,
 
   // Typography

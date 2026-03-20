@@ -44,6 +44,7 @@ from prefab_ui.components import (
     Label,
     Large,
     Lead,
+    Link,
     Muted,
     P,
     Radio,
@@ -70,6 +71,7 @@ def add(component: object) -> None:
 for Cls in (H1, H2, H3, H4, P, Lead, Large, Small, Muted, BlockQuote):
     add(Cls("text"))
 add(Span("code", code=True))
+add(Link("link", href="https://example.com"))
 
 # Button — every variant × every size
 for variant in (
