@@ -39,8 +39,7 @@ automatically converted to declaration strings.
 
 from prefab_ui.themes.base import Theme
 from prefab_ui.themes.basic import Basic
-from prefab_ui.themes.dashboard import Dashboard
 from prefab_ui.themes.minimal import Minimal
 from prefab_ui.themes.presentation import Presentation
 
-__all__ = ["Basic", "Dashboard", "Minimal", "Presentation", "Theme"]
+__all__ = ["Basic", "Minimal", "Presentation", "Theme"]

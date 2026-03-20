@@ -9,7 +9,6 @@ Themes are Python objects that generate CSS. The wire format is simple: `{"light
 ```
 Theme (base)
 ├── Basic (accent-driven colors, no layout opinions)
-│   └── Dashboard (Inter font, tabular numerals, thicker progress)
 ├── Presentation (dark chrome, generous padding, styled badges/tables)
 └── Minimal (strips all renderer defaults)
 ```
@@ -24,11 +23,11 @@ The renderer uses CSS custom properties with fallback defaults so themes can ove
 
 Set in `style.css` with fallback defaults:
 ```css
-.cn-card { padding: var(--card-padding, 1.5rem); }
+.cn-card { padding: var(--card-padding-y, 1.5rem); }
 .flex.flex-col:has(> .cn-card) { gap: var(--layout-gap, 1rem); }
 ```
 
-Themes override: `Presentation` sets `--card-padding: 3rem; --layout-gap: 1.5rem;`. `Minimal` sets both to `0`.
+Themes override: `Presentation` sets `--card-padding-y: 3rem; --layout-gap: 1.5rem;`. `Minimal` sets both to `0`.
 
 User `css_class` on components (e.g. `Card(css_class="p-2")`) wins over the variable because Tailwind utilities have higher specificity than `var()` fallbacks.
 
@@ -102,7 +101,6 @@ renderer/src/
     └── theme-picker.tsx    Preset themes, custom CSS textarea
 
 src/prefab_ui/themes/
-├── __init__.py             Exports: Basic, Dashboard, Minimal, Presentation, Theme
 ├── base.py                 Theme base class, _TAILWIND_COLORS, _NO_GRADIENT_CSS
 ├── basic.py                Accent-only theme
 ├── dashboard.py            Inter + tabular numerals

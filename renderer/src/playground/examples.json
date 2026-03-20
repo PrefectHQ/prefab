@@ -2507,7 +2507,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Styling",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Card, Metric, Grid, Column, Progress, CardHeader, CardTitle, CardContent\n\nwith Column() as view:\n    with Grid(columns=3):\n        with Card():\n            Metric(label=\"Revenue\", value=\"$1.2M\", delta=\"+12%\")\n        with Card():\n            Metric(label=\"Users\", value=\"8,420\", delta=\"-4.3%\")\n        with Card():\n            Metric(label=\"Uptime\", value=\"99.9%\", delta=\"+0.1%\")\n    with Card():\n        with CardHeader():\n            CardTitle(\"Pipeline\")\n        with CardContent():\n            with Column(gap=2):\n                Progress(value=92, variant=\"success\", label=\"Builds\")\n                Progress(value=67, variant=\"default\", label=\"Deploy\")\n                Progress(value=34, variant=\"warning\", label=\"Tests\")\n\nPrefabApp(view=view)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Card, CardContent, Metric, Grid, Column, Progress, CardHeader, CardTitle\n\nwith Column() as view:\n    with Grid(columns=3):\n        with Card():\n            with CardContent():\n                Metric(label=\"Revenue\", value=\"$1.2M\", delta=\"+12%\")\n        with Card():\n            with CardContent():\n                Metric(label=\"Users\", value=\"8,420\", delta=\"-4.3%\")\n        with Card():\n            with CardContent():\n                Metric(label=\"Uptime\", value=\"99.9%\", delta=\"+0.1%\")\n    with Card():\n        with CardHeader():\n            CardTitle(\"Pipeline\")\n        with CardContent():\n            with Column(gap=2):\n                Progress(value=92, variant=\"success\", label=\"Builds\")\n                Progress(value=67, variant=\"default\", label=\"Deploy\")\n                Progress(value=34, variant=\"warning\", label=\"Tests\")\n\nPrefabApp(view=view)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -2517,12 +2517,12 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Styling",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.themes import Minimal\nfrom prefab_ui.components import Card, Metric, Grid, Column, Progress, CardHeader, CardTitle, CardContent\n\nwith Column(gap=4) as view:\n    with Grid(columns=3, gap=4):\n        with Card(css_class=\"p-6\"):\n            Metric(label=\"Revenue\", value=\"$1.2M\", delta=\"+12%\")\n        with Card(css_class=\"p-6\"):\n            Metric(label=\"Users\", value=\"8,420\", delta=\"-4.3%\")\n        with Card(css_class=\"p-6\"):\n            Metric(label=\"Uptime\", value=\"99.9%\", delta=\"+0.1%\")\n    with Card(css_class=\"p-6\"):\n        with CardHeader():\n            CardTitle(\"Pipeline\")\n        with CardContent():\n            with Column(gap=2):\n                Progress(value=92, variant=\"success\", label=\"Builds\")\n                Progress(value=67, variant=\"default\", label=\"Deploy\")\n                Progress(value=34, variant=\"warning\", label=\"Tests\")\n\nPrefabApp(view=view, theme=Minimal())"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.themes import Minimal\nfrom prefab_ui.components import Column, Row, H2, Text, Muted, Progress, Badge\n\nwith Column(gap=4) as view:\n    H2(\"System Status\")\n    Muted(\"Last checked 2 minutes ago\")\n    with Column(gap=2):\n        Progress(value=92, variant=\"success\", label=\"API\")\n        Progress(value=67, label=\"Workers\")\n        Progress(value=34, variant=\"warning\", label=\"Queue\")\n    with Row(gap=2):\n        Badge(\"3 healthy\", variant=\"success\")\n        Badge(\"1 degraded\", variant=\"warning\")\n\nPrefabApp(view=view, theme=Minimal())"
   },
   {
     "title": "Python icon=\"python\"",
     "category": "Styling",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.themes import Basic\nfrom prefab_ui.components import Column, Heading, Text, Button, Badge, Row\n\nwith Column(gap=3) as view:\n    Heading(\"Welcome back\")\n    Text(\"You have 3 new notifications.\")\n    with Row(gap=2):\n        Button(\"View all\", variant=\"default\")\n        Button(\"Dismiss\", variant=\"outline\")\n    with Row(gap=2):\n        Badge(\"On Track\", variant=\"success\")\n        Badge(\"3 alerts\", variant=\"warning\")\n\nPrefabApp(view=view, theme=Basic(accent=\"sky\"))"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.themes import Basic\nfrom prefab_ui.components import Column, Heading, Text, Span, Button, Badge, Row\n\nwith Column(gap=3) as view:\n    Heading(\"Welcome back\")\n    Text(\"You have 3 new notifications.\")\n    Text(\"Run \", Span(\"prefab serve app.py\", code=True), \" to preview locally.\")\n    with Row(gap=2):\n        Button(\"View all\", variant=\"default\")\n        Button(\"Dismiss\", variant=\"outline\")\n    with Row(gap=2):\n        Badge(\"On Track\", variant=\"success\")\n        Badge(\"3 alerts\", variant=\"warning\")\n\nPrefabApp(view=view, theme=Basic(accent=\"sky\"))"
   },
   {
     "title": "Basic(accent=\"amber\")          # Tailwind name (defaults to 500 shade)",
@@ -2540,24 +2540,14 @@
     "code": "Presentation(mode=\"light\")"
   },
   {
-    "title": "from prefab_ui.themes import Dashboard",
-    "category": "Styling",
-    "code": "PrefabApp(view=view, theme=Dashboard())\nPrefabApp(view=view, theme=Dashboard(accent=\"blue\"))"
-  },
-  {
-    "title": "from prefab_ui.themes import Basic",
-    "category": "Styling",
-    "code": "PrefabApp(view=view, theme=Basic(accent=\"green\"))"
-  },
-  {
     "title": "from prefab_ui.themes import Theme",
     "category": "Styling",
-    "code": "Theme(\n    light_css=\"--primary: oklch(0.60 0.24 260); --ring: oklch(0.60 0.24 260);\",\n    dark_css=\"--primary: oklch(0.70 0.18 260); --ring: oklch(0.70 0.18 260);\",\n)"
+    "code": "Theme(\n    font=\"Inter\",\n    css=\".cn-table-cell { font-variant-numeric: tabular-nums; }\",\n)"
   },
   {
-    "title": "app = PrefabApp(",
+    "title": "Theme(",
     "category": "Styling",
-    "code": "view=my_view,\n    stylesheets=[\"\"\"\n        :root { --primary: oklch(0.72 0.19 149); }\n        .dark { --primary: oklch(0.77 0.15 163); }\n    \"\"\"],\n)"
+    "code": "light_css=\"--primary: oklch(0.60 0.24 260); --ring: oklch(0.60 0.24 260);\",\n    dark_css=\"--primary: oklch(0.70 0.18 260); --ring: oklch(0.70 0.18 260);\",\n)"
   },
   {
     "title": "Python icon=\"python\"",

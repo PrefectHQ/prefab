@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Text
-from prefab_ui.themes import Basic, Dashboard, Presentation, Theme
+from prefab_ui.themes import Basic, Presentation, Theme
 
 
 class TestThemeModel:
@@ -231,29 +231,6 @@ class TestBasicTheme:
         assert "--primary: #3b82f6;" in result["light"]
 
 
-class TestDashboardTheme:
-    def test_dashboard_defaults_to_inter(self):
-        theme = Dashboard()
-        result = theme.to_json()
-        assert "--font-sans: 'Inter'" in result["light"]
-
-    def test_dashboard_has_inter_font(self):
-        theme = Dashboard()
-        result = theme.to_json()
-        assert "--font-sans" in result["light"]
-        assert "Inter" in result["light"]
-
-    def test_dashboard_has_table_styling(self):
-        theme = Dashboard()
-        result = theme.to_json()
-        assert "tabular-nums" in result["css"]
-
-    def test_dashboard_with_accent(self):
-        theme = Dashboard(accent="green")
-        result = theme.to_json()
-        assert "--primary: #22c55e;" in result["light"]
-
-
 class TestPresentationTheme:
     def test_has_light_and_dark(self):
         result = Presentation().to_json()
@@ -374,8 +351,3 @@ class TestThemeImport:
         from prefab_ui.themes import Presentation as ThemesPresentation
 
         assert ThemesPresentation is Presentation
-
-    def test_dashboard_importable_from_themes(self):
-        from prefab_ui.themes import Dashboard as ThemesDashboard
-
-        assert ThemesDashboard is Dashboard
