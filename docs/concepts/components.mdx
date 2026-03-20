@@ -1,17 +1,28 @@
 ---
-title: Composing Interfaces
-sidebarTitle: Composition
-description: Nesting components into layouts, layouts into cards, and cards into complete interfaces.
-icon: compass-drafting
+title: Components
+description: Building UIs from components — what they are, how they nest, and how Python's with statement maps to the component tree.
+icon: puzzle-piece
 ---
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-Prefab UIs are trees of components. You compose them with Python's `with` statement: nesting in code mirrors nesting on screen. This page builds up from simple layout primitives to a complete interface, one layer at a time.
+Components are the building blocks of every Prefab UI. A `Button`, a `Card`, a `Slider` — each is a self-contained piece that knows how to render itself. You build interfaces by creating components and nesting them inside each other, the same way you'd compose functions in Python.
 
-Composition controls the _structure_ of your interface, while CSS handles styling and layout fine-tuning. Every component accepts a `css_class` prop that maps directly to [Tailwind utility classes](/styling/css), so you can adjust widths, colors, spacing, and more without leaving Python.
+Every component is a Python class you instantiate with keyword arguments. Simple components like `Text` and `Badge` stand alone. Container components like `Card`, `Row`, and `Column` accept children — and you add children using Python's `with` statement. Nesting in code mirrors nesting on screen.
 
-## Rows and columns
+```python
+from prefab_ui.components import Card, CardContent, Text, Badge, Row
+
+with Card():
+    with CardContent():
+        with Row(gap=2, align="center"):
+            Text("Status")
+            Badge("Active", variant="success")
+```
+
+Every component also accepts a `css_class` prop for styling via [Tailwind utility classes](/styling/css), so you can adjust spacing, colors, and layout without leaving Python.
+
+## Rows and Columns
 
 Every interface needs a way to arrange things on screen. Prefab provides two fundamental layout containers: `Row` arranges children horizontally, and `Column` stacks them vertically. Both accept a `gap` parameter that controls the spacing between children; the number maps to [Tailwind's spacing scale](/styling/css), so `gap=4` means `1rem`.
 
