@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import type { SparklineWire } from "@/schemas/chart";
 
 const SPARKLINE_VARIANT_CLASS: Record<string, string> = {
-  default: "cn-sparkline-variant-default",
-  success: "cn-sparkline-variant-success",
-  warning: "cn-sparkline-variant-warning",
-  destructive: "cn-sparkline-variant-destructive",
-  info: "cn-sparkline-variant-info",
-  muted: "cn-sparkline-variant-muted",
+  default: "pf-sparkline-variant-default",
+  success: "pf-sparkline-variant-success",
+  warning: "pf-sparkline-variant-warning",
+  destructive: "pf-sparkline-variant-destructive",
+  info: "pf-sparkline-variant-info",
+  muted: "pf-sparkline-variant-muted",
 };
 
 function sparkPoints(
@@ -151,7 +151,7 @@ export function PrefabSparkline({
     return (
       <svg
         className={cn(
-          "cn-sparkline w-full",
+          "pf-sparkline w-full",
           height == null && "h-6",
           variantClass,
           className,
@@ -204,12 +204,12 @@ export function PrefabSparkline({
     strokeLinejoin: "round" as const,
     strokeLinecap: "round" as const,
     vectorEffect: "non-scaling-stroke" as const,
-    className: cn("cn-sparkline-line", indicatorClass),
+    className: cn("pf-sparkline-line", indicatorClass),
   };
 
   return (
     <svg
-      className={cn("cn-sparkline w-full", variantClass, className, cssClass)}
+      className={cn("pf-sparkline w-full", variantClass, className, cssClass)}
       viewBox={`0 0 ${vw} ${vh}`}
       preserveAspectRatio="none"
       style={{ height }}
@@ -218,8 +218,8 @@ export function PrefabSparkline({
         <>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" className="cn-sparkline-fill-stop-start" />
-              <stop offset="100%" className="cn-sparkline-fill-stop-end" />
+              <stop offset="0%" className="pf-sparkline-fill-stop-start" />
+              <stop offset="100%" className="pf-sparkline-fill-stop-end" />
             </linearGradient>
           </defs>
           {useSmooth ? (

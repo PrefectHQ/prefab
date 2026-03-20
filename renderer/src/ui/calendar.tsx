@@ -27,7 +27,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "cn-calendar bg-background group/calendar [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "pf-calendar bg-background group/calendar [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -68,7 +68,7 @@ function Calendar({
           defaultClassNames.dropdowns
         ),
         dropdown_root: cn(
-          "cn-calendar-dropdown-root shadow-xs relative rounded-md",
+          "pf-calendar-dropdown-root shadow-xs relative rounded-md",
           defaultClassNames.dropdown_root
         ),
         dropdown: cn(
@@ -76,7 +76,7 @@ function Calendar({
           defaultClassNames.dropdown
         ),
         caption_label: cn(
-          "cn-calendar-caption-label select-none font-medium",
+          "pf-calendar-caption-label select-none font-medium",
           captionLayout === "label"
             ? "text-sm"
             : "[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md text-sm [&>svg]:size-3.5",

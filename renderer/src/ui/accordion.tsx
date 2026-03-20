@@ -17,7 +17,7 @@ function Accordion({ className, ...props }: AccordionPrimitive.Root.Props) {
 function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
   return (
     <AccordionPrimitive.Item
-      className={cn("cn-accordion-item", className)}
+      className={cn("pf-accordion-item", className)}
       {...props}
     />
   )
@@ -32,7 +32,7 @@ function AccordionTrigger({
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         className={cn(
-          "cn-accordion-trigger group/accordion-trigger flex flex-1 items-start justify-between",
+          "pf-accordion-trigger group/accordion-trigger flex flex-1 items-start justify-between",
           className
         )}
         {...props}
@@ -51,10 +51,10 @@ function AccordionContent({
 }: AccordionPrimitive.Panel.Props) {
   return (
     <AccordionPrimitive.Panel
-      className="cn-accordion-content overflow-hidden"
+      className="pf-accordion-content overflow-hidden"
       {...props}
     >
-      <div className={cn("cn-accordion-content-inner text-muted-foreground", className)}>{children}</div>
+      <div className={cn("pf-accordion-content-inner text-muted-foreground", className)}>{children}</div>
     </AccordionPrimitive.Panel>
   )
 }

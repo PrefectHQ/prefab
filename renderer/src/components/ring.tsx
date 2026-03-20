@@ -7,18 +7,18 @@ const SIZE_PX: Record<string, number> = {
 };
 
 const LABEL_CLASS: Record<string, string> = {
-  sm: "cn-ring-label cn-ring-label-sm",
-  default: "cn-ring-label cn-ring-label-default",
-  lg: "cn-ring-label cn-ring-label-lg",
+  sm: "pf-ring-label pf-ring-label-sm",
+  default: "pf-ring-label pf-ring-label-default",
+  lg: "pf-ring-label pf-ring-label-lg",
 };
 
 const VARIANT_CLASS: Record<string, string> = {
-  default: "cn-ring-variant-default",
-  success: "cn-ring-variant-success",
-  warning: "cn-ring-variant-warning",
-  destructive: "cn-ring-variant-destructive",
-  info: "cn-ring-variant-info",
-  muted: "cn-ring-variant-muted",
+  default: "pf-ring-variant-default",
+  success: "pf-ring-variant-success",
+  warning: "pf-ring-variant-warning",
+  destructive: "pf-ring-variant-destructive",
+  info: "pf-ring-variant-info",
+  muted: "pf-ring-variant-muted",
 };
 
 interface RingProps {
@@ -68,7 +68,7 @@ export function Ring({
     const outerR = radius + tickLen / 2;
     targetLine = (
       <line
-        className={cn("cn-ring-target", targetClassName)}
+        className={cn("pf-ring-target", targetClassName)}
         x1={half + innerR * Math.cos(rad)}
         y1={half + innerR * Math.sin(rad)}
         x2={half + outerR * Math.cos(rad)}
@@ -82,7 +82,7 @@ export function Ring({
   return (
     <div
       className={cn(
-        "cn-ring group inline-flex items-center justify-center overflow-visible",
+        "pf-ring group inline-flex items-center justify-center overflow-visible",
         className,
         cssClass,
       )}
@@ -97,7 +97,7 @@ export function Ring({
         width={px}
         height={px}
         viewBox={`0 0 ${px} ${px}`}
-        className="cn-ring-svg"
+        className="pf-ring-svg"
         overflow="visible"
         style={{ transform: "rotate(-90deg)" }}
       >
@@ -173,7 +173,7 @@ export function Ring({
           </linearGradient>
         </defs>
         <circle
-          className="cn-ring-track"
+          className="pf-ring-track"
           cx={half}
           cy={half}
           r={radius}
@@ -181,7 +181,7 @@ export function Ring({
         />
         <circle
           className={cn(
-            "cn-ring-fill",
+            "pf-ring-fill",
             VARIANT_CLASS[variant] ?? VARIANT_CLASS.default,
             indicatorClassName,
           )}
@@ -196,14 +196,14 @@ export function Ring({
         {targetLine}
       </svg>
       {children ? (
-        <div className="cn-ring-label-overlay absolute inset-0 flex items-center justify-center">
+        <div className="pf-ring-label-overlay absolute inset-0 flex items-center justify-center">
           {children}
         </div>
       ) : (
         label && (
           <span
             className={cn(
-              "cn-ring-label-overlay absolute",
+              "pf-ring-label-overlay absolute",
               LABEL_CLASS[size] ?? LABEL_CLASS.default,
             )}
           >

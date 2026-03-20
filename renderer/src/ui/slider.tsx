@@ -5,16 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const sliderRangeVariants = cva(
-  "cn-slider-range select-none data-horizontal:h-full data-vertical:w-full",
+  "pf-slider-range select-none data-horizontal:h-full data-vertical:w-full",
   {
     variants: {
       variant: {
-        default: "cn-slider-variant-default",
-        success: "cn-slider-variant-success",
-        warning: "cn-slider-variant-warning",
-        destructive: "cn-slider-variant-destructive",
-        info: "cn-slider-variant-info",
-        muted: "cn-slider-variant-muted",
+        default: "pf-slider-variant-default",
+        success: "pf-slider-variant-success",
+        warning: "pf-slider-variant-warning",
+        destructive: "pf-slider-variant-destructive",
+        info: "pf-slider-variant-info",
+        muted: "pf-slider-variant-muted",
       },
     },
     defaultVariants: {
@@ -73,10 +73,10 @@ function Slider({
       thumbAlignment="edge"
       {...props}
     >
-      <SliderPrimitive.Control className={cn("cn-slider relative flex w-full cursor-pointer touch-none items-center select-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col", `cn-slider-size-${size}`)}>
+      <SliderPrimitive.Control className={cn("pf-slider relative flex w-full cursor-pointer touch-none items-center select-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col", `pf-slider-size-${size}`)}>
         <SliderPrimitive.Track
           data-slot="slider-track"
-          className="cn-slider-track bg-muted relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"
+          className="pf-slider-track bg-muted relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
@@ -88,9 +88,9 @@ function Slider({
             data-slot="slider-thumb"
             key={index}
             className={cn(
-              "cn-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
-              handleStyle === "bar" && "cn-slider-thumb-bar",
-              `cn-slider-thumb-variant-${variant ?? "default"}`,
+              "pf-slider-thumb block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50",
+              handleStyle === "bar" && "pf-slider-thumb-bar",
+              `pf-slider-thumb-variant-${variant ?? "default"}`,
               handleClassName,
             )}
           />

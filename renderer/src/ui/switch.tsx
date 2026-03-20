@@ -14,14 +14,14 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        "cn-switch peer group/switch relative inline-flex cursor-pointer items-center transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 data-disabled:cursor-not-allowed data-disabled:opacity-50",
+        "pf-switch peer group/switch relative inline-flex cursor-pointer items-center transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 data-disabled:cursor-not-allowed data-disabled:opacity-50",
         className
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="cn-switch-thumb pointer-events-none block ring-0 transition-transform"
+        className="pf-switch-thumb pointer-events-none block ring-0 transition-transform"
       />
     </SwitchPrimitive.Root>
   )

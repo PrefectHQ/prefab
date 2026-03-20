@@ -27,20 +27,20 @@ class TestThemeModel:
         assert result["dark"] == "--primary: oklch(0.7 0.18 260);"
 
     def test_css_field(self):
-        theme = Theme(css=".cn-progress { height: 0.625rem; }")
+        theme = Theme(css=".pf-progress { height: 0.625rem; }")
         result = theme.to_json()
-        assert result["css"] == ".cn-progress { height: 0.625rem; }"
+        assert result["css"] == ".pf-progress { height: 0.625rem; }"
 
     def test_all_three_fields(self):
         theme = Theme(
             light_css="--primary: red;",
             dark_css="--primary: blue;",
-            css=".cn-button { border-radius: 0; }",
+            css=".pf-button { border-radius: 0; }",
         )
         result = theme.to_json()
         assert result["light"] == "--primary: red;"
         assert result["dark"] == "--primary: blue;"
-        assert result["css"] == ".cn-button { border-radius: 0; }"
+        assert result["css"] == ".pf-button { border-radius: 0; }"
 
     def test_empty_theme(self):
         theme = Theme()
@@ -245,9 +245,9 @@ class TestPresentationTheme:
 
     def test_has_css_overrides(self):
         p = Presentation()
-        assert ".cn-progress" in p.css
-        assert ".cn-badge-variant-default" in p.css
-        assert ".cn-table-row" in p.css
+        assert ".pf-progress" in p.css
+        assert ".pf-badge-variant-default" in p.css
+        assert ".pf-table-row" in p.css
 
     def test_dark_matches_light(self):
         result = Presentation().to_json()
@@ -293,11 +293,11 @@ class TestPrefabAppTheme:
     def test_theme_with_css_in_wire_format(self):
         theme = Theme(
             light_css="--primary: red;",
-            css=".cn-progress { height: 0.625rem; }",
+            css=".pf-progress { height: 0.625rem; }",
         )
         app = PrefabApp(view=Text(content="hi"), theme=theme)
         result = app.to_json()
-        assert result["theme"]["css"] == ".cn-progress { height: 0.625rem; }"
+        assert result["theme"]["css"] == ".pf-progress { height: 0.625rem; }"
 
     def test_dict_compat_in_wire_format(self):
         app = PrefabApp(

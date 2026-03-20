@@ -4,29 +4,29 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "cn-button group/button",
+  "pf-button group/button",
   {
     variants: {
       variant: {
-        default: "cn-button-variant-default",
-        outline: "cn-button-variant-outline",
-        secondary: "cn-button-variant-secondary",
-        ghost: "cn-button-variant-ghost",
-        destructive: "cn-button-variant-destructive",
-        link: "cn-button-variant-link",
-        success: "cn-button-variant-success",
-        warning: "cn-button-variant-warning",
-        info: "cn-button-variant-info",
+        default: "pf-button-variant-default",
+        outline: "pf-button-variant-outline",
+        secondary: "pf-button-variant-secondary",
+        ghost: "pf-button-variant-ghost",
+        destructive: "pf-button-variant-destructive",
+        link: "pf-button-variant-link",
+        success: "pf-button-variant-success",
+        warning: "pf-button-variant-warning",
+        info: "pf-button-variant-info",
       },
       size: {
-        default: "cn-button-size-default",
-        xs: "cn-button-size-xs",
-        sm: "cn-button-size-sm",
-        lg: "cn-button-size-lg",
-        icon: "cn-button-size-icon",
-        "icon-xs": "cn-button-size-icon-xs",
-        "icon-sm": "cn-button-size-icon-sm",
-        "icon-lg": "cn-button-size-icon-lg",
+        default: "pf-button-size-default",
+        xs: "pf-button-size-xs",
+        sm: "pf-button-size-sm",
+        lg: "pf-button-size-lg",
+        icon: "pf-button-size-icon",
+        "icon-xs": "pf-button-size-icon-xs",
+        "icon-sm": "pf-button-size-icon-sm",
+        "icon-lg": "pf-button-size-icon-lg",
       },
     },
     defaultVariants: {

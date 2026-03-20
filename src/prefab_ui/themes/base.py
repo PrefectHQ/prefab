@@ -86,21 +86,21 @@ def _vars_to_css(d: dict[str, str]) -> str:
 
 
 _NO_GRADIENT_CSS = """
-.cn-progress-variant-default,
-.cn-progress-variant-success,
-.cn-progress-variant-warning,
-.cn-progress-variant-destructive,
-.cn-progress-variant-info,
-.cn-slider-variant-default,
-.cn-slider-variant-success,
-.cn-slider-variant-warning,
-.cn-slider-variant-destructive,
-.cn-slider-variant-info { background-image: none; }
-.cn-ring-variant-default { stroke: var(--primary); }
-.cn-ring-variant-success { stroke: var(--success); }
-.cn-ring-variant-warning { stroke: var(--warning); }
-.cn-ring-variant-destructive { stroke: var(--destructive); }
-.cn-ring-variant-info { stroke: var(--info); }
+.pf-progress-variant-default,
+.pf-progress-variant-success,
+.pf-progress-variant-warning,
+.pf-progress-variant-destructive,
+.pf-progress-variant-info,
+.pf-slider-variant-default,
+.pf-slider-variant-success,
+.pf-slider-variant-warning,
+.pf-slider-variant-destructive,
+.pf-slider-variant-info { background-image: none; }
+.pf-ring-variant-default { stroke: var(--primary); }
+.pf-ring-variant-success { stroke: var(--success); }
+.pf-ring-variant-warning { stroke: var(--warning); }
+.pf-ring-variant-destructive { stroke: var(--destructive); }
+.pf-ring-variant-info { stroke: var(--info); }
 """
 
 

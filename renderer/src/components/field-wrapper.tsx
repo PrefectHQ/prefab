@@ -29,7 +29,7 @@ export function PrefabField({
       data-slot="field"
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
-      className={cn("cn-field group/field flex flex-col gap-1.5", className)}
+      className={cn("pf-field group/field flex flex-col gap-1.5", className)}
     >
       {children}
     </div>
@@ -43,13 +43,13 @@ export function PrefabChoiceCard({
   children,
 }: PrefabFieldProps) {
   return (
-    <label className="cn-field-label">
+    <label className="pf-field-label">
       <div
         data-slot="field"
         data-invalid={invalid || undefined}
         data-disabled={disabled || undefined}
         className={cn(
-          "cn-field group/field flex items-center justify-between gap-2",
+          "pf-field group/field flex items-center justify-between gap-2",
           className,
         )}
       >
@@ -68,7 +68,7 @@ export function PrefabFieldTitle({
   className,
   children,
 }: PrefabFieldTextProps) {
-  return <span className={cn("cn-field-title", className)}>{children}</span>;
+  return <span className={cn("pf-field-title", className)}>{children}</span>;
 }
 
 export function PrefabFieldDescription({
@@ -76,7 +76,7 @@ export function PrefabFieldDescription({
   children,
 }: PrefabFieldTextProps) {
   return (
-    <span className={cn("cn-field-description", className)}>{children}</span>
+    <span className={cn("pf-field-description", className)}>{children}</span>
   );
 }
 
@@ -85,7 +85,7 @@ export function PrefabFieldContent({
   children,
 }: PrefabFieldTextProps) {
   return (
-    <div className={cn("cn-field-content grid", className)}>{children}</div>
+    <div className={cn("pf-field-content grid", className)}>{children}</div>
   );
 }
 
@@ -93,5 +93,5 @@ export function PrefabFieldError({
   className,
   children,
 }: PrefabFieldTextProps) {
-  return <p className={cn("cn-field-error", className)}>{children}</p>;
+  return <p className={cn("pf-field-error", className)}>{children}</p>;
 }

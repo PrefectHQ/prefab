@@ -50,7 +50,7 @@ function ComboboxItemRow({ item }: { item: ComboboxItemData }) {
       value={item.value}
       disabled={item.disabled}
       className={cn(
-        "cn-combobox-item relative flex cursor-pointer select-none items-center",
+        "pf-combobox-item relative flex cursor-pointer select-none items-center",
         item.disabled && "pointer-events-none opacity-50",
       )}
     >
@@ -158,7 +158,7 @@ export function PrefabCombobox({
         aria-invalid={invalid || undefined}
         disabled={disabled}
         className={cn(
-          "cn-button cn-button-variant-outline cn-button-size-default cn-combobox-trigger w-full justify-between font-normal",
+          "pf-button pf-button-variant-outline pf-button-size-default pf-combobox-trigger w-full justify-between font-normal",
           !value && "text-muted-foreground",
           invalid &&
             "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
@@ -166,7 +166,7 @@ export function PrefabCombobox({
         )}
       >
         {selectedLabel ?? placeholder}
-        <ChevronsUpDown className="cn-combobox-trigger-icon" />
+        <ChevronsUpDown className="pf-combobox-trigger-icon" />
       </ComboboxPrimitive.Trigger>
 
       <ComboboxPrimitive.Portal container={container}>
@@ -180,21 +180,21 @@ export function PrefabCombobox({
           align={align}
           className="isolate z-50"
         >
-          <ComboboxPrimitive.Popup className="cn-combobox-content group/combobox-content min-w-(--anchor-width) p-0">
+          <ComboboxPrimitive.Popup className="pf-combobox-content group/combobox-content min-w-(--anchor-width) p-0">
             <ComboboxPrimitive.Input
               placeholder={searchPlaceholder}
-              className="cn-input h-8 m-1 mb-0 w-[calc(100%-0.5rem)] border bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="pf-input h-8 m-1 mb-0 w-[calc(100%-0.5rem)] border bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
-            <div className="cn-combobox-list">
+            <div className="pf-combobox-list">
               {hasGroups
                 ? filteredGroups.map((group, gi) => (
                     <React.Fragment key={gi}>
                       {gi > 0 && (
-                        <Separator className="cn-combobox-separator" />
+                        <Separator className="pf-combobox-separator" />
                       )}
                       <div>
                         {group.label && (
-                          <div className="cn-combobox-label">{group.label}</div>
+                          <div className="pf-combobox-label">{group.label}</div>
                         )}
                         {group.items.map((item) => (
                           <ComboboxItemRow key={item.value} item={item} />
@@ -208,7 +208,7 @@ export function PrefabCombobox({
                     return (
                       <React.Fragment key={item.value}>
                         {separatorSet.has(origIdx) && (
-                          <Separator className="cn-combobox-separator" />
+                          <Separator className="pf-combobox-separator" />
                         )}
                         <ComboboxItemRow item={item} />
                       </React.Fragment>

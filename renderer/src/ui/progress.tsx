@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const progressVariants = cva(
-  "cn-progress-indicator h-full w-full flex-1 transition-all",
+  "pf-progress-indicator h-full w-full flex-1 transition-all",
   {
     variants: {
       variant: {
-        default: "cn-progress-variant-default",
-        success: "cn-progress-variant-success",
-        warning: "cn-progress-variant-warning",
-        destructive: "cn-progress-variant-destructive",
-        info: "cn-progress-variant-info",
-        muted: "cn-progress-variant-muted",
+        default: "pf-progress-variant-default",
+        success: "pf-progress-variant-success",
+        warning: "pf-progress-variant-warning",
+        destructive: "pf-progress-variant-destructive",
+        info: "pf-progress-variant-info",
+        muted: "pf-progress-variant-muted",
       },
     },
     defaultVariants: {
@@ -43,16 +43,16 @@ function Progress({
   const isVertical = orientation === "vertical";
   const clampedTarget =
     target != null ? Math.max(0, Math.min(100, target)) : undefined;
-  const sizeClass = `cn-progress-size-${size}`;
+  const sizeClass = `pf-progress-size-${size}`;
 
   return (
     <ProgressPrimitive.Root
       value={value}
       className={cn(
-        "cn-progress relative overflow-visible rounded-full",
+        "pf-progress relative overflow-visible rounded-full",
         sizeClass,
         isVertical
-          ? "cn-progress-vertical flex flex-col-reverse"
+          ? "pf-progress-vertical flex flex-col-reverse"
           : "w-full",
         className
       )}
@@ -60,7 +60,7 @@ function Progress({
     >
       <ProgressPrimitive.Track
         className={cn(
-          "cn-progress relative flex items-center overflow-hidden rounded-full",
+          "pf-progress relative flex items-center overflow-hidden rounded-full",
           sizeClass,
           isVertical ? "h-full w-full" : "w-full",
         )}
@@ -76,7 +76,7 @@ function Progress({
       </ProgressPrimitive.Track>
       {clampedTarget != null && (
         <span
-          className={cn("cn-progress-target", targetClassName)}
+          className={cn("pf-progress-target", targetClassName)}
           style={
             isVertical
               ? { bottom: `${clampedTarget}%` }

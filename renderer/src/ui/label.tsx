@@ -10,7 +10,7 @@ function Label({
     <label
       data-slot="label"
       className={cn(
-        "cn-label flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed",
+        "pf-label flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed",
         className
       )}
       {...props}

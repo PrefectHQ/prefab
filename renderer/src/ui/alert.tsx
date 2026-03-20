@@ -3,14 +3,14 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-const alertVariants = cva("cn-alert w-full relative group/alert", {
+const alertVariants = cva("pf-alert w-full relative group/alert", {
   variants: {
     variant: {
-      default: "cn-alert-variant-default",
-      destructive: "cn-alert-variant-destructive",
-      success: "cn-alert-variant-success",
-      warning: "cn-alert-variant-warning",
-      info: "cn-alert-variant-info",
+      default: "pf-alert-variant-default",
+      destructive: "pf-alert-variant-destructive",
+      success: "pf-alert-variant-success",
+      warning: "pf-alert-variant-warning",
+      info: "pf-alert-variant-info",
     },
   },
   defaultVariants: {
@@ -37,7 +37,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
-      className={cn("cn-alert-title", className)}
+      className={cn("pf-alert-title", className)}
       {...props}
     />
   )
@@ -50,7 +50,7 @@ function AlertDescription({
   return (
     <div
       data-slot="alert-description"
-      className={cn("cn-alert-description", className)}
+      className={cn("pf-alert-description", className)}
       {...props}
     />
   )

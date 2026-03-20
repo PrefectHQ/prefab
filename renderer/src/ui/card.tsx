@@ -11,7 +11,7 @@ function Card({
     <div
       data-slot="card"
       data-size={size}
-      className={cn("cn-card group/card flex flex-col has-data-[slot=card-footer]:pb-0", className)}
+      className={cn("pf-card group/card flex flex-col has-data-[slot=card-footer]:pb-0", className)}
       {...props}
     />
   )
@@ -22,7 +22,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-header"
       className={cn(
-        "cn-card-header group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
+        "pf-card-header group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]",
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
-      className={cn("cn-card-title", className)}
+      className={cn("pf-card-title", className)}
       {...props}
     />
   )
@@ -44,7 +44,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("cn-card-description", className)}
+      className={cn("pf-card-description", className)}
       {...props}
     />
   )
@@ -54,7 +54,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-content"
-      className={cn("cn-card-content", className)}
+      className={cn("pf-card-content", className)}
       {...props}
     />
   )
@@ -64,7 +64,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-footer"
-      className={cn("cn-card-footer flex items-center gap-2", className)}
+      className={cn("pf-card-footer flex items-center gap-2", className)}
       {...props}
     />
   )
