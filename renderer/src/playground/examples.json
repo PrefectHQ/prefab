@@ -1860,6 +1860,11 @@
     "code": "Checkbox(\n        name=\"todos.{{ $index }}.done\",\n        on_change=[\n            SetState(\"todos.{{ $index }}.done\", \"{{ $event }}\"),\n            CallTool(\n                \"persist_todo\",\n                arguments={\"id\": \"{{ $item.id }}\", \"done\": \"{{ $event }}\"},\n                on_error=[\n                    SetState(\"todos.{{ $index }}.done\", \"{{ !$event }}\"),\n                    ShowToast(\"Failed to save\", variant=\"error\"),\n                ],\n            ),\n        ],\n    )"
   },
   {
+    "title": "from prefab_ui.components import Card, CardContent, Text, Badge, Row",
+    "category": "Concepts",
+    "code": "with Card():\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Text(\"Status\")\n            Badge(\"Active\", variant=\"success\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
     "code": "from prefab_ui.components import Div, Row\n\nwith Row(gap=4):\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")\n    Div(css_class=\"bg-emerald-500 rounded-md h-10 w-24\")"
@@ -2012,7 +2017,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {state.todos.selectattr('name').first()}\")\n    Text(f\"All: {state.todos.selectattr('name').join(', ')}\")"
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"Completed: {state.todos.selectattr('done').length()}\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -2203,6 +2208,11 @@
     "title": "Python icon=\"python\"",
     "category": "Expressions",
     "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import (\n    Badge,\n    Card,\n    CardContent,\n    CardHeader,\n    CardTitle,\n    Column,\n    Text,\n)\n\nstate = set_initial_state(\n    name=\"Arthur Dent\",\n    bio=\"A perfectly ordinary man who woke up one Thursday to discover his house\"\n    \" was about to be demolished, his planet destroyed, and his best friend\"\n    \" was an alien from Betelgeuse.\",\n)\n\nwith Card():\n    with CardHeader():\n        CardTitle(state.name.upper())\n    with CardContent():\n        with Column(gap=2):\n            Badge(state.name.lower(), variant=\"secondary\")\n            Text(state.bio.truncate(80))"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Expressions",
+    "code": "from prefab_ui.app import set_initial_state\nfrom prefab_ui.components import Badge, Column, Row, Text\n\nstate = set_initial_state(\n    todos=[\n        {\"name\": \"Learn Prefab\", \"done\": True},\n        {\"name\": \"Build dashboard\", \"done\": False},\n        {\"name\": \"Deploy to production\", \"done\": False},\n    ]\n)\n\nwith Column(gap=2):\n    with Row(gap=2, align=\"center\"):\n        Text(f\"{state.todos.rejectattr('done').length()} remaining\")\n        Badge(f\"{state.todos.length()} total\", variant=\"outline\")\n    Text(f\"First: {state.todos.selectattr('name').first()}\")\n    Text(f\"All: {state.todos.selectattr('name').join(', ')}\")"
   },
   {
     "title": "app.py",

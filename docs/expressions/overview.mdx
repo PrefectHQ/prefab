@@ -209,7 +209,7 @@ with Column():
     slider = Slider(value=50)                # ...even though slider is created here
 ```
 
-Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/composition#forward-references) for more.
+Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/components#forward-references) for more.
 
 Use `.rx` when you have a component variable in scope. For keys from `set_initial_state()`, use the returned proxy — `state = set_initial_state(count=0)` gives you `state.count`, which is equivalent to `Rx("count")`. Use `Rx("key")` directly when the state key was created by a form control's `name` prop elsewhere in the tree and you don't have the component variable handy.
 
