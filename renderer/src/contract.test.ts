@@ -21,7 +21,7 @@ import {
 } from "./schemas/index.ts";
 import { REGISTRY } from "./components/registry.ts";
 
-const SCHEMAS_DIR = path.resolve(__dirname, "../../schemas");
+const SCHEMAS_DIR = path.resolve(__dirname, "../schemas");
 const MANIFEST_PATH = path.join(SCHEMAS_DIR, "manifest.json");
 
 interface Manifest {

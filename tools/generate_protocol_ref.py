@@ -3,7 +3,7 @@
 Produces compact pseudocode JSON blocks that show the wire format at a glance,
 plus links to the full JSON Schema protocol pages.
 
-Run via: uv run docs-build/generate_protocol_ref.py
+Run via: uv run tools/generate_protocol_ref.py
 """
 
 from __future__ import annotations

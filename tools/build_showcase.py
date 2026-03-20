@@ -6,9 +6,9 @@ self-contained copies of the renderer — one light, one dark — both with the
 fade-to-white/black mask and #08000E background. Output goes to /tmp/ by default.
 
 Usage:
-    uv run scripts/build_showcase.py
-    uv run scripts/build_showcase.py --out-dir ~/Desktop
-    uv run scripts/build_showcase.py --open
+    uv run tools/build_showcase.py
+    uv run tools/build_showcase.py --out-dir ~/Desktop
+    uv run tools/build_showcase.py --open
 """
 
 import argparse

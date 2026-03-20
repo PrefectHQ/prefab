@@ -1,6 +1,6 @@
 """Generate the playground Python source bundle as a JSON file.
 
-Run via: uv run docs-build/generate_playground_bundle.py
+Run via: uv run tools/generate_playground_bundle.py
 
 Reads all .py files from the prefab_ui package and serializes them as
 a JSON object mapping module paths to source code. The output is written

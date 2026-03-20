@@ -12,7 +12,7 @@ from prefab_ui.rx import reset_counter
 
 os.environ.setdefault("PREFAB_RENDERER_URL", "http://localhost:3333")
 
-# Make scripts/ importable for contract tests
+# Make tools/ importable for contract tests
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 

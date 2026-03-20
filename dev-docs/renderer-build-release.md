@@ -109,7 +109,7 @@ The npm-published version must be built with `VITE_LOCAL_PLAYGROUND=1` (handled 
 
 ### Bundle generation
 
-`docs-build/generate_playground_bundle.py` reads all `.py` files from `src/prefab_ui/` and serializes them as JSON into `renderer/src/playground/bundle.json`. This runs as part of `prefab dev build-docs`.
+`tools/generate_playground_bundle.py` reads all `.py` files from `src/prefab_ui/` and serializes them as JSON into `renderer/src/playground/bundle.json`. This runs as part of `prefab dev build-docs`.
 
 When adding new Python subpackages to prefab_ui, make sure they're included in the bundle generator's source paths.
 

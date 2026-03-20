@@ -6,8 +6,8 @@ minimal instances, serializes them to JSON, and writes fixture files that
 TypeScript contract tests validate against Zod schemas.
 
 Usage:
-    python scripts/generate_schemas.py          # Generate fixtures
-    python scripts/generate_schemas.py --check  # Check freshness (CI mode)
+    python tools/generate_schemas.py          # Generate fixtures
+    python tools/generate_schemas.py --check  # Check freshness (CI mode)
 """
 
 from __future__ import annotations
@@ -50,7 +50,7 @@ from prefab_ui.components.charts import (
 from prefab_ui.components.control_flow import ForEach
 from prefab_ui.rx import reset_counter
 
-SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
+SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "renderer" / "schemas"
 FIXTURES_DIR = SCHEMAS_DIR / "fixtures"
 COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"

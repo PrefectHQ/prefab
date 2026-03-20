@@ -1,9 +1,9 @@
 """Generate an HTML file containing all component classes for Tailwind to scan.
 
-Run via: uv run docs-build/generate_content.py
+Run via: uv run tools/generate_content.py
 
 This renders every component variant to HTML and writes the output to
-docs-build/content.html. The Tailwind CLI then scans this file (along
+tools/content.html. The Tailwind CLI then scans this file (along
 with the MDX docs) to know which utility classes to include in preview.css.
 """
 

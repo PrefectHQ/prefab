@@ -1,6 +1,6 @@
 """Scope Tailwind v4 output under .prefab-preview using CSS nesting.
 
-Run via: uv run docs-build/scope_css.py
+Run via: uv run tools/scope_css.py
 
 Reads the raw Tailwind output from /tmp/prefab-preview-raw.css (kept outside
 docs/ so Mintlify's dev server never auto-includes it), wraps all rules inside

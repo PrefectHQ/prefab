@@ -399,7 +399,7 @@ def _should_rebuild_playground(repo_root: Path) -> bool:
 def build_docs() -> None:
     """Regenerate all doc assets: previews, CSS, playground, and protocol ref."""
     repo_root = _find_repo_root()
-    build_dir = repo_root / "docs-build"
+    build_dir = repo_root / "tools"
 
     if not shutil.which("npx"):
         console.print(
@@ -550,7 +550,7 @@ def build_docs() -> None:
 def build_playground() -> None:
     """Rebuild only the playground HTML (skips previews, Tailwind, protocol)."""
     repo_root = _find_repo_root()
-    build_dir = repo_root / "docs-build"
+    build_dir = repo_root / "tools"
     renderer_dir = repo_root / "renderer"
 
     if not shutil.which("npm"):
@@ -598,8 +598,8 @@ def _collect_source_mtimes(repo_root: Path) -> dict[Path, float]:
         (repo_root / "src" / "prefab_ui", "**/*.py"),
         (repo_root / "renderer" / "src", "**/*.ts"),
         (repo_root / "renderer" / "src", "**/*.tsx"),
-        (repo_root / "docs-build", "*.py"),
-        (repo_root / "docs-build", "*.css"),
+        (repo_root / "tools", "*.py"),
+        (repo_root / "tools", "*.css"),
     ]
 
     # Exclude generated outputs so they don't re-trigger builds.
