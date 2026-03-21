@@ -25,6 +25,7 @@ export const comboboxSeparatorSchema = componentBase.extend({
 export const comboboxSchema = containerBase.extend({
   type: z.literal("Combobox"),
   placeholder: z.string().nullable().optional(),
+  value: z.string().optional(),
   searchPlaceholder: z.string().nullable().optional(),
   name: z.string().nullable().optional(),
   disabled: z.boolean().optional(),

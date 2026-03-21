@@ -77,9 +77,9 @@ export function collectComponentState(
       typeof n.name === "string" &&
       !(n.name in existing)
     ) {
-      let val: unknown = n.type === "DropZone" ? [] : n.value ?? n.checked;
+      let val: unknown = n.type === "DropZone" ? [] : n.value;
 
-      // Select/RadioGroup: default lives on children (selected/checked)
+      // Select/RadioGroup: default lives on children (selected/value)
       if (val === undefined && n.children) {
         if (n.type === "Select") {
           const selected = n.children.find((c) => (c as typeof n).selected) as
@@ -87,10 +87,10 @@ export function collectComponentState(
             | undefined;
           if (selected) val = selected.value;
         } else if (n.type === "RadioGroup") {
-          const checked = n.children.find((c) => (c as typeof n).checked) as
+          const checked = n.children.find((c) => (c as typeof n).value) as
             | typeof n
             | undefined;
-          if (checked) val = checked.value;
+          if (checked) val = (checked as Record<string, unknown>).option;
         }
       }
 

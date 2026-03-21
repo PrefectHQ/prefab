@@ -5,6 +5,7 @@ import { actionOrList } from "./actions.ts";
 export const datePickerSchema = componentBase.extend({
   type: z.literal("DatePicker"),
   placeholder: z.string().optional(),
+  value: z.string().optional(),
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });

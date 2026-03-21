@@ -5,6 +5,7 @@ import { actionOrList } from "./actions.ts";
 export const selectSchema = containerBase.extend({
   type: z.literal("Select"),
   placeholder: z.string().optional(),
+  value: z.string().optional(),
   name: z.string().optional(),
   size: z.enum(["sm", "default"]).optional(),
   side: z.enum(["top", "right", "bottom", "left"]).optional(),

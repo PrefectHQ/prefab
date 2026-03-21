@@ -121,10 +121,10 @@ describe("collectComponentState", () => {
     expect(collectComponentState(tree, {})).toEqual({ email: "a@b.com" });
   });
 
-  test("seeds checked from Checkbox", () => {
+  test("seeds value from Checkbox", () => {
     const tree = {
       type: "Column",
-      children: [{ type: "Checkbox", name: "agree", checked: true }],
+      children: [{ type: "Checkbox", name: "agree", value: true }],
     };
     expect(collectComponentState(tree, {})).toEqual({ agree: true });
   });
@@ -157,14 +157,14 @@ describe("collectComponentState", () => {
     expect(collectComponentState(tree, {})).toEqual({ color: "blue" });
   });
 
-  test("seeds RadioGroup from checked child option", () => {
+  test("seeds RadioGroup from selected child option", () => {
     const tree = {
       type: "RadioGroup",
       name: "size",
       children: [
-        { type: "Radio", value: "sm", label: "Small" },
-        { type: "Radio", value: "md", label: "Medium", checked: true },
-        { type: "Radio", value: "lg", label: "Large" },
+        { type: "Radio", option: "sm", label: "Small" },
+        { type: "Radio", option: "md", label: "Medium", value: true },
+        { type: "Radio", option: "lg", label: "Large" },
       ],
     };
     expect(collectComponentState(tree, {})).toEqual({ size: "md" });
