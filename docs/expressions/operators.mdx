@@ -203,7 +203,7 @@ This is a Python quirk, not a Prefab one. The protocol's `{{ }}` expressions don
 
 Sometimes you need to choose between two values based on a condition — "Online" or "Offline", "Pass" or "Fail", one color or another. The `.then(if_true, if_false)` method on `Rx` handles this, compiling to the protocol's `condition ? ifTrue : ifFalse` syntax:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -228,8 +228,8 @@ with Column(gap=2):
         "children": [
           {
             "name": "active",
+            "value": false,
             "type": "Switch",
-            "checked": false,
             "size": "default",
             "disabled": false,
             "required": false

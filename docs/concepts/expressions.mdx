@@ -110,7 +110,7 @@ Every interactive component manages a state key through its `name` prop, and tha
 
 The `.rx` property solves this. It returns `Rx(component.name)`, giving you a reactive reference to that component's state without needing to know or repeat the key name:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_24","type":"Slider","min":0.0,"max":100.0,"value":50.0,"disabled":false,"size":"default"},{"content":"Volume: {{ slider_24 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_24 }}","variant":"default","size":"default"}]},"state":{"slider_24":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBzbGlkZXIgPSBTbGlkZXIodmFsdWU9NTAsIG1pbj0wLCBtYXg9MTAwKQogICAgVGV4dChmIlZvbHVtZToge3NsaWRlci5yeH0lIikKICAgIFByb2dyZXNzKHZhbHVlPXNsaWRlci5yeCkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"slider_24","value":50.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"content":"Volume: {{ slider_24 }}%","type":"Text"},{"type":"Progress","value":"{{ slider_24 }}","variant":"default","size":"default"}]},"state":{"slider_24":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBQcm9ncmVzcywgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICBzbGlkZXIgPSBTbGlkZXIodmFsdWU9NTAsIG1pbj0wLCBtYXg9MTAwKQogICAgVGV4dChmIlZvbHVtZToge3NsaWRlci5yeH0lIikKICAgIFByb2dyZXNzKHZhbHVlPXNsaWRlci5yeCkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Progress, Slider, Text
@@ -128,10 +128,10 @@ with Column(gap=3):
     "children": [
       {
         "name": "slider_24",
+        "value": 50.0,
         "type": "Slider",
         "min": 0.0,
         "max": 100.0,
-        "value": 50.0,
         "disabled": false,
         "size": "default"
       },
@@ -307,7 +307,7 @@ This is a Python quirk. The `{{ }}` protocol expressions use standard precedence
 
 `.then(if_true, if_false)` chooses between two values based on a boolean expression. It compiles to the ternary operator `? :` in the protocol:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","type":"Switch","checked":false,"size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import set_initial_state
@@ -332,8 +332,8 @@ with Column(gap=2):
         "children": [
           {
             "name": "active",
+            "value": false,
             "type": "Switch",
-            "checked": false,
             "size": "default",
             "disabled": false,
             "required": false

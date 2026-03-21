@@ -39,7 +39,19 @@ Radio button input component.
       "description": "State key for reactive binding. Auto-generated if omitted."
     },
     "value": {
-      "description": "Form value",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": false,
+      "description": "Whether radio is selected"
+    },
+    "option": {
+      "description": "Option identifier within the group",
       "type": "string"
     },
     "label": {
@@ -49,11 +61,6 @@ Radio button input component.
       ],
       "default": null,
       "description": "Label text"
-    },
-    "checked": {
-      "default": false,
-      "description": "Whether radio is selected",
-      "type": "boolean"
     },
     "disabled": {
       "default": false,
@@ -68,7 +75,7 @@ Radio button input component.
   },
   "required": [
     "type",
-    "value"
+    "option"
   ]
 }
 ```

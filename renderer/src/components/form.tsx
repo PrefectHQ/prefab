@@ -33,31 +33,31 @@ import { Label } from "@/ui/label";
 /* ------------------------------------------------------------------ */
 
 interface PrefabRadioProps {
-  value: string;
+  option: string;
   label?: string;
-  checked?: boolean;
+  value?: boolean;
   name?: string;
   disabled?: boolean;
   className?: string;
 }
 
 export function PrefabRadio({
-  value,
+  option,
   label,
-  checked,
+  value,
   name,
   disabled,
   className,
 }: PrefabRadioProps) {
-  const id = `radio-${name ?? "standalone"}-${value}`;
+  const id = `radio-${name ?? "standalone"}-${option}`;
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <input
         type="radio"
         id={id}
         name={name}
-        value={value}
-        defaultChecked={checked}
+        value={option}
+        defaultChecked={value}
         disabled={disabled}
         className="h-4 w-4 border-border text-primary accent-primary"
       />
@@ -82,9 +82,9 @@ interface SelectItemData {
 }
 
 interface RadioItemData {
-  value: string;
+  option: string;
   label?: string;
-  checked?: boolean;
+  value?: boolean;
   disabled?: boolean;
 }
 
@@ -253,7 +253,7 @@ export function PrefabRadioGroup({
   onValueChange,
   _items = [],
 }: PrefabRadioGroupProps) {
-  const defaultValue = _items.find((i) => i.checked)?.value;
+  const defaultValue = _items.find((i) => i.value)?.option;
 
   const controlProps =
     value !== undefined
@@ -263,11 +263,11 @@ export function PrefabRadioGroup({
   return (
     <ShadcnRadioGroup {...controlProps} className={className} name={name}>
       {_items.map((item) => {
-        const id = `radio-${name ?? ""}-${item.value}`;
+        const id = `radio-${name ?? ""}-${item.option}`;
         return (
-          <div key={item.value} className="flex items-center space-x-2">
+          <div key={item.option} className="flex items-center space-x-2">
             <RadioGroupItem
-              value={item.value}
+              value={item.option}
               disabled={item.disabled}
               id={id}
             />
@@ -289,7 +289,7 @@ export function PrefabRadioGroup({
 
 interface PrefabCheckboxProps {
   label?: string;
-  checked?: boolean;
+  value?: boolean;
   name?: string;
   disabled?: boolean;
   className?: string;
@@ -299,7 +299,7 @@ interface PrefabCheckboxProps {
 
 export function PrefabCheckbox({
   label,
-  checked,
+  value,
   name,
   disabled,
   className,
@@ -309,11 +309,11 @@ export function PrefabCheckbox({
 
   // Internal state so the checkbox always toggles visually, even when
   // onCheckedChange is provided (which would otherwise force controlled
-  // mode with a frozen checked prop).
-  const [internal, setInternal] = React.useState(checked ?? false);
+  // mode with a frozen value prop).
+  const [internal, setInternal] = React.useState(value ?? false);
   React.useEffect(() => {
-    if (checked !== undefined) setInternal(checked);
-  }, [checked]);
+    if (value !== undefined) setInternal(value);
+  }, [value]);
 
   const handleChange = (val: boolean) => {
     setInternal(val);
@@ -351,7 +351,7 @@ export function PrefabCheckbox({
 
 interface PrefabSwitchProps {
   label?: string;
-  checked?: boolean;
+  value?: boolean;
   size?: "sm" | "default";
   name?: string;
   disabled?: boolean;
@@ -362,7 +362,7 @@ interface PrefabSwitchProps {
 
 export function PrefabSwitch({
   label,
-  checked,
+  value,
   size,
   name,
   disabled,
@@ -374,10 +374,10 @@ export function PrefabSwitch({
   // Internal state so the switch always toggles visually on click, while
   // still reflecting external state changes (e.g. another action sets the
   // bound state key via `name`).
-  const [internal, setInternal] = React.useState(checked ?? false);
+  const [internal, setInternal] = React.useState(value ?? false);
   React.useEffect(() => {
-    if (checked !== undefined) setInternal(checked);
-  }, [checked]);
+    if (value !== undefined) setInternal(value);
+  }, [value]);
 
   const handleChange = (val: boolean) => {
     setInternal(val);

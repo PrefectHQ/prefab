@@ -4,7 +4,7 @@ Example::
 
     from prefab_ui.components import Tabs, Tab, Text
 
-    with Tabs(default_value="general"):
+    with Tabs(value="general"):
         with Tab("General"):
             Text("General settings here.")
         with Tab("Advanced"):
@@ -65,7 +65,7 @@ class Tabs(StatefulMixin, ContainerComponent):
 
     Example::
 
-        with Tabs(default_value="general"):
+        with Tabs(value="general"):
             with Tab("General"):
                 Text("General settings")
             with Tab("Advanced"):
@@ -78,9 +78,8 @@ class Tabs(StatefulMixin, ContainerComponent):
         default="default",
         description="Visual style — 'default' (pill) or 'line' (underline)",
     )
-    default_value: str | None = Field(
+    value: RxStr | None = Field(
         default=None,
-        alias="defaultValue",
         description="Value of the initially active tab",
     )
     name: str | None = Field(
@@ -96,3 +95,8 @@ class Tabs(StatefulMixin, ContainerComponent):
         alias="onChange",
         description="Action(s) when the active tab changes",
     )
+
+    @property
+    def default_value(self) -> RxStr | None:
+        """Alias for ``value`` — the initially active tab."""
+        return self.value

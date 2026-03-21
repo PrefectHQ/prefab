@@ -9,9 +9,9 @@ export const pageSchema = containerBase.extend({
 
 export const pagesSchema = containerBase.extend({
   type: z.literal("Pages"),
-  defaultValue: z.string().optional(),
+  value: z.string().optional(),
   name: z.string().optional(),
 });
 
-export type PageWire = z.infer<typeof pageSchema>;
+export type PageWire = z.infer<typeof pagesSchema>;
 export type PagesWire = z.infer<typeof pagesSchema>;

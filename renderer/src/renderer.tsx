@@ -341,7 +341,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       }
     } else if (type === "Checkbox" || type === "Switch") {
       if (stateValue !== undefined) {
-        finalProps.checked = Boolean(stateValue);
+        finalProps.value = Boolean(stateValue);
       }
       if (!finalProps.onCheckedChange) {
         finalProps.onCheckedChange = (checked: boolean) => {

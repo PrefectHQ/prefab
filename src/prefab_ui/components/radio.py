@@ -7,9 +7,9 @@ Example::
     from prefab_ui.components import RadioGroup, Radio
 
     with RadioGroup(name="size"):
-        Radio(value="sm", label="Small")
-        Radio(value="md", label="Medium", checked=True)
-        Radio(value="lg", label="Large")
+        Radio(option="sm", label="Small")
+        Radio(option="md", label="Medium", value=True)
+        Radio(option="lg", label="Large")
 
     # Access reactive value
     group = RadioGroup()
@@ -18,9 +18,9 @@ Example::
 
 from __future__ import annotations
 
-from typing import ClassVar, Literal
+from typing import Any, ClassVar, Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
@@ -31,18 +31,23 @@ class RadioGroup(StatefulMixin, ContainerComponent):
     """Container for radio button options.
 
     Args:
+        value: Initially selected radio option string
         name: Form field name (shared by all radios in group)
         css_class: Additional CSS classes
 
     Example::
 
-        with RadioGroup(name="theme"):
-            Radio(value="light", label="Light")
-            Radio(value="dark", label="Dark")
+        with RadioGroup(name="theme", value="light"):
+            Radio(option="light", label="Light")
+            Radio(option="dark", label="Dark")
     """
 
     _auto_name: ClassVar[str] = "radiogroup"
     type: Literal["RadioGroup"] = "RadioGroup"
+    value: RxStr | None = Field(
+        default=None,
+        description="Initially selected radio option string",
+    )
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
@@ -58,9 +63,9 @@ class Radio(StatefulMixin, Component):
     """Radio button input component.
 
     Args:
-        value: Form value for this option
+        option: Option identifier for this radio within its group
         label: Label text to display
-        checked: Whether radio is initially selected
+        value: Whether radio is initially selected
         name: Form field name (usually set by RadioGroup)
         disabled: Whether radio is disabled
         required: Whether radio is required
@@ -68,18 +73,33 @@ class Radio(StatefulMixin, Component):
 
     Example::
 
-        Radio(value="yes", label="Yes")
-        Radio(value="no", label="No", checked=True)
+        Radio(option="yes", label="Yes")
+        Radio(option="no", label="No", value=True)
     """
 
     _auto_name: ClassVar[str] = "radio"
     type: Literal["Radio"] = "Radio"
-    value: RxStr = Field(description="Form value")
+    option: RxStr = Field(description="Option identifier within the group")
     label: RxStr | None = Field(default=None, description="Label text")
-    checked: bool = Field(default=False, description="Whether radio is selected")
+    value: bool | RxStr = Field(default=False, description="Whether radio is selected")
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
     )
     disabled: bool = Field(default=False, description="Whether radio is disabled")
     required: bool = Field(default=False, description="Whether radio is required")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _default_option_from_label(cls, data: Any) -> Any:
+        """Default ``option`` from ``label`` if not provided."""
+        if isinstance(data, dict) and "option" not in data:
+            label = data.get("label")
+            if label is not None:
+                data["option"] = label
+        return data
+
+    @property
+    def checked(self) -> bool | RxStr:
+        """Alias for ``value`` — whether radio is selected."""
+        return self.value

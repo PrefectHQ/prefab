@@ -57,6 +57,10 @@ class Select(StatefulMixin, ContainerComponent):
         default=None,
         description="Placeholder text",
     )
+    value: str | None = Field(
+        default=None,
+        description="Initially selected option value",
+    )
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",

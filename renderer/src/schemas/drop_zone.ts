@@ -11,6 +11,7 @@ export const dropZoneSchema = componentBase.extend({
   multiple: z.boolean().optional(),
   maxSize: z.number().int().optional(),
   disabled: z.boolean().optional(),
+  value: z.array(z.unknown()).optional(),
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });

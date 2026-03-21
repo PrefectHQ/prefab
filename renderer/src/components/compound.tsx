@@ -55,7 +55,6 @@ interface ChildPanel {
 // ── Tabs ───────────────────────────────────────────────────────────────
 
 interface PrefabTabsProps {
-  defaultValue?: string;
   value?: string;
   variant?: "default" | "line";
   orientation?: "horizontal" | "vertical";
@@ -65,7 +64,6 @@ interface PrefabTabsProps {
 }
 
 export function PrefabTabs({
-  defaultValue,
   value,
   variant,
   orientation = "horizontal",
@@ -74,12 +72,12 @@ export function PrefabTabs({
   _panels,
 }: PrefabTabsProps) {
   // Use first tab as default if none specified
-  const resolvedDefault = defaultValue ?? _panels[0]?.value;
+  const resolvedDefault = value ?? _panels[0]?.value;
 
   return (
     <ShadcnTabs
-      defaultValue={!value ? resolvedDefault : undefined}
-      value={value}
+      defaultValue={!onValueChange ? resolvedDefault : undefined}
+      value={onValueChange ? value : undefined}
       orientation={orientation}
       onValueChange={onValueChange}
       className={className}
@@ -139,23 +137,14 @@ export function PrefabAccordion({
 // ── Pages ──────────────────────────────────────────────────────────────
 
 interface PrefabPagesProps {
-  defaultValue?: string;
   name?: string;
   value?: string;
   className?: string;
   _panels: ChildPanel[];
 }
 
-export function PrefabPages({
-  defaultValue,
-  value,
-  className,
-  _panels,
-}: PrefabPagesProps) {
-  // Active page determined by value prop (from auto-state binding) or defaultValue
-  const [active, setActive] = useState(
-    value ?? defaultValue ?? _panels[0]?.value,
-  );
+export function PrefabPages({ value, className, _panels }: PrefabPagesProps) {
+  const [active, setActive] = useState(value ?? _panels[0]?.value);
 
   // Sync with external value changes (from state store)
   useEffect(() => {

@@ -38,6 +38,10 @@ class DatePicker(StatefulMixin, Component):
         default="Pick a date",
         description="Button text when no date is selected",
     )
+    value: str | None = Field(
+        default=None,
+        description="Initially selected date (ISO string)",
+    )
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",

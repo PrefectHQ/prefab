@@ -446,7 +446,7 @@ Compare this to the turnkey version above: the `CallTool` now has explicit `argu
 
 Each field's Python type determines which input component is rendered. A field named `email` gets an email input automatically, a `bool` becomes a checkbox, number types get number inputs with constraints, and so on.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Username","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"name":"age","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"name":"password","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":true}]},{"name":"active","type":"Checkbox","label":"Active","checked":true,"disabled":false,"required":false}]}}} playground="ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZCwgU2VjcmV0U3RyCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IEZvcm0KCmNsYXNzIFVzZXJQcm9maWxlKEJhc2VNb2RlbCk6CiAgICB1c2VybmFtZTogc3RyCiAgICBlbWFpbDogc3RyCiAgICBhZ2U6IGludCA9IEZpZWxkKGdlPTAsIGxlPTE1MCkKICAgIHBhc3N3b3JkOiBTZWNyZXRTdHIKICAgIGFjdGl2ZTogYm9vbCA9IFRydWUKCkZvcm0uZnJvbV9tb2RlbChVc2VyUHJvZmlsZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Username","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Email"},{"name":"email","type":"Input","inputType":"email","placeholder":"Email","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Age"},{"name":"age","type":"Input","inputType":"number","placeholder":"Age","disabled":false,"readOnly":false,"required":true,"min":0.0,"max":150.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Password"},{"name":"password","type":"Input","inputType":"password","placeholder":"Password","disabled":false,"readOnly":false,"required":true}]},{"name":"active","value":true,"type":"Checkbox","label":"Active","disabled":false,"required":false}]},"state":{"active":true}}} playground="ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZCwgU2VjcmV0U3RyCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IEZvcm0KCmNsYXNzIFVzZXJQcm9maWxlKEJhc2VNb2RlbCk6CiAgICB1c2VybmFtZTogc3RyCiAgICBlbWFpbDogc3RyCiAgICBhZ2U6IGludCA9IEZpZWxkKGdlPTAsIGxlPTE1MCkKICAgIHBhc3N3b3JkOiBTZWNyZXRTdHIKICAgIGFjdGl2ZTogYm9vbCA9IFRydWUKCkZvcm0uZnJvbV9tb2RlbChVc2VyUHJvZmlsZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field, SecretStr
@@ -535,14 +535,15 @@ Form.from_model(UserProfile)
       },
       {
         "name": "active",
+        "value": true,
         "type": "Checkbox",
         "label": "Active",
-        "checked": true,
         "disabled": false,
         "required": false
       }
     ]
-  }
+  },
+  "state": {"active": true}
 }
 ```
 </CodeGroup>
@@ -565,7 +566,7 @@ The full type mapping:
 
 Pydantic `Field()` parameters control labels, placeholders, and HTML validation constraints. In this example, `title` sets the label, `description` sets the placeholder, `min_length` enforces a minimum, and the `ui` hint overrides the default text input with a textarea.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Your Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"How should we address you?","disabled":false,"readOnly":false,"required":true,"minLength":2,"maxLength":50}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bio"},{"name":"bio","type":"Textarea","placeholder":"Tell us about yourself","value":"","rows":3,"disabled":false,"required":false}]}]},"state":{"bio":""}}} playground="ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZApmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBGb3JtCgpjbGFzcyBQcm9maWxlKEJhc2VNb2RlbCk6CiAgICBuYW1lOiBzdHIgPSBGaWVsZCgKICAgICAgICB0aXRsZT0iWW91ciBOYW1lIiwKICAgICAgICBkZXNjcmlwdGlvbj0iSG93IHNob3VsZCB3ZSBhZGRyZXNzIHlvdT8iLAogICAgICAgIG1pbl9sZW5ndGg9MiwKICAgICAgICBtYXhfbGVuZ3RoPTUwLAogICAgKQogICAgYmlvOiBzdHIgPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PSIiLAogICAgICAgIGRlc2NyaXB0aW9uPSJUZWxsIHVzIGFib3V0IHlvdXJzZWxmIiwKICAgICAgICBqc29uX3NjaGVtYV9leHRyYT17InVpIjogeyJ0eXBlIjogInRleHRhcmVhIiwgInJvd3MiOiAzfX0sCiAgICApCgpGb3JtLmZyb21fbW9kZWwoUHJvZmlsZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Your Name"},{"name":"name","type":"Input","inputType":"text","placeholder":"How should we address you?","disabled":false,"readOnly":false,"required":true,"minLength":2,"maxLength":50}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bio"},{"name":"bio","value":"","type":"Textarea","placeholder":"Tell us about yourself","rows":3,"disabled":false,"required":false}]}]},"state":{"bio":""}}} playground="ZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsLCBGaWVsZApmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBGb3JtCgpjbGFzcyBQcm9maWxlKEJhc2VNb2RlbCk6CiAgICBuYW1lOiBzdHIgPSBGaWVsZCgKICAgICAgICB0aXRsZT0iWW91ciBOYW1lIiwKICAgICAgICBkZXNjcmlwdGlvbj0iSG93IHNob3VsZCB3ZSBhZGRyZXNzIHlvdT8iLAogICAgICAgIG1pbl9sZW5ndGg9MiwKICAgICAgICBtYXhfbGVuZ3RoPTUwLAogICAgKQogICAgYmlvOiBzdHIgPSBGaWVsZCgKICAgICAgICBkZWZhdWx0PSIiLAogICAgICAgIGRlc2NyaXB0aW9uPSJUZWxsIHVzIGFib3V0IHlvdXJzZWxmIiwKICAgICAgICBqc29uX3NjaGVtYV9leHRyYT17InVpIjogeyJ0eXBlIjogInRleHRhcmVhIiwgInJvd3MiOiAzfX0sCiAgICApCgpGb3JtLmZyb21fbW9kZWwoUHJvZmlsZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from pydantic import BaseModel, Field
@@ -617,9 +618,9 @@ Form.from_model(Profile)
           {"type": "Label", "text": "Bio"},
           {
             "name": "bio",
+            "value": "",
             "type": "Textarea",
             "placeholder": "Tell us about yourself",
-            "value": "",
             "rows": 3,
             "disabled": false,
             "required": false

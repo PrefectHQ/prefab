@@ -161,17 +161,17 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             with CardContent():
                 with Column(gap=3):
                     Switch(
-                        label="Auto-scale agents", checked=True,
+                        label="Auto-scale agents", value=True,
                         name="autoscale",
                     )
                     Separator()
                     Switch(
-                        label="Code Mode", checked=True,
+                        label="Code Mode", value=True,
                         name="code_mode",
                     )
                     Separator()
                     Switch(
-                        label="Tool call caching", checked=False,
+                        label="Tool call caching", value=False,
                         name="cache",
                     )
             with CardFooter():
@@ -184,14 +184,14 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                 CardTitle("Travel Class")
             with CardContent():
                 with RadioGroup(name="travel_class"):
-                    Radio(value="economy", label="Economy")
+                    Radio(option="economy", label="Economy")
                     Radio(
-                        value="business", label="Business Class",
+                        option="business", label="Business Class",
                     )
                     Radio(
-                        value="improbability",
+                        option="improbability",
                         label="Infinite Improbability",
-                        checked=True,
+                        value=True,
                     )
 
     # ── Cols 3–4: summary row, chart, then 2-col grid below ─────────
@@ -262,15 +262,15 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             with Column(gap=2):
                                 Checkbox(
                                     label="Towel packed",
-                                    checked=True,
+                                    value=True,
                                 )
                                 Checkbox(
                                     label="Guide charged",
-                                    checked=True,
+                                    value=True,
                                 )
                                 Checkbox(
                                     label="Babel fish inserted",
-                                    checked=False,
+                                    value=False,
                                 )
                     with If("{{ !pressed }}"):
                         Button(
@@ -781,10 +781,10 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "children": [
                       {
                         "name": "improbability",
+                        "value": 42.0,
                         "type": "Slider",
                         "min": 0.0,
                         "max": 100.0,
-                        "value": 42.0,
                         "disabled": false,
                         "size": "default"
                       },
@@ -827,9 +827,9 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "children": [
                       {
                         "name": "autoscale",
+                        "value": true,
                         "type": "Switch",
                         "label": "Auto-scale agents",
-                        "checked": true,
                         "size": "default",
                         "disabled": false,
                         "required": false
@@ -837,9 +837,9 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                       {"type": "Separator", "orientation": "horizontal"},
                       {
                         "name": "code_mode",
+                        "value": true,
                         "type": "Switch",
                         "label": "Code Mode",
-                        "checked": true,
                         "size": "default",
                         "disabled": false,
                         "required": false
@@ -847,9 +847,9 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                       {"type": "Separator", "orientation": "horizontal"},
                       {
                         "name": "cache",
+                        "value": false,
                         "type": "Switch",
                         "label": "Tool call caching",
-                        "checked": false,
                         "size": "default",
                         "disabled": false,
                         "required": false
@@ -889,28 +889,28 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                     "children": [
                       {
                         "name": "radio_16",
+                        "value": false,
                         "type": "Radio",
-                        "value": "economy",
+                        "option": "economy",
                         "label": "Economy",
-                        "checked": false,
                         "disabled": false,
                         "required": false
                       },
                       {
                         "name": "radio_17",
+                        "value": false,
                         "type": "Radio",
-                        "value": "business",
+                        "option": "business",
                         "label": "Business Class",
-                        "checked": false,
                         "disabled": false,
                         "required": false
                       },
                       {
                         "name": "radio_18",
+                        "value": true,
                         "type": "Radio",
-                        "value": "improbability",
+                        "option": "improbability",
                         "label": "Infinite Improbability",
-                        "checked": true,
                         "disabled": false,
                         "required": false
                       }
@@ -1062,25 +1062,25 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                                 "children": [
                                   {
                                     "name": "checkbox_12",
+                                    "value": true,
                                     "type": "Checkbox",
                                     "label": "Towel packed",
-                                    "checked": true,
                                     "disabled": false,
                                     "required": false
                                   },
                                   {
                                     "name": "checkbox_13",
+                                    "value": true,
                                     "type": "Checkbox",
                                     "label": "Guide charged",
-                                    "checked": true,
                                     "disabled": false,
                                     "required": false
                                   },
                                   {
                                     "name": "checkbox_14",
+                                    "value": false,
                                     "type": "Checkbox",
                                     "label": "Babel fish inserted",
-                                    "checked": false,
                                     "disabled": false,
                                     "required": false
                                   }
@@ -1344,9 +1344,12 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
     "autoscale": true,
     "code_mode": true,
     "cache": false,
-    "radio_16": "economy",
-    "radio_17": "business",
-    "radio_18": "improbability"
+    "radio_16": false,
+    "radio_17": false,
+    "radio_18": true,
+    "checkbox_12": true,
+    "checkbox_13": true,
+    "checkbox_14": false
   }
 }
 ```

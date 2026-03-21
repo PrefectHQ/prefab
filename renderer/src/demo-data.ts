@@ -398,7 +398,7 @@ export const DEMO_TREE: ComponentNode = {
               type: "Checkbox",
               label: "Subscribe to newsletter",
               name: "newsletter",
-              checked: true,
+              value: true,
             },
 
             { type: "H3", content: "Switch" },
@@ -632,7 +632,7 @@ export const DEMO_TREE: ComponentNode = {
     { type: "H2", content: "Tabs" },
     {
       type: "Tabs",
-      defaultValue: "account",
+      value: "account",
       children: [
         {
           type: "Tab",
@@ -815,7 +815,7 @@ export const DEMO_TREE: ComponentNode = {
         {
           type: "Pages",
           name: "currentPage",
-          defaultValue: "home",
+          value: "home",
           children: [
             {
               type: "Page",

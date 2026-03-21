@@ -140,6 +140,10 @@ class Combobox(StatefulMixin, ContainerComponent):
         default=None,
         description="Placeholder text shown when no value is selected",
     )
+    value: str | None = Field(
+        default=None,
+        description="Initially selected option value",
+    )
     search_placeholder: RxStr | None = Field(
         default=None,
         alias="searchPlaceholder",
