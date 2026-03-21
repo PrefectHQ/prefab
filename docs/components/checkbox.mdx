@@ -115,14 +115,13 @@ with Column(gap=3, css_class="w-fit mx-auto"):
 
 The `on_change` parameter runs actions when the checkbox is toggled. `$event` is `true` when checked, `false` when unchecked:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"accepted","value":false,"type":"Checkbox","label":"Accept terms","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIENvbHVtbiwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCmV2ZW50ID0gUngoIiRldmVudCIpCm1lc3NhZ2UgPSBSeCgibWVzc2FnZSIpCgp3aXRoIENvbHVtbihnYXA9NCwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBDaGVja2JveCgKICAgICAgICBsYWJlbD0iQWNjZXB0IHRlcm1zIiwKICAgICAgICBuYW1lPSJhY2NlcHRlZCIsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKAogICAgICAgICAgICAibWVzc2FnZSIsCiAgICAgICAgICAgIGV2ZW50LnRoZW4oIlRoYW5rIHlvdSEiLCAiUGxlYXNlIGFjY2VwdCB0byBjb250aW51ZSIpLAogICAgICAgICksCiAgICApCiAgICBUZXh0KAogICAgICAgIG1lc3NhZ2UuZGVmYXVsdCgiQ2hlY2sgdGhlIGJveCIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"accepted","value":false,"type":"Checkbox","label":"Accept terms","disabled":false,"required":false,"onChange":{"action":"setState","key":"message","value":"{{ $event ? 'Thank you!' : 'Please accept to continue' }}"}},{"cssClass":"text-muted-foreground","content":"{{ message | default:'Check the box' }}","type":"Text"}]},"state":{"accepted":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gsIENvbHVtbiwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgRVZFTlQsIFJ4CgptZXNzYWdlID0gUngoIm1lc3NhZ2UiKQoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgQ2hlY2tib3goCiAgICAgICAgbGFiZWw9IkFjY2VwdCB0ZXJtcyIsCiAgICAgICAgbmFtZT0iYWNjZXB0ZWQiLAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgKICAgICAgICAgICAgIm1lc3NhZ2UiLAogICAgICAgICAgICBFVkVOVC50aGVuKCJUaGFuayB5b3UhIiwgIlBsZWFzZSBhY2NlcHQgdG8gY29udGludWUiKSwKICAgICAgICApLAogICAgKQogICAgVGV4dCgKICAgICAgICBtZXNzYWdlLmRlZmF1bHQoIkNoZWNrIHRoZSBib3giKSwKICAgICAgICBjc3NfY2xhc3M9InRleHQtbXV0ZWQtZm9yZWdyb3VuZCIsCiAgICApCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Checkbox, Column, Text
 from prefab_ui.actions import SetState
-from prefab_ui.rx import Rx
+from prefab_ui.rx import EVENT, Rx
 
-event = Rx("$event")
 message = Rx("message")
 
 with Column(gap=4, css_class="w-fit mx-auto"):
@@ -131,7 +130,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
         name="accepted",
         on_change=SetState(
             "message",
-            event.then("Thank you!", "Please accept to continue"),
+            EVENT.then("Thank you!", "Please accept to continue"),
         ),
     )
     Text(

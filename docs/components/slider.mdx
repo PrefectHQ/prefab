@@ -175,18 +175,19 @@ with Column(gap=2):
 
 The `on_change` parameter runs actions when the slider value changes. `$event` is the current numeric value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"slider_5","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_5":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSeCwgU2xpZGVyLCBUZXh0CgpsZXZlbCA9IFJ4KCJsZXZlbCIpCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICBTbGlkZXIoCiAgICAgICAgdmFsdWU9NTAsCiAgICAgICAgb25fY2hhbmdlPVNldFN0YXRlKCJsZXZlbCIsIFJ4KCIkZXZlbnQiKSksCiAgICApCiAgICBUZXh0KAogICAgICAgIGxldmVsLmRlZmF1bHQoIkRyYWcgdGhlIHNsaWRlciIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"name":"slider_5","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","onChange":{"action":"setState","key":"level","value":"{{ $event }}"}},{"cssClass":"text-muted-foreground","content":"{{ level | default:'Drag the slider' }}","type":"Text"}]},"state":{"slider_5":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBTbGlkZXIsIFRleHQKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IEVWRU5ULCBSeAoKbGV2ZWwgPSBSeCgibGV2ZWwiKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgU2xpZGVyKAogICAgICAgIHZhbHVlPTUwLAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgibGV2ZWwiLCBFVkVOVCksCiAgICApCiAgICBUZXh0KAogICAgICAgIGxldmVsLmRlZmF1bHQoIkRyYWcgdGhlIHNsaWRlciIpLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.actions import SetState
-from prefab_ui.components import Column, Rx, Slider, Text
+from prefab_ui.components import Column, Slider, Text
+from prefab_ui.rx import EVENT, Rx
 
 level = Rx("level")
 
 with Column(gap=4):
     Slider(
         value=50,
-        on_change=SetState("level", Rx("$event")),
+        on_change=SetState("level", EVENT),
     )
     Text(
         level.default("Drag the slider"),
