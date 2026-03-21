@@ -7,7 +7,7 @@ Example::
     from prefab_ui.components import Pages, Page, Text, Button
     from prefab_ui.actions import SetState
 
-    with Pages(name="page", default_value="home"):
+    with Pages(name="page", value="home"):
         with Page("Home"):
             Text("Welcome!")
             Button("Go to Settings", on_click=SetState("page", "settings"))
@@ -27,6 +27,7 @@ from typing import Any, ClassVar, Literal, overload
 from pydantic import Field
 
 from prefab_ui.components.base import ContainerComponent, StatefulMixin
+from prefab_ui.rx import RxStr
 
 
 class Page(ContainerComponent):
@@ -64,7 +65,7 @@ class Pages(StatefulMixin, ContainerComponent):
 
     Example::
 
-        with Pages(name="currentPage", default_value="home"):
+        with Pages(name="currentPage", value="home"):
             with Page("Home"):
                 Text("Home content")
             with Page("Settings"):
@@ -73,12 +74,16 @@ class Pages(StatefulMixin, ContainerComponent):
 
     _auto_name: ClassVar[str] = "pages"
     type: Literal["Pages"] = "Pages"
-    default_value: str | None = Field(
+    value: RxStr | None = Field(
         default=None,
-        alias="defaultValue",
         description="Initially active page value",
     )
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
     )
+
+    @property
+    def default_value(self) -> RxStr | None:
+        """Alias for ``value`` — the initially active page."""
+        return self.value

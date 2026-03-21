@@ -207,10 +207,13 @@ class StatefulMixin:
     mixin to gain the ``.rx`` property, which returns an ``Rx`` object
     serializing to ``{{ name }}`` for template expressions.
 
+    Subclasses narrow the ``value`` type (e.g. ``bool`` for Checkbox,
+    ``str | None`` for Tabs).
     """
 
     _auto_name: ClassVar[str]
     name: str | None
+    value: Any
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)

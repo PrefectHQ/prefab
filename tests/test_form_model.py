@@ -60,7 +60,7 @@ class TestFormComponent:
 
         checkbox = j["children"][2]
         assert checkbox["type"] == "Checkbox"
-        assert checkbox["checked"] is True
+        assert checkbox["value"] is True
 
     def test_from_model_email_detection(self):
         class Contact(BaseModel):

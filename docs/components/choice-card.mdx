@@ -12,7 +12,7 @@ ChoiceCard is a [Field](/components/field) that renders as a bordered card. Clic
 
 Place a `FieldContent` (with title and description) alongside a toggle control like Switch or Checkbox.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Marketing emails"},{"type":"FieldDescription","content":"Receive emails about new products and features."}]},{"name":"switch_1","type":"Switch","checked":false,"size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Security emails"},{"type":"FieldDescription","content":"Receive emails about your account activity."}]},{"name":"switch_2","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiTWFya2V0aW5nIGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgbmV3IHByb2R1Y3RzIGFuZCBmZWF0dXJlcy4iCiAgICAgICAgICAgICkKICAgICAgICBTd2l0Y2goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlNlY3VyaXR5IGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgeW91ciBhY2NvdW50IGFjdGl2aXR5LiIKICAgICAgICAgICAgKQogICAgICAgIFN3aXRjaChjaGVja2VkPVRydWUpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Marketing emails"},{"type":"FieldDescription","content":"Receive emails about new products and features."}]},{"name":"switch_1","value":false,"type":"Switch","size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Security emails"},{"type":"FieldDescription","content":"Receive emails about your account activity."}]},{"name":"switch_2","value":true,"type":"Switch","size":"default","disabled":false,"required":false}]}]},"state":{"switch_1":false,"switch_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiTWFya2V0aW5nIGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgbmV3IHByb2R1Y3RzIGFuZCBmZWF0dXJlcy4iCiAgICAgICAgICAgICkKICAgICAgICBTd2l0Y2goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlNlY3VyaXR5IGVtYWlscyIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAiUmVjZWl2ZSBlbWFpbHMgYWJvdXQgeW91ciBhY2NvdW50IGFjdGl2aXR5LiIKICAgICAgICAgICAgKQogICAgICAgIFN3aXRjaCh2YWx1ZT1UcnVlKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -34,7 +34,7 @@ with Column(gap=4):
             FieldDescription(
                 "Receive emails about your account activity."
             )
-        Switch(checked=True)
+        Switch(value=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -59,8 +59,8 @@ with Column(gap=4):
           },
           {
             "name": "switch_1",
+            "value": false,
             "type": "Switch",
-            "checked": false,
             "size": "default",
             "disabled": false,
             "required": false
@@ -84,8 +84,8 @@ with Column(gap=4):
           },
           {
             "name": "switch_2",
+            "value": true,
             "type": "Switch",
-            "checked": true,
             "size": "default",
             "disabled": false,
             "required": false
@@ -104,7 +104,7 @@ with Column(gap=4):
 
 ChoiceCard works with any toggle control.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Accept terms"},{"type":"FieldDescription","content":"You agree to our Terms of Service and Privacy Policy."}]},{"name":"checkbox_10","type":"Checkbox","checked":false,"disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Subscribe to newsletter"},{"type":"FieldDescription","content":"Get weekly updates on new features."}]},{"name":"checkbox_11","type":"Checkbox","checked":true,"disabled":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsIENob2ljZUNhcmQsIENvbHVtbiwgRmllbGRDb250ZW50LCBGaWVsZERlc2NyaXB0aW9uLCBGaWVsZFRpdGxlLAopCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENob2ljZUNhcmQoKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJBY2NlcHQgdGVybXMiKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKAogICAgICAgICAgICAgICAgIllvdSBhZ3JlZSB0byBvdXIgVGVybXMgb2YgU2VydmljZSBhbmQgUHJpdmFjeSBQb2xpY3kuIgogICAgICAgICAgICApCiAgICAgICAgQ2hlY2tib3goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlN1YnNjcmliZSB0byBuZXdzbGV0dGVyIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiR2V0IHdlZWtseSB1cGRhdGVzIG9uIG5ldyBmZWF0dXJlcy4iKQogICAgICAgIENoZWNrYm94KGNoZWNrZWQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Accept terms"},{"type":"FieldDescription","content":"You agree to our Terms of Service and Privacy Policy."}]},{"name":"checkbox_10","value":false,"type":"Checkbox","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Subscribe to newsletter"},{"type":"FieldDescription","content":"Get weekly updates on new features."}]},{"name":"checkbox_11","value":true,"type":"Checkbox","disabled":false,"required":false}]}]},"state":{"checkbox_10":false,"checkbox_11":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsIENob2ljZUNhcmQsIENvbHVtbiwgRmllbGRDb250ZW50LCBGaWVsZERlc2NyaXB0aW9uLCBGaWVsZFRpdGxlLAopCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENob2ljZUNhcmQoKToKICAgICAgICB3aXRoIEZpZWxkQ29udGVudCgpOgogICAgICAgICAgICBGaWVsZFRpdGxlKCJBY2NlcHQgdGVybXMiKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKAogICAgICAgICAgICAgICAgIllvdSBhZ3JlZSB0byBvdXIgVGVybXMgb2YgU2VydmljZSBhbmQgUHJpdmFjeSBQb2xpY3kuIgogICAgICAgICAgICApCiAgICAgICAgQ2hlY2tib3goKQoKICAgIHdpdGggQ2hvaWNlQ2FyZCgpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIlN1YnNjcmliZSB0byBuZXdzbGV0dGVyIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiR2V0IHdlZWtseSB1cGRhdGVzIG9uIG5ldyBmZWF0dXJlcy4iKQogICAgICAgIENoZWNrYm94KHZhbHVlPVRydWUpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -124,7 +124,7 @@ with Column(gap=4):
         with FieldContent():
             FieldTitle("Subscribe to newsletter")
             FieldDescription("Get weekly updates on new features.")
-        Checkbox(checked=True)
+        Checkbox(value=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -149,8 +149,8 @@ with Column(gap=4):
           },
           {
             "name": "checkbox_10",
+            "value": false,
             "type": "Checkbox",
-            "checked": false,
             "disabled": false,
             "required": false
           }
@@ -170,15 +170,16 @@ with Column(gap=4):
           },
           {
             "name": "checkbox_11",
+            "value": true,
             "type": "Checkbox",
-            "checked": true,
             "disabled": false,
             "required": false
           }
         ]
       }
     ]
-  }
+  },
+  "state": {"checkbox_10": false, "checkbox_11": true}
 }
 ```
 </CodeGroup>
@@ -188,7 +189,7 @@ with Column(gap=4):
 
 A disabled ChoiceCard dims the entire card and prevents interaction.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Enabled option"},{"type":"FieldDescription","content":"You can toggle this."}]},{"name":"switch_3","type":"Switch","checked":true,"size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":true,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Disabled option"},{"type":"FieldDescription","content":"This cannot be changed."}]},{"name":"switch_4","type":"Switch","checked":false,"size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiRW5hYmxlZCBvcHRpb24iKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKCJZb3UgY2FuIHRvZ2dsZSB0aGlzLiIpCiAgICAgICAgU3dpdGNoKGNoZWNrZWQ9VHJ1ZSkKCiAgICB3aXRoIENob2ljZUNhcmQoZGlzYWJsZWQ9VHJ1ZSk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiRGlzYWJsZWQgb3B0aW9uIikKICAgICAgICAgICAgRmllbGREZXNjcmlwdGlvbigiVGhpcyBjYW5ub3QgYmUgY2hhbmdlZC4iKQogICAgICAgIFN3aXRjaChkaXNhYmxlZD1UcnVlKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"ChoiceCard","invalid":false,"disabled":false,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Enabled option"},{"type":"FieldDescription","content":"You can toggle this."}]},{"name":"switch_3","value":true,"type":"Switch","size":"default","disabled":false,"required":false}]},{"type":"ChoiceCard","invalid":false,"disabled":true,"children":[{"type":"FieldContent","children":[{"type":"FieldTitle","content":"Disabled option"},{"type":"FieldDescription","content":"This cannot be changed."}]},{"name":"switch_4","value":false,"type":"Switch","size":"default","disabled":true,"required":false}]}]},"state":{"switch_3":true,"switch_4":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hvaWNlQ2FyZCwgQ29sdW1uLCBGaWVsZENvbnRlbnQsIEZpZWxkRGVzY3JpcHRpb24sIEZpZWxkVGl0bGUsIFN3aXRjaCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBDaG9pY2VDYXJkKCk6CiAgICAgICAgd2l0aCBGaWVsZENvbnRlbnQoKToKICAgICAgICAgICAgRmllbGRUaXRsZSgiRW5hYmxlZCBvcHRpb24iKQogICAgICAgICAgICBGaWVsZERlc2NyaXB0aW9uKCJZb3UgY2FuIHRvZ2dsZSB0aGlzLiIpCiAgICAgICAgU3dpdGNoKHZhbHVlPVRydWUpCgogICAgd2l0aCBDaG9pY2VDYXJkKGRpc2FibGVkPVRydWUpOgogICAgICAgIHdpdGggRmllbGRDb250ZW50KCk6CiAgICAgICAgICAgIEZpZWxkVGl0bGUoIkRpc2FibGVkIG9wdGlvbiIpCiAgICAgICAgICAgIEZpZWxkRGVzY3JpcHRpb24oIlRoaXMgY2Fubm90IGJlIGNoYW5nZWQuIikKICAgICAgICBTd2l0Y2goZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -200,7 +201,7 @@ with Column(gap=4):
         with FieldContent():
             FieldTitle("Enabled option")
             FieldDescription("You can toggle this.")
-        Switch(checked=True)
+        Switch(value=True)
 
     with ChoiceCard(disabled=True):
         with FieldContent():
@@ -228,8 +229,8 @@ with Column(gap=4):
           },
           {
             "name": "switch_3",
+            "value": true,
             "type": "Switch",
-            "checked": true,
             "size": "default",
             "disabled": false,
             "required": false
@@ -250,8 +251,8 @@ with Column(gap=4):
           },
           {
             "name": "switch_4",
+            "value": false,
             "type": "Switch",
-            "checked": false,
             "size": "default",
             "disabled": true,
             "required": false

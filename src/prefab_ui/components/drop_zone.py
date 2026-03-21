@@ -22,7 +22,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import ClassVar, Literal
+from typing import Any, ClassVar, Literal
 
 from pydantic import Field
 
@@ -54,6 +54,10 @@ class DropZone(StatefulMixin, Component):
 
     _auto_name: ClassVar[str] = "dropzone"
     type: Literal["DropZone"] = "DropZone"
+    value: list[Any] | None = Field(
+        default=None,
+        description="Initial file data",
+    )
     icon: str | None = Field(
         default=None,
         description="Lucide icon name (kebab-case, e.g. 'cloud-upload'). "

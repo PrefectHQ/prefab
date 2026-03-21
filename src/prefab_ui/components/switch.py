@@ -6,7 +6,7 @@ Example::
 
     from prefab_ui.components import Switch
 
-    Switch(label="Enable notifications", checked=True)
+    Switch(label="Enable notifications", value=True)
     Switch(label="Dark mode", size="sm")
 
     # Access reactive value
@@ -32,7 +32,7 @@ class Switch(StatefulMixin, Component):
 
     Args:
         label: Label text to display next to switch
-        checked: Whether switch is on
+        value: Whether switch is on
         size: Switch size ("sm" or "default")
         name: Form field name
         disabled: Whether switch is disabled
@@ -42,13 +42,13 @@ class Switch(StatefulMixin, Component):
     Example::
 
         Switch(label="Enabled")
-        Switch(checked=True, label="Active", size="sm")
+        Switch(value=True, label="Active", size="sm")
     """
 
     _auto_name: ClassVar[str] = "switch"
     type: Literal["Switch"] = "Switch"
     label: RxStr | None = Field(default=None, description="Label text")
-    checked: bool = Field(default=False, description="Whether switch is on")
+    value: bool | RxStr = Field(default=False, description="Whether switch is on")
     size: SwitchSize = Field(default="default", description="Switch size (sm, default)")
     name: str | None = Field(
         default=None,
@@ -61,3 +61,8 @@ class Switch(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when toggled",
     )
+
+    @property
+    def checked(self) -> bool | RxStr:
+        """Alias for ``value`` — whether switch is on."""
+        return self.value

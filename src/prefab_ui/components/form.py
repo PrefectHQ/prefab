@@ -352,8 +352,8 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
 
     # bool → Checkbox
     if inner is bool:
-        checked = bool(default) if default is not None else False
-        return Checkbox(label=label_text, name=name, checked=checked)
+        initial = bool(default) if default is not None else False
+        return Checkbox(label=label_text, name=name, value=initial)
 
     # SecretStr → password input
     if inner is SecretStr:

@@ -7,7 +7,7 @@ from prefab_ui.components import Tab, Tabs, Text
 
 class TestTabsComponents:
     def test_tabs_structure(self):
-        with Tabs(default_value="general") as tabs:
+        with Tabs(value="general") as tabs:
             with Tab("General"):
                 Text(content="General content")
             with Tab("Advanced", disabled=True):
@@ -15,7 +15,8 @@ class TestTabsComponents:
 
         j = tabs.to_json()
         assert j["type"] == "Tabs"
-        assert j["defaultValue"] == "general"
+        assert j["value"] == "general"
+        assert "defaultValue" not in j
         assert len(j["children"]) == 2
         assert j["children"][0]["type"] == "Tab"
         assert j["children"][0]["title"] == "General"
@@ -39,3 +40,7 @@ class TestTabsComponents:
         tabs = Tabs(variant="line")
         j = tabs.to_json()
         assert j["variant"] == "line"
+
+    def test_tabs_default_value_property(self):
+        tabs = Tabs(value="settings")
+        assert tabs.default_value == "settings"

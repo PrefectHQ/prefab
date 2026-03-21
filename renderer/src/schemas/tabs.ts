@@ -13,7 +13,7 @@ export const tabsSchema = containerBase.extend({
   type: z.literal("Tabs"),
   variant: z.enum(["default", "line"]).or(z.string()).optional(),
   orientation: z.enum(["horizontal", "vertical"]).optional(),
-  defaultValue: z.string().optional(),
+  value: z.string().optional(),
   name: z.string().optional(),
   onChange: actionOrList.optional(),
 });

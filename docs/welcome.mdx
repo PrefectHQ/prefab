@@ -5,7 +5,6 @@ description: The agentic frontend framework that even humans can use.
 icon: hand-wave
 mode: center
 ---
-import _C_showcase from '/snippets/gen/welcome/code_showcase.mdx'
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
@@ -189,17 +188,17 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
             with CardContent():
                 with Column(gap=3):
                     Switch(
-                        label="Auto-scale agents", checked=True,
+                        label="Auto-scale agents", value=True,
                         name="autoscale",
                     )
                     Separator()
                     Switch(
-                        label="Code Mode", checked=True,
+                        label="Code Mode", value=True,
                         name="code_mode",
                     )
                     Separator()
                     Switch(
-                        label="Tool call caching", checked=False,
+                        label="Tool call caching", value=False,
                         name="cache",
                     )
             with CardFooter():
@@ -212,14 +211,14 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                 CardTitle("Travel Class")
             with CardContent():
                 with RadioGroup(name="travel_class"):
-                    Radio(value="economy", label="Economy")
+                    Radio(option="economy", label="Economy")
                     Radio(
                         value="business", label="Business Class",
                     )
                     Radio(
                         value="improbability",
                         label="Infinite Improbability",
-                        checked=True,
+                        value=True,
                     )
 
     # ── Cols 3–4: summary row, chart, then 2-col grid below ─────────
@@ -290,15 +289,15 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
                             with Column(gap=2):
                                 Checkbox(
                                     label="Towel packed",
-                                    checked=True,
+                                    value=True,
                                 )
                                 Checkbox(
                                     label="Guide charged",
-                                    checked=True,
+                                    value=True,
                                 )
                                 Checkbox(
                                     label="Babel fish inserted",
-                                    checked=False,
+                                    value=False,
                                 )
                     with If("{{ !pressed }}"):
                         Button(

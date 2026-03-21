@@ -6,7 +6,7 @@ Example::
 
     from prefab_ui.components import Checkbox, Label
 
-    Checkbox(checked=True, label="Accept terms")
+    Checkbox(value=True, label="Accept terms")
     Checkbox(label="Subscribe to newsletter")
 
     # Access reactive value
@@ -30,9 +30,8 @@ class Checkbox(StatefulMixin, Component):
 
     Args:
         label: Label text to display next to checkbox
-        checked: Whether checkbox is checked
+        value: Whether checkbox is checked
         name: Form field name
-        value: Form value when checked
         disabled: Whether checkbox is disabled
         required: Whether checkbox is required
         css_class: Additional CSS classes
@@ -40,19 +39,20 @@ class Checkbox(StatefulMixin, Component):
     Example::
 
         Checkbox(label="Remember me")
-        Checkbox(checked=True, label="Agreed")
-        Checkbox(label="Enable {{ feature_name }}", checked="{{ is_enabled }}")
+        Checkbox(value=True, label="Agreed")
+        Checkbox(label="Enable {{ feature_name }}", value="{{ is_enabled }}")
     """
 
     _auto_name: ClassVar[str] = "checkbox"
     type: Literal["Checkbox"] = "Checkbox"
     label: RxStr | None = Field(default=None, description="Label text")
-    checked: bool = Field(default=False, description="Whether checkbox is checked")
+    value: bool | RxStr = Field(
+        default=False, description="Whether checkbox is checked"
+    )
     name: str | None = Field(
         default=None,
         description="State key for reactive binding. Auto-generated if omitted.",
     )
-    value: RxStr | None = Field(default=None, description="Form value")
     disabled: bool = Field(default=False, description="Whether checkbox is disabled")
     required: bool = Field(default=False, description="Whether checkbox is required")
     on_change: Action | list[Action] | None = Field(
@@ -60,3 +60,8 @@ class Checkbox(StatefulMixin, Component):
         alias="onChange",
         description="Action(s) to execute when checked state changes",
     )
+
+    @property
+    def checked(self) -> bool | RxStr:
+        """Alias for ``value`` — whether checkbox is checked."""
+        return self.value

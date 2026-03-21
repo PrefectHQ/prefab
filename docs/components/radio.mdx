@@ -10,17 +10,17 @@ Radio buttons let users select exactly one option from a set. Each `Radio` repre
 
 ## Basic Usage
 
-A `RadioGroup` is a container that holds `Radio` children. Each radio needs a `value` (what gets stored when selected) and a `label` (what the user sees). The group tracks which radio is selected and stores its `value` string in state:
+A `RadioGroup` is a container that holds `Radio` children. Each radio needs an `option` (what gets stored when selected) and a `label` (what the user sees). The group tracks which radio is selected and stores its `option` string in state:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_1","type":"RadioGroup","children":[{"name":"radio_1","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_2","type":"Radio","value":"md","label":"Medium","checked":false,"disabled":false,"required":false},{"name":"radio_3","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]},"state":{"radio_1":"sm","radio_2":"md","radio_3":"lg"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKHZhbHVlPSJzbSIsIGxhYmVsPSJTbWFsbCIpCiAgICBSYWRpbyh2YWx1ZT0ibWQiLCBsYWJlbD0iTWVkaXVtIikKICAgIFJhZGlvKHZhbHVlPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_1","type":"RadioGroup","children":[{"name":"radio_1","value":false,"type":"Radio","option":"sm","label":"Small","disabled":false,"required":false},{"name":"radio_2","value":false,"type":"Radio","option":"md","label":"Medium","disabled":false,"required":false},{"name":"radio_3","value":false,"type":"Radio","option":"lg","label":"Large","disabled":false,"required":false}]},"state":{"radio_1":false,"radio_2":false,"radio_3":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKG9wdGlvbj0ic20iLCBsYWJlbD0iU21hbGwiKQogICAgUmFkaW8ob3B0aW9uPSJtZCIsIGxhYmVsPSJNZWRpdW0iKQogICAgUmFkaW8ob3B0aW9uPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Radio, RadioGroup
 
 with RadioGroup(css_class="w-fit mx-auto"):
-    Radio(value="sm", label="Small")
-    Radio(value="md", label="Medium")
-    Radio(value="lg", label="Large")
+    Radio(option="sm", label="Small")
+    Radio(option="md", label="Medium")
+    Radio(option="lg", label="Large")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -31,34 +31,34 @@ with RadioGroup(css_class="w-fit mx-auto"):
     "children": [
       {
         "name": "radio_1",
+        "value": false,
         "type": "Radio",
-        "value": "sm",
+        "option": "sm",
         "label": "Small",
-        "checked": false,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_2",
+        "value": false,
         "type": "Radio",
-        "value": "md",
+        "option": "md",
         "label": "Medium",
-        "checked": false,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_3",
+        "value": false,
         "type": "Radio",
-        "value": "lg",
+        "option": "lg",
         "label": "Large",
-        "checked": false,
         "disabled": false,
         "required": false
       }
     ]
   },
-  "state": {"radio_1": "sm", "radio_2": "md", "radio_3": "lg"}
+  "state": {"radio_1": false, "radio_2": false, "radio_3": false}
 }
 ```
 </CodeGroup>
@@ -66,17 +66,17 @@ with RadioGroup(css_class="w-fit mx-auto"):
 
 ## Pre-selected Option
 
-Set `checked=True` on a radio to have it selected when the component first renders:
+Set `value=True` on a radio to have it selected when the component first renders:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_2","type":"RadioGroup","children":[{"name":"radio_4","type":"Radio","value":"sm","label":"Small","checked":false,"disabled":false,"required":false},{"name":"radio_5","type":"Radio","value":"md","label":"Medium","checked":true,"disabled":false,"required":false},{"name":"radio_6","type":"Radio","value":"lg","label":"Large","checked":false,"disabled":false,"required":false}]},"state":{"radio_4":"sm","radio_5":"md","radio_6":"lg"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKHZhbHVlPSJzbSIsIGxhYmVsPSJTbWFsbCIpCiAgICBSYWRpbyh2YWx1ZT0ibWQiLCBsYWJlbD0iTWVkaXVtIiwgY2hlY2tlZD1UcnVlKQogICAgUmFkaW8odmFsdWU9ImxnIiwgbGFiZWw9IkxhcmdlIikK">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_2","type":"RadioGroup","children":[{"name":"radio_4","value":false,"type":"Radio","option":"sm","label":"Small","disabled":false,"required":false},{"name":"radio_5","value":true,"type":"Radio","option":"md","label":"Medium","disabled":false,"required":false},{"name":"radio_6","value":false,"type":"Radio","option":"lg","label":"Large","disabled":false,"required":false}]},"state":{"radio_4":false,"radio_5":true,"radio_6":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKG9wdGlvbj0ic20iLCBsYWJlbD0iU21hbGwiKQogICAgUmFkaW8ob3B0aW9uPSJtZCIsIGxhYmVsPSJNZWRpdW0iLCB2YWx1ZT1UcnVlKQogICAgUmFkaW8ob3B0aW9uPSJsZyIsIGxhYmVsPSJMYXJnZSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Radio, RadioGroup
 
 with RadioGroup(css_class="w-fit mx-auto"):
-    Radio(value="sm", label="Small")
-    Radio(value="md", label="Medium", checked=True)
-    Radio(value="lg", label="Large")
+    Radio(option="sm", label="Small")
+    Radio(option="md", label="Medium", value=True)
+    Radio(option="lg", label="Large")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -87,34 +87,34 @@ with RadioGroup(css_class="w-fit mx-auto"):
     "children": [
       {
         "name": "radio_4",
+        "value": false,
         "type": "Radio",
-        "value": "sm",
+        "option": "sm",
         "label": "Small",
-        "checked": false,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_5",
+        "value": true,
         "type": "Radio",
-        "value": "md",
+        "option": "md",
         "label": "Medium",
-        "checked": true,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_6",
+        "value": false,
         "type": "Radio",
-        "value": "lg",
+        "option": "lg",
         "label": "Large",
-        "checked": false,
         "disabled": false,
         "required": false
       }
     ]
   },
-  "state": {"radio_4": "sm", "radio_5": "md", "radio_6": "lg"}
+  "state": {"radio_4": false, "radio_5": true, "radio_6": false}
 }
 ```
 </CodeGroup>
@@ -124,15 +124,15 @@ with RadioGroup(css_class="w-fit mx-auto"):
 
 Individual radios can be disabled while the rest of the group remains interactive. This is useful for options that exist but aren't currently available:
 
-<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_3","type":"RadioGroup","children":[{"name":"radio_7","type":"Radio","value":"free","label":"Free","checked":true,"disabled":false,"required":false},{"name":"radio_8","type":"Radio","value":"pro","label":"Pro","checked":false,"disabled":false,"required":false},{"name":"radio_9","type":"Radio","value":"enterprise","label":"Enterprise","checked":false,"disabled":true,"required":false}]},"state":{"radio_7":"free","radio_8":"pro","radio_9":"enterprise"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKHZhbHVlPSJmcmVlIiwgbGFiZWw9IkZyZWUiLCBjaGVja2VkPVRydWUpCiAgICBSYWRpbyh2YWx1ZT0icHJvIiwgbGFiZWw9IlBybyIpCiAgICBSYWRpbyh2YWx1ZT0iZW50ZXJwcmlzZSIsIGxhYmVsPSJFbnRlcnByaXNlIiwgZGlzYWJsZWQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"w-fit mx-auto","name":"radiogroup_3","type":"RadioGroup","children":[{"name":"radio_7","value":true,"type":"Radio","option":"free","label":"Free","disabled":false,"required":false},{"name":"radio_8","value":false,"type":"Radio","option":"pro","label":"Pro","disabled":false,"required":false},{"name":"radio_9","value":false,"type":"Radio","option":"enterprise","label":"Enterprise","disabled":true,"required":false}]},"state":{"radio_7":true,"radio_8":false,"radio_9":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgUmFkaW8sIFJhZGlvR3JvdXAKCndpdGggUmFkaW9Hcm91cChjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIFJhZGlvKG9wdGlvbj0iZnJlZSIsIGxhYmVsPSJGcmVlIiwgdmFsdWU9VHJ1ZSkKICAgIFJhZGlvKG9wdGlvbj0icHJvIiwgbGFiZWw9IlBybyIpCiAgICBSYWRpbyhvcHRpb249ImVudGVycHJpc2UiLCBsYWJlbD0iRW50ZXJwcmlzZSIsIGRpc2FibGVkPVRydWUpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Radio, RadioGroup
 
 with RadioGroup(css_class="w-fit mx-auto"):
-    Radio(value="free", label="Free", checked=True)
-    Radio(value="pro", label="Pro")
-    Radio(value="enterprise", label="Enterprise", disabled=True)
+    Radio(option="free", label="Free", value=True)
+    Radio(option="pro", label="Pro")
+    Radio(option="enterprise", label="Enterprise", disabled=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -143,34 +143,34 @@ with RadioGroup(css_class="w-fit mx-auto"):
     "children": [
       {
         "name": "radio_7",
+        "value": true,
         "type": "Radio",
-        "value": "free",
+        "option": "free",
         "label": "Free",
-        "checked": true,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_8",
+        "value": false,
         "type": "Radio",
-        "value": "pro",
+        "option": "pro",
         "label": "Pro",
-        "checked": false,
         "disabled": false,
         "required": false
       },
       {
         "name": "radio_9",
+        "value": false,
         "type": "Radio",
-        "value": "enterprise",
+        "option": "enterprise",
         "label": "Enterprise",
-        "checked": false,
         "disabled": true,
         "required": false
       }
     ]
   },
-  "state": {"radio_7": "free", "radio_8": "pro", "radio_9": "enterprise"}
+  "state": {"radio_7": true, "radio_8": false, "radio_9": false}
 }
 ```
 </CodeGroup>
@@ -178,18 +178,18 @@ with RadioGroup(css_class="w-fit mx-auto"):
 
 ## Reading the Value
 
-Use `.rx` on the `RadioGroup` to get a reactive reference to the selected radio's `value` string. When the user clicks a different option, anything bound to `.rx` updates automatically:
+Use `.rx` on the `RadioGroup` to get a reactive reference to the selected radio's `option` string. When the user clicks a different option, anything bound to `.rx` updates automatically:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"radiogroup_4","type":"RadioGroup","children":[{"name":"radio_10","type":"Radio","value":"heart-of-gold","label":"Heart of Gold","checked":false,"disabled":false,"required":false},{"name":"radio_11","type":"Radio","value":"bistromath","label":"Bistromath","checked":false,"disabled":false,"required":false},{"name":"radio_12","type":"Radio","value":"vogon-cruiser","label":"Vogon Constructor Fleet","checked":false,"disabled":false,"required":false}]},{"content":"Selected ship: {{ radiogroup_4 }}","type":"Text"}]},"state":{"radio_10":"heart-of-gold","radio_11":"bistromath","radio_12":"vogon-cruiser"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSYWRpbywgUmFkaW9Hcm91cCwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSYWRpb0dyb3VwKCkgYXMgZ3JvdXA6CiAgICAgICAgUmFkaW8odmFsdWU9ImhlYXJ0LW9mLWdvbGQiLCBsYWJlbD0iSGVhcnQgb2YgR29sZCIpCiAgICAgICAgUmFkaW8odmFsdWU9ImJpc3Ryb21hdGgiLCBsYWJlbD0iQmlzdHJvbWF0aCIpCiAgICAgICAgUmFkaW8odmFsdWU9InZvZ29uLWNydWlzZXIiLCBsYWJlbD0iVm9nb24gQ29uc3RydWN0b3IgRmxlZXQiKQogICAgVGV4dChmIlNlbGVjdGVkIHNoaXA6IHtncm91cC5yeH0iKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"radiogroup_4","type":"RadioGroup","children":[{"name":"radio_10","value":false,"type":"Radio","option":"heart-of-gold","label":"Heart of Gold","disabled":false,"required":false},{"name":"radio_11","value":false,"type":"Radio","option":"bistromath","label":"Bistromath","disabled":false,"required":false},{"name":"radio_12","value":false,"type":"Radio","option":"vogon-cruiser","label":"Vogon Constructor Fleet","disabled":false,"required":false}]},{"content":"Selected ship: {{ radiogroup_4 }}","type":"Text"}]},"state":{"radio_10":false,"radio_11":false,"radio_12":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSYWRpbywgUmFkaW9Hcm91cCwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSYWRpb0dyb3VwKCkgYXMgZ3JvdXA6CiAgICAgICAgUmFkaW8ob3B0aW9uPSJoZWFydC1vZi1nb2xkIiwgbGFiZWw9IkhlYXJ0IG9mIEdvbGQiKQogICAgICAgIFJhZGlvKG9wdGlvbj0iYmlzdHJvbWF0aCIsIGxhYmVsPSJCaXN0cm9tYXRoIikKICAgICAgICBSYWRpbyhvcHRpb249InZvZ29uLWNydWlzZXIiLCBsYWJlbD0iVm9nb24gQ29uc3RydWN0b3IgRmxlZXQiKQogICAgVGV4dChmIlNlbGVjdGVkIHNoaXA6IHtncm91cC5yeH0iKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Radio, RadioGroup, Text
 
 with Column(gap=4, css_class="w-fit mx-auto"):
     with RadioGroup() as group:
-        Radio(value="heart-of-gold", label="Heart of Gold")
-        Radio(value="bistromath", label="Bistromath")
-        Radio(value="vogon-cruiser", label="Vogon Constructor Fleet")
+        Radio(option="heart-of-gold", label="Heart of Gold")
+        Radio(option="bistromath", label="Bistromath")
+        Radio(option="vogon-cruiser", label="Vogon Constructor Fleet")
     Text(f"Selected ship: {group.rx}")
 ```
 ```json Protocol icon="brackets-curly"
@@ -204,28 +204,28 @@ with Column(gap=4, css_class="w-fit mx-auto"):
         "children": [
           {
             "name": "radio_10",
+            "value": false,
             "type": "Radio",
-            "value": "heart-of-gold",
+            "option": "heart-of-gold",
             "label": "Heart of Gold",
-            "checked": false,
             "disabled": false,
             "required": false
           },
           {
             "name": "radio_11",
+            "value": false,
             "type": "Radio",
-            "value": "bistromath",
+            "option": "bistromath",
             "label": "Bistromath",
-            "checked": false,
             "disabled": false,
             "required": false
           },
           {
             "name": "radio_12",
+            "value": false,
             "type": "Radio",
-            "value": "vogon-cruiser",
+            "option": "vogon-cruiser",
             "label": "Vogon Constructor Fleet",
-            "checked": false,
             "disabled": false,
             "required": false
           }
@@ -234,23 +234,19 @@ with Column(gap=4, css_class="w-fit mx-auto"):
       {"content": "Selected ship: {{ radiogroup_4 }}", "type": "Text"}
     ]
   },
-  "state": {
-    "radio_10": "heart-of-gold",
-    "radio_11": "bistromath",
-    "radio_12": "vogon-cruiser"
-  }
+  "state": {"radio_10": false, "radio_11": false, "radio_12": false}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-Click a radio and the text updates instantly. The `.rx` reference holds the `value` string — `"heart-of-gold"`, `"bistromath"`, etc. — not the label.
+Click a radio and the text updates instantly. The `.rx` reference holds the `option` string — `"heart-of-gold"`, `"bistromath"`, etc. — not the label.
 
 ## Actions
 
-The `on_change` parameter on `RadioGroup` fires actions when the selection changes. Inside the action, `$event` holds the newly selected `value` string:
+The `on_change` parameter on `RadioGroup` fires actions when the selection changes. Inside the action, `$event` holds the newly selected `option` string:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"radiogroup_5","type":"RadioGroup","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"name":"radio_13","type":"Radio","value":"light","label":"Light","checked":false,"disabled":false,"required":false},{"name":"radio_14","type":"Radio","value":"dark","label":"Dark","checked":false,"disabled":false,"required":false},{"name":"radio_15","type":"Radio","value":"system","label":"System","checked":true,"disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]},"state":{"radio_13":"light","radio_14":"dark","radio_15":"system"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSYWRpbywgUmFkaW9Hcm91cCwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSYWRpb0dyb3VwKAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgiY2hvaWNlIiwgIllvdSBwaWNrZWQ6IHt7ICRldmVudCB9fSIpLAogICAgKToKICAgICAgICBSYWRpbyh2YWx1ZT0ibGlnaHQiLCBsYWJlbD0iTGlnaHQiKQogICAgICAgIFJhZGlvKHZhbHVlPSJkYXJrIiwgbGFiZWw9IkRhcmsiKQogICAgICAgIFJhZGlvKHZhbHVlPSJzeXN0ZW0iLCBsYWJlbD0iU3lzdGVtIiwgY2hlY2tlZD1UcnVlKQogICAgVGV4dCgKICAgICAgICAie3sgY2hvaWNlIHwgZGVmYXVsdDonTWFrZSBhIHNlbGVjdGlvbicgfX0iLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4 w-fit mx-auto","type":"Column","children":[{"name":"radiogroup_5","type":"RadioGroup","onChange":{"action":"setState","key":"choice","value":"You picked: {{ $event }}"},"children":[{"name":"radio_13","value":false,"type":"Radio","option":"light","label":"Light","disabled":false,"required":false},{"name":"radio_14","value":false,"type":"Radio","option":"dark","label":"Dark","disabled":false,"required":false},{"name":"radio_15","value":true,"type":"Radio","option":"system","label":"System","disabled":false,"required":false}]},{"cssClass":"text-muted-foreground","content":"{{ choice | default:'Make a selection' }}","type":"Text"}]},"state":{"radio_13":false,"radio_14":false,"radio_15":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSYWRpbywgUmFkaW9Hcm91cCwgVGV4dApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKd2l0aCBDb2x1bW4oZ2FwPTQsIGNzc19jbGFzcz0idy1maXQgbXgtYXV0byIpOgogICAgd2l0aCBSYWRpb0dyb3VwKAogICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgiY2hvaWNlIiwgIllvdSBwaWNrZWQ6IHt7ICRldmVudCB9fSIpLAogICAgKToKICAgICAgICBSYWRpbyhvcHRpb249ImxpZ2h0IiwgbGFiZWw9IkxpZ2h0IikKICAgICAgICBSYWRpbyhvcHRpb249ImRhcmsiLCBsYWJlbD0iRGFyayIpCiAgICAgICAgUmFkaW8ob3B0aW9uPSJzeXN0ZW0iLCBsYWJlbD0iU3lzdGVtIiwgdmFsdWU9VHJ1ZSkKICAgIFRleHQoCiAgICAgICAgInt7IGNob2ljZSB8IGRlZmF1bHQ6J01ha2UgYSBzZWxlY3Rpb24nIH19IiwKICAgICAgICBjc3NfY2xhc3M9InRleHQtbXV0ZWQtZm9yZWdyb3VuZCIsCiAgICApCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Radio, RadioGroup, Text
@@ -260,9 +256,9 @@ with Column(gap=4, css_class="w-fit mx-auto"):
     with RadioGroup(
         on_change=SetState("choice", "You picked: {{ $event }}"),
     ):
-        Radio(value="light", label="Light")
-        Radio(value="dark", label="Dark")
-        Radio(value="system", label="System", checked=True)
+        Radio(option="light", label="Light")
+        Radio(option="dark", label="Dark")
+        Radio(option="system", label="System", value=True)
     Text(
         "{{ choice | default:'Make a selection' }}",
         css_class="text-muted-foreground",
@@ -281,28 +277,28 @@ with Column(gap=4, css_class="w-fit mx-auto"):
         "children": [
           {
             "name": "radio_13",
+            "value": false,
             "type": "Radio",
-            "value": "light",
+            "option": "light",
             "label": "Light",
-            "checked": false,
             "disabled": false,
             "required": false
           },
           {
             "name": "radio_14",
+            "value": false,
             "type": "Radio",
-            "value": "dark",
+            "option": "dark",
             "label": "Dark",
-            "checked": false,
             "disabled": false,
             "required": false
           },
           {
             "name": "radio_15",
+            "value": true,
             "type": "Radio",
-            "value": "system",
+            "option": "system",
             "label": "System",
-            "checked": true,
             "disabled": false,
             "required": false
           }
@@ -315,7 +311,7 @@ with Column(gap=4, css_class="w-fit mx-auto"):
       }
     ]
   },
-  "state": {"radio_13": "light", "radio_14": "dark", "radio_15": "system"}
+  "state": {"radio_13": false, "radio_14": false, "radio_15": true}
 }
 ```
 </CodeGroup>
@@ -340,15 +336,15 @@ For simple "show the current selection" cases, `.rx` is the better approach. Use
 </Card>
 
 <Card icon="code" title="Radio Parameters">
-<ParamField body="value" type="str" required>
-  The value stored in the group's state when this radio is selected.
+<ParamField body="option" type="str" required>
+  The option identifier stored in the group's state when this radio is selected. Defaults to the label.
 </ParamField>
 
 <ParamField body="label" type="str | None" default="None">
   Label text displayed next to the radio button.
 </ParamField>
 
-<ParamField body="checked" type="bool" default="False">
+<ParamField body="value" type="bool" default="False">
   Whether this radio is initially selected.
 </ParamField>
 
