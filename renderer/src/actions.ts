@@ -55,6 +55,20 @@ export function clearAllIntervals(): void {
 }
 
 /**
+ * FastMCPApp identity for scoping callServerTool requests.
+ *
+ * When set, every outgoing tool call includes
+ * `_meta: { fastmcp: { app: appName } }` so the server can route the
+ * call to the correct app's tool registry.
+ */
+let appName: string | undefined;
+
+/** Set the app name used to scope server tool calls. */
+export function setAppName(name: string | undefined): void {
+  appName = name;
+}
+
+/**
  * Extract a human-readable error message from a failed action result.
  *
  * Looks for text content in the result's content array (the standard MCP
@@ -155,6 +169,7 @@ export async function executeAction(
         const toolResult = await app?.callServerTool({
           name,
           arguments: args,
+          _meta: appName ? { fastmcp: { app: appName } } : undefined,
         });
         if (toolResult?.isError) {
           success = false;

@@ -33,7 +33,7 @@ import type {
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { earlyBridge } from "./early-bridge";
-import { clearAllIntervals } from "./actions";
+import { clearAllIntervals, setAppName } from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
 
 /** Protocol versions this renderer understands. */
@@ -143,6 +143,13 @@ export function App() {
         ComponentNode
       >;
       const stateData = (structured.state ?? {}) as Record<string, unknown>;
+
+      // Scope server tool calls to this app when the server provides
+      // an app identity via _meta.fastmcp.app in the structured content.
+      const meta = structured._meta as
+        | { fastmcp?: { app?: string } }
+        | undefined;
+      setAppName(meta?.fastmcp?.app);
 
       // Full state reset — host is providing a fresh view + state.
       // Preserve $host across resets so host context stays available.

@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { App } from "@modelcontextprotocol/ext-apps";
 import { createStateStore } from "./testing/state-store";
 import { createMockApp, type MockApp } from "./testing/mock-app";
-import { executeAction, executeActions, type ActionSpec } from "./actions";
+import {
+  executeAction,
+  executeActions,
+  setAppName,
+  type ActionSpec,
+} from "./actions";
 
 // Mock sonner to avoid DOM access
 vi.mock("sonner", () => ({
@@ -23,6 +28,7 @@ describe("executeAction", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    setAppName(undefined);
     app = createMockApp();
     appAsApp = app as unknown as App;
   });
@@ -218,6 +224,41 @@ describe("executeAction", () => {
       expect(app.callServerTool).toHaveBeenCalledWith({
         name: "search",
         arguments: { q: "hello" },
+        _meta: undefined,
+      });
+    });
+
+    it("includes _meta.fastmcp.app when appName is set", async () => {
+      setAppName("Contacts");
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "save_contact",
+        arguments: { name: "Alice" },
+      };
+
+      await executeAction(action, appAsApp, state);
+
+      expect(app.callServerTool).toHaveBeenCalledWith({
+        name: "save_contact",
+        arguments: { name: "Alice" },
+        _meta: { fastmcp: { app: "Contacts" } },
+      });
+    });
+
+    it("omits _meta when appName is not set", async () => {
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "search",
+      };
+
+      await executeAction(action, appAsApp, state);
+
+      expect(app.callServerTool).toHaveBeenCalledWith({
+        name: "search",
+        arguments: {},
+        _meta: undefined,
       });
     });
   });
