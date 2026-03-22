@@ -54,6 +54,14 @@ prefab dev build-docs
 - Always run `prek` before opening a PR
 - **Never** comment on an issue, open a PR, or cut a release unless explicitly instructed to do so
 
+### Releases
+
+Cut releases with `gh release create`. Tags follow `v<version>` (e.g. `v0.13.0`). Titles follow `v<version>: <pun or short theme>`. Optional brief notes can be added to the body. Always use `--generate-notes` for the auto-generated changelog.
+
+```bash
+gh release create v0.13.0 --target main --title "v0.13.0: Value Add" --generate-notes
+```
+
 ### Commit Messages and Agent Attribution
 
 - Keep commit messages brief — a headline is usually enough; avoid detailed blow-by-blow descriptions
