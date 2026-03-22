@@ -2,7 +2,7 @@
 
 # Prefab 🎨
 
-**The agentic frontend framework that even humans can use.**
+**The generative UI framework that even humans can use.**
 
 🚧 *Don't panic. Prefab is under **extremely** active development. You probably shouldn't use it yet.* 🚧
 

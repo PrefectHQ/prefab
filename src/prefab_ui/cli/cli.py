@@ -32,7 +32,7 @@ console = Console()
 
 app = cyclopts.App(
     name="prefab",
-    help="Prefab — the agentic frontend framework.",
+    help="Prefab — the generative UI framework.",
     version=prefab_ui.__version__,
     default_parameter=Parameter(negative=()),
 )

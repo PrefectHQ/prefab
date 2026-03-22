@@ -127,7 +127,7 @@ const DEFAULT_PYTHON = `from prefab_ui.components import *
 with Card():
     with CardHeader():
         CardTitle("Welcome to Prefab")
-        CardDescription("The agentic frontend framework that even humans can use.")
+        CardDescription("The generative UI framework that even humans can use.")
     with CardContent():
         with Column(gap=3):
             Input(name="name", placeholder="Your name...")
