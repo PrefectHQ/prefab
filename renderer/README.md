@@ -1,6 +1,6 @@
 # @prefecthq/prefab-ui
 
-The renderer and playground for [Prefab](https://prefab.prefect.io), the agentic frontend framework.
+The renderer and playground for [Prefab](https://prefab.prefect.io), the generative UI framework.
 
 This package contains the bundled React renderer that turns Prefab's JSON wire format into a live interface. If you're building with Prefab in Python, you want the [`prefab-ui`](https://pypi.org/project/prefab-ui/) Python package instead.
 

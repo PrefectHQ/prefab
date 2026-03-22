@@ -477,7 +477,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nmessage = Rx(\"message\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            event.then(\"Thank you!\", \"Please accept to continue\"),\n        ),\n    )\n    Text(\n        message.default(\"Check the box\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Checkbox, Column, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import EVENT, Rx\n\nmessage = Rx(\"message\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Checkbox(\n        label=\"Accept terms\",\n        name=\"accepted\",\n        on_change=SetState(\n            \"message\",\n            EVENT.then(\"Thank you!\", \"Please accept to continue\"),\n        ),\n    )\n    Text(\n        message.default(\"Check the box\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -757,7 +757,7 @@
   {
     "title": "from prefab_ui.define import Define",
     "category": "Components",
-    "code": "from prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The agentic frontend framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
+    "code": "from prefab_ui.use import Use\nfrom prefab_ui.response import UIResponse\nfrom prefab_ui.components import (\n    Card, CardHeader, CardTitle, CardDescription,\n    Column, ForEach, Heading,\n)\n\nwith Define(\"project-card\") as project_card:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ name }}\")\n            CardDescription(\"{{ description }}\")\n\nwith Column(gap=4) as view:\n    Heading(\"Featured\")\n    Use(\"project-card\", name=\"Prefab\", description=\"The generative UI framework\")\n\n    Heading(\"All Projects\")\n    with ForEach(\"projects\"):\n        Use(\"project-card\")\n\nUIResponse(\n    view=view,\n    defs=[project_card],\n    data={\"projects\": [\n        {\"name\": \"Alpha\", \"description\": \"First project\"},\n        {\"name\": \"Beta\", \"description\": \"Second project\"},\n    ]},\n)"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1592,7 +1592,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Rx, Slider, Text\n\nlevel = Rx(\"level\")\n\nwith Column(gap=4):\n    Slider(\n        value=50,\n        on_change=SetState(\"level\", Rx(\"$event\")),\n    )\n    Text(\n        level.default(\"Drag the slider\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Slider, Text\nfrom prefab_ui.rx import EVENT, Rx\n\nlevel = Rx(\"level\")\n\nwith Column(gap=4):\n    Slider(\n        value=50,\n        on_change=SetState(\"level\", EVENT),\n    )\n    Text(\n        level.default(\"Drag the slider\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1697,7 +1697,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import Rx\n\nevent = Rx(\"$event\")\nstatus = Rx(\"status\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            event.then(\"Notifications enabled\", \"Notifications disabled\"),\n        ),\n    )\n    Text(\n        status.default(\"Toggle the switch\"),\n        css_class=\"text-muted-foreground\",\n    )"
+    "code": "from prefab_ui.components import Column, Switch, Text\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.rx import EVENT, Rx\n\nstatus = Rx(\"status\")\n\nwith Column(gap=4, css_class=\"w-fit mx-auto\"):\n    Switch(\n        label=\"Enable notifications\",\n        name=\"notifications\",\n        on_change=SetState(\n            \"status\",\n            EVENT.then(\"Notifications enabled\", \"Notifications disabled\"),\n        ),\n    )\n    Text(\n        status.default(\"Toggle the switch\"),\n        css_class=\"text-muted-foreground\",\n    )"
   },
   {
     "title": "Python icon=\"python\"",
