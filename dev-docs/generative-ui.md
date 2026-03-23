@@ -68,18 +68,35 @@ The renderer already supports full tree replacement. Each time a tool result arr
 
 The work for streaming is on the Python/FastMCP side: a streaming tool that yields progressively larger `PrefabApp` objects as the LLM generates more code. Each yield sends an updated tree to the renderer.
 
-## Monty shims
+## Sandbox module (`prefab_ui.sandbox`)
 
-Monty doesn't support classes, so Prefab components are exposed as plain functions that call real constructors outside the sandbox:
+The sandbox module provides the integration between Prefab and sandboxed execution environments like Monty. It follows the same `SandboxProvider` protocol pattern as FastMCP's code mode.
+
+### Architecture
+
+- **`SandboxProvider`** — Protocol defining the sandbox interface: `run(code, inputs, external_functions) -> Any`
+- **`MontySandboxProvider`** — Implementation backed by pydantic-monty. Lazy-imports the dependency so the module is always importable.
+- **`get_component_namespace()`** — Returns all Prefab component classes (Column, Row, Text, charts, etc.) as a dict for sandbox injection. Filters to `Component` subclasses only.
+- **`execute(code, data, sandbox)`** — High-level convenience that wires components into the sandbox namespace and runs the code.
+
+### Usage
 
 ```python
-def make_shim(cls):
-    def shim(**kwargs):
-        return cls(**kwargs)
-    return shim
+from prefab_ui.sandbox import execute
+
+result = await execute('''
+    root = Column(gap=4)
+    Heading("Sales Report", parent=root)
+    Text("Revenue: $1.2M", parent=root)
+    return root
+''', data={"revenue": 1_200_000})
 ```
 
-Since `parent=` is handled natively by `Component.__init__`, the shims need no special logic — they just pass through kwargs.
+Components are injected as `external_functions` so Monty can call them from sandboxed code. Since `parent=` is handled natively by `Component.__init__`, no shim-specific logic is needed — the real classes work directly.
+
+### Optional dependency
+
+Install with `pip install prefab-ui[monty]`. The `MontySandboxProvider` raises a clear `ImportError` if pydantic-monty isn't installed.
 
 ## PR chain
 
