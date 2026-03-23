@@ -29,7 +29,7 @@ Progress(value=60)
 
 By default `max` is 100 and `min` is 0, but you can set either to define a custom range. The renderer normalizes the value to a percentage automatically. Set `max` for step-style counting, or use both `min` and `max` when the range doesn't start at zero.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps"},{"type":"Progress","value":3.0,"max":5.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature: 72\u00b0F (range 60\u2013100)"},{"type":"Progress","value":72.0,"min":60.0,"max":100.0,"variant":"warning","size":"default"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiMyBvZiA1IHN0ZXBzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0zLCBtYXg9NSkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVGVtcGVyYXR1cmU6IDcywrBGIChyYW5nZSA2MOKAkzEwMCkiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTcyLCBtaW49NjAsIG1heD0xMDAsIHZhcmlhbnQ9Indhcm5pbmciKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"3 of 5 steps","optional":false},{"type":"Progress","value":3.0,"max":5.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Temperature: 72\u00b0F (range 60\u2013100)","optional":false},{"type":"Progress","value":72.0,"min":60.0,"max":100.0,"variant":"warning","size":"default"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiMyBvZiA1IHN0ZXBzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0zLCBtYXg9NSkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVGVtcGVyYXR1cmU6IDcywrBGIChyYW5nZSA2MOKAkzEwMCkiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTcyLCBtaW49NjAsIG1heD0xMDAsIHZhcmlhbnQ9Indhcm5pbmciKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -52,7 +52,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "3 of 5 steps"},
+          {"type": "Label", "text": "3 of 5 steps", "optional": false},
           {
             "type": "Progress",
             "value": 3.0,
@@ -66,7 +66,11 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Temperature: 72\u00b0F (range 60\u2013100)"},
+          {
+            "type": "Label",
+            "text": "Temperature: 72\u00b0F (range 60\u2013100)",
+            "optional": false
+          },
           {
             "type": "Progress",
             "value": 72.0,
@@ -88,7 +92,7 @@ with Column(gap=4):
 
 Semantic variants color the progress bar to communicate meaning at a glance:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"type":"Progress","value":60.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"type":"Progress","value":100.0,"variant":"success","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"type":"Progress","value":72.0,"variant":"warning","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"type":"Progress","value":90.0,"variant":"destructive","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"type":"Progress","value":45.0,"variant":"info","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"type":"Progress","value":30.0,"variant":"muted","size":"default"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVmYXVsdCIpCiAgICAgICAgUHJvZ3Jlc3ModmFsdWU9NjApCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN1Y2Nlc3MiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTcyLCB2YXJpYW50PSJ3YXJuaW5nIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVzdHJ1Y3RpdmUiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTkwLCB2YXJpYW50PSJkZXN0cnVjdGl2ZSIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkluZm8iKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTMwLCB2YXJpYW50PSJtdXRlZCIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default","optional":false},{"type":"Progress","value":60.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success","optional":false},{"type":"Progress","value":100.0,"variant":"success","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning","optional":false},{"type":"Progress","value":72.0,"variant":"warning","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive","optional":false},{"type":"Progress","value":90.0,"variant":"destructive","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info","optional":false},{"type":"Progress","value":45.0,"variant":"info","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted","optional":false},{"type":"Progress","value":30.0,"variant":"muted","size":"default"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVmYXVsdCIpCiAgICAgICAgUHJvZ3Jlc3ModmFsdWU9NjApCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN1Y2Nlc3MiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTcyLCB2YXJpYW50PSJ3YXJuaW5nIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVzdHJ1Y3RpdmUiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTkwLCB2YXJpYW50PSJkZXN0cnVjdGl2ZSIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkluZm8iKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTMwLCB2YXJpYW50PSJtdXRlZCIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -123,7 +127,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Default"},
+          {"type": "Label", "text": "Default", "optional": false},
           {"type": "Progress", "value": 60.0, "variant": "default", "size": "default"}
         ]
       },
@@ -131,7 +135,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Success"},
+          {"type": "Label", "text": "Success", "optional": false},
           {"type": "Progress", "value": 100.0, "variant": "success", "size": "default"}
         ]
       },
@@ -139,7 +143,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Warning"},
+          {"type": "Label", "text": "Warning", "optional": false},
           {"type": "Progress", "value": 72.0, "variant": "warning", "size": "default"}
         ]
       },
@@ -147,7 +151,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Destructive"},
+          {"type": "Label", "text": "Destructive", "optional": false},
           {"type": "Progress", "value": 90.0, "variant": "destructive", "size": "default"}
         ]
       },
@@ -155,7 +159,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Info"},
+          {"type": "Label", "text": "Info", "optional": false},
           {"type": "Progress", "value": 45.0, "variant": "info", "size": "default"}
         ]
       },
@@ -163,7 +167,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Muted"},
+          {"type": "Label", "text": "Muted", "optional": false},
           {"type": "Progress", "value": 30.0, "variant": "muted", "size": "default"}
         ]
       }
@@ -178,7 +182,7 @@ with Column(gap=4):
 
 Control the bar thickness with `size`. The default is a medium weight suitable for most layouts; use `sm` for compact spaces and `lg` for dashboard-style data displays:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Small"},{"type":"Progress","value":60.0,"variant":"default","size":"sm"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"type":"Progress","value":60.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Large"},{"type":"Progress","value":60.0,"variant":"default","size":"lg"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU21hbGwiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTYwLCBzaXplPSJzbSIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTYwKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJMYXJnZSIpCiAgICAgICAgUHJvZ3Jlc3ModmFsdWU9NjAsIHNpemU9ImxnIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Small","optional":false},{"type":"Progress","value":60.0,"variant":"default","size":"sm"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default","optional":false},{"type":"Progress","value":60.0,"variant":"default","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Large","optional":false},{"type":"Progress","value":60.0,"variant":"default","size":"lg"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU21hbGwiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTYwLCBzaXplPSJzbSIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFByb2dyZXNzKHZhbHVlPTYwKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJMYXJnZSIpCiAgICAgICAgUHJvZ3Jlc3ModmFsdWU9NjAsIHNpemU9ImxnIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -204,7 +208,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Small"},
+          {"type": "Label", "text": "Small", "optional": false},
           {"type": "Progress", "value": 60.0, "variant": "default", "size": "sm"}
         ]
       },
@@ -212,7 +216,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Default"},
+          {"type": "Label", "text": "Default", "optional": false},
           {"type": "Progress", "value": 60.0, "variant": "default", "size": "default"}
         ]
       },
@@ -220,7 +224,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Large"},
+          {"type": "Label", "text": "Large", "optional": false},
           {"type": "Progress", "value": 60.0, "variant": "default", "size": "lg"}
         ]
       }
@@ -235,7 +239,7 @@ with Column(gap=4):
 
 Use `indicator_class` for arbitrary colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"cssClass":"pf-progress-flat","type":"Progress","value":85.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"cssClass":"pf-progress-flat","type":"Progress","value":45.0,"variant":"default","size":"default","indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete"},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"variant":"default","size":"default","indicatorClass":"bg-green-500"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3RvcmFnZSBVc2VkIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT04NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1yZWQtNTAwIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVXBsb2FkIFByb2dyZXNzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlRhc2tzIENvbXBsZXRlIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0xMDAsIGluZGljYXRvcl9jbGFzcz0iYmctZ3JlZW4tNTAwIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used","optional":false},{"cssClass":"pf-progress-flat","type":"Progress","value":85.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress","optional":false},{"cssClass":"pf-progress-flat","type":"Progress","value":45.0,"variant":"default","size":"default","indicatorClass":"bg-blue-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Tasks Complete","optional":false},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"variant":"default","size":"default","indicatorClass":"bg-green-500"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3RvcmFnZSBVc2VkIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT04NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1yZWQtNTAwIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiVXBsb2FkIFByb2dyZXNzIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlRhc2tzIENvbXBsZXRlIikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT0xMDAsIGluZGljYXRvcl9jbGFzcz0iYmctZ3JlZW4tNTAwIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -261,7 +265,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Storage Used"},
+          {"type": "Label", "text": "Storage Used", "optional": false},
           {
             "cssClass": "pf-progress-flat",
             "type": "Progress",
@@ -276,7 +280,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Upload Progress"},
+          {"type": "Label", "text": "Upload Progress", "optional": false},
           {
             "cssClass": "pf-progress-flat",
             "type": "Progress",
@@ -291,7 +295,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Tasks Complete"},
+          {"type": "Label", "text": "Tasks Complete", "optional": false},
           {
             "cssClass": "pf-progress-flat",
             "type": "Progress",
@@ -313,7 +317,7 @@ with Column(gap=4):
 
 The `target` prop renders a vertical marker line on the bar at a specific position, so you can compare actual progress against a goal. Set `max` to the ceiling of the gauge so both `value` and `target` land at meaningful positions. Use `target_class` to style the marker.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Below target"},{"type":"Progress","value":55.0,"variant":"default","size":"default","target":75.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Custom target style"},{"cssClass":"pf-progress-flat","type":"Progress","value":50.0,"variant":"default","size":"default","target":75.0,"indicatorClass":"bg-pink-400","targetClass":"bg-pink-400"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmVsb3cgdGFyZ2V0IikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT01NSwgdGFyZ2V0PTc1KQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJDdXN0b20gdGFyZ2V0IHN0eWxlIikKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9NTAsIAogICAgICAgICAgICB0YXJnZXQ9NzUsCiAgICAgICAgICAgIGluZGljYXRvcl9jbGFzcz0iYmctcGluay00MDAiLAogICAgICAgICAgICB0YXJnZXRfY2xhc3M9ImJnLXBpbmstNDAwIiwKICAgICAgICApCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Below target","optional":false},{"type":"Progress","value":55.0,"variant":"default","size":"default","target":75.0}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Custom target style","optional":false},{"cssClass":"pf-progress-flat","type":"Progress","value":50.0,"variant":"default","size":"default","target":75.0,"indicatorClass":"bg-pink-400","targetClass":"bg-pink-400"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmVsb3cgdGFyZ2V0IikKICAgICAgICBQcm9ncmVzcyh2YWx1ZT01NSwgdGFyZ2V0PTc1KQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJDdXN0b20gdGFyZ2V0IHN0eWxlIikKICAgICAgICBQcm9ncmVzcygKICAgICAgICAgICAgdmFsdWU9NTAsIAogICAgICAgICAgICB0YXJnZXQ9NzUsCiAgICAgICAgICAgIGluZGljYXRvcl9jbGFzcz0iYmctcGluay00MDAiLAogICAgICAgICAgICB0YXJnZXRfY2xhc3M9ImJnLXBpbmstNDAwIiwKICAgICAgICApCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress
@@ -341,7 +345,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Below target"},
+          {"type": "Label", "text": "Below target", "optional": false},
           {
             "type": "Progress",
             "value": 55.0,
@@ -355,7 +359,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Custom target style"},
+          {"type": "Label", "text": "Custom target style", "optional": false},
           {
             "cssClass": "pf-progress-flat",
             "type": "Progress",

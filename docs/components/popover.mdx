@@ -10,7 +10,7 @@ Popovers display rich content in a floating panel when users click a trigger ele
 
 ## Basic Usage
 
-<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language"},{"name":"input_15","type":"Input","inputType":"text","placeholder":"Vogon","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Target Language"},{"name":"input_16","type":"Input","inputType":"text","placeholder":"Galactic Standard","disabled":false,"readOnly":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgSW5wdXQsCiAgICBMYWJlbCwKICAgIFBvcG92ZXIsCikKCndpdGggUG9wb3Zlcih0aXRsZT0iQmFiZWwgRmlzaCBTZXR0aW5ncyIsIGRlc2NyaXB0aW9uPSJDb25maWd1cmUgeW91ciB1bml2ZXJzYWwgdHJhbnNsYXRvci4iKToKICAgIEJ1dHRvbigiT3BlbiBwb3BvdmVyIiwgdmFyaWFudD0ib3V0bGluZSIpCiAgICB3aXRoIENvbHVtbihnYXA9Myk6CiAgICAgICAgTGFiZWwoIlNvdXJjZSBMYW5ndWFnZSIpCiAgICAgICAgSW5wdXQocGxhY2Vob2xkZXI9IlZvZ29uIikKICAgICAgICBMYWJlbCgiVGFyZ2V0IExhbmd1YWdlIikKICAgICAgICBJbnB1dChwbGFjZWhvbGRlcj0iR2FsYWN0aWMgU3RhbmRhcmQiKQo">
+<ComponentPreview height="340px" json={{"view":{"type":"Popover","title":"Babel Fish Settings","description":"Configure your universal translator.","children":[{"type":"Button","label":"Open popover","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Source Language","optional":false},{"name":"input_15","type":"Input","inputType":"text","placeholder":"Vogon","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Target Language","optional":false},{"name":"input_16","type":"Input","inputType":"text","placeholder":"Galactic Standard","disabled":false,"readOnly":false,"required":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgSW5wdXQsCiAgICBMYWJlbCwKICAgIFBvcG92ZXIsCikKCndpdGggUG9wb3Zlcih0aXRsZT0iQmFiZWwgRmlzaCBTZXR0aW5ncyIsIGRlc2NyaXB0aW9uPSJDb25maWd1cmUgeW91ciB1bml2ZXJzYWwgdHJhbnNsYXRvci4iKToKICAgIEJ1dHRvbigiT3BlbiBwb3BvdmVyIiwgdmFyaWFudD0ib3V0bGluZSIpCiAgICB3aXRoIENvbHVtbihnYXA9Myk6CiAgICAgICAgTGFiZWwoIlNvdXJjZSBMYW5ndWFnZSIpCiAgICAgICAgSW5wdXQocGxhY2Vob2xkZXI9IlZvZ29uIikKICAgICAgICBMYWJlbCgiVGFyZ2V0IExhbmd1YWdlIikKICAgICAgICBJbnB1dChwbGFjZWhvbGRlcj0iR2FsYWN0aWMgU3RhbmRhcmQiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -47,7 +47,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
         "cssClass": "gap-3",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Source Language"},
+          {"type": "Label", "text": "Source Language", "optional": false},
           {
             "name": "input_15",
             "type": "Input",
@@ -57,7 +57,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
             "readOnly": false,
             "required": false
           },
-          {"type": "Label", "text": "Target Language"},
+          {"type": "Label", "text": "Target Language", "optional": false},
           {
             "name": "input_16",
             "type": "Input",
@@ -80,7 +80,7 @@ with Popover(title="Babel Fish Settings", description="Configure your universal 
 
 Skip the `title` and `description` to render content directly in the panel.
 
-<ComponentPreview height="260px" json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Improbability Factor"},{"name":"improbability","value":42.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"}]}]},"state":{"improbability":42.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBQb3BvdmVyLAogICAgU2xpZGVyLAopCgp3aXRoIFBvcG92ZXIoKToKICAgIEJ1dHRvbigiU2V0dGluZ3MiLCB2YXJpYW50PSJvdXRsaW5lIikKICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICBMYWJlbCgiSW1wcm9iYWJpbGl0eSBGYWN0b3IiKQogICAgICAgIFNsaWRlcihtaW49MCwgbWF4PTEwMCwgdmFsdWU9NDIsIG5hbWU9ImltcHJvYmFiaWxpdHkiKQo">
+<ComponentPreview height="260px" json={{"view":{"type":"Popover","children":[{"type":"Button","label":"Settings","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Improbability Factor","optional":false},{"name":"improbability","value":42.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"}]}]},"state":{"improbability":42.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBQb3BvdmVyLAogICAgU2xpZGVyLAopCgp3aXRoIFBvcG92ZXIoKToKICAgIEJ1dHRvbigiU2V0dGluZ3MiLCB2YXJpYW50PSJvdXRsaW5lIikKICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICBMYWJlbCgiSW1wcm9iYWJpbGl0eSBGYWN0b3IiKQogICAgICAgIFNsaWRlcihtaW49MCwgbWF4PTEwMCwgdmFsdWU9NDIsIG5hbWU9ImltcHJvYmFiaWxpdHkiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -113,7 +113,7 @@ with Popover():
         "cssClass": "gap-3",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Improbability Factor"},
+          {"type": "Label", "text": "Improbability Factor", "optional": false},
           {
             "name": "improbability",
             "value": 42.0,

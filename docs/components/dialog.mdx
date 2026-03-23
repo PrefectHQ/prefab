@@ -10,7 +10,7 @@ Dialogs display content in a modal overlay that focuses user attention. Like Pop
 
 ## Basic Usage
 
-<ComponentPreview height="400px" json={{"view":{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name"},{"name":"input_4","type":"Input","inputType":"text","placeholder":"Arthur Dent","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Designation"},{"name":"input_5","type":"Input","inputType":"text","placeholder":"Sandwich Maker","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgRGlhbG9nLAogICAgSW5wdXQsCiAgICBMYWJlbCwKICAgIFJvdywKKQpmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBDbG9zZU92ZXJsYXkKCndpdGggRGlhbG9nKAogICAgdGl0bGU9IkNyZXcgUHJvZmlsZSIsCiAgICBkZXNjcmlwdGlvbj0iVXBkYXRlIHlvdXIgZGV0YWlscyBmb3IgdGhlIEhlYXJ0IG9mIEdvbGQgY3JldyBtYW5pZmVzdC4iLAopOgogICAgQnV0dG9uKCJFZGl0IFByb2ZpbGUiLCB2YXJpYW50PSJvdXRsaW5lIikKICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICBMYWJlbCgiTmFtZSIpCiAgICAgICAgSW5wdXQocGxhY2Vob2xkZXI9IkFydGh1ciBEZW50IikKICAgICAgICBMYWJlbCgiRGVzaWduYXRpb24iKQogICAgICAgIElucHV0KHBsYWNlaG9sZGVyPSJTYW5kd2ljaCBNYWtlciIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJqdXN0aWZ5LWVuZCIpOgogICAgICAgIEJ1dHRvbigiU2F2ZSBjaGFuZ2VzIiwgb25fY2xpY2s9Q2xvc2VPdmVybGF5KCkpCg">
+<ComponentPreview height="400px" json={{"view":{"type":"Dialog","title":"Crew Profile","description":"Update your details for the Heart of Gold crew manifest.","children":[{"type":"Button","label":"Edit Profile","variant":"outline","size":"default","disabled":false},{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Name","optional":false},{"name":"input_4","type":"Input","inputType":"text","placeholder":"Arthur Dent","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Designation","optional":false},{"name":"input_5","type":"Input","inputType":"text","placeholder":"Sandwich Maker","disabled":false,"readOnly":false,"required":false}]},{"cssClass":"gap-2 justify-end","type":"Row","children":[{"type":"Button","label":"Save changes","variant":"default","size":"default","disabled":false,"onClick":{"action":"closeOverlay"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ29sdW1uLAogICAgRGlhbG9nLAogICAgSW5wdXQsCiAgICBMYWJlbCwKICAgIFJvdywKKQpmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBDbG9zZU92ZXJsYXkKCndpdGggRGlhbG9nKAogICAgdGl0bGU9IkNyZXcgUHJvZmlsZSIsCiAgICBkZXNjcmlwdGlvbj0iVXBkYXRlIHlvdXIgZGV0YWlscyBmb3IgdGhlIEhlYXJ0IG9mIEdvbGQgY3JldyBtYW5pZmVzdC4iLAopOgogICAgQnV0dG9uKCJFZGl0IFByb2ZpbGUiLCB2YXJpYW50PSJvdXRsaW5lIikKICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICBMYWJlbCgiTmFtZSIpCiAgICAgICAgSW5wdXQocGxhY2Vob2xkZXI9IkFydGh1ciBEZW50IikKICAgICAgICBMYWJlbCgiRGVzaWduYXRpb24iKQogICAgICAgIElucHV0KHBsYWNlaG9sZGVyPSJTYW5kd2ljaCBNYWtlciIpCiAgICB3aXRoIFJvdyhnYXA9MiwgY3NzX2NsYXNzPSJqdXN0aWZ5LWVuZCIpOgogICAgICAgIEJ1dHRvbigiU2F2ZSBjaGFuZ2VzIiwgb25fY2xpY2s9Q2xvc2VPdmVybGF5KCkpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -54,7 +54,7 @@ with Dialog(
         "cssClass": "gap-3",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Name"},
+          {"type": "Label", "text": "Name", "optional": false},
           {
             "name": "input_4",
             "type": "Input",
@@ -64,7 +64,7 @@ with Dialog(
             "readOnly": false,
             "required": false
           },
-          {"type": "Label", "text": "Designation"},
+          {"type": "Label", "text": "Designation", "optional": false},
           {
             "name": "input_5",
             "type": "Input",

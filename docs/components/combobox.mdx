@@ -202,7 +202,7 @@ with Combobox(
 
 Pair a `Combobox` with a `Label` in a `Column` for a standard form field pattern:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination"},{"name":"combobox_4","type":"Combobox","placeholder":"Search planets...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsCgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiRGVzdGluYXRpb24iKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VhcmNoIHBsYW5ldHMuLi4iKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIktyaWtraXQiLCB2YWx1ZT0ia3Jpa2tpdCIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination","optional":false},{"name":"combobox_4","type":"Combobox","placeholder":"Search planets...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false},{"type":"ComboboxOption","value":"krikkit","label":"Krikkit","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsCgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiRGVzdGluYXRpb24iKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VhcmNoIHBsYW5ldHMuLi4iKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIktyaWtraXQiLCB2YWx1ZT0ia3Jpa2tpdCIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Combobox, ComboboxOption, Label
@@ -221,7 +221,7 @@ with Column(gap=2, css_class="w-fit mx-auto"):
     "cssClass": "gap-2 w-fit mx-auto",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Destination"},
+      {"type": "Label", "text": "Destination", "optional": false},
       {
         "name": "combobox_4",
         "type": "Combobox",
@@ -370,7 +370,7 @@ with Combobox(placeholder="Select a planet...", css_class="w-fit mx-auto"):
 
 Set `invalid=True` to indicate a validation error. The trigger shows a red border, making it clear the user needs to correct their selection. Pair it with a `Label` and error text for a complete form field:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Home planet"},{"name":"combobox_7","type":"Combobox","placeholder":"Select a planet...","disabled":false,"invalid":true,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"cssClass":"text-sm text-destructive","content":"Please select your home planet","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiSG9tZSBwbGFuZXQiKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VsZWN0IGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICBUZXh0KAogICAgICAgICJQbGVhc2Ugc2VsZWN0IHlvdXIgaG9tZSBwbGFuZXQiLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1zbSB0ZXh0LWRlc3RydWN0aXZlIiwKICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Home planet","optional":false},{"name":"combobox_7","type":"Combobox","placeholder":"Select a planet...","disabled":false,"invalid":true,"children":[{"type":"ComboboxOption","value":"magrathea","label":"Magrathea","disabled":false},{"type":"ComboboxOption","value":"betelgeuse","label":"Betelgeuse V","disabled":false},{"type":"ComboboxOption","value":"vogsphere","label":"Vogsphere","disabled":false}]},{"cssClass":"text-sm text-destructive","content":"Please select your home planet","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBDb21ib2JveCwgQ29tYm9ib3hPcHRpb24sIExhYmVsLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBMYWJlbCgiSG9tZSBwbGFuZXQiKQogICAgd2l0aCBDb21ib2JveChwbGFjZWhvbGRlcj0iU2VsZWN0IGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBDb21ib2JveE9wdGlvbigiTWFncmF0aGVhIiwgdmFsdWU9Im1hZ3JhdGhlYSIpCiAgICAgICAgQ29tYm9ib3hPcHRpb24oIkJldGVsZ2V1c2UgViIsIHZhbHVlPSJiZXRlbGdldXNlIikKICAgICAgICBDb21ib2JveE9wdGlvbigiVm9nc3BoZXJlIiwgdmFsdWU9InZvZ3NwaGVyZSIpCiAgICBUZXh0KAogICAgICAgICJQbGVhc2Ugc2VsZWN0IHlvdXIgaG9tZSBwbGFuZXQiLAogICAgICAgIGNzc19jbGFzcz0idGV4dC1zbSB0ZXh0LWRlc3RydWN0aXZlIiwKICAgICkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Combobox, ComboboxOption, Label, Text
@@ -392,7 +392,7 @@ with Column(gap=2, css_class="w-fit mx-auto"):
     "cssClass": "gap-2 w-fit mx-auto",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Home planet"},
+      {"type": "Label", "text": "Home planet", "optional": false},
       {
         "name": "combobox_7",
         "type": "Combobox",

@@ -34,7 +34,7 @@ DatePicker(placeholder="Select deadline", css_class="w-fit mx-auto")
 
 Use `.rx` to get a reactive reference to the selected date. The value is an ISO date string once a date is picked, but starts as `undefined` when nothing is selected. Use `.then()` to handle both states — showing formatted text when a date exists, and fallback text otherwise:
 
-<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"name":"datepicker_2","type":"DatePicker","placeholder":"When does the whale arrive?"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date"},{"cssClass":"italic","content":"{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBEYXRlUGlja2VyLCBMYWJlbCwgUm93LCBUZXh0Cgp3aXRoIFJvdyhnYXA9NiwgYWxpZ249ImNlbnRlciIpOgogICAgcGlja2VyID0gRGF0ZVBpY2tlcihwbGFjZWhvbGRlcj0iV2hlbiBkb2VzIHRoZSB3aGFsZSBhcnJpdmU_IikKICAgIHdpdGggQ29sdW1uKGdhcD0yLCBqdXN0aWZ5PSJjZW50ZXIiKToKICAgICAgICBMYWJlbCgiU2VsZWN0ZWQgZGF0ZSIpCiAgICAgICAgVGV4dChwaWNrZXIucngudGhlbihwaWNrZXIucnguZGF0ZSgibG9uZyIpLCAiTm9uZSB5ZXQiKSwgaXRhbGljPVRydWUpCg">
+<ComponentPreview height="400px" json={{"view":{"cssClass":"gap-6 items-center","type":"Row","children":[{"name":"datepicker_2","type":"DatePicker","placeholder":"When does the whale arrive?"},{"cssClass":"gap-2 justify-center","type":"Column","children":[{"type":"Label","text":"Selected date","optional":false},{"cssClass":"italic","content":"{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBEYXRlUGlja2VyLCBMYWJlbCwgUm93LCBUZXh0Cgp3aXRoIFJvdyhnYXA9NiwgYWxpZ249ImNlbnRlciIpOgogICAgcGlja2VyID0gRGF0ZVBpY2tlcihwbGFjZWhvbGRlcj0iV2hlbiBkb2VzIHRoZSB3aGFsZSBhcnJpdmU_IikKICAgIHdpdGggQ29sdW1uKGdhcD0yLCBqdXN0aWZ5PSJjZW50ZXIiKToKICAgICAgICBMYWJlbCgiU2VsZWN0ZWQgZGF0ZSIpCiAgICAgICAgVGV4dChwaWNrZXIucngudGhlbihwaWNrZXIucnguZGF0ZSgibG9uZyIpLCAiTm9uZSB5ZXQiKSwgaXRhbGljPVRydWUpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, DatePicker, Label, Row, Text
@@ -60,7 +60,7 @@ with Row(gap=6, align="center"):
         "cssClass": "gap-2 justify-center",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Selected date"},
+          {"type": "Label", "text": "Selected date", "optional": false},
           {
             "cssClass": "italic",
             "content": "{{ datepicker_2 ? (datepicker_2 | date:long) : 'None yet' }}",
@@ -81,7 +81,7 @@ Before a date is picked, the text shows "None yet". Pick a date and it updates i
 
 DatePicker works naturally alongside other form controls. Each component's value syncs to state automatically — use `.rx` to reference it elsewhere:
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name"},{"name":"input_3","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date"},{"name":"datepicker_3","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ2FyZCwKICAgIENhcmRDb250ZW50LAogICAgQ2FyZEZvb3RlciwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDb2x1bW4sCiAgICBEYXRlUGlja2VyLAogICAgSW5wdXQsCiAgICBMYWJlbCwKKQoKd2l0aCBDYXJkKCk6CiAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICBDYXJkVGl0bGUoIk5ldyBFdmVudCIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgICAgICAgICBMYWJlbCgiRXZlbnQgTmFtZSIpCiAgICAgICAgICAgIElucHV0KHBsYWNlaG9sZGVyPSJUZWFtIHN0YW5kdXAiKQogICAgICAgICAgICBMYWJlbCgiRGF0ZSIpCiAgICAgICAgICAgIERhdGVQaWNrZXIocGxhY2Vob2xkZXI9IlBpY2sgYSBkYXRlIikKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIEJ1dHRvbigiQ3JlYXRlIEV2ZW50IikK">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"New Event"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Label","text":"Event Name","optional":false},{"name":"input_3","type":"Input","inputType":"text","placeholder":"Team standup","disabled":false,"readOnly":false,"required":false},{"type":"Label","text":"Date","optional":false},{"name":"datepicker_3","type":"DatePicker","placeholder":"Pick a date"}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Create Event","variant":"default","size":"default","disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgQ2FyZCwKICAgIENhcmRDb250ZW50LAogICAgQ2FyZEZvb3RlciwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDb2x1bW4sCiAgICBEYXRlUGlja2VyLAogICAgSW5wdXQsCiAgICBMYWJlbCwKKQoKd2l0aCBDYXJkKCk6CiAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICBDYXJkVGl0bGUoIk5ldyBFdmVudCIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgICAgICAgICBMYWJlbCgiRXZlbnQgTmFtZSIpCiAgICAgICAgICAgIElucHV0KHBsYWNlaG9sZGVyPSJUZWFtIHN0YW5kdXAiKQogICAgICAgICAgICBMYWJlbCgiRGF0ZSIpCiAgICAgICAgICAgIERhdGVQaWNrZXIocGxhY2Vob2xkZXI9IlBpY2sgYSBkYXRlIikKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIEJ1dHRvbigiQ3JlYXRlIEV2ZW50IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -125,7 +125,7 @@ with Card():
             "cssClass": "gap-3",
             "type": "Column",
             "children": [
-              {"type": "Label", "text": "Event Name"},
+              {"type": "Label", "text": "Event Name", "optional": false},
               {
                 "name": "input_3",
                 "type": "Input",
@@ -135,7 +135,7 @@ with Card():
                 "readOnly": false,
                 "required": false
               },
-              {"type": "Label", "text": "Date"},
+              {"type": "Label", "text": "Date", "optional": false},
               {"name": "datepicker_3", "type": "DatePicker", "placeholder": "Pick a date"}
             ]
           }
