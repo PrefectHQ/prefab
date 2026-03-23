@@ -1,4 +1,4 @@
-"""Tests for context manager nesting, defer, and insert."""
+"""Tests for context manager nesting, defer, insert, and parent=."""
 
 from __future__ import annotations
 
@@ -254,3 +254,97 @@ class TestInsert:
         text = col.children[0]
         assert "{{ " in text.content  # type: ignore[attr-defined]
         assert col.children[1] is volume
+
+
+class TestParent:
+    def test_basic_attachment(self):
+        col = Column()
+        t = Text(content="hello", parent=col)
+        assert len(col.children) == 1
+        assert col.children[0] is t
+
+    def test_outside_context_manager(self):
+        col = Column()
+        Text(content="a", parent=col)
+        Text(content="b", parent=col)
+        assert len(col.children) == 2
+        assert col.children[0].content == "a"  # type: ignore[attr-defined]
+        assert col.children[1].content == "b"  # type: ignore[attr-defined]
+
+    def test_explicit_parent_wins_over_stack(self):
+        target = Column()
+        with Column() as outer:
+            Text(content="auto-attached")
+            Text(content="explicit", parent=target)
+        assert len(outer.children) == 1
+        assert outer.children[0].content == "auto-attached"  # type: ignore[attr-defined]
+        assert len(target.children) == 1
+        assert target.children[0].content == "explicit"  # type: ignore[attr-defined]
+
+    def test_nested_contexts(self):
+        target = Column()
+        with Column() as outer:
+            with Row() as inner:
+                Text(content="in-row", parent=target)
+        assert len(target.children) == 1
+        assert len(inner.children) == 0
+        assert len(outer.children) == 1  # just the Row
+
+    def test_does_not_serialize(self):
+        col = Column()
+        t = Text(content="hello", parent=col)
+        j = t.to_json()
+        assert "parent" not in j
+
+    def test_with_stateful_component(self):
+        col = Column()
+        slider = Slider(value=50, parent=col)
+        assert slider.name is not None
+        assert slider.rx is not None
+        assert len(col.children) == 1
+        assert col.children[0] is slider
+
+    def test_non_container_raises_type_error(self):
+        leaf = Text(content="not a container")
+        with pytest.raises(TypeError, match="container component"):
+            Text(content="child", parent=leaf)
+
+    def test_parent_and_defer_raises(self):
+        col = Column()
+        with pytest.raises(ValueError, match="parent.*defer"):
+            Text(content="conflict", parent=col, defer=True)
+
+    def test_container_with_children_and_parent(self):
+        target = Column()
+        row = Row(
+            children=[Text(content="a"), Text(content="b")],
+            parent=target,
+        )
+        assert len(target.children) == 1
+        assert target.children[0] is row
+        assert len(row.children) == 2
+
+    def test_inside_defer_context(self):
+        target = Column()
+        with defer():
+            Text(content="hello", parent=target)
+        assert len(target.children) == 1
+
+    def test_multiple_children_ordering(self):
+        col = Column()
+        Text(content="first", parent=col)
+        Text(content="second", parent=col)
+        Text(content="third", parent=col)
+        assert [c.content for c in col.children] == ["first", "second", "third"]  # type: ignore[attr-defined]
+
+    def test_generative_ui_pattern(self):
+        """The motivating use case: imperative tree-building for sandboxed code."""
+        root = Column()
+        Heading("Sales Report", parent=root)
+        with Row(parent=root) as metrics:
+            Text(content="Revenue: $1.2M", parent=metrics)
+            Text(content="Growth: 15%", parent=metrics)
+        assert len(root.children) == 2
+        assert isinstance(root.children[0], Heading)
+        assert isinstance(root.children[1], Row)
+        assert len(root.children[1].children) == 2
