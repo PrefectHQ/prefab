@@ -43,7 +43,7 @@ def _get_component_classes() -> dict[str, type[Component]]:
 
 
 class ComponentRegistry:
-    """Maps integer handles to real Component instances.
+    """Maps integer handles to real objects built outside the sandbox.
 
     Monty can only pass primitives (int, str, float, bool, list, dict)
     across the sandbox boundary.  The registry lets shim functions return
