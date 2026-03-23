@@ -22,14 +22,18 @@ PREFAB_SRC = Path(__file__).parent.parent  # src/prefab_ui/
 class Sandbox:
     """Pyodide sandbox with a warm Deno subprocess.
 
-    Use as an async context manager::
+    Use as an async context manager for explicit lifecycle control::
 
         async with Sandbox() as sandbox:
             result = await sandbox.run(code, data={"key": "value"})
 
-    The Deno/Pyodide process starts on ``__aenter__`` and is killed on
-    ``__aexit__``. Between calls, the process stays warm — only the
-    first request pays the Pyodide cold start (~2-3s).
+    Or create a long-lived instance that starts lazily on first use::
+
+        sandbox = Sandbox()
+        result = await sandbox.run(code)  # cold start happens here
+        result = await sandbox.run(code)  # warm, ~1ms
+
+    The Deno process auto-restarts if it crashes between calls.
     """
 
     def __init__(self) -> None:
@@ -113,11 +117,12 @@ class Sandbox:
             RuntimeError: If the sandbox is not started or the code fails.
         """
         async with self._lock:
+            if self._process is None or self._process.poll() is not None:
+                await self._start()
+
             proc = self._process
-            if proc is None or proc.poll() is not None:
-                raise RuntimeError("Sandbox is not running")
-            if proc.stdin is None or proc.stdout is None:
-                raise RuntimeError("Sandbox pipes not available")
+            if proc is None or proc.stdin is None or proc.stdout is None:
+                raise RuntimeError("Sandbox failed to start")
 
             request = json.dumps({"code": code, "data": data or {}}) + "\n"
             loop = asyncio.get_event_loop()
