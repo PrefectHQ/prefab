@@ -8,7 +8,7 @@ There are three ways to build a component tree, each suited to different context
 
 ### Context managers (idiomatic)
 
-Visual nesting mirrors the component hierarchy. The preferred style for hand-written code.
+Visual nesting mirrors the component hierarchy. The preferred style for both hand-written and LLM-generated code.
 
 ```python
 with Column(gap=4) as root:
@@ -18,7 +18,7 @@ with Column(gap=4) as root:
         Text("Growth: 15%")
 ```
 
-Requires Python's `with` statement and relies on ContextVars internally.
+Context managers also work for streaming — see "Streaming architecture" below.
 
 ### `parent=` (imperative)
 
@@ -32,11 +32,7 @@ Text("Revenue: $1.2M", parent=row)
 Text("Growth: 15%", parent=row)
 ```
 
-This exists for two reasons:
-
-1. **Sandbox compatibility.** Monty (pydantic-monty) sandboxes Python execution but supports neither context managers nor ContextVars. The `parent=` pattern works purely through function calls and attribute mutation.
-
-2. **Streaming evaluation.** When an LLM generates code token by token, each `Component(..., parent=root)` line can be evaluated as soon as it's complete — the UI builds up incrementally. With `children=[...]` you must wait for the closing bracket. With `with Column():` you need the entire block.
+Useful for sandbox environments that don't support context managers (e.g. Monty). Also works for streaming, since each line is independently evaluable.
 
 ### `children=` (batch)
 
@@ -60,32 +56,49 @@ The `parent=` kwarg is handled in `Component.__init__` (`components/base.py`). I
 
 The implementation uses "undo" rather than "prevent": `super().__init__()` runs normally (which may auto-attach the component to the context manager stack via `model_post_init`), then `__init__` removes the component from the stack parent and appends it to the explicit parent instead. This avoids introducing new ContextVars — the only ContextVar touched is the existing `_component_stack`, and only for cleanup.
 
-When there's no active context manager (the common case for sandbox/streaming), there's no stack to undo — the component just appends to the explicit parent directly.
-
 ## Streaming architecture
 
-The renderer already supports full tree replacement. Each time a tool result arrives via `handleToolResult` in `app.tsx`, the renderer replaces the view and React's reconciliation diffs it — existing components stay mounted, new ones appear. No renderer changes are needed for streaming.
+The streaming model is "try to compile, execute on success":
 
-The work for streaming is on the Python/FastMCP side: a streaming tool that yields progressively larger `PrefabApp` objects as the LLM generates more code. Each yield sends an updated tree to the renderer.
+1. The LLM streams tokens into a code buffer
+2. On each new line, attempt `compile(buffer)` — if it succeeds, the code is syntactically valid
+3. Execute the buffer in the sandbox, producing a component tree
+4. Serialize and send to the renderer via `handleToolResult`
+5. React's reconciliation diffs the new tree against the old — existing components stay mounted, new ones appear
 
-## Monty shims
+Context managers work for streaming because a `with` block with children is valid Python as soon as the block's indentation ends. The full buffer is re-executed each time, producing a fresh tree. This is cheap — component construction is microseconds.
 
-Monty doesn't support classes, so Prefab components are exposed as plain functions that call real constructors outside the sandbox:
+The renderer already supports full tree replacement. Each `handleToolResult` call replaces the view and React diffs it. No renderer changes are needed.
 
-```python
-def make_shim(cls):
-    def shim(**kwargs):
-        return cls(**kwargs)
-    return shim
-```
+## Sandbox: Pyodide via Deno
 
-Since `parent=` is handled natively by `Component.__init__`, the shims need no special logic — they just pass through kwargs.
+LLM-generated code is untrusted and must run in a sandbox. After evaluating Monty, Wasmer, Docker, and sandboxing services, Pyodide via Deno is the right choice:
 
-## PR chain
+- **Full CPython** — context managers, `.rx`, classes, Pydantic, real Prefab code
+- **Pydantic works** — pydantic-core publishes emscripten/WASM wheels
+- **Proven** — the FastMCP playground already runs Prefab in Pyodide
+- **WASM security** — V8's WASM sandbox has billions of hours of security scrutiny
+- **Persistent process** — pay the ~3s cold start once, keep the Deno subprocess warm
 
-This capability is being built across a series of PRs:
+The sandbox provider lives in FastMCP (which owns the `SandboxProvider` protocol), not in Prefab. A `PyodideSandboxProvider` wraps a persistent Deno subprocess with Prefab pre-loaded. Code goes in as JSON over stdin, results come back on stdout.
 
-1. **`parent=` kwarg on Component** — the foundation
-2. **Monty shims** — function wrappers exposing components to the sandbox
-3. **Streaming tool execution** — FastMCP sends progressive tree updates during tool execution
-4. **Error boundaries** — graceful handling of bad LLM-generated code mid-stream
+### Why not Monty?
+
+Monty is fast (microsecond startup) and secure, but too limited for generative UI:
+
+- No classes → Pydantic models can't cross the sandbox boundary
+- No context managers → can't write idiomatic Prefab code
+- No `.rx` → reactive references require dict-handle workarounds
+- Shims return integer/dict handles instead of real objects
+
+Monty is well-suited for FastMCP's code-mode tool calling (where the LLM orchestrates tool calls via Python), but not for building Prefab component trees.
+
+### Why not Wasmer?
+
+Wasmer runs full CPython in WASM, but pydantic-core (Rust extension) doesn't compile for the `wasm32-wasi` target. Only `wasm32-unknown-emscripten` (Pyodide's target) has pydantic-core wheels.
+
+## Next steps
+
+1. **`PyodideSandboxProvider` in FastMCP** — persistent Deno subprocess, JSON stdin/stdout, Prefab pre-loaded
+2. **Streaming integration** — wire the "try to compile" loop to the provider, push intermediate trees via `handleToolResult`
+3. **Error boundaries** — when LLM code fails mid-stream, show what was built so far plus an error indicator
