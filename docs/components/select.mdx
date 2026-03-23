@@ -201,7 +201,7 @@ with Column(gap=4, css_class="w-fit min-w-[200px] mx-auto"):
 
 Pair a `Select` with a `Label` in a `Column` for a standard form field pattern:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Preferred language"},{"name":"select_6","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJQcmVmZXJyZWQgbGFuZ3VhZ2UiKQogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBsYW5ndWFnZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iZW4iLCBsYWJlbD0iRW5nbGlzaCIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlcyIsIGxhYmVsPSJTcGFuaXNoIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImZyIiwgbGFiZWw9IkZyZW5jaCIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Preferred language","optional":false},{"name":"select_6","type":"Select","placeholder":"Choose language","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"en","label":"English","selected":false,"disabled":false},{"type":"SelectOption","value":"es","label":"Spanish","selected":false,"disabled":false},{"type":"SelectOption","value":"fr","label":"French","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJQcmVmZXJyZWQgbGFuZ3VhZ2UiKQogICAgd2l0aCBTZWxlY3QocGxhY2Vob2xkZXI9IkNob29zZSBsYW5ndWFnZSIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iZW4iLCBsYWJlbD0iRW5nbGlzaCIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlcyIsIGxhYmVsPSJTcGFuaXNoIikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9ImZyIiwgbGFiZWw9IkZyZW5jaCIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Select, SelectOption
@@ -219,7 +219,7 @@ with Column(gap=2, css_class="w-fit mx-auto"):
     "cssClass": "gap-2 w-fit mx-auto",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Preferred language"},
+      {"type": "Label", "text": "Preferred language", "optional": false},
       {
         "name": "select_6",
         "type": "Select",
@@ -392,7 +392,7 @@ with Select(
 
 Set `invalid=True` to flag a select with error styling. Pair it with a `Label` in a form layout to signal that a selection is required or incorrect:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination"},{"name":"select_9","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":true,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJEZXN0aW5hdGlvbiIpCiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iQ2hvb3NlIGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hZ3JhdGhlYSIsIGxhYmVsPSJNYWdyYXRoZWEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYmV0ZWxnZXVzZSIsIGxhYmVsPSJCZXRlbGdldXNlIFYiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idm9nc3BoZXJlIiwgbGFiZWw9IlZvZ3NwaGVyZSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-2 w-fit mx-auto","type":"Column","children":[{"type":"Label","text":"Destination","optional":false},{"name":"select_9","type":"Select","placeholder":"Choose a planet...","size":"default","disabled":false,"required":false,"invalid":true,"children":[{"type":"SelectOption","value":"magrathea","label":"Magrathea","selected":false,"disabled":false},{"type":"SelectOption","value":"betelgeuse","label":"Betelgeuse V","selected":false,"disabled":false},{"type":"SelectOption","value":"vogsphere","label":"Vogsphere","selected":false,"disabled":false}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2VsZWN0LCBTZWxlY3RPcHRpb24KCndpdGggQ29sdW1uKGdhcD0yLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIExhYmVsKCJEZXN0aW5hdGlvbiIpCiAgICB3aXRoIFNlbGVjdChwbGFjZWhvbGRlcj0iQ2hvb3NlIGEgcGxhbmV0Li4uIiwgaW52YWxpZD1UcnVlKToKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Im1hZ3JhdGhlYSIsIGxhYmVsPSJNYWdyYXRoZWEiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iYmV0ZWxnZXVzZSIsIGxhYmVsPSJCZXRlbGdldXNlIFYiKQogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0idm9nc3BoZXJlIiwgbGFiZWw9IlZvZ3NwaGVyZSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Select, SelectOption
@@ -410,7 +410,7 @@ with Column(gap=2, css_class="w-fit mx-auto"):
     "cssClass": "gap-2 w-fit mx-auto",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Destination"},
+      {"type": "Label", "text": "Destination", "optional": false},
       {
         "name": "select_9",
         "type": "Select",

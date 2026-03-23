@@ -38,7 +38,7 @@ Slider(value=50)
 
 Every form control has an `.rx` property — a reactive reference to its current value. For a slider, `.rx` is a number you can format with pipes like `.percent()` or use in expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume"},{"name":"slider_3","value":0.75,"type":"Slider","min":0.0,"max":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ slider_3 | percent }}","type":"Text"}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiVm9sdW1lIikKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT0wLjc1LCBtaW49MCwgbWF4PTEpCiAgICBUZXh0KHZvbHVtZS5yeC5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Volume","optional":false},{"name":"slider_3","value":0.75,"type":"Slider","min":0.0,"max":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ slider_3 | percent }}","type":"Text"}]},"state":{"slider_3":0.75}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiVm9sdW1lIikKICAgIHZvbHVtZSA9IFNsaWRlcih2YWx1ZT0wLjc1LCBtaW49MCwgbWF4PTEpCiAgICBUZXh0KHZvbHVtZS5yeC5wZXJjZW50KCksIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider, Text
@@ -54,7 +54,7 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Volume"},
+      {"type": "Label", "text": "Volume", "optional": false},
       {
         "name": "slider_3",
         "value": 0.75,
@@ -75,7 +75,7 @@ with Column(gap=2):
 
 When the display needs to appear *above* the slider in the layout, forward-declare the reference with `Rx(lambda: ...)` so it resolves at render time:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness"},{"cssClass":"font-bold","content":"{{ slider_4 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0.0,"max":1.0,"variant":"default","size":"default"},{"name":"slider_4","value":0.42,"type":"Slider","min":0.0,"max":1.0,"disabled":false,"size":"default"}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwsIG1pbj0wLCBtYXg9MSkKICAgIHMgPSBTbGlkZXIodmFsdWU9MC40MiwgbWluPTAsIG1heD0xKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"justify-between","type":"Row","children":[{"type":"Label","text":"Brightness","optional":false},{"cssClass":"font-bold","content":"{{ slider_4 | percent }}","type":"Text"}]},{"type":"Progress","value":"{{ slider_4 }}","min":0.0,"max":1.0,"variant":"default","size":"default"},{"name":"slider_4","value":0.42,"type":"Slider","min":0.0,"max":1.0,"disabled":false,"size":"default"}]},"state":{"slider_4":0.42}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgUHJvZ3Jlc3MsIFJvdywgU2xpZGVyLCBUZXh0CmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdmFsID0gUngobGFtYmRhOiBzKQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBSb3coY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICBMYWJlbCgiQnJpZ2h0bmVzcyIpCiAgICAgICAgVGV4dCh2YWwucGVyY2VudCgpLCBib2xkPVRydWUpCiAgICBQcm9ncmVzcyh2YWx1ZT12YWwsIG1pbj0wLCBtYXg9MSkKICAgIHMgPSBTbGlkZXIodmFsdWU9MC40MiwgbWluPTAsIG1heD0xKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Progress, Row, Slider, Text
@@ -100,7 +100,7 @@ with Column(gap=4):
         "cssClass": "justify-between",
         "type": "Row",
         "children": [
-          {"type": "Label", "text": "Brightness"},
+          {"type": "Label", "text": "Brightness", "optional": false},
           {"cssClass": "font-bold", "content": "{{ slider_4 | percent }}", "type": "Text"}
         ]
       },
@@ -135,7 +135,7 @@ See [Forward References](/concepts/components#forward-references) for more on th
 
 Use `min`, `max`, and `step` to constrain the slider. Here the range is 0–5 with half-step increments:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Rating"},{"name":"rating","value":4.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating }}","type":"Text"}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiUmF0aW5nIikKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Rating","optional":false},{"name":"rating","value":4.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating }}","type":"Text"}]},"state":{"rating":4.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyLCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBMYWJlbCgiUmF0aW5nIikKICAgIHJhdGluZyA9IFNsaWRlcih2YWx1ZT00LCBuYW1lPSJyYXRpbmciLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgVGV4dChyYXRpbmcucngsIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider, Text
@@ -151,7 +151,7 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Rating"},
+      {"type": "Label", "text": "Rating", "optional": false},
       {
         "name": "rating",
         "value": 4.0,
@@ -257,7 +257,7 @@ Slider(value=30, disabled=True)
 
 Semantic variants color the filled track to communicate meaning at a glance — the same palette available on Progress:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"name":"slider_7","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success"},{"name":"slider_8","value":100.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"success","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning"},{"name":"slider_9","value":72.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"warning","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive"},{"name":"slider_10","value":90.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"destructive","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info"},{"name":"slider_11","value":45.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"info","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted"},{"name":"slider_12","value":30.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"muted","size":"default"}]}]},"state":{"slider_7":60.0,"slider_8":100.0,"slider_9":72.0,"slider_10":90.0,"slider_11":45.0,"slider_12":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFNsaWRlcih2YWx1ZT02MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3VjY2VzcyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFNsaWRlcih2YWx1ZT03MiwgdmFyaWFudD0id2FybmluZyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlc3RydWN0aXZlIikKICAgICAgICBTbGlkZXIodmFsdWU9OTAsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiSW5mbyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFNsaWRlcih2YWx1ZT0zMCwgdmFyaWFudD0ibXV0ZWQiKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default","optional":false},{"name":"slider_7","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Success","optional":false},{"name":"slider_8","value":100.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"success","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Warning","optional":false},{"name":"slider_9","value":72.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"warning","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Destructive","optional":false},{"name":"slider_10","value":90.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"destructive","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Info","optional":false},{"name":"slider_11","value":45.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"info","size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Muted","optional":false},{"name":"slider_12","value":30.0,"type":"Slider","min":0,"max":100,"disabled":false,"variant":"muted","size":"default"}]}]},"state":{"slider_7":60.0,"slider_8":100.0,"slider_9":72.0,"slider_10":90.0,"slider_11":45.0,"slider_12":30.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlZmF1bHQiKQogICAgICAgIFNsaWRlcih2YWx1ZT02MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiU3VjY2VzcyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTEwMCwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIldhcm5pbmciKQogICAgICAgIFNsaWRlcih2YWx1ZT03MiwgdmFyaWFudD0id2FybmluZyIpCiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkRlc3RydWN0aXZlIikKICAgICAgICBTbGlkZXIodmFsdWU9OTAsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiSW5mbyIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTQ1LCB2YXJpYW50PSJpbmZvIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiTXV0ZWQiKQogICAgICAgIFNsaWRlcih2YWx1ZT0zMCwgdmFyaWFudD0ibXV0ZWQiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -292,7 +292,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Default"},
+          {"type": "Label", "text": "Default", "optional": false},
           {
             "name": "slider_7",
             "value": 60.0,
@@ -308,7 +308,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Success"},
+          {"type": "Label", "text": "Success", "optional": false},
           {
             "name": "slider_8",
             "value": 100.0,
@@ -325,7 +325,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Warning"},
+          {"type": "Label", "text": "Warning", "optional": false},
           {
             "name": "slider_9",
             "value": 72.0,
@@ -342,7 +342,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Destructive"},
+          {"type": "Label", "text": "Destructive", "optional": false},
           {
             "name": "slider_10",
             "value": 90.0,
@@ -359,7 +359,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Info"},
+          {"type": "Label", "text": "Info", "optional": false},
           {
             "name": "slider_11",
             "value": 45.0,
@@ -376,7 +376,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Muted"},
+          {"type": "Label", "text": "Muted", "optional": false},
           {
             "name": "slider_12",
             "value": 30.0,
@@ -408,7 +408,7 @@ with Column(gap=4):
 
 Control the track thickness with `size`. The default is a medium weight; use `sm` for compact layouts and `lg` for prominent controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Small"},{"name":"slider_13","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"sm"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default"},{"name":"slider_14","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Large"},{"name":"slider_15","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"lg"}]}]},"state":{"slider_13":60.0,"slider_14":60.0,"slider_15":60.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlNtYWxsIikKICAgICAgICBTbGlkZXIodmFsdWU9NjAsIHNpemU9InNtIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVmYXVsdCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTYwKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJMYXJnZSIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTYwLCBzaXplPSJsZyIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Small","optional":false},{"name":"slider_13","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"sm"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Default","optional":false},{"name":"slider_14","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Large","optional":false},{"name":"slider_15","value":60.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"lg"}]}]},"state":{"slider_13":60.0,"slider_14":60.0,"slider_15":60.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlNtYWxsIikKICAgICAgICBTbGlkZXIodmFsdWU9NjAsIHNpemU9InNtIikKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiRGVmYXVsdCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTYwKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJMYXJnZSIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTYwLCBzaXplPSJsZyIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -434,7 +434,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Small"},
+          {"type": "Label", "text": "Small", "optional": false},
           {
             "name": "slider_13",
             "value": 60.0,
@@ -450,7 +450,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Default"},
+          {"type": "Label", "text": "Default", "optional": false},
           {
             "name": "slider_14",
             "value": 60.0,
@@ -466,7 +466,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Large"},
+          {"type": "Label", "text": "Large", "optional": false},
           {
             "name": "slider_15",
             "value": 60.0,
@@ -490,7 +490,7 @@ with Column(gap=4):
 
 Use `indicator_class` for arbitrary track colors beyond the built-in variants:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used"},{"cssClass":"pf-slider-flat","name":"slider_16","value":85.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress"},{"cssClass":"pf-slider-flat","name":"slider_17","value":45.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","indicatorClass":"bg-blue-500"}]}]},"state":{"slider_16":85.0,"slider_17":45.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN0b3JhZ2UgVXNlZCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTg1LCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJVcGxvYWQgUHJvZ3Jlc3MiKQogICAgICAgIFNsaWRlcih2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Storage Used","optional":false},{"cssClass":"pf-slider-flat","name":"slider_16","value":85.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","indicatorClass":"bg-red-500"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Upload Progress","optional":false},{"cssClass":"pf-slider-flat","name":"slider_17","value":45.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","indicatorClass":"bg-blue-500"}]}]},"state":{"slider_16":85.0,"slider_17":45.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIlN0b3JhZ2UgVXNlZCIpCiAgICAgICAgU2xpZGVyKHZhbHVlPTg1LCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIExhYmVsKCJVcGxvYWQgUHJvZ3Jlc3MiKQogICAgICAgIFNsaWRlcih2YWx1ZT00NSwgaW5kaWNhdG9yX2NsYXNzPSJiZy1ibHVlLTUwMCIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -513,7 +513,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Storage Used"},
+          {"type": "Label", "text": "Storage Used", "optional": false},
           {
             "cssClass": "pf-slider-flat",
             "name": "slider_16",
@@ -531,7 +531,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Upload Progress"},
+          {"type": "Label", "text": "Upload Progress", "optional": false},
           {
             "cssClass": "pf-slider-flat",
             "name": "slider_17",
@@ -617,7 +617,7 @@ with Row(css_class="gap-8 h-48 items-center justify-center"):
 
 The `handle_style` parameter changes the thumb shape. Use `"bar"` for a tall rounded rectangle instead of the default circle:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)"},{"name":"slider_21","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar"},{"name":"slider_22","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","handleStyle":"bar"}]}]},"state":{"slider_21":50.0,"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkNpcmNsZSAoZGVmYXVsdCkiKQogICAgICAgIFNsaWRlcih2YWx1ZT01MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmFyIikKICAgICAgICBTbGlkZXIodmFsdWU9NTAsIGhhbmRsZV9zdHlsZT0iYmFyIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Circle (default)","optional":false},{"name":"slider_21","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default"}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Bar","optional":false},{"name":"slider_22","value":50.0,"type":"Slider","min":0,"max":100,"disabled":false,"size":"default","handleStyle":"bar"}]}]},"state":{"slider_21":50.0,"slider_22":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBMYWJlbCwgU2xpZGVyCgp3aXRoIENvbHVtbihnYXA9NCk6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgTGFiZWwoIkNpcmNsZSAoZGVmYXVsdCkiKQogICAgICAgIFNsaWRlcih2YWx1ZT01MCkKICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICBMYWJlbCgiQmFyIikKICAgICAgICBTbGlkZXIodmFsdWU9NTAsIGhhbmRsZV9zdHlsZT0iYmFyIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Column, Label, Slider
@@ -640,7 +640,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Circle (default)"},
+          {"type": "Label", "text": "Circle (default)", "optional": false},
           {
             "name": "slider_21",
             "value": 50.0,
@@ -656,7 +656,7 @@ with Column(gap=4):
         "cssClass": "gap-2",
         "type": "Column",
         "children": [
-          {"type": "Label", "text": "Bar"},
+          {"type": "Label", "text": "Bar", "optional": false},
           {
             "name": "slider_22",
             "value": 50.0,

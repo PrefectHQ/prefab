@@ -29,6 +29,27 @@ import { Switch as ShadcnSwitch } from "@/ui/switch";
 import { Label } from "@/ui/label";
 
 /* ------------------------------------------------------------------ */
+/*  Label                                                             */
+/* ------------------------------------------------------------------ */
+
+interface PrefabLabelProps extends React.ComponentProps<typeof Label> {
+  optional?: boolean;
+}
+
+export function PrefabLabel({
+  optional,
+  children,
+  ...props
+}: PrefabLabelProps) {
+  return (
+    <Label {...props}>
+      {children}
+      {optional && <span className="pf-label-optional">optional</span>}
+    </Label>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Standalone Radio (outside a RadioGroup)                           */
 /* ------------------------------------------------------------------ */
 

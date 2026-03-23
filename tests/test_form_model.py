@@ -191,6 +191,30 @@ class TestFromModelMetadata:
         assert required_input.get("required") is True
         assert optional_input.get("required") is not True
 
+    def test_optional_label_indicator(self):
+        class M(BaseModel):
+            required_field: str
+            optional_field: str = "default"
+
+        form = Form.from_model(M)
+        j = form.to_json()
+        required_label = j["children"][0]["children"][0]
+        optional_label = j["children"][1]["children"][0]
+        assert required_label.get("optional") is not True
+        assert optional_label["optional"] is True
+
+    def test_optional_type_label_indicator(self):
+        class M(BaseModel):
+            name: str
+            nickname: str | None = None
+
+        form = Form.from_model(M)
+        j = form.to_json()
+        required_label = j["children"][0]["children"][0]
+        optional_label = j["children"][1]["children"][0]
+        assert required_label.get("optional") is not True
+        assert optional_label["optional"] is True
+
     def test_list_field_skipped(self):
         class M(BaseModel):
             name: str

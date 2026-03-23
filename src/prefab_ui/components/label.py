@@ -46,6 +46,10 @@ class Label(ContainerComponent):
         alias="forId",
         description="ID of the associated form field",
     )
+    optional: bool = Field(
+        default=False,
+        description="Whether to show an '(optional)' indicator after the label text",
+    )
 
     @overload
     def __init__(self, text: str, /, **kwargs: Any) -> None: ...

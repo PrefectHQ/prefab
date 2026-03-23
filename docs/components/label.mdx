@@ -12,7 +12,7 @@ Labels provide accessible text descriptions for form fields.
 
 Labels can contain text directly or wrap other components.
 
-<ComponentPreview json={{"view":{"type":"Label","text":"Email address"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTGFiZWwKCkxhYmVsKCJFbWFpbCBhZGRyZXNzIikK">
+<ComponentPreview json={{"view":{"type":"Label","text":"Email address","optional":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTGFiZWwKCkxhYmVsKCJFbWFpbCBhZGRyZXNzIikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import Label
@@ -20,7 +20,7 @@ from prefab_ui.components import Label
 Label("Email address")
 ```
 ```json Protocol icon="brackets-curly"
-{"view": {"type": "Label", "text": "Email address"}}
+{"view": {"type": "Label", "text": "Email address", "optional": false}}
 ```
 </CodeGroup>
 </ComponentPreview>
@@ -29,7 +29,7 @@ Label("Email address")
 
 Labels are typically paired with inputs and other form controls:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username","forId":"username"},{"name":"username","type":"Input","inputType":"text","placeholder":"Enter username","disabled":false,"readOnly":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgSW5wdXQsCiAgICBMYWJlbCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgTGFiZWwoIlVzZXJuYW1lIiwgZm9yX2lkPSJ1c2VybmFtZSIpCiAgICBJbnB1dChwbGFjZWhvbGRlcj0iRW50ZXIgdXNlcm5hbWUiLCBuYW1lPSJ1c2VybmFtZSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Username","forId":"username","optional":false},{"name":"username","type":"Input","inputType":"text","placeholder":"Enter username","disabled":false,"readOnly":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgSW5wdXQsCiAgICBMYWJlbCwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgTGFiZWwoIlVzZXJuYW1lIiwgZm9yX2lkPSJ1c2VybmFtZSIpCiAgICBJbnB1dChwbGFjZWhvbGRlcj0iRW50ZXIgdXNlcm5hbWUiLCBuYW1lPSJ1c2VybmFtZSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -48,12 +48,48 @@ with Column(gap=2):
     "cssClass": "gap-2",
     "type": "Column",
     "children": [
-      {"type": "Label", "text": "Username", "forId": "username"},
+      {"type": "Label", "text": "Username", "forId": "username", "optional": false},
       {
         "name": "username",
         "type": "Input",
         "inputType": "text",
         "placeholder": "Enter username",
+        "disabled": false,
+        "readOnly": false,
+        "required": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Optional Indicator
+
+Set `optional=True` to show a muted "optional" hint after the label text. `Form.from_model()` sets this automatically for non-required fields; for manually built forms, set it yourself on any label.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Phone","optional":true},{"name":"phone","type":"Input","inputType":"tel","placeholder":"+1 (555) 000-0000","disabled":false,"readOnly":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgTGFiZWwKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIExhYmVsKCJQaG9uZSIsIG9wdGlvbmFsPVRydWUpCiAgICBJbnB1dChpbnB1dF90eXBlPSJ0ZWwiLCBuYW1lPSJwaG9uZSIsIHBsYWNlaG9sZGVyPSIrMSAoNTU1KSAwMDAtMDAwMCIpCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Label
+
+with Column(gap=2):
+    Label("Phone", optional=True)
+    Input(input_type="tel", name="phone", placeholder="+1 (555) 000-0000")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Phone", "optional": true},
+      {
+        "name": "phone",
+        "type": "Input",
+        "inputType": "tel",
+        "placeholder": "+1 (555) 000-0000",
         "disabled": false,
         "readOnly": false,
         "required": false
@@ -77,6 +113,10 @@ with Column(gap=2):
   ID of the associated form field element.
 </ParamField>
 
+<ParamField body="optional" type="bool" default="False">
+  When `True`, displays a muted "optional" indicator after the label text.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Additional Tailwind CSS classes appended to the component's built-in styles.
 </ParamField>
@@ -91,6 +131,7 @@ with Column(gap=2):
   "let?": "object",
   "text?": "string",
   "forId?": "string",
+  "optional?": "boolean",
   "cssClass?": "string"
 }
 ```

@@ -320,7 +320,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         value = str(default) if isinstance(default, str) else None
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Textarea(
                 name=name,
                 placeholder=placeholder,
@@ -347,7 +347,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
                 )
             )
         col = Column(gap=2)
-        col.children = [Label(label_text), select]
+        col.children = [Label(label_text, optional=not required), select]
         return col
 
     # bool → Checkbox
@@ -359,7 +359,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     if inner is SecretStr:
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Input(
                 input_type="password",
                 name=name,
@@ -375,7 +375,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     if inner is datetime.date:
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Input(input_type="date", name=name, required=required),
         ]
         return col
@@ -383,7 +383,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     if inner is datetime.time:
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Input(input_type="time", name=name, required=required),
         ]
         return col
@@ -391,7 +391,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     if inner is datetime.datetime:
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Input(input_type="datetime-local", name=name, required=required),
         ]
         return col
@@ -401,7 +401,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
         value = str(default) if default is not None else None
         col = Column(gap=2)
         col.children = [
-            Label(label_text),
+            Label(label_text, optional=not required),
             Input(
                 input_type="number",
                 name=name,
@@ -436,7 +436,7 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
     value = str(default) if isinstance(default, str) else None
     col = Column(gap=2)
     col.children = [
-        Label(label_text),
+        Label(label_text, optional=not required),
         Input(
             input_type=input_type,
             name=name,
