@@ -8,7 +8,7 @@ There are three ways to build a component tree, each suited to different context
 
 ### Context managers (idiomatic)
 
-Visual nesting mirrors the component hierarchy. The preferred style for hand-written code.
+Visual nesting mirrors the component hierarchy. The preferred style for both hand-written and LLM-generated code.
 
 ```python
 with Column(gap=4) as root:
@@ -18,7 +18,7 @@ with Column(gap=4) as root:
         Text("Growth: 15%")
 ```
 
-Requires Python's `with` statement and relies on ContextVars internally.
+Context managers also work for streaming — see "Streaming architecture" below.
 
 ### `parent=` (imperative)
 
@@ -32,11 +32,7 @@ Text("Revenue: $1.2M", parent=row)
 Text("Growth: 15%", parent=row)
 ```
 
-This exists for two reasons:
-
-1. **Sandbox compatibility.** Monty (pydantic-monty) sandboxes Python execution but supports neither context managers nor ContextVars. The `parent=` pattern works purely through function calls and attribute mutation.
-
-2. **Streaming evaluation.** When an LLM generates code token by token, each `Component(..., parent=root)` line can be evaluated as soon as it's complete — the UI builds up incrementally. With `children=[...]` you must wait for the closing bracket. With `with Column():` you need the entire block.
+Useful for environments that don't support context managers. Also works for streaming, since each line is independently evaluable.
 
 ### `children=` (batch)
 
@@ -54,38 +50,43 @@ Column(gap=4, children=[
 
 Works in any environment but the entire tree must be complete before evaluation. Not suitable for streaming.
 
-## Implementation: `parent=`
+## Sandbox: Pyodide via Deno
 
-The `parent=` kwarg is handled in `Component.__init__` (`components/base.py`). It is not a Pydantic field — it's popped from kwargs before Pydantic ever sees it, so it never serializes.
-
-The implementation uses "undo" rather than "prevent": `super().__init__()` runs normally (which may auto-attach the component to the context manager stack via `model_post_init`), then `__init__` removes the component from the stack parent and appends it to the explicit parent instead. This avoids introducing new ContextVars — the only ContextVar touched is the existing `_component_stack`, and only for cleanup.
-
-When there's no active context manager (the common case for sandbox/streaming), there's no stack to undo — the component just appends to the explicit parent directly.
-
-## Streaming architecture
-
-The renderer already supports full tree replacement. Each time a tool result arrives via `handleToolResult` in `app.tsx`, the renderer replaces the view and React's reconciliation diffs it — existing components stay mounted, new ones appear. No renderer changes are needed for streaming.
-
-The work for streaming is on the Python/FastMCP side: a streaming tool that yields progressively larger `PrefabApp` objects as the LLM generates more code. Each yield sends an updated tree to the renderer.
-
-## Monty shims
-
-Monty doesn't support classes, so Prefab components are exposed as plain functions that call real constructors outside the sandbox:
+LLM-generated code is untrusted and must run in a sandbox. `prefab_ui.sandbox.Sandbox` runs code in a Pyodide WASM sandbox via a persistent Deno subprocess:
 
 ```python
-def make_shim(cls):
-    def shim(**kwargs):
-        return cls(**kwargs)
-    return shim
+from prefab_ui.sandbox import Sandbox
+
+async with Sandbox() as sandbox:
+    result = await sandbox.run(code, data={"sales": data})
 ```
 
-Since `parent=` is handled natively by `Component.__init__`, the shims need no special logic — they just pass through kwargs.
+Full CPython runs inside Pyodide — context managers, `.rx`, Pydantic validation, everything works identically to native Python. The Deno process stays warm between calls (~1ms per execution after the initial ~2s cold start).
 
-## PR chain
+### How it works
 
-This capability is being built across a series of PRs:
+1. Deno starts a Pyodide WASM runtime and mounts Prefab source into the virtual filesystem
+2. Code arrives as JSON over stdin, executes in a fresh namespace with injected data
+3. The harness finds the root PrefabApp or Component and serializes it
+4. Wire protocol JSON returns on stdout
 
-1. **`parent=` kwarg on Component** — the foundation
-2. **Monty shims** — function wrappers exposing components to the sandbox
-3. **Streaming tool execution** — FastMCP sends progressive tree updates during tool execution
-4. **Error boundaries** — graceful handling of bad LLM-generated code mid-stream
+### Streaming architecture
+
+The streaming model is "try to compile, execute on success":
+
+1. The LLM streams tokens into a code buffer
+2. On each new line, attempt `compile(buffer)` — if it succeeds, the code is syntactically valid
+3. Execute the buffer in the sandbox, producing a component tree
+4. Serialize and send to the renderer
+5. React's reconciliation diffs the new tree against the old — existing components stay mounted, new ones appear
+
+Context managers work for streaming because a `with` block with children is valid Python as soon as the block's indentation ends. The full buffer is re-executed each time, producing a fresh tree.
+
+We hope to support Monty once it has more coverage of the Python features that Prefab uses (classes, context managers). Monty's microsecond startup and snapshotting capabilities would be ideal for this use case.
+
+## Example server
+
+`examples/generative-ui/server.py` demonstrates the pattern with two MCP tools:
+
+- **`execute_ui(code, data)`** — runs Prefab code in the sandbox, returns the rendered UI
+- **`components(query)`** — searches the component library with import paths and field signatures
