@@ -62,18 +62,16 @@ class TestPrefabAppFromJson:
             "view": {"type": "Text", "content": "hi"},
             "state": {"x": 1},
         }
-        app = PrefabApp.from_json(wire)
-        assert app.state is not None
-        app.state["y"] = 2
+        app = PrefabApp.from_json(wire, state={"y": 2})
         result = app.to_json()
-        assert result["state"] == {"x": 1, "y": 2}
+        assert result["state"] == {"y": 2}
 
     def test_override_theme(self):
         from prefab_ui.themes import Theme
 
+        theme = Theme(light={"primary": "#000"})
         wire = {"view": {"type": "Text", "content": "hi"}}
-        app = PrefabApp.from_json(wire)
-        app.theme = Theme(light={"primary": "#000"})
+        app = PrefabApp.from_json(wire, theme=theme)
         result = app.to_json()
         assert "theme" in result
 

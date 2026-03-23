@@ -186,24 +186,20 @@ class PrefabApp(BaseModel):
         return self
 
     @classmethod
-    def from_json(cls, wire: dict[str, Any]) -> PrefabApp:
+    def from_json(cls, wire: dict[str, Any], **overrides: Any) -> PrefabApp:
         """Create a PrefabApp from a wire protocol dict.
 
-        Unpacks the envelope into real fields so you can inspect and
-        override them before serializing::
+        Keyword arguments override values from the wire data::
 
             wire = await sandbox.run(code)
-            app = PrefabApp.from_json(wire)
-            app.state["extra"] = "value"   # extend state
-            app.theme = my_theme           # override theme
-            app.to_json()                  # serializes with overrides
+            app = PrefabApp.from_json(wire, state={"extra": "value"})
         """
-        return cls.model_construct(
-            view=wire.get("view"),
-            state=wire.get("state"),
-            defs=wire.get("defs"),
-            theme=wire.get("theme"),
-        )
+        fields: dict[str, Any] = {}
+        for key in ("view", "state", "defs", "theme"):
+            if key in wire:
+                fields[key] = wire[key]
+        fields.update(overrides)
+        return cls.model_construct(**fields)
 
     def to_json(
         self,
