@@ -72,7 +72,7 @@ The renderer already supports full tree replacement. Each `handleToolResult` cal
 
 ## Sandbox: Pyodide via Deno
 
-LLM-generated code is untrusted and must run in a sandbox. After evaluating Monty, Wasmer, Docker, and sandboxing services, Pyodide via Deno is the right choice:
+LLM-generated code is untrusted and must run in a sandbox. Pyodide via Deno provides the best fit for Prefab's needs:
 
 - **Full CPython** — context managers, `.rx`, classes, Pydantic, real Prefab code
 - **Pydantic works** — pydantic-core publishes emscripten/WASM wheels
@@ -82,20 +82,7 @@ LLM-generated code is untrusted and must run in a sandbox. After evaluating Mont
 
 The sandbox provider lives in FastMCP (which owns the `SandboxProvider` protocol), not in Prefab. A `PyodideSandboxProvider` wraps a persistent Deno subprocess with Prefab pre-loaded. Code goes in as JSON over stdin, results come back on stdout.
 
-### Why not Monty?
-
-Monty is fast (microsecond startup) and secure, but too limited for generative UI:
-
-- No classes → Pydantic models can't cross the sandbox boundary
-- No context managers → can't write idiomatic Prefab code
-- No `.rx` → reactive references require dict-handle workarounds
-- Shims return integer/dict handles instead of real objects
-
-Monty is well-suited for FastMCP's code-mode tool calling (where the LLM orchestrates tool calls via Python), but not for building Prefab component trees.
-
-### Why not Wasmer?
-
-Wasmer runs full CPython in WASM, but pydantic-core (Rust extension) doesn't compile for the `wasm32-wasi` target. Only `wasm32-unknown-emscripten` (Pyodide's target) has pydantic-core wheels.
+We hope to support Monty once it has more coverage of the Python features that Prefab uses (classes, context managers). Monty's microsecond startup and snapshotting capabilities would be ideal for this use case.
 
 ## Next steps
 
