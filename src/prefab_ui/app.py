@@ -26,7 +26,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import pydantic_core
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 from prefab_ui.rx import _BoundStateProxy
@@ -165,6 +165,7 @@ class PrefabApp(BaseModel):
         default=None,
         description="Custom JS action handlers: name → function expression",
     )
+    _wire_override: dict[str, Any] | None = PrivateAttr(default=None)
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -185,6 +186,21 @@ class PrefabApp(BaseModel):
                     raise ValueError(f"State key {key!r} uses reserved prefix '$'")
         return self
 
+    @classmethod
+    def from_json(cls, wire: dict[str, Any]) -> PrefabApp:
+        """Create a PrefabApp from a wire protocol dict.
+
+        The dict is stored as-is and returned unchanged by ``to_json()``.
+        Use this when you already have serialized Prefab JSON (e.g. from
+        sandboxed execution) and need a PrefabApp that round-trips it::
+
+            wire = await sandbox.run(code)
+            app = PrefabApp.from_json(wire)
+            app.to_json()  # returns wire unchanged
+        """
+        instance = cls.model_construct(_wire_override=wire)
+        return instance
+
     def to_json(
         self,
         *,
@@ -192,8 +208,11 @@ class PrefabApp(BaseModel):
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        Returns a dict with ``version``, ``view``, ``defs``, and ``state``
+        Returns a dict with ``$prefab``, ``view``, ``defs``, and ``state``
         as top-level keys (omitting any that are None).
+
+        If this instance was created via ``from_json()``, the original
+        wire dict is returned with ``$prefab`` injected if missing.
 
         Parameters
         ----------
@@ -202,9 +221,16 @@ class PrefabApp(BaseModel):
             during serialization.  Scoped to this call — safe for
             concurrent use with different resolvers.
         """
+        if self._wire_override is not None:
+            self._wire_override.setdefault("$prefab", {"version": PROTOCOL_VERSION})
+            self._wire_override.pop("version", None)
+            return self._wire_override
+
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
-            result: dict[str, Any] = {"version": PROTOCOL_VERSION}
+            result: dict[str, Any] = {
+                "$prefab": {"version": PROTOCOL_VERSION},
+            }
 
             if self.view is not None:
                 result["view"] = self.view.to_json()

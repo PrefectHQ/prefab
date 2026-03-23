@@ -20,7 +20,7 @@ class TestPrefabAppToJson:
     def test_empty_app(self):
         app = PrefabApp()
         result = app.to_json()
-        assert result == {"version": PROTOCOL_VERSION}
+        assert result == {"$prefab": {"version": PROTOCOL_VERSION}}
 
     def test_view_and_state(self):
         app = PrefabApp(
@@ -28,7 +28,7 @@ class TestPrefabAppToJson:
             state={"name": "Alice"},
         )
         result = app.to_json()
-        assert result["version"] == PROTOCOL_VERSION
+        assert result["$prefab"]["version"] == PROTOCOL_VERSION
         assert result["view"]["type"] == "Column"
         assert result["state"]["name"] == "Alice"
 
@@ -43,6 +43,37 @@ class TestPrefabAppToJson:
         result = app.to_json()
         assert result["state"]["x"] == 1
         assert "view" not in result
+
+
+class TestPrefabAppFromJson:
+    def test_round_trip(self):
+        wire = {
+            "version": "0.2",
+            "view": {"type": "Column", "children": [{"type": "Text", "content": "hi"}]},
+            "state": {"x": 1},
+        }
+        app = PrefabApp.from_json(wire)
+        result = app.to_json()
+        assert result["$prefab"] == {"version": PROTOCOL_VERSION}
+        assert result["view"] == wire["view"]
+        assert result["state"] == wire["state"]
+        assert "version" not in result
+
+    def test_preserves_existing_prefab_key(self):
+        wire = {
+            "$prefab": {"version": "0.2"},
+            "view": {"type": "Text", "content": "hi"},
+        }
+        app = PrefabApp.from_json(wire)
+        result = app.to_json()
+        assert result["$prefab"] == {"version": "0.2"}
+
+    def test_to_json_idempotent(self):
+        wire = {"view": {"type": "Text", "content": "hi"}}
+        app = PrefabApp.from_json(wire)
+        r1 = app.to_json()
+        r2 = app.to_json()
+        assert r1 == r2
 
 
 class TestPrefabAppValidation:
@@ -80,7 +111,7 @@ class TestPrefabAppHtml:
         start = html.index('type="application/json">') + len('type="application/json">')
         end = html.index("</script>", start)
         baked = json.loads(html[start:end])
-        assert baked == {"version": PROTOCOL_VERSION}
+        assert baked == {"$prefab": {"version": PROTOCOL_VERSION}}
 
     def test_includes_stylesheets(self):
         app = PrefabApp(
