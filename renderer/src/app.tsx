@@ -126,8 +126,11 @@ export function App() {
       const structured = result.structuredContent;
       if (!structured) return;
 
-      // Check protocol version (warn but don't block rendering)
-      const version = structured.version as string | undefined;
+      // Check protocol version (warn but don't block rendering).
+      // Supports both $prefab.version (new) and top-level version (legacy).
+      const prefabMeta = structured.$prefab as { version?: string } | undefined;
+      const version =
+        prefabMeta?.version ?? (structured.version as string | undefined);
       if (version && !SUPPORTED_VERSIONS.has(version)) {
         console.warn(
           `[Prefab] Unrecognized protocol version "${version}" (supported: ${[

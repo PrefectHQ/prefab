@@ -185,6 +185,30 @@ class PrefabApp(BaseModel):
                     raise ValueError(f"State key {key!r} uses reserved prefix '$'")
         return self
 
+    @classmethod
+    def from_json(
+        cls,
+        wire: dict[str, Any],
+        *,
+        view: Any | None = None,
+        state: dict[str, Any] | None = None,
+        defs: list[Any] | dict[str, Any] | None = None,
+        theme: Theme | dict[str, Any] | None = None,
+    ) -> PrefabApp:
+        """Create a PrefabApp from a wire protocol dict.
+
+        Explicit keyword arguments override values from the wire::
+
+            wire = await sandbox.run(code)
+            app = PrefabApp.from_json(wire, state={"extra": "value"})
+        """
+        return cls.model_construct(
+            view=view if view is not None else wire.get("view"),
+            state=state if state is not None else wire.get("state"),
+            defs=defs if defs is not None else wire.get("defs"),
+            theme=theme if theme is not None else wire.get("theme"),
+        )
+
     def to_json(
         self,
         *,
@@ -192,8 +216,11 @@ class PrefabApp(BaseModel):
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        Returns a dict with ``version``, ``view``, ``defs``, and ``state``
+        Returns a dict with ``$prefab``, ``view``, ``defs``, and ``state``
         as top-level keys (omitting any that are None).
+
+        The ``view`` field can be either a Component (serialized via
+        ``to_json()``) or a pre-serialized dict (passed through as-is).
 
         Parameters
         ----------
@@ -204,19 +231,30 @@ class PrefabApp(BaseModel):
         """
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
-            result: dict[str, Any] = {"version": PROTOCOL_VERSION}
+            result: dict[str, Any] = {
+                "$prefab": {"version": PROTOCOL_VERSION},
+            }
 
             if self.view is not None:
-                result["view"] = self.view.to_json()
+                if isinstance(self.view, dict):
+                    result["view"] = self.view
+                else:
+                    result["view"] = self.view.to_json()
 
             if self.defs:
-                result["defs"] = {d.name: d.to_json() for d in self.defs}
+                if isinstance(self.defs, dict):
+                    result["defs"] = self.defs
+                else:
+                    result["defs"] = {d.name: d.to_json() for d in self.defs}
 
             if self.state is not None:
                 result["state"] = _serialize_state(self.state)
 
             if self.theme is not None:
-                result["theme"] = self.theme.to_json()
+                if isinstance(self.theme, dict):
+                    result["theme"] = self.theme
+                else:
+                    result["theme"] = self.theme.to_json()
 
             return result
         finally:

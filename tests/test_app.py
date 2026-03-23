@@ -20,7 +20,7 @@ class TestPrefabAppToJson:
     def test_empty_app(self):
         app = PrefabApp()
         result = app.to_json()
-        assert result == {"version": PROTOCOL_VERSION}
+        assert result == {"$prefab": {"version": PROTOCOL_VERSION}}
 
     def test_view_and_state(self):
         app = PrefabApp(
@@ -28,7 +28,7 @@ class TestPrefabAppToJson:
             state={"name": "Alice"},
         )
         result = app.to_json()
-        assert result["version"] == PROTOCOL_VERSION
+        assert result["$prefab"]["version"] == PROTOCOL_VERSION
         assert result["view"]["type"] == "Column"
         assert result["state"]["name"] == "Alice"
 
@@ -43,6 +43,43 @@ class TestPrefabAppToJson:
         result = app.to_json()
         assert result["state"]["x"] == 1
         assert "view" not in result
+
+
+class TestPrefabAppFromJson:
+    def test_round_trip(self):
+        wire = {
+            "view": {"type": "Column", "children": [{"type": "Text", "content": "hi"}]},
+            "state": {"x": 1},
+        }
+        app = PrefabApp.from_json(wire)
+        result = app.to_json()
+        assert result["$prefab"] == {"version": PROTOCOL_VERSION}
+        assert result["view"] == wire["view"]
+        assert result["state"] == wire["state"]
+
+    def test_override_state(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "state": {"x": 1},
+        }
+        app = PrefabApp.from_json(wire, state={"y": 2})
+        result = app.to_json()
+        assert result["state"] == {"y": 2}
+
+    def test_override_theme(self):
+        from prefab_ui.themes import Theme
+
+        theme = Theme(light={"primary": "#000"})
+        wire = {"view": {"type": "Text", "content": "hi"}}
+        app = PrefabApp.from_json(wire, theme=theme)
+        result = app.to_json()
+        assert "theme" in result
+
+    def test_dict_view_passthrough(self):
+        view_dict = {"type": "Column", "children": []}
+        app = PrefabApp(view=view_dict)
+        result = app.to_json()
+        assert result["view"] is view_dict
 
 
 class TestPrefabAppValidation:
@@ -80,7 +117,7 @@ class TestPrefabAppHtml:
         start = html.index('type="application/json">') + len('type="application/json">')
         end = html.index("</script>", start)
         baked = json.loads(html[start:end])
-        assert baked == {"version": PROTOCOL_VERSION}
+        assert baked == {"$prefab": {"version": PROTOCOL_VERSION}}
 
     def test_includes_stylesheets(self):
         app = PrefabApp(

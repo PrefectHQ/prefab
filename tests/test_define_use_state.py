@@ -211,7 +211,7 @@ def test_full_wire_format() -> None:
     result = PrefabApp(view=layout, defs=[user_card]).to_json()
 
     expected: dict[str, Any] = {
-        "version": PROTOCOL_VERSION,
+        "$prefab": {"version": PROTOCOL_VERSION},
         "defs": {
             "user-card": {
                 "type": "Card",
