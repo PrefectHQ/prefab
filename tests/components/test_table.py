@@ -16,6 +16,7 @@ from prefab_ui.components import (
     TableRow,
 )
 from prefab_ui.components.charts import Sparkline
+from prefab_ui.rx import Rx
 
 
 class TestTableComponents:
@@ -144,6 +145,15 @@ class TestDataTableComponent:
         assert "onRowClick" in j
         assert j["onRowClick"]["action"] == "showToast"
         assert j["onRowClick"]["message"] == "Row clicked"
+
+    def test_data_table_rx_rows(self):
+        rx = Rx("users")
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=rx,
+        )
+        j = dt.to_json()
+        assert j["rows"] == "{{ users }}"
 
     def test_data_table_on_row_click_list(self):
         dt = DataTable(
