@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, Heading, Row, Text
 from prefab_ui.components.base import ContainerComponent
 from prefab_ui.sandbox import ComponentRegistry, build_namespace, execute
@@ -83,6 +84,17 @@ class TestBuildNamespace:
         assert isinstance(root_component.children[1], Row)
         assert len(root_component.children[1].children) == 2
 
+    def test_prefab_app_shim(self):
+        reg, ns = build_namespace()
+        root = ns["Column"](gap=4)
+        ns["Heading"]("Title", parent=root)
+        app_handle = ns["PrefabApp"](view=root, state={"count": 0})
+        app = reg.get(app_handle)
+        assert isinstance(app, PrefabApp)
+        assert app.state == {"count": 0}
+        assert isinstance(app.view, Column)
+        assert len(app.view.children) == 1
+
     def test_shared_registry(self):
         reg = ComponentRegistry()
         _, ns = build_namespace(registry=reg)
@@ -139,3 +151,15 @@ return root
         assert j["cssClass"] == "gap-4"
         assert len(j["children"]) == 1
         assert j["children"][0]["type"] == "Heading"
+
+    async def test_prefab_app_with_state(self):
+        app = await execute("""
+root = Column(gap=4)
+Heading('Dashboard', parent=root)
+return PrefabApp(view=root, state={"count": 0})
+""")
+        assert isinstance(app, PrefabApp)
+        assert app.state == {"count": 0}
+        j = app.to_json()
+        assert j["state"] == {"count": 0}
+        assert j["view"]["type"] == "Column"

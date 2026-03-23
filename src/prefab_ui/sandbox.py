@@ -2,20 +2,19 @@
 
 Monty (pydantic-monty) can't pass Pydantic model instances across the
 sandbox boundary.  This module provides handle-based shims: each
-component constructor returns an integer handle to the caller inside
-the sandbox, while the real Prefab object is built and stored outside.
+constructor returns an integer handle inside the sandbox, while the
+real Prefab object is built and stored outside.
 
 Usage::
 
     from prefab_ui.sandbox import execute
 
-    root = await execute('''
+    app = await execute('''
         root = Column(gap=4)
         Heading("Sales Report", parent=root)
         Text("Revenue: $1.2M", parent=root)
-        return root
+        return PrefabApp(view=root, state={"count": 0})
     ''')
-    # root is a real prefab_ui Column with children
 """
 
 from __future__ import annotations
@@ -25,6 +24,7 @@ from typing import Any
 
 import prefab_ui.components
 import prefab_ui.components.charts
+from prefab_ui.app import PrefabApp
 from prefab_ui.components.base import Component, ContainerComponent
 
 
@@ -52,17 +52,17 @@ class ComponentRegistry:
     """
 
     def __init__(self) -> None:
-        self._components: dict[int, Component] = {}
+        self._objects: dict[int, Any] = {}
         self._next_id: int = 0
 
-    def store(self, component: Component) -> int:
+    def store(self, obj: Any) -> int:
         handle = self._next_id
         self._next_id += 1
-        self._components[handle] = component
+        self._objects[handle] = obj
         return handle
 
-    def get(self, handle: int) -> Component:
-        return self._components[handle]
+    def get(self, handle: int) -> Any:
+        return self._objects[handle]
 
 
 def build_namespace(
@@ -102,9 +102,16 @@ def build_namespace(
 
         return shim
 
+    def _prefab_app_shim(**kwargs: Any) -> int:
+        view_handle = kwargs.pop("view", None)
+        if view_handle is not None:
+            kwargs["view"] = reg.get(view_handle)
+        return reg.store(PrefabApp(**kwargs))
+
     namespace: dict[str, Callable[..., Any]] = {
         name: _make_shim(cls) for name, cls in _get_component_classes().items()
     }
+    namespace["PrefabApp"] = _prefab_app_shim
     if extra:
         namespace.update(extra)
     return reg, namespace
@@ -115,22 +122,22 @@ async def execute(
     *,
     data: dict[str, Any] | None = None,
     extra_functions: dict[str, Callable[..., Any]] | None = None,
-) -> Component:
-    """Execute LLM-generated Python and return the resulting component tree.
+) -> Component | PrefabApp:
+    """Execute LLM-generated Python and return the result.
 
     Runs ``code`` in a Monty sandbox with all Prefab component
-    constructors available. The code should ``return`` the root
-    component handle; this function resolves it to the real Component.
+    constructors and ``PrefabApp`` available. The code should build
+    a component tree and ``return`` either a root component handle
+    or a ``PrefabApp`` handle.
 
     Args:
-        code: Python code that builds a component tree using Prefab
-            constructors and ``return``\\s the root.
+        code: Python code that builds a Prefab UI.
         data: Values injected as variables in the sandbox.
         extra_functions: Additional callables available in the sandbox
             (e.g. ``call_tool``).
 
     Returns:
-        The root Component built by the code.
+        The Component or PrefabApp built by the code.
 
     Raises:
         ImportError: If pydantic-monty is not installed.
