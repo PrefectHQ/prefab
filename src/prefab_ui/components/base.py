@@ -250,6 +250,13 @@ class Component(BaseModel):
     Components serialize to JSON via ``to_json()`` for the React renderer.
     When created inside a ``ContainerComponent`` context manager, they
     automatically append themselves to the parent's children list.
+
+    Alternatively, pass ``parent=<container>`` to attach to a specific
+    container without using a context manager::
+
+        root = Column(gap=4)
+        Heading("Sales Report", parent=root)
+        Text("Q3 results", parent=root)
     """
 
     model_config = {"populate_by_name": True, "arbitrary_types_allowed": True}
@@ -269,6 +276,28 @@ class Component(BaseModel):
         alias="cssClass",
         description="CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes.",
     )
+
+    def __init__(self, /, **kwargs: Any) -> None:
+        parent = kwargs.pop("parent", None)
+        if parent is not None:
+            if not isinstance(parent, ContainerComponent):
+                raise TypeError(
+                    f"parent must be a container component like Column or Row, "
+                    f"got {type(parent).__name__}"
+                )
+            if kwargs.get("defer", False):
+                raise ValueError(
+                    "Cannot use parent= and defer=True together — "
+                    "parent= attaches immediately, defer=True prevents attachment"
+                )
+        super().__init__(**kwargs)
+        if parent is not None:
+            # Undo stack auto-attach that model_post_init may have done
+            stack = _component_stack.get() or []
+            if stack:
+                with contextlib.suppress(ValueError):
+                    stack[-1].children.remove(self)
+            parent.children.append(self)
 
     @model_validator(mode="before")
     @classmethod
