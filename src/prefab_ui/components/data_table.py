@@ -30,6 +30,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, _merge_css_classes
+from prefab_ui.rx import Rx
 
 
 def _serialize_cell_value(value: Any) -> Any:
@@ -129,7 +130,7 @@ class DataTable(Component):
             rows = data.get("rows")
         else:
             return data
-        if rows is None:
+        if rows is None or isinstance(rows, (str, Rx)):
             return data
         if hasattr(rows, "columns") and hasattr(rows, "to_dict"):
             if hasattr(rows, "to_dicts"):
@@ -143,7 +144,7 @@ class DataTable(Component):
         return data
 
     columns: list[DataTableColumn] = Field(description="Column definitions")
-    rows: list[dict[str, Any]] | str = Field(
+    rows: list[dict[str, Any]] | str | Rx = Field(
         default_factory=list,
         description="Row data, {{ interpolation }} reference, or DataFrame",
     )
