@@ -1,9 +1,10 @@
 """Sandboxed execution of LLM-generated Prefab component code.
 
 Monty (pydantic-monty) can't pass Pydantic model instances across the
-sandbox boundary.  This module provides handle-based shims: each
-constructor returns an integer handle inside the sandbox, while the
-real Prefab object is built and stored outside.
+sandbox boundary.  This module provides dict-handle shims: each
+constructor builds the real Prefab object outside the sandbox and
+returns a dict that Monty can pass around.  Stateful components
+include ``rx`` and ``name`` keys for reactive references.
 
 Usage::
 
@@ -11,8 +12,8 @@ Usage::
 
     app = await execute('''
         root = Column(gap=4)
-        Heading("Sales Report", parent=root)
-        Text("Revenue: $1.2M", parent=root)
+        slider = Slider(value=50, parent=root)
+        Text(content="Value: " + slider["rx"], parent=root)
         return PrefabApp(view=root, state={"count": 0})
     ''')
 """
@@ -25,7 +26,7 @@ from typing import Any
 import prefab_ui.components
 import prefab_ui.components.charts
 from prefab_ui.app import PrefabApp
-from prefab_ui.components.base import Component, ContainerComponent
+from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
 
 
 def _get_component_classes() -> dict[str, type[Component]]:
@@ -46,9 +47,13 @@ class ComponentRegistry:
     """Maps integer handles to real objects built outside the sandbox.
 
     Monty can only pass primitives (int, str, float, bool, list, dict)
-    across the sandbox boundary.  The registry lets shim functions return
-    an int handle that Monty code can pass around (e.g. as ``parent=``),
-    while the real Pydantic model lives outside the sandbox.
+    across the sandbox boundary.  Shim functions build real Prefab
+    objects outside the sandbox, store them here, and return a dict
+    handle that Monty code can pass around::
+
+        {"_handle": 0}                              # plain component
+        {"_handle": 1, "name": "slider_1",           # stateful component
+         "rx": "{{ slider_1 }}"}
     """
 
     def __init__(self) -> None:
@@ -64,6 +69,25 @@ class ComponentRegistry:
     def get(self, handle: int) -> Any:
         return self._objects[handle]
 
+    def resolve_handle(self, info: dict[str, Any] | int) -> Any:
+        """Resolve a handle dict or bare int to the stored object."""
+        if isinstance(info, dict):
+            return self._objects[info["_handle"]]
+        return self._objects[info]
+
+
+def _make_handle_dict(handle: int, component: Component) -> dict[str, Any]:
+    """Build the dict handle returned to sandbox code.
+
+    Stateful components (Slider, Input, etc.) get ``name`` and ``rx``
+    fields so the LLM can reference reactive state via ``slider['rx']``.
+    """
+    info: dict[str, Any] = {"_handle": handle}
+    if isinstance(component, StatefulMixin) and component.name is not None:
+        info["name"] = component.name
+        info["rx"] = str(component.rx)
+    return info
+
 
 def build_namespace(
     registry: ComponentRegistry | None = None,
@@ -73,7 +97,11 @@ def build_namespace(
 
     Each shim wraps a real Component constructor. It intercepts
     ``parent=<handle>`` to resolve the real parent, builds the component
-    outside the sandbox, stores it in the registry, and returns a handle.
+    outside the sandbox, and returns a dict handle.  Stateful components
+    include ``name`` and ``rx`` keys so the LLM can write::
+
+        slider = Slider(value=50, parent=root)
+        Text(content='Value: ' + slider['rx'], parent=root)
 
     Args:
         registry: Existing registry to use. Created if not provided.
@@ -87,26 +115,30 @@ def build_namespace(
         registry = ComponentRegistry()
     reg = registry
 
-    def _make_shim(cls: type[Component]) -> Callable[..., int]:
-        def shim(*args: Any, **kwargs: Any) -> int:
-            parent_handle = kwargs.pop("parent", None)
-            if parent_handle is not None:
-                parent = reg.get(parent_handle)
+    def _make_shim(cls: type[Component]) -> Callable[..., dict[str, Any]]:
+        def shim(*args: Any, **kwargs: Any) -> dict[str, Any]:
+            parent_info = kwargs.pop("parent", None)
+            if parent_info is not None:
+                parent = reg.resolve_handle(parent_info)
                 if not isinstance(parent, ContainerComponent):
                     raise TypeError(
                         f"parent must be a container component, "
                         f"got {type(parent).__name__}"
                     )
                 kwargs["parent"] = parent
-            return reg.store(cls(*args, **kwargs))
+            comp = cls(*args, **kwargs)
+            handle = reg.store(comp)
+            return _make_handle_dict(handle, comp)
 
         return shim
 
-    def _prefab_app_shim(**kwargs: Any) -> int:
-        view_handle = kwargs.pop("view", None)
-        if view_handle is not None:
-            kwargs["view"] = reg.get(view_handle)
-        return reg.store(PrefabApp(**kwargs))
+    def _prefab_app_shim(**kwargs: Any) -> dict[str, Any]:
+        view_info = kwargs.pop("view", None)
+        if view_info is not None:
+            kwargs["view"] = reg.resolve_handle(view_info)
+        app = PrefabApp(**kwargs)
+        handle = reg.store(app)
+        return {"_handle": handle}
 
     namespace: dict[str, Callable[..., Any]] = {
         name: _make_shim(cls) for name, cls in _get_component_classes().items()
@@ -159,5 +191,5 @@ async def execute(
     run_kwargs: dict[str, Any] = {"external_functions": namespace}
     if data:
         run_kwargs["inputs"] = data
-    root_handle = await pydantic_monty.run_monty_async(monty, **run_kwargs)
-    return registry.get(root_handle)
+    result = await pydantic_monty.run_monty_async(monty, **run_kwargs)
+    return registry.resolve_handle(result)
