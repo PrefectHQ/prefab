@@ -55,7 +55,6 @@ import {
 import { PrefabIcon } from "./icon-wrapper";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
-import { Label } from "@/ui/label";
 import { Separator } from "@/ui/separator";
 import { Loader } from "@/ui/loader";
 import { Slider } from "@/ui/slider";
@@ -74,6 +73,7 @@ import {
 
 // Wrapper components (bridge Python API → shadcn internals)
 import {
+  PrefabLabel,
   PrefabSelect,
   PrefabRadioGroup,
   PrefabRadio,
@@ -175,7 +175,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   AlertDescription,
   Input,
   Textarea,
-  Label,
+  Label: PrefabLabel,
   Separator,
   Slider,
   Dot,
