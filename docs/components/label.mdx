@@ -65,6 +65,42 @@ with Column(gap=2):
 </CodeGroup>
 </ComponentPreview>
 
+## Optional Indicator
+
+Set `optional=True` to show a muted "optional" hint after the label text. `Form.from_model()` sets this automatically for non-required fields; for manually built forms, set it yourself on any label.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Phone","optional":true},{"name":"phone","type":"Input","inputType":"tel","placeholder":"+1 (555) 000-0000","disabled":false,"readOnly":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgTGFiZWwKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIExhYmVsKCJQaG9uZSIsIG9wdGlvbmFsPVRydWUpCiAgICBJbnB1dChpbnB1dF90eXBlPSJ0ZWwiLCBuYW1lPSJwaG9uZSIsIHBsYWNlaG9sZGVyPSIrMSAoNTU1KSAwMDAtMDAwMCIpCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import Column, Input, Label
+
+with Column(gap=2):
+    Label("Phone", optional=True)
+    Input(input_type="tel", name="phone", placeholder="+1 (555) 000-0000")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2",
+    "type": "Column",
+    "children": [
+      {"type": "Label", "text": "Phone", "optional": true},
+      {
+        "name": "phone",
+        "type": "Input",
+        "inputType": "tel",
+        "placeholder": "+1 (555) 000-0000",
+        "disabled": false,
+        "readOnly": false,
+        "required": false
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Label Parameters">
@@ -75,6 +111,10 @@ with Column(gap=2):
 
 <ParamField body="for_id" type="str | None" default="None">
   ID of the associated form field element.
+</ParamField>
+
+<ParamField body="optional" type="bool" default="False">
+  When `True`, displays a muted "optional" indicator after the label text.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -91,6 +131,7 @@ with Column(gap=2):
   "let?": "object",
   "text?": "string",
   "forId?": "string",
+  "optional?": "boolean",
   "cssClass?": "string"
 }
 ```

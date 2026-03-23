@@ -44,7 +44,7 @@ export function PrefabLabel({
   return (
     <Label {...props}>
       {children}
-      {optional && <span className="pf-label-optional">(optional)</span>}
+      {optional && <span className="pf-label-optional">optional</span>}
     </Label>
   );
 }
