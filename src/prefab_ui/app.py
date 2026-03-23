@@ -26,7 +26,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import pydantic_core
-from pydantic import BaseModel, Field, PrivateAttr, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 from prefab_ui.rx import _BoundStateProxy
@@ -165,7 +165,6 @@ class PrefabApp(BaseModel):
         default=None,
         description="Custom JS action handlers: name → function expression",
     )
-    _wire_override: dict[str, Any] | None = PrivateAttr(default=None)
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -190,16 +189,21 @@ class PrefabApp(BaseModel):
     def from_json(cls, wire: dict[str, Any]) -> PrefabApp:
         """Create a PrefabApp from a wire protocol dict.
 
-        The dict is stored as-is and returned unchanged by ``to_json()``.
-        Use this when you already have serialized Prefab JSON (e.g. from
-        sandboxed execution) and need a PrefabApp that round-trips it::
+        Unpacks the envelope into real fields so you can inspect and
+        override them before serializing::
 
             wire = await sandbox.run(code)
             app = PrefabApp.from_json(wire)
-            app.to_json()  # returns wire unchanged
+            app.state["extra"] = "value"   # extend state
+            app.theme = my_theme           # override theme
+            app.to_json()                  # serializes with overrides
         """
-        instance = cls.model_construct(_wire_override=wire)
-        return instance
+        return cls.model_construct(
+            view=wire.get("view"),
+            state=wire.get("state"),
+            defs=wire.get("defs"),
+            theme=wire.get("theme"),
+        )
 
     def to_json(
         self,
@@ -211,8 +215,8 @@ class PrefabApp(BaseModel):
         Returns a dict with ``$prefab``, ``view``, ``defs``, and ``state``
         as top-level keys (omitting any that are None).
 
-        If this instance was created via ``from_json()``, the original
-        wire dict is returned with ``$prefab`` injected if missing.
+        The ``view`` field can be either a Component (serialized via
+        ``to_json()``) or a pre-serialized dict (passed through as-is).
 
         Parameters
         ----------
@@ -221,11 +225,6 @@ class PrefabApp(BaseModel):
             during serialization.  Scoped to this call — safe for
             concurrent use with different resolvers.
         """
-        if self._wire_override is not None:
-            self._wire_override.setdefault("$prefab", {"version": PROTOCOL_VERSION})
-            self._wire_override.pop("version", None)
-            return self._wire_override
-
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
             result: dict[str, Any] = {
@@ -233,16 +232,25 @@ class PrefabApp(BaseModel):
             }
 
             if self.view is not None:
-                result["view"] = self.view.to_json()
+                if isinstance(self.view, dict):
+                    result["view"] = self.view
+                else:
+                    result["view"] = self.view.to_json()
 
             if self.defs:
-                result["defs"] = {d.name: d.to_json() for d in self.defs}
+                if isinstance(self.defs, dict):
+                    result["defs"] = self.defs
+                else:
+                    result["defs"] = {d.name: d.to_json() for d in self.defs}
 
             if self.state is not None:
                 result["state"] = _serialize_state(self.state)
 
             if self.theme is not None:
-                result["theme"] = self.theme.to_json()
+                if isinstance(self.theme, dict):
+                    result["theme"] = self.theme
+                else:
+                    result["theme"] = self.theme.to_json()
 
             return result
         finally:

@@ -48,7 +48,6 @@ class TestPrefabAppToJson:
 class TestPrefabAppFromJson:
     def test_round_trip(self):
         wire = {
-            "version": "0.2",
             "view": {"type": "Column", "children": [{"type": "Text", "content": "hi"}]},
             "state": {"x": 1},
         }
@@ -57,23 +56,32 @@ class TestPrefabAppFromJson:
         assert result["$prefab"] == {"version": PROTOCOL_VERSION}
         assert result["view"] == wire["view"]
         assert result["state"] == wire["state"]
-        assert "version" not in result
 
-    def test_preserves_existing_prefab_key(self):
+    def test_override_state(self):
         wire = {
-            "$prefab": {"version": "0.2"},
             "view": {"type": "Text", "content": "hi"},
+            "state": {"x": 1},
         }
         app = PrefabApp.from_json(wire)
+        assert app.state is not None
+        app.state["y"] = 2
         result = app.to_json()
-        assert result["$prefab"] == {"version": "0.2"}
+        assert result["state"] == {"x": 1, "y": 2}
 
-    def test_to_json_idempotent(self):
+    def test_override_theme(self):
+        from prefab_ui.themes import Theme
+
         wire = {"view": {"type": "Text", "content": "hi"}}
         app = PrefabApp.from_json(wire)
-        r1 = app.to_json()
-        r2 = app.to_json()
-        assert r1 == r2
+        app.theme = Theme(light={"primary": "#000"})
+        result = app.to_json()
+        assert "theme" in result
+
+    def test_dict_view_passthrough(self):
+        view_dict = {"type": "Column", "children": []}
+        app = PrefabApp(view=view_dict)
+        result = app.to_json()
+        assert result["view"] is view_dict
 
 
 class TestPrefabAppValidation:
