@@ -27,10 +27,17 @@ pytestmark = [
 ]
 
 
+_shared_sandbox: Sandbox | None = None
+
+
 @pytest.fixture
 async def sandbox():
-    async with Sandbox() as sb:
-        yield sb
+    """Shared sandbox — one Deno process reused across all tests."""
+    global _shared_sandbox
+    if _shared_sandbox is None:
+        _shared_sandbox = Sandbox()
+        await _shared_sandbox._start()
+    yield _shared_sandbox
 
 
 # ── Context managers ─────────────────────────────────────────────────
