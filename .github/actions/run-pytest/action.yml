@@ -10,6 +10,11 @@ runs:
       with:
         deno-version: v2.x
 
+    - name: Pre-cache Deno dependencies
+      if: runner.os != 'Windows'
+      shell: bash
+      run: deno cache src/prefab_ui/sandbox/runner.js || true
+
     - name: Run pytest
       shell: bash
       run: |
