@@ -10,7 +10,10 @@ import pytest
 
 from prefab_ui.sandbox import Sandbox
 
-pytestmark = pytest.mark.timeout(60)
+pytestmark = [
+    pytest.mark.timeout(120),
+    pytest.mark.xdist_group("sandbox"),
+]
 
 
 @pytest.fixture
