@@ -1,0 +1,115 @@
+---
+title: Generative UI
+sidebarTitle: Generative UI
+description: Let an LLM write Prefab code that executes safely and renders in real time.
+icon: wand-magic-sparkles
+---
+
+Generative UI flips the usual pattern: instead of you writing the UI code, an LLM writes it. The LLM receives data and a prompt, generates Prefab Python code, and a sandbox executes it safely. The user sees a bespoke interface — built for their specific data and question — rendered as a live Prefab app.
+
+## How it works
+
+```
+User prompt → LLM generates Prefab code → Sandbox executes → PrefabApp renders
+```
+
+The LLM writes standard Prefab Python — context managers, `.rx`, charts, everything. The code runs in a Pyodide WASM sandbox so untrusted LLM output can't access the host system. The sandbox returns wire protocol JSON, which renders like any other Prefab app.
+
+```python
+from prefab_ui.sandbox import Sandbox
+from prefab_ui.app import PrefabApp
+
+sandbox = Sandbox()
+
+code = '''
+from prefab_ui.components import Column, Heading, Slider, Text
+from prefab_ui.app import PrefabApp
+
+with Column(gap=4) as view:
+    Heading("Revenue Dashboard")
+    slider = Slider(value=75, min=0, max=100, name="confidence")
+    Text(f"Confidence: {slider.rx}%")
+
+app = PrefabApp(view=view, state={"confidence": 75})
+'''
+
+wire = await sandbox.run(code, data={"revenue": 1_200_000})
+app = PrefabApp.from_json(wire)
+```
+
+The `data` parameter injects values as global variables in the sandbox. The LLM's code can use them freely — loops, f-strings, list comprehensions, computation.
+
+## The Sandbox
+
+`prefab_ui.sandbox.Sandbox` manages a persistent Deno subprocess running Pyodide (CPython compiled to WebAssembly). Deno must be [installed](https://deno.land) on the host.
+
+The first call pays a ~2 second cold start while Pyodide boots and Prefab loads. Every subsequent call executes in about 1 millisecond — the process stays warm between calls.
+
+```python
+sandbox = Sandbox()
+
+# First call: ~2s (cold start)
+result = await sandbox.run(code)
+
+# All subsequent calls: ~1ms
+result = await sandbox.run(more_code)
+```
+
+The sandbox also works as an async context manager for explicit lifecycle control:
+
+```python
+async with Sandbox() as sandbox:
+    result = await sandbox.run(code)
+# Deno process is killed on exit
+```
+
+If the Deno process crashes, the sandbox automatically restarts on the next call.
+
+### Security
+
+Code runs inside Pyodide's WASM sandbox. The Deno process has read-only filesystem access (to load Prefab source) and network access (for the Pyodide CDN on first run). It has no write, environment variable, or FFI access.
+
+Each `run()` call executes in a fresh namespace — variables from one call don't leak into the next.
+
+## MCP server pattern
+
+The generative UI sandbox pairs naturally with FastMCP. The example at `examples/generative-ui/server.py` shows two tools working together:
+
+**`execute_ui`** takes Prefab Python code and optional data, runs it in the sandbox, and returns the rendered UI. Its docstring teaches the LLM the key patterns — context managers, `.rx`, chart imports:
+
+```python
+@mcp.tool(app=True)
+async def execute_ui(code: str, data: dict | None = None) -> PrefabApp:
+    wire = await sandbox.run(code, data=data)
+    return PrefabApp.from_json(wire)
+```
+
+**`components`** is a searchable reference of all Prefab components with their import paths and field signatures. The LLM calls this to look up what's available before generating code.
+
+Together, these two tools are sufficient for an LLM to generate complex, interactive dashboards. In testing, an LLM produced a 200-line multi-section dashboard with charts, sparklines, data tables, and reactive controls — using only the `execute_ui` docstring and the component search tool.
+
+## `PrefabApp.from_json`
+
+The sandbox returns wire protocol JSON (a dict), not a live `PrefabApp`. `PrefabApp.from_json()` bridges the gap — it wraps the wire data so FastMCP's app pipeline handles it correctly:
+
+```python
+wire = await sandbox.run(code)
+app = PrefabApp.from_json(wire)
+```
+
+You can override fields from the wire data:
+
+```python
+app = PrefabApp.from_json(wire, state={"extra": "value"}, theme=my_theme)
+```
+
+## What the LLM needs to know
+
+Surprisingly little. In testing, an LLM successfully generated complex Prefab UIs from just:
+
+1. A small code example in the tool docstring (context managers, `PrefabApp`, `.rx`)
+2. A component search tool that returns field signatures and import paths
+
+Prefab's component names follow [shadcn/ui](https://ui.shadcn.com) conventions (`Card`, `CardHeader`, `Badge`, `Alert`) and the chart API follows [Recharts](https://recharts.org) patterns (`BarChart`, `ChartSeries`, `data_key`). LLMs already know these conventions — Prefab's API is immediately familiar.
+
+The most common mistake is importing chart components from `prefab_ui.components` instead of `prefab_ui.components.charts`. The component search tool prevents this by including the correct import path in every result.

@@ -54,9 +54,19 @@ let pendingCode: string | null = null;
 /** Execute code with sequence-based stale result rejection. */
 function executeAndDeliver(code: string) {
   const mySeq = ++execSeq;
+  debug(`execute: seq=${mySeq}, ${code.length} chars`);
   executePrefabCode(code).then((result) => {
-    // Discard if a newer execution has started since this one
-    if (mySeq !== execSeq) return;
+    if (mySeq !== execSeq) {
+      debug(`execute: seq=${mySeq} stale (current=${execSeq}), discarding`);
+      return;
+    }
+    if (result.tree) {
+      debug(
+        `execute: seq=${mySeq} success, tree type=${(result.tree as any).type}`,
+      );
+    } else if (result.error) {
+      debug(`execute: seq=${mySeq} error: ${result.error.slice(0, 100)}`);
+    }
     if (result.tree && codeResultCb) {
       codeResultCb(result);
     }
@@ -84,16 +94,35 @@ function ensurePyodideLoading() {
   });
 }
 
+/** Visible debug log — appended to by the bridge, read by the app. */
+export const debugMessages: string[] = [];
+let debugCb: ((msg: string) => void) | null = null;
+
+function debug(msg: string) {
+  const time = new Date().toLocaleTimeString();
+  const full = `[${time}] ${msg}`;
+  debugMessages.push(full);
+  if (debugCb) debugCb(full);
+  console.log(`[Prefab Generative] ${msg}`);
+}
+
+export function onDebug(cb: (msg: string) => void) {
+  debugCb = cb;
+  for (const msg of debugMessages) cb(msg);
+}
+
 /** Handle a code string from partial or complete input. */
 function handleCode(code: string) {
-  if (code === lastCode) return;
+  if (code === lastCode) {
+    debug(`handleCode: skipped (identical, ${code.length} chars)`);
+    return;
+  }
   lastCode = code;
-
-  // Trigger Pyodide loading on first code arrival
-  ensurePyodideLoading();
+  debug(`handleCode: ${code.length} chars, pyodideReady=${pyodideReady}`);
 
   if (!pyodideReady) {
     pendingCode = code;
+    debug("handleCode: buffered (Pyodide not ready)");
     return;
   }
 
@@ -109,8 +138,12 @@ export const generativeBridge: GenerativeBridge = {
     const app = new App({ name: "Prefab Generative", version: "1.0.0" });
     this.app = app;
 
-    // Pyodide loads lazily on first ontoolinputpartial — no cost if
-    // the tool result arrives without streaming.
+    // Start loading Pyodide immediately. The host creates the iframe in
+    // parallel with the tool call (per MCP spec), so we have the full
+    // LLM generation time to cold-start (~2-3s). This IS the generative
+    // renderer — it will always receive streaming code. Non-streaming
+    // tools use app.html instead.
+    ensurePyodideLoading();
 
     // Standard tool result handler (same as early-bridge)
     app.ontoolresult = (params) => {
@@ -125,15 +158,26 @@ export const generativeBridge: GenerativeBridge = {
     // Streaming partial tool arguments — the generative UI hook
     app.ontoolinputpartial = (params) => {
       const args = params.arguments as Record<string, unknown> | undefined;
+      debug(
+        `ontoolinputpartial: args keys=${
+          args ? Object.keys(args).join(",") : "none"
+        }`,
+      );
       if (!args) return;
       const code = args[codeKey];
-      if (typeof code !== "string" || !code.trim()) return;
+      if (typeof code !== "string" || !code.trim()) {
+        debug(`ontoolinputpartial: no code (key="${codeKey}")`);
+        return;
+      }
       handleCode(code);
     };
 
     // Complete tool input
     app.ontoolinput = (params) => {
       const args = params.arguments as Record<string, unknown> | undefined;
+      debug(
+        `ontoolinput: args keys=${args ? Object.keys(args).join(",") : "none"}`,
+      );
       if (!args) return;
       const code = args[codeKey];
       if (typeof code !== "string" || !code.trim()) return;
