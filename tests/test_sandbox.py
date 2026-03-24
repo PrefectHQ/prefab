@@ -15,7 +15,6 @@ from prefab_ui.sandbox import Sandbox
 
 pytestmark = [
     pytest.mark.timeout(120),
-    pytest.mark.xdist_group("sandbox"),
     pytest.mark.skipif(
         shutil.which("deno") is None,
         reason="Deno not installed",
@@ -27,20 +26,12 @@ pytestmark = [
 ]
 
 
-_shared_sandbox: Sandbox | None = None
-
-
 @pytest.fixture
 async def sandbox():
-    """Shared sandbox — one Deno process reused across all tests."""
-    global _shared_sandbox
-    if _shared_sandbox is None or (
-        _shared_sandbox._process is not None
-        and _shared_sandbox._process.poll() is not None
-    ):
-        _shared_sandbox = Sandbox()
-        await _shared_sandbox._start()
-    yield _shared_sandbox
+    """Per-test sandbox with lazy start (auto-starts on first .run())."""
+    sb = Sandbox()
+    yield sb
+    sb._stop()
 
 
 # ── Context managers ─────────────────────────────────────────────────
