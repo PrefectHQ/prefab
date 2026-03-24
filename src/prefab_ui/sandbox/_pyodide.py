@@ -63,6 +63,7 @@ class PyodideSandbox:
                     deno,
                     "run",
                     "--allow-read",
+                    "--allow-write",
                     "--allow-net",
                     str(RUNNER_JS),
                     str(PREFAB_SRC),
@@ -73,14 +74,17 @@ class PyodideSandbox:
             ),
         )
 
-        # Wait for the runner to signal readiness
+        # Wait for the runner to signal readiness, collecting stderr
+        stderr_lines: list[str] = []
         while True:
             line = await loop.run_in_executor(None, proc.stderr.readline)
-            if b"pyodide:ready" in line:
+            if not line and proc.poll() is not None:
+                err = "\n".join(stderr_lines)
+                raise RuntimeError(f"Pyodide sandbox failed to start:\n{err[-1000:]}")
+            decoded = line.decode().rstrip()
+            stderr_lines.append(decoded)
+            if "pyodide:ready" in decoded:
                 break
-            if proc.poll() is not None:
-                err = proc.stderr.read().decode()
-                raise RuntimeError(f"Pyodide sandbox failed to start: {err[-500:]}")
 
         self._process = proc
 
