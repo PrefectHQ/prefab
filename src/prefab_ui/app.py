@@ -26,7 +26,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import pydantic_core
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 from prefab_ui.rx import _BoundStateProxy
@@ -176,21 +176,29 @@ class PrefabApp(BaseModel):
         description="Custom JS action handlers: name → function expression",
     )
 
+    _context_root: Any = PrivateAttr(default=None)
+
     model_config = {"arbitrary_types_allowed": True}
 
     def __enter__(self) -> PrefabApp:
+        if self.view is not None:
+            raise RuntimeError(
+                "Cannot use PrefabApp as a context manager when view= "
+                "is already set. Use either `with PrefabApp():` or "
+                "`PrefabApp(view=...)`, not both."
+            )
         from prefab_ui.components.column import Column
 
         root = Column(css_class=self.css_class, defer=True)  # type: ignore[call-arg]
-        object.__setattr__(self, "_context_root", root)
+        self._context_root = root
         root.__enter__()
         return self
 
     def __exit__(self, *args: Any) -> None:
-        root = getattr(self, "_context_root", None)
-        if root is not None:
-            root.__exit__(*args)
-            self.view = root
+        if self._context_root is not None:
+            self._context_root.__exit__(*args)
+            self.view = self._context_root
+            self._context_root = None
 
     @model_validator(mode="after")
     def _consume_initial_state(self) -> PrefabApp:

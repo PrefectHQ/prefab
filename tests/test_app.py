@@ -129,6 +129,29 @@ class TestPrefabAppContextManager:
         assert len(outer.children) == 1
         assert len(app.to_json()["view"]["children"]) == 1
 
+    def test_reentrant(self):
+        """Same PrefabApp can be used as context manager multiple times."""
+        app = PrefabApp(state={"x": 1})
+
+        with app:
+            Text("version 1")
+        assert app.to_json()["view"]["children"][0]["content"] == "version 1"
+
+        # Reset view for re-entry
+        app.view = None
+        with app:
+            Text("version 2")
+            Text("extra")
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 2
+        assert children[0]["content"] == "version 2"
+
+    def test_error_if_view_already_set(self):
+        app = PrefabApp(view=Text("existing"))
+        with pytest.raises(RuntimeError, match="view= is already set"):
+            with app:
+                Text("conflict")
+
 
 class TestPrefabAppValidation:
     def test_reserved_state_key_rejected(self):
