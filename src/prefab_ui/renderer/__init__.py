@@ -17,6 +17,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 _BUNDLED_HTML = Path(__file__).parent / "app.html"
+_GENERATIVE_HTML = Path(__file__).parent / "generative.html"
+
+PYODIDE_CDN_ORIGIN = "https://cdn.jsdelivr.net"
 
 _EXTERNAL_HEAD = """\
   <meta charset="UTF-8">
@@ -96,3 +99,31 @@ def get_renderer_csp() -> dict[str, list[str]]:
     if override:
         return {"resource_domains": [_get_origin(override.rstrip("/"))]}
     return {"resource_domains": []}
+
+
+def get_generative_renderer_html() -> str:
+    """Return the generative renderer HTML.
+
+    The generative renderer extends the standard renderer with browser-side
+    Pyodide execution, enabling progressive rendering of LLM-generated
+    Prefab Python code via ``ontoolinputpartial``.
+
+    Pyodide loads from CDN at runtime — the HTML itself is small.
+    """
+    override = os.environ.get("PREFAB_RENDERER_URL")
+    if override:
+        return _EXTERNAL_TEMPLATE.format(base_url=override.rstrip("/"))
+    return _GENERATIVE_HTML.read_text(encoding="utf-8")
+
+
+def get_generative_renderer_csp() -> dict[str, list[str]]:
+    """Return CSP domains needed for the generative renderer.
+
+    Includes the Pyodide CDN origin (jsdelivr) since Pyodide and its
+    packages are loaded at runtime from CDN.
+    """
+    domains = [PYODIDE_CDN_ORIGIN]
+    override = os.environ.get("PREFAB_RENDERER_URL")
+    if override:
+        domains.append(_get_origin(override.rstrip("/")))
+    return {"resource_domains": domains}
