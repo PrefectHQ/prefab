@@ -19,17 +19,17 @@ RUNNER_JS = Path(__file__).parent / "runner.js"
 PREFAB_SRC = Path(__file__).parent.parent  # src/prefab_ui/
 
 
-class Sandbox:
-    """Pyodide sandbox with a warm Deno subprocess.
+class PyodideSandbox:
+    """Pyodide sandbox backed by a warm Deno subprocess.
 
     Use as an async context manager for explicit lifecycle control::
 
-        async with Sandbox() as sandbox:
+        async with PyodideSandbox() as sandbox:
             result = await sandbox.run(code, data={"key": "value"})
 
     Or create a long-lived instance that starts lazily on first use::
 
-        sandbox = Sandbox()
+        sandbox = PyodideSandbox()
         result = await sandbox.run(code)  # cold start happens here
         result = await sandbox.run(code)  # warm, ~1ms
 
@@ -40,7 +40,7 @@ class Sandbox:
         self._process: subprocess.Popen[bytes] | None = None
         self._lock = asyncio.Lock()
 
-    async def __aenter__(self) -> Sandbox:
+    async def __aenter__(self) -> PyodideSandbox:
         await self._start()
         return self
 

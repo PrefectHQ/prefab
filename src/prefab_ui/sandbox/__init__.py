@@ -1,8 +1,8 @@
 """Sandboxed execution of LLM-generated Prefab code.
 
-Executes untrusted Python in a Pyodide WASM sandbox (via Deno) with
-the full Prefab library pre-loaded. Context managers, ``.rx``, Pydantic
-validation — everything works identically to native Python.
+The sandbox takes untrusted Python, executes it safely, and returns
+Prefab wire protocol JSON. The default implementation uses Pyodide
+(CPython compiled to WASM) via a Deno subprocess.
 
 Usage::
 
@@ -18,6 +18,9 @@ Usage::
         ''')
 """
 
-from prefab_ui.sandbox._sandbox import Sandbox
+from prefab_ui.sandbox._pyodide import PyodideSandbox
 
-__all__ = ["Sandbox"]
+# Default sandbox implementation
+Sandbox = PyodideSandbox
+
+__all__ = ["PyodideSandbox", "Sandbox"]
