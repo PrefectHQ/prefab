@@ -6,6 +6,9 @@ subprocess. They require Deno to be installed.
 
 from __future__ import annotations
 
+import shutil
+import sys
+
 import pytest
 
 from prefab_ui.sandbox import Sandbox
@@ -13,6 +16,14 @@ from prefab_ui.sandbox import Sandbox
 pytestmark = [
     pytest.mark.timeout(120),
     pytest.mark.xdist_group("sandbox"),
+    pytest.mark.skipif(
+        shutil.which("deno") is None,
+        reason="Deno not installed",
+    ),
+    pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Sandbox tests require Unix (Deno subprocess handling)",
+    ),
 ]
 
 

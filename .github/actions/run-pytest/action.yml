@@ -5,6 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Install Deno
+      if: runner.os != 'Windows'
       uses: denoland/setup-deno@v2
       with:
         deno-version: v2.x
