@@ -14,7 +14,7 @@ MCP App support requires a development branch of FastMCP that has not been relea
 ```python
 from fastmcp import FastMCP
 from prefab_ui.app import PrefabApp
-from prefab_ui.components import Column, Heading, Text
+from prefab_ui.components import Heading, Text
 from prefab_ui.components.control_flow import ForEach
 mcp = FastMCP("My Server")
 
@@ -23,11 +23,11 @@ ITEMS = [{"name": "Widget"}, {"name": "Gadget"}, {"name": "Gizmo"}]
 @mcp.tool(app=True)
 def browse() -> PrefabApp:
     """Show all items."""
-    with Column(gap=4) as view:
+    with PrefabApp(state={"items": ITEMS}, css_class="p-6") as app:
         Heading("Items")
         with ForEach("items"):
             Text("{{ name }}")
-    return PrefabApp(view=view, state={"items": ITEMS})
+    return app
 ```
 
 When a host like Claude Desktop calls this tool, the user sees a fully interactive UI instead of plain text. FastMCP handles the wiring automatically: it registers a shared Prefab renderer as a `ui://` resource, sets the MCP Apps metadata on your tool, and converts `PrefabApp` returns to `structuredContent` in the tool result.

@@ -4,22 +4,30 @@ description: The application object that ties together view, state, theme, and a
 icon: box
 ---
 
-`PrefabApp` is a pure data object that describes a complete Prefab UI. It holds the component tree, initial state, theme, and any external assets. Every delivery mechanism (MCP, REST, `prefab serve`) ultimately produces a `PrefabApp`.
+`PrefabApp` describes a complete Prefab UI — the component tree, initial state, theme, and any external assets. Every delivery mechanism (MCP, REST, `prefab serve`) ultimately produces a `PrefabApp`.
+
+The recommended way to build an app is as a context manager. This creates an implicit root Column and establishes state, theme, and styling before any components render:
 
 ```python
 from prefab_ui.app import PrefabApp
 from prefab_ui.themes import Dashboard
+from prefab_ui.components import Heading, Text
+
+with PrefabApp(state={"greeting": "Hello"}, theme=Dashboard(accent="blue"), css_class="p-6") as app:
+    Heading("Hello")
+    Text("World")
+```
+
+You can also pass `view=` directly if you build the tree separately:
+
+```python
 from prefab_ui.components import Column, Heading, Text
 
-with Column() as view:
+with Column(css_class="p-6") as view:
     Heading("Hello")
     Text("World")
 
-app = PrefabApp(
-    view=view,
-    state={"greeting": "Hello"},
-    theme=Dashboard(accent="blue"),
-)
+app = PrefabApp(view=view, state={"greeting": "Hello"})
 ```
 
 ## Fields
@@ -29,6 +37,7 @@ app = PrefabApp(
 | `view` | `Component` | Component tree to render |
 | `state` | `dict` | Initial client-side state |
 | `theme` | `Theme` | Theme to apply — see [Themes](/styling/themes) |
+| `css_class` | `str` | CSS/Tailwind classes for the root container (context manager mode) |
 | `defs` | `list[Define]` | Reusable component definitions |
 | `stylesheets` | `list[str]` | CSS URLs or inline CSS strings to load in `<head>` |
 | `scripts` | `list[str]` | External JS URLs to load in `<head>` |

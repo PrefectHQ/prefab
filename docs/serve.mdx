@@ -13,13 +13,11 @@ Create a Python file that defines a `PrefabApp`:
 
 ```python app.py
 from prefab_ui.app import PrefabApp
-from prefab_ui.components import Column, Heading, Text
+from prefab_ui.components import Heading, Text
 
-with Column(gap=3) as view:
+with PrefabApp(state={"greeting": "Hello"}, css_class="p-6") as app:
     Heading("Hello Prefab")
     Text("This is a local preview.")
-
-app = PrefabApp(view=view, state={"greeting": "Hello"})
 ```
 
 Then serve it:

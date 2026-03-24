@@ -96,33 +96,30 @@ async def execute_ui(
 
     Key patterns:
 
-    1. Build trees with context managers. Assign the root with `as`:
+    1. Use PrefabApp as a context manager — it's the root of your app:
 
     ```python
-    from prefab_ui.components import Column, Heading, Text, Row, Badge
+    from prefab_ui.components import Heading, Text, Row, Badge
     from prefab_ui.app import PrefabApp
 
-    with Column(gap=4) as view:
+    with PrefabApp(css_class="p-6") as app:
         Heading("Dashboard")
         with Row(gap=2):
             Text("Revenue: $1.2M")
             Badge("On Track", variant="success")
-
-    app = PrefabApp(view=view)
     ```
 
     2. For interactive UIs, use stateful components and .rx for
-       reactive bindings. Wrap in PrefabApp with initial state:
+       reactive bindings. Set initial state on PrefabApp:
 
     ```python
-    from prefab_ui.components import Column, Slider, Text
+    from prefab_ui.components import Heading, Slider, Text
     from prefab_ui.app import PrefabApp
 
-    with Column(gap=4) as view:
+    with PrefabApp(state={"threshold": 50}, css_class="p-6") as app:
+        Heading("Controls")
         slider = Slider(value=50, min=0, max=100, name="threshold")
         Text(f"Threshold: {slider.rx}%")
-
-    app = PrefabApp(view=view, state={"threshold": 50})
     ```
 
     3. Charts are in prefab_ui.components.charts:
