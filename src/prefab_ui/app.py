@@ -189,7 +189,8 @@ class PrefabApp(BaseModel):
             )
         from prefab_ui.components.column import Column
 
-        root = Column(css_class=self.css_class, defer=True)  # type: ignore[call-arg]
+        cls = f"pf-app-root {self.css_class}" if self.css_class else "pf-app-root"
+        root = Column(css_class=cls, defer=True)  # type: ignore[call-arg]
         self._context_root = root
         root.__enter__()
         return self

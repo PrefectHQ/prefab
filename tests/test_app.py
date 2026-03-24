@@ -93,9 +93,9 @@ class TestPrefabAppContextManager:
         assert result["state"] == {"x": 1}
 
     def test_css_class(self):
-        with PrefabApp(css_class="p-6 max-w-3xl") as app:
+        with PrefabApp(css_class="max-w-3xl") as app:
             Text("hi")
-        assert app.to_json()["view"]["cssClass"] == "p-6 max-w-3xl"
+        assert app.to_json()["view"]["cssClass"] == "pf-app-root max-w-3xl"
 
     def test_nested_containers(self):
         with PrefabApp() as app:
@@ -118,7 +118,7 @@ class TestPrefabAppContextManager:
     def test_no_css_class(self):
         with PrefabApp() as app:
             Text("hi")
-        assert "cssClass" not in app.to_json()["view"]
+        assert app.to_json()["view"]["cssClass"] == "pf-app-root"
 
     def test_not_attached_to_outer_stack(self):
         """PrefabApp's implicit Column should not leak to an outer context."""
