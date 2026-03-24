@@ -6,16 +6,11 @@ subprocess. They require Deno to be installed.
 
 from __future__ import annotations
 
-import shutil
-
 import pytest
 
 from prefab_ui.sandbox import Sandbox
 
-pytestmark = pytest.mark.skipif(
-    shutil.which("deno") is None,
-    reason="Deno not installed",
-)
+pytestmark = pytest.mark.timeout(60)
 
 
 @pytest.fixture

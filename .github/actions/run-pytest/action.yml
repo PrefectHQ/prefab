@@ -4,6 +4,11 @@ description: "Run pytest with appropriate flags for the platform"
 runs:
   using: "composite"
   steps:
+    - name: Install Deno
+      uses: denoland/setup-deno@v2
+      with:
+        deno-version: v2.x
+
     - name: Run pytest
       shell: bash
       run: |
