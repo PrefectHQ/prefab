@@ -16,9 +16,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom(), viteSingleFile()],
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
-    // No local bundle — the generative renderer loads prefab-ui from PyPI
-    // via micropip at runtime (pydantic comes from Pyodide's built-ins).
-    __LOCAL_BUNDLE__: "false",
+    // Bundle Prefab source into the renderer so we don't need micropip/PyPI.
+    __LOCAL_BUNDLE__: "true",
   },
   resolve: {
     alias: {

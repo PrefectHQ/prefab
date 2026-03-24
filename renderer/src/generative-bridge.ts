@@ -9,7 +9,11 @@
 import { App } from "@modelcontextprotocol/ext-apps";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import type { ExecuteResult } from "./pyodide/executor";
-import { loadPyodideRuntime, executePrefabCode } from "./pyodide/executor";
+import {
+  loadPyodideRuntime,
+  executePrefabCode,
+  setExecutorDebug,
+} from "./pyodide/executor";
 
 export interface BufferedToolResult {
   structuredContent?: Record<string, unknown>;
@@ -54,18 +58,20 @@ let pendingCode: string | null = null;
 /** Execute code with sequence-based stale result rejection. */
 function executeAndDeliver(code: string) {
   const mySeq = ++execSeq;
-  debug(`execute: seq=${mySeq}, ${code.length} chars`);
+  const t0 = performance.now();
   executePrefabCode(code).then((result) => {
+    const elapsed = (performance.now() - t0).toFixed(0);
     if (mySeq !== execSeq) {
-      debug(`execute: seq=${mySeq} stale (current=${execSeq}), discarding`);
       return;
     }
     if (result.tree) {
-      debug(
-        `execute: seq=${mySeq} success, tree type=${(result.tree as any).type}`,
-      );
+      debug(`exec #${mySeq}: ${code.length}ch → success in ${elapsed}ms`);
     } else if (result.error) {
-      debug(`execute: seq=${mySeq} error: ${result.error.slice(0, 100)}`);
+      debug(
+        `exec #${mySeq}: ${
+          code.length
+        }ch → error in ${elapsed}ms: ${result.error.slice(0, 80)}`,
+      );
     }
     if (result.tree && codeResultCb) {
       codeResultCb(result);
@@ -77,20 +83,22 @@ function executeAndDeliver(code: string) {
 function ensurePyodideLoading() {
   if (pyodideLoading) return;
   pyodideLoading = true;
+  debug("Pyodide: starting load...");
   loadPyodideRuntime((status) => {
+    debug(`Pyodide: status=${status}`);
     if (status === "ready") {
       pyodideReady = true;
-      console.log("[Prefab Generative] Pyodide ready");
       if (pendingCode) {
         const code = pendingCode;
         pendingCode = null;
+        debug(`Pyodide: executing buffered code (${code.length} chars)`);
         executeAndDeliver(code);
       }
     } else if (status === "error") {
-      console.error("[Prefab Generative] Pyodide failed to load");
+      debug("Pyodide: FAILED to load");
     }
   }).catch((err) => {
-    console.error("[Prefab Generative] Pyodide load error:", err);
+    debug(`Pyodide: load error: ${String(err).slice(0, 200)}`);
   });
 }
 
@@ -106,27 +114,55 @@ function debug(msg: string) {
   console.log(`[Prefab Generative] ${msg}`);
 }
 
+// Route executor debug messages through the same system
+setExecutorDebug((msg) => debug(`executor: ${msg}`));
+
+let debugReplayed = false;
 export function onDebug(cb: (msg: string) => void) {
   debugCb = cb;
-  for (const msg of debugMessages) cb(msg);
+  if (!debugReplayed) {
+    debugReplayed = true;
+    for (const msg of debugMessages) cb(msg);
+  }
 }
 
+/** Throttle: execute at most once per interval, using the latest code. */
+let throttleTimer: ReturnType<typeof setTimeout> | null = null;
+let latestCode: string | null = null;
+const THROTTLE_MS = 50;
+
 /** Handle a code string from partial or complete input. */
-function handleCode(code: string) {
-  if (code === lastCode) {
-    debug(`handleCode: skipped (identical, ${code.length} chars)`);
-    return;
-  }
+function handleCode(code: string, immediate = false) {
+  if (code === lastCode) return;
   lastCode = code;
-  debug(`handleCode: ${code.length} chars, pyodideReady=${pyodideReady}`);
 
   if (!pyodideReady) {
     pendingCode = code;
-    debug("handleCode: buffered (Pyodide not ready)");
     return;
   }
 
-  executeAndDeliver(code);
+  if (immediate) {
+    if (throttleTimer) clearTimeout(throttleTimer);
+    throttleTimer = null;
+    latestCode = null;
+    executeAndDeliver(code);
+    return;
+  }
+
+  // Stash the latest code. The throttle timer fires every THROTTLE_MS
+  // and executes whatever's latest, regardless of whether partials
+  // are still arriving.
+  latestCode = code;
+  if (!throttleTimer) {
+    throttleTimer = setTimeout(() => {
+      throttleTimer = null;
+      if (latestCode) {
+        const c = latestCode;
+        latestCode = null;
+        executeAndDeliver(c);
+      }
+    }, THROTTLE_MS);
+  }
 }
 
 export const generativeBridge: GenerativeBridge = {
@@ -156,32 +192,27 @@ export const generativeBridge: GenerativeBridge = {
     };
 
     // Streaming partial tool arguments — the generative UI hook
+    let partialCount = 0;
     app.ontoolinputpartial = (params) => {
+      partialCount++;
       const args = params.arguments as Record<string, unknown> | undefined;
-      debug(
-        `ontoolinputpartial: args keys=${
-          args ? Object.keys(args).join(",") : "none"
-        }`,
-      );
       if (!args) return;
       const code = args[codeKey];
-      if (typeof code !== "string" || !code.trim()) {
-        debug(`ontoolinputpartial: no code (key="${codeKey}")`);
-        return;
+      if (typeof code !== "string" || !code.trim()) return;
+      if (partialCount % 100 === 1) {
+        debug(`partial #${partialCount}: ${code.length} chars`);
       }
       handleCode(code);
     };
 
-    // Complete tool input
+    // Complete tool input — execute immediately, no debounce
     app.ontoolinput = (params) => {
       const args = params.arguments as Record<string, unknown> | undefined;
-      debug(
-        `ontoolinput: args keys=${args ? Object.keys(args).join(",") : "none"}`,
-      );
+      debug(`ontoolinput: complete`);
       if (!args) return;
       const code = args[codeKey];
       if (typeof code !== "string" || !code.trim()) return;
-      handleCode(code);
+      handleCode(code, true);
     };
 
     app.onhostcontextchanged = (ctx) => {

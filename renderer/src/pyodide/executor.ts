@@ -30,6 +30,16 @@ export interface PyodideInterface {
 
 export type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
+/** Debug callback — set by the bridge to route messages to the UI. */
+let debugFn: ((msg: string) => void) | null = null;
+export function setExecutorDebug(fn: (msg: string) => void) {
+  debugFn = fn;
+}
+function log(msg: string) {
+  if (debugFn) debugFn(msg);
+  console.log(`[Pyodide] ${msg}`);
+}
+
 let pyodide: PyodideInterface | null = null;
 let loadPromise: Promise<PyodideInterface> | null = null;
 
@@ -62,12 +72,16 @@ export function loadPyodideRuntime(
   loadPromise = (async () => {
     onStatus("loading");
 
+    log("Loading script from CDN...");
     await loadScript(PYODIDE_CDN);
+    log("Script loaded, initializing...");
     const py = await window.loadPyodide();
+    log("Initialized, loading pydantic...");
 
     // Pydantic must come from Pyodide's built-in packages (WASM build)
     // because pydantic-core is a Rust extension with no WASM wheel on PyPI.
     await py.loadPackage(["pydantic"]);
+    log("Pydantic loaded, installing prefab...");
 
     if (typeof __LOCAL_BUNDLE__ !== "undefined" && __LOCAL_BUNDLE__) {
       // Bundle build: write bundled source to Pyodide FS.
@@ -84,14 +98,18 @@ export function loadPyodideRuntime(
       for (const [modulePath, source] of Object.entries(bundle)) {
         py.FS.writeFile(`/lib/python3.12/site-packages/${modulePath}`, source);
       }
+      log("Prefab mounted from bundle");
     } else {
       // Fallback: install prefab-ui from PyPI, skipping deps since
       // pydantic is already loaded from Pyodide's built-in packages.
+      log("Loading micropip...");
       await py.loadPackage(["micropip"]);
+      log("Installing prefab-ui from PyPI...");
       await py.runPythonAsync(`
 import micropip
 await micropip.install("prefab-ui", deps=False)
 `);
+      log("Prefab installed from PyPI");
     }
 
     pyodide = py;
@@ -132,103 +150,58 @@ export async function executePrefabCode(code: string): Promise<ExecuteResult> {
 
   const harness = `
 import json as _json
-from prefab_ui.components.base import _component_stack, ContainerComponent
+from prefab_ui.components.base import _component_stack, Component as _C, ContainerComponent as _CC
+from prefab_ui.app import PrefabApp as _PA
 
 # Reset the component stack
 _component_stack.set(None)
 
-# State capture (monkey-patched so importing from prefab_ui.app gets this version)
-_pg_state = {}
+# Heal partial code: strip trailing lines until it compiles.
+_pg_code = ${JSON.stringify(code)}
+_pg_lines = _pg_code.split("\\n")
+_pg_healed = None
+for _pg_trim in range(min(len(_pg_lines), 5)):
+    _pg_try = "\\n".join(_pg_lines[:len(_pg_lines) - _pg_trim]) if _pg_trim else _pg_code
+    try:
+        compile(_pg_try, "<string>", "exec")
+        _pg_healed = _pg_try
+        break
+    except SyntaxError:
+        continue
 
-def set_initial_state(**kwargs):
-    _pg_state.update(kwargs)
+if _pg_healed is None:
+    raise SyntaxError("Could not heal partial code")
 
-import prefab_ui.app as _pg_app
-_pg_app.set_initial_state = set_initial_state
+# Execute in a fresh namespace
+_pg_ns = {}
+exec(_pg_healed, _pg_ns)
 
-# Track all created components and PrefabApp instances, with creation order
-_pg_created = []
-_pg_apps = []
-_pg_order: dict = {}
-_pg_counter = [0]
-from prefab_ui.components.base import Component as _PgComponent
-from prefab_ui.app import PrefabApp as _PrefabApp
-_pg_real_post_init = _PgComponent.model_post_init
+# Find result: prefer PrefabApp, then root components
+_pg_apps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
+_pg_comps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _C)]
 
-def _pg_tracking_post_init(self, ctx):
-    _pg_real_post_init(self, ctx)
-    _pg_created.append(self)
-    _pg_order[id(self)] = _pg_counter[0]
-    _pg_counter[0] += 1
-
-_PgComponent.model_post_init = _pg_tracking_post_init
-
-# Pydantic v2's Rust validator caches model_post_init at class creation,
-# so patching it on PrefabApp has no effect. Patch __init__ instead.
-_pg_real_app_init = _PrefabApp.__init__
-
-def _pg_app_tracking_init(self, /, **data):
-    _pg_real_app_init(self, **data)
-    _pg_apps.append(self)
-    _pg_order[id(self)] = _pg_counter[0]
-    _pg_counter[0] += 1
-
-_PrefabApp.__init__ = _pg_app_tracking_init
-
-globals().pop("main", None)
-try:
-    exec(${JSON.stringify(code)})
-finally:
-    _PgComponent.model_post_init = _pg_real_post_init
-    _PrefabApp.__init__ = _pg_real_app_init
-
-# Find root components (not children of any container, Text, or DataTable row)
-from prefab_ui.components.data_table import DataTable as _PgDataTable
-from prefab_ui.components.text import Text as _PgText
+# Filter to roots — components not children of any container
 _pg_all_children = set()
-for _c in _pg_created:
-    if isinstance(_c, ContainerComponent):
+for _c in _pg_comps:
+    if isinstance(_c, _CC):
         for _ch in _c.children:
             _pg_all_children.add(id(_ch))
-    if isinstance(_c, _PgText) and _c.children:
-        for _ch in _c.children:
-            _pg_all_children.add(id(_ch))
-    if isinstance(_c, _PgDataTable) and isinstance(_c.rows, list):
-        for _row in _c.rows:
-            if isinstance(_row, dict):
-                for _v in _row.values():
-                    if isinstance(_v, _PgComponent):
-                        _pg_all_children.add(id(_v))
+_pg_roots = [_c for _c in _pg_comps if id(_c) not in _pg_all_children]
 
-_pg_roots = [_c for _c in _pg_created if id(_c) not in _pg_all_children]
-
-# If main() is defined, call it — the return value is the render target.
-# Otherwise pick whichever was created LAST: a root component or a PrefabApp.
-_pg_main = globals().get("main")
-if callable(_pg_main):
-    _pg_target = _pg_main()
-else:
-    _pg_candidates = _pg_roots + _pg_apps
-    _pg_candidates.sort(key=lambda _c: _pg_order.get(id(_c), -1))
-    _pg_target = _pg_candidates[-1] if _pg_candidates else None
+_pg_target = _pg_apps[-1] if _pg_apps else (_pg_roots[-1] if _pg_roots else None)
 
 if _pg_target is None:
     raise ValueError("No components created")
 
-if isinstance(_pg_target, _PrefabApp):
+if isinstance(_pg_target, _PA):
     _pg_wire = _pg_target.to_json()
-    _pg_tree = _pg_wire.get("view")
-    _pg_result = {"tree": _pg_tree}
+    _pg_result = {"tree": _pg_wire.get("view")}
     if _pg_wire.get("state"):
         _pg_result["state"] = _pg_wire["state"]
-    elif _pg_state:
-        _pg_result["state"] = _pg_state
-    if "theme" in _pg_wire:
+    if _pg_wire.get("theme"):
         _pg_result["theme"] = _pg_wire["theme"]
 else:
     _pg_result = {"tree": _pg_target.to_json()}
-    if _pg_state:
-        _pg_result["state"] = _pg_state
 
 _json.dumps(_pg_result)
 `;

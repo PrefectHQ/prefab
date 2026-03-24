@@ -12,7 +12,7 @@ import { Toaster } from "sonner";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
-import { generativeBridge, onDebug } from "./generative-bridge";
+import { generativeBridge } from "./generative-bridge";
 import { clearAllIntervals, setAppName } from "./actions";
 import {
   SUPPORTED_VERSIONS,
@@ -25,24 +25,11 @@ export function GenerativeApp() {
   const [tree, setTree] = useState<ComponentNode | null>(null);
   const [defs, setDefs] = useState<Record<string, ComponentNode>>({});
   const [isStreaming, setIsStreaming] = useState(false);
-  const [debugLog, setDebugLog] = useState<string[]>([
-    "[init] GenerativeApp mounted",
-  ]);
   const state = useStateStore();
-
-  const addDebug = useCallback((msg: string) => {
-    const time = new Date().toLocaleTimeString();
-    setDebugLog((prev) => [...prev.slice(-50), `[${time}] ${msg}`]);
-  }, []);
 
   // Handle server-validated tool result (final render)
   const handleToolResult = useCallback(
     (result: { structuredContent?: Record<string, unknown> }) => {
-      addDebug(
-        `ontoolresult: ${
-          result.structuredContent ? "has structured content" : "empty"
-        }`,
-      );
       const structured = result.structuredContent;
       if (!structured) return;
 
@@ -85,9 +72,6 @@ export function GenerativeApp() {
   // Handle Pyodide execution result from partial/complete code
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
-      addDebug(
-        `codeResult: tree=${!!result.tree} error=${result.error ?? "none"}`,
-      );
       if (result.tree) {
         setTree(result.tree);
         setIsStreaming(true);
@@ -117,8 +101,7 @@ export function GenerativeApp() {
     generativeBridge.onToolResult(handleToolResult);
     generativeBridge.onHostContext(handleHostContext);
     generativeBridge.onCodeResult(handleCodeResult);
-    onDebug(addDebug);
-  }, [handleToolResult, handleHostContext, handleCodeResult, addDebug]);
+  }, [handleToolResult, handleHostContext, handleCodeResult]);
 
   // Apply initial theme
   useEffect(() => {
@@ -128,42 +111,12 @@ export function GenerativeApp() {
     }
   }, [handleHostContext]);
 
-  const debugPanel = (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        maxHeight: "200px",
-        overflow: "auto",
-        background: "#1a1a2e",
-        color: "#e0e0e0",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        lineHeight: "1.4",
-        padding: "8px",
-        borderTop: "1px solid #333",
-        zIndex: 9999,
-      }}
-    >
-      <strong style={{ color: "#58a6ff" }}>Debug Log</strong>
-      <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-        {debugLog.join("\n")}
-      </pre>
-    </div>
-  );
-
-  // Loading state
   if (!tree) {
     return (
-      <>
-        <div className="pf-p-4 pf-text-sm pf-text-muted-foreground pf-flex pf-items-center pf-gap-2">
-          <div className="pf-animate-spin pf-h-4 pf-w-4 pf-border-2 pf-border-current pf-border-t-transparent pf-rounded-full" />
-          Preparing…
-        </div>
-        {debugPanel}
-      </>
+      <div className="pf-p-4 pf-text-sm pf-text-muted-foreground pf-flex pf-items-center pf-gap-2">
+        <div className="pf-animate-spin pf-h-4 pf-w-4 pf-border-2 pf-border-current pf-border-t-transparent pf-rounded-full" />
+        Preparing…
+      </div>
     );
   }
 
@@ -181,7 +134,6 @@ export function GenerativeApp() {
         app={generativeBridge.app}
       />
       <Toaster />
-      {debugPanel}
     </>
   );
 }

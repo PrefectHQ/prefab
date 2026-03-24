@@ -119,11 +119,18 @@ def get_generative_renderer_html() -> str:
 def get_generative_renderer_csp() -> dict[str, list[str]]:
     """Return CSP domains needed for the generative renderer.
 
-    Includes the Pyodide CDN origin (jsdelivr) since Pyodide and its
-    packages are loaded at runtime from CDN.
+    Includes the Pyodide CDN origin (jsdelivr) for both resource loading
+    (script tags) and connect (fetch for WASM binary and packages).
     """
     domains = [PYODIDE_CDN_ORIGIN]
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:
         domains.append(_get_origin(override.rstrip("/")))
-    return {"resource_domains": domains}
+    return {
+        "resource_domains": domains,
+        "connect_domains": [
+            PYODIDE_CDN_ORIGIN,
+            "https://pypi.org",
+            "https://files.pythonhosted.org",
+        ],
+    }
