@@ -6,19 +6,42 @@ icon: box
 
 `PrefabApp` describes a complete Prefab UI — the component tree, initial state, theme, and any external assets. Every delivery mechanism (MCP, REST, `prefab serve`) ultimately produces a `PrefabApp`.
 
-The recommended way to build an app is as a context manager. This creates an implicit root Column and establishes state, theme, and styling before any components render:
+## Building an app
+
+### Context manager (recommended)
+
+Use PrefabApp as a context manager to build the component tree inline. This creates an implicit root Column and establishes state, theme, and styling upfront — before any components render:
 
 ```python
 from prefab_ui.app import PrefabApp
 from prefab_ui.themes import Dashboard
-from prefab_ui.components import Heading, Text
+from prefab_ui.components import Heading, Slider, Text
 
-with PrefabApp(state={"greeting": "Hello"}, theme=Dashboard(accent="blue"), css_class="p-6") as app:
-    Heading("Hello")
-    Text("World")
+with PrefabApp(state={"volume": 75}, theme=Dashboard(accent="blue"), css_class="p-6") as app:
+    Heading("Dashboard")
+    slider = Slider(value=75, name="volume")
+    Text(f"Volume: {slider.rx}%")
 ```
 
-You can also pass `view=` directly if you build the tree separately:
+The context manager pattern is the canonical way to write Prefab apps. State, theme, and root styling are declared on the first line, and components nest naturally inside. For generative UI, this means the LLM establishes the app envelope before writing any components — no theme flash at the end.
+
+The same PrefabApp can be used as a context manager multiple times. Set `view = None` between uses to reset:
+
+```python
+app = PrefabApp(state={"x": 1}, css_class="p-6")
+
+with app:
+    Heading("Version 1")
+
+app.view = None
+
+with app:
+    Heading("Version 2")
+```
+
+### Functional style
+
+If you build the component tree separately — or receive it from a sandbox, API, or other source — pass it via `view=`:
 
 ```python
 from prefab_ui.components import Column, Heading, Text
@@ -28,6 +51,17 @@ with Column(css_class="p-6") as view:
     Text("World")
 
 app = PrefabApp(view=view, state={"greeting": "Hello"})
+```
+
+Using both `view=` and the context manager on the same PrefabApp raises an error — use one or the other.
+
+### From wire protocol
+
+`PrefabApp.from_json()` wraps pre-serialized wire protocol data (e.g. from sandboxed execution):
+
+```python
+wire = await sandbox.run(code)
+app = PrefabApp.from_json(wire, state={"extra": "value"})
 ```
 
 ## Fields
