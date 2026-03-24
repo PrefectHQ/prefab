@@ -129,10 +129,20 @@ class PrefabApp(BaseModel):
     Describes the view, initial state, reusable component definitions,
     and external assets.  Use ``html()`` to produce a self-contained
     HTML page, or ``to_json()`` for the wire-format envelope.
+
+    Can be used as a context manager to build the component tree inline::
+
+        with PrefabApp(state={"count": 0}, css_class="p-6") as app:
+            Heading("Dashboard")
+            Slider(value=50, name="count")
     """
 
     title: str = Field(default="Prefab", description="HTML page title")
     view: Any | None = Field(default=None, description="Component tree to render")
+    css_class: str | None = Field(
+        default=None,
+        description="CSS/Tailwind classes for the root container",
+    )
     state: dict[str, Any] | None = Field(
         default=None,
         description="Initial client-side state",
@@ -167,6 +177,20 @@ class PrefabApp(BaseModel):
     )
 
     model_config = {"arbitrary_types_allowed": True}
+
+    def __enter__(self) -> PrefabApp:
+        from prefab_ui.components.column import Column
+
+        root = Column(css_class=self.css_class, defer=True)  # type: ignore[call-arg]
+        object.__setattr__(self, "_context_root", root)
+        root.__enter__()
+        return self
+
+    def __exit__(self, *args: Any) -> None:
+        root = getattr(self, "_context_root", None)
+        if root is not None:
+            root.__exit__(*args)
+            self.view = root
 
     @model_validator(mode="after")
     def _consume_initial_state(self) -> PrefabApp:

@@ -82,6 +82,54 @@ class TestPrefabAppFromJson:
         assert result["view"] is view_dict
 
 
+class TestPrefabAppContextManager:
+    def test_basic(self):
+        with PrefabApp(state={"x": 1}) as app:
+            Heading("Title")
+            Text("body")
+        result = app.to_json()
+        assert result["view"]["type"] == "Column"
+        assert len(result["view"]["children"]) == 2
+        assert result["state"] == {"x": 1}
+
+    def test_css_class(self):
+        with PrefabApp(css_class="p-6 max-w-3xl") as app:
+            Text("hi")
+        assert app.to_json()["view"]["cssClass"] == "p-6 max-w-3xl"
+
+    def test_nested_containers(self):
+        with PrefabApp() as app:
+            Heading("Title")
+            with Column(gap=2):
+                Text("a")
+                Text("b")
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 2
+        assert children[1]["type"] == "Column"
+
+    def test_defer_excluded(self):
+        with PrefabApp() as app:
+            Text("attached")
+            Text("deferred", defer=True)
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 1
+        assert children[0]["content"] == "attached"
+
+    def test_no_css_class(self):
+        with PrefabApp() as app:
+            Text("hi")
+        assert "cssClass" not in app.to_json()["view"]
+
+    def test_not_attached_to_outer_stack(self):
+        """PrefabApp's implicit Column should not leak to an outer context."""
+        with Column() as outer:
+            Text("outer child")
+            with PrefabApp() as app:
+                Text("inner")
+        assert len(outer.children) == 1
+        assert len(app.to_json()["view"]["children"]) == 1
+
+
 class TestPrefabAppValidation:
     def test_reserved_state_key_rejected(self):
         with pytest.raises(ValueError, match="reserved prefix '\\$'"):
