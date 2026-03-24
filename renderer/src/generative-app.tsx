@@ -7,48 +7,25 @@
  * 3. ontoolresult → server-validated PrefabApp → final render (replaces preview)
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Toaster } from "sonner";
-import {
-  applyDocumentTheme,
-  applyHostStyleVariables,
-  applyHostFonts,
-} from "@modelcontextprotocol/ext-apps/react";
-import type {
-  App as McpApp,
-  McpUiHostContext,
-} from "@modelcontextprotocol/ext-apps";
+import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { generativeBridge } from "./generative-bridge";
 import { clearAllIntervals, setAppName } from "./actions";
+import {
+  SUPPORTED_VERSIONS,
+  applyTheme,
+  hostContextToState,
+} from "./shared-app-utils";
 import type { ExecuteResult } from "./pyodide/executor";
-
-const SUPPORTED_VERSIONS = new Set(["0.2"]);
-
-function applyTheme(ctx: McpUiHostContext) {
-  if (ctx.theme) applyDocumentTheme(ctx.theme);
-  if (ctx.styles?.variables) applyHostStyleVariables(ctx.styles.variables);
-  if (ctx.styles?.css?.fonts) applyHostFonts(ctx.styles.css.fonts);
-}
-
-function hostContextToState(ctx: McpUiHostContext): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  if (ctx.theme != null) result.theme = ctx.theme;
-  if (ctx.displayMode != null) result.displayMode = ctx.displayMode;
-  if (ctx.availableDisplayModes != null)
-    result.availableDisplayModes = ctx.availableDisplayModes;
-  if (ctx.containerDimensions != null)
-    result.containerDimensions = ctx.containerDimensions;
-  return result;
-}
 
 export function GenerativeApp() {
   const [tree, setTree] = useState<ComponentNode | null>(null);
   const [defs, setDefs] = useState<Record<string, ComponentNode>>({});
   const [isStreaming, setIsStreaming] = useState(false);
   const state = useStateStore();
-  const appRef = useRef<McpApp | null>(generativeBridge.app);
 
   // Handle server-validated tool result (final render)
   const handleToolResult = useCallback(
@@ -151,7 +128,12 @@ export function GenerativeApp() {
           Generating…
         </div>
       )}
-      <RenderTree tree={tree} defs={defs} state={state} app={appRef.current} />
+      <RenderTree
+        tree={tree}
+        defs={defs}
+        state={state}
+        app={generativeBridge.app}
+      />
       <Toaster />
     </>
   );
