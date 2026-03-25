@@ -14,4 +14,5 @@ class Minimal(Theme):
     """
 
     light_css: str = "--card-padding-y: 0; --layout-gap: 0;"
+    css: str = ".pf-app-root { padding: 0; }"
     gradient: bool = False

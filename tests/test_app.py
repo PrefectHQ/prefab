@@ -82,6 +82,77 @@ class TestPrefabAppFromJson:
         assert result["view"] is view_dict
 
 
+class TestPrefabAppContextManager:
+    def test_basic(self):
+        with PrefabApp(state={"x": 1}) as app:
+            Heading("Title")
+            Text("body")
+        result = app.to_json()
+        assert result["view"]["type"] == "Column"
+        assert len(result["view"]["children"]) == 2
+        assert result["state"] == {"x": 1}
+
+    def test_css_class(self):
+        with PrefabApp(css_class="max-w-3xl") as app:
+            Text("hi")
+        assert app.to_json()["view"]["cssClass"] == "pf-app-root max-w-3xl"
+
+    def test_nested_containers(self):
+        with PrefabApp() as app:
+            Heading("Title")
+            with Column(gap=2):
+                Text("a")
+                Text("b")
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 2
+        assert children[1]["type"] == "Column"
+
+    def test_defer_excluded(self):
+        with PrefabApp() as app:
+            Text("attached")
+            Text("deferred", defer=True)
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 1
+        assert children[0]["content"] == "attached"
+
+    def test_no_css_class(self):
+        with PrefabApp() as app:
+            Text("hi")
+        assert app.to_json()["view"]["cssClass"] == "pf-app-root"
+
+    def test_not_attached_to_outer_stack(self):
+        """PrefabApp's implicit Column should not leak to an outer context."""
+        with Column() as outer:
+            Text("outer child")
+            with PrefabApp() as app:
+                Text("inner")
+        assert len(outer.children) == 1
+        assert len(app.to_json()["view"]["children"]) == 1
+
+    def test_reentrant(self):
+        """Same PrefabApp can be used as context manager multiple times."""
+        app = PrefabApp(state={"x": 1})
+
+        with app:
+            Text("version 1")
+        assert app.to_json()["view"]["children"][0]["content"] == "version 1"
+
+        # Reset view for re-entry
+        app.view = None
+        with app:
+            Text("version 2")
+            Text("extra")
+        children = app.to_json()["view"]["children"]
+        assert len(children) == 2
+        assert children[0]["content"] == "version 2"
+
+    def test_error_if_view_already_set(self):
+        app = PrefabApp(view=Text("existing"))
+        with pytest.raises(RuntimeError, match="view= is already set"):
+            with app:
+                Text("conflict")
+
+
 class TestPrefabAppValidation:
     def test_reserved_state_key_rejected(self):
         with pytest.raises(ValueError, match="reserved prefix '\\$'"):

@@ -156,6 +156,14 @@ from prefab_ui.app import PrefabApp as _PA
 # Reset the component stack
 _component_stack.set(None)
 
+# Track PrefabApp instances (may not be assigned to a variable)
+_pg_app_instances = []
+_pg_real_app_init = _PA.__init__
+def _pg_app_init(self, /, **data):
+    _pg_real_app_init(self, **data)
+    _pg_app_instances.append(self)
+_PA.__init__ = _pg_app_init
+
 # Heal partial code: strip trailing lines until it compiles.
 _pg_code = ${JSON.stringify(code)}
 _pg_lines = _pg_code.split("\\n")
@@ -170,14 +178,18 @@ for _pg_trim in range(min(len(_pg_lines), 5)):
         continue
 
 if _pg_healed is None:
+    _PA.__init__ = _pg_real_app_init
     raise SyntaxError("Could not heal partial code")
 
 # Execute in a fresh namespace
 _pg_ns = {}
-exec(_pg_healed, _pg_ns)
+try:
+    exec(_pg_healed, _pg_ns)
+finally:
+    _PA.__init__ = _pg_real_app_init
 
 # Find result: prefer PrefabApp, then root components
-_pg_apps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
+_pg_apps = _pg_app_instances or [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
 _pg_comps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _C)]
 
 # Filter to roots — components not children of any container

@@ -26,7 +26,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import pydantic_core
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 from prefab_ui.rx import _BoundStateProxy
@@ -129,10 +129,20 @@ class PrefabApp(BaseModel):
     Describes the view, initial state, reusable component definitions,
     and external assets.  Use ``html()`` to produce a self-contained
     HTML page, or ``to_json()`` for the wire-format envelope.
+
+    Can be used as a context manager to build the component tree inline::
+
+        with PrefabApp(state={"count": 0}, css_class="p-6") as app:
+            Heading("Dashboard")
+            Slider(value=50, name="count")
     """
 
     title: str = Field(default="Prefab", description="HTML page title")
     view: Any | None = Field(default=None, description="Component tree to render")
+    css_class: str | None = Field(
+        default=None,
+        description="CSS/Tailwind classes for the root container",
+    )
     state: dict[str, Any] | None = Field(
         default=None,
         description="Initial client-side state",
@@ -166,7 +176,30 @@ class PrefabApp(BaseModel):
         description="Custom JS action handlers: name → function expression",
     )
 
+    _context_root: Any = PrivateAttr(default=None)
+
     model_config = {"arbitrary_types_allowed": True}
+
+    def __enter__(self) -> PrefabApp:
+        if self.view is not None:
+            raise RuntimeError(
+                "Cannot use PrefabApp as a context manager when view= "
+                "is already set. Use either `with PrefabApp():` or "
+                "`PrefabApp(view=...)`, not both."
+            )
+        from prefab_ui.components.column import Column
+
+        cls = f"pf-app-root {self.css_class}" if self.css_class else "pf-app-root"
+        root = Column(css_class=cls, defer=True)  # type: ignore[call-arg]
+        self._context_root = root
+        root.__enter__()
+        return self
+
+    def __exit__(self, *args: Any) -> None:
+        if self._context_root is not None:
+            self._context_root.__exit__(*args)
+            self.view = self._context_root
+            self._context_root = None
 
     @model_validator(mode="after")
     def _consume_initial_state(self) -> PrefabApp:

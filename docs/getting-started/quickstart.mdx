@@ -24,7 +24,7 @@ from prefab_ui.app import PrefabApp
 from prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted
 from prefab_ui.actions import ShowToast
 
-with Column(css_class="max-w-md mx-auto") as view:
+with PrefabApp(state={"name": "world"}, css_class="max-w-md mx-auto") as app:
     with Card():
         with CardContent():
             with Column(gap=3):
@@ -33,8 +33,6 @@ with Column(css_class="max-w-md mx-auto") as view:
                 Muted("Type your name and watch the heading update in real time.")
         with CardFooter():
             Button("Say hi", on_click=ShowToast(f"Hey there, {name_input.rx}!"))
-
-app = PrefabApp(view=view, state={"name": "world"})
 ```
 
 ## Run it

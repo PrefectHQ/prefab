@@ -22,15 +22,13 @@ from prefab_ui.app import PrefabApp
 sandbox = Sandbox()
 
 code = '''
-from prefab_ui.components import Column, Heading, Slider, Text
+from prefab_ui.components import Heading, Slider, Text
 from prefab_ui.app import PrefabApp
 
-with Column(gap=4) as view:
+with PrefabApp(state={"confidence": 75}, css_class="p-6") as app:
     Heading("Revenue Dashboard")
     slider = Slider(value=75, min=0, max=100, name="confidence")
     Text(f"Confidence: {slider.rx}%")
-
-app = PrefabApp(view=view, state={"confidence": 75})
 '''
 
 wire = await sandbox.run(code, data={"revenue": 1_200_000})

@@ -40,6 +40,13 @@ _PRESENTATION_VARS = (
 _PRESENTATION_CSS = """\
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* App root — centered with max-width for slide-like presentation */
+.pf-app-root {
+  padding: 2rem;
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
 /* Font */
 .pf-card, .pf-table {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
