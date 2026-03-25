@@ -164,58 +164,60 @@ def _pg_app_init(self, /, **data):
     _pg_app_instances.append(self)
 _PA.__init__ = _pg_app_init
 
-# Heal partial code: strip trailing lines until it compiles.
-_pg_code = ${JSON.stringify(code)}
-_pg_lines = _pg_code.split("\\n")
-_pg_healed = None
-for _pg_trim in range(min(len(_pg_lines), 5)):
-    _pg_try = "\\n".join(_pg_lines[:len(_pg_lines) - _pg_trim]) if _pg_trim else _pg_code
-    try:
-        compile(_pg_try, "<string>", "exec")
-        _pg_healed = _pg_try
-        break
-    except SyntaxError:
-        continue
-
-if _pg_healed is None:
-    _PA.__init__ = _pg_real_app_init
-    raise SyntaxError("Could not heal partial code")
-
-# Execute in a fresh namespace
-_pg_ns = {}
 try:
+    # Heal partial code: strip trailing lines until it compiles.
+    _pg_code = ${JSON.stringify(code)}
+    _pg_lines = _pg_code.split("\\n")
+    _pg_healed = None
+    for _pg_trim in range(min(len(_pg_lines), 5)):
+        _pg_try = "\\n".join(_pg_lines[:len(_pg_lines) - _pg_trim]) if _pg_trim else _pg_code
+        try:
+            compile(_pg_try, "<string>", "exec")
+            _pg_healed = _pg_try
+            break
+        except SyntaxError:
+            continue
+
+    if _pg_healed is None:
+        raise SyntaxError("Could not heal partial code")
+
+    # Execute in a fresh namespace
+    _pg_ns = {}
     exec(_pg_healed, _pg_ns)
-finally:
-    _PA.__init__ = _pg_real_app_init
 
-# Find result: prefer PrefabApp, then root components
-_pg_apps = _pg_app_instances or [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
-_pg_comps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _C)]
+    # Find result: prefer PrefabApp, then root components
+    _pg_apps = _pg_app_instances or [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
+    _pg_comps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _C)]
 
-# Filter to roots — components not children of any container
-_pg_all_children = set()
-for _c in _pg_comps:
-    if isinstance(_c, _CC):
-        for _ch in _c.children:
-            _pg_all_children.add(id(_ch))
-_pg_roots = [_c for _c in _pg_comps if id(_c) not in _pg_all_children]
+    # Filter to roots — components not children of any container
+    _pg_all_children = set()
+    for _c in _pg_comps:
+        if isinstance(_c, _CC):
+            for _ch in _c.children:
+                _pg_all_children.add(id(_ch))
+    _pg_roots = [_c for _c in _pg_comps if id(_c) not in _pg_all_children]
 
-_pg_target = _pg_apps[-1] if _pg_apps else (_pg_roots[-1] if _pg_roots else None)
+    _pg_target = _pg_apps[-1] if _pg_apps else (_pg_roots[-1] if _pg_roots else None)
 
-if _pg_target is None:
-    raise ValueError("No components created")
+    if _pg_target is None:
+        raise ValueError("No components created")
 
-if isinstance(_pg_target, _PA):
+    # Always wrap in PrefabApp so the result gets default padding, theme, etc.
+    if not isinstance(_pg_target, _PA):
+        _pg_target = _PA(view=_pg_target)
+
     _pg_wire = _pg_target.to_json()
     _pg_result = {"tree": _pg_wire.get("view")}
     if _pg_wire.get("state"):
         _pg_result["state"] = _pg_wire["state"]
     if _pg_wire.get("theme"):
         _pg_result["theme"] = _pg_wire["theme"]
-else:
-    _pg_result = {"tree": _pg_target.to_json()}
 
-_json.dumps(_pg_result)
+    _pg_json_result = _json.dumps(_pg_result)
+finally:
+    _PA.__init__ = _pg_real_app_init
+
+_pg_json_result
 `;
 
   try {

@@ -14,7 +14,12 @@ export const SUPPORTED_VERSIONS = new Set(["0.2"]);
 
 /** Apply host theme context (dark mode, CSS variables, fonts). */
 export function applyTheme(ctx: McpUiHostContext) {
-  if (ctx.theme) applyDocumentTheme(ctx.theme);
+  if (ctx.theme) {
+    applyDocumentTheme(ctx.theme);
+    // The SDK sets data-theme + colorScheme but not the .dark class.
+    // Tailwind's dark variant requires .dark on an ancestor.
+    document.documentElement.classList.toggle("dark", ctx.theme === "dark");
+  }
   if (ctx.styles?.variables) applyHostStyleVariables(ctx.styles.variables);
   if (ctx.styles?.css?.fonts) applyHostFonts(ctx.styles.css.fonts);
 }

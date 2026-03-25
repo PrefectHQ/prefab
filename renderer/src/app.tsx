@@ -81,6 +81,9 @@ const INITIAL = readInitialData();
 function applyTheme(ctx: McpUiHostContext) {
   if (ctx.theme) {
     applyDocumentTheme(ctx.theme);
+    // The SDK sets data-theme + colorScheme but not the .dark class.
+    // Tailwind's dark variant requires .dark on an ancestor.
+    document.documentElement.classList.toggle("dark", ctx.theme === "dark");
   }
   if (ctx.styles?.variables) {
     applyHostStyleVariables(ctx.styles.variables);

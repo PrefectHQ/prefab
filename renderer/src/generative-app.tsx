@@ -7,12 +7,12 @@
  * 3. ontoolresult → server-validated PrefabApp → final render (replaces preview)
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Toaster } from "sonner";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
-import { generativeBridge } from "./generative-bridge";
+import { generativeBridge, debugMessages, onDebug } from "./generative-bridge";
 import { clearAllIntervals, setAppName } from "./actions";
 import {
   SUPPORTED_VERSIONS,
@@ -21,10 +21,115 @@ import {
 } from "./shared-app-utils";
 import type { ExecuteResult } from "./pyodide/executor";
 
+function FastMCPLogo({
+  size = 24,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 196 196"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M145.747 44.611L145.355 44.3877L144.96 44.611L86.0283 78.5276V171.267L86.4014 171.499L99.6674 179.667V86.3859L159 52.2379L145.747 44.611Z"
+        fill="currentColor"
+      />
+      <path
+        d="M121.616 30.2714L121.224 30.0454L120.832 30.2714L61.8975 64.188V156.928L62.2732 157.156L75.5393 165.325V72.0463L134.869 37.8983L121.616 30.2714Z"
+        fill="currentColor"
+      />
+      <path
+        d="M97.4894 16.3818L97.0973 16.1558L96.7025 16.3818L37.7705 50.3038V142.066L51.4096 150.463V58.1567L110.742 24.0086L97.4894 16.3818Z"
+        fill="currentColor"
+      />
+      <path
+        d="M131.23 113.671L124.979 117.266L124.584 117.494V117.5L116.796 121.987L110.547 125.581L110.152 125.807V141.51L144.564 121.709V121.698L158.999 113.394V97.6851L139.277 109.034L131.23 113.671Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function DebugPanel() {
+  const [messages, setMessages] = useState<string[]>(() => [...debugMessages]);
+  const [collapsed, setCollapsed] = useState(true);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages([...debugMessages]);
+    onDebug((msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+  }, []);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        background: "#1a1a2e",
+        color: "#e0e0e0",
+        fontFamily: "monospace",
+        fontSize: "11px",
+        borderTop: "2px solid #e94560",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "4px 8px",
+          background: "#16213e",
+          cursor: "pointer",
+        }}
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        <span style={{ color: "#e94560", fontWeight: "bold" }}>
+          🔧 Prefab Debug ({messages.length})
+        </span>
+        <span>{collapsed ? "▲" : "▼"}</span>
+      </div>
+      {!collapsed && (
+        <div
+          style={{
+            maxHeight: "200px",
+            overflow: "auto",
+            padding: "4px 8px",
+          }}
+        >
+          {messages.length === 0 && (
+            <div style={{ color: "#666" }}>Waiting for events…</div>
+          )}
+          {messages.map((msg, i) => (
+            <div key={i} style={{ padding: "1px 0", whiteSpace: "pre-wrap" }}>
+              {msg}
+            </div>
+          ))}
+          <div ref={bottomRef} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function GenerativeApp() {
   const [tree, setTree] = useState<ComponentNode | null>(null);
   const [defs, setDefs] = useState<Record<string, ComponentNode>>({});
-  const [isStreaming, setIsStreaming] = useState(false);
+  const [, setIsStreaming] = useState(false);
   const state = useStateStore();
 
   // Handle server-validated tool result (final render)
@@ -113,20 +218,41 @@ export function GenerativeApp() {
 
   if (!tree) {
     return (
-      <div className="pf-p-4 pf-text-sm pf-text-muted-foreground pf-flex pf-items-center pf-gap-2">
-        <div className="pf-animate-spin pf-h-4 pf-w-4 pf-border-2 pf-border-current pf-border-t-transparent pf-rounded-full" />
-        Preparing…
-      </div>
+      <>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "50vh",
+            gap: "6px",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: 36,
+              height: 36,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <div className="pf-absolute pf-inset-0 pf-rounded-full pf-border-2 pf-border-muted-foreground/20 pf-border-t-muted-foreground pf-animate-spin" />
+            <FastMCPLogo size={16} className="pf-text-muted-foreground" />
+          </div>
+          <span className="pf-text-sm pf-text-muted-foreground">
+            Generating UI…
+          </span>
+        </div>
+        <DebugPanel />
+      </>
     );
   }
 
   return (
     <>
-      {isStreaming && (
-        <div className="pf-fixed pf-top-2 pf-right-2 pf-z-50 pf-text-xs pf-text-muted-foreground pf-bg-background/80 pf-px-2 pf-py-1 pf-rounded pf-border">
-          Generating…
-        </div>
-      )}
       <RenderTree
         tree={tree}
         defs={defs}
@@ -134,6 +260,7 @@ export function GenerativeApp() {
         app={generativeBridge.app}
       />
       <Toaster />
+      <DebugPanel />
     </>
   );
 }

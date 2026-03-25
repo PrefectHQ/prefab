@@ -217,6 +217,9 @@ export const generativeBridge: GenerativeBridge = {
 
     app.onhostcontextchanged = (ctx) => {
       const hostCtx = ctx as McpUiHostContext;
+      debug(
+        `hostContext: theme=${hostCtx.theme}, displayMode=${hostCtx.displayMode}`,
+      );
       this.hostContext = hostCtx;
       if (hostContextCb) {
         hostContextCb(hostCtx);
