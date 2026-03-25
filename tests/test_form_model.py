@@ -372,10 +372,11 @@ class TestAutoFillConvention:
         form = Form.from_model(M, on_submit=CallTool(save_item))
         app = PrefabApp(view=form)
         j = app.to_json(tool_resolver=resolver)
-        view = j["view"]
+        # view is wrapped in Div with pf-app-root; form is inside
+        form_view = j["view"]["children"][0]
 
-        assert view["onSubmit"]["tool"] == "save_item-abc123"
-        button = view["children"][-1]
+        assert form_view["onSubmit"]["tool"] == "save_item-abc123"
+        button = form_view["children"][-1]
         assert "onClick" not in button
 
     def test_callable_tool_ref_preserved_with_explicit_arguments(self):
@@ -398,8 +399,9 @@ class TestAutoFillConvention:
         j = app.to_json(
             tool_resolver=lambda fn: ResolvedTool(name=fn.__name__ + "-resolved")
         )
-        assert j["view"]["onSubmit"]["tool"] == "save_item-resolved"
-        assert j["view"]["onSubmit"]["arguments"] == {"custom": "val"}
+        form_view = j["view"]["children"][0]
+        assert form_view["onSubmit"]["tool"] == "save_item-resolved"
+        assert form_view["onSubmit"]["arguments"] == {"custom": "val"}
 
     def test_callable_without_resolver_uses_name(self):
         """Without a resolver, CallTool(fn) falls back to fn.__name__."""

@@ -29,13 +29,17 @@ class TestPrefabAppToJson:
         )
         result = app.to_json()
         assert result["$prefab"]["version"] == PROTOCOL_VERSION
-        assert result["view"]["type"] == "Column"
+        # view= path: wrapped in Div with pf-app-root
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["cssClass"] == "pf-app-root"
+        assert result["view"]["children"][0]["type"] == "Column"
         assert result["state"]["name"] == "Alice"
 
     def test_view_only(self):
         app = PrefabApp(view=Text(content="hi"))
         result = app.to_json()
-        assert result["view"]["type"] == "Text"
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["children"][0]["type"] == "Text"
         assert "state" not in result
 
     def test_state_only(self):
@@ -54,7 +58,9 @@ class TestPrefabAppFromJson:
         app = PrefabApp.from_json(wire)
         result = app.to_json()
         assert result["$prefab"] == {"version": PROTOCOL_VERSION}
-        assert result["view"] == wire["view"]
+        # Dict views get wrapped in a Div with pf-app-root
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["children"] == [wire["view"]]
         assert result["state"] == wire["state"]
 
     def test_override_state(self):
@@ -75,11 +81,13 @@ class TestPrefabAppFromJson:
         result = app.to_json()
         assert "theme" in result
 
-    def test_dict_view_passthrough(self):
+    def test_dict_view_wrapped(self):
         view_dict = {"type": "Column", "children": []}
         app = PrefabApp(view=view_dict)
         result = app.to_json()
-        assert result["view"] is view_dict
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["cssClass"] == "pf-app-root"
+        assert result["view"]["children"] == [view_dict]
 
 
 class TestPrefabAppContextManager:
@@ -88,7 +96,9 @@ class TestPrefabAppContextManager:
             Heading("Title")
             Text("body")
         result = app.to_json()
-        assert result["view"]["type"] == "Column"
+        # Context manager: bare Div gets pf-app-root stamped on it
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["cssClass"] == "pf-app-root"
         assert len(result["view"]["children"]) == 2
         assert result["state"] == {"x": 1}
 
@@ -121,7 +131,7 @@ class TestPrefabAppContextManager:
         assert app.to_json()["view"]["cssClass"] == "pf-app-root"
 
     def test_not_attached_to_outer_stack(self):
-        """PrefabApp's implicit Column should not leak to an outer context."""
+        """PrefabApp's implicit Div should not leak to an outer context."""
         with Column() as outer:
             Text("outer child")
             with PrefabApp() as app:

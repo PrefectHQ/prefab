@@ -109,6 +109,8 @@ def get_generative_renderer_html() -> str:
     Prefab Python code via ``ontoolinputpartial``.
 
     Pyodide loads from CDN at runtime — the HTML itself is small.
+
+    Pyodide loads from CDN at runtime — the HTML itself is small.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:

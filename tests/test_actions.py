@@ -107,7 +107,9 @@ class TestCallToolResolver:
         j = app.to_json(
             tool_resolver=lambda fn: ResolvedTool(name=fn.__name__ + "-abc123")
         )
-        assert j["view"]["children"][0]["onClick"]["tool"] == "save-abc123"
+        # view is wrapped in a Div with pf-app-root; Column is inside
+        column = j["view"]["children"][0]
+        assert column["children"][0]["onClick"]["tool"] == "save-abc123"
 
     def test_callable_without_resolver_uses_name(self):
         def my_tool() -> None:
@@ -129,7 +131,9 @@ class TestCallToolResolver:
         j = app.to_json(
             tool_resolver=lambda ref: ResolvedTool(name="save_contact-a1b2c3d4")
         )
-        assert j["view"]["children"][0]["onClick"]["tool"] == "save_contact-a1b2c3d4"
+        # view is wrapped in a Div with pf-app-root; Column is inside
+        column = j["view"]["children"][0]
+        assert column["children"][0]["onClick"]["tool"] == "save_contact-a1b2c3d4"
 
 
 class TestActionOnComponents:

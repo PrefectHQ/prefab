@@ -141,7 +141,7 @@ class PrefabApp(BaseModel):
     view: Any | None = Field(default=None, description="Component tree to render")
     css_class: str | None = Field(
         default=None,
-        description="CSS/Tailwind classes for the root container",
+        description="Extra CSS/Tailwind classes merged onto the pf-app-root wrapper Div",
     )
     state: dict[str, Any] | None = Field(
         default=None,
@@ -187,10 +187,9 @@ class PrefabApp(BaseModel):
                 "is already set. Use either `with PrefabApp():` or "
                 "`PrefabApp(view=...)`, not both."
             )
-        from prefab_ui.components.column import Column
+        from prefab_ui.components.div import Div
 
-        cls = f"pf-app-root {self.css_class}" if self.css_class else "pf-app-root"
-        root = Column(css_class=cls, defer=True)  # type: ignore[call-arg]  # ty:ignore[unknown-argument]
+        root = Div(defer=True)  # type: ignore[call-arg]  # ty:ignore[unknown-argument]
         self._context_root = root
         root.__enter__()
         return self
@@ -242,6 +241,44 @@ class PrefabApp(BaseModel):
             theme=theme if theme is not None else wire.get("theme"),
         )
 
+    def _wrap_view(self) -> dict[str, Any] | None:
+        """Wrap the view in a ``Div`` with ``pf-app-root`` and serialize.
+
+        Every PrefabApp view is wrapped in a root ``<div>`` that carries
+        the ``pf-app-root`` CSS class plus any user-supplied ``css_class``.
+        Themes target ``.pf-app-root`` for default padding, background,
+        and other app-level styling.
+
+        If the view is already the bare ``Div`` created by ``__enter__``,
+        the class is stamped directly onto it (no extra nesting).
+        Otherwise a new ``Div`` wrapper is created around the view.
+        """
+        if self.view is None:
+            return None
+
+        from prefab_ui.components.div import Div
+
+        cls = f"pf-app-root {self.css_class}" if self.css_class else "pf-app-root"
+
+        if isinstance(self.view, dict):
+            # Pre-serialized dict — wrap in a serialized Div
+            wrapper = Div(css_class=cls)
+            wrapper_json = wrapper.to_json()
+            wrapper_json["children"] = [self.view]
+            return wrapper_json
+
+        if (
+            isinstance(self.view, Div)
+            and not self.view.css_class
+            and not self.view.style
+        ):
+            # Bare Div from context manager — stamp the class directly
+            self.view.css_class = cls
+            return self.view.to_json()
+
+        # Wrap the user's view in a new Div
+        return Div(children=[self.view], css_class=cls).to_json()
+
     def to_json(
         self,
         *,
@@ -252,8 +289,13 @@ class PrefabApp(BaseModel):
         Returns a dict with ``$prefab``, ``view``, ``defs``, and ``state``
         as top-level keys (omitting any that are None).
 
-        The ``view`` field can be either a Component (serialized via
-        ``to_json()``) or a pre-serialized dict (passed through as-is).
+        The view is always wrapped in a root ``Div`` carrying the
+        ``pf-app-root`` CSS class.  This div is the theme's styling
+        target — it provides default padding and can be customized via
+        ``PrefabApp(css_class="...")``::
+
+            # Center a narrow app
+            PrefabApp(view=my_view, css_class="max-w-2xl mx-auto")
 
         Parameters
         ----------
@@ -268,11 +310,9 @@ class PrefabApp(BaseModel):
                 "$prefab": {"version": PROTOCOL_VERSION},
             }
 
-            if self.view is not None:
-                if isinstance(self.view, dict):
-                    result["view"] = self.view
-                else:
-                    result["view"] = self.view.to_json()
+            wrapped = self._wrap_view()
+            if wrapped is not None:
+                result["view"] = wrapped
 
             if self.defs:
                 if isinstance(self.defs, dict):
