@@ -58,7 +58,7 @@ class ForEach(ContainerComponent):
             kwargs["key"] = key.key if isinstance(key, Rx) else key
         super().__init__(**kwargs)
 
-    def __enter__(self) -> LoopItem:  # type: ignore[override]
+    def __enter__(self) -> LoopItem:  # type: ignore[override]  # ty:ignore[invalid-method-override]
         """Push onto the component stack and return a scoped loop binding.
 
         Auto-generates ``let`` bindings that capture ``$item`` and ``$index``

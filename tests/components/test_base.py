@@ -32,8 +32,8 @@ class TestContextManagerNesting:
             Text(content="a")
             Text(content="b")
         assert len(col.children) == 2
-        assert col.children[0].content == "a"  # type: ignore[attr-defined]
-        assert col.children[1].content == "b"  # type: ignore[attr-defined]
+        assert col.children[0].content == "a"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
+        assert col.children[1].content == "b"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_nested(self):
         with Column() as root:
@@ -90,9 +90,9 @@ class TestExplicitChildren:
             Row(children=[Text(content="explicit")])
             Text(content="also-auto")
         assert len(outer.children) == 3
-        assert outer.children[0].content == "auto"  # type: ignore[attr-defined]
+        assert outer.children[0].content == "auto"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert isinstance(outer.children[1], Row)
-        assert outer.children[2].content == "also-auto"  # type: ignore[attr-defined]
+        assert outer.children[2].content == "also-auto"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_multiple_explicit_children(self):
         with Column() as outer:
@@ -126,7 +126,7 @@ class TestDefer:
             with defer():
                 orphan = Text(content="deferred")
         assert len(col.children) == 1
-        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert orphan.content == "deferred"
 
     def test_context_allows_explicit_context_managers(self):
@@ -138,7 +138,7 @@ class TestDefer:
                     Text(content="sidebar-child")
         assert len(outer.children) == 1
         assert len(sidebar.children) == 1
-        assert sidebar.children[0].content == "sidebar-child"  # type: ignore[attr-defined]
+        assert sidebar.children[0].content == "sidebar-child"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_context_restores_stack(self):
         with Column() as col:
@@ -147,8 +147,8 @@ class TestDefer:
                 Text(content="ignored")
             Text(content="after")
         assert len(col.children) == 2
-        assert col.children[0].content == "before"  # type: ignore[attr-defined]
-        assert col.children[1].content == "after"  # type: ignore[attr-defined]
+        assert col.children[0].content == "before"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
+        assert col.children[1].content == "after"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_context_nested(self):
         with Column() as col:
@@ -158,7 +158,7 @@ class TestDefer:
                 Text(content="single-deferred")
             Text(content="attached")
         assert len(col.children) == 1
-        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_context_at_top_level(self):
         with defer():
@@ -174,14 +174,14 @@ class TestDefer:
                 pass
             Text(content="after-error")
         assert len(col.children) == 1
-        assert col.children[0].content == "after-error"  # type: ignore[attr-defined]
+        assert col.children[0].content == "after-error"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_kwarg_prevents_auto_attach(self):
         with Column() as col:
             Text(content="attached")
             deferred = Text(content="deferred", defer=True)
         assert len(col.children) == 1
-        assert col.children[0].content == "attached"  # type: ignore[attr-defined]
+        assert col.children[0].content == "attached"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert deferred.content == "deferred"
 
     def test_kwarg_still_generates_name(self):
@@ -211,7 +211,7 @@ class TestInsert:
             Text(content="label")
             insert(slider)
         assert len(outer.children) == 2
-        assert outer.children[0].content == "label"  # type: ignore[attr-defined]
+        assert outer.children[0].content == "label"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert outer.children[1] is slider
 
     def test_with_defer_context(self):
@@ -223,7 +223,7 @@ class TestInsert:
             Text(content="main")
             insert(sidebar)
         assert len(col.children) == 2
-        assert col.children[0].content == "main"  # type: ignore[attr-defined]
+        assert col.children[0].content == "main"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert col.children[1] is sidebar
 
     def test_returns_component(self):
@@ -252,7 +252,7 @@ class TestInsert:
             insert(volume)
         assert len(col.children) == 2
         text = col.children[0]
-        assert "{{ " in text.content  # type: ignore[attr-defined]
+        assert "{{ " in text.content  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert col.children[1] is volume
 
 
@@ -268,8 +268,8 @@ class TestParent:
         Text(content="a", parent=col)
         Text(content="b", parent=col)
         assert len(col.children) == 2
-        assert col.children[0].content == "a"  # type: ignore[attr-defined]
-        assert col.children[1].content == "b"  # type: ignore[attr-defined]
+        assert col.children[0].content == "a"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
+        assert col.children[1].content == "b"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_explicit_parent_wins_over_stack(self):
         target = Column()
@@ -277,9 +277,9 @@ class TestParent:
             Text(content="auto-attached")
             Text(content="explicit", parent=target)
         assert len(outer.children) == 1
-        assert outer.children[0].content == "auto-attached"  # type: ignore[attr-defined]
+        assert outer.children[0].content == "auto-attached"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
         assert len(target.children) == 1
-        assert target.children[0].content == "explicit"  # type: ignore[attr-defined]
+        assert target.children[0].content == "explicit"  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_nested_contexts(self):
         target = Column()
@@ -335,7 +335,7 @@ class TestParent:
         Text(content="first", parent=col)
         Text(content="second", parent=col)
         Text(content="third", parent=col)
-        assert [c.content for c in col.children] == ["first", "second", "third"]  # type: ignore[attr-defined]
+        assert [c.content for c in col.children] == ["first", "second", "third"]  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_generative_ui_pattern(self):
         """The motivating use case: imperative tree-building for sandboxed code."""

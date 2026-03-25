@@ -41,7 +41,7 @@ class Action(BaseModel):
     @model_serializer(mode="wrap")
     def _serialize_rx(self, handler: Any) -> dict[str, Any]:
         """Resolve any Rx values to ``{{ }}`` strings at serialization time."""
-        return _coerce_rx(handler(self))  # type: ignore[return-value]
+        return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,
