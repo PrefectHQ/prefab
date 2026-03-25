@@ -4,67 +4,37 @@ description: The application object that ties together view, state, theme, and a
 icon: box
 ---
 
-Every Prefab UI is wrapped in a `PrefabApp`. It's the outermost container — the thing that holds your component tree, your state, your theme, and any external assets together as a single unit. Whether you're serving HTML, returning structured content from an MCP tool, or streaming generative UI, you're ultimately producing a `PrefabApp`.
+Every Prefab UI is wrapped in a `PrefabApp`. It holds your component tree, state, theme, and external assets together as a single unit.
 
-## The context manager
-
-The natural way to build an app is to use PrefabApp as a context manager. Components created inside the `with` block become the app's view:
+The natural way to build an app is as a context manager. Components inside the `with` block become the view:
 
 ```python
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Heading, Slider, Text
+from prefab_ui.themes import Presentation
 
-with PrefabApp(state={"volume": 75}) as app:
+with PrefabApp(state={"volume": 75}, theme=Presentation(accent="blue")) as app:
     Heading("Dashboard")
     slider = Slider(value=75, name="volume")
     Text(f"Volume: {slider.rx}%")
 ```
 
-The context manager creates an implicit root Column, so children stack vertically with standard layout behavior. State, theme, and styling are all declared upfront on the `PrefabApp` line — by the time the first component renders, the app envelope is already established.
+The context manager creates an implicit root Column, so children stack vertically. State, theme, and styling are declared upfront — by the time the first component renders, the app envelope is established.
 
-### Root styling
-
-The root Column gets a `pf-app-root` CSS class that themes can target. The default theme applies `p-6` padding. You can add your own classes via `css_class`, which stack on top:
+The root Column gets a `pf-app-root` CSS class that themes target for default padding. Add your own classes via `css_class`:
 
 ```python
 with PrefabApp(css_class="max-w-3xl mx-auto") as app:
     Heading("Centered and constrained")
 ```
 
-### Theming
-
-Pass a theme directly on the PrefabApp. The theme takes effect immediately — there's no flash or delay:
+You can also pass `view=` directly if you build the tree separately:
 
 ```python
-from prefab_ui.themes import Presentation
-
-with PrefabApp(theme=Presentation(accent="blue")) as app:
-    Heading("Slide deck vibes")
-```
-
-## Passing a view directly
-
-If you build the component tree separately — or receive it from a sandbox, API, or other source — pass it via `view=`:
-
-```python
-from prefab_ui.components import Column, Heading, Text
-
 with Column(css_class="p-6") as view:
     Heading("Hello")
-    Text("World")
 
 app = PrefabApp(view=view, state={"greeting": "Hello"})
-```
-
-You can't use both `view=` and the context manager on the same PrefabApp — pick one.
-
-## From wire protocol
-
-`PrefabApp.from_json()` wraps pre-serialized wire protocol data, for example from sandboxed execution. Keyword arguments override values from the wire:
-
-```python
-wire = await sandbox.run(code)
-app = PrefabApp.from_json(wire, state={"extra": "value"}, theme=my_theme)
 ```
 
 ## Fields
@@ -74,31 +44,27 @@ app = PrefabApp.from_json(wire, state={"extra": "value"}, theme=my_theme)
 | `view` | `Component \| dict` | Component tree to render (set automatically in context manager mode) |
 | `state` | `dict` | Initial client-side state |
 | `theme` | `Theme` | Theme to apply — see [Themes](/styling/themes) |
-| `css_class` | `str` | Additional CSS/Tailwind classes for the root container. The root always has `pf-app-root` which themes target for default padding. |
+| `css_class` | `str` | Additional CSS/Tailwind classes for the root container. Stacks on top of `pf-app-root`. |
 | `defs` | `list[Define]` | Reusable component definitions |
-| `stylesheets` | `list[str]` | CSS URLs or inline CSS strings to load in `<head>` |
+| `stylesheets` | `list[str]` | CSS URLs or inline CSS to load in `<head>` |
 | `scripts` | `list[str]` | External JS URLs to load in `<head>` |
 | `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` (for Fetch actions) |
 | `title` | `str` | HTML page title (default: `"Prefab"`) |
 
 ## Methods
 
-**`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all application data baked in. This is what `prefab serve` uses internally.
+**`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all data baked in.
 
 **`app.to_json()`** returns the wire-format envelope — a dict with `$prefab`, `view`, `state`, `defs`, and `theme`.
 
 **`app.csp()`** computes Content Security Policy domains from the app's asset configuration.
 
-## Stylesheets
-
-The `stylesheets` field accepts both URLs and inline CSS strings. URLs become `<link>` tags; inline CSS (detected by the presence of `{`) becomes a `<style>` tag:
+**`PrefabApp.from_json(wire, **overrides)`** wraps pre-serialized wire protocol data (e.g. from sandboxed execution). Keyword arguments override values from the wire:
 
 ```python
-with PrefabApp(stylesheets=["https://fonts.googleapis.com/css2?family=Inter"]) as app:
-    Heading("Custom font loaded")
+wire = await sandbox.run(code)
+app = PrefabApp.from_json(wire, state={"extra": "value"})
 ```
-
-For theming, prefer `theme=` over inline stylesheets.
 
 ## State
 
@@ -119,3 +85,7 @@ state = set_initial_state(count=0, items=[])
 with PrefabApp() as app:  # state is picked up automatically
     Text("Count: {{ count }}")
 ```
+
+## Stylesheets
+
+The `stylesheets` field accepts both URLs and inline CSS. URLs become `<link>` tags; inline CSS (detected by `{`) becomes a `<style>` tag. For theming, prefer `theme=` over inline stylesheets.
