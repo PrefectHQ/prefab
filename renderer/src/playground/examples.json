@@ -1122,6 +1122,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import Column, Input, Label\n\nwith Column(gap=2):\n    Label(\"Phone\", optional=True)\n    Input(input_type=\"tel\", name=\"phone\", placeholder=\"+1 (555) 000-0000\")"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components.charts import LineChart, ChartSeries\n\ndata = [\n    {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n    {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n    {\"month\": \"Mar\", \"desktop\": 237, \"mobile\": 120},\n    {\"month\": \"Apr\", \"desktop\": 73, \"mobile\": 190},\n    {\"month\": \"May\", \"desktop\": 209, \"mobile\": 130},\n    {\"month\": \"Jun\", \"desktop\": 214, \"mobile\": 140},\n]\n\nLineChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_legend=True,\n)"
   },
   {
@@ -2040,6 +2045,31 @@
     "code": "Text(\"{{ name }}\")\n    Button(\"Edit\", on_click=CallTool(\"edit_user\", arguments={\"user\": \"{{ $item }}\"}))"
   },
   {
+    "title": "from prefab_ui.sandbox import Sandbox",
+    "category": "Concepts",
+    "code": "from prefab_ui.app import PrefabApp\n\nsandbox = Sandbox()\n\ncode = '''\nfrom prefab_ui.components import Heading, Slider, Text\nfrom prefab_ui.app import PrefabApp\n\nwith PrefabApp(state={\"confidence\": 75}, css_class=\"p-6\") as app:\n    Heading(\"Revenue Dashboard\")\n    slider = Slider(value=75, min=0, max=100, name=\"confidence\")\n    Text(f\"Confidence: {slider.rx}%\")\n'''\n\nwire = await sandbox.run(code, data={\"revenue\": 1_200_000})\napp = PrefabApp.from_json(wire)"
+  },
+  {
+    "title": "sandbox = Sandbox()",
+    "category": "Concepts",
+    "code": "# First call: ~2s (cold start)\nresult = await sandbox.run(code)\n\n# All subsequent calls: ~1ms\nresult = await sandbox.run(more_code)"
+  },
+  {
+    "title": "async with Sandbox() as sandbox:",
+    "category": "Concepts",
+    "code": "result = await sandbox.run(code)\n# Deno process is killed on exit"
+  },
+  {
+    "title": "@mcp.tool(app=True)",
+    "category": "Concepts",
+    "code": "async def execute_ui(code: str, data: dict | None = None) -> PrefabApp:\n    wire = await sandbox.run(code, data=data)\n    return PrefabApp.from_json(wire)"
+  },
+  {
+    "title": "wire = await sandbox.run(code)",
+    "category": "Concepts",
+    "code": "app = PrefabApp.from_json(wire)"
+  },
+  {
     "title": "from prefab_ui.app import set_initial_state",
     "category": "Concepts",
     "code": "state = set_initial_state(count=0, title=\"Dashboard\", items=[])\nstate.count       # reactive reference to {{ count }}\nstate.items       # reactive reference to {{ items }}"
@@ -2217,7 +2247,7 @@
   {
     "title": "app.py",
     "category": "Getting Started",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith Column(css_class=\"max-w-md mx-auto\") as view:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))\n\napp = PrefabApp(view=view, state={\"name\": \"world\"})"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith PrefabApp(state={\"name\": \"world\"}, css_class=\"max-w-md mx-auto\") as app:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))"
   },
   {
     "title": "from prefab_ui import FastMCP",
@@ -2352,17 +2382,32 @@
   {
     "title": "from prefab_ui.app import PrefabApp",
     "category": "Reference",
-    "code": "from prefab_ui.themes import Dashboard\nfrom prefab_ui.components import Column, Heading, Text\n\nwith Column() as view:\n    Heading(\"Hello\")\n    Text(\"World\")\n\napp = PrefabApp(\n    view=view,\n    state={\"greeting\": \"Hello\"},\n    theme=Dashboard(accent=\"blue\"),\n)"
+    "code": "from prefab_ui.components import Heading, Slider, Text\nfrom prefab_ui.themes import Presentation\n\nwith PrefabApp(state={\"volume\": 75}, theme=Presentation(accent=\"blue\")) as app:\n    Heading(\"Dashboard\")\n    slider = Slider(value=75, name=\"volume\")\n    Text(f\"Volume: {slider.rx}%\")"
   },
   {
-    "title": "app = PrefabApp(",
+    "title": "with PrefabApp(css_class=\"max-w-3xl mx-auto\") as app:",
     "category": "Reference",
-    "code": "view=view,\n    stylesheets=[\n        \"https://fonts.googleapis.com/css2?family=Inter\",\n        \":root { --primary: oklch(0.72 0.19 149); }\",\n    ],\n)"
+    "code": "Heading(\"Centered and constrained\")"
   },
   {
-    "title": "from prefab_ui.app import PrefabApp, set_initial_state",
+    "title": "with Column(css_class=\"p-6\") as view:",
     "category": "Reference",
-    "code": "state = set_initial_state(count=0, items=[])\n\napp = PrefabApp(view=view)  # state is picked up automatically"
+    "code": "Heading(\"Hello\")\n\napp = PrefabApp(view=view, state={\"greeting\": \"Hello\"})"
+  },
+  {
+    "title": "wire = await sandbox.run(code)",
+    "category": "Reference",
+    "code": "app = PrefabApp.from_json(wire, state={\"extra\": \"value\"})"
+  },
+  {
+    "title": "with PrefabApp(state={\"count\": 0, \"items\": []}) as app:",
+    "category": "Reference",
+    "code": "Text(\"Count: {{ count }}\")"
+  },
+  {
+    "title": "from prefab_ui.app import set_initial_state",
+    "category": "Reference",
+    "code": "state = set_initial_state(count=0, items=[])\n\nwith PrefabApp() as app:\n    Text(\"Count: {{ count }}\")"
   },
   {
     "title": "from fastapi import FastAPI",
@@ -2422,7 +2467,7 @@
   {
     "title": "from fastmcp import FastMCP",
     "category": "Running",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Heading, Text\nfrom prefab_ui.components.control_flow import ForEach\nmcp = FastMCP(\"My Server\")\n\nITEMS = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"Show all items.\"\"\"\n    with Column(gap=4) as view:\n        Heading(\"Items\")\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n    return PrefabApp(view=view, state={\"items\": ITEMS})"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Heading, Text\nfrom prefab_ui.components.control_flow import ForEach\nmcp = FastMCP(\"My Server\")\n\nITEMS = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n\n@mcp.tool(app=True)\ndef browse() -> PrefabApp:\n    \"\"\"Show all items.\"\"\"\n    with PrefabApp(state={\"items\": ITEMS}, css_class=\"p-6\") as app:\n        Heading(\"Items\")\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n    return app"
   },
   {
     "title": "PrefabApp",
@@ -2472,7 +2517,7 @@
   {
     "title": "app.py",
     "category": "General",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Heading, Text\n\nwith Column(gap=3) as view:\n    Heading(\"Hello Prefab\")\n    Text(\"This is a local preview.\")\n\napp = PrefabApp(view=view, state={\"greeting\": \"Hello\"})"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Heading, Text\n\nwith PrefabApp(state={\"greeting\": \"Hello\"}, css_class=\"p-6\") as app:\n    Heading(\"Hello Prefab\")\n    Text(\"This is a local preview.\")"
   },
   {
     "title": "Python expandable icon=\"python\"",
