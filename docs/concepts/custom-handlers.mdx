@@ -20,7 +20,7 @@ Register formatting functions that become available in `{{ }}` expressions. Each
    Do not remove the js_pipes from the Python examples — they show users the
    full picture even though the preview ignores them. */}
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","value":3.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJyYXRpbmciLCB2YWx1ZT0zLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgICAgIFRleHQoInt7IHJhdGluZyB8IHN0YXJzIH19IiwgYm9sZD1UcnVlKQoKYXBwID0gUHJlZmFiQXBwKAogICAgdmlldz12aWV3LAogICAganNfcGlwZXM9ewogICAgICAgICJzdGFycyI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBuID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgY29uc3QgZnVsbCA9IE1hdGguZmxvb3Iobik7CiAgICAgICAgICAgIGNvbnN0IGhhbGYgPSBuICUgMSA-PSAwLjUgPyAxIDogMDsKICAgICAgICAgICAgY29uc3QgZW1wdHkgPSA1IC0gZnVsbCAtIGhhbGY7CiAgICAgICAgICAgIHJldHVybiAn4piFJy5yZXBlYXQoZnVsbCkgKyAoaGFsZiA_ICfCvScgOiAnJykgKyAn4piGJy5yZXBlYXQoZW1wdHkpOwogICAgICAgIH0iIiIsCiAgICB9LAopCg">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","value":3.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJyYXRpbmciLCB2YWx1ZT0zLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgICAgIFRleHQoInt7IHJhdGluZyB8IHN0YXJzIH19IiwgYm9sZD1UcnVlKQoKYXBwID0gUHJlZmFiQXBwKAogICAgdmlldz12aWV3LAogICAganNfcGlwZXM9ewogICAgICAgICJzdGFycyI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBuID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgY29uc3QgZnVsbCA9IE1hdGguZmxvb3Iobik7CiAgICAgICAgICAgIGNvbnN0IGhhbGYgPSBuICUgMSA-PSAwLjUgPyAxIDogMDsKICAgICAgICAgICAgY29uc3QgZW1wdHkgPSA1IC0gZnVsbCAtIGhhbGY7CiAgICAgICAgICAgIHJldHVybiAn4piFJy5yZXBlYXQoZnVsbCkgKyAoaGFsZiA_ICfCvScgOiAnJykgKyAn4piGJy5yZXBlYXQoZW1wdHkpOwogICAgICAgIH0iIiIsCiAgICB9LAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
@@ -47,24 +47,30 @@ app = PrefabApp(
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
+    "cssClass": "pf-app-root",
+    "type": "Div",
     "children": [
       {
-        "cssClass": "items-center gap-4",
-        "type": "Row",
+        "cssClass": "gap-2",
+        "type": "Column",
         "children": [
           {
-            "name": "rating",
-            "value": 3.0,
-            "type": "Slider",
-            "min": 0.0,
-            "max": 5.0,
-            "step": 0.5,
-            "disabled": false,
-            "size": "default"
-          },
-          {"cssClass": "font-bold", "content": "{{ rating | stars }}", "type": "Text"}
+            "cssClass": "items-center gap-4",
+            "type": "Row",
+            "children": [
+              {
+                "name": "rating",
+                "value": 3.0,
+                "type": "Slider",
+                "min": 0.0,
+                "max": 5.0,
+                "step": 0.5,
+                "disabled": false,
+                "size": "default"
+              },
+              {"cssClass": "font-bold", "content": "{{ rating | stars }}", "type": "Text"}
+            ]
+          }
         ]
       }
     ]
@@ -77,7 +83,7 @@ app = PrefabApp(
 
 The `tempColor` pipe adds contextual emoji based on the value:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","value":72.0,"type":"Slider","min":32.0,"max":120.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJ0ZW1wIiwgdmFsdWU9NzIsIG1pbj0zMiwgbWF4PTEyMCwgc3RlcD0xKQogICAgICAgIFRleHQoInt7IHRlbXAgfCB0ZW1wQ29sb3IgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgInRlbXBDb2xvciI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBmID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgaWYgKGYgPj0gMTAwKSByZXR1cm4gZiArICfCsEYg8J-UpSc7CiAgICAgICAgICAgIGlmIChmID49IDgwKSByZXR1cm4gZiArICfCsEYg4piA77iPJzsKICAgICAgICAgICAgaWYgKGYgPj0gNjApIHJldHVybiBmICsgJ8KwRiDwn4yk77iPJzsKICAgICAgICAgICAgcmV0dXJuIGYgKyAnwrBGIOKdhO-4jyc7CiAgICAgICAgfSIiIiwKICAgIH0sCikK">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","value":72.0,"type":"Slider","min":32.0,"max":120.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJ0ZW1wIiwgdmFsdWU9NzIsIG1pbj0zMiwgbWF4PTEyMCwgc3RlcD0xKQogICAgICAgIFRleHQoInt7IHRlbXAgfCB0ZW1wQ29sb3IgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgInRlbXBDb2xvciI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBmID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgaWYgKGYgPj0gMTAwKSByZXR1cm4gZiArICfCsEYg8J-UpSc7CiAgICAgICAgICAgIGlmIChmID49IDgwKSByZXR1cm4gZiArICfCsEYg4piA77iPJzsKICAgICAgICAgICAgaWYgKGYgPj0gNjApIHJldHVybiBmICsgJ8KwRiDwn4yk77iPJzsKICAgICAgICAgICAgcmV0dXJuIGYgKyAnwrBGIOKdhO-4jyc7CiAgICAgICAgfSIiIiwKICAgIH0sCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
@@ -104,24 +110,30 @@ app = PrefabApp(
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
+    "cssClass": "pf-app-root",
+    "type": "Div",
     "children": [
       {
-        "cssClass": "items-center gap-4",
-        "type": "Row",
+        "cssClass": "gap-2",
+        "type": "Column",
         "children": [
           {
-            "name": "temp",
-            "value": 72.0,
-            "type": "Slider",
-            "min": 32.0,
-            "max": 120.0,
-            "step": 1.0,
-            "disabled": false,
-            "size": "default"
-          },
-          {"cssClass": "font-bold", "content": "{{ temp | tempColor }}", "type": "Text"}
+            "cssClass": "items-center gap-4",
+            "type": "Row",
+            "children": [
+              {
+                "name": "temp",
+                "value": 72.0,
+                "type": "Slider",
+                "min": 32.0,
+                "max": 120.0,
+                "step": 1.0,
+                "disabled": false,
+                "size": "default"
+              },
+              {"cssClass": "font-bold", "content": "{{ temp | tempColor }}", "type": "Text"}
+            ]
+          }
         ]
       }
     ]
@@ -134,7 +146,7 @@ app = PrefabApp(
 
 The `initials` pipe extracts first letters. Type a name to see it update:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","value":"Arthur Dent","type":"Input","inputType":"text","placeholder":"Type a name...","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MikgYXMgdmlldzoKICAgIElucHV0KG5hbWU9ImZ1bGxfbmFtZSIsIHZhbHVlPSJBcnRodXIgRGVudCIsIHBsYWNlaG9sZGVyPSJUeXBlIGEgbmFtZS4uLiIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMiIpOgogICAgICAgIFRleHQoIkluaXRpYWxzOiIpCiAgICAgICAgVGV4dCgie3sgZnVsbF9uYW1lIHwgaW5pdGlhbHMgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgImluaXRpYWxzIjogIiIiKHZhbHVlKSA9PiB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmcodmFsdWUpLnNwbGl0KCcgJykubWFwKHcgPT4gd1swXSkuam9pbignJykudG9VcHBlckNhc2UoKTsKICAgICAgICB9IiIiLAogICAgfSwKKQo">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","value":"Arthur Dent","type":"Input","inputType":"text","placeholder":"Type a name...","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MikgYXMgdmlldzoKICAgIElucHV0KG5hbWU9ImZ1bGxfbmFtZSIsIHZhbHVlPSJBcnRodXIgRGVudCIsIHBsYWNlaG9sZGVyPSJUeXBlIGEgbmFtZS4uLiIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMiIpOgogICAgICAgIFRleHQoIkluaXRpYWxzOiIpCiAgICAgICAgVGV4dCgie3sgZnVsbF9uYW1lIHwgaW5pdGlhbHMgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgImluaXRpYWxzIjogIiIiKHZhbHVlKSA9PiB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmcodmFsdWUpLnNwbGl0KCcgJykubWFwKHcgPT4gd1swXSkuam9pbignJykudG9VcHBlckNhc2UoKTsKICAgICAgICB9IiIiLAogICAgfSwKKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
@@ -158,28 +170,34 @@ app = PrefabApp(
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-2",
-    "type": "Column",
+    "cssClass": "pf-app-root",
+    "type": "Div",
     "children": [
       {
-        "name": "full_name",
-        "value": "Arthur Dent",
-        "type": "Input",
-        "inputType": "text",
-        "placeholder": "Type a name...",
-        "disabled": false,
-        "readOnly": false,
-        "required": false
-      },
-      {
-        "cssClass": "items-center gap-2",
-        "type": "Row",
+        "cssClass": "gap-2",
+        "type": "Column",
         "children": [
-          {"content": "Initials:", "type": "Text"},
           {
-            "cssClass": "font-bold",
-            "content": "{{ full_name | initials }}",
-            "type": "Text"
+            "name": "full_name",
+            "value": "Arthur Dent",
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Type a name...",
+            "disabled": false,
+            "readOnly": false,
+            "required": false
+          },
+          {
+            "cssClass": "items-center gap-2",
+            "type": "Row",
+            "children": [
+              {"content": "Initials:", "type": "Text"},
+              {
+                "cssClass": "font-bold",
+                "content": "{{ full_name | initials }}",
+                "type": "Text"
+              }
+            ]
           }
         ]
       }
