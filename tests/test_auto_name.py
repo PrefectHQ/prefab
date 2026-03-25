@@ -84,7 +84,7 @@ class TestRxProperty:
     def test_rx_on_component_without_mixin_raises(self) -> None:
         t = Text("hello")
         with pytest.raises(AttributeError):
-            t.rx  # type: ignore[attr-defined]
+            t.rx  # type: ignore[attr-defined]  # ty:ignore[unresolved-attribute]
 
     def test_rx_dot_path(self) -> None:
         s = Slider(name="data", min=0, max=100)

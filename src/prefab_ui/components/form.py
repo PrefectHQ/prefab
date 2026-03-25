@@ -281,7 +281,7 @@ def _get_ui_hints(field_info: FieldInfo) -> dict[str, Any]:
     """Extract UI hints from json_schema_extra."""
     extra = field_info.json_schema_extra
     if isinstance(extra, dict):
-        ui = extra.get("ui")  # type: ignore[union-attr]
+        ui = extra.get("ui")  # type: ignore[union-attr]  # ty:ignore[invalid-argument-type]
         if isinstance(ui, dict):
             return ui
     return {}

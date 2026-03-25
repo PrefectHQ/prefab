@@ -376,10 +376,10 @@ class Rx:
 
     # ── Comparison ───────────────────────────────────────────────────
 
-    def __eq__(self, other: object) -> Rx:  # type: ignore[override]
+    def __eq__(self, other: object) -> Rx:  # type: ignore[override]  # ty:ignore[invalid-method-override]
         return Rx(_BinOp("==", self, other), _PREC_COMP)
 
-    def __ne__(self, other: object) -> Rx:  # type: ignore[override]
+    def __ne__(self, other: object) -> Rx:  # type: ignore[override]  # ty:ignore[invalid-method-override]
         return Rx(_BinOp("!=", self, other), _PREC_COMP)
 
     def __gt__(self, other: object) -> Rx:

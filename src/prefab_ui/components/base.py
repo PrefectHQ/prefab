@@ -315,7 +315,7 @@ class Component(BaseModel):
     @model_serializer(mode="wrap")
     def _serialize_rx(self, handler: Any) -> dict[str, Any]:
         """Resolve any Rx values to ``{{ }}`` strings at serialization time."""
-        return _coerce_rx(handler(self))  # type: ignore[return-value]
+        return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
     def model_post_init(self, __context: Any) -> None:
         # Auto-generate name and validate for stateful components

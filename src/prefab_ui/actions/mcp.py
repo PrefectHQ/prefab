@@ -54,7 +54,7 @@ class CallTool(Action):
 
     @model_serializer(mode="wrap")
     def _serialize_with_resolver(self, handler: Any) -> dict[str, Any]:
-        data: dict[str, Any] = _coerce_rx(handler(self))  # type: ignore[assignment]
+        data: dict[str, Any] = _coerce_rx(handler(self))  # type: ignore[assignment]  # ty:ignore[invalid-assignment]
         resolver = get_tool_resolver()
         if resolver is not None:
             ref = self._tool_ref if self._tool_ref is not None else self.tool
