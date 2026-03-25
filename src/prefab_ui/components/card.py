@@ -38,14 +38,36 @@ from prefab_ui.rx import RxStr
 class Card(ContainerComponent):
     """A card container with border and shadow.
 
-    Cards group related content and actions. Use CardHeader, CardContent,
-    and CardFooter for structured layouts.
+    Two usage patterns:
 
-    Example::
+    **Structured card** — use CardHeader, CardContent, CardFooter for
+    cards with a title, body, and actions. Each sub-component has
+    built-in padding; don't add extra padding to them::
 
         with Card():
-            CardTitle("Title")
-            P("Content")
+            with CardHeader():
+                CardTitle("Create project")
+                CardDescription("Deploy in one click.")
+            with CardContent():
+                Input(name="project_name", placeholder="Project name")
+            with CardFooter():
+                Button("Cancel", variant="outline")
+                Button("Deploy")
+
+    **Simple card** — for compact content (a single Metric, a short
+    stat, etc.), skip the sub-components and add padding directly::
+
+        with Card(css_class="p-6"):
+            Metric(label="Revenue", value="$1.2M", delta="+12%")
+
+    Don't mix the patterns — a Card should use either sub-components
+    or direct children with ``css_class="p-6"``, not both.
+
+    For equal-width cards, wrap them in a Grid::
+
+        with Grid(columns=3, gap=4):
+            with Card(css_class="p-6"):
+                Metric(...)
     """
 
     type: Literal["Card"] = "Card"
@@ -68,6 +90,9 @@ class CardTitle(ContainerComponent):
     """Card title text.
 
     Can contain a string or child components.
+
+    Args:
+        content: Title text (alternative to children).
 
     Example::
 
@@ -96,6 +121,9 @@ class CardTitle(ContainerComponent):
 
 class CardDescription(ContainerComponent):
     """Card description text, typically below the title.
+
+    Args:
+        content: Description text (alternative to children).
 
     Example::
 

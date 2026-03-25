@@ -35,7 +35,13 @@ from prefab_ui.rx import RxStr
 
 
 class ChartSeries(BaseModel):
-    """Series definition for cartesian charts (Bar, Line, Area)."""
+    """Series definition for cartesian charts (Bar, Line, Area).
+
+    Args:
+        data_key: Data field to plot.
+        label: Display label (defaults to data_key).
+        color: CSS color override.
+    """
 
     model_config = {"populate_by_name": True}
 
@@ -49,7 +55,27 @@ class ChartSeries(BaseModel):
 class BarChart(Component):
     """Bar chart with one or more series.
 
+    Each series is a ``ChartSeries(data_key=..., label=..., color=...)``
+    from ``prefab_ui.components.charts``. The ``data_key`` selects which
+    field in each data row to plot.
+
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as bars.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        stacked: Stack bars instead of grouping side-by-side.
+        horizontal: Render as horizontal bar chart.
+        bar_radius: Corner radius on bars.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
     Example::
+
+        from prefab_ui.components.charts import BarChart, ChartSeries
 
         BarChart(
             data=[{"month": "Jan", "a": 10, "b": 20}],
@@ -97,7 +123,25 @@ class BarChart(Component):
 class LineChart(Component):
     """Line chart with one or more series.
 
+    Series are defined with ``ChartSeries`` from
+    ``prefab_ui.components.charts``.
+
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as lines.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        curve: Line interpolation style ("linear", "smooth", or "step").
+        show_dots: Show dots at data points.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
     Example::
+
+        from prefab_ui.components.charts import LineChart, ChartSeries
 
         LineChart(
             data=[{"month": "Jan", "a": 10}],
@@ -143,7 +187,26 @@ class LineChart(Component):
 class AreaChart(Component):
     """Area chart with one or more series.
 
+    Series are defined with ``ChartSeries`` from
+    ``prefab_ui.components.charts``.
+
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as areas.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        stacked: Stack areas instead of overlaying.
+        curve: Line interpolation style ("linear", "smooth", or "step").
+        show_dots: Show dots at data points.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
     Example::
+
+        from prefab_ui.components.charts import AreaChart, ChartSeries
 
         AreaChart(
             data=[{"month": "Jan", "a": 10, "b": 20}],
@@ -191,6 +254,17 @@ class AreaChart(Component):
 class PieChart(Component):
     """Pie or donut chart.
 
+    Args:
+        data: Row data or reactive interpolation reference.
+        data_key: Numeric value field.
+        name_key: Label field.
+        height: Chart height in pixels.
+        inner_radius: Inner radius in pixels (> 0 for donut).
+        show_label: Show labels on slices.
+        padding_angle: Gap between slices in degrees.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+
     Example::
 
         PieChart(
@@ -234,6 +308,17 @@ class ScatterChart(Component):
     Each series references the same dataset and plots (x_axis, y_axis) pairs.
     Optionally set ``z_axis`` to size dots proportionally (bubble chart).
 
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as scatter groups.
+        x_axis: Data key for x-axis values.
+        y_axis: Data key for y-axis values.
+        z_axis: Data key for bubble size (optional).
+        height: Chart height in pixels.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+
     Example::
 
         ScatterChart(
@@ -275,6 +360,17 @@ class ScatterChart(Component):
 class RadarChart(Component):
     """Radar (spider) chart with one or more series plotted on radial axes.
 
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as radar areas.
+        axis_key: Data key for angular axis labels.
+        height: Chart height in pixels.
+        filled: Fill radar polygons (False for lines only).
+        show_dots: Show dots at vertices.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show polar grid.
+
     Example::
 
         RadarChart(
@@ -315,6 +411,17 @@ class RadarChart(Component):
 
 class RadialChart(Component):
     """Radial bar chart — categorical data as concentric rings.
+
+    Args:
+        data: Row data or reactive interpolation reference.
+        data_key: Numeric value field.
+        name_key: Label field.
+        height: Chart height in pixels.
+        inner_radius: Inner radius in pixels.
+        start_angle: Arc start angle in degrees.
+        end_angle: Arc end angle in degrees.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
 
     Example::
 
@@ -364,6 +471,16 @@ class Sparkline(Component):
 
     Takes a flat list of numbers and renders a tiny line (or area) chart
     with no axes, labels, or tooltips. Designed to sit inline next to text.
+
+    Args:
+        data: Flat list of numeric values or reactive interpolation reference.
+        height: Chart height in pixels (default 24px via CSS).
+        variant: Visual variant ("default", "success", "warning", "destructive", "info", "muted").
+        indicator_class: Tailwind classes for the line/fill (e.g. "stroke-blue-500").
+        fill: Show area fill under the line.
+        curve: Line interpolation ("linear", "smooth", or "step").
+        stroke_width: Line thickness in pixels.
+        mode: Chart mode ("line" or "bar").
 
     Example::
 

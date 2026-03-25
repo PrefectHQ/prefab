@@ -14,13 +14,15 @@ class Slot(ContainerComponent):
 
     ``Slot`` is a named placeholder in your layout. When the state key
     contains a component tree, Slot renders it. When the state key is
-    empty, Slot renders its children as fallback content::
+    empty, Slot renders its children as fallback content.
+
+    Args:
+        name: State key containing the component tree to render.
+
+    Example::
 
         with Slot("detail_view"):
             Text("Select an item to see details")
-
-    The slot content is typically populated by writing component JSON
-    into state via ``SetState`` in an ``on_success`` callback::
 
         Button(
             "Load Details",

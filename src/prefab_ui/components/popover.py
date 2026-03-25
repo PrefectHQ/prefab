@@ -28,6 +28,11 @@ class Popover(ContainerComponent):
 
     First child = trigger, remaining children = content.
 
+    Args:
+        title: Optional popover header title.
+        description: Optional popover description text.
+        side: Which side to show the popover (top, right, bottom, left).
+
     Example::
 
         with Popover(title="Options"):

@@ -7,12 +7,12 @@
  * 3. ontoolresult → server-validated PrefabApp → final render (replaces preview)
  */
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Toaster } from "sonner";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
-import { generativeBridge, debugMessages, onDebug } from "./generative-bridge";
+import { generativeBridge } from "./generative-bridge";
 import { clearAllIntervals, setAppName } from "./actions";
 import {
   SUPPORTED_VERSIONS,
@@ -53,76 +53,6 @@ function FastMCPLogo({
         fill="currentColor"
       />
     </svg>
-  );
-}
-
-function DebugPanel() {
-  const [messages, setMessages] = useState<string[]>(() => [...debugMessages]);
-  const [collapsed, setCollapsed] = useState(true);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMessages([...debugMessages]);
-    onDebug((msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-  }, []);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 9999,
-        background: "#1a1a2e",
-        color: "#e0e0e0",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        borderTop: "2px solid #e94560",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "4px 8px",
-          background: "#16213e",
-          cursor: "pointer",
-        }}
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        <span style={{ color: "#e94560", fontWeight: "bold" }}>
-          🔧 Prefab Debug ({messages.length})
-        </span>
-        <span>{collapsed ? "▲" : "▼"}</span>
-      </div>
-      {!collapsed && (
-        <div
-          style={{
-            maxHeight: "200px",
-            overflow: "auto",
-            padding: "4px 8px",
-          }}
-        >
-          {messages.length === 0 && (
-            <div style={{ color: "#666" }}>Waiting for events…</div>
-          )}
-          {messages.map((msg, i) => (
-            <div key={i} style={{ padding: "1px 0", whiteSpace: "pre-wrap" }}>
-              {msg}
-            </div>
-          ))}
-          <div ref={bottomRef} />
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -246,7 +176,6 @@ export function GenerativeApp() {
             Generating UI…
           </span>
         </div>
-        <DebugPanel />
       </>
     );
   }
@@ -260,7 +189,6 @@ export function GenerativeApp() {
         app={generativeBridge.app}
       />
       <Toaster />
-      <DebugPanel />
     </>
   );
 }

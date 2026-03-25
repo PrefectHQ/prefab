@@ -69,6 +69,9 @@ class TableRow(ContainerComponent):
 class TableHead(ContainerComponent):
     """A header cell within a TableRow.
 
+    Args:
+        content: Header text (alternative to children).
+
     Example::
 
         TableHead("Name")
@@ -96,6 +99,9 @@ class TableCell(ContainerComponent):
     """A data cell within a TableRow.
 
     Can contain text or arbitrary child components.
+
+    Args:
+        content: Cell text (alternative to children).
 
     Example::
 
@@ -125,6 +131,9 @@ class TableCell(ContainerComponent):
 
 class TableCaption(Component):
     """Table caption text.
+
+    Args:
+        content: Caption text.
 
     Example::
 

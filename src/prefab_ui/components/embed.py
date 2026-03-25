@@ -15,9 +15,17 @@ class Embed(Component):
     """Embed external content in a sandboxed iframe.
 
     Accepts either a ``url`` (iframe src) or ``html`` (iframe srcdoc),
-    but not both.  Use ``url`` for YouTube, Google Maps, and other
-    hosted content.  Use ``html`` for custom HTML/JS like Three.js
+    but not both. Use ``url`` for YouTube, Google Maps, and other
+    hosted content. Use ``html`` for custom HTML/JS like Three.js
     scenes or Canvas-based visualizations.
+
+    Args:
+        url: URL to embed (iframe src).
+        html: Raw HTML to embed (iframe srcdoc).
+        width: CSS width of the iframe.
+        height: CSS height of the iframe.
+        sandbox: Iframe sandbox attribute (e.g. ``'allow-scripts allow-same-origin'``).
+        allow: Iframe allow attribute (e.g. ``'fullscreen; autoplay'``).
 
     Example::
 

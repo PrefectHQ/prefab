@@ -29,10 +29,14 @@ from prefab_ui.rx import RxStr
 class Icon(Component):
     """Renders a lucide icon by name.
 
+    Use the ``size`` prop for sizing — avoid css_class for width/height.
+    Browse available icons at https://lucide.dev/icons.
+
     Args:
-        name: Lucide icon name in kebab-case (e.g., "arrow-right", "circle-alert")
-        size: Icon size — "sm" (16px), "default" (16px with standard spacing),
-            or "lg" (24px)
+        name: Lucide icon name in kebab-case (e.g. "arrow-right",
+            "circle-alert"). See https://lucide.dev/icons.
+        size: Icon size — "sm" (16px), "default" (16px with standard
+            spacing), or "lg" (24px).
 
     Example::
 

@@ -34,6 +34,11 @@ class Tab(ContainerComponent):
 
     The ``title`` appears in the tab trigger; children are the panel content.
 
+    Args:
+        title: Tab trigger label.
+        value: Unique value for this tab (defaults to title).
+        disabled: Disable this tab.
+
     Example::
 
         with Tab("Settings"):
@@ -62,6 +67,13 @@ class Tab(ContainerComponent):
 
 class Tabs(StatefulMixin, ContainerComponent):
     """Tab container — children must be ``Tab`` components.
+
+    Args:
+        variant: Visual style — ``'default'`` (pill) or ``'line'`` (underline).
+        value: Value of the initially active tab.
+        name: State key for reactive binding. Auto-generated if omitted.
+        orientation: Layout direction — ``'horizontal'`` or ``'vertical'``.
+        on_change: Action(s) fired when the active tab changes.
 
     Example::
 

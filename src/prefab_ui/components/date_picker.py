@@ -27,6 +27,12 @@ class DatePicker(StatefulMixin, Component):
 
     A button trigger shows the selected date; clicking opens a calendar.
 
+    Args:
+        placeholder: Button text when no date is selected.
+        value: Initially selected date as an ISO string.
+        name: State key for reactive binding. Auto-generated if omitted.
+        on_change: Action(s) fired when the date changes.
+
     Example::
 
         DatePicker(placeholder="Pick a date", name="deadline")

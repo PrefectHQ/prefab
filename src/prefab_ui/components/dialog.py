@@ -28,11 +28,16 @@ from prefab_ui.rx import RxStr
 class Dialog(ContainerComponent):
     """Modal dialog overlay.
 
-    First child = trigger, remaining children = dialog body.
+    The first child is the trigger element (what the user clicks to
+    open the dialog). All remaining children form the dialog body.
+
+    Args:
+        title: Header title displayed at the top of the dialog.
+        description: Subtitle text below the title.
 
     Example::
 
-        with Dialog(title="Edit Profile"):
+        with Dialog(title="Edit Profile", description="Update your info."):
             Button("Edit")
             with Column(gap=3):
                 Input(name="displayName", placeholder="Display name")

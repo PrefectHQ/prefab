@@ -46,6 +46,10 @@ class Form(ContainerComponent):
     Use ``Form.from_model()`` to auto-generate a form from a Pydantic model,
     or build forms manually with context-manager syntax.
 
+    Args:
+        gap: Spacing between form children (Tailwind gap scale).
+        on_submit: Action(s) to execute when the form is submitted.
+
     Example::
 
         with Form():

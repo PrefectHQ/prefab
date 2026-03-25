@@ -23,6 +23,11 @@ class Tooltip(ContainerComponent):
 
     Wrap any single component to show tooltip text on hover.
 
+    Args:
+        content: Tooltip text.
+        side: Which side to show the tooltip (top, right, bottom, left).
+        delay: Delay in milliseconds before showing the tooltip.
+
     Example::
 
         with Tooltip("Saves the current document"):

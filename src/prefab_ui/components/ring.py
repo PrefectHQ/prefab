@@ -22,6 +22,19 @@ class Ring(ContainerComponent):
     current value within the min/max range. Accepts children for custom
     center content; when no children are present, ``label`` is shown.
 
+    Args:
+        value: Current value (number or template expression).
+        min: Minimum value.
+        max: Maximum value.
+        label: Text displayed in the center of the ring.
+        variant: Visual variant (default, success, warning, destructive, info, muted).
+        size: Ring size (sm, default, lg).
+        thickness: Stroke width of the ring in pixels.
+        target: Target marker position (renders a tick mark on the ring).
+        indicator_class: Tailwind classes for the filled arc.
+        target_class: Tailwind classes for the target marker.
+        gradient: Gradient stroke — None inherits theme, True forces on, False forces off.
+
     Example::
 
         Ring(value=75, label="75%", variant="success")

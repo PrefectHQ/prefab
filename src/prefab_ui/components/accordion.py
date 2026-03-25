@@ -26,6 +26,10 @@ class AccordionItem(ContainerComponent):
 
     The ``title`` appears in the trigger; children are revealed on expand.
 
+    Args:
+        title: Accordion trigger label.
+        value: Unique value identifying this item (defaults to title).
+
     Example::
 
         with AccordionItem("Details"):
@@ -53,6 +57,11 @@ class AccordionItem(ContainerComponent):
 
 class Accordion(ContainerComponent):
     """Accordion container — children must be ``AccordionItem`` components.
+
+    Args:
+        multiple: Allow multiple items to be open simultaneously.
+        collapsible: Whether items can be fully collapsed (single mode only).
+        default_open_items: Initially expanded item(s) by index or value/title.
 
     Example::
 

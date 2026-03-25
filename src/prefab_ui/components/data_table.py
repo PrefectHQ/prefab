@@ -108,6 +108,14 @@ class DataTable(Component):
     Also accepts a pandas, polars, or any DataFrame-like object as ``rows``.
     Columns are auto-generated from the DataFrame's column names if not provided.
 
+    Args:
+        columns: Column definitions.
+        rows: Row data as a list of dicts, a ``{{ template }}`` string, or a DataFrame.
+        search: Show a search input above the table.
+        paginated: Show pagination controls.
+        page_size: Rows per page when paginated.
+        on_row_click: Action(s) when a row is clicked. ``$event`` is the row dict.
+
     Example::
 
         DataTable(

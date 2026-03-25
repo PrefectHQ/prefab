@@ -102,19 +102,17 @@ function ensurePyodideLoading() {
   });
 }
 
-/** Visible debug log — appended to by the bridge, read by the app. */
 export const debugMessages: string[] = [];
 let debugCb: ((msg: string) => void) | null = null;
 
 function debug(msg: string) {
-  const time = new Date().toLocaleTimeString();
-  const full = `[${time}] ${msg}`;
+  const full = `[${new Date().toLocaleTimeString()}] ${msg}`;
   debugMessages.push(full);
   if (debugCb) debugCb(full);
   console.log(`[Prefab Generative] ${msg}`);
 }
 
-// Route executor debug messages through the same system
+// Route executor debug messages through the same channel
 setExecutorDebug((msg) => debug(`executor: ${msg}`));
 
 let debugReplayed = false;

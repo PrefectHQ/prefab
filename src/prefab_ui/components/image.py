@@ -13,6 +13,12 @@ from prefab_ui.rx import RxStr
 class Image(Component):
     """Image element.
 
+    Args:
+        src: Image URL.
+        alt: Alt text for accessibility.
+        width: CSS width (e.g. ``"200px"``).
+        height: CSS height (e.g. ``"auto"``).
+
     Example::
 
         Image(src="{{ avatar_url }}", alt="{{ name }}")

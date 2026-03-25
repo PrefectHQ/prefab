@@ -11,11 +11,19 @@ from prefab_ui.rx import RxStr
 
 
 class Markdown(Component):
-    """Rendered markdown component.
+    """Render markdown content with full formatting support.
+
+    Supports headings, bold, italic, links, lists, code blocks, and
+    template expressions. Useful for displaying rich text from state
+    or LLM responses.
+
+    Args:
+        content: Markdown string. Supports ``{{ expr }}`` templates.
 
     Example::
 
-        Markdown("**Name:** {{ name }}\\n\\n{{ bio }}")
+        Markdown("# Welcome\\n\\nHello, **{{ name }}**!")
+        Markdown("{{ ai_response }}")
     """
 
     type: Literal["Markdown"] = "Markdown"

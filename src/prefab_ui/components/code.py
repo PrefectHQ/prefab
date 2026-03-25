@@ -13,6 +13,10 @@ from prefab_ui.rx import RxStr
 class Code(Component):
     """Code block with optional syntax highlighting.
 
+    Args:
+        content: Code content.
+        language: Syntax highlighting language.
+
     Example::
 
         Code("{{ source_code }}", language="python")

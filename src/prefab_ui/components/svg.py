@@ -16,6 +16,11 @@ class Svg(Component):
     Content is sanitized in the renderer to strip scripts and event
     handlers, making it safe to render user- or LLM-generated SVG.
 
+    Args:
+        content: SVG markup string.
+        width: CSS width (e.g. ``"100px"``).
+        height: CSS height (e.g. ``"100px"``).
+
     Example::
 
         Svg('<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>')

@@ -70,8 +70,9 @@ class ChoiceCard(Field):
     to-toggle behavior. Use FieldContent to group the title and description,
     and place the toggle control (Switch, Checkbox) alongside it.
 
-    When the control is toggled on, the card highlights with a subtle
-    border and background tint.
+    Args:
+        invalid: Whether the card is in an error state.
+        disabled: Whether the card is dimmed and non-interactive.
 
     Example::
 
@@ -87,6 +88,9 @@ class ChoiceCard(Field):
 
 class FieldTitle(Component):
     """Field heading text.
+
+    Args:
+        content: Title text.
 
     Example::
 
@@ -111,6 +115,9 @@ class FieldTitle(Component):
 class FieldDescription(Component):
     """Field description text.
 
+    Args:
+        content: Description text.
+
     Example::
 
         FieldDescription("Focus is shared across devices.")
@@ -132,7 +139,7 @@ class FieldDescription(Component):
 
 
 class FieldContent(ContainerComponent):
-    """Groups title and description in choice card layouts.
+    """Container that groups title and description in choice card layouts.
 
     Example::
 
@@ -146,6 +153,9 @@ class FieldContent(ContainerComponent):
 
 class FieldError(Component):
     """Error message text for invalid fields.
+
+    Args:
+        content: Error message text.
 
     Example::
 

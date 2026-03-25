@@ -166,17 +166,24 @@ _PA.__init__ = _pg_app_init
 
 try:
     # Heal partial code: strip trailing lines until it compiles.
+    # Tracks the total line count seen so far — since streaming only
+    # appends, lines before this point never change and don't need
+    # to be re-scanned.
     _pg_code = ${JSON.stringify(code)}
     _pg_lines = _pg_code.split("\\n")
     _pg_healed = None
-    for _pg_trim in range(min(len(_pg_lines), 5)):
-        _pg_try = "\\n".join(_pg_lines[:len(_pg_lines) - _pg_trim]) if _pg_trim else _pg_code
+    _pg_floor = globals().get("_pg_seen_lines", 0)
+    for _pg_n in range(len(_pg_lines), _pg_floor, -1):
+        _pg_try = "\\n".join(_pg_lines[:_pg_n])
         try:
             compile(_pg_try, "<string>", "exec")
             _pg_healed = _pg_try
             break
         except SyntaxError:
             continue
+    # Advance floor: all lines except the last are complete (streaming
+    # only appends, so the last line may still be growing).
+    _pg_seen_lines = max(len(_pg_lines) - 1, globals().get("_pg_seen_lines", 0))
 
     if _pg_healed is None:
         raise SyntaxError("Could not heal partial code")

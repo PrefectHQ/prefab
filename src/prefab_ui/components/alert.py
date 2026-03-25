@@ -37,8 +37,8 @@ class Alert(ContainerComponent):
     """An alert container for important messages.
 
     Args:
-        variant: Visual style - "default", "destructive"
-        css_class: Additional CSS classes to apply
+        variant: Visual style — "default", "destructive", "success", "warning", or "info".
+        icon: Lucide icon name in kebab-case (e.g. "circle-alert").
 
     Example::
 
@@ -65,6 +65,9 @@ class Alert(ContainerComponent):
 class AlertTitle(Component):
     """Alert title text.
 
+    Args:
+        content: Title text.
+
     Example::
 
         AlertTitle("Important!")
@@ -89,6 +92,9 @@ class AlertTitle(Component):
 
 class AlertDescription(Component):
     """Alert description text.
+
+    Args:
+        content: Description text.
 
     Example::
 

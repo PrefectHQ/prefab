@@ -35,6 +35,12 @@ class Calendar(StatefulMixin, Component):
 
     Selected date(s) stored in state as ISO strings.
 
+    Args:
+        mode: Selection mode — "single", "multiple", or "range".
+        value: Initial selected date(s); accepts a date, dict, or list of dates.
+        name: State key for reactive binding (auto-generated if omitted).
+        on_change: Action(s) fired when selection changes.
+
     Example::
 
         Calendar(value=datetime.date(2026, 5, 4))

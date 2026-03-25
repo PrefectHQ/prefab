@@ -82,6 +82,8 @@ class Elif(ContainerComponent):
 class Else(ContainerComponent):
     """Default branch — renders when no preceding If/Elif matched.
 
+    Takes no arguments beyond children. Must follow an ``If`` or ``Elif``.
+
     Example::
 
         with Else():

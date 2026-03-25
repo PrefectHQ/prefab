@@ -25,7 +25,19 @@ TextAlign = Literal["left", "center", "right", "justify"] | None
 
 
 class _TextComponent(Component):
-    """Base class for text components that accept positional content."""
+    """Base class for text components that accept positional content.
+
+    Args:
+        content: Text content (positional or keyword).
+        bold: Render text in bold.
+        italic: Render text in italic.
+        underline: Render text with underline.
+        strikethrough: Render text with strikethrough.
+        uppercase: Transform text to uppercase.
+        lowercase: Transform text to lowercase.
+        code: Render text in monospace font.
+        align: Horizontal text alignment.
+    """
 
     content: RxStr = Field(description="Text content")
     bold: bool | None = Field(default=None, exclude=True)
@@ -82,6 +94,9 @@ def _text_init(self: _TextComponent, content: str | None = None, **kwargs: Any) 
 class H1(_TextComponent):
     """Large page heading (h1).
 
+    Args:
+        content: Heading text.
+
     Example::
 
         H1("Dashboard")
@@ -102,6 +117,9 @@ class H1(_TextComponent):
 
 class H2(_TextComponent):
     """Section heading (h2).
+
+    Args:
+        content: Heading text.
 
     Example::
 
@@ -124,6 +142,9 @@ class H2(_TextComponent):
 class H3(_TextComponent):
     """Subsection heading (h3).
 
+    Args:
+        content: Heading text.
+
     Example::
 
         H3("Account Details")
@@ -144,6 +165,9 @@ class H3(_TextComponent):
 class H4(_TextComponent):
     """Small heading (h4).
 
+    Args:
+        content: Heading text.
+
     Example::
 
         H4("Additional Options")
@@ -163,6 +187,9 @@ class H4(_TextComponent):
 
 class P(_TextComponent):
     """Paragraph text.
+
+    Args:
+        content: Paragraph text.
 
     Example::
 
@@ -185,6 +212,9 @@ class P(_TextComponent):
 class Lead(_TextComponent):
     """Lead paragraph with larger text for introductions.
 
+    Args:
+        content: Lead paragraph text.
+
     Example::
 
         Lead("A comprehensive guide to building MCP applications.")
@@ -204,6 +234,9 @@ class Lead(_TextComponent):
 
 class Large(_TextComponent):
     """Large text for emphasis.
+
+    Args:
+        content: Text content.
 
     Example::
 
@@ -225,6 +258,9 @@ class Large(_TextComponent):
 class Small(_TextComponent):
     """Small text for fine print or metadata.
 
+    Args:
+        content: Text content.
+
     Example::
 
         Small("Terms and conditions apply")
@@ -244,6 +280,9 @@ class Small(_TextComponent):
 
 class Muted(_TextComponent):
     """Muted/secondary text for less prominent information.
+
+    Args:
+        content: Text content.
 
     Example::
 
@@ -265,6 +304,9 @@ class Muted(_TextComponent):
 
 class BlockQuote(_TextComponent):
     """Block quotation.
+
+    Args:
+        content: Quotation text.
 
     Example::
 

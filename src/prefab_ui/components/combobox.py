@@ -35,6 +35,11 @@ from prefab_ui.rx import RxStr
 class ComboboxOption(Component):
     """A single option within a Combobox.
 
+    Args:
+        label: Display label.
+        value: Option value (defaults to lowercased label).
+        disabled: Whether the option is disabled.
+
     Example::
 
         ComboboxOption("Next.js", value="nextjs")
@@ -77,6 +82,9 @@ class ComboboxGroup(ContainerComponent):
 
 class ComboboxLabel(Component):
     """A label/header for a ``ComboboxGroup``.
+
+    Args:
+        label: Label text.
 
     Example::
 

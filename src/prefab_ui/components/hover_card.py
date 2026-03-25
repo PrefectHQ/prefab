@@ -28,6 +28,11 @@ class HoverCard(ContainerComponent):
     First child = trigger, remaining children = content.
     Appears on hover and auto-dismisses on mouse leave.
 
+    Args:
+        side: Which side to show the hover card (top, right, bottom, left).
+        open_delay: Delay in milliseconds before opening.
+        close_delay: Delay in milliseconds before closing.
+
     Example::
 
         with HoverCard(open_delay=0):

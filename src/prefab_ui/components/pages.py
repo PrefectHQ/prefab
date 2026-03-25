@@ -33,6 +33,10 @@ from prefab_ui.rx import RxStr
 class Page(ContainerComponent):
     """A single page within a Pages container.
 
+    Args:
+        title: Page identifier / label.
+        value: Unique value for this page (defaults to title).
+
     Example::
 
         with Page("Settings"):
@@ -62,6 +66,10 @@ class Pages(StatefulMixin, ContainerComponent):
     """Multi-page layout — only the active Page renders.
 
     Control which page shows via the state key matching ``name``.
+
+    Args:
+        value: Initially active page value.
+        name: State key for reactive binding. Auto-generated if omitted.
 
     Example::
 

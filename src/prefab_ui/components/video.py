@@ -13,6 +13,16 @@ from prefab_ui.rx import RxStr
 class Video(Component):
     """HTML5 video element.
 
+    Args:
+        src: Video URL.
+        poster: Poster image URL shown before playback.
+        controls: Show playback controls (default True).
+        autoplay: Auto-start playback.
+        loop: Loop playback.
+        muted: Mute audio.
+        width: CSS width.
+        height: CSS height.
+
     Example::
 
         Video(src="https://example.com/video.mp4")

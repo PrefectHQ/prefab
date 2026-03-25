@@ -31,16 +31,21 @@ class ForEach(ContainerComponent):
 
     The context manager form auto-captures ``$item`` and ``$index`` into
     scoped ``let`` bindings, so each loop level keeps its own references
-    even when nested::
+    even when nested.
+
+    The returned object supports both simple and destructured usage:
+
+    - ``as item`` -- acts as an Rx for the current item
+    - ``as (idx, item)`` -- tuple unpacking (index first, matching enumerate)
+
+    Args:
+        key: Data field containing the list to iterate over.
+
+    Example::
 
         with ForEach("groups") as (gi, group):
             with ForEach(f"groups.{gi}.todos") as (_, todo):
                 Text(f"{todo.name} in {group.name}")
-
-    The returned object supports both simple and destructured usage:
-
-    - ``as item`` — acts as an Rx for the current item
-    - ``as (idx, item)`` — tuple unpacking (index first, matching enumerate)
     """
 
     type: Literal["ForEach"] = "ForEach"

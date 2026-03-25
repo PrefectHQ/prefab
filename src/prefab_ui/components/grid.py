@@ -145,6 +145,10 @@ class GridItem(ContainerComponent):
     :class:`~prefab_ui.components.dashboard.DashboardItem` for explicit
     ``col``/``row`` coordinates instead.
 
+    Args:
+        col_span: Number of columns to span.
+        row_span: Number of rows to span.
+
     Example::
 
         with Grid(columns=4, gap=4):
