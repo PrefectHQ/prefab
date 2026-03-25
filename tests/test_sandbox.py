@@ -30,8 +30,16 @@ pytestmark = [
 async def sandbox():
     """Per-test sandbox with lazy start (auto-starts on first .run())."""
     sb = Sandbox()
-    yield sb
-    sb._stop()
+    try:
+        await sb._start()
+    except RuntimeError as exc:
+        if "failed to start" in str(exc):
+            pytest.skip(f"Pyodide sandbox unavailable: {exc}")
+        raise
+    try:
+        yield sb
+    finally:
+        sb._stop()
 
 
 # ── Context managers ─────────────────────────────────────────────────
