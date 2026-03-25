@@ -94,6 +94,13 @@ def run_harness(code: str) -> dict:
     return json.loads(json_str)
 
 
+def inner_view(result: dict) -> dict:
+    """Unwrap the pf-app-root Div to get the user's view."""
+    assert result["tree"]["type"] == "Div"
+    assert "pf-app-root" in result["tree"]["cssClass"]
+    return result["tree"]["children"][0]
+
+
 class TestInitRestoration:
     """PrefabApp.__init__ must be restored after every execution."""
 
@@ -135,7 +142,7 @@ view = Text("hello")
 from prefab_ui.components import Text
 view = Text("after error")
 """)
-        assert result["tree"]["content"] == "after error"
+        assert inner_view(result)["content"] == "after error"
         assert PrefabApp.__init__ is original
 
     def test_no_recursion_after_multiple_errors(self):
@@ -149,7 +156,7 @@ view = Text("after error")
 from prefab_ui.components import Text
 view = Text("still works")
 """)
-        assert result["tree"]["content"] == "still works"
+        assert inner_view(result)["content"] == "still works"
         assert PrefabApp.__init__ is original
 
 
@@ -162,7 +169,7 @@ from prefab_ui.components import Text
 view = Text("hello")
 """)
         assert "tree" in result
-        assert result["tree"]["type"] == "Text"
+        assert inner_view(result)["type"] == "Text"
 
     def test_prefab_app_extracts_view(self):
         result = run_harness("""
@@ -171,7 +178,9 @@ from prefab_ui.app import PrefabApp
 with PrefabApp() as app:
     Text("inside app")
 """)
-        assert result["tree"]["type"] == "Column"
+        # Context manager: Div with pf-app-root contains children directly
+        assert result["tree"]["type"] == "Div"
+        assert result["tree"]["children"][0]["content"] == "inside app"
 
     def test_prefab_app_extracts_state(self):
         result = run_harness("""
@@ -198,7 +207,7 @@ class TestCodeHealing:
 from prefab_ui.components import Text
 view = Text("complete")
 Text("incomp""")
-        assert result["tree"]["content"] == "complete"
+        assert inner_view(result)["content"] == "complete"
 
     def test_heals_incomplete_with_block(self):
         # Trailing `with X():` with no body is a SyntaxError
@@ -207,7 +216,7 @@ from prefab_ui.components import Column, Text
 with Column() as view:
     Text("inside")
     with Column():""")
-        assert result["tree"]["type"] == "Column"
+        assert inner_view(result)["type"] == "Column"
 
     def test_cannot_heal_fully_broken(self):
         with pytest.raises(SyntaxError, match="Could not heal"):
@@ -236,7 +245,8 @@ from prefab_ui.app import PrefabApp
 with PrefabApp():
     Text("tracked")
 """)
-        assert result["tree"]["type"] == "Column"
+        assert result["tree"]["type"] == "Div"
+        assert result["tree"]["children"][0]["content"] == "tracked"
 
     def test_prefers_prefab_app_over_raw_components(self):
         result = run_harness("""
@@ -268,7 +278,7 @@ class TestRootDetection:
 from prefab_ui.components import Text
 view = Text("solo")
 """)
-        assert result["tree"]["content"] == "solo"
+        assert inner_view(result)["content"] == "solo"
 
     def test_nested_children_not_roots(self):
         result = run_harness("""
@@ -276,7 +286,7 @@ from prefab_ui.components import Column, Text
 col = Column(children=[Text("child")])
 """)
         # Column is the root, not Text
-        assert result["tree"]["type"] == "Column"
+        assert inner_view(result)["type"] == "Column"
 
     def test_context_manager_root(self):
         result = run_harness("""
@@ -285,5 +295,5 @@ with Column() as view:
     Heading("title")
     Text("body")
 """)
-        assert result["tree"]["type"] == "Column"
-        assert len(result["tree"]["children"]) == 2
+        assert inner_view(result)["type"] == "Column"
+        assert len(inner_view(result)["children"]) == 2

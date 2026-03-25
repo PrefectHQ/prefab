@@ -222,15 +222,21 @@ def test_full_wire_format() -> None:
             },
         },
         "view": {
-            "type": "Column",
+            "type": "Div",
+            "cssClass": "pf-app-root",
             "children": [
                 {
-                    "$ref": "user-card",
-                    "let": {"name": "Alice", "role": "Engineer"},
-                },
-                {
-                    "$ref": "user-card",
-                    "let": {"name": "Bob", "role": "Designer"},
+                    "type": "Column",
+                    "children": [
+                        {
+                            "$ref": "user-card",
+                            "let": {"name": "Alice", "role": "Engineer"},
+                        },
+                        {
+                            "$ref": "user-card",
+                            "let": {"name": "Bob", "role": "Designer"},
+                        },
+                    ],
                 },
             ],
         },

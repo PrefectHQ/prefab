@@ -152,7 +152,8 @@ with Column() as view:
 app = PrefabApp(view=view, state={"count": 0})
 """)
         assert result["state"] == {"count": 0}
-        assert result["view"]["type"] == "Column"
+        assert result["view"]["type"] == "Div"
+        assert result["view"]["children"][0]["type"] == "Column"
 
     async def test_prefab_envelope(self, sandbox: Sandbox):
         result = await sandbox.run("""

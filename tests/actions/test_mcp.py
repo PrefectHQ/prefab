@@ -96,7 +96,9 @@ class TestCallToolCallableRef:
             return ResolvedTool(name=f"{fn.__name__}-resolved")
 
         data = app.to_json(tool_resolver=resolver)
-        assert data["view"]["onClick"]["tool"] == "save_contact-resolved"
+        # view is wrapped in a Div with pf-app-root; the button is inside
+        button = data["view"]["children"][0]
+        assert button["onClick"]["tool"] == "save_contact-resolved"
 
     def test_resolver_scoped_to_call(self):
         """Resolver ContextVar resets after to_json() returns."""
