@@ -3,18 +3,20 @@
 Describes what to render, what state to initialize, and what external
 assets to load.  Pure data model — transport-agnostic.
 
-Usage::
+**Usage:**
 
-    from prefab_ui.app import PrefabApp
-    from prefab_ui.components import Column, Heading, DataTable
+```python
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Heading, DataTable
 
-    app = PrefabApp(
-        view=Column(Heading("Dashboard"), DataTable(data=users)),
-        state={"users": users},
-    )
+app = PrefabApp(
+    view=Column(Heading("Dashboard"), DataTable(data=users)),
+    state={"users": users},
+)
 
-    html = app.html()      # complete self-contained page
-    csp = app.csp()        # CSP domains for sandboxed delivery
+html = app.html()      # complete self-contained page
+csp = app.csp()        # CSP domains for sandboxed delivery
+```
 """
 
 from __future__ import annotations
@@ -47,7 +49,7 @@ _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
 class ResolvedTool:
     """Enriched result from a tool resolver.
 
-    Beyond the tool ``name``, the resolver can set flags that influence
+    Beyond the tool `name`, the resolver can set flags that influence
     how the renderer handles the tool's result.  This keeps the contract
     typed and extensible without allowing arbitrary key injection.
     """
@@ -62,7 +64,7 @@ _tool_resolver: ContextVar[Callable[[Any], ResolvedTool] | None] = ContextVar(
 
 
 def get_tool_resolver() -> Callable[[Any], ResolvedTool] | None:
-    """Return the active tool resolver, or ``None``."""
+    """Return the active tool resolver, or `None`."""
     return _tool_resolver.get()
 
 
@@ -70,19 +72,21 @@ def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
     """Declare initial client-side state for the current app.
 
     Called alongside component construction to define the starting
-    values that templates like ``{{ name }}`` resolve against.
+    values that templates like `{{ name }}` resolve against.
 
     Returns a bound state proxy that validates attribute access against
-    the declared keys::
+    the declared keys:
 
-        state = set_initial_state(count=0, items=[])
-        state.count    # Rx("count")
-        state.typo     # AttributeError — catches misspelled keys
+    ```python
+    state = set_initial_state(count=0, items=[])
+    state.count    # Rx("count")
+    state.typo     # AttributeError — catches misspelled keys
+    ```
 
     The proxy holds a reference to the same accumulator dict, so
-    multiple calls to ``set_initial_state`` are visible from any proxy.
-    Use the global :data:`~prefab_ui.rx.STATE` for keys defined
-    elsewhere (form controls, ``SetState`` actions, etc.).
+    multiple calls to `set_initial_state` are visible from any proxy.
+    Use the global `STATE` from `prefab_ui.rx` for keys defined
+    elsewhere (form controls, `SetState` actions, etc.).
     """
     current = _initial_state.get()
     if current is None:
@@ -93,7 +97,7 @@ def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
 
 
 def get_initial_state() -> dict[str, Any] | None:
-    """Retrieve state set by :func:`set_initial_state`, or ``None``."""
+    """Retrieve state set by `set_initial_state()`, or `None`."""
     return _initial_state.get()
 
 
@@ -127,14 +131,16 @@ class PrefabApp(BaseModel):
     """A complete Prefab application.
 
     Describes the view, initial state, reusable component definitions,
-    and external assets.  Use ``html()`` to produce a self-contained
-    HTML page, or ``to_json()`` for the wire-format envelope.
+    and external assets.  Use `html()` to produce a self-contained
+    HTML page, or `to_json()` for the wire-format envelope.
 
-    Can be used as a context manager to build the component tree inline::
+    Can be used as a context manager to build the component tree inline:
 
-        with PrefabApp(state={"count": 0}, css_class="p-6") as app:
-            Heading("Dashboard")
-            Slider(value=50, name="count")
+    ```python
+    with PrefabApp(state={"count": 0}, css_class="p-6") as app:
+        Heading("Dashboard")
+        Slider(value=50, name="count")
+    ```
     """
 
     title: str = Field(default="Prefab", description="HTML page title")
@@ -229,10 +235,12 @@ class PrefabApp(BaseModel):
     ) -> PrefabApp:
         """Create a PrefabApp from a wire protocol dict.
 
-        Explicit keyword arguments override values from the wire::
+        Explicit keyword arguments override values from the wire:
 
-            wire = await sandbox.run(code)
-            app = PrefabApp.from_json(wire, state={"extra": "value"})
+        ```python
+        wire = await sandbox.run(code)
+        app = PrefabApp.from_json(wire, state={"extra": "value"})
+        ```
         """
         return cls.model_construct(
             view=view if view is not None else wire.get("view"),
@@ -242,16 +250,16 @@ class PrefabApp(BaseModel):
         )
 
     def _wrap_view(self) -> dict[str, Any] | None:
-        """Wrap the view in a ``Div`` with ``pf-app-root`` and serialize.
+        """Wrap the view in a `Div` with `pf-app-root` and serialize.
 
-        Every PrefabApp view is wrapped in a root ``<div>`` that carries
-        the ``pf-app-root`` CSS class plus any user-supplied ``css_class``.
-        Themes target ``.pf-app-root`` for default padding, background,
+        Every PrefabApp view is wrapped in a root `<div>` that carries
+        the `pf-app-root` CSS class plus any user-supplied `css_class`.
+        Themes target `.pf-app-root` for default padding, background,
         and other app-level styling.
 
-        If the view is already the bare ``Div`` created by ``__enter__``,
+        If the view is already the bare `Div` created by `__enter__`,
         the class is stamped directly onto it (no extra nesting).
-        Otherwise a new ``Div`` wrapper is created around the view.
+        Otherwise a new `Div` wrapper is created around the view.
         """
         if self.view is None:
             return None
@@ -286,23 +294,23 @@ class PrefabApp(BaseModel):
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        Returns a dict with ``$prefab``, ``view``, ``defs``, and ``state``
+        Returns a dict with `$prefab`, `view`, `defs`, and `state`
         as top-level keys (omitting any that are None).
 
-        The view is always wrapped in a root ``Div`` carrying the
-        ``pf-app-root`` CSS class.  This div is the theme's styling
+        The view is always wrapped in a root `Div` carrying the
+        `pf-app-root` CSS class.  This div is the theme's styling
         target — it provides default padding and can be customized via
-        ``PrefabApp(css_class="...")``::
+        `PrefabApp(css_class="...")`:
 
-            # Center a narrow app
-            PrefabApp(view=my_view, css_class="max-w-2xl mx-auto")
+        ```python
+        # Center a narrow app
+        PrefabApp(view=my_view, css_class="max-w-2xl mx-auto")
+        ```
 
-        Parameters
-        ----------
-        tool_resolver:
-            Resolves callable tool references to ``ResolvedTool`` instances
-            during serialization.  Scoped to this call — safe for
-            concurrent use with different resolvers.
+        Args:
+            tool_resolver: Resolves callable tool references to
+                `ResolvedTool` instances during serialization. Scoped to
+                this call — safe for concurrent use with different resolvers.
         """
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
@@ -343,7 +351,7 @@ class PrefabApp(BaseModel):
 
         The page includes the Prefab renderer (JS/CSS), any user-specified
         stylesheets and scripts, and the application data baked in as a
-        JSON ``<script>`` tag.
+        JSON `<script>` tag.
         """
         head_parts = [get_renderer_head()]
 
@@ -392,7 +400,7 @@ class PrefabApp(BaseModel):
         """Compute CSP domains from the app's asset configuration.
 
         Merges the renderer's base CSP with origins extracted from
-        ``stylesheets``, ``scripts``, and ``connect_domains``.
+        `stylesheets`, `scripts`, and `connect_domains`.
         """
         result = get_renderer_csp()
 

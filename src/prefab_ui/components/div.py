@@ -14,18 +14,20 @@ from prefab_ui.rx import RxStr
 class Div(ContainerComponent):
     """A bare container with no default styling.
 
-    The Python equivalent of ``<div className="...">`` in React.
+    The Python equivalent of `<div className="...">` in React.
     Use when you need a wrapper with custom Tailwind classes that
     Column/Row/Grid don't naturally express.
 
     Args:
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        with Div(css_class="flex items-center gap-4 px-6 py-4"):
-            Badge("deploy", variant="outline")
-            P("Deployed v2.4.1")
+    **Example:**
+    
+    ```python
+    with Div(css_class="flex items-center gap-4 px-6 py-4"):
+        Badge("deploy", variant="outline")
+        P("Deployed v2.4.1")
+    ```
     """
 
     type: Literal["Div"] = "Div"
@@ -38,8 +40,8 @@ class Span(_TextComponent):
     """An inline text element with text modifiers.
 
     Supports bold, italic, underline, strikethrough, uppercase, lowercase,
-    ``code`` for inline code styling, plus arbitrary CSS via ``css_class``
-    or ``style``.
+    `code` for inline code styling, plus arbitrary CSS via `css_class`
+    or `style`.
 
     Args:
         content: Text content.
@@ -49,14 +51,16 @@ class Span(_TextComponent):
         strikethrough: Render text with strikethrough.
         uppercase: Transform text to uppercase.
         lowercase: Transform text to lowercase.
-        code: Render as inline ``<code>`` with monospace font.
+        code: Render as inline `<code>` with monospace font.
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        Span("14m ago", css_class="text-sm text-muted-foreground")
-        Span("important", bold=True, underline=True)
-        Span("pip install prefab-ui", code=True)
+    **Example:**
+    
+    ```python
+    Span("14m ago", css_class="text-sm text-muted-foreground")
+    Span("important", bold=True, underline=True)
+    Span("pip install prefab-ui", code=True)
+    ```
     """
 
     type: Literal["Span"] = "Span"
@@ -88,17 +92,19 @@ class Link(_TextComponent):
     Args:
         content: Link text.
         href: URL to navigate to.
-        target: Link target (``'_blank'`` for new tab, ``'_self'`` for same tab).
+        target: Link target (`'_blank'` for new tab, `'_self'` for same tab).
         bold: Render link text in bold.
         italic: Render link text in italic.
         underline: Render link text with underline.
         code: Render as inline code with monospace font.
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        Link("Prefab docs", href="https://prefab.prefect.io")
-        Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    **Example:**
+    
+    ```python
+    Link("Prefab docs", href="https://prefab.prefect.io")
+    Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    ```
     """
 
     type: Literal["Link"] = "Link"

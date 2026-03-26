@@ -2,21 +2,23 @@
 
 Buttons support multiple variants and sizes, with automatic dark mode styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button
+```python
+from prefab_ui.components import Button
 
-    Button("Click me")
-    Button("Save", variant="default")
-    Button("Delete", variant="destructive")
-    Button("Cancel", variant="outline")
-    Button("More options", variant="ghost")
-    Button("Learn more", variant="link")
+Button("Click me")
+Button("Save", variant="default")
+Button("Delete", variant="destructive")
+Button("Cancel", variant="outline")
+Button("More options", variant="ghost")
+Button("Learn more", variant="link")
 
-    # Sizes
-    Button("Small", size="sm")
-    Button("Large", size="lg")
-    Button("Icon", size="icon")
+# Sizes
+Button("Small", size="sm")
+Button("Large", size="lg")
+Button("Icon", size="icon")
+```
 """
 
 from __future__ import annotations
@@ -59,11 +61,13 @@ class Button(Component):
         disabled: Whether the button is disabled
         css_class: Additional CSS classes to apply
 
-    Example::
-
-        Button("Save Changes")
-        Button("Delete", variant="destructive")
-        Button("Cancel", variant="outline", size="sm")
+    **Example:**
+    
+    ```python
+    Button("Save Changes")
+    Button("Delete", variant="destructive")
+    Button("Cancel", variant="outline", size="sm")
+    ```
     """
 
     type: Literal["Button"] = "Button"

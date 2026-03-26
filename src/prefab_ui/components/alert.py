@@ -2,23 +2,25 @@
 
 Alerts display important messages to users.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Alert, AlertTitle, AlertDescription
+```python
+from prefab_ui.components import Alert, AlertTitle, AlertDescription
 
-    # Default alert
-    with Alert():
-        AlertTitle("Heads up!")
-        AlertDescription("You can add components to your app using the CLI.")
+# Default alert
+with Alert():
+    AlertTitle("Heads up!")
+    AlertDescription("You can add components to your app using the CLI.")
 
-    # Destructive alert for errors
-    with Alert(variant="destructive"):
-        AlertTitle("Error")
-        AlertDescription("Your session has expired. Please log in again.")
+# Destructive alert for errors
+with Alert(variant="destructive"):
+    AlertTitle("Error")
+    AlertDescription("Your session has expired. Please log in again.")
 
-    # Simple alert without title
-    with Alert():
-        AlertDescription("Your changes have been saved.")
+# Simple alert without title
+with Alert():
+    AlertDescription("Your changes have been saved.")
+```
 """
 
 from __future__ import annotations
@@ -40,15 +42,17 @@ class Alert(ContainerComponent):
         variant: Visual style — "default", "destructive", "success", "warning", or "info".
         icon: Lucide icon name in kebab-case (e.g. "circle-alert").
 
-    Example::
-
-        with Alert():
-            AlertTitle("Note")
-            AlertDescription("This is an informational message.")
-
-        with Alert(variant="destructive"):
-            AlertTitle("Error")
-            AlertDescription("Something went wrong.")
+    **Example:**
+    
+    ```python
+    with Alert():
+        AlertTitle("Note")
+        AlertDescription("This is an informational message.")
+    
+    with Alert(variant="destructive"):
+        AlertTitle("Error")
+        AlertDescription("Something went wrong.")
+    ```
     """
 
     type: Literal["Alert"] = "Alert"
@@ -68,10 +72,12 @@ class AlertTitle(Component):
     Args:
         content: Title text.
 
-    Example::
-
-        AlertTitle("Important!")
-        AlertTitle("{{ alert_type }}")
+    **Example:**
+    
+    ```python
+    AlertTitle("Important!")
+    AlertTitle("{{ alert_type }}")
+    ```
     """
 
     type: Literal["AlertTitle"] = "AlertTitle"
@@ -96,10 +102,12 @@ class AlertDescription(Component):
     Args:
         content: Description text.
 
-    Example::
-
-        AlertDescription("Your changes have been saved successfully.")
-        AlertDescription("{{ message }}")
+    **Example:**
+    
+    ```python
+    AlertDescription("Your changes have been saved successfully.")
+    AlertDescription("{{ message }}")
+    ```
     """
 
     type: Literal["AlertDescription"] = "AlertDescription"

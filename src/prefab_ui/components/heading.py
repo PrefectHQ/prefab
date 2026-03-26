@@ -19,11 +19,13 @@ class Heading(_TextComponent):
         content: Heading text. Accepts template expressions.
         level: Heading level — 1 (h1, default), 2 (h2), 3 (h3), or 4 (h4).
 
-    Example::
-
-        Heading("Dashboard")
-        Heading("Details", level=2)
-        Heading("{{ section_title }}", level=3)
+    **Example:**
+    
+    ```python
+    Heading("Dashboard")
+    Heading("Details", level=2)
+    Heading("{{ section_title }}", level=3)
+    ```
     """
 
     type: Literal["Heading"] = "Heading"

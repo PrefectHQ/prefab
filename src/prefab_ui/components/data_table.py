@@ -2,24 +2,26 @@
 
 Built on @tanstack/react-table in the renderer.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DataTable, DataTableColumn
+```python
+from prefab_ui.components import DataTable, DataTableColumn
 
-    DataTable(
-        columns=[
-            DataTableColumn(key="name", header="Name", sortable=True),
-            DataTableColumn(key="email", header="Email"),
-            DataTableColumn(key="role", header="Role"),
-        ],
-        rows="{{ users }}",
-        search=True,
-        paginated=True,
-    )
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
+        DataTableColumn(key="role", header="Role"),
+    ],
+    rows="{{ users }}",
+    search=True,
+    paginated=True,
+)
 
-    # DataFrame support — auto-generates columns from df.columns
-    import pandas as pd
-    DataTable(rows=pd.DataFrame({"name": ["Alice"], "score": [90]}))
+# DataFrame support — auto-generates columns from df.columns
+import pandas as pd
+DataTable(rows=pd.DataFrame({"name": ["Alice"], "score": [90]}))
+```
 """
 
 from __future__ import annotations
@@ -104,29 +106,31 @@ class DataTableColumn(BaseModel):
 class DataTable(Component):
     """High-level data table with sorting, filtering, and pagination.
 
-    Accepts flat ``columns`` and ``rows`` — the renderer handles the rest.
-    Also accepts a pandas, polars, or any DataFrame-like object as ``rows``.
+    Accepts flat `columns` and `rows` — the renderer handles the rest.
+    Also accepts a pandas, polars, or any DataFrame-like object as `rows`.
     Columns are auto-generated from the DataFrame's column names if not provided.
 
     Args:
         columns: Column definitions.
-        rows: Row data as a list of dicts, a ``{{ template }}`` string, or a DataFrame.
+        rows: Row data as a list of dicts, a `{{ template }}` string, or a DataFrame.
         search: Show a search input above the table.
         paginated: Show pagination controls.
         page_size: Rows per page when paginated.
-        on_row_click: Action(s) when a row is clicked. ``$event`` is the row dict.
+        on_row_click: Action(s) when a row is clicked. `$event` is the row dict.
 
-    Example::
-
-        DataTable(
-            columns=[
-                DataTableColumn(key="name", header="Name", sortable=True),
-                DataTableColumn(key="email", header="Email"),
-            ],
-            rows=data["users"],
-            search=True,
-            paginated=True,
-        )
+    **Example:**
+    
+    ```python
+    DataTable(
+        columns=[
+            DataTableColumn(key="name", header="Name", sortable=True),
+            DataTableColumn(key="email", header="Email"),
+        ],
+        rows=data["users"],
+        search=True,
+        paginated=True,
+    )
+    ```
     """
 
     type: Literal["DataTable"] = "DataTable"
@@ -154,7 +158,7 @@ class DataTable(Component):
     columns: list[DataTableColumn] = Field(description="Column definitions")
     rows: list[dict[str, Any]] | str | Rx = Field(
         default_factory=list,
-        description="Row data, {{ interpolation }} reference, or DataFrame",
+        description="Row data, `{{ interpolation }}` reference, or DataFrame",
     )
     search: bool = Field(default=False, description="Show search input")
     paginated: bool = Field(default=False, description="Show pagination controls")

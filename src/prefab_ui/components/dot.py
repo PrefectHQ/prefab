@@ -35,12 +35,14 @@ class Dot(Component):
         size: Dot size (sm, default, lg).
         shape: Dot shape (circle, square, rounded).
 
-    Example::
-
-        Dot()
-        Dot(variant="success")
-        Dot(variant="warning", size="lg")
-        Dot(shape="square", css_class="bg-purple-500")
+    **Example:**
+    
+    ```python
+    Dot()
+    Dot(variant="success")
+    Dot(variant="warning", size="lg")
+    Dot(shape="square", css_class="bg-purple-500")
+    ```
     """
 
     type: Literal["Dot"] = "Dot"

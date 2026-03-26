@@ -20,7 +20,7 @@ from prefab_ui.components.base import (
 def _compile_column_template(columns: list[int | str]) -> str:
     """Compile a column list to a CSS grid-template-columns value.
 
-    Integers become ``Nfr`` (fractional units); strings pass through as-is.
+    Integers become `Nfr` (fractional units); strings pass through as-is.
 
         [1, "auto", 1]  → "1fr auto 1fr"
         [2, 1]          → "2fr 1fr"
@@ -41,36 +41,40 @@ class Grid(ContainerComponent):
     Args:
         columns: Number of columns (1-12), a list of column widths, a
             Responsive mapping, or a dict of breakpoint→column-count.
-            Defaults to 3 equal columns. Pass a list for custom widths::
+            Defaults to 3 equal columns. Pass a list for custom widths:
 
-                Grid(columns=[1, "auto", 1])  # 1fr auto 1fr
+            ```python
+            Grid(columns=[1, "auto", 1])  # 1fr auto 1fr
+            ```
 
-            In a list, integers become fractional units (``1`` → ``1fr``)
-            and strings pass through (``"auto"``, ``"200px"``).
+            In a list, integers become fractional units (`1` → `1fr`)
+            and strings pass through (`"auto"`, `"200px"`).
         min_column_width: Minimum column width for auto-fill responsive
-            grids (e.g. ``"16rem"``). Mutually exclusive with *columns*.
+            grids (e.g. `"16rem"`). Mutually exclusive with *columns*.
         gap: Gap between children: int, (x, y) tuple, or Responsive.
         css_class: Additional CSS classes to apply.
 
-    Example::
-
-        with Grid(columns=3):
-            Card(...)
-            Card(...)
-            Card(...)
-
-        # Custom widths: sidebar + content
-        with Grid(columns=[1, 3]):
-            Sidebar(...)
-            MainContent(...)
-
-        # Responsive: 1 col on mobile, 2 on md, 3 on lg
-        with Grid(columns={"default": 1, "md": 2, "lg": 3}):
-            Card(...)
-
-        # Auto-fill: as many columns as fit, each ≥ 16rem
-        with Grid(min_column_width="16rem"):
-            Card(...)
+    **Example:**
+    
+    ```python
+    with Grid(columns=3):
+        Card(...)
+        Card(...)
+        Card(...)
+    
+    # Custom widths: sidebar + content
+    with Grid(columns=[1, 3]):
+        Sidebar(...)
+        MainContent(...)
+    
+    # Responsive: 1 col on mobile, 2 on md, 3 on lg
+    with Grid(columns={"default": 1, "md": 2, "lg": 3}):
+        Card(...)
+    
+    # Auto-fill: as many columns as fit, each ≥ 16rem
+    with Grid(min_column_width="16rem"):
+        Card(...)
+    ```
     """
 
     type: Literal["Grid"] = "Grid"
@@ -137,26 +141,28 @@ class Grid(ContainerComponent):
 
 
 class GridItem(ContainerComponent):
-    """A child of :class:`Grid` that spans multiple columns or rows.
+    """A child of `Grid` that spans multiple columns or rows.
 
-    Use ``GridItem`` to control how much space a child occupies within
-    a ``Grid``.  Items without a ``GridItem`` wrapper span a single cell.
+    Use `GridItem` to control how much space a child occupies within
+    a `Grid`.  Items without a `GridItem` wrapper span a single cell.
     Positioning is automatic (CSS auto-placement); use
-    :class:`~prefab_ui.components.dashboard.DashboardItem` for explicit
-    ``col``/``row`` coordinates instead.
+    `DashboardItem` for explicit
+    `col`/`row` coordinates instead.
 
     Args:
         col_span: Number of columns to span.
         row_span: Number of rows to span.
 
-    Example::
-
-        with Grid(columns=4, gap=4):
-            with GridItem(col_span=2):
-                Card(...)        # spans 2 columns
-            Card(...)            # spans 1 column
-            with GridItem(col_span=2, row_span=2):
-                BigChart(...)    # spans 2x2
+    **Example:**
+    
+    ```python
+    with Grid(columns=4, gap=4):
+        with GridItem(col_span=2):
+            Card(...)        # spans 2 columns
+        Card(...)            # spans 1 column
+        with GridItem(col_span=2, row_span=2):
+            BigChart(...)    # spans 2x2
+    ```
     """
 
     type: Literal["GridItem"] = "GridItem"

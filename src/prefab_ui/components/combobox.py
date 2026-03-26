@@ -1,24 +1,26 @@
 """Combobox — searchable select dropdown.
 
 A filterable dropdown for selecting from large option lists. Options are
-defined as ``ComboboxOption`` children, similar to ``Select``/``SelectOption``.
+defined as `ComboboxOption` children, similar to `Select`/`SelectOption`.
 
-Supports grouping options with ``ComboboxGroup`` and ``ComboboxLabel``,
-and visual dividers with ``ComboboxSeparator``.
+Supports grouping options with `ComboboxGroup` and `ComboboxLabel`,
+and visual dividers with `ComboboxSeparator`.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Combobox, ComboboxOption
+```python
+from prefab_ui.components import Combobox, ComboboxOption
 
-    with Combobox(placeholder="Select a framework...", name="framework"):
-        ComboboxOption("Next.js", value="nextjs")
-        ComboboxOption("Remix", value="remix")
-        ComboboxOption("Astro", value="astro")
-        ComboboxOption("SvelteKit", value="sveltekit")
+with Combobox(placeholder="Select a framework...", name="framework"):
+    ComboboxOption("Next.js", value="nextjs")
+    ComboboxOption("Remix", value="remix")
+    ComboboxOption("Astro", value="astro")
+    ComboboxOption("SvelteKit", value="sveltekit")
 
-    # Access reactive value
-    combo = Combobox(placeholder="Choose framework...")
-    Text(f"Selected: {combo.rx}")
+# Access reactive value
+combo = Combobox(placeholder="Choose framework...")
+Text(f"Selected: {combo.rx}")
+```
 """
 
 from __future__ import annotations
@@ -40,9 +42,11 @@ class ComboboxOption(Component):
         value: Option value (defaults to lowercased label).
         disabled: Whether the option is disabled.
 
-    Example::
-
-        ComboboxOption("Next.js", value="nextjs")
+    **Example:**
+    
+    ```python
+    ComboboxOption("Next.js", value="nextjs")
+    ```
     """
 
     type: Literal["ComboboxOption"] = "ComboboxOption"
@@ -67,28 +71,32 @@ class ComboboxOption(Component):
 class ComboboxGroup(ContainerComponent):
     """A group container for related combobox options.
 
-    Children should be ``ComboboxLabel`` and ``ComboboxOption`` components.
+    Children should be `ComboboxLabel` and `ComboboxOption` components.
 
-    Example::
-
-        with ComboboxGroup():
-            ComboboxLabel("Planets")
-            ComboboxOption("Earth", value="earth")
-            ComboboxOption("Mars", value="mars")
+    **Example:**
+    
+    ```python
+    with ComboboxGroup():
+        ComboboxLabel("Planets")
+        ComboboxOption("Earth", value="earth")
+        ComboboxOption("Mars", value="mars")
+    ```
     """
 
     type: Literal["ComboboxGroup"] = "ComboboxGroup"
 
 
 class ComboboxLabel(Component):
-    """A label/header for a ``ComboboxGroup``.
+    """A label/header for a `ComboboxGroup`.
 
     Args:
         label: Label text.
 
-    Example::
-
-        ComboboxLabel("Planets")
+    **Example:**
+    
+    ```python
+    ComboboxLabel("Planets")
+    ```
     """
 
     type: Literal["ComboboxLabel"] = "ComboboxLabel"
@@ -109,11 +117,13 @@ class ComboboxLabel(Component):
 class ComboboxSeparator(Component):
     """A visual divider between combobox options or groups.
 
-    Example::
-
-        ComboboxOption("Earth", value="earth")
-        ComboboxSeparator()
-        ComboboxOption("Mars", value="mars")
+    **Example:**
+    
+    ```python
+    ComboboxOption("Earth", value="earth")
+    ComboboxSeparator()
+    ComboboxOption("Mars", value="mars")
+    ```
     """
 
     type: Literal["ComboboxSeparator"] = "ComboboxSeparator"
@@ -122,8 +132,8 @@ class ComboboxSeparator(Component):
 class Combobox(StatefulMixin, ContainerComponent):
     """Searchable select dropdown.
 
-    Children must be ``ComboboxOption``, ``ComboboxGroup``,
-    ``ComboboxLabel``, or ``ComboboxSeparator`` components.
+    Children must be `ComboboxOption`, `ComboboxGroup`,
+    `ComboboxLabel`, or `ComboboxSeparator` components.
 
     Args:
         placeholder: Placeholder text when no value selected
@@ -134,12 +144,14 @@ class Combobox(StatefulMixin, ContainerComponent):
         align: Alignment of the dropdown relative to the trigger
         invalid: Whether the combobox is in an error state
 
-    Example::
-
-        with Combobox(placeholder="Pick a language...", name="lang"):
-            ComboboxOption("Python", value="python")
-            ComboboxOption("TypeScript", value="typescript")
-            ComboboxOption("Rust", value="rust")
+    **Example:**
+    
+    ```python
+    with Combobox(placeholder="Pick a language...", name="lang"):
+        ComboboxOption("Python", value="python")
+        ComboboxOption("TypeScript", value="typescript")
+        ComboboxOption("Rust", value="rust")
+    ```
     """
 
     _auto_name: ClassVar[str] = "combobox"

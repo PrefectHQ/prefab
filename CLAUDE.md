@@ -36,6 +36,16 @@ Docstrings are **markdown, not reStructuredText**. Use backticks for inline code
 
 When adding or modifying a component, update the docstring to match. Run `uv run python -c "from prefab_ui.generative import search_components; print(search_components('YourComponent', detail=True))"` to verify the LLM-facing output.
 
+## Agent Skills
+
+`skills/` contains agent skills that teach LLMs how to write Prefab UIs:
+- `writing-prefab-python` — core patterns, imports, layout, actions, expressions
+- `prefab-charts` — ChartSeries and all chart types
+- `prefab-forms` — Form.from_model and manual form composition
+- `prefab-reactive` — Rx bindings, ForEach, conditionals, Define/Use
+
+**Keep skills in sync with code changes.** When modifying components, actions, imports, or layout behavior, update the relevant skill to match. Stale skills teach LLMs wrong patterns.
+
 ## Developer Docs
 
 `dev-docs/` contains internal reference documentation for build processes, architecture decisions, and operational knowledge. Check there before asking questions about how things work.

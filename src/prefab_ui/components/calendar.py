@@ -1,15 +1,17 @@
 """Calendar component for date selection.
 
-Example::
+**Example:**
 
-    import datetime
+```python
+import datetime
 
-    from prefab_ui.components import Calendar, Text
+from prefab_ui.components import Calendar, Text
 
-    cal = Calendar(value=datetime.date(2026, 5, 4))
-    Text(f"Selected: {cal.rx.date('long')}")
+cal = Calendar(value=datetime.date(2026, 5, 4))
+Text(f"Selected: {cal.rx.date('long')}")
 
-    Calendar(mode="range", name="dateRange")
+Calendar(mode="range", name="dateRange")
+```
 """
 
 from __future__ import annotations
@@ -41,10 +43,12 @@ class Calendar(StatefulMixin, Component):
         name: State key for reactive binding (auto-generated if omitted).
         on_change: Action(s) fired when selection changes.
 
-    Example::
-
-        Calendar(value=datetime.date(2026, 5, 4))
-        Calendar(mode="range", name="dateRange")
+    **Example:**
+    
+    ```python
+    Calendar(value=datetime.date(2026, 5, 4))
+    Calendar(mode="range", name="dateRange")
+    ```
     """
 
     _auto_name: ClassVar[str] = "calendar"

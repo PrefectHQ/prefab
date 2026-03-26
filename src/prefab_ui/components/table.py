@@ -2,24 +2,26 @@
 
 Tables display structured data in rows and columns.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import (
-        Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
-    )
+```python
+from prefab_ui.components import (
+    Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
+)
 
-    with Table():
-        TableCaption("Recent orders")
-        with TableHeader():
-            with TableRow():
-                TableHead("Order")
-                TableHead("Status")
-                TableHead("Amount")
-        with TableBody():
-            with TableRow():
-                TableCell("ORD-001")
-                TableCell("Shipped")
-                TableCell("$250.00")
+with Table():
+    TableCaption("Recent orders")
+    with TableHeader():
+        with TableRow():
+            TableHead("Order")
+            TableHead("Status")
+            TableHead("Amount")
+    with TableBody():
+        with TableRow():
+            TableCell("ORD-001")
+            TableCell("Shipped")
+            TableCell("$250.00")
+```
 """
 
 from __future__ import annotations
@@ -72,9 +74,11 @@ class TableHead(ContainerComponent):
     Args:
         content: Header text (alternative to children).
 
-    Example::
-
-        TableHead("Name")
+    **Example:**
+    
+    ```python
+    TableHead("Name")
+    ```
     """
 
     type: Literal["TableHead"] = "TableHead"
@@ -103,12 +107,14 @@ class TableCell(ContainerComponent):
     Args:
         content: Cell text (alternative to children).
 
-    Example::
-
-        TableCell("$250.00")
-        # or with children:
-        with TableCell():
-            Badge("Active", variant="success")
+    **Example:**
+    
+    ```python
+    TableCell("$250.00")
+    # or with children:
+    with TableCell():
+        Badge("Active", variant="success")
+    ```
     """
 
     type: Literal["TableCell"] = "TableCell"
@@ -135,9 +141,11 @@ class TableCaption(Component):
     Args:
         content: Caption text.
 
-    Example::
-
-        TableCaption("A list of recent invoices")
+    **Example:**
+    
+    ```python
+    TableCaption("A list of recent invoices")
+    ```
     """
 
     type: Literal["TableCaption"] = "TableCaption"

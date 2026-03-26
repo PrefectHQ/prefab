@@ -17,9 +17,11 @@ class Code(Component):
         content: Code content.
         language: Syntax highlighting language.
 
-    Example::
-
-        Code("{{ source_code }}", language="python")
+    **Example:**
+    
+    ```python
+    Code("{{ source_code }}", language="python")
+    ```
     """
 
     type: Literal["Code"] = "Code"

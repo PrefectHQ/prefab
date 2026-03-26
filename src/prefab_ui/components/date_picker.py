@@ -1,14 +1,16 @@
 """DatePicker — popover with a calendar for selecting dates.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DatePicker
+```python
+from prefab_ui.components import DatePicker
 
-    DatePicker(placeholder="Select deadline", name="deadline")
+DatePicker(placeholder="Select deadline", name="deadline")
 
-    # Access reactive value
-    picker = DatePicker(placeholder="Choose date...")
-    Text(f"Date: {picker.rx}")
+# Access reactive value
+picker = DatePicker(placeholder="Choose date...")
+Text(f"Date: {picker.rx}")
+```
 """
 
 from __future__ import annotations
@@ -33,9 +35,11 @@ class DatePicker(StatefulMixin, Component):
         name: State key for reactive binding. Auto-generated if omitted.
         on_change: Action(s) fired when the date changes.
 
-    Example::
-
-        DatePicker(placeholder="Pick a date", name="deadline")
+    **Example:**
+    
+    ```python
+    DatePicker(placeholder="Pick a date", name="deadline")
+    ```
     """
 
     _auto_name: ClassVar[str] = "datepicker"

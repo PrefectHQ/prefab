@@ -24,7 +24,7 @@ class Row(ContainerComponent):
     equal-width — they size to their content.
 
     For equal-width or proportional layouts (e.g. a row of cards),
-    use :class:`Grid` instead: ``Grid(columns=3, gap=4)`` gives
+    use `Grid` instead: `Grid(columns=3, gap=4)` gives
     three equal columns without any flex classes.
 
     Args:
@@ -35,15 +35,17 @@ class Row(ContainerComponent):
             around, evenly, or stretch.
         css_class: Additional Tailwind classes.
 
-    Example::
-
-        with Row(gap=2, align="center"):
-            Dot(variant="success")
-            Text("Online")
-
-        with Row(gap=4, align="center", justify="between"):
-            Text("Label")
-            Badge("Status", variant="success")
+    **Example:**
+    
+    ```python
+    with Row(gap=2, align="center"):
+        Dot(variant="success")
+        Text("Online")
+    
+    with Row(gap=4, align="center", justify="between"):
+        Text("Label")
+        Badge("Status", variant="success")
+    ```
     """
 
     type: Literal["Row"] = "Row"

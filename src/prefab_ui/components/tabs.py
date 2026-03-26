@@ -1,18 +1,20 @@
 """Tabs component for switching between panels of content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Tabs, Tab, Text
+```python
+from prefab_ui.components import Tabs, Tab, Text
 
-    with Tabs(value="general"):
-        with Tab("General"):
-            Text("General settings here.")
-        with Tab("Advanced"):
-            Text("Advanced settings here.")
+with Tabs(value="general"):
+    with Tab("General"):
+        Text("General settings here.")
+    with Tab("Advanced"):
+        Text("Advanced settings here.")
 
-    # Access reactive value
-    tabs = Tabs()
-    Text(f"Active tab: {tabs.rx}")
+# Access reactive value
+tabs = Tabs()
+Text(f"Active tab: {tabs.rx}")
+```
 """
 
 from __future__ import annotations
@@ -32,17 +34,19 @@ TabsOrientation = Literal["horizontal", "vertical"]
 class Tab(ContainerComponent):
     """A single tab panel within a Tabs container.
 
-    The ``title`` appears in the tab trigger; children are the panel content.
+    The `title` appears in the tab trigger; children are the panel content.
 
     Args:
         title: Tab trigger label.
         value: Unique value for this tab (defaults to title).
         disabled: Disable this tab.
 
-    Example::
-
-        with Tab("Settings"):
-            Text("Content shown when this tab is active.")
+    **Example:**
+    
+    ```python
+    with Tab("Settings"):
+        Text("Content shown when this tab is active.")
+    ```
     """
 
     type: Literal["Tab"] = "Tab"
@@ -66,22 +70,24 @@ class Tab(ContainerComponent):
 
 
 class Tabs(StatefulMixin, ContainerComponent):
-    """Tab container — children must be ``Tab`` components.
+    """Tab container — children must be `Tab` components.
 
     Args:
-        variant: Visual style — ``'default'`` (pill) or ``'line'`` (underline).
+        variant: Visual style — `'default'` (pill) or `'line'` (underline).
         value: Value of the initially active tab.
         name: State key for reactive binding. Auto-generated if omitted.
-        orientation: Layout direction — ``'horizontal'`` or ``'vertical'``.
+        orientation: Layout direction — `'horizontal'` or `'vertical'`.
         on_change: Action(s) fired when the active tab changes.
 
-    Example::
-
-        with Tabs(value="general"):
-            with Tab("General"):
-                Text("General settings")
-            with Tab("Advanced"):
-                Text("Advanced settings")
+    **Example:**
+    
+    ```python
+    with Tabs(value="general"):
+        with Tab("General"):
+            Text("General settings")
+        with Tab("Advanced"):
+            Text("Advanced settings")
+    ```
     """
 
     _auto_name: ClassVar[str] = "tabs"
@@ -110,5 +116,5 @@ class Tabs(StatefulMixin, ContainerComponent):
 
     @property
     def default_value(self) -> RxStr | None:
-        """Alias for ``value`` — the initially active tab."""
+        """Alias for `value` — the initially active tab."""
         return self.value

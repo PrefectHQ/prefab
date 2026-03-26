@@ -23,10 +23,12 @@ class Video(Component):
         width: CSS width.
         height: CSS height.
 
-    Example::
-
-        Video(src="https://example.com/video.mp4")
-        Video(src="...", controls=True, autoplay=True, muted=True)
+    **Example:**
+    
+    ```python
+    Video(src="https://example.com/video.mp4")
+    Video(src="...", controls=True, autoplay=True, muted=True)
+    ```
     """
 
     type: Literal["Video"] = "Video"

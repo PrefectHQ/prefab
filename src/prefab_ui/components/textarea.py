@@ -2,16 +2,18 @@
 
 Multi-line text inputs with auto-sizing and form validation styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Textarea, Label
+```python
+from prefab_ui.components import Textarea, Label
 
-    Textarea(placeholder="Enter your message...")
-    Textarea(rows=5, placeholder="Feedback")
+Textarea(placeholder="Enter your message...")
+Textarea(rows=5, placeholder="Feedback")
 
-    # Access reactive value
-    textarea = Textarea(placeholder="Your feedback...")
-    Text(f"Comment: {textarea.rx}")
+# Access reactive value
+textarea = Textarea(placeholder="Your feedback...")
+Text(f"Comment: {textarea.rx}")
+```
 """
 
 from __future__ import annotations
@@ -37,10 +39,12 @@ class Textarea(StatefulMixin, Component):
         required: Whether textarea is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Textarea(placeholder="Write something...")
-        Textarea(rows=10, value="{{ comment_text }}")
+    **Example:**
+    
+    ```python
+    Textarea(placeholder="Write something...")
+    Textarea(rows=10, value="{{ comment_text }}")
+    ```
     """
 
     _auto_name: ClassVar[str] = "textarea"

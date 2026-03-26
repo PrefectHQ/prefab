@@ -2,22 +2,24 @@
 
 Only the active page renders. Navigate by setting state.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Pages, Page, Text, Button
-    from prefab_ui.actions import SetState
+```python
+from prefab_ui.components import Pages, Page, Text, Button
+from prefab_ui.actions import SetState
 
-    with Pages(name="page", value="home"):
-        with Page("Home"):
-            Text("Welcome!")
-            Button("Go to Settings", on_click=SetState("page", "settings"))
-        with Page("Settings"):
-            Text("Settings go here.")
-            Button("Back", on_click=SetState("page", "home"))
+with Pages(name="page", value="home"):
+    with Page("Home"):
+        Text("Welcome!")
+        Button("Go to Settings", on_click=SetState("page", "settings"))
+    with Page("Settings"):
+        Text("Settings go here.")
+        Button("Back", on_click=SetState("page", "home"))
 
-    # Access reactive value
-    pages = Pages()
-    Text(f"Current page: {pages.rx}")
+# Access reactive value
+pages = Pages()
+Text(f"Current page: {pages.rx}")
+```
 """
 
 from __future__ import annotations
@@ -37,10 +39,12 @@ class Page(ContainerComponent):
         title: Page identifier / label.
         value: Unique value for this page (defaults to title).
 
-    Example::
-
-        with Page("Settings"):
-            Text("Settings content.")
+    **Example:**
+    
+    ```python
+    with Page("Settings"):
+        Text("Settings content.")
+    ```
     """
 
     type: Literal["Page"] = "Page"
@@ -65,19 +69,21 @@ class Page(ContainerComponent):
 class Pages(StatefulMixin, ContainerComponent):
     """Multi-page layout — only the active Page renders.
 
-    Control which page shows via the state key matching ``name``.
+    Control which page shows via the state key matching `name`.
 
     Args:
         value: Initially active page value.
         name: State key for reactive binding. Auto-generated if omitted.
 
-    Example::
-
-        with Pages(name="currentPage", value="home"):
-            with Page("Home"):
-                Text("Home content")
-            with Page("Settings"):
-                Text("Settings content")
+    **Example:**
+    
+    ```python
+    with Pages(name="currentPage", value="home"):
+        with Page("Home"):
+            Text("Home content")
+        with Page("Settings"):
+            Text("Settings content")
+    ```
     """
 
     _auto_name: ClassVar[str] = "pages"
@@ -93,5 +99,5 @@ class Pages(StatefulMixin, ContainerComponent):
 
     @property
     def default_value(self) -> RxStr | None:
-        """Alias for ``value`` — the initially active page."""
+        """Alias for `value` — the initially active page."""
         return self.value

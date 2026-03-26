@@ -13,14 +13,16 @@ from prefab_ui.rx import RxStr
 class SetInterval(Action):
     """Execute actions on a repeating schedule.
 
-    Starts a client-side timer that fires ``on_tick`` every ``duration``
-    milliseconds.  The interval stops when ``while_`` evaluates to falsy
-    or ``count`` ticks have elapsed — whichever comes first.  When it
-    stops, ``on_complete`` fires.
+    Starts a client-side timer that fires `on_tick` every `duration`
+    milliseconds.  The interval stops when `while_` evaluates to falsy
+    or `count` ticks have elapsed — whichever comes first.  When it
+    stops, `on_complete` fires.
 
-    Use ``count=1`` for a one-shot delay::
+    Use `count=1` for a one-shot delay:
 
-        SetInterval(3000, count=1, on_complete=ShowToast("Still there?"))
+    ```python
+    SetInterval(3000, count=1, on_complete=ShowToast("Still there?"))
+    ```
     """
 
     action: Literal["setInterval"] = "setInterval"

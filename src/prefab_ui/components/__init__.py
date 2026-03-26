@@ -1,13 +1,17 @@
 """Prefab component library.
 
-UI and layout components are importable from this package directly::
+**UI and layout components are importable from this package directly:**
 
-    from prefab_ui.components import Card, Badge, H1, Grid
+```python
+from prefab_ui.components import Card, Badge, H1, Grid
+```
 
-Charts and control flow have dedicated submodules::
+**Charts and control flow have dedicated submodules:**
 
-    from prefab_ui.components.charts import BarChart, ChartSeries
-    from prefab_ui.components.control_flow import ForEach, If, Else
+```python
+from prefab_ui.components.charts import BarChart, ChartSeries
+from prefab_ui.components.control_flow import ForEach, If, Else
+```
 """
 
 from prefab_ui.components.alert import Alert, AlertDescription, AlertTitle

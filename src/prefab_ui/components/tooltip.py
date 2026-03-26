@@ -1,11 +1,13 @@
 """Tooltip — hover text on any component.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Tooltip, Button
+```python
+from prefab_ui.components import Tooltip, Button
 
-    with Tooltip("Click to save your changes"):
-        Button("Save")
+with Tooltip("Click to save your changes"):
+    Button("Save")
+```
 """
 
 from __future__ import annotations
@@ -28,10 +30,12 @@ class Tooltip(ContainerComponent):
         side: Which side to show the tooltip (top, right, bottom, left).
         delay: Delay in milliseconds before showing the tooltip.
 
-    Example::
-
-        with Tooltip("Saves the current document"):
-            Button("Save")
+    **Example:**
+    
+    ```python
+    with Tooltip("Saves the current document"):
+        Button("Save")
+    ```
     """
 
     type: Literal["Tooltip"] = "Tooltip"

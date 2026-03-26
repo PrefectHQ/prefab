@@ -17,8 +17,8 @@ from prefab_ui.components.base import (
 class Dashboard(ContainerComponent):
     """Explicit-placement grid for dashboard layouts.
 
-    Unlike ``Grid`` (auto-flow), ``Dashboard`` places children at
-    specific grid coordinates using ``DashboardItem`` wrappers.
+    Unlike `Grid` (auto-flow), `Dashboard` places children at
+    specific grid coordinates using `DashboardItem` wrappers.
     Positions are **1-indexed** (matching CSS Grid conventions).
 
     Args:
@@ -27,13 +27,15 @@ class Dashboard(ContainerComponent):
         rows: Fixed number of rows. Omit for auto-expanding rows.
         gap: Gap between grid cells.
 
-    Example::
-
-        with Dashboard(columns=12, row_height=120, gap=4):
-            with DashboardItem(col=1, row=1, col_span=8, row_span=3):
-                LineChart(...)
-            with DashboardItem(col=9, row=1, col_span=4, row_span=1):
-                Text("Revenue: $42M")
+    **Example:**
+    
+    ```python
+    with Dashboard(columns=12, row_height=120, gap=4):
+        with DashboardItem(col=1, row=1, col_span=8, row_span=3):
+            LineChart(...)
+        with DashboardItem(col=9, row=1, col_span=4, row_span=1):
+            Text("Revenue: $42M")
+    ```
     """
 
     type: Literal["Dashboard"] = "Dashboard"
@@ -56,7 +58,7 @@ class Dashboard(ContainerComponent):
 
 
 class DashboardItem(ContainerComponent):
-    """A positioned cell within a ``Dashboard``.
+    """A positioned cell within a `Dashboard`.
 
     Specifies where this item sits and how many columns/rows it spans.
     Positions are **1-indexed**.
@@ -68,9 +70,11 @@ class DashboardItem(ContainerComponent):
         row_span: Number of rows to span.
         z_index: CSS z-index for layering.
 
-    Example::
-
-        DashboardItem(col=1, row=1, col_span=4, row_span=2)
+    **Example:**
+    
+    ```python
+    DashboardItem(col=1, row=1, col_span=4, row_span=2)
+    ```
     """
 
     type: Literal["DashboardItem"] = "DashboardItem"

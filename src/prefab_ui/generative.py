@@ -2,27 +2,33 @@
 
 Prefab-side business logic for generative UI features. This module
 provides the functions and descriptions that MCP servers (like FastMCP's
-``GenerativeUI`` provider) wrap as tools and resources.
+`GenerativeUI` provider) wrap as tools and resources.
 
-Component introspection::
+**Component introspection:**
 
-    from prefab_ui.generative import search_components
+```python
+from prefab_ui.generative import search_components
 
-    # Compact catalog
-    print(search_components())
+# Compact catalog
+print(search_components())
 
-    # Detailed view for specific components
-    print(search_components("Chart", detail=True))
+# Detailed view for specific components
+print(search_components("Chart", detail=True))
+```
 
-Sandbox execution::
+**Sandbox execution:**
 
-    from prefab_ui.generative import execute
-    app = await execute('from prefab_ui.components import Text; Text("hi")')
+```python
+from prefab_ui.generative import execute
+app = await execute('from prefab_ui.components import Text; Text("hi")')
+```
 
-Coding guides::
+**Coding guides:**
 
-    from prefab_ui.generative import get_guide
-    print(get_guide("writing-prefab-python"))
+```python
+from prefab_ui.generative import get_guide
+print(get_guide("writing-prefab-python"))
+```
 """
 
 from __future__ import annotations
@@ -148,24 +154,24 @@ def search_components(
     Returns component names, import paths, tags, and a one-line
     description. This is usually enough to write correct code.
 
-    Use ``detail=True`` to include full docstrings, field listings,
+    Use `detail=True` to include full docstrings, field listings,
     and usage examples for matched components.
 
     The query matches component names. Space-separated terms match
-    independently, so ``"Card Badge Metric"`` returns all three.
+    independently, so `"Card Badge Metric"` returns all three.
 
     Recommended workflow (two calls max):
 
     1. Call with no arguments to see the full catalog — the compact
        listing includes import paths and descriptions, which is
        enough for most components.
-    2. Optionally, call with a query and ``detail=True`` to get
+    2. Optionally, call with a query and `detail=True` to get
        full docs for components with complex APIs (e.g. DataTable,
        Form, Grid, charts).
 
     Args:
         query: Filter by component name. Space-separated terms are
-            OR-matched (e.g. ``"Card Badge"`` returns both).
+            OR-matched (e.g. `"Card Badge"` returns both).
         detail: Include full docstrings and field listings.
     """
     if components is None:
@@ -218,7 +224,7 @@ def get_guide(name: str) -> str:
 
     Returns the raw guide content (markdown with frontmatter) as a
     single string, with any reference files appended.
-    Use :func:`list_guides` to see available names.
+    Use `list_guides()` to see available names.
     """
     skill_dir = _SKILLS_DIR / name
     skill_file = skill_dir / "SKILL.md"
@@ -252,54 +258,60 @@ async def execute(
     """Execute Prefab Python code in a sandbox and render the result.
 
     The code runs in a Pyodide WASM sandbox with full Python support.
-    Import everything you use. Use the ``components`` tool to look up
+    Import everything you use. Use the `components` tool to look up
     available components and their import paths.
 
     Always use PrefabApp as the outermost context manager — this enables
-    streaming so the UI renders progressively as code is written::
+    streaming so the UI renders progressively as code is written:
 
-        from prefab_ui.components import Column, Heading, Text, Row, Badge
-        from prefab_ui.app import PrefabApp
+    ```python
+    from prefab_ui.components import Column, Heading, Text, Row, Badge
+    from prefab_ui.app import PrefabApp
+    
+    with PrefabApp() as app:
+        with Column(gap=4):
+            Heading("Dashboard")
+            with Row(gap=2):
+                Text("Revenue: $1.2M")
+                Badge("On Track", variant="success")
+    ```
 
-        with PrefabApp() as app:
-            with Column(gap=4):
-                Heading("Dashboard")
-                with Row(gap=2):
-                    Text("Revenue: $1.2M")
-                    Badge("On Track", variant="success")
+    For interactive UIs, declare state and use `.rx` on stateful
+    components for reactive bindings:
 
-    For interactive UIs, declare state and use ``.rx`` on stateful
-    components for reactive bindings::
+    ```python
+    from prefab_ui.components import Column, Slider, Text
+    from prefab_ui.app import PrefabApp, set_initial_state
+    
+    state = set_initial_state(threshold=50)
+    
+    with PrefabApp() as app:
+        with Column(gap=4):
+            slider = Slider(value=50, min=0, max=100, name="threshold")
+            Text(f"Threshold: {slider.rx}%")
+    ```
 
-        from prefab_ui.components import Column, Slider, Text
-        from prefab_ui.app import PrefabApp, set_initial_state
-
-        state = set_initial_state(threshold=50)
-
-        with PrefabApp() as app:
-            with Column(gap=4):
-                slider = Slider(value=50, min=0, max=100, name="threshold")
-                Text(f"Threshold: {slider.rx}%")
-
-    ``slider.rx`` produces ``{{ threshold }}``, a template expression
-    that resolves against client-side state. Use ``Rx("key")`` directly,
-    or apply pipe filters: ``Rx("balance").currency()`` produces
-    ``{{ balance | currency }}``.
+    `slider.rx` produces `{{ threshold }}`, a template expression
+    that resolves against client-side state. Use `Rx("key")` directly,
+    or apply pipe filters: `Rx("balance").currency()` produces
+    `{{ balance | currency }}`.
 
     Available pipes: upper, lower, currency, length, json, round(n),
     default(val), truncate(n).
 
-    Charts live in ``prefab_ui.components.charts``::
+    Charts live in `prefab_ui.components.charts`:
 
-        from prefab_ui.components.charts import BarChart, ChartSeries
+    ```python
+    from prefab_ui.components.charts import BarChart, ChartSeries
+    
+    BarChart(
+        data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
+        series=[ChartSeries(data_key="rev", label="Revenue")],
+        x_axis="month",
+    )
+    ```
 
-        BarChart(
-            data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
-            series=[ChartSeries(data_key="rev", label="Revenue")],
-            x_axis="month",
-        )
-
-    Values passed via ``data`` are available as global variables in the
+    Values passed via `data` are available as global variables in the
     code. Python features like loops, f-strings, and comprehensions all
     work.
 
@@ -307,18 +319,18 @@ async def execute(
 
     - Card sub-components (CardHeader, CardContent, CardFooter) have
       built-in padding. Don't add extra padding to them. For a simple
-      card without sub-components, use ``Card(css_class="p-6")``.
-    - Use ``Grid(columns=N, gap=4)`` for equal-width cards or panels.
+      card without sub-components, use `Card(css_class="p-6")`.
+    - Use `Grid(columns=N, gap=4)` for equal-width cards or panels.
       Grid handles sizing automatically — no flex classes needed.
-      For unequal widths, pass a list: ``Grid(columns=[2, 1], gap=4)``
+      For unequal widths, pass a list: `Grid(columns=[2, 1], gap=4)`
       gives a 2:1 ratio.
     - Row is for inline elements (badges, icons + text, buttons).
       Prefer Grid when children should have equal or proportional
       widths. Row does not wrap by default.
-    - Column and Row accept ``gap`` (Tailwind scale: 1-12),
-      ``align`` (cross-axis), and ``justify`` (main-axis) as native
+    - Column and Row accept `gap` (Tailwind scale: 1-12),
+      `align` (cross-axis), and `justify` (main-axis) as native
       props — prefer these over raw css_class for spacing.
-    - Use ``css_class="overflow-hidden"`` on containers if chart
+    - Use `css_class="overflow-hidden"` on containers if chart
       or content edges should clip to the container boundary.
 
     Args:

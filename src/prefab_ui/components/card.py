@@ -2,27 +2,29 @@
 
 Cards provide a contained surface for grouping related content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import (
-        Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
-    )
-    from prefab_ui.components import Button, P
+```python
+from prefab_ui.components import (
+    Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+)
+from prefab_ui.components import Button, P
 
-    with Card():
-        with CardHeader():
-            CardTitle("Create project")
-            CardDescription("Deploy your new project in one-click.")
-        with CardContent():
-            P("Your project will be created with default settings.")
-        with CardFooter():
-            Button("Cancel", variant="outline")
-            Button("Deploy")
+with Card():
+    with CardHeader():
+        CardTitle("Create project")
+        CardDescription("Deploy your new project in one-click.")
+    with CardContent():
+        P("Your project will be created with default settings.")
+    with CardFooter():
+        Button("Cancel", variant="outline")
+        Button("Deploy")
 
-    # Simple card
-    with Card(css_class="p-6"):
-        H3("Quick Stats")
-        P("{{ summary }}")
+# Simple card
+with Card(css_class="p-6"):
+    H3("Quick Stats")
+    P("{{ summary }}")
+```
 """
 
 from __future__ import annotations
@@ -42,32 +44,38 @@ class Card(ContainerComponent):
 
     **Structured card** — use CardHeader, CardContent, CardFooter for
     cards with a title, body, and actions. Each sub-component has
-    built-in padding; don't add extra padding to them::
+    built-in padding; don't add extra padding to them:
 
-        with Card():
-            with CardHeader():
-                CardTitle("Create project")
-                CardDescription("Deploy in one click.")
-            with CardContent():
-                Input(name="project_name", placeholder="Project name")
-            with CardFooter():
-                Button("Cancel", variant="outline")
-                Button("Deploy")
+    ```python
+    with Card():
+        with CardHeader():
+            CardTitle("Create project")
+            CardDescription("Deploy in one click.")
+        with CardContent():
+            Input(name="project_name", placeholder="Project name")
+        with CardFooter():
+            Button("Cancel", variant="outline")
+            Button("Deploy")
+    ```
 
     **Simple card** — for compact content (a single Metric, a short
-    stat, etc.), skip the sub-components and add padding directly::
+    stat, etc.), skip the sub-components and add padding directly:
 
-        with Card(css_class="p-6"):
-            Metric(label="Revenue", value="$1.2M", delta="+12%")
+    ```python
+    with Card(css_class="p-6"):
+        Metric(label="Revenue", value="$1.2M", delta="+12%")
+    ```
 
     Don't mix the patterns — a Card should use either sub-components
-    or direct children with ``css_class="p-6"``, not both.
+    or direct children with `css_class="p-6"`, not both.
 
-    For equal-width cards, wrap them in a Grid::
+    For equal-width cards, wrap them in a `Grid`:
 
-        with Grid(columns=3, gap=4):
-            with Card(css_class="p-6"):
-                Metric(...)
+    ```python
+    with Grid(columns=3, gap=4):
+        with Card(css_class="p-6"):
+            Metric(...)
+    ```
     """
 
     type: Literal["Card"] = "Card"
@@ -76,11 +84,13 @@ class Card(ContainerComponent):
 class CardHeader(ContainerComponent):
     """Card header section for title and description.
 
-    Example::
-
-        with CardHeader():
-            CardTitle("Account")
-            CardDescription("Manage your account settings.")
+    **Example:**
+    
+    ```python
+    with CardHeader():
+        CardTitle("Account")
+        CardDescription("Manage your account settings.")
+    ```
     """
 
     type: Literal["CardHeader"] = "CardHeader"
@@ -94,10 +104,12 @@ class CardTitle(ContainerComponent):
     Args:
         content: Title text (alternative to children).
 
-    Example::
-
-        CardTitle("Settings")
-        CardTitle("{{ project_name }}")
+    **Example:**
+    
+    ```python
+    CardTitle("Settings")
+    CardTitle("{{ project_name }}")
+    ```
     """
 
     type: Literal["CardTitle"] = "CardTitle"
@@ -125,9 +137,11 @@ class CardDescription(ContainerComponent):
     Args:
         content: Description text (alternative to children).
 
-    Example::
-
-        CardDescription("Make changes to your account here.")
+    **Example:**
+    
+    ```python
+    CardDescription("Make changes to your account here.")
+    ```
     """
 
     type: Literal["CardDescription"] = "CardDescription"
@@ -152,10 +166,12 @@ class CardDescription(ContainerComponent):
 class CardContent(ContainerComponent):
     """Card content section for the main body.
 
-    Example::
-
-        with CardContent():
-            P("Your content here.")
+    **Example:**
+    
+    ```python
+    with CardContent():
+        P("Your content here.")
+    ```
     """
 
     type: Literal["CardContent"] = "CardContent"
@@ -164,11 +180,13 @@ class CardContent(ContainerComponent):
 class CardFooter(ContainerComponent):
     """Card footer section, typically for actions.
 
-    Example::
-
-        with CardFooter():
-            Button("Cancel", variant="outline")
-            Button("Save")
+    **Example:**
+    
+    ```python
+    with CardFooter():
+        Button("Cancel", variant="outline")
+        Button("Save")
+    ```
     """
 
     type: Literal["CardFooter"] = "CardFooter"

@@ -29,11 +29,13 @@ class Text(_TextComponent):
         code: Render text in monospace font.
         align: Horizontal text alignment.
 
-    Example::
-
-        Text("Hello, {{ name }}!")
-
-        Text("Click ", Span("here", bold=True), " to continue")
+    **Example:**
+    
+    ```python
+    Text("Hello, {{ name }}!")
+    
+    Text("Click ", Span("here", bold=True), " to continue")
+    ```
     """
 
     type: Literal["Text"] = "Text"

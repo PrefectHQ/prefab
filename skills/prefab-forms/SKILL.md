@@ -1,4 +1,14 @@
-# Form.from_model Reference
+---
+name: prefab-forms
+description: >
+  Build forms in Prefab Python UIs. Covers Form.from_model for auto-generating
+  forms from Pydantic models, manual form composition with Field/Input/Select,
+  and form submission with CallTool. Use when adding forms to a Prefab UI.
+---
+
+# Prefab Forms
+
+## Form.from_model
 
 Generate a complete form from a Pydantic model:
 
@@ -17,7 +27,7 @@ class UserProfile(BaseModel):
     password: SecretStr = Field(min_length=8)
     active: bool = True
 
-form = Form.from_model(
+Form.from_model(
     UserProfile,
     submit_label="Save Profile",
     on_submit=CallTool("save_profile"),
@@ -61,7 +71,29 @@ Form.from_model(Contact, on_submit=CallTool("create_contact"))
 # generates: arguments={"data": {"name": "{{ name }}", "email": "{{ email }}", ...}}
 ```
 
-A default `on_error` toast is added if not already specified.
+## Manual Forms
+
+For full control, compose Field, Input, Select, etc. directly:
+
+```python
+from prefab_ui.components import (
+    Form, Field, Input, Select, SelectOption, Textarea, Button,
+)
+from prefab_ui.actions.mcp import CallTool
+
+with Form(on_submit=CallTool("submit", arguments={"name": "{{ name }}"})):
+    with Field(label="Name"):
+        Input(name="name", placeholder="Your name", required=True)
+    with Field(label="Category"):
+        with Select(name="category"):
+            SelectOption(value="bug", label="Bug Report")
+            SelectOption(value="feature", label="Feature Request")
+    with Field(label="Description"):
+        Textarea(name="desc", rows=4)
+    Button("Submit", variant="default")
+```
+
+Components with `name=` auto-sync their value to client state at that key.
 
 ## Skipped Types
 

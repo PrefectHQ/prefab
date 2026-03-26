@@ -2,16 +2,18 @@
 
 Switches provide an alternative to checkboxes for on/off states.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Switch
+```python
+from prefab_ui.components import Switch
 
-    Switch(label="Enable notifications", value=True)
-    Switch(label="Dark mode", size="sm")
+Switch(label="Enable notifications", value=True)
+Switch(label="Dark mode", size="sm")
 
-    # Access reactive value
-    toggle = Switch(label="Enable feature")
-    Text(f"Enabled: {toggle.rx}")
+# Access reactive value
+toggle = Switch(label="Enable feature")
+Text(f"Enabled: {toggle.rx}")
+```
 """
 
 from __future__ import annotations
@@ -39,10 +41,12 @@ class Switch(StatefulMixin, Component):
         required: Whether switch is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Switch(label="Enabled")
-        Switch(value=True, label="Active", size="sm")
+    **Example:**
+    
+    ```python
+    Switch(label="Enabled")
+    Switch(value=True, label="Active", size="sm")
+    ```
     """
 
     _auto_name: ClassVar[str] = "switch"
@@ -64,5 +68,5 @@ class Switch(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for ``value`` — whether switch is on."""
+        """Alias for `value` — whether switch is on."""
         return self.value

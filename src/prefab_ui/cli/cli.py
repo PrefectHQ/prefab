@@ -70,7 +70,7 @@ def version() -> None:
 
 
 def _load_prefab_app(target: str) -> PrefabApp:
-    """Load a PrefabApp from a ``file.py:attribute`` target string.
+    """Load a PrefabApp from a `file.py:attribute` target string.
 
     If no attribute is given, scans the module for the first PrefabApp
     instance.
@@ -123,7 +123,7 @@ def _load_prefab_app(target: str) -> PrefabApp:
 def _make_html_handler(html_ref: list[str]) -> type:
     """Create an HTTP request handler that serves HTML from a mutable ref.
 
-    ``html_ref`` is a single-element list so the reload watcher can swap
+    `html_ref` is a single-element list so the reload watcher can swap
     the content between requests.
     """
 
@@ -277,7 +277,7 @@ def playground(
     """Launch the interactive playground in your browser.
 
     Serves the self-contained playground HTML.  Requires docs to be
-    built first (``prefab dev build-docs``).
+    built first (`prefab dev build-docs`).
 
     Example:
         prefab playground
@@ -344,7 +344,7 @@ app.command(dev_app)
 
 
 def _should_install_node_deps(renderer_dir: Path) -> bool:
-    """Check whether ``npm install`` needs to run for the renderer."""
+    """Check whether `npm install` needs to run for the renderer."""
     node_modules = renderer_dir / "node_modules"
     if not node_modules.exists():
         return True
@@ -679,7 +679,7 @@ def docs(
     """Serve documentation locally with component previews.
 
     Rebuilds all doc assets, starts the Mintlify dev server, and watches
-    for source changes to automatically rebuild. Use ``--no-rebuild`` to
+    for source changes to automatically rebuild. Use `--no-rebuild` to
     skip both the initial build and the file watcher.
 
     Example:

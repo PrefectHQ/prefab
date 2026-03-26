@@ -1,14 +1,16 @@
 """Accordion component for collapsible content sections.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Accordion, AccordionItem, Text
+```python
+from prefab_ui.components import Accordion, AccordionItem, Text
 
-    with Accordion(default_open_items=0):
-        with AccordionItem("Getting Started"):
-            Text("Install with pip install fastmcp")
-        with AccordionItem("Configuration"):
-            Text("Edit config.toml to customize settings.")
+with Accordion(default_open_items=0):
+    with AccordionItem("Getting Started"):
+        Text("Install with pip install fastmcp")
+    with AccordionItem("Configuration"):
+        Text("Edit config.toml to customize settings.")
+```
 """
 
 from __future__ import annotations
@@ -24,16 +26,18 @@ from prefab_ui.rx import Rx, RxStr
 class AccordionItem(ContainerComponent):
     """A single collapsible section within an Accordion.
 
-    The ``title`` appears in the trigger; children are revealed on expand.
+    The `title` appears in the trigger; children are revealed on expand.
 
     Args:
         title: Accordion trigger label.
         value: Unique value identifying this item (defaults to title).
 
-    Example::
-
-        with AccordionItem("Details"):
-            Text("Hidden content revealed on click.")
+    **Example:**
+    
+    ```python
+    with AccordionItem("Details"):
+        Text("Hidden content revealed on click.")
+    ```
     """
 
     type: Literal["AccordionItem"] = "AccordionItem"
@@ -56,20 +60,22 @@ class AccordionItem(ContainerComponent):
 
 
 class Accordion(ContainerComponent):
-    """Accordion container — children must be ``AccordionItem`` components.
+    """Accordion container — children must be `AccordionItem` components.
 
     Args:
         multiple: Allow multiple items to be open simultaneously.
         collapsible: Whether items can be fully collapsed (single mode only).
         default_open_items: Initially expanded item(s) by index or value/title.
 
-    Example::
-
-        with Accordion(multiple=True, default_open_items=[0, 1]):
-            with AccordionItem("Section 1"):
-                Text("Content 1")
-            with AccordionItem("Section 2"):
-                Text("Content 2")
+    **Example:**
+    
+    ```python
+    with Accordion(multiple=True, default_open_items=[0, 1]):
+        with AccordionItem("Section 1"):
+            Text("Content 1")
+        with AccordionItem("Section 2"):
+            Text("Content 2")
+    ```
     """
 
     type: Literal["Accordion"] = "Accordion"

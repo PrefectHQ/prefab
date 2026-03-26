@@ -2,22 +2,26 @@
 
 Helpers for building css_class values without repeating variant prefixes.
 
-Pseudo-state helpers prefix each space-separated class::
+Pseudo-state helpers prefix each space-separated class:
 
-    from prefab_ui.css import Hover, FocusVisible
+```python
+from prefab_ui.css import Hover, FocusVisible
 
-    css_class=["p-4 border-0", Hover("bg-blue-500 scale-105")]
-    # → "p-4 border-0 hover:bg-blue-500 hover:scale-105"
+css_class=["p-4 border-0", Hover("bg-blue-500 scale-105")]
+# → "p-4 border-0 hover:bg-blue-500 hover:scale-105"
 
-    css_class=["ring-0 border-0", FocusVisible("border-b border-border")]
-    # → "ring-0 border-0 focus-visible:border-b focus-visible:border-border"
+css_class=["ring-0 border-0", FocusVisible("border-b border-border")]
+# → "ring-0 border-0 focus-visible:border-b focus-visible:border-border"
+```
 
-Responsive maps Tailwind breakpoints to values::
+Responsive maps Tailwind breakpoints to values:
 
-    from prefab_ui.css import Responsive
+```python
+from prefab_ui.css import Responsive
 
-    Grid(columns=Responsive(default=1, md=2, lg=3))
-    Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+Grid(columns=Responsive(default=1, md=2, lg=3))
+Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+```
 """
 
 from __future__ import annotations
@@ -35,13 +39,15 @@ class Responsive:
     """Breakpoint-aware values for responsive layouts.
 
     Maps Tailwind breakpoints to values. At compile time, each entry is
-    prefixed with its breakpoint (``default`` emits unprefixed classes).
+    prefixed with its breakpoint (`default` emits unprefixed classes).
 
-    Usage::
-
-        Grid(columns=Responsive(default=1, md=2, lg=3))
-        Row(gap=Responsive(default=2, md=4))
-        Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+    **Usage:**
+    
+    ```python
+    Grid(columns=Responsive(default=1, md=2, lg=3))
+    Row(gap=Responsive(default=2, md=4))
+    Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+    ```
     """
 
     __slots__ = ("_values",)
@@ -100,38 +106,40 @@ def _prefixed(prefix: str, classes: str) -> str:
 
 
 def Hover(classes: str) -> str:
-    """Prefix classes with ``hover:``.
+    """Prefix classes with `hover:`.
 
-    Example::
-
-        css_class=["p-4", Hover("bg-blue-500 scale-105")]
-        # → "p-4 hover:bg-blue-500 hover:scale-105"
+    **Example:**
+    
+    ```python
+    css_class=["p-4", Hover("bg-blue-500 scale-105")]
+    # → "p-4 hover:bg-blue-500 hover:scale-105"
+    ```
     """
     return _prefixed("hover", classes)
 
 
 def Focus(classes: str) -> str:
-    """Prefix classes with ``focus:``."""
+    """Prefix classes with `focus:`."""
     return _prefixed("focus", classes)
 
 
 def FocusVisible(classes: str) -> str:
-    """Prefix classes with ``focus-visible:``."""
+    """Prefix classes with `focus-visible:`."""
     return _prefixed("focus-visible", classes)
 
 
 def FocusWithin(classes: str) -> str:
-    """Prefix classes with ``focus-within:``."""
+    """Prefix classes with `focus-within:`."""
     return _prefixed("focus-within", classes)
 
 
 def Active(classes: str) -> str:
-    """Prefix classes with ``active:``."""
+    """Prefix classes with `active:`."""
     return _prefixed("active", classes)
 
 
 def Disabled(classes: str) -> str:
-    """Prefix classes with ``disabled:``."""
+    """Prefix classes with `disabled:`."""
     return _prefixed("disabled", classes)
 
 
@@ -139,25 +147,25 @@ def Disabled(classes: str) -> str:
 
 
 def Sm(classes: str) -> str:
-    """Prefix classes with ``sm:`` (≥640px)."""
+    """Prefix classes with `sm:` (≥640px)."""
     return _prefixed("sm", classes)
 
 
 def Md(classes: str) -> str:
-    """Prefix classes with ``md:`` (≥768px)."""
+    """Prefix classes with `md:` (≥768px)."""
     return _prefixed("md", classes)
 
 
 def Lg(classes: str) -> str:
-    """Prefix classes with ``lg:`` (≥1024px)."""
+    """Prefix classes with `lg:` (≥1024px)."""
     return _prefixed("lg", classes)
 
 
 def Xl(classes: str) -> str:
-    """Prefix classes with ``xl:`` (≥1280px)."""
+    """Prefix classes with `xl:` (≥1280px)."""
     return _prefixed("xl", classes)
 
 
 def Xxl(classes: str) -> str:
-    """Prefix classes with ``2xl:`` (≥1536px)."""
+    """Prefix classes with `2xl:` (≥1536px)."""
     return _prefixed("2xl", classes)

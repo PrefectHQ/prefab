@@ -2,13 +2,15 @@
 
 Separators create visual divisions between content sections.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Separator
+```python
+from prefab_ui.components import Separator
 
-    Separator()
-    Separator(orientation="vertical")
-    Separator(spacing=4)
+Separator()
+Separator(orientation="vertical")
+Separator(spacing=4)
+```
 """
 
 from __future__ import annotations
@@ -32,11 +34,13 @@ class Separator(Component):
             margin for vertical separators.
         css_class: Additional CSS classes
 
-    Example::
-
-        Separator()  # Horizontal by default
-        Separator(orientation="vertical")
-        Separator(spacing=4)  # Extra breathing room
+    **Example:**
+    
+    ```python
+    Separator()  # Horizontal by default
+    Separator(orientation="vertical")
+    Separator(spacing=4)  # Extra breathing room
+    ```
     """
 
     type: Literal["Separator"] = "Separator"

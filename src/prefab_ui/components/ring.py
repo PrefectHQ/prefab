@@ -20,7 +20,7 @@ class Ring(ContainerComponent):
 
     Renders an SVG ring that fills clockwise from 12 o'clock based on the
     current value within the min/max range. Accepts children for custom
-    center content; when no children are present, ``label`` is shown.
+    center content; when no children are present, `label` is shown.
 
     Args:
         value: Current value (number or template expression).
@@ -35,13 +35,15 @@ class Ring(ContainerComponent):
         target_class: Tailwind classes for the target marker.
         gradient: Gradient stroke — None inherits theme, True forces on, False forces off.
 
-    Example::
-
-        Ring(value=75, label="75%", variant="success")
-        Ring(value=3, max=5, label="3/5", variant="info", size="lg")
-
-        with Ring(value=75, variant="success", size="lg"):
-            H1("75%")
+    **Example:**
+    
+    ```python
+    Ring(value=75, label="75%", variant="success")
+    Ring(value=3, max=5, label="3/5", variant="info", size="lg")
+    
+    with Ring(value=75, variant="success", size="lg"):
+        H1("75%")
+    ```
     """
 
     type: Literal["Ring"] = "Ring"

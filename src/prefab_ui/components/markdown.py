@@ -18,12 +18,14 @@ class Markdown(Component):
     or LLM responses.
 
     Args:
-        content: Markdown string. Supports ``{{ expr }}`` templates.
+        content: Markdown string. Supports `{{ expr }}` templates.
 
-    Example::
-
-        Markdown("# Welcome\\n\\nHello, **{{ name }}**!")
-        Markdown("{{ ai_response }}")
+    **Example:**
+    
+    ```python
+    Markdown("# Welcome\\n\\nHello, **{{ name }}**!")
+    Markdown("{{ ai_response }}")
+    ```
     """
 
     type: Literal["Markdown"] = "Markdown"

@@ -10,25 +10,27 @@ three CSS layers:
 The `accent` field accepts a Tailwind color name (`"blue"`, `"amber-500"`),
 a CSS color string (`"#3b82f6"`), or an OKLCH hue number (0-360).
 
-Usage::
+**Usage:**
 
-    from prefab_ui import PrefabApp
-    from prefab_ui.themes import Basic, Presentation, Theme
+```python
+from prefab_ui import PrefabApp
+from prefab_ui.themes import Basic, Presentation, Theme
 
-    # Single-hue theme
-    app = PrefabApp(view=my_view, theme=Basic(accent="green"))
+# Single-hue theme
+app = PrefabApp(view=my_view, theme=Basic(accent="green"))
 
-    # Always-dark data dashboard theme
-    app = PrefabApp(view=my_view, theme=Presentation())
+# Always-dark data dashboard theme
+app = PrefabApp(view=my_view, theme=Presentation())
 
-    # Custom declarations
-    app = PrefabApp(
-        view=my_view,
-        theme=Theme(
-            light_css="--primary: oklch(0.6 0.24 260);",
-            dark_css="--primary: oklch(0.7 0.18 260);",
-        ),
-    )
+# Custom declarations
+app = PrefabApp(
+    view=my_view,
+    theme=Theme(
+        light_css="--primary: oklch(0.6 0.24 260);",
+        dark_css="--primary: oklch(0.7 0.18 260);",
+    ),
+)
+```
 
 If `dark_css` is omitted, the `light_css` values are used for both modes.
 

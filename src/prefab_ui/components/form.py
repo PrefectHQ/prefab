@@ -1,21 +1,23 @@
 """Form component with Pydantic model integration.
 
-Forms group inputs with labels. The ``from_model()`` classmethod generates
+Forms group inputs with labels. The `from_model()` classmethod generates
 a complete form from a Pydantic model's field definitions, using Pydantic
-``Field()`` metadata for labels, descriptions, constraints, and UI hints.
+`Field()` metadata for labels, descriptions, constraints, and UI hints.
 
-Example::
+**Example:**
 
-    from pydantic import BaseModel, Field
-    from prefab_ui.components import Form
+```python
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
 
-    class UserProfile(BaseModel):
-        name: str = Field(title="Full Name", min_length=1)
-        email: str
-        age: int = Field(ge=0, le=150)
-        active: bool = True
+class UserProfile(BaseModel):
+    name: str = Field(title="Full Name", min_length=1)
+    email: str
+    age: int = Field(ge=0, le=150)
+    active: bool = True
 
-    Form.from_model(UserProfile, on_submit=CallTool("save_profile"))
+Form.from_model(UserProfile, on_submit=CallTool("save_profile"))
+```
 """
 
 from __future__ import annotations
@@ -43,19 +45,21 @@ from prefab_ui.components.base import (
 class Form(ContainerComponent):
     """Form container that groups labeled inputs.
 
-    Use ``Form.from_model()`` to auto-generate a form from a Pydantic model,
+    Use `Form.from_model()` to auto-generate a form from a Pydantic model,
     or build forms manually with context-manager syntax.
 
     Args:
         gap: Spacing between form children (Tailwind gap scale).
         on_submit: Action(s) to execute when the form is submitted.
 
-    Example::
-
-        with Form():
-            Label("Name")
-            Input(name="name", placeholder="Your name")
-            Button("Submit", on_click=CallTool("save"))
+    **Example:**
+    
+    ```python
+    with Form():
+        Label("Name")
+        Input(name="name", placeholder="Your name")
+        Button("Submit", on_click=CallTool("save"))
+    ```
     """
 
     type: Literal["Form"] = "Form"
@@ -108,46 +112,50 @@ class Form(ContainerComponent):
         """Generate a form from a Pydantic model.
 
         Introspects the model's fields and creates appropriate input
-        components for each, using Pydantic ``Field()`` metadata:
+        components for each, using Pydantic `Field()` metadata:
 
-        - ``title`` → label text (falls back to humanized field name)
-        - ``description`` → placeholder / help text
-        - ``min_length`` / ``max_length`` → HTML input constraints
-        - ``ge`` / ``le`` / ``gt`` / ``lt`` → number min/max
-        - ``json_schema_extra={"ui": {"type": "textarea"}}`` → textarea
-        - ``SecretStr`` → password input
-        - ``exclude=True`` → skip field
+        - `title` → label text (falls back to humanized field name)
+        - `description` → placeholder / help text
+        - `min_length` / `max_length` → HTML input constraints
+        - `ge` / `le` / `gt` / `lt` → number min/max
+        - `json_schema_extra={"ui": {"type": "textarea"}}` → textarea
+        - `SecretStr` → password input
+        - `exclude=True` → skip field
 
         Type mapping:
 
-        - ``str`` → text input (email/password/tel/url detected by name)
-        - ``int`` / ``float`` → number input
-        - ``bool`` → checkbox
-        - ``datetime.date`` → date input
-        - ``datetime.time`` → time input
-        - ``datetime.datetime`` → datetime-local input
-        - ``Literal[...]`` → select dropdown
-        - ``SecretStr`` → password input
+        - `str` → text input (email/password/tel/url detected by name)
+        - `int` / `float` → number input
+        - `bool` → checkbox
+        - `datetime.date` → date input
+        - `datetime.time` → time input
+        - `datetime.datetime` → datetime-local input
+        - `Literal[...]` → select dropdown
+        - `SecretStr` → password input
 
-        When ``on_submit`` is a single ``CallTool`` with no ``arguments``,
-        arguments are auto-filled from the model's fields under a ``data``
-        key. This enables the self-calling tool pattern::
+        When `on_submit` is a single `CallTool` with no `arguments`,
+        arguments are auto-filled from the model's fields under a `data`
+        key. This enables the self-calling tool pattern:
 
-            Form.from_model(Contact, on_submit=CallTool("create_contact"))
-            # auto-generates: arguments={"data": {"name": "{{ name }}", ...}}
+        ```python
+        Form.from_model(Contact, on_submit=CallTool("create_contact"))
+        # auto-generates: arguments={"data": {"name": "{{ name }}", ...}}
+        ```
 
-        A default ``on_error`` toast is added if not already specified.
+        A default `on_error` toast is added if not already specified.
 
-        When ``fields_only=True``, only the field components (labeled
-        inputs) are created — no ``Form`` wrapper and no submit button.
+        When `fields_only=True`, only the field components (labeled
+        inputs) are created — no `Form` wrapper and no submit button.
         The fields auto-parent to whatever context manager is active,
-        letting you compose them into custom layouts::
+        letting you compose them into custom layouts:
 
-            with Form(on_submit=CallTool("save")):
-                with CardContent():
-                    Form.from_model(Contact, fields_only=True)
-                with CardFooter():
-                    Button("Submit")
+        ```python
+        with Form(on_submit=CallTool("save")):
+            with CardContent():
+                Form.from_model(Contact, fields_only=True)
+            with CardFooter():
+                Button("Submit")
+        ```
 
         Args:
             model: Pydantic model class to generate from.
@@ -155,7 +163,7 @@ class Form(ContainerComponent):
                 a Form wrapper or submit button. Returns a list of the
                 created components.
             submit_label: Text for the submit button.
-            on_submit: Action(s) fired on submit. A ``CallTool`` with no
+            on_submit: Action(s) fired on submit. A `CallTool` with no
                 arguments gets auto-filled from model fields.
             css_class: Additional CSS classes on the form container.
         """
@@ -184,7 +192,7 @@ class Form(ContainerComponent):
         on_submit = _maybe_enrich_tool_call(on_submit, model)
 
         # Form is created with the stack active so it auto-parents to any
-        # outer context manager (e.g. ``with Card(): Form.from_model(...)``).
+        # outer context manager (e.g. `with Card(): Form.from_model(...)`).
         form = cls(on_submit=on_submit, css_class=css_class)
 
         # Suppress auto-parenting while building internal components so
@@ -211,8 +219,8 @@ def _maybe_enrich_tool_call(
     """Auto-fill CallTool arguments from model fields when empty.
 
     Only triggers when on_submit is a single CallTool with no arguments.
-    Wraps field templates under a ``data`` key so the receiving tool gets
-    ``data: Model`` as a single parameter.
+    Wraps field templates under a `data` key so the receiving tool gets
+    `data: Model` as a single parameter.
     """
     if not isinstance(on_submit, CallTool):
         return on_submit

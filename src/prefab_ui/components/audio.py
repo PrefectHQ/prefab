@@ -20,10 +20,12 @@ class Audio(Component):
         loop: Loop playback.
         muted: Mute audio.
 
-    Example::
-
-        Audio(src="https://example.com/track.mp3")
-        Audio(src="...", controls=True, loop=True)
+    **Example:**
+    
+    ```python
+    Audio(src="https://example.com/track.mp3")
+    Audio(src="...", controls=True, loop=True)
+    ```
     """
 
     type: Literal["Audio"] = "Audio"

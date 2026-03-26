@@ -16,12 +16,14 @@ class Image(Component):
     Args:
         src: Image URL.
         alt: Alt text for accessibility.
-        width: CSS width (e.g. ``"200px"``).
-        height: CSS height (e.g. ``"auto"``).
+        width: CSS width (e.g. `"200px"`).
+        height: CSS height (e.g. `"auto"`).
 
-    Example::
-
-        Image(src="{{ avatar_url }}", alt="{{ name }}")
+    **Example:**
+    
+    ```python
+    Image(src="{{ avatar_url }}", alt="{{ name }}")
+    ```
     """
 
     type: Literal["Image"] = "Image"

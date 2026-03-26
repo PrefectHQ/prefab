@@ -14,9 +14,9 @@ from prefab_ui.rx import RxStr
 class Embed(Component):
     """Embed external content in a sandboxed iframe.
 
-    Accepts either a ``url`` (iframe src) or ``html`` (iframe srcdoc),
-    but not both. Use ``url`` for YouTube, Google Maps, and other
-    hosted content. Use ``html`` for custom HTML/JS like Three.js
+    Accepts either a `url` (iframe src) or `html` (iframe srcdoc),
+    but not both. Use `url` for YouTube, Google Maps, and other
+    hosted content. Use `html` for custom HTML/JS like Three.js
     scenes or Canvas-based visualizations.
 
     Args:
@@ -24,13 +24,15 @@ class Embed(Component):
         html: Raw HTML to embed (iframe srcdoc).
         width: CSS width of the iframe.
         height: CSS height of the iframe.
-        sandbox: Iframe sandbox attribute (e.g. ``'allow-scripts allow-same-origin'``).
-        allow: Iframe allow attribute (e.g. ``'fullscreen; autoplay'``).
+        sandbox: Iframe sandbox attribute (e.g. `'allow-scripts allow-same-origin'`).
+        allow: Iframe allow attribute (e.g. `'fullscreen; autoplay'`).
 
-    Example::
-
-        Embed(url="https://www.youtube.com/embed/dQw4w9WgXcQ")
-        Embed(html="<canvas id='c'></canvas><script>/*...*/</script>")
+    **Example:**
+    
+    ```python
+    Embed(url="https://www.youtube.com/embed/dQw4w9WgXcQ")
+    Embed(html="<canvas id='c'></canvas><script>/*...*/</script>")
+    ```
     """
 
     type: Literal["Embed"] = "Embed"
@@ -62,16 +64,18 @@ class Embed(Component):
 
     @classmethod
     def from_iframe(cls, iframe_html: str, **kwargs: Any) -> Embed:
-        """Create an Embed from a raw ``<iframe>`` HTML snippet.
+        """Create an Embed from a raw `<iframe>` HTML snippet.
 
-        Parses the tag attributes and maps them to Embed fields::
+        Parses the tag attributes and maps them to Embed fields:
 
-            Embed.from_iframe(
-                '<iframe src="https://example.com" width="600" height="400"'
-                ' allow="fullscreen"></iframe>'
-            )
+        ```python
+        Embed.from_iframe(
+            '<iframe src="https://example.com" width="600" height="400"'
+            ' allow="fullscreen"></iframe>'
+        )
+        ```
 
-        Any ``**kwargs`` override the parsed attributes.
+        Any `**kwargs` override the parsed attributes.
         """
         parsed_attrs: dict[str, str | None] = {}
 
