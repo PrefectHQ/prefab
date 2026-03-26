@@ -149,7 +149,7 @@ class PrefabApp(BaseModel):
         default=None,
         description="Extra CSS/Tailwind classes merged onto the pf-app-root wrapper Div",
     )
-    state: dict[str, Any] | None = Field(
+    state: dict[str, Any] | _BoundStateProxy | None = Field(
         default=None,
         description="Initial client-side state",
     )
@@ -208,6 +208,10 @@ class PrefabApp(BaseModel):
 
     @model_validator(mode="after")
     def _consume_initial_state(self) -> PrefabApp:
+        # Coerce _BoundStateProxy to dict
+        if isinstance(self.state, _BoundStateProxy):
+            self.state = object.__getattribute__(self.state, "_declared")
+
         accumulated = get_initial_state()
         if accumulated:
             clear_initial_state()

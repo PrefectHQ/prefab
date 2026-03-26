@@ -44,9 +44,14 @@ with PrefabApp(state={"query": "", "results": []}) as app:
 
 1. `PrefabApp` is the outermost context manager — children auto-append
 2. Container components (`Column`, `Card`, etc.) use `with` blocks
-3. `state=` sets initial client-side state
+3. `state=` takes a plain dict of initial client-side state
 4. `{{ key }}` templates resolve against state at render time
 5. Actions like `CallTool` call server tools; `result_key` writes results into state
+
+**Do not pass `set_initial_state()` to `PrefabApp(state=...)`** — it
+returns a proxy, not a dict. Either use `PrefabApp(state={...})` with a
+plain dict, or call `set_initial_state()` separately (it registers state
+globally).
 
 ## Imports
 
@@ -146,6 +151,31 @@ with Card():
 with Card(css_class="p-6"):
     Metric(label="Total", value="{{ total }}")
 ```
+
+### Tabs
+
+Content goes *inside* each Tab — Tab is a container, not just a header:
+
+```python
+with Tabs(default_value="overview"):
+    with Tab("Overview", value="overview"):
+        with Card():
+            with CardContent():
+                Text("overview content")
+    with Tab("Settings", value="settings"):
+        Text("settings content")
+```
+
+### Metric
+
+```python
+Metric(label="Revenue", value="$1.2M", delta="+12%", trend="up",
+       trend_sentiment="positive", description="vs last month")
+```
+
+`delta=` is the change text. `trend=` is "up"/"down"/"neutral" (sets the
+arrow icon). `trend_sentiment=` is "positive"/"negative"/"neutral" (sets
+the color).
 
 ### DataTable
 

@@ -8730,25 +8730,27 @@ A JSON component format that renders to real interactive frontends.
 Transport-agnostic: works with MCP servers, REST APIs, or any backend
 that can return JSON.
 
-Usage::
+**Usage:**
 
-    from prefab_ui.components import Column, Heading, Text
-    from prefab_ui.response import UIResponse
+\`\`\`python
+from prefab_ui.components import Column, Heading, Text
+from prefab_ui.response import UIResponse
 
-    def show_user(name: str) -> UIResponse:
-        return UIResponse(
-            state={"name": name},
-            view=Column(Heading("{{ name }}")),
-        )
+def show_user(name: str) -> UIResponse:
+    return UIResponse(
+        state={"name": name},
+        view=Column(Heading("{{ name }}")),
+    )
+\`\`\`
 
 Submodules:
 
-- \`\`prefab_ui.components\`\` — UI components (Button, Grid, Card, etc.)
-- \`\`prefab_ui.actions\`\` — state actions (SetState, AppendState, etc.)
-- \`\`prefab_ui.css\`\` — CSS helpers (Responsive, Hover, Md, etc.)
-- \`\`prefab_ui.response\`\` — UIResponse
-- \`\`prefab_ui.define\`\` — Define (reusable component definitions)
-- \`\`prefab_ui.use\`\` — Use (component instantiation)
+- \`prefab_ui.components\` — UI components (Button, Grid, Card, etc.)
+- \`prefab_ui.actions\` — state actions (SetState, AppendState, etc.)
+- \`prefab_ui.css\` — CSS helpers (Responsive, Hover, Md, etc.)
+- \`prefab_ui.response\` — UIResponse
+- \`prefab_ui.define\` — Define (reusable component definitions)
+- \`prefab_ui.use\` — Use (component instantiation)
 """
 
 from __future__ import annotations
@@ -8768,18 +8770,20 @@ except importlib.metadata.PackageNotFoundError:
 Describes what to render, what state to initialize, and what external
 assets to load.  Pure data model — transport-agnostic.
 
-Usage::
+**Usage:**
 
-    from prefab_ui.app import PrefabApp
-    from prefab_ui.components import Column, Heading, DataTable
+\`\`\`python
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Column, Heading, DataTable
 
-    app = PrefabApp(
-        view=Column(Heading("Dashboard"), DataTable(data=users)),
-        state={"users": users},
-    )
+app = PrefabApp(
+    view=Column(Heading("Dashboard"), DataTable(data=users)),
+    state={"users": users},
+)
 
-    html = app.html()      # complete self-contained page
-    csp = app.csp()        # CSP domains for sandboxed delivery
+html = app.html()      # complete self-contained page
+csp = app.csp()        # CSP domains for sandboxed delivery
+\`\`\`
 """
 
 from __future__ import annotations
@@ -8812,7 +8816,7 @@ _initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
 class ResolvedTool:
     """Enriched result from a tool resolver.
 
-    Beyond the tool \`\`name\`\`, the resolver can set flags that influence
+    Beyond the tool \`name\`, the resolver can set flags that influence
     how the renderer handles the tool's result.  This keeps the contract
     typed and extensible without allowing arbitrary key injection.
     """
@@ -8827,7 +8831,7 @@ _tool_resolver: ContextVar[Callable[[Any], ResolvedTool] | None] = ContextVar(
 
 
 def get_tool_resolver() -> Callable[[Any], ResolvedTool] | None:
-    """Return the active tool resolver, or \`\`None\`\`."""
+    """Return the active tool resolver, or \`None\`."""
     return _tool_resolver.get()
 
 
@@ -8835,19 +8839,21 @@ def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
     """Declare initial client-side state for the current app.
 
     Called alongside component construction to define the starting
-    values that templates like \`\`{{ name }}\`\` resolve against.
+    values that templates like \`{{ name }}\` resolve against.
 
     Returns a bound state proxy that validates attribute access against
-    the declared keys::
+    the declared keys:
 
-        state = set_initial_state(count=0, items=[])
-        state.count    # Rx("count")
-        state.typo     # AttributeError — catches misspelled keys
+    \`\`\`python
+    state = set_initial_state(count=0, items=[])
+    state.count    # Rx("count")
+    state.typo     # AttributeError — catches misspelled keys
+    \`\`\`
 
     The proxy holds a reference to the same accumulator dict, so
-    multiple calls to \`\`set_initial_state\`\` are visible from any proxy.
-    Use the global :data:\`~prefab_ui.rx.STATE\` for keys defined
-    elsewhere (form controls, \`\`SetState\`\` actions, etc.).
+    multiple calls to \`set_initial_state\` are visible from any proxy.
+    Use the global \`STATE\` from \`prefab_ui.rx\` for keys defined
+    elsewhere (form controls, \`SetState\` actions, etc.).
     """
     current = _initial_state.get()
     if current is None:
@@ -8858,7 +8864,7 @@ def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
 
 
 def get_initial_state() -> dict[str, Any] | None:
-    """Retrieve state set by :func:\`set_initial_state\`, or \`\`None\`\`."""
+    """Retrieve state set by \`set_initial_state()\`, or \`None\`."""
     return _initial_state.get()
 
 
@@ -8892,14 +8898,16 @@ class PrefabApp(BaseModel):
     """A complete Prefab application.
 
     Describes the view, initial state, reusable component definitions,
-    and external assets.  Use \`\`html()\`\` to produce a self-contained
-    HTML page, or \`\`to_json()\`\` for the wire-format envelope.
+    and external assets.  Use \`html()\` to produce a self-contained
+    HTML page, or \`to_json()\` for the wire-format envelope.
 
-    Can be used as a context manager to build the component tree inline::
+    Can be used as a context manager to build the component tree inline:
 
-        with PrefabApp(state={"count": 0}, css_class="p-6") as app:
-            Heading("Dashboard")
-            Slider(value=50, name="count")
+    \`\`\`python
+    with PrefabApp(state={"count": 0}, css_class="p-6") as app:
+        Heading("Dashboard")
+        Slider(value=50, name="count")
+    \`\`\`
     """
 
     title: str = Field(default="Prefab", description="HTML page title")
@@ -8908,7 +8916,7 @@ class PrefabApp(BaseModel):
         default=None,
         description="Extra CSS/Tailwind classes merged onto the pf-app-root wrapper Div",
     )
-    state: dict[str, Any] | None = Field(
+    state: dict[str, Any] | _BoundStateProxy | None = Field(
         default=None,
         description="Initial client-side state",
     )
@@ -8967,6 +8975,10 @@ class PrefabApp(BaseModel):
 
     @model_validator(mode="after")
     def _consume_initial_state(self) -> PrefabApp:
+        # Coerce _BoundStateProxy to dict
+        if isinstance(self.state, _BoundStateProxy):
+            self.state = object.__getattribute__(self.state, "_declared")
+
         accumulated = get_initial_state()
         if accumulated:
             clear_initial_state()
@@ -8994,10 +9006,12 @@ class PrefabApp(BaseModel):
     ) -> PrefabApp:
         """Create a PrefabApp from a wire protocol dict.
 
-        Explicit keyword arguments override values from the wire::
+        Explicit keyword arguments override values from the wire:
 
-            wire = await sandbox.run(code)
-            app = PrefabApp.from_json(wire, state={"extra": "value"})
+        \`\`\`python
+        wire = await sandbox.run(code)
+        app = PrefabApp.from_json(wire, state={"extra": "value"})
+        \`\`\`
         """
         return cls.model_construct(
             view=view if view is not None else wire.get("view"),
@@ -9007,16 +9021,16 @@ class PrefabApp(BaseModel):
         )
 
     def _wrap_view(self) -> dict[str, Any] | None:
-        """Wrap the view in a \`\`Div\`\` with \`\`pf-app-root\`\` and serialize.
+        """Wrap the view in a \`Div\` with \`pf-app-root\` and serialize.
 
-        Every PrefabApp view is wrapped in a root \`\`<div>\`\` that carries
-        the \`\`pf-app-root\`\` CSS class plus any user-supplied \`\`css_class\`\`.
-        Themes target \`\`.pf-app-root\`\` for default padding, background,
+        Every PrefabApp view is wrapped in a root \`<div>\` that carries
+        the \`pf-app-root\` CSS class plus any user-supplied \`css_class\`.
+        Themes target \`.pf-app-root\` for default padding, background,
         and other app-level styling.
 
-        If the view is already the bare \`\`Div\`\` created by \`\`__enter__\`\`,
+        If the view is already the bare \`Div\` created by \`__enter__\`,
         the class is stamped directly onto it (no extra nesting).
-        Otherwise a new \`\`Div\`\` wrapper is created around the view.
+        Otherwise a new \`Div\` wrapper is created around the view.
         """
         if self.view is None:
             return None
@@ -9051,23 +9065,23 @@ class PrefabApp(BaseModel):
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        Returns a dict with \`\`$prefab\`\`, \`\`view\`\`, \`\`defs\`\`, and \`\`state\`\`
+        Returns a dict with \`$prefab\`, \`view\`, \`defs\`, and \`state\`
         as top-level keys (omitting any that are None).
 
-        The view is always wrapped in a root \`\`Div\`\` carrying the
-        \`\`pf-app-root\`\` CSS class.  This div is the theme's styling
+        The view is always wrapped in a root \`Div\` carrying the
+        \`pf-app-root\` CSS class.  This div is the theme's styling
         target — it provides default padding and can be customized via
-        \`\`PrefabApp(css_class="...")\`\`::
+        \`PrefabApp(css_class="...")\`:
 
-            # Center a narrow app
-            PrefabApp(view=my_view, css_class="max-w-2xl mx-auto")
+        \`\`\`python
+        # Center a narrow app
+        PrefabApp(view=my_view, css_class="max-w-2xl mx-auto")
+        \`\`\`
 
-        Parameters
-        ----------
-        tool_resolver:
-            Resolves callable tool references to \`\`ResolvedTool\`\` instances
-            during serialization.  Scoped to this call — safe for
-            concurrent use with different resolvers.
+        Args:
+            tool_resolver: Resolves callable tool references to
+                \`ResolvedTool\` instances during serialization. Scoped to
+                this call — safe for concurrent use with different resolvers.
         """
         token = _tool_resolver.set(tool_resolver) if tool_resolver is not None else None
         try:
@@ -9108,7 +9122,7 @@ class PrefabApp(BaseModel):
 
         The page includes the Prefab renderer (JS/CSS), any user-specified
         stylesheets and scripts, and the application data baked in as a
-        JSON \`\`<script>\`\` tag.
+        JSON \`<script>\` tag.
         """
         head_parts = [get_renderer_head()]
 
@@ -9157,7 +9171,7 @@ class PrefabApp(BaseModel):
         """Compute CSP domains from the app's asset configuration.
 
         Merges the renderer's base CSP with origins extracted from
-        \`\`stylesheets\`\`, \`\`scripts\`\`, and \`\`connect_domains\`\`.
+        \`stylesheets\`, \`scripts\`, and \`connect_domains\`.
         """
         result = get_renderer_csp()
 
@@ -9179,22 +9193,26 @@ class PrefabApp(BaseModel):
 
 Helpers for building css_class values without repeating variant prefixes.
 
-Pseudo-state helpers prefix each space-separated class::
+Pseudo-state helpers prefix each space-separated class:
 
-    from prefab_ui.css import Hover, FocusVisible
+\`\`\`python
+from prefab_ui.css import Hover, FocusVisible
 
-    css_class=["p-4 border-0", Hover("bg-blue-500 scale-105")]
-    # → "p-4 border-0 hover:bg-blue-500 hover:scale-105"
+css_class=["p-4 border-0", Hover("bg-blue-500 scale-105")]
+# → "p-4 border-0 hover:bg-blue-500 hover:scale-105"
 
-    css_class=["ring-0 border-0", FocusVisible("border-b border-border")]
-    # → "ring-0 border-0 focus-visible:border-b focus-visible:border-border"
+css_class=["ring-0 border-0", FocusVisible("border-b border-border")]
+# → "ring-0 border-0 focus-visible:border-b focus-visible:border-border"
+\`\`\`
 
-Responsive maps Tailwind breakpoints to values::
+Responsive maps Tailwind breakpoints to values:
 
-    from prefab_ui.css import Responsive
+\`\`\`python
+from prefab_ui.css import Responsive
 
-    Grid(columns=Responsive(default=1, md=2, lg=3))
-    Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+Grid(columns=Responsive(default=1, md=2, lg=3))
+Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -9212,13 +9230,15 @@ class Responsive:
     """Breakpoint-aware values for responsive layouts.
 
     Maps Tailwind breakpoints to values. At compile time, each entry is
-    prefixed with its breakpoint (\`\`default\`\` emits unprefixed classes).
+    prefixed with its breakpoint (\`default\` emits unprefixed classes).
 
-    Usage::
-
-        Grid(columns=Responsive(default=1, md=2, lg=3))
-        Row(gap=Responsive(default=2, md=4))
-        Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+    **Usage:**
+    
+    \`\`\`python
+    Grid(columns=Responsive(default=1, md=2, lg=3))
+    Row(gap=Responsive(default=2, md=4))
+    Button("Go", css_class=Responsive(default="w-full", md="w-auto"))
+    \`\`\`
     """
 
     __slots__ = ("_values",)
@@ -9277,38 +9297,40 @@ def _prefixed(prefix: str, classes: str) -> str:
 
 
 def Hover(classes: str) -> str:
-    """Prefix classes with \`\`hover:\`\`.
+    """Prefix classes with \`hover:\`.
 
-    Example::
-
-        css_class=["p-4", Hover("bg-blue-500 scale-105")]
-        # → "p-4 hover:bg-blue-500 hover:scale-105"
+    **Example:**
+    
+    \`\`\`python
+    css_class=["p-4", Hover("bg-blue-500 scale-105")]
+    # → "p-4 hover:bg-blue-500 hover:scale-105"
+    \`\`\`
     """
     return _prefixed("hover", classes)
 
 
 def Focus(classes: str) -> str:
-    """Prefix classes with \`\`focus:\`\`."""
+    """Prefix classes with \`focus:\`."""
     return _prefixed("focus", classes)
 
 
 def FocusVisible(classes: str) -> str:
-    """Prefix classes with \`\`focus-visible:\`\`."""
+    """Prefix classes with \`focus-visible:\`."""
     return _prefixed("focus-visible", classes)
 
 
 def FocusWithin(classes: str) -> str:
-    """Prefix classes with \`\`focus-within:\`\`."""
+    """Prefix classes with \`focus-within:\`."""
     return _prefixed("focus-within", classes)
 
 
 def Active(classes: str) -> str:
-    """Prefix classes with \`\`active:\`\`."""
+    """Prefix classes with \`active:\`."""
     return _prefixed("active", classes)
 
 
 def Disabled(classes: str) -> str:
-    """Prefix classes with \`\`disabled:\`\`."""
+    """Prefix classes with \`disabled:\`."""
     return _prefixed("disabled", classes)
 
 
@@ -9316,52 +9338,54 @@ def Disabled(classes: str) -> str:
 
 
 def Sm(classes: str) -> str:
-    """Prefix classes with \`\`sm:\`\` (≥640px)."""
+    """Prefix classes with \`sm:\` (≥640px)."""
     return _prefixed("sm", classes)
 
 
 def Md(classes: str) -> str:
-    """Prefix classes with \`\`md:\`\` (≥768px)."""
+    """Prefix classes with \`md:\` (≥768px)."""
     return _prefixed("md", classes)
 
 
 def Lg(classes: str) -> str:
-    """Prefix classes with \`\`lg:\`\` (≥1024px)."""
+    """Prefix classes with \`lg:\` (≥1024px)."""
     return _prefixed("lg", classes)
 
 
 def Xl(classes: str) -> str:
-    """Prefix classes with \`\`xl:\`\` (≥1280px)."""
+    """Prefix classes with \`xl:\` (≥1280px)."""
     return _prefixed("xl", classes)
 
 
 def Xxl(classes: str) -> str:
-    """Prefix classes with \`\`2xl:\`\` (≥1536px)."""
+    """Prefix classes with \`2xl:\` (≥1536px)."""
     return _prefixed("2xl", classes)
 `,"prefab_ui/define.py":`"""Define — named reusable component templates.
 
-A \`\`Define\`\` captures a component subtree as a named template that can be
-referenced with :class:\`~prefab_ui.use.Use\`. Definitions live outside the
-component tree and are passed to :class:\`~prefab_ui.app.PrefabApp\`
-via the \`\`defs\`\` parameter.
+A \`Define\` captures a component subtree as a named template that can be
+referenced with \`Use\`. Definitions live outside the
+component tree and are passed to \`PrefabApp\`
+via the \`defs\` parameter.
 
-Example::
+**Example:**
 
-    from prefab_ui.define import Define
-    from prefab_ui.use import Use
-    from prefab_ui.app import PrefabApp
-    from prefab_ui.components import Card, Column, Heading, Badge
+\`\`\`python
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Card, Column, Heading, Badge
 
-    with Define("user-card") as user_card:
-        with Card():
-            Heading("{{ name }}")
-            Badge("{{ role }}")
+with Define("user-card") as user_card:
+    with Card():
+        Heading("{{ name }}")
+        Badge("{{ role }}")
 
-    with Column() as layout:
-        Use("user-card", name="Alice", role="Engineer")
-        Use("user-card", name="Bob", role="Designer")
+with Column() as layout:
+    Use("user-card", name="Alice", role="Engineer")
+    Use("user-card", name="Bob", role="Designer")
 
-    PrefabApp(view=layout, defs=[user_card])
+PrefabApp(view=layout, defs=[user_card])
+\`\`\`
 """
 
 from __future__ import annotations
@@ -9378,10 +9402,10 @@ class Define(ContainerComponent):
 
     Define captures children via the context manager but does **not**
     attach itself to any parent container. Pass Define instances to
-    \`\`PrefabApp(defs=[...])\`\` to include them in the wire format.
+    \`PrefabApp(defs=[...])\` to include them in the wire format.
 
     Args:
-        name: Template name, referenced by :class:\`~prefab_ui.use.Use\`.
+        name: Template name, referenced by \`Use\`.
     """
 
     type: Literal["Define"] = "Define"
@@ -9411,27 +9435,33 @@ class Define(ContainerComponent):
 
 Prefab-side business logic for generative UI features. This module
 provides the functions and descriptions that MCP servers (like FastMCP's
-\`\`GenerativeUI\`\` provider) wrap as tools and resources.
+\`GenerativeUI\` provider) wrap as tools and resources.
 
-Component introspection::
+**Component introspection:**
 
-    from prefab_ui.generative import search_components
+\`\`\`python
+from prefab_ui.generative import search_components
 
-    # Compact catalog
-    print(search_components())
+# Compact catalog
+print(search_components())
 
-    # Detailed view for specific components
-    print(search_components("Chart", detail=True))
+# Detailed view for specific components
+print(search_components("Chart", detail=True))
+\`\`\`
 
-Sandbox execution::
+**Sandbox execution:**
 
-    from prefab_ui.generative import execute
-    app = await execute('from prefab_ui.components import Text; Text("hi")')
+\`\`\`python
+from prefab_ui.generative import execute
+app = await execute('from prefab_ui.components import Text; Text("hi")')
+\`\`\`
 
-Coding guides::
+**Coding guides:**
 
-    from prefab_ui.generative import get_guide
-    print(get_guide("writing-prefab-python"))
+\`\`\`python
+from prefab_ui.generative import get_guide
+print(get_guide("writing-prefab-python"))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -9557,24 +9587,24 @@ def search_components(
     Returns component names, import paths, tags, and a one-line
     description. This is usually enough to write correct code.
 
-    Use \`\`detail=True\`\` to include full docstrings, field listings,
+    Use \`detail=True\` to include full docstrings, field listings,
     and usage examples for matched components.
 
     The query matches component names. Space-separated terms match
-    independently, so \`\`"Card Badge Metric"\`\` returns all three.
+    independently, so \`"Card Badge Metric"\` returns all three.
 
     Recommended workflow (two calls max):
 
     1. Call with no arguments to see the full catalog — the compact
        listing includes import paths and descriptions, which is
        enough for most components.
-    2. Optionally, call with a query and \`\`detail=True\`\` to get
+    2. Optionally, call with a query and \`detail=True\` to get
        full docs for components with complex APIs (e.g. DataTable,
        Form, Grid, charts).
 
     Args:
         query: Filter by component name. Space-separated terms are
-            OR-matched (e.g. \`\`"Card Badge"\`\` returns both).
+            OR-matched (e.g. \`"Card Badge"\` returns both).
         detail: Include full docstrings and field listings.
     """
     if components is None:
@@ -9597,14 +9627,11 @@ def search_components(
 
     if detail:
         sections = [
-            describe_component(name, cls)
-            for name, cls in sorted(matches.items())
+            describe_component(name, cls) for name, cls in sorted(matches.items())
         ]
         return f"{header}:\\n\\n" + "\\n\\n".join(sections)
 
-    lines = [
-        _summarize_component(name, cls) for name, cls in sorted(matches.items())
-    ]
+    lines = [_summarize_component(name, cls) for name, cls in sorted(matches.items())]
     return f"{header}:\\n" + "\\n".join(lines)
 
 
@@ -9622,11 +9649,7 @@ def list_guides() -> list[str]:
     """
     if not _SKILLS_DIR.is_dir():
         return []
-    return sorted(
-        d.name
-        for d in _SKILLS_DIR.iterdir()
-        if (d / "SKILL.md").is_file()
-    )
+    return sorted(d.name for d in _SKILLS_DIR.iterdir() if (d / "SKILL.md").is_file())
 
 
 def get_guide(name: str) -> str:
@@ -9634,7 +9657,7 @@ def get_guide(name: str) -> str:
 
     Returns the raw guide content (markdown with frontmatter) as a
     single string, with any reference files appended.
-    Use :func:\`list_guides\` to see available names.
+    Use \`list_guides()\` to see available names.
     """
     skill_dir = _SKILLS_DIR / name
     skill_file = skill_dir / "SKILL.md"
@@ -9668,54 +9691,60 @@ async def execute(
     """Execute Prefab Python code in a sandbox and render the result.
 
     The code runs in a Pyodide WASM sandbox with full Python support.
-    Import everything you use. Use the \`\`components\`\` tool to look up
+    Import everything you use. Use the \`components\` tool to look up
     available components and their import paths.
 
     Always use PrefabApp as the outermost context manager — this enables
-    streaming so the UI renders progressively as code is written::
+    streaming so the UI renders progressively as code is written:
 
-        from prefab_ui.components import Column, Heading, Text, Row, Badge
-        from prefab_ui.app import PrefabApp
+    \`\`\`python
+    from prefab_ui.components import Column, Heading, Text, Row, Badge
+    from prefab_ui.app import PrefabApp
+    
+    with PrefabApp() as app:
+        with Column(gap=4):
+            Heading("Dashboard")
+            with Row(gap=2):
+                Text("Revenue: $1.2M")
+                Badge("On Track", variant="success")
+    \`\`\`
 
-        with PrefabApp() as app:
-            with Column(gap=4):
-                Heading("Dashboard")
-                with Row(gap=2):
-                    Text("Revenue: $1.2M")
-                    Badge("On Track", variant="success")
+    For interactive UIs, declare state and use \`.rx\` on stateful
+    components for reactive bindings:
 
-    For interactive UIs, declare state and use \`\`.rx\`\` on stateful
-    components for reactive bindings::
+    \`\`\`python
+    from prefab_ui.components import Column, Slider, Text
+    from prefab_ui.app import PrefabApp, set_initial_state
+    
+    state = set_initial_state(threshold=50)
+    
+    with PrefabApp() as app:
+        with Column(gap=4):
+            slider = Slider(value=50, min=0, max=100, name="threshold")
+            Text(f"Threshold: {slider.rx}%")
+    \`\`\`
 
-        from prefab_ui.components import Column, Slider, Text
-        from prefab_ui.app import PrefabApp, set_initial_state
-
-        state = set_initial_state(threshold=50)
-
-        with PrefabApp() as app:
-            with Column(gap=4):
-                slider = Slider(value=50, min=0, max=100, name="threshold")
-                Text(f"Threshold: {slider.rx}%")
-
-    \`\`slider.rx\`\` produces \`\`{{ threshold }}\`\`, a template expression
-    that resolves against client-side state. Use \`\`Rx("key")\`\` directly,
-    or apply pipe filters: \`\`Rx("balance").currency()\`\` produces
-    \`\`{{ balance | currency }}\`\`.
+    \`slider.rx\` produces \`{{ threshold }}\`, a template expression
+    that resolves against client-side state. Use \`Rx("key")\` directly,
+    or apply pipe filters: \`Rx("balance").currency()\` produces
+    \`{{ balance | currency }}\`.
 
     Available pipes: upper, lower, currency, length, json, round(n),
     default(val), truncate(n).
 
-    Charts live in \`\`prefab_ui.components.charts\`\`::
+    Charts live in \`prefab_ui.components.charts\`:
 
-        from prefab_ui.components.charts import BarChart, ChartSeries
+    \`\`\`python
+    from prefab_ui.components.charts import BarChart, ChartSeries
+    
+    BarChart(
+        data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
+        series=[ChartSeries(data_key="rev", label="Revenue")],
+        x_axis="month",
+    )
+    \`\`\`
 
-        BarChart(
-            data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
-            series=[ChartSeries(data_key="rev", label="Revenue")],
-            x_axis="month",
-        )
-
-    Values passed via \`\`data\`\` are available as global variables in the
+    Values passed via \`data\` are available as global variables in the
     code. Python features like loops, f-strings, and comprehensions all
     work.
 
@@ -9723,18 +9752,18 @@ async def execute(
 
     - Card sub-components (CardHeader, CardContent, CardFooter) have
       built-in padding. Don't add extra padding to them. For a simple
-      card without sub-components, use \`\`Card(css_class="p-6")\`\`.
-    - Use \`\`Grid(columns=N, gap=4)\`\` for equal-width cards or panels.
+      card without sub-components, use \`Card(css_class="p-6")\`.
+    - Use \`Grid(columns=N, gap=4)\` for equal-width cards or panels.
       Grid handles sizing automatically — no flex classes needed.
-      For unequal widths, pass a list: \`\`Grid(columns=[2, 1], gap=4)\`\`
+      For unequal widths, pass a list: \`Grid(columns=[2, 1], gap=4)\`
       gives a 2:1 ratio.
     - Row is for inline elements (badges, icons + text, buttons).
       Prefer Grid when children should have equal or proportional
       widths. Row does not wrap by default.
-    - Column and Row accept \`\`gap\`\` (Tailwind scale: 1–12),
-      \`\`align\`\` (cross-axis), and \`\`justify\`\` (main-axis) as native
+    - Column and Row accept \`gap\` (Tailwind scale: 1-12),
+      \`align\` (cross-axis), and \`justify\` (main-axis) as native
       props — prefer these over raw css_class for spacing.
-    - Use \`\`css_class="overflow-hidden"\`\` on containers if chart
+    - Use \`css_class="overflow-hidden"\` on containers if chart
       or content edges should clip to the container boundary.
 
     Args:
@@ -9756,24 +9785,26 @@ async def execute(
     return PrefabApp.from_json(wire)
 `,"prefab_ui/use.py":`"""Use — reference a defined component template.
 
-A \`\`Use\`\` node references a :class:\`~prefab_ui.define.Define\` template by
-name. On the wire it desugars to \`\`{"$ref": "name"}\`\`, with optional \`\`let\`\`
-bindings for scoped overrides and \`\`cssClass\`\` for styling.
+A \`Use\` node references a \`Define\` template by
+name. On the wire it desugars to \`{"$ref": "name"}\`, with optional \`let\`
+bindings for scoped overrides and \`cssClass\` for styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.define import Define
-    from prefab_ui.use import Use
-    from prefab_ui.components import Card, Column, Heading, Badge
+\`\`\`python
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.components import Card, Column, Heading, Badge
 
-    with Define("user-card") as user_card:
-        with Card():
-            Heading("{{ name }}")
-            Badge("{{ role }}")
+with Define("user-card") as user_card:
+    with Card():
+        Heading("{{ name }}")
+        Badge("{{ role }}")
 
-    with Column() as layout:
-        Use("user-card", name="Alice", role="Engineer")
-        Use("user-card", name="Bob", role="Designer")
+with Column() as layout:
+    Use("user-card", name="Alice", role="Engineer")
+    Use("user-card", name="Bob", role="Designer")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -9791,11 +9822,11 @@ _BASE_FIELDS = frozenset(Component.model_fields)
 class Use(Component):
     """Reference a defined component template by name.
 
-    Kwargs that aren't base component fields (\`\`css_class\`\`)
-    become scoped \`\`let\`\` bindings on the \`\`$ref\`\` node.
+    Kwargs that aren't base component fields (\`css_class\`)
+    become scoped \`let\` bindings on the \`$ref\` node.
 
     Args:
-        name: The template name (must match a \`\`Define\`\` name).
+        name: The template name (must match a \`Define\` name).
         **kwargs: Scoped bindings and/or base component fields.
     """
 
@@ -9817,7 +9848,7 @@ class Use(Component):
         super().__init__(**init_kwargs)
 
     def to_json(self) -> dict[str, Any]:
-        """Desugar to \`\`$ref\`\` with optional \`\`let\`\` and \`\`cssClass\`\`."""
+        """Desugar to \`$ref\` with optional \`let\` and \`cssClass\`."""
         ref: dict[str, Any] = {"$ref": self.name}
 
         if self.overrides:
@@ -9828,14 +9859,18 @@ class Use(Component):
         return ref
 `,"prefab_ui/components/__init__.py":`"""Prefab component library.
 
-UI and layout components are importable from this package directly::
+**UI and layout components are importable from this package directly:**
 
-    from prefab_ui.components import Card, Badge, H1, Grid
+\`\`\`python
+from prefab_ui.components import Card, Badge, H1, Grid
+\`\`\`
 
-Charts and control flow have dedicated submodules::
+**Charts and control flow have dedicated submodules:**
 
-    from prefab_ui.components.charts import BarChart, ChartSeries
-    from prefab_ui.components.control_flow import ForEach, If, Else
+\`\`\`python
+from prefab_ui.components.charts import BarChart, ChartSeries
+from prefab_ui.components.control_flow import ForEach, If, Else
+\`\`\`
 """
 
 from prefab_ui.components.alert import Alert, AlertDescription, AlertTitle
@@ -10066,15 +10101,17 @@ __all__ = [
 ]
 `,"prefab_ui/components/accordion.py":`"""Accordion component for collapsible content sections.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Accordion, AccordionItem, Text
+\`\`\`python
+from prefab_ui.components import Accordion, AccordionItem, Text
 
-    with Accordion(default_open_items=0):
-        with AccordionItem("Getting Started"):
-            Text("Install with pip install fastmcp")
-        with AccordionItem("Configuration"):
-            Text("Edit config.toml to customize settings.")
+with Accordion(default_open_items=0):
+    with AccordionItem("Getting Started"):
+        Text("Install with pip install fastmcp")
+    with AccordionItem("Configuration"):
+        Text("Edit config.toml to customize settings.")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -10090,16 +10127,18 @@ from prefab_ui.rx import Rx, RxStr
 class AccordionItem(ContainerComponent):
     """A single collapsible section within an Accordion.
 
-    The \`\`title\`\` appears in the trigger; children are revealed on expand.
+    The \`title\` appears in the trigger; children are revealed on expand.
 
     Args:
         title: Accordion trigger label.
         value: Unique value identifying this item (defaults to title).
 
-    Example::
-
-        with AccordionItem("Details"):
-            Text("Hidden content revealed on click.")
+    **Example:**
+    
+    \`\`\`python
+    with AccordionItem("Details"):
+        Text("Hidden content revealed on click.")
+    \`\`\`
     """
 
     type: Literal["AccordionItem"] = "AccordionItem"
@@ -10122,20 +10161,22 @@ class AccordionItem(ContainerComponent):
 
 
 class Accordion(ContainerComponent):
-    """Accordion container — children must be \`\`AccordionItem\`\` components.
+    """Accordion container — children must be \`AccordionItem\` components.
 
     Args:
         multiple: Allow multiple items to be open simultaneously.
         collapsible: Whether items can be fully collapsed (single mode only).
         default_open_items: Initially expanded item(s) by index or value/title.
 
-    Example::
-
-        with Accordion(multiple=True, default_open_items=[0, 1]):
-            with AccordionItem("Section 1"):
-                Text("Content 1")
-            with AccordionItem("Section 2"):
-                Text("Content 2")
+    **Example:**
+    
+    \`\`\`python
+    with Accordion(multiple=True, default_open_items=[0, 1]):
+        with AccordionItem("Section 1"):
+            Text("Content 1")
+        with AccordionItem("Section 2"):
+            Text("Content 2")
+    \`\`\`
     """
 
     type: Literal["Accordion"] = "Accordion"
@@ -10185,23 +10226,25 @@ class Accordion(ContainerComponent):
 
 Alerts display important messages to users.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Alert, AlertTitle, AlertDescription
+\`\`\`python
+from prefab_ui.components import Alert, AlertTitle, AlertDescription
 
-    # Default alert
-    with Alert():
-        AlertTitle("Heads up!")
-        AlertDescription("You can add components to your app using the CLI.")
+# Default alert
+with Alert():
+    AlertTitle("Heads up!")
+    AlertDescription("You can add components to your app using the CLI.")
 
-    # Destructive alert for errors
-    with Alert(variant="destructive"):
-        AlertTitle("Error")
-        AlertDescription("Your session has expired. Please log in again.")
+# Destructive alert for errors
+with Alert(variant="destructive"):
+    AlertTitle("Error")
+    AlertDescription("Your session has expired. Please log in again.")
 
-    # Simple alert without title
-    with Alert():
-        AlertDescription("Your changes have been saved.")
+# Simple alert without title
+with Alert():
+    AlertDescription("Your changes have been saved.")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -10223,15 +10266,17 @@ class Alert(ContainerComponent):
         variant: Visual style — "default", "destructive", "success", "warning", or "info".
         icon: Lucide icon name in kebab-case (e.g. "circle-alert").
 
-    Example::
-
-        with Alert():
-            AlertTitle("Note")
-            AlertDescription("This is an informational message.")
-
-        with Alert(variant="destructive"):
-            AlertTitle("Error")
-            AlertDescription("Something went wrong.")
+    **Example:**
+    
+    \`\`\`python
+    with Alert():
+        AlertTitle("Note")
+        AlertDescription("This is an informational message.")
+    
+    with Alert(variant="destructive"):
+        AlertTitle("Error")
+        AlertDescription("Something went wrong.")
+    \`\`\`
     """
 
     type: Literal["Alert"] = "Alert"
@@ -10251,10 +10296,12 @@ class AlertTitle(Component):
     Args:
         content: Title text.
 
-    Example::
-
-        AlertTitle("Important!")
-        AlertTitle("{{ alert_type }}")
+    **Example:**
+    
+    \`\`\`python
+    AlertTitle("Important!")
+    AlertTitle("{{ alert_type }}")
+    \`\`\`
     """
 
     type: Literal["AlertTitle"] = "AlertTitle"
@@ -10279,10 +10326,12 @@ class AlertDescription(Component):
     Args:
         content: Description text.
 
-    Example::
-
-        AlertDescription("Your changes have been saved successfully.")
-        AlertDescription("{{ message }}")
+    **Example:**
+    
+    \`\`\`python
+    AlertDescription("Your changes have been saved successfully.")
+    AlertDescription("{{ message }}")
+    \`\`\`
     """
 
     type: Literal["AlertDescription"] = "AlertDescription"
@@ -10321,10 +10370,12 @@ class Audio(Component):
         loop: Loop playback.
         muted: Mute audio.
 
-    Example::
-
-        Audio(src="https://example.com/track.mp3")
-        Audio(src="...", controls=True, loop=True)
+    **Example:**
+    
+    \`\`\`python
+    Audio(src="https://example.com/track.mp3")
+    Audio(src="...", controls=True, loop=True)
+    \`\`\`
     """
 
     type: Literal["Audio"] = "Audio"
@@ -10342,15 +10393,17 @@ class Audio(Component):
 
 Badges display short status indicators or labels.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Badge
+\`\`\`python
+from prefab_ui.components import Badge
 
-    Badge("New")
-    Badge("{{ status }}")
-    Badge("Error", variant="destructive")
-    Badge("Draft", variant="secondary")
-    Badge("Custom", variant="outline")
+Badge("New")
+Badge("{{ status }}")
+Badge("Error", variant="destructive")
+Badge("Draft", variant="secondary")
+Badge("Custom", variant="outline")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -10386,14 +10439,16 @@ class Badge(ContainerComponent):
             "ghost", "success", "warning", "info"
         css_class: Additional CSS classes to apply
 
-    Example::
-
-        Badge("Active")
-        Badge("{{ user.role }}")
-        Badge("Error", variant="destructive")
-        Badge("Draft", variant="secondary")
-        Badge("Custom", variant="outline")
-        Badge("Ghost", variant="ghost")
+    **Example:**
+    
+    \`\`\`python
+    Badge("Active")
+    Badge("{{ user.role }}")
+    Badge("Error", variant="destructive")
+    Badge("Draft", variant="secondary")
+    Badge("Custom", variant="outline")
+    Badge("Ghost", variant="ghost")
+    \`\`\`
     """
 
     type: Literal["Badge"] = "Badge"
@@ -10449,18 +10504,20 @@ _defer_next_component: ContextVar[bool] = ContextVar(
 def defer() -> Generator[None, None, None]:
     """Create components without attaching them to the current parent.
 
-    Components created inside a \`\`defer()\`\` block are **not** automatically
-    appended as children to any enclosing context manager.  Use
-    :func:\`insert\` later to place them in the tree::
+    Components created inside a \`defer()\` block are **not** automatically
+    appended as children to any enclosing context manager. Use
+    \`insert()\` later to place them in the tree:
 
-        with Column() as outer:
-            with defer():
-                sidebar = Column()
-                with sidebar:
-                    Text("child of sidebar, not outer")
-            insert(sidebar)
-
-        assert len(outer.children) == 2
+    \`\`\`python
+    with Column() as outer:
+        with defer():
+            sidebar = Column()
+            with sidebar:
+                Text("child of sidebar, not outer")
+        insert(sidebar)
+    
+    assert len(outer.children) == 2
+    \`\`\`
     """
     saved = _component_stack.get()
     _component_stack.set(None)
@@ -10474,16 +10531,18 @@ def insert(component: Component) -> Component:
     """Insert a deferred component into the current parent context.
 
     Use this to place a component that was created outside the tree
-    (either before any \`\`with\`\` block or inside a \`\`defer()\`\` block)
-    as a child of the current container::
+    (either before any \`with\` block or inside a \`defer()\` block)
+    as a child of the current container:
 
-        volume = Slider(value=75, defer=True)
+    \`\`\`python
+    volume = Slider(value=75, defer=True)
+    
+    with Column():
+        Text(f"{volume.rx.number()}%")
+        insert(volume)  # volume becomes a child of Column here
+    \`\`\`
 
-        with Column():
-            Text(f"{volume.rx.number()}%")
-            insert(volume)  # volume becomes a child of Column here
-
-    Raises :class:\`RuntimeError\` if called outside a container context
+    Raises \`RuntimeError\` if called outside a container context
     or if the component is already a child of another container.
     """
     stack = _component_stack.get() or []
@@ -10617,14 +10676,14 @@ _VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_.$]*$")
 
 
 class StatefulMixin:
-    """Mixin for components that support reactive state binding via \`\`.rx\`\`.
+    """Mixin for components that support reactive state binding via \`.rx\`.
 
     Stateful components (Slider, Input, Checkbox, etc.) inherit from this
-    mixin to gain the \`\`.rx\`\` property, which returns an \`\`Rx\`\` object
-    serializing to \`\`{{ name }}\`\` for template expressions.
+    mixin to gain the \`.rx\` property, which returns an \`Rx\` object
+    serializing to \`{{ name }}\` for template expressions.
 
-    Subclasses narrow the \`\`value\`\` type (e.g. \`\`bool\`\` for Checkbox,
-    \`\`str | None\`\` for Tabs).
+    Subclasses narrow the \`value\` type (e.g. \`bool\` for Checkbox,
+    \`str | None\` for Tabs).
     """
 
     _auto_name: ClassVar[str]
@@ -10649,7 +10708,7 @@ class StatefulMixin:
     def rx(self) -> Rx:
         """Reactive reference to this component's state value.
 
-        Returns an \`\`Rx\`\` object that serializes to \`\`{{ key }}\`\` and can
+        Returns an \`Rx\` object that serializes to \`{{ key }}\` and can
         be passed to any string-typed component field or used in f-strings.
         """
         if self.name is None:
@@ -10663,24 +10722,26 @@ class StatefulMixin:
 class Component(BaseModel):
     """Base class for all UI components.
 
-    Components serialize to JSON via \`\`to_json()\`\` for the React renderer.
-    When created inside a \`\`ContainerComponent\`\` context manager, they
+    Components serialize to JSON via \`to_json()\` for the React renderer.
+    When created inside a \`ContainerComponent\` context manager, they
     automatically append themselves to the parent's children list.
 
-    Alternatively, pass \`\`parent=<container>\`\` to attach to a specific
-    container without using a context manager::
+    Alternatively, pass \`parent=<container>\` to attach to a specific
+    container without using a context manager:
 
-        root = Column(gap=4)
-        Heading("Sales Report", parent=root)
-        Text("Q3 results", parent=root)
+    \`\`\`python
+    root = Column(gap=4)
+    Heading("Sales Report", parent=root)
+    Text("Q3 results", parent=root)
+    \`\`\`
     """
 
     model_config = {"populate_by_name": True, "arbitrary_types_allowed": True}
 
     _auto_name: ClassVar[str | None] = None
-    """Subclasses set this to a prefix string (e.g. \`\`"slider"\`\`) to opt in
+    """Subclasses set this to a prefix string (e.g. \`"slider"\`) to opt in
     to automatic name generation.  When set, components without an explicit
-    \`\`name\`\` receive a deterministic sequential key like \`\`slider-1\`\`."""
+    \`name\` receive a deterministic sequential key like \`slider-1\`."""
 
     id: str | None = Field(
         default=None,
@@ -10718,7 +10779,7 @@ class Component(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _extract_defer(cls, data: Any) -> Any:
-        """Extract the \`\`defer\`\` kwarg and unwrap Rx names before validation."""
+        """Extract the \`defer\` kwarg and unwrap Rx names before validation."""
         if isinstance(data, dict):
             if data.pop("defer", False):
                 _defer_next_component.set(True)
@@ -10730,7 +10791,7 @@ class Component(BaseModel):
 
     @model_serializer(mode="wrap")
     def _serialize_rx(self, handler: Any) -> dict[str, Any]:
-        """Resolve any Rx values to \`\`{{ }}\`\` strings at serialization time."""
+        """Resolve any Rx values to \`{{ }}\` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
     def model_post_init(self, __context: Any) -> None:
@@ -10752,8 +10813,8 @@ class Component(BaseModel):
     def to_json(self) -> dict[str, Any]:
         """Serialize to JSON format for the React renderer.
 
-        Produces \`\`{"type": "ClassName", ...props}\`\` with \`\`None\`\` values
-        excluded. Children are serialized recursively.
+        Produces a JSON object with \`type\` set to the class name plus
+        props, with \`None\` values excluded. Children are serialized recursively.
         """
         return self.model_dump(by_alias=True, exclude_none=True)
 
@@ -10761,11 +10822,13 @@ class Component(BaseModel):
 class ContainerComponent(Component):
     """Component that can contain child components.
 
-    Use as a context manager to build nested layouts::
+    Use as a context manager to build nested layouts:
 
-        with Column():
-            Text("hello")
-            Text("world")
+    \`\`\`python
+    with Column():
+        Text("hello")
+        Text("world")
+    \`\`\`
     """
 
     children: list[Component] = Field(default_factory=list)
@@ -10862,21 +10925,23 @@ def _serialize_children(children: list[Component]) -> list[dict[str, Any]]:
 
 Buttons support multiple variants and sizes, with automatic dark mode styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button
+\`\`\`python
+from prefab_ui.components import Button
 
-    Button("Click me")
-    Button("Save", variant="default")
-    Button("Delete", variant="destructive")
-    Button("Cancel", variant="outline")
-    Button("More options", variant="ghost")
-    Button("Learn more", variant="link")
+Button("Click me")
+Button("Save", variant="default")
+Button("Delete", variant="destructive")
+Button("Cancel", variant="outline")
+Button("More options", variant="ghost")
+Button("Learn more", variant="link")
 
-    # Sizes
-    Button("Small", size="sm")
-    Button("Large", size="lg")
-    Button("Icon", size="icon")
+# Sizes
+Button("Small", size="sm")
+Button("Large", size="lg")
+Button("Icon", size="icon")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -10919,11 +10984,13 @@ class Button(Component):
         disabled: Whether the button is disabled
         css_class: Additional CSS classes to apply
 
-    Example::
-
-        Button("Save Changes")
-        Button("Delete", variant="destructive")
-        Button("Cancel", variant="outline", size="sm")
+    **Example:**
+    
+    \`\`\`python
+    Button("Save Changes")
+    Button("Delete", variant="destructive")
+    Button("Cancel", variant="outline", size="sm")
+    \`\`\`
     """
 
     type: Literal["Button"] = "Button"
@@ -10973,13 +11040,15 @@ class Button(Component):
 
 Groups buttons together with merged borders and adjusted corners.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button, ButtonGroup
+\`\`\`python
+from prefab_ui.components import Button, ButtonGroup
 
-    with ButtonGroup():
-        Button("Previous")
-        Button("Next")
+with ButtonGroup():
+    Button("Previous")
+    Button("Next")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -10998,18 +11067,20 @@ class ButtonGroup(ContainerComponent):
         orientation: Layout direction - "horizontal" or "vertical"
         css_class: Additional CSS classes to apply
 
-    Example::
-
-        from prefab_ui.components import Button, ButtonGroup
-
-        with ButtonGroup():
-            Button("Save")
-            Button("Cancel", variant="outline")
-
-        with ButtonGroup(orientation="vertical"):
-            Button("Top")
-            Button("Middle")
-            Button("Bottom")
+    **Example:**
+    
+    \`\`\`python
+    from prefab_ui.components import Button, ButtonGroup
+    
+    with ButtonGroup():
+        Button("Save")
+        Button("Cancel", variant="outline")
+    
+    with ButtonGroup(orientation="vertical"):
+        Button("Top")
+        Button("Middle")
+        Button("Bottom")
+    \`\`\`
     """
 
     type: Literal["ButtonGroup"] = "ButtonGroup"
@@ -11019,16 +11090,18 @@ class ButtonGroup(ContainerComponent):
     )
 `,"prefab_ui/components/calendar.py":`"""Calendar component for date selection.
 
-Example::
+**Example:**
 
-    import datetime
+\`\`\`python
+import datetime
 
-    from prefab_ui.components import Calendar, Text
+from prefab_ui.components import Calendar, Text
 
-    cal = Calendar(value=datetime.date(2026, 5, 4))
-    Text(f"Selected: {cal.rx.date('long')}")
+cal = Calendar(value=datetime.date(2026, 5, 4))
+Text(f"Selected: {cal.rx.date('long')}")
 
-    Calendar(mode="range", name="dateRange")
+Calendar(mode="range", name="dateRange")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -11060,10 +11133,12 @@ class Calendar(StatefulMixin, Component):
         name: State key for reactive binding (auto-generated if omitted).
         on_change: Action(s) fired when selection changes.
 
-    Example::
-
-        Calendar(value=datetime.date(2026, 5, 4))
-        Calendar(mode="range", name="dateRange")
+    **Example:**
+    
+    \`\`\`python
+    Calendar(value=datetime.date(2026, 5, 4))
+    Calendar(mode="range", name="dateRange")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "calendar"
@@ -11121,27 +11196,29 @@ class Calendar(StatefulMixin, Component):
 
 Cards provide a contained surface for grouping related content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import (
-        Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
-    )
-    from prefab_ui.components import Button, P
+\`\`\`python
+from prefab_ui.components import (
+    Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+)
+from prefab_ui.components import Button, P
 
-    with Card():
-        with CardHeader():
-            CardTitle("Create project")
-            CardDescription("Deploy your new project in one-click.")
-        with CardContent():
-            P("Your project will be created with default settings.")
-        with CardFooter():
-            Button("Cancel", variant="outline")
-            Button("Deploy")
+with Card():
+    with CardHeader():
+        CardTitle("Create project")
+        CardDescription("Deploy your new project in one-click.")
+    with CardContent():
+        P("Your project will be created with default settings.")
+    with CardFooter():
+        Button("Cancel", variant="outline")
+        Button("Deploy")
 
-    # Simple card
-    with Card(css_class="p-6"):
-        H3("Quick Stats")
-        P("{{ summary }}")
+# Simple card
+with Card(css_class="p-6"):
+    H3("Quick Stats")
+    P("{{ summary }}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -11157,41 +11234,42 @@ from prefab_ui.rx import RxStr
 class Card(ContainerComponent):
     """A card container with border and shadow.
 
-    Cards group related content and actions. Use sub-components for
-    structured layouts: CardHeader (with CardTitle and CardDescription),
-    CardContent for the body, and CardFooter for actions. Each
-    sub-component has built-in padding — don't add extra padding to
-    them.
+    Two usage patterns:
 
-    For a simple card without sub-components, add padding to the
-    Card itself with \`\`css_class="p-6"\`\`.
+    **Structured card** — use CardHeader, CardContent, CardFooter for
+    cards with a title, body, and actions. Each sub-component has
+    built-in padding; don't add extra padding to them:
 
-    For a row of equal-width cards, wrap them in a Grid::
+    \`\`\`python
+    with Card():
+        with CardHeader():
+            CardTitle("Create project")
+            CardDescription("Deploy in one click.")
+        with CardContent():
+            Input(name="project_name", placeholder="Project name")
+        with CardFooter():
+            Button("Cancel", variant="outline")
+            Button("Deploy")
+    \`\`\`
 
-        with Grid(columns=3, gap=4):
-            with Card():
-                ...
-            with Card():
-                ...
-            with Card():
-                ...
+    **Simple card** — for compact content (a single Metric, a short
+    stat, etc.), skip the sub-components and add padding directly:
 
-    Example::
+    \`\`\`python
+    with Card(css_class="p-6"):
+        Metric(label="Revenue", value="$1.2M", delta="+12%")
+    \`\`\`
 
-        with Card():
-            with CardHeader():
-                CardTitle("Create project")
-                CardDescription("Deploy your new project in one-click.")
-            with CardContent():
-                Input(name="project_name", placeholder="Project name")
-            with CardFooter():
-                Button("Cancel", variant="outline")
-                Button("Deploy")
+    Don't mix the patterns — a Card should use either sub-components
+    or direct children with \`css_class="p-6"\`, not both.
 
-        # Simple card without sub-components
+    For equal-width cards, wrap them in a \`Grid\`:
+
+    \`\`\`python
+    with Grid(columns=3, gap=4):
         with Card(css_class="p-6"):
-            Heading("Quick Stats", level=3)
-            Text("{{ summary }}")
+            Metric(...)
+    \`\`\`
     """
 
     type: Literal["Card"] = "Card"
@@ -11200,11 +11278,13 @@ class Card(ContainerComponent):
 class CardHeader(ContainerComponent):
     """Card header section for title and description.
 
-    Example::
-
-        with CardHeader():
-            CardTitle("Account")
-            CardDescription("Manage your account settings.")
+    **Example:**
+    
+    \`\`\`python
+    with CardHeader():
+        CardTitle("Account")
+        CardDescription("Manage your account settings.")
+    \`\`\`
     """
 
     type: Literal["CardHeader"] = "CardHeader"
@@ -11218,10 +11298,12 @@ class CardTitle(ContainerComponent):
     Args:
         content: Title text (alternative to children).
 
-    Example::
-
-        CardTitle("Settings")
-        CardTitle("{{ project_name }}")
+    **Example:**
+    
+    \`\`\`python
+    CardTitle("Settings")
+    CardTitle("{{ project_name }}")
+    \`\`\`
     """
 
     type: Literal["CardTitle"] = "CardTitle"
@@ -11249,9 +11331,11 @@ class CardDescription(ContainerComponent):
     Args:
         content: Description text (alternative to children).
 
-    Example::
-
-        CardDescription("Make changes to your account here.")
+    **Example:**
+    
+    \`\`\`python
+    CardDescription("Make changes to your account here.")
+    \`\`\`
     """
 
     type: Literal["CardDescription"] = "CardDescription"
@@ -11276,10 +11360,12 @@ class CardDescription(ContainerComponent):
 class CardContent(ContainerComponent):
     """Card content section for the main body.
 
-    Example::
-
-        with CardContent():
-            P("Your content here.")
+    **Example:**
+    
+    \`\`\`python
+    with CardContent():
+        P("Your content here.")
+    \`\`\`
     """
 
     type: Literal["CardContent"] = "CardContent"
@@ -11288,11 +11374,13 @@ class CardContent(ContainerComponent):
 class CardFooter(ContainerComponent):
     """Card footer section, typically for actions.
 
-    Example::
-
-        with CardFooter():
-            Button("Cancel", variant="outline")
-            Button("Save")
+    **Example:**
+    
+    \`\`\`python
+    with CardFooter():
+        Button("Cancel", variant="outline")
+        Button("Save")
+    \`\`\`
     """
 
     type: Literal["CardFooter"] = "CardFooter"
@@ -11300,26 +11388,28 @@ class CardFooter(ContainerComponent):
 
 Built on Recharts + shadcn ChartContainer in the renderer.
 
-Example::
+**Example:**
 
-    from prefab_ui.components.charts import BarChart, ChartSeries
+\`\`\`python
+from prefab_ui.components.charts import BarChart, ChartSeries
 
-    BarChart(
-        data=[
-            {"month": "Jan", "desktop": 186, "mobile": 80},
-            {"month": "Feb", "desktop": 305, "mobile": 200},
-        ],
-        series=[
-            ChartSeries(data_key="desktop", label="Desktop"),
-            ChartSeries(data_key="mobile", label="Mobile"),
-        ],
-        x_axis="month",
-    )
+BarChart(
+    data=[
+        {"month": "Jan", "desktop": 186, "mobile": 80},
+        {"month": "Feb", "desktop": 305, "mobile": 200},
+    ],
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+)
 
-    from prefab_ui.components.charts import Sparkline
+from prefab_ui.components.charts import Sparkline
 
-    Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
-    Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+\`\`\`
 """
 
 from __future__ import annotations
@@ -11353,8 +11443,8 @@ class ChartSeries(BaseModel):
 class BarChart(Component):
     """Bar chart with one or more series.
 
-    Each series is a \`\`ChartSeries(data_key=..., label=..., color=...)\`\`
-    from \`\`prefab_ui.components.charts\`\`. The \`\`data_key\`\` selects which
+    Each series is a \`ChartSeries(data_key=..., label=..., color=...)\`
+    from \`prefab_ui.components.charts\`. The \`data_key\` selects which
     field in each data row to plot.
 
     Args:
@@ -11371,21 +11461,23 @@ class BarChart(Component):
         show_y_axis: Show y-axis with tick labels.
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
-    Example::
-
-        from prefab_ui.components.charts import BarChart, ChartSeries
-
-        BarChart(
-            data=[{"month": "Jan", "a": 10, "b": 20}],
-            series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
-            x_axis="month",
-            stacked=True,
-        )
+    **Example:**
+    
+    \`\`\`python
+    from prefab_ui.components.charts import BarChart, ChartSeries
+    
+    BarChart(
+        data=[{"month": "Jan", "a": 10, "b": 20}],
+        series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
+        x_axis="month",
+        stacked=True,
+    )
+    \`\`\`
     """
 
     type: Literal["BarChart"] = "BarChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as bars")
     x_axis: str | None = Field(
@@ -11421,8 +11513,8 @@ class BarChart(Component):
 class LineChart(Component):
     """Line chart with one or more series.
 
-    Series are defined with \`\`ChartSeries\`\` from
-    \`\`prefab_ui.components.charts\`\`.
+    Series are defined with \`ChartSeries\` from
+    \`prefab_ui.components.charts\`.
 
     Args:
         data: Row data or reactive interpolation reference.
@@ -11437,20 +11529,22 @@ class LineChart(Component):
         show_y_axis: Show y-axis with tick labels.
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
-    Example::
-
-        from prefab_ui.components.charts import LineChart, ChartSeries
-
-        LineChart(
-            data=[{"month": "Jan", "a": 10}],
-            series=[ChartSeries(data_key="a")],
-            x_axis="month",
-        )
+    **Example:**
+    
+    \`\`\`python
+    from prefab_ui.components.charts import LineChart, ChartSeries
+    
+    LineChart(
+        data=[{"month": "Jan", "a": 10}],
+        series=[ChartSeries(data_key="a")],
+        x_axis="month",
+    )
+    \`\`\`
     """
 
     type: Literal["LineChart"] = "LineChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as lines")
     x_axis: str | None = Field(
@@ -11485,8 +11579,8 @@ class LineChart(Component):
 class AreaChart(Component):
     """Area chart with one or more series.
 
-    Series are defined with \`\`ChartSeries\`\` from
-    \`\`prefab_ui.components.charts\`\`.
+    Series are defined with \`ChartSeries\` from
+    \`prefab_ui.components.charts\`.
 
     Args:
         data: Row data or reactive interpolation reference.
@@ -11502,21 +11596,23 @@ class AreaChart(Component):
         show_y_axis: Show y-axis with tick labels.
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
-    Example::
-
-        from prefab_ui.components.charts import AreaChart, ChartSeries
-
-        AreaChart(
-            data=[{"month": "Jan", "a": 10, "b": 20}],
-            series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
-            x_axis="month",
-            stacked=True,
-        )
+    **Example:**
+    
+    \`\`\`python
+    from prefab_ui.components.charts import AreaChart, ChartSeries
+    
+    AreaChart(
+        data=[{"month": "Jan", "a": 10, "b": 20}],
+        series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
+        x_axis="month",
+        stacked=True,
+    )
+    \`\`\`
     """
 
     type: Literal["AreaChart"] = "AreaChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as areas")
     x_axis: str | None = Field(
@@ -11563,22 +11659,24 @@ class PieChart(Component):
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
 
-    Example::
-
-        PieChart(
-            data=[
-                {"browser": "Chrome", "visitors": 275},
-                {"browser": "Safari", "visitors": 200},
-            ],
-            data_key="visitors",
-            name_key="browser",
-            inner_radius=60,
-        )
+    **Example:**
+    
+    \`\`\`python
+    PieChart(
+        data=[
+            {"browser": "Chrome", "visitors": 275},
+            {"browser": "Safari", "visitors": 200},
+        ],
+        data_key="visitors",
+        name_key="browser",
+        inner_radius=60,
+    )
+    \`\`\`
     """
 
     type: Literal["PieChart"] = "PieChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
@@ -11604,7 +11702,7 @@ class ScatterChart(Component):
     """Scatter (or bubble) chart plotting points from shared data.
 
     Each series references the same dataset and plots (x_axis, y_axis) pairs.
-    Optionally set \`\`z_axis\`\` to size dots proportionally (bubble chart).
+    Optionally set \`z_axis\` to size dots proportionally (bubble chart).
 
     Args:
         data: Row data or reactive interpolation reference.
@@ -11617,23 +11715,25 @@ class ScatterChart(Component):
         show_tooltip: Show tooltip on hover.
         show_grid: Show cartesian grid.
 
-    Example::
-
-        ScatterChart(
-            data=[
-                {"height": 170, "weight": 65, "age": 25},
-                {"height": 180, "weight": 80, "age": 30},
-            ],
-            series=[ChartSeries(data_key="group1", label="Group 1")],
-            x_axis="height",
-            y_axis="weight",
-            z_axis="age",
-        )
+    **Example:**
+    
+    \`\`\`python
+    ScatterChart(
+        data=[
+            {"height": 170, "weight": 65, "age": 25},
+            {"height": 180, "weight": 80, "age": 30},
+        ],
+        series=[ChartSeries(data_key="group1", label="Group 1")],
+        x_axis="height",
+        y_axis="weight",
+        z_axis="age",
+    )
+    \`\`\`
     """
 
     type: Literal["ScatterChart"] = "ScatterChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as scatter groups")
     x_axis: str = Field(alias="xAxis", description="Data key for x-axis values")
@@ -11669,21 +11769,23 @@ class RadarChart(Component):
         show_tooltip: Show tooltip on hover.
         show_grid: Show polar grid.
 
-    Example::
-
-        RadarChart(
-            data=[
-                {"subject": "Math", "alice": 120, "bob": 98},
-                {"subject": "English", "alice": 98, "bob": 130},
-            ],
-            series=[ChartSeries(data_key="alice"), ChartSeries(data_key="bob")],
-            axis_key="subject",
-        )
+    **Example:**
+    
+    \`\`\`python
+    RadarChart(
+        data=[
+            {"subject": "Math", "alice": 120, "bob": 98},
+            {"subject": "English", "alice": 98, "bob": 130},
+        ],
+        series=[ChartSeries(data_key="alice"), ChartSeries(data_key="bob")],
+        axis_key="subject",
+    )
+    \`\`\`
     """
 
     type: Literal["RadarChart"] = "RadarChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as radar areas")
     axis_key: str | None = Field(
@@ -11721,21 +11823,23 @@ class RadialChart(Component):
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
 
-    Example::
-
-        RadialChart(
-            data=[
-                {"browser": "Chrome", "visitors": 275},
-                {"browser": "Safari", "visitors": 200},
-            ],
-            data_key="visitors",
-            name_key="browser",
-        )
+    **Example:**
+    
+    \`\`\`python
+    RadialChart(
+        data=[
+            {"browser": "Chrome", "visitors": 275},
+            {"browser": "Safari", "visitors": 200},
+        ],
+        data_key="visitors",
+        name_key="browser",
+    )
+    \`\`\`
     """
 
     type: Literal["RadialChart"] = "RadialChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or \`{{ interpolation }}\` reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
@@ -11780,17 +11884,19 @@ class Sparkline(Component):
         stroke_width: Line thickness in pixels.
         mode: Chart mode ("line" or "bar").
 
-    Example::
-
-        Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
-        Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
-        Sparkline(data=[5, 12, 8, 3, 15], indicator_class="stroke-blue-500")
-        Sparkline(data=[5, 12, 8, 3, 15], curve="smooth", css_class="w-24")
+    **Example:**
+    
+    \`\`\`python
+    Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+    Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+    Sparkline(data=[5, 12, 8, 3, 15], indicator_class="stroke-blue-500")
+    Sparkline(data=[5, 12, 8, 3, 15], curve="smooth", css_class="w-24")
+    \`\`\`
     """
 
     type: Literal["Sparkline"] = "Sparkline"
     data: list[int | float] | RxStr = Field(
-        description="Flat list of numeric values or {{ interpolation }} reference",
+        description="Flat list of numeric values or \`{{ interpolation }}\` reference",
     )
     height: int | None = Field(
         default=None, description="Chart height in pixels (default 24px via CSS)"
@@ -11833,16 +11939,18 @@ class Sparkline(Component):
 
 Checkboxes let users select one or more options from a set.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Checkbox, Label
+\`\`\`python
+from prefab_ui.components import Checkbox, Label
 
-    Checkbox(value=True, label="Accept terms")
-    Checkbox(label="Subscribe to newsletter")
+Checkbox(value=True, label="Accept terms")
+Checkbox(label="Subscribe to newsletter")
 
-    # Access reactive value
-    agree = Checkbox(label="I agree")
-    Text(f"Agreed: {agree.rx}")
+# Access reactive value
+agree = Checkbox(label="I agree")
+Text(f"Agreed: {agree.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -11867,11 +11975,13 @@ class Checkbox(StatefulMixin, Component):
         required: Whether checkbox is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Checkbox(label="Remember me")
-        Checkbox(value=True, label="Agreed")
-        Checkbox(label="Enable {{ feature_name }}", value="{{ is_enabled }}")
+    **Example:**
+    
+    \`\`\`python
+    Checkbox(label="Remember me")
+    Checkbox(value=True, label="Agreed")
+    Checkbox(label="Enable {{ feature_name }}", value="{{ is_enabled }}")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "checkbox"
@@ -11894,7 +12004,7 @@ class Checkbox(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for \`\`value\`\` — whether checkbox is checked."""
+        """Alias for \`value\` — whether checkbox is checked."""
         return self.value
 `,"prefab_ui/components/code.py":`"""Code block display component."""
 
@@ -11915,9 +12025,11 @@ class Code(Component):
         content: Code content.
         language: Syntax highlighting language.
 
-    Example::
-
-        Code("{{ source_code }}", language="python")
+    **Example:**
+    
+    \`\`\`python
+    Code("{{ source_code }}", language="python")
+    \`\`\`
     """
 
     type: Literal["Code"] = "Code"
@@ -11969,15 +12081,17 @@ class Column(ContainerComponent):
             around, evenly, or stretch.
         css_class: Additional Tailwind classes (e.g. "p-6 max-w-2xl").
 
-    Example::
-
-        with Column(gap=4):
-            Heading("Title")
-            Text("Body")
-
-        with Column(gap=2, align="center", css_class="p-6"):
-            Icon("check")
-            Text("Confirmed")
+    **Example:**
+    
+    \`\`\`python
+    with Column(gap=4):
+        Heading("Title")
+        Text("Body")
+    
+    with Column(gap=2, align="center", css_class="p-6"):
+        Icon("check")
+        Text("Confirmed")
+    \`\`\`
     """
 
     type: Literal["Column"] = "Column"
@@ -11994,24 +12108,26 @@ class Column(ContainerComponent):
 `,"prefab_ui/components/combobox.py":`"""Combobox — searchable select dropdown.
 
 A filterable dropdown for selecting from large option lists. Options are
-defined as \`\`ComboboxOption\`\` children, similar to \`\`Select\`\`/\`\`SelectOption\`\`.
+defined as \`ComboboxOption\` children, similar to \`Select\`/\`SelectOption\`.
 
-Supports grouping options with \`\`ComboboxGroup\`\` and \`\`ComboboxLabel\`\`,
-and visual dividers with \`\`ComboboxSeparator\`\`.
+Supports grouping options with \`ComboboxGroup\` and \`ComboboxLabel\`,
+and visual dividers with \`ComboboxSeparator\`.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Combobox, ComboboxOption
+\`\`\`python
+from prefab_ui.components import Combobox, ComboboxOption
 
-    with Combobox(placeholder="Select a framework...", name="framework"):
-        ComboboxOption("Next.js", value="nextjs")
-        ComboboxOption("Remix", value="remix")
-        ComboboxOption("Astro", value="astro")
-        ComboboxOption("SvelteKit", value="sveltekit")
+with Combobox(placeholder="Select a framework...", name="framework"):
+    ComboboxOption("Next.js", value="nextjs")
+    ComboboxOption("Remix", value="remix")
+    ComboboxOption("Astro", value="astro")
+    ComboboxOption("SvelteKit", value="sveltekit")
 
-    # Access reactive value
-    combo = Combobox(placeholder="Choose framework...")
-    Text(f"Selected: {combo.rx}")
+# Access reactive value
+combo = Combobox(placeholder="Choose framework...")
+Text(f"Selected: {combo.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -12033,9 +12149,11 @@ class ComboboxOption(Component):
         value: Option value (defaults to lowercased label).
         disabled: Whether the option is disabled.
 
-    Example::
-
-        ComboboxOption("Next.js", value="nextjs")
+    **Example:**
+    
+    \`\`\`python
+    ComboboxOption("Next.js", value="nextjs")
+    \`\`\`
     """
 
     type: Literal["ComboboxOption"] = "ComboboxOption"
@@ -12060,28 +12178,32 @@ class ComboboxOption(Component):
 class ComboboxGroup(ContainerComponent):
     """A group container for related combobox options.
 
-    Children should be \`\`ComboboxLabel\`\` and \`\`ComboboxOption\`\` components.
+    Children should be \`ComboboxLabel\` and \`ComboboxOption\` components.
 
-    Example::
-
-        with ComboboxGroup():
-            ComboboxLabel("Planets")
-            ComboboxOption("Earth", value="earth")
-            ComboboxOption("Mars", value="mars")
+    **Example:**
+    
+    \`\`\`python
+    with ComboboxGroup():
+        ComboboxLabel("Planets")
+        ComboboxOption("Earth", value="earth")
+        ComboboxOption("Mars", value="mars")
+    \`\`\`
     """
 
     type: Literal["ComboboxGroup"] = "ComboboxGroup"
 
 
 class ComboboxLabel(Component):
-    """A label/header for a \`\`ComboboxGroup\`\`.
+    """A label/header for a \`ComboboxGroup\`.
 
     Args:
         label: Label text.
 
-    Example::
-
-        ComboboxLabel("Planets")
+    **Example:**
+    
+    \`\`\`python
+    ComboboxLabel("Planets")
+    \`\`\`
     """
 
     type: Literal["ComboboxLabel"] = "ComboboxLabel"
@@ -12102,11 +12224,13 @@ class ComboboxLabel(Component):
 class ComboboxSeparator(Component):
     """A visual divider between combobox options or groups.
 
-    Example::
-
-        ComboboxOption("Earth", value="earth")
-        ComboboxSeparator()
-        ComboboxOption("Mars", value="mars")
+    **Example:**
+    
+    \`\`\`python
+    ComboboxOption("Earth", value="earth")
+    ComboboxSeparator()
+    ComboboxOption("Mars", value="mars")
+    \`\`\`
     """
 
     type: Literal["ComboboxSeparator"] = "ComboboxSeparator"
@@ -12115,8 +12239,8 @@ class ComboboxSeparator(Component):
 class Combobox(StatefulMixin, ContainerComponent):
     """Searchable select dropdown.
 
-    Children must be \`\`ComboboxOption\`\`, \`\`ComboboxGroup\`\`,
-    \`\`ComboboxLabel\`\`, or \`\`ComboboxSeparator\`\` components.
+    Children must be \`ComboboxOption\`, \`ComboboxGroup\`,
+    \`ComboboxLabel\`, or \`ComboboxSeparator\` components.
 
     Args:
         placeholder: Placeholder text when no value selected
@@ -12127,12 +12251,14 @@ class Combobox(StatefulMixin, ContainerComponent):
         align: Alignment of the dropdown relative to the trigger
         invalid: Whether the combobox is in an error state
 
-    Example::
-
-        with Combobox(placeholder="Pick a language...", name="lang"):
-            ComboboxOption("Python", value="python")
-            ComboboxOption("TypeScript", value="typescript")
-            ComboboxOption("Rust", value="rust")
+    **Example:**
+    
+    \`\`\`python
+    with Combobox(placeholder="Pick a language...", name="lang"):
+        ComboboxOption("Python", value="python")
+        ComboboxOption("TypeScript", value="typescript")
+        ComboboxOption("Rust", value="rust")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "combobox"
@@ -12181,33 +12307,37 @@ from prefab_ui.components.base import ContainerComponent
 class Container(ContainerComponent):
     """A centered, max-width container with responsive padding.
 
-    Wraps content in Tailwind's \`\`container\`\` with automatic horizontal
+    Wraps content in Tailwind's \`container\` with automatic horizontal
     centering and padding that scales with the viewport.
 
-    Example::
-
-        with Container():
-            H1("Dashboard")
-            Grid(columns=3):
-                ...
+    **Example:**
+    
+    \`\`\`python
+    with Container():
+        H1("Dashboard")
+        Grid(columns=3):
+            ...
+    \`\`\`
     """
 
     type: Literal["Container"] = "Container"
 `,"prefab_ui/components/control_flow/__init__.py":`"""Control flow components for conditional and iterative rendering.
 
 These components control *what* renders rather than *how* it looks.
-\`\`ForEach\`\` repeats children over a list, while \`\`If\`\`/\`\`Elif\`\`/\`\`Else\`\`
+\`ForEach\` repeats children over a list, while \`If\`/\`Elif\`/\`Else\`
 express conditional branches that the renderer evaluates at display time.
 
-Example::
+**Example:**
 
-    from prefab_ui.components.control_flow import ForEach, If, Else
+\`\`\`python
+from prefab_ui.components.control_flow import ForEach, If, Else
 
-    with ForEach("items"):
-        with If("price > 100"):
-            Badge("Premium")
-        with Else():
-            Badge("Standard")
+with ForEach("items"):
+    with If("price > 100"):
+        Badge("Premium")
+    with Else():
+        Badge("Standard")
+\`\`\`
 """
 
 from prefab_ui.components.control_flow.conditional import Elif, Else, If
@@ -12222,17 +12352,19 @@ __all__ = [
 `,"prefab_ui/components/control_flow/conditional.py":`"""Conditional rendering components: If, Elif, Else.
 
 These components express conditional logic in the Python DSL as natural
-siblings, mirroring Python's own if/elif/else syntax::
+siblings, mirroring Python's own if/elif/else syntax:
 
-    with If("inventory == 0"):
-        Alert("Out of stock", variant="destructive")
-    with Elif("inventory < 10"):
-        Alert("Low stock")
-    with Else():
-        Badge("In stock")
+\`\`\`python
+with If("inventory == 0"):
+    Alert("Out of stock", variant="destructive")
+with Elif("inventory < 10"):
+    Alert("Low stock")
+with Else():
+    Badge("In stock")
+\`\`\`
 
 During serialization, the parent container groups consecutive If/Elif/Else
-siblings into a single \`\`Condition\`\` node in the wire format. These component
+siblings into a single \`Condition\` node in the wire format. These component
 types never appear in the JSON directly.
 """
 
@@ -12252,10 +12384,12 @@ class If(ContainerComponent):
     Args:
         condition: Expression string evaluated against the current state.
 
-    Example::
-
-        with If("count > 0"):
-            Text("{{ count }} items")
+    **Example:**
+    
+    \`\`\`python
+    with If("count > 0"):
+        Text("{{ count }} items")
+    \`\`\`
     """
 
     type: Literal["If"] = "If"
@@ -12279,10 +12413,12 @@ class Elif(ContainerComponent):
     Args:
         condition: Expression string evaluated against the current state.
 
-    Example::
-
-        with Elif("count == 0"):
-            Text("No items")
+    **Example:**
+    
+    \`\`\`python
+    with Elif("count == 0"):
+        Text("No items")
+    \`\`\`
     """
 
     type: Literal["Elif"] = "Elif"
@@ -12303,31 +12439,35 @@ class Elif(ContainerComponent):
 class Else(ContainerComponent):
     """Default branch — renders when no preceding If/Elif matched.
 
-    Takes no arguments beyond children. Must follow an \`\`If\`\` or \`\`Elif\`\`.
+    Takes no arguments beyond children. Must follow an \`If\` or \`Elif\`.
 
-    Example::
-
-        with Else():
-            Text("Fallback content")
+    **Example:**
+    
+    \`\`\`python
+    with Else():
+        Text("Fallback content")
+    \`\`\`
     """
 
     type: Literal["Else"] = "Else"
 `,"prefab_ui/components/control_flow/foreach.py":`"""ForEach control-flow component for iterating over lists.
 
 Repeats its children once per item in a data list.  Inside the loop,
-\`\`$item\`\` refers to the current element and \`\`$index\`\` to its position.
-Use the context manager form to get a typed handle::
+\`$item\` refers to the current element and \`$index\` to its position.
+Use the context manager form to get a typed handle:
 
-    from prefab_ui.components.control_flow import ForEach
-    from prefab_ui.components import Card, CardTitle, Badge
+\`\`\`python
+from prefab_ui.components.control_flow import ForEach
+from prefab_ui.components import Card, CardTitle, Badge
 
-    with ForEach("users") as user:
-        with Card():
-            CardTitle(user.name)
-            Badge(user.role)
+with ForEach("users") as user:
+    with Card():
+        CardTitle(user.name)
+        Badge(user.role)
+\`\`\`
 
-The \`\`user\`\` variable is an \`\`Rx("$item")\`\` reference — attribute access
-chains into dot-path expressions like \`\`{{ $item.name }}\`\`.
+The \`user\` variable is an \`Rx("$item")\` reference — attribute access
+chains into dot-path expressions like \`{{ $item.name }}\`.
 """
 
 from __future__ import annotations
@@ -12343,23 +12483,25 @@ from prefab_ui.rx import INDEX, ITEM, LoopItem, Rx, _generate_key
 class ForEach(ContainerComponent):
     """Repeat children for each item in a data list.
 
-    The context manager form auto-captures \`\`$item\`\` and \`\`$index\`\` into
-    scoped \`\`let\`\` bindings, so each loop level keeps its own references
+    The context manager form auto-captures \`$item\` and \`$index\` into
+    scoped \`let\` bindings, so each loop level keeps its own references
     even when nested.
 
     The returned object supports both simple and destructured usage:
 
-    - \`\`as item\`\` -- acts as an Rx for the current item
-    - \`\`as (idx, item)\`\` -- tuple unpacking (index first, matching enumerate)
+    - \`as item\` -- acts as an Rx for the current item
+    - \`as (idx, item)\` -- tuple unpacking (index first, matching enumerate)
 
     Args:
         key: Data field containing the list to iterate over.
 
-    Example::
-
-        with ForEach("groups") as (gi, group):
-            with ForEach(f"groups.{gi}.todos") as (_, todo):
-                Text(f"{todo.name} in {group.name}")
+    **Example:**
+    
+    \`\`\`python
+    with ForEach("groups") as (gi, group):
+        with ForEach(f"groups.{gi}.todos") as (_, todo):
+            Text(f"{todo.name} in {group.name}")
+    \`\`\`
     """
 
     type: Literal["ForEach"] = "ForEach"
@@ -12380,7 +12522,7 @@ class ForEach(ContainerComponent):
     def __enter__(self) -> LoopItem:  # type: ignore[override]  # ty:ignore[invalid-method-override]
         """Push onto the component stack and return a scoped loop binding.
 
-        Auto-generates \`\`let\`\` bindings that capture \`\`$item\`\` and \`\`$index\`\`
+        Auto-generates \`let\` bindings that capture \`$item\` and \`$index\`
         under unique names, so nested loops don't shadow each other.
         """
         super().__enter__()
@@ -12410,8 +12552,8 @@ from prefab_ui.components.base import (
 class Dashboard(ContainerComponent):
     """Explicit-placement grid for dashboard layouts.
 
-    Unlike \`\`Grid\`\` (auto-flow), \`\`Dashboard\`\` places children at
-    specific grid coordinates using \`\`DashboardItem\`\` wrappers.
+    Unlike \`Grid\` (auto-flow), \`Dashboard\` places children at
+    specific grid coordinates using \`DashboardItem\` wrappers.
     Positions are **1-indexed** (matching CSS Grid conventions).
 
     Args:
@@ -12420,13 +12562,15 @@ class Dashboard(ContainerComponent):
         rows: Fixed number of rows. Omit for auto-expanding rows.
         gap: Gap between grid cells.
 
-    Example::
-
-        with Dashboard(columns=12, row_height=120, gap=4):
-            with DashboardItem(col=1, row=1, col_span=8, row_span=3):
-                LineChart(...)
-            with DashboardItem(col=9, row=1, col_span=4, row_span=1):
-                Text("Revenue: $42M")
+    **Example:**
+    
+    \`\`\`python
+    with Dashboard(columns=12, row_height=120, gap=4):
+        with DashboardItem(col=1, row=1, col_span=8, row_span=3):
+            LineChart(...)
+        with DashboardItem(col=9, row=1, col_span=4, row_span=1):
+            Text("Revenue: $42M")
+    \`\`\`
     """
 
     type: Literal["Dashboard"] = "Dashboard"
@@ -12449,7 +12593,7 @@ class Dashboard(ContainerComponent):
 
 
 class DashboardItem(ContainerComponent):
-    """A positioned cell within a \`\`Dashboard\`\`.
+    """A positioned cell within a \`Dashboard\`.
 
     Specifies where this item sits and how many columns/rows it spans.
     Positions are **1-indexed**.
@@ -12461,9 +12605,11 @@ class DashboardItem(ContainerComponent):
         row_span: Number of rows to span.
         z_index: CSS z-index for layering.
 
-    Example::
-
-        DashboardItem(col=1, row=1, col_span=4, row_span=2)
+    **Example:**
+    
+    \`\`\`python
+    DashboardItem(col=1, row=1, col_span=4, row_span=2)
+    \`\`\`
     """
 
     type: Literal["DashboardItem"] = "DashboardItem"
@@ -12482,24 +12628,26 @@ class DashboardItem(ContainerComponent):
 
 Built on @tanstack/react-table in the renderer.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DataTable, DataTableColumn
+\`\`\`python
+from prefab_ui.components import DataTable, DataTableColumn
 
-    DataTable(
-        columns=[
-            DataTableColumn(key="name", header="Name", sortable=True),
-            DataTableColumn(key="email", header="Email"),
-            DataTableColumn(key="role", header="Role"),
-        ],
-        rows="{{ users }}",
-        search=True,
-        paginated=True,
-    )
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
+        DataTableColumn(key="role", header="Role"),
+    ],
+    rows="{{ users }}",
+    search=True,
+    paginated=True,
+)
 
-    # DataFrame support — auto-generates columns from df.columns
-    import pandas as pd
-    DataTable(rows=pd.DataFrame({"name": ["Alice"], "score": [90]}))
+# DataFrame support — auto-generates columns from df.columns
+import pandas as pd
+DataTable(rows=pd.DataFrame({"name": ["Alice"], "score": [90]}))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -12584,29 +12732,31 @@ class DataTableColumn(BaseModel):
 class DataTable(Component):
     """High-level data table with sorting, filtering, and pagination.
 
-    Accepts flat \`\`columns\`\` and \`\`rows\`\` — the renderer handles the rest.
-    Also accepts a pandas, polars, or any DataFrame-like object as \`\`rows\`\`.
+    Accepts flat \`columns\` and \`rows\` — the renderer handles the rest.
+    Also accepts a pandas, polars, or any DataFrame-like object as \`rows\`.
     Columns are auto-generated from the DataFrame's column names if not provided.
 
     Args:
         columns: Column definitions.
-        rows: Row data as a list of dicts, a \`\`{{ template }}\`\` string, or a DataFrame.
+        rows: Row data as a list of dicts, a \`{{ template }}\` string, or a DataFrame.
         search: Show a search input above the table.
         paginated: Show pagination controls.
         page_size: Rows per page when paginated.
-        on_row_click: Action(s) when a row is clicked. \`\`$event\`\` is the row dict.
+        on_row_click: Action(s) when a row is clicked. \`$event\` is the row dict.
 
-    Example::
-
-        DataTable(
-            columns=[
-                DataTableColumn(key="name", header="Name", sortable=True),
-                DataTableColumn(key="email", header="Email"),
-            ],
-            rows=data["users"],
-            search=True,
-            paginated=True,
-        )
+    **Example:**
+    
+    \`\`\`python
+    DataTable(
+        columns=[
+            DataTableColumn(key="name", header="Name", sortable=True),
+            DataTableColumn(key="email", header="Email"),
+        ],
+        rows=data["users"],
+        search=True,
+        paginated=True,
+    )
+    \`\`\`
     """
 
     type: Literal["DataTable"] = "DataTable"
@@ -12634,7 +12784,7 @@ class DataTable(Component):
     columns: list[DataTableColumn] = Field(description="Column definitions")
     rows: list[dict[str, Any]] | str | Rx = Field(
         default_factory=list,
-        description="Row data, {{ interpolation }} reference, or DataFrame",
+        description="Row data, \`{{ interpolation }}\` reference, or DataFrame",
     )
     search: bool = Field(default=False, description="Show search input")
     paginated: bool = Field(default=False, description="Show pagination controls")
@@ -12657,15 +12807,17 @@ class DataTable(Component):
         return d
 `,"prefab_ui/components/date_picker.py":`"""DatePicker — popover with a calendar for selecting dates.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DatePicker
+\`\`\`python
+from prefab_ui.components import DatePicker
 
-    DatePicker(placeholder="Select deadline", name="deadline")
+DatePicker(placeholder="Select deadline", name="deadline")
 
-    # Access reactive value
-    picker = DatePicker(placeholder="Choose date...")
-    Text(f"Date: {picker.rx}")
+# Access reactive value
+picker = DatePicker(placeholder="Choose date...")
+Text(f"Date: {picker.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -12690,9 +12842,11 @@ class DatePicker(StatefulMixin, Component):
         name: State key for reactive binding. Auto-generated if omitted.
         on_change: Action(s) fired when the date changes.
 
-    Example::
-
-        DatePicker(placeholder="Pick a date", name="deadline")
+    **Example:**
+    
+    \`\`\`python
+    DatePicker(placeholder="Pick a date", name="deadline")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "datepicker"
@@ -12718,17 +12872,19 @@ class DatePicker(StatefulMixin, Component):
 
 The first child becomes the trigger; remaining children become the dialog body.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Dialog, Button, Text, Row
-    from prefab_ui.actions.mcp import CallTool
+\`\`\`python
+from prefab_ui.components import Dialog, Button, Text, Row
+from prefab_ui.actions.mcp import CallTool
 
-    with Dialog(title="Confirm Delete", description="This action cannot be undone."):
-        Button("Delete", variant="destructive")  # trigger
-        Text("Are you sure you want to delete this item?")
-        with Row(gap=2):
-            Button("Cancel", variant="outline")
-            Button("Confirm", on_click=CallTool("delete_item"))
+with Dialog(title="Confirm Delete", description="This action cannot be undone."):
+    Button("Delete", variant="destructive")  # trigger
+    Text("Are you sure you want to delete this item?")
+    with Row(gap=2):
+        Button("Cancel", variant="outline")
+        Button("Confirm", on_click=CallTool("delete_item"))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -12751,13 +12907,15 @@ class Dialog(ContainerComponent):
         title: Header title displayed at the top of the dialog.
         description: Subtitle text below the title.
 
-    Example::
-
-        with Dialog(title="Edit Profile", description="Update your info."):
-            Button("Edit")
-            with Column(gap=3):
-                Input(name="displayName", placeholder="Display name")
-                Button("Save", on_click=CallTool("update_profile"))
+    **Example:**
+    
+    \`\`\`python
+    with Dialog(title="Edit Profile", description="Update your info."):
+        Button("Edit")
+        with Column(gap=3):
+            Input(name="displayName", placeholder="Display name")
+            Button("Save", on_click=CallTool("update_profile"))
+    \`\`\`
     """
 
     type: Literal["Dialog"] = "Dialog"
@@ -12781,18 +12939,20 @@ from prefab_ui.rx import RxStr
 class Div(ContainerComponent):
     """A bare container with no default styling.
 
-    The Python equivalent of \`\`<div className="...">\`\` in React.
+    The Python equivalent of \`<div className="...">\` in React.
     Use when you need a wrapper with custom Tailwind classes that
     Column/Row/Grid don't naturally express.
 
     Args:
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        with Div(css_class="flex items-center gap-4 px-6 py-4"):
-            Badge("deploy", variant="outline")
-            P("Deployed v2.4.1")
+    **Example:**
+    
+    \`\`\`python
+    with Div(css_class="flex items-center gap-4 px-6 py-4"):
+        Badge("deploy", variant="outline")
+        P("Deployed v2.4.1")
+    \`\`\`
     """
 
     type: Literal["Div"] = "Div"
@@ -12805,8 +12965,8 @@ class Span(_TextComponent):
     """An inline text element with text modifiers.
 
     Supports bold, italic, underline, strikethrough, uppercase, lowercase,
-    \`\`code\`\` for inline code styling, plus arbitrary CSS via \`\`css_class\`\`
-    or \`\`style\`\`.
+    \`code\` for inline code styling, plus arbitrary CSS via \`css_class\`
+    or \`style\`.
 
     Args:
         content: Text content.
@@ -12816,14 +12976,16 @@ class Span(_TextComponent):
         strikethrough: Render text with strikethrough.
         uppercase: Transform text to uppercase.
         lowercase: Transform text to lowercase.
-        code: Render as inline \`\`<code>\`\` with monospace font.
+        code: Render as inline \`<code>\` with monospace font.
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        Span("14m ago", css_class="text-sm text-muted-foreground")
-        Span("important", bold=True, underline=True)
-        Span("pip install prefab-ui", code=True)
+    **Example:**
+    
+    \`\`\`python
+    Span("14m ago", css_class="text-sm text-muted-foreground")
+    Span("important", bold=True, underline=True)
+    Span("pip install prefab-ui", code=True)
+    \`\`\`
     """
 
     type: Literal["Span"] = "Span"
@@ -12855,17 +13017,19 @@ class Link(_TextComponent):
     Args:
         content: Link text.
         href: URL to navigate to.
-        target: Link target (\`\`'_blank'\`\` for new tab, \`\`'_self'\`\` for same tab).
+        target: Link target (\`'_blank'\` for new tab, \`'_self'\` for same tab).
         bold: Render link text in bold.
         italic: Render link text in italic.
         underline: Render link text with underline.
         code: Render as inline code with monospace font.
         style: Inline CSS styles as a dict of property/value pairs.
 
-    Example::
-
-        Link("Prefab docs", href="https://prefab.prefect.io")
-        Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    **Example:**
+    
+    \`\`\`python
+    Link("Prefab docs", href="https://prefab.prefect.io")
+    Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    \`\`\`
     """
 
     type: Literal["Link"] = "Link"
@@ -12927,12 +13091,14 @@ class Dot(Component):
         size: Dot size (sm, default, lg).
         shape: Dot shape (circle, square, rounded).
 
-    Example::
-
-        Dot()
-        Dot(variant="success")
-        Dot(variant="warning", size="lg")
-        Dot(shape="square", css_class="bg-purple-500")
+    **Example:**
+    
+    \`\`\`python
+    Dot()
+    Dot(variant="success")
+    Dot(variant="warning", size="lg")
+    Dot(shape="square", css_class="bg-purple-500")
+    \`\`\`
     """
 
     type: Literal["Dot"] = "Dot"
@@ -12954,23 +13120,25 @@ class Dot(Component):
 `,"prefab_ui/components/drop_zone.py":`"""DropZone component for drag-and-drop file uploads.
 
 A styled drag-and-drop area where users can drop files or click to browse.
-Reads selected files to base64 and fires \`\`onChange\`\` with structured file data.
+Reads selected files to base64 and fires \`onChange\` with structured file data.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DropZone
-    from prefab_ui.actions.mcp import CallTool
+\`\`\`python
+from prefab_ui.components import DropZone
+from prefab_ui.actions.mcp import CallTool
 
-    DropZone(
-        label="Drop files here",
-        accept="image/*",
-        multiple=True,
-        on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
-    )
+DropZone(
+    label="Drop files here",
+    accept="image/*",
+    multiple=True,
+    on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
+)
 
-    # Access reactive value
-    zone = DropZone(label="Drop files", accept="image/*")
-    Text(f"Files: {zone.rx}")
+# Access reactive value
+zone = DropZone(label="Drop files", accept="image/*")
+Text(f"Files: {zone.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -12987,17 +13155,17 @@ from prefab_ui.rx import RxStr
 class DropZone(StatefulMixin, Component):
     """Drag-and-drop file upload area.
 
-    Fires \`\`onChange\`\` with file data as \`\`$event\`\`:
-    \`\`[{name, size, type, data}, ...]\`\` (always an array, even for single files).
+    Fires \`onChange\` with file data as \`$event\`:
+    \`[{name, size, type, data}, ...]\` (always an array, even for single files).
 
-    State value is always \`\`list[FileUpload]\`\`, defaulting to \`\`[]\`\`.
-    When \`\`multiple=False\`\`, uploading a new file overwrites the previous one.
-    When \`\`multiple=True\`\`, files accumulate.
+    State value is always \`list[FileUpload]\`, defaulting to \`[]\`.
+    When \`multiple=False\`, uploading a new file overwrites the previous one.
+    When \`multiple=True\`, files accumulate.
 
     Args:
         label: Primary prompt text shown in the drop zone.
         description: Secondary text below the label (e.g. file type hints).
-        accept: File type filter (e.g. \`\`"image/*"\`\`, \`\`".csv,.xlsx"\`\`).
+        accept: File type filter (e.g. \`"image/*"\`, \`".csv,.xlsx"\`).
         multiple: Allow dropping multiple files.
         max_size: Maximum file size in bytes per file.
         disabled: Whether the drop zone is disabled.
@@ -13066,9 +13234,9 @@ from prefab_ui.rx import RxStr
 class Embed(Component):
     """Embed external content in a sandboxed iframe.
 
-    Accepts either a \`\`url\`\` (iframe src) or \`\`html\`\` (iframe srcdoc),
-    but not both. Use \`\`url\`\` for YouTube, Google Maps, and other
-    hosted content. Use \`\`html\`\` for custom HTML/JS like Three.js
+    Accepts either a \`url\` (iframe src) or \`html\` (iframe srcdoc),
+    but not both. Use \`url\` for YouTube, Google Maps, and other
+    hosted content. Use \`html\` for custom HTML/JS like Three.js
     scenes or Canvas-based visualizations.
 
     Args:
@@ -13076,13 +13244,15 @@ class Embed(Component):
         html: Raw HTML to embed (iframe srcdoc).
         width: CSS width of the iframe.
         height: CSS height of the iframe.
-        sandbox: Iframe sandbox attribute (e.g. \`\`'allow-scripts allow-same-origin'\`\`).
-        allow: Iframe allow attribute (e.g. \`\`'fullscreen; autoplay'\`\`).
+        sandbox: Iframe sandbox attribute (e.g. \`'allow-scripts allow-same-origin'\`).
+        allow: Iframe allow attribute (e.g. \`'fullscreen; autoplay'\`).
 
-    Example::
-
-        Embed(url="https://www.youtube.com/embed/dQw4w9WgXcQ")
-        Embed(html="<canvas id='c'></canvas><script>/*...*/<\/script>")
+    **Example:**
+    
+    \`\`\`python
+    Embed(url="https://www.youtube.com/embed/dQw4w9WgXcQ")
+    Embed(html="<canvas id='c'></canvas><script>/*...*/<\/script>")
+    \`\`\`
     """
 
     type: Literal["Embed"] = "Embed"
@@ -13114,16 +13284,18 @@ class Embed(Component):
 
     @classmethod
     def from_iframe(cls, iframe_html: str, **kwargs: Any) -> Embed:
-        """Create an Embed from a raw \`\`<iframe>\`\` HTML snippet.
+        """Create an Embed from a raw \`<iframe>\` HTML snippet.
 
-        Parses the tag attributes and maps them to Embed fields::
+        Parses the tag attributes and maps them to Embed fields:
 
-            Embed.from_iframe(
-                '<iframe src="https://example.com" width="600" height="400"'
-                ' allow="fullscreen"></iframe>'
-            )
+        \`\`\`python
+        Embed.from_iframe(
+            '<iframe src="https://example.com" width="600" height="400"'
+            ' allow="fullscreen"></iframe>'
+        )
+        \`\`\`
 
-        Any \`\`**kwargs\`\` override the parsed attributes.
+        Any \`**kwargs\` override the parsed attributes.
         """
         parsed_attrs: dict[str, str | None] = {}
 
@@ -13159,27 +13331,31 @@ class Embed(Component):
 `,"prefab_ui/components/field.py":`"""Composable form field components.
 
 Field groups a label, control, and error message into a single unit. Its
-main job is validation styling — when \`\`invalid\`\` is set, all text inside
+main job is validation styling — when \`invalid\` is set, all text inside
 turns red automatically via CSS cascade.
 
 ChoiceCard is a Field subclass that renders as a bordered, clickable card.
 Clicking anywhere on the card toggles the wrapped control (Switch, Checkbox,
 etc.).
 
-Form validation::
+**Form validation:**
 
-    with Field(invalid=Rx("!destination")):
-        Label("Destination")
-        Select(name="destination", placeholder="Choose a planet...")
-        FieldError("Please select a destination.")
+\`\`\`python
+with Field(invalid=Rx("!destination")):
+    Label("Destination")
+    Select(name="destination", placeholder="Choose a planet...")
+    FieldError("Please select a destination.")
+\`\`\`
 
-Choice card::
+**Choice card:**
 
-    with ChoiceCard():
-        with FieldContent():
-            FieldTitle("Share across devices")
-            FieldDescription("Focus is shared across devices.")
-        Switch()
+\`\`\`python
+with ChoiceCard():
+    with FieldContent():
+        FieldTitle("Share across devices")
+        FieldDescription("Focus is shared across devices.")
+    Switch()
+\`\`\`
 """
 
 from __future__ import annotations
@@ -13195,21 +13371,23 @@ from prefab_ui.rx import RxStr
 class Field(ContainerComponent):
     """Composable form field wrapper.
 
-    Groups a label, control, and error message. Propagates \`\`data-invalid\`\`
+    Groups a label, control, and error message. Propagates \`data-invalid\`
     to all children via CSS cascade so labels turn red, controls get error
     styling, and error messages appear — without wiring each individually.
 
     Args:
         invalid: Whether the field is in an error state. Accepts reactive
-            expressions like \`\`Rx("!email")\`\`.
+            expressions like \`Rx("!email")\`.
         disabled: Whether the field is dimmed and non-interactive.
 
-    Example::
-
-        with Field(invalid=True):
-            Label("Email")
-            Input(name="email")
-            FieldError("Email is required.")
+    **Example:**
+    
+    \`\`\`python
+    with Field(invalid=True):
+        Label("Email")
+        Input(name="email")
+        FieldError("Email is required.")
+    \`\`\`
     """
 
     type: Literal["Field"] = "Field"
@@ -13232,13 +13410,15 @@ class ChoiceCard(Field):
         invalid: Whether the card is in an error state.
         disabled: Whether the card is dimmed and non-interactive.
 
-    Example::
-
-        with ChoiceCard():
-            with FieldContent():
-                FieldTitle("Dark mode")
-                FieldDescription("Use dark theme throughout the app.")
-            Switch()
+    **Example:**
+    
+    \`\`\`python
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Dark mode")
+            FieldDescription("Use dark theme throughout the app.")
+        Switch()
+    \`\`\`
     """
 
     type: Literal["ChoiceCard"] = "ChoiceCard"
@@ -13250,9 +13430,11 @@ class FieldTitle(Component):
     Args:
         content: Title text.
 
-    Example::
-
-        FieldTitle("Share across devices")
+    **Example:**
+    
+    \`\`\`python
+    FieldTitle("Share across devices")
+    \`\`\`
     """
 
     type: Literal["FieldTitle"] = "FieldTitle"
@@ -13276,9 +13458,11 @@ class FieldDescription(Component):
     Args:
         content: Description text.
 
-    Example::
-
-        FieldDescription("Focus is shared across devices.")
+    **Example:**
+    
+    \`\`\`python
+    FieldDescription("Focus is shared across devices.")
+    \`\`\`
     """
 
     type: Literal["FieldDescription"] = "FieldDescription"
@@ -13299,11 +13483,13 @@ class FieldDescription(Component):
 class FieldContent(ContainerComponent):
     """Container that groups title and description in choice card layouts.
 
-    Example::
-
-        with FieldContent():
-            FieldTitle("Dark mode")
-            FieldDescription("Use dark theme throughout the app.")
+    **Example:**
+    
+    \`\`\`python
+    with FieldContent():
+        FieldTitle("Dark mode")
+        FieldDescription("Use dark theme throughout the app.")
+    \`\`\`
     """
 
     type: Literal["FieldContent"] = "FieldContent"
@@ -13315,9 +13501,11 @@ class FieldError(Component):
     Args:
         content: Error message text.
 
-    Example::
-
-        FieldError("Please select a destination.")
+    **Example:**
+    
+    \`\`\`python
+    FieldError("Please select a destination.")
+    \`\`\`
     """
 
     type: Literal["FieldError"] = "FieldError"
@@ -13335,22 +13523,24 @@ class FieldError(Component):
         super().__init__(**kwargs)
 `,"prefab_ui/components/form.py":`"""Form component with Pydantic model integration.
 
-Forms group inputs with labels. The \`\`from_model()\`\` classmethod generates
+Forms group inputs with labels. The \`from_model()\` classmethod generates
 a complete form from a Pydantic model's field definitions, using Pydantic
-\`\`Field()\`\` metadata for labels, descriptions, constraints, and UI hints.
+\`Field()\` metadata for labels, descriptions, constraints, and UI hints.
 
-Example::
+**Example:**
 
-    from pydantic import BaseModel, Field
-    from prefab_ui.components import Form
+\`\`\`python
+from pydantic import BaseModel, Field
+from prefab_ui.components import Form
 
-    class UserProfile(BaseModel):
-        name: str = Field(title="Full Name", min_length=1)
-        email: str
-        age: int = Field(ge=0, le=150)
-        active: bool = True
+class UserProfile(BaseModel):
+    name: str = Field(title="Full Name", min_length=1)
+    email: str
+    age: int = Field(ge=0, le=150)
+    active: bool = True
 
-    Form.from_model(UserProfile, on_submit=CallTool("save_profile"))
+Form.from_model(UserProfile, on_submit=CallTool("save_profile"))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -13378,19 +13568,21 @@ from prefab_ui.components.base import (
 class Form(ContainerComponent):
     """Form container that groups labeled inputs.
 
-    Use \`\`Form.from_model()\`\` to auto-generate a form from a Pydantic model,
+    Use \`Form.from_model()\` to auto-generate a form from a Pydantic model,
     or build forms manually with context-manager syntax.
 
     Args:
         gap: Spacing between form children (Tailwind gap scale).
         on_submit: Action(s) to execute when the form is submitted.
 
-    Example::
-
-        with Form():
-            Label("Name")
-            Input(name="name", placeholder="Your name")
-            Button("Submit", on_click=CallTool("save"))
+    **Example:**
+    
+    \`\`\`python
+    with Form():
+        Label("Name")
+        Input(name="name", placeholder="Your name")
+        Button("Submit", on_click=CallTool("save"))
+    \`\`\`
     """
 
     type: Literal["Form"] = "Form"
@@ -13443,46 +13635,50 @@ class Form(ContainerComponent):
         """Generate a form from a Pydantic model.
 
         Introspects the model's fields and creates appropriate input
-        components for each, using Pydantic \`\`Field()\`\` metadata:
+        components for each, using Pydantic \`Field()\` metadata:
 
-        - \`\`title\`\` → label text (falls back to humanized field name)
-        - \`\`description\`\` → placeholder / help text
-        - \`\`min_length\`\` / \`\`max_length\`\` → HTML input constraints
-        - \`\`ge\`\` / \`\`le\`\` / \`\`gt\`\` / \`\`lt\`\` → number min/max
-        - \`\`json_schema_extra={"ui": {"type": "textarea"}}\`\` → textarea
-        - \`\`SecretStr\`\` → password input
-        - \`\`exclude=True\`\` → skip field
+        - \`title\` → label text (falls back to humanized field name)
+        - \`description\` → placeholder / help text
+        - \`min_length\` / \`max_length\` → HTML input constraints
+        - \`ge\` / \`le\` / \`gt\` / \`lt\` → number min/max
+        - \`json_schema_extra={"ui": {"type": "textarea"}}\` → textarea
+        - \`SecretStr\` → password input
+        - \`exclude=True\` → skip field
 
         Type mapping:
 
-        - \`\`str\`\` → text input (email/password/tel/url detected by name)
-        - \`\`int\`\` / \`\`float\`\` → number input
-        - \`\`bool\`\` → checkbox
-        - \`\`datetime.date\`\` → date input
-        - \`\`datetime.time\`\` → time input
-        - \`\`datetime.datetime\`\` → datetime-local input
-        - \`\`Literal[...]\`\` → select dropdown
-        - \`\`SecretStr\`\` → password input
+        - \`str\` → text input (email/password/tel/url detected by name)
+        - \`int\` / \`float\` → number input
+        - \`bool\` → checkbox
+        - \`datetime.date\` → date input
+        - \`datetime.time\` → time input
+        - \`datetime.datetime\` → datetime-local input
+        - \`Literal[...]\` → select dropdown
+        - \`SecretStr\` → password input
 
-        When \`\`on_submit\`\` is a single \`\`CallTool\`\` with no \`\`arguments\`\`,
-        arguments are auto-filled from the model's fields under a \`\`data\`\`
-        key. This enables the self-calling tool pattern::
+        When \`on_submit\` is a single \`CallTool\` with no \`arguments\`,
+        arguments are auto-filled from the model's fields under a \`data\`
+        key. This enables the self-calling tool pattern:
 
-            Form.from_model(Contact, on_submit=CallTool("create_contact"))
-            # auto-generates: arguments={"data": {"name": "{{ name }}", ...}}
+        \`\`\`python
+        Form.from_model(Contact, on_submit=CallTool("create_contact"))
+        # auto-generates: arguments={"data": {"name": "{{ name }}", ...}}
+        \`\`\`
 
-        A default \`\`on_error\`\` toast is added if not already specified.
+        A default \`on_error\` toast is added if not already specified.
 
-        When \`\`fields_only=True\`\`, only the field components (labeled
-        inputs) are created — no \`\`Form\`\` wrapper and no submit button.
+        When \`fields_only=True\`, only the field components (labeled
+        inputs) are created — no \`Form\` wrapper and no submit button.
         The fields auto-parent to whatever context manager is active,
-        letting you compose them into custom layouts::
+        letting you compose them into custom layouts:
 
-            with Form(on_submit=CallTool("save")):
-                with CardContent():
-                    Form.from_model(Contact, fields_only=True)
-                with CardFooter():
-                    Button("Submit")
+        \`\`\`python
+        with Form(on_submit=CallTool("save")):
+            with CardContent():
+                Form.from_model(Contact, fields_only=True)
+            with CardFooter():
+                Button("Submit")
+        \`\`\`
 
         Args:
             model: Pydantic model class to generate from.
@@ -13490,7 +13686,7 @@ class Form(ContainerComponent):
                 a Form wrapper or submit button. Returns a list of the
                 created components.
             submit_label: Text for the submit button.
-            on_submit: Action(s) fired on submit. A \`\`CallTool\`\` with no
+            on_submit: Action(s) fired on submit. A \`CallTool\` with no
                 arguments gets auto-filled from model fields.
             css_class: Additional CSS classes on the form container.
         """
@@ -13519,7 +13715,7 @@ class Form(ContainerComponent):
         on_submit = _maybe_enrich_tool_call(on_submit, model)
 
         # Form is created with the stack active so it auto-parents to any
-        # outer context manager (e.g. \`\`with Card(): Form.from_model(...)\`\`).
+        # outer context manager (e.g. \`with Card(): Form.from_model(...)\`).
         form = cls(on_submit=on_submit, css_class=css_class)
 
         # Suppress auto-parenting while building internal components so
@@ -13546,8 +13742,8 @@ def _maybe_enrich_tool_call(
     """Auto-fill CallTool arguments from model fields when empty.
 
     Only triggers when on_submit is a single CallTool with no arguments.
-    Wraps field templates under a \`\`data\`\` key so the receiving tool gets
-    \`\`data: Model\`\` as a single parameter.
+    Wraps field templates under a \`data\` key so the receiving tool gets
+    \`data: Model\` as a single parameter.
     """
     if not isinstance(on_submit, CallTool):
         return on_submit
@@ -13810,7 +14006,7 @@ from prefab_ui.components.base import (
 def _compile_column_template(columns: list[int | str]) -> str:
     """Compile a column list to a CSS grid-template-columns value.
 
-    Integers become \`\`Nfr\`\` (fractional units); strings pass through as-is.
+    Integers become \`Nfr\` (fractional units); strings pass through as-is.
 
         [1, "auto", 1]  → "1fr auto 1fr"
         [2, 1]          → "2fr 1fr"
@@ -13831,36 +14027,40 @@ class Grid(ContainerComponent):
     Args:
         columns: Number of columns (1-12), a list of column widths, a
             Responsive mapping, or a dict of breakpoint→column-count.
-            Defaults to 3 equal columns. Pass a list for custom widths::
+            Defaults to 3 equal columns. Pass a list for custom widths:
 
-                Grid(columns=[1, "auto", 1])  # 1fr auto 1fr
+            \`\`\`python
+            Grid(columns=[1, "auto", 1])  # 1fr auto 1fr
+            \`\`\`
 
-            In a list, integers become fractional units (\`\`1\`\` → \`\`1fr\`\`)
-            and strings pass through (\`\`"auto"\`\`, \`\`"200px"\`\`).
+            In a list, integers become fractional units (\`1\` → \`1fr\`)
+            and strings pass through (\`"auto"\`, \`"200px"\`).
         min_column_width: Minimum column width for auto-fill responsive
-            grids (e.g. \`\`"16rem"\`\`). Mutually exclusive with *columns*.
+            grids (e.g. \`"16rem"\`). Mutually exclusive with *columns*.
         gap: Gap between children: int, (x, y) tuple, or Responsive.
         css_class: Additional CSS classes to apply.
 
-    Example::
-
-        with Grid(columns=3):
-            Card(...)
-            Card(...)
-            Card(...)
-
-        # Custom widths: sidebar + content
-        with Grid(columns=[1, 3]):
-            Sidebar(...)
-            MainContent(...)
-
-        # Responsive: 1 col on mobile, 2 on md, 3 on lg
-        with Grid(columns={"default": 1, "md": 2, "lg": 3}):
-            Card(...)
-
-        # Auto-fill: as many columns as fit, each ≥ 16rem
-        with Grid(min_column_width="16rem"):
-            Card(...)
+    **Example:**
+    
+    \`\`\`python
+    with Grid(columns=3):
+        Card(...)
+        Card(...)
+        Card(...)
+    
+    # Custom widths: sidebar + content
+    with Grid(columns=[1, 3]):
+        Sidebar(...)
+        MainContent(...)
+    
+    # Responsive: 1 col on mobile, 2 on md, 3 on lg
+    with Grid(columns={"default": 1, "md": 2, "lg": 3}):
+        Card(...)
+    
+    # Auto-fill: as many columns as fit, each ≥ 16rem
+    with Grid(min_column_width="16rem"):
+        Card(...)
+    \`\`\`
     """
 
     type: Literal["Grid"] = "Grid"
@@ -13927,26 +14127,28 @@ class Grid(ContainerComponent):
 
 
 class GridItem(ContainerComponent):
-    """A child of :class:\`Grid\` that spans multiple columns or rows.
+    """A child of \`Grid\` that spans multiple columns or rows.
 
-    Use \`\`GridItem\`\` to control how much space a child occupies within
-    a \`\`Grid\`\`.  Items without a \`\`GridItem\`\` wrapper span a single cell.
+    Use \`GridItem\` to control how much space a child occupies within
+    a \`Grid\`.  Items without a \`GridItem\` wrapper span a single cell.
     Positioning is automatic (CSS auto-placement); use
-    :class:\`~prefab_ui.components.dashboard.DashboardItem\` for explicit
-    \`\`col\`\`/\`\`row\`\` coordinates instead.
+    \`DashboardItem\` for explicit
+    \`col\`/\`row\` coordinates instead.
 
     Args:
         col_span: Number of columns to span.
         row_span: Number of rows to span.
 
-    Example::
-
-        with Grid(columns=4, gap=4):
-            with GridItem(col_span=2):
-                Card(...)        # spans 2 columns
-            Card(...)            # spans 1 column
-            with GridItem(col_span=2, row_span=2):
-                BigChart(...)    # spans 2x2
+    **Example:**
+    
+    \`\`\`python
+    with Grid(columns=4, gap=4):
+        with GridItem(col_span=2):
+            Card(...)        # spans 2 columns
+        Card(...)            # spans 1 column
+        with GridItem(col_span=2, row_span=2):
+            BigChart(...)    # spans 2x2
+    \`\`\`
     """
 
     type: Literal["GridItem"] = "GridItem"
@@ -13968,7 +14170,7 @@ from prefab_ui.components.typography import _text_init, _TextComponent
 
 
 class Heading(_TextComponent):
-    """Section heading (h1–h4).
+    """Section heading (h1-h4).
 
     Renders as an HTML heading element. Level 1 is the largest (page
     title), level 4 is the smallest.
@@ -13977,11 +14179,13 @@ class Heading(_TextComponent):
         content: Heading text. Accepts template expressions.
         level: Heading level — 1 (h1, default), 2 (h2), 3 (h3), or 4 (h4).
 
-    Example::
-
-        Heading("Dashboard")
-        Heading("Details", level=2)
-        Heading("{{ section_title }}", level=3)
+    **Example:**
+    
+    \`\`\`python
+    Heading("Dashboard")
+    Heading("Details", level=2)
+    Heading("{{ section_title }}", level=3)
+    \`\`\`
     """
 
     type: Literal["Heading"] = "Heading"
@@ -14003,22 +14207,24 @@ Binning happens in Python at construction time. The renderer receives a
 standard BarChart payload with pre-computed bin labels and counts, so no
 new React component or Zod schema is needed.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Histogram
+\`\`\`python
+from prefab_ui.components import Histogram
 
-    Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
 
-    Histogram(
-        values=[10.5, 20.3, 15.7, 30.1, 25.0],
-        bins=5,
-        color="#4f46e5",
-    )
+Histogram(
+    values=[10.5, 20.3, 15.7, 30.1, 25.0],
+    bins=5,
+    color="#4f46e5",
+)
 
-    Histogram(
-        values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        bin_edges=[0, 3, 7, 10],
-    )
+Histogram(
+    values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    bin_edges=[0, 3, 7, 10],
+)
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14049,7 +14255,7 @@ def _compute_bins(
 ) -> list[dict[str, Any]]:
     """Compute histogram bin counts from raw values.
 
-    Returns a list of \`\`{"bin": "lo-hi", "count": n}\`\` dicts suitable for
+    Returns a list of \`{"bin": "lo-hi", "count": n}\` dicts suitable for
     BarChart data.
     """
     if not values:
@@ -14094,7 +14300,7 @@ def _compute_bins(
 class Histogram(Component):
     """Histogram that auto-bins raw values and renders as a BarChart.
 
-    The \`\`values\`\`, \`\`bins\`\`, and \`\`bin_edges\`\` fields are consumed during
+    The \`values\`, \`bins\`, and \`bin_edges\` fields are consumed during
     construction and excluded from the serialized output. The renderer
     receives a standard BarChart payload.
 
@@ -14109,9 +14315,11 @@ class Histogram(Component):
         color: Bar fill color (CSS color string).
         bar_radius: Corner radius on bars.
 
-    Example::
-
-        Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+    **Example:**
+    
+    \`\`\`python
+    Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+    \`\`\`
     """
 
     type: Literal["BarChart"] = "BarChart"
@@ -14151,15 +14359,17 @@ class Histogram(Component):
 
 The first child becomes the trigger; remaining children become the content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import HoverCard, Badge, Column, Text, Progress
+\`\`\`python
+from prefab_ui.components import HoverCard, Badge, Column, Text, Progress
 
-    with HoverCard(open_delay=0):
-        Badge("In Orbit")          # trigger
-        with Column(gap=2):        # content
-            Text("heart-of-gold")
-            Progress(value=100, indicator_class="bg-green-500")
+with HoverCard(open_delay=0):
+    Badge("In Orbit")          # trigger
+    with Column(gap=2):        # content
+        Text("heart-of-gold")
+        Progress(value=100, indicator_class="bg-green-500")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14182,13 +14392,15 @@ class HoverCard(ContainerComponent):
         open_delay: Delay in milliseconds before opening.
         close_delay: Delay in milliseconds before closing.
 
-    Example::
-
-        with HoverCard(open_delay=0):
-            Badge("Healthy")
-            with Column(gap=2):
-                Text("weather-api")
-                Muted("Uptime: 99.97%")
+    **Example:**
+    
+    \`\`\`python
+    with HoverCard(open_delay=0):
+        Badge("Healthy")
+        with Column(gap=2):
+            Text("weather-api")
+            Muted("Uptime: 99.97%")
+    \`\`\`
     """
 
     type: Literal["HoverCard"] = "HoverCard"
@@ -14210,17 +14422,19 @@ class HoverCard(ContainerComponent):
 Uses the lucide-react icon library. Pass any icon name in kebab-case.
 Browse available icons at https://lucide.dev/icons.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Icon, Button
+\`\`\`python
+from prefab_ui.components import Icon, Button
 
-    # Standalone icon
-    Icon("circle-alert")
+# Standalone icon
+Icon("circle-alert")
 
-    # Inside a button (renders inline)
-    with Button():
-        Icon("download")
-        "Download file"
+# Inside a button (renders inline)
+with Button():
+    Icon("download")
+    "Download file"
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14236,15 +14450,21 @@ from prefab_ui.rx import RxStr
 class Icon(Component):
     """Renders a lucide icon by name.
 
+    Use the \`size\` prop for sizing — avoid css_class for width/height.
+    Browse available icons at https://lucide.dev/icons.
+
     Args:
-        name: Lucide icon name in kebab-case (e.g., "arrow-right", "circle-alert")
-        size: Icon size — "sm" (16px), "default" (16px with standard spacing),
-            or "lg" (24px)
+        name: Lucide icon name in kebab-case (e.g. "arrow-right",
+            "circle-alert"). See https://lucide.dev/icons.
+        size: Icon size — "sm" (16px), "default" (16px with standard
+            spacing), or "lg" (24px).
 
-    Example::
-
-        Icon("check")
-        Icon("arrow-right", size="lg")
+    **Example:**
+    
+    \`\`\`python
+    Icon("check")
+    Icon("arrow-right", size="lg")
+    \`\`\`
     """
 
     type: Literal["Icon"] = "Icon"
@@ -14282,12 +14502,14 @@ class Image(Component):
     Args:
         src: Image URL.
         alt: Alt text for accessibility.
-        width: CSS width (e.g. \`\`"200px"\`\`).
-        height: CSS height (e.g. \`\`"auto"\`\`).
+        width: CSS width (e.g. \`"200px"\`).
+        height: CSS height (e.g. \`"auto"\`).
 
-    Example::
-
-        Image(src="{{ avatar_url }}", alt="{{ name }}")
+    **Example:**
+    
+    \`\`\`python
+    Image(src="{{ avatar_url }}", alt="{{ name }}")
+    \`\`\`
     """
 
     type: Literal["Image"] = "Image"
@@ -14299,17 +14521,19 @@ class Image(Component):
 
 Text inputs with full form validation styling and dark mode support.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Input, Label
+\`\`\`python
+from prefab_ui.components import Input, Label
 
-    Input(placeholder="Enter your name")
-    Input(input_type="email", placeholder="you@example.com")
-    Input(input_type="password", placeholder="••••••••")
+Input(placeholder="Enter your name")
+Input(input_type="email", placeholder="you@example.com")
+Input(input_type="password", placeholder="••••••••")
 
-    # Access reactive value
-    input_field = Input(placeholder="Type something...")
-    Text(f"Value: {input_field.rx}")
+# Access reactive value
+input_field = Input(placeholder="Type something...")
+Text(f"Value: {input_field.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14349,11 +14573,13 @@ class Input(StatefulMixin, Component):
         required: Whether input is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Input(placeholder="Search...")
-        Input(input_type="email", placeholder="Email", required=True)
-        Input(input_type="password", value="{{ user_password }}")
+    **Example:**
+    
+    \`\`\`python
+    Input(placeholder="Search...")
+    Input(input_type="email", placeholder="Email", required=True)
+    Input(input_type="password", value="{{ user_password }}")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "input"
@@ -14410,12 +14636,14 @@ class Input(StatefulMixin, Component):
 
 Labels identify form inputs and provide accessible descriptions.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Label, Input
+\`\`\`python
+from prefab_ui.components import Label, Input
 
-    with Label("Email address"):
-        Input(placeholder="you@example.com")
+with Label("Email address"):
+    Input(placeholder="you@example.com")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14436,15 +14664,17 @@ class Label(ContainerComponent):
         for_id: ID of the associated input element
         css_class: Additional CSS classes
 
-    Example::
-
-        Label("Username")
-        Label("Email", for_id="email-input")
-
-        # With children
-        with Label():
-            Text("Password")
-            Input(input_type="password")
+    **Example:**
+    
+    \`\`\`python
+    Label("Username")
+    Label("Email", for_id="email-input")
+    
+    # With children
+    with Label():
+        Text("Password")
+        Input(input_type="password")
+    \`\`\`
     """
 
     type: Literal["Label"] = "Label"
@@ -14475,14 +14705,16 @@ class Label(ContainerComponent):
 Loaders communicate that something is happening — a request in flight,
 content loading, or a background process running.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Loader
+\`\`\`python
+from prefab_ui.components import Loader
 
-    Loader()
-    Loader(variant="dots")
-    Loader(variant="pulse")
-    Loader(size="lg")
+Loader()
+Loader(variant="dots")
+Loader(variant="pulse")
+Loader(size="lg")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14499,23 +14731,25 @@ class Loader(Component):
 
     Three visual variants convey "something is happening":
 
-    - \`\`"spin"\`\` — a rotating arc (default, classic loading spinner)
-    - \`\`"dots"\`\` — three dots bouncing in sequence (typing / processing)
-    - \`\`"pulse"\`\` — a pulsing dot (background activity / heartbeat)
-    - \`\`"bars"\`\` — three vertical bars oscillating (equalizer / processing)
-    - \`\`"ios"\`\` — segmented circle with chasing opacity (iOS-style)
+    - \`"spin"\` — a rotating arc (default, classic loading spinner)
+    - \`"dots"\` — three dots bouncing in sequence (typing / processing)
+    - \`"pulse"\` — a pulsing dot (background activity / heartbeat)
+    - \`"bars"\` — three vertical bars oscillating (equalizer / processing)
+    - \`"ios"\` — segmented circle with chasing opacity (iOS-style)
 
     Args:
         variant: Animation style — "spin", "dots", "pulse", "bars", or "ios"
         size: Indicator size — "sm", "default", or "lg"
 
-    Example::
-
-        Loader()
-        Loader(variant="dots")
-        Loader(variant="pulse", size="lg")
-        Loader(variant="bars")
-        Loader(variant="ios")
+    **Example:**
+    
+    \`\`\`python
+    Loader()
+    Loader(variant="dots")
+    Loader(variant="pulse", size="lg")
+    Loader(variant="bars")
+    Loader(variant="ios")
+    \`\`\`
     """
 
     type: Literal["Loader"] = "Loader"
@@ -14547,12 +14781,14 @@ class Markdown(Component):
     or LLM responses.
 
     Args:
-        content: Markdown string. Supports \`\`{{ expr }}\`\` templates.
+        content: Markdown string. Supports \`{{ expr }}\` templates.
 
-    Example::
-
-        Markdown("# Welcome\\\\n\\\\nHello, **{{ name }}**!")
-        Markdown("{{ ai_response }}")
+    **Example:**
+    
+    \`\`\`python
+    Markdown("# Welcome\\\\n\\\\nHello, **{{ name }}**!")
+    Markdown("{{ ai_response }}")
+    \`\`\`
     """
 
     type: Literal["Markdown"] = "Markdown"
@@ -14570,13 +14806,15 @@ class Markdown(Component):
         super().__init__(**kwargs)
 `,"prefab_ui/components/metric.py":`"""Metric/KPI card component for displaying headline numbers with optional deltas.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Metric
+\`\`\`python
+from prefab_ui.components import Metric
 
-    Metric(label="Revenue", value="$42M")
-    Metric(label="Active Users", value=1842, delta="+23.4%", trend="up")
-    Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+Metric(label="Revenue", value="$42M")
+Metric(label="Active Users", value=1842, delta="+23.4%", trend="up")
+Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14605,10 +14843,12 @@ class Metric(Component):
         trend_sentiment: Color control — "positive" (green), "negative" (red),
             or "neutral" (muted). If None, inferred: up=positive, down=negative.
 
-    Example::
-
-        Metric(label="Revenue", value="$42M", delta="+12%")
-        Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+    **Example:**
+    
+    \`\`\`python
+    Metric(label="Revenue", value="$42M", delta="+12%")
+    Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+    \`\`\`
     """
 
     type: Literal["Metric"] = "Metric"
@@ -14635,22 +14875,24 @@ class Metric(Component):
 
 Only the active page renders. Navigate by setting state.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Pages, Page, Text, Button
-    from prefab_ui.actions import SetState
+\`\`\`python
+from prefab_ui.components import Pages, Page, Text, Button
+from prefab_ui.actions import SetState
 
-    with Pages(name="page", value="home"):
-        with Page("Home"):
-            Text("Welcome!")
-            Button("Go to Settings", on_click=SetState("page", "settings"))
-        with Page("Settings"):
-            Text("Settings go here.")
-            Button("Back", on_click=SetState("page", "home"))
+with Pages(name="page", value="home"):
+    with Page("Home"):
+        Text("Welcome!")
+        Button("Go to Settings", on_click=SetState("page", "settings"))
+    with Page("Settings"):
+        Text("Settings go here.")
+        Button("Back", on_click=SetState("page", "home"))
 
-    # Access reactive value
-    pages = Pages()
-    Text(f"Current page: {pages.rx}")
+# Access reactive value
+pages = Pages()
+Text(f"Current page: {pages.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14670,10 +14912,12 @@ class Page(ContainerComponent):
         title: Page identifier / label.
         value: Unique value for this page (defaults to title).
 
-    Example::
-
-        with Page("Settings"):
-            Text("Settings content.")
+    **Example:**
+    
+    \`\`\`python
+    with Page("Settings"):
+        Text("Settings content.")
+    \`\`\`
     """
 
     type: Literal["Page"] = "Page"
@@ -14698,19 +14942,21 @@ class Page(ContainerComponent):
 class Pages(StatefulMixin, ContainerComponent):
     """Multi-page layout — only the active Page renders.
 
-    Control which page shows via the state key matching \`\`name\`\`.
+    Control which page shows via the state key matching \`name\`.
 
     Args:
         value: Initially active page value.
         name: State key for reactive binding. Auto-generated if omitted.
 
-    Example::
-
-        with Pages(name="currentPage", value="home"):
-            with Page("Home"):
-                Text("Home content")
-            with Page("Settings"):
-                Text("Settings content")
+    **Example:**
+    
+    \`\`\`python
+    with Pages(name="currentPage", value="home"):
+        with Page("Home"):
+            Text("Home content")
+        with Page("Settings"):
+            Text("Settings content")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "pages"
@@ -14726,21 +14972,23 @@ class Pages(StatefulMixin, ContainerComponent):
 
     @property
     def default_value(self) -> RxStr | None:
-        """Alias for \`\`value\`\` — the initially active page."""
+        """Alias for \`value\` — the initially active page."""
         return self.value
 `,"prefab_ui/components/popover.py":`"""Popover — floating content panel triggered by a child element.
 
 The first child becomes the trigger; remaining children become the content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Popover, Button, Column, Label, Slider
+\`\`\`python
+from prefab_ui.components import Popover, Button, Column, Label, Slider
 
-    with Popover(title="Settings"):
-        Button("Open")          # trigger
-        with Column(gap=3):     # content
-            Label("Volume")
-            Slider(name="volume")
+with Popover(title="Settings"):
+    Button("Open")          # trigger
+    with Column(gap=3):     # content
+        Label("Volume")
+        Slider(name="volume")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14763,13 +15011,15 @@ class Popover(ContainerComponent):
         description: Optional popover description text.
         side: Which side to show the popover (top, right, bottom, left).
 
-    Example::
-
-        with Popover(title="Options"):
-            Button("Configure")
-            with Column(gap=2):
-                Label("Setting")
-                Input(name="value")
+    **Example:**
+    
+    \`\`\`python
+    with Popover(title="Options"):
+        Button("Configure")
+        with Column(gap=2):
+            Label("Setting")
+            Input(name="value")
+    \`\`\`
     """
 
     type: Literal["Popover"] = "Popover"
@@ -14812,18 +15062,20 @@ class Progress(Component):
         variant: Visual variant (default, success, warning, destructive, info, muted).
         size: Bar thickness (sm, default, lg).
         target: Target marker position (renders a vertical line at this value).
-        indicator_class: Tailwind classes for the indicator bar (e.g. \`\`"bg-green-500"\`\`).
+        indicator_class: Tailwind classes for the indicator bar (e.g. \`"bg-green-500"\`).
         target_class: Tailwind classes for the target marker line.
         orientation: Layout direction (horizontal or vertical).
         gradient: Gradient fill — None inherits theme, True forces on, False forces off.
 
-    Example::
-
-        Progress(value=75)
-        Progress(value=3, max=10)
-        Progress(value=80, variant="success")
-        Progress(value=80, indicator_class="bg-green-500")
-        Progress(value=60, orientation="vertical")
+    **Example:**
+    
+    \`\`\`python
+    Progress(value=75)
+    Progress(value=3, max=10)
+    Progress(value=80, variant="success")
+    Progress(value=80, indicator_class="bg-green-500")
+    Progress(value=60, orientation="vertical")
+    \`\`\`
     """
 
     type: Literal["Progress"] = "Progress"
@@ -14881,18 +15133,20 @@ class Progress(Component):
 
 Radio buttons let users select exactly one option from a set.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import RadioGroup, Radio
+\`\`\`python
+from prefab_ui.components import RadioGroup, Radio
 
-    with RadioGroup(name="size"):
-        Radio(option="sm", label="Small")
-        Radio(option="md", label="Medium", value=True)
-        Radio(option="lg", label="Large")
+with RadioGroup(name="size"):
+    Radio(option="sm", label="Small")
+    Radio(option="md", label="Medium", value=True)
+    Radio(option="lg", label="Large")
 
-    # Access reactive value
-    group = RadioGroup()
-    Text(f"Selected: {group.rx}")
+# Access reactive value
+group = RadioGroup()
+Text(f"Selected: {group.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -14914,11 +15168,13 @@ class RadioGroup(StatefulMixin, ContainerComponent):
         name: Form field name (shared by all radios in group)
         css_class: Additional CSS classes
 
-    Example::
-
-        with RadioGroup(name="theme", value="light"):
-            Radio(option="light", label="Light")
-            Radio(option="dark", label="Dark")
+    **Example:**
+    
+    \`\`\`python
+    with RadioGroup(name="theme", value="light"):
+        Radio(option="light", label="Light")
+        Radio(option="dark", label="Dark")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "radiogroup"
@@ -14950,10 +15206,12 @@ class Radio(StatefulMixin, Component):
         required: Whether radio is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Radio(option="yes", label="Yes")
-        Radio(option="no", label="No", value=True)
+    **Example:**
+    
+    \`\`\`python
+    Radio(option="yes", label="Yes")
+    Radio(option="no", label="No", value=True)
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "radio"
@@ -14971,7 +15229,7 @@ class Radio(StatefulMixin, Component):
     @model_validator(mode="before")
     @classmethod
     def _default_option_from_label(cls, data: Any) -> Any:
-        """Default \`\`option\`\` from \`\`label\`\` if not provided."""
+        """Default \`option\` from \`label\` if not provided."""
         if isinstance(data, dict) and "option" not in data:
             label = data.get("label")
             if label is not None:
@@ -14980,7 +15238,7 @@ class Radio(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for \`\`value\`\` — whether radio is selected."""
+        """Alias for \`value\` — whether radio is selected."""
         return self.value
 `,"prefab_ui/components/ring.py":`"""Circular progress ring component."""
 
@@ -15004,7 +15262,7 @@ class Ring(ContainerComponent):
 
     Renders an SVG ring that fills clockwise from 12 o'clock based on the
     current value within the min/max range. Accepts children for custom
-    center content; when no children are present, \`\`label\`\` is shown.
+    center content; when no children are present, \`label\` is shown.
 
     Args:
         value: Current value (number or template expression).
@@ -15019,13 +15277,15 @@ class Ring(ContainerComponent):
         target_class: Tailwind classes for the target marker.
         gradient: Gradient stroke — None inherits theme, True forces on, False forces off.
 
-    Example::
-
-        Ring(value=75, label="75%", variant="success")
-        Ring(value=3, max=5, label="3/5", variant="info", size="lg")
-
-        with Ring(value=75, variant="success", size="lg"):
-            H1("75%")
+    **Example:**
+    
+    \`\`\`python
+    Ring(value=75, label="75%", variant="success")
+    Ring(value=3, max=5, label="3/5", variant="info", size="lg")
+    
+    with Ring(value=75, variant="success", size="lg"):
+        H1("75%")
+    \`\`\`
     """
 
     type: Literal["Ring"] = "Ring"
@@ -15103,7 +15363,7 @@ class Row(ContainerComponent):
     equal-width — they size to their content.
 
     For equal-width or proportional layouts (e.g. a row of cards),
-    use :class:\`Grid\` instead: \`\`Grid(columns=3, gap=4)\`\` gives
+    use \`Grid\` instead: \`Grid(columns=3, gap=4)\` gives
     three equal columns without any flex classes.
 
     Args:
@@ -15114,15 +15374,17 @@ class Row(ContainerComponent):
             around, evenly, or stretch.
         css_class: Additional Tailwind classes.
 
-    Example::
-
-        with Row(gap=2, align="center"):
-            Dot(variant="success")
-            Text("Online")
-
-        with Row(gap=4, align="center", justify="between"):
-            Text("Label")
-            Badge("Status", variant="success")
+    **Example:**
+    
+    \`\`\`python
+    with Row(gap=2, align="center"):
+        Dot(variant="success")
+        Text("Online")
+    
+    with Row(gap=4, align="center", justify="between"):
+        Text("Label")
+        Badge("Status", variant="success")
+    \`\`\`
     """
 
     type: Literal["Row"] = "Row"
@@ -15140,18 +15402,20 @@ class Row(ContainerComponent):
 
 Select dropdowns let users pick from a list of options.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Select, SelectOption
+\`\`\`python
+from prefab_ui.components import Select, SelectOption
 
-    with Select(placeholder="Choose size..."):
-        SelectOption(value="sm", label="Small")
-        SelectOption(value="md", label="Medium")
-        SelectOption(value="lg", label="Large")
+with Select(placeholder="Choose size..."):
+    SelectOption(value="sm", label="Small")
+    SelectOption(value="md", label="Medium")
+    SelectOption(value="lg", label="Large")
 
-    # Access reactive value
-    size_select = Select(placeholder="Pick size...")
-    Text(f"Selected: {size_select.rx}")
+# Access reactive value
+size_select = Select(placeholder="Pick size...")
+Text(f"Selected: {size_select.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15182,11 +15446,13 @@ class Select(StatefulMixin, ContainerComponent):
         required: Whether select is required
         css_class: Additional CSS classes
 
-    Example::
-
-        with Select(placeholder="Pick one...", name="choice"):
-            SelectOption(value="a", label="Option A")
-            SelectOption(value="b", label="Option B")
+    **Example:**
+    
+    \`\`\`python
+    with Select(placeholder="Pick one...", name="choice"):
+        SelectOption(value="a", label="Option A")
+        SelectOption(value="b", label="Option B")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "select"
@@ -15233,17 +15499,19 @@ class SelectGroup(ContainerComponent):
     Args:
         css_class: Additional CSS classes
 
-    Example::
-
-        with Select(placeholder="Pick a food..."):
-            with SelectGroup():
-                SelectLabel("Fruits")
-                SelectOption(value="apple", label="Apple")
-                SelectOption(value="banana", label="Banana")
-            with SelectGroup():
-                SelectLabel("Vegetables")
-                SelectOption(value="carrot", label="Carrot")
-                SelectOption(value="broccoli", label="Broccoli")
+    **Example:**
+    
+    \`\`\`python
+    with Select(placeholder="Pick a food..."):
+        with SelectGroup():
+            SelectLabel("Fruits")
+            SelectOption(value="apple", label="Apple")
+            SelectOption(value="banana", label="Banana")
+        with SelectGroup():
+            SelectLabel("Vegetables")
+            SelectOption(value="carrot", label="Carrot")
+            SelectOption(value="broccoli", label="Broccoli")
+    \`\`\`
     """
 
     type: Literal["SelectGroup"] = "SelectGroup"
@@ -15258,9 +15526,11 @@ class SelectLabel(Component):
         label: Display text for the group header
         css_class: Additional CSS classes
 
-    Example::
-
-        SelectLabel("Fruits")
+    **Example:**
+    
+    \`\`\`python
+    SelectLabel("Fruits")
+    \`\`\`
     """
 
     type: Literal["SelectLabel"] = "SelectLabel"
@@ -15288,12 +15558,14 @@ class SelectSeparator(Component):
     Args:
         css_class: Additional CSS classes
 
-    Example::
-
-        with Select(placeholder="Pick one..."):
-            SelectOption(value="a", label="Option A")
-            SelectSeparator()
-            SelectOption(value="b", label="Option B")
+    **Example:**
+    
+    \`\`\`python
+    with Select(placeholder="Pick one..."):
+        SelectOption(value="a", label="Option A")
+        SelectSeparator()
+        SelectOption(value="b", label="Option B")
+    \`\`\`
     """
 
     type: Literal["SelectSeparator"] = "SelectSeparator"
@@ -15309,10 +15581,12 @@ class SelectOption(Component):
         disabled: Whether option is disabled
         css_class: Additional CSS classes
 
-    Example::
-
-        SelectOption(value="yes", label="Yes")
-        SelectOption(value="no", label="No", selected=True)
+    **Example:**
+    
+    \`\`\`python
+    SelectOption(value="yes", label="Yes")
+    SelectOption(value="no", label="No", selected=True)
+    \`\`\`
     """
 
     type: Literal["SelectOption"] = "SelectOption"
@@ -15336,13 +15610,15 @@ class SelectOption(Component):
 
 Separators create visual divisions between content sections.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Separator
+\`\`\`python
+from prefab_ui.components import Separator
 
-    Separator()
-    Separator(orientation="vertical")
-    Separator(spacing=4)
+Separator()
+Separator(orientation="vertical")
+Separator(spacing=4)
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15366,11 +15642,13 @@ class Separator(Component):
             margin for vertical separators.
         css_class: Additional CSS classes
 
-    Example::
-
-        Separator()  # Horizontal by default
-        Separator(orientation="vertical")
-        Separator(spacing=4)  # Extra breathing room
+    **Example:**
+    
+    \`\`\`python
+    Separator()  # Horizontal by default
+    Separator(orientation="vertical")
+    Separator(spacing=4)  # Extra breathing room
+    \`\`\`
     """
 
     type: Literal["Separator"] = "Separator"
@@ -15392,29 +15670,31 @@ class Separator(Component):
         super().model_post_init(__context)
 `,"prefab_ui/components/slider.py":`"""Slider component for range input.
 
-Sliders let users select a numeric value from a range. Set \`\`range=True\`\`
-for a two-thumb range slider that emits \`\`[min, max]\`\` values.
+Sliders let users select a numeric value from a range. Set \`range=True\`
+for a two-thumb range slider that emits \`[min, max]\` values.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Slider
+\`\`\`python
+from prefab_ui.components import Slider
 
-    Slider(min=0, max=100, value=50)
-    Slider(min=0, max=10, step=0.5, value=5)
-    Slider(min=0, max=100, value=[20, 80], range=True)
+Slider(min=0, max=100, value=50)
+Slider(min=0, max=10, step=0.5, value=5)
+Slider(min=0, max=100, value=[20, 80], range=True)
 
-    # Styled slider with variant
-    Slider(min=0, max=100, value=75, variant="success")
+# Styled slider with variant
+Slider(min=0, max=100, value=75, variant="success")
 
-    # Vertical slider
-    Slider(min=0, max=100, value=50, orientation="vertical")
+# Vertical slider
+Slider(min=0, max=100, value=50, orientation="vertical")
 
-    # Bar-style handle
-    Slider(min=0, max=100, value=50, handle_style="bar")
+# Bar-style handle
+Slider(min=0, max=100, value=50, handle_style="bar")
 
-    # Access reactive value
-    slider = Slider(min=0, max=100, value=50)
-    Text(f"Value: {slider.rx}")
+# Access reactive value
+slider = Slider(min=0, max=100, value=50)
+Text(f"Value: {slider.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15441,9 +15721,9 @@ SliderOrientation = Literal["horizontal", "vertical"]
 class Slider(StatefulMixin, Component):
     """Range slider input component.
 
-    When \`\`range=True\`\`, renders two thumbs for selecting a range. The
-    \`\`value\`\` field accepts a \`\`[low, high]\`\` list and \`\`on_change\`\`
-    emits the pair as \`\`[low, high]\`\`.
+    When \`range=True\`, renders two thumbs for selecting a range. The
+    \`value\` field accepts a \`[low, high]\` list and \`on_change\`
+    emits the pair as \`[low, high]\`.
 
     Args:
         min: Minimum value
@@ -15459,14 +15739,16 @@ class Slider(StatefulMixin, Component):
         handle_style: Thumb shape (circle or bar)
         css_class: Additional CSS classes
 
-    Example::
-
-        Slider(min=0, max=100, value=50)
-        Slider(min=0, max=1, step=0.1, value=0.5)
-        Slider(min=0, max=100, value=[20, 80], range=True)
-        Slider(min=0, max=100, value=75, variant="success")
-        Slider(min=0, max=100, value=50, orientation="vertical")
-        Slider(min=0, max=100, value=50, handle_style="bar")
+    **Example:**
+    
+    \`\`\`python
+    Slider(min=0, max=100, value=50)
+    Slider(min=0, max=1, step=0.1, value=0.5)
+    Slider(min=0, max=100, value=[20, 80], range=True)
+    Slider(min=0, max=100, value=75, variant="success")
+    Slider(min=0, max=100, value=50, orientation="vertical")
+    Slider(min=0, max=100, value=50, handle_style="bar")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "slider"
@@ -15563,25 +15845,27 @@ from prefab_ui.components.base import ContainerComponent
 class Slot(ContainerComponent):
     """Render a component tree stored in state.
 
-    \`\`Slot\`\` is a named placeholder in your layout. When the state key
+    \`Slot\` is a named placeholder in your layout. When the state key
     contains a component tree, Slot renders it. When the state key is
     empty, Slot renders its children as fallback content.
 
     Args:
         name: State key containing the component tree to render.
 
-    Example::
-
-        with Slot("detail_view"):
-            Text("Select an item to see details")
-
-        Button(
-            "Load Details",
-            on_click=CallTool(
-                "get_detail",
-                on_success=SetState("detail_view", RESULT),
-            ),
-        )
+    **Example:**
+    
+    \`\`\`python
+    with Slot("detail_view"):
+        Text("Select an item to see details")
+    
+    Button(
+        "Load Details",
+        on_click=CallTool(
+            "get_detail",
+            on_success=SetState("detail_view", RESULT),
+        ),
+    )
+    \`\`\`
     """
 
     type: Literal["Slot"] = "Slot"
@@ -15610,12 +15894,14 @@ class Svg(Component):
 
     Args:
         content: SVG markup string.
-        width: CSS width (e.g. \`\`"100px"\`\`).
-        height: CSS height (e.g. \`\`"100px"\`\`).
+        width: CSS width (e.g. \`"100px"\`).
+        height: CSS height (e.g. \`"100px"\`).
 
-    Example::
-
-        Svg('<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>')
+    **Example:**
+    
+    \`\`\`python
+    Svg('<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>')
+    \`\`\`
     """
 
     type: Literal["Svg"] = "Svg"
@@ -15631,16 +15917,18 @@ class Svg(Component):
 
 Switches provide an alternative to checkboxes for on/off states.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Switch
+\`\`\`python
+from prefab_ui.components import Switch
 
-    Switch(label="Enable notifications", value=True)
-    Switch(label="Dark mode", size="sm")
+Switch(label="Enable notifications", value=True)
+Switch(label="Dark mode", size="sm")
 
-    # Access reactive value
-    toggle = Switch(label="Enable feature")
-    Text(f"Enabled: {toggle.rx}")
+# Access reactive value
+toggle = Switch(label="Enable feature")
+Text(f"Enabled: {toggle.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15668,10 +15956,12 @@ class Switch(StatefulMixin, Component):
         required: Whether switch is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Switch(label="Enabled")
-        Switch(value=True, label="Active", size="sm")
+    **Example:**
+    
+    \`\`\`python
+    Switch(label="Enabled")
+    Switch(value=True, label="Active", size="sm")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "switch"
@@ -15693,30 +15983,32 @@ class Switch(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for \`\`value\`\` — whether switch is on."""
+        """Alias for \`value\` — whether switch is on."""
         return self.value
 `,"prefab_ui/components/table.py":`"""Table components following shadcn/ui conventions.
 
 Tables display structured data in rows and columns.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import (
-        Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
-    )
+\`\`\`python
+from prefab_ui.components import (
+    Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
+)
 
-    with Table():
-        TableCaption("Recent orders")
-        with TableHeader():
-            with TableRow():
-                TableHead("Order")
-                TableHead("Status")
-                TableHead("Amount")
-        with TableBody():
-            with TableRow():
-                TableCell("ORD-001")
-                TableCell("Shipped")
-                TableCell("$250.00")
+with Table():
+    TableCaption("Recent orders")
+    with TableHeader():
+        with TableRow():
+            TableHead("Order")
+            TableHead("Status")
+            TableHead("Amount")
+    with TableBody():
+        with TableRow():
+            TableCell("ORD-001")
+            TableCell("Shipped")
+            TableCell("$250.00")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15769,9 +16061,11 @@ class TableHead(ContainerComponent):
     Args:
         content: Header text (alternative to children).
 
-    Example::
-
-        TableHead("Name")
+    **Example:**
+    
+    \`\`\`python
+    TableHead("Name")
+    \`\`\`
     """
 
     type: Literal["TableHead"] = "TableHead"
@@ -15800,12 +16094,14 @@ class TableCell(ContainerComponent):
     Args:
         content: Cell text (alternative to children).
 
-    Example::
-
-        TableCell("$250.00")
-        # or with children:
-        with TableCell():
-            Badge("Active", variant="success")
+    **Example:**
+    
+    \`\`\`python
+    TableCell("$250.00")
+    # or with children:
+    with TableCell():
+        Badge("Active", variant="success")
+    \`\`\`
     """
 
     type: Literal["TableCell"] = "TableCell"
@@ -15832,9 +16128,11 @@ class TableCaption(Component):
     Args:
         content: Caption text.
 
-    Example::
-
-        TableCaption("A list of recent invoices")
+    **Example:**
+    
+    \`\`\`python
+    TableCaption("A list of recent invoices")
+    \`\`\`
     """
 
     type: Literal["TableCaption"] = "TableCaption"
@@ -15852,19 +16150,21 @@ class TableCaption(Component):
         super().__init__(**kwargs)
 `,"prefab_ui/components/tabs.py":`"""Tabs component for switching between panels of content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Tabs, Tab, Text
+\`\`\`python
+from prefab_ui.components import Tabs, Tab, Text
 
-    with Tabs(value="general"):
-        with Tab("General"):
-            Text("General settings here.")
-        with Tab("Advanced"):
-            Text("Advanced settings here.")
+with Tabs(value="general"):
+    with Tab("General"):
+        Text("General settings here.")
+    with Tab("Advanced"):
+        Text("Advanced settings here.")
 
-    # Access reactive value
-    tabs = Tabs()
-    Text(f"Active tab: {tabs.rx}")
+# Access reactive value
+tabs = Tabs()
+Text(f"Active tab: {tabs.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -15884,17 +16184,19 @@ TabsOrientation = Literal["horizontal", "vertical"]
 class Tab(ContainerComponent):
     """A single tab panel within a Tabs container.
 
-    The \`\`title\`\` appears in the tab trigger; children are the panel content.
+    The \`title\` appears in the tab trigger; children are the panel content.
 
     Args:
         title: Tab trigger label.
         value: Unique value for this tab (defaults to title).
         disabled: Disable this tab.
 
-    Example::
-
-        with Tab("Settings"):
-            Text("Content shown when this tab is active.")
+    **Example:**
+    
+    \`\`\`python
+    with Tab("Settings"):
+        Text("Content shown when this tab is active.")
+    \`\`\`
     """
 
     type: Literal["Tab"] = "Tab"
@@ -15918,22 +16220,24 @@ class Tab(ContainerComponent):
 
 
 class Tabs(StatefulMixin, ContainerComponent):
-    """Tab container — children must be \`\`Tab\`\` components.
+    """Tab container — children must be \`Tab\` components.
 
     Args:
-        variant: Visual style — \`\`'default'\`\` (pill) or \`\`'line'\`\` (underline).
+        variant: Visual style — \`'default'\` (pill) or \`'line'\` (underline).
         value: Value of the initially active tab.
         name: State key for reactive binding. Auto-generated if omitted.
-        orientation: Layout direction — \`\`'horizontal'\`\` or \`\`'vertical'\`\`.
+        orientation: Layout direction — \`'horizontal'\` or \`'vertical'\`.
         on_change: Action(s) fired when the active tab changes.
 
-    Example::
-
-        with Tabs(value="general"):
-            with Tab("General"):
-                Text("General settings")
-            with Tab("Advanced"):
-                Text("Advanced settings")
+    **Example:**
+    
+    \`\`\`python
+    with Tabs(value="general"):
+        with Tab("General"):
+            Text("General settings")
+        with Tab("Advanced"):
+            Text("Advanced settings")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "tabs"
@@ -15962,7 +16266,7 @@ class Tabs(StatefulMixin, ContainerComponent):
 
     @property
     def default_value(self) -> RxStr | None:
-        """Alias for \`\`value\`\` — the initially active tab."""
+        """Alias for \`value\` — the initially active tab."""
         return self.value
 `,"prefab_ui/components/text.py":`"""Text display component."""
 
@@ -15995,11 +16299,13 @@ class Text(_TextComponent):
         code: Render text in monospace font.
         align: Horizontal text alignment.
 
-    Example::
-
-        Text("Hello, {{ name }}!")
-
-        Text("Click ", Span("here", bold=True), " to continue")
+    **Example:**
+    
+    \`\`\`python
+    Text("Hello, {{ name }}!")
+    
+    Text("Click ", Span("here", bold=True), " to continue")
+    \`\`\`
     """
 
     type: Literal["Text"] = "Text"
@@ -16053,16 +16359,18 @@ class Text(_TextComponent):
 
 Multi-line text inputs with auto-sizing and form validation styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Textarea, Label
+\`\`\`python
+from prefab_ui.components import Textarea, Label
 
-    Textarea(placeholder="Enter your message...")
-    Textarea(rows=5, placeholder="Feedback")
+Textarea(placeholder="Enter your message...")
+Textarea(rows=5, placeholder="Feedback")
 
-    # Access reactive value
-    textarea = Textarea(placeholder="Your feedback...")
-    Text(f"Comment: {textarea.rx}")
+# Access reactive value
+textarea = Textarea(placeholder="Your feedback...")
+Text(f"Comment: {textarea.rx}")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16088,10 +16396,12 @@ class Textarea(StatefulMixin, Component):
         required: Whether textarea is required
         css_class: Additional CSS classes
 
-    Example::
-
-        Textarea(placeholder="Write something...")
-        Textarea(rows=10, value="{{ comment_text }}")
+    **Example:**
+    
+    \`\`\`python
+    Textarea(placeholder="Write something...")
+    Textarea(rows=10, value="{{ comment_text }}")
+    \`\`\`
     """
 
     _auto_name: ClassVar[str] = "textarea"
@@ -16125,12 +16435,14 @@ class Textarea(StatefulMixin, Component):
     )
 `,"prefab_ui/components/tooltip.py":`"""Tooltip — hover text on any component.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Tooltip, Button
+\`\`\`python
+from prefab_ui.components import Tooltip, Button
 
-    with Tooltip("Click to save your changes"):
-        Button("Save")
+with Tooltip("Click to save your changes"):
+    Button("Save")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16153,10 +16465,12 @@ class Tooltip(ContainerComponent):
         side: Which side to show the tooltip (top, right, bottom, left).
         delay: Delay in milliseconds before showing the tooltip.
 
-    Example::
-
-        with Tooltip("Saves the current document"):
-            Button("Save")
+    **Example:**
+    
+    \`\`\`python
+    with Tooltip("Saves the current document"):
+        Button("Save")
+    \`\`\`
     """
 
     type: Literal["Tooltip"] = "Tooltip"
@@ -16181,15 +16495,17 @@ class Tooltip(ContainerComponent):
 `,"prefab_ui/components/typography.py":`"""Typography components following shadcn/ui conventions.
 
 These components provide semantic text styling with automatic dark mode support.
-Example::
+**Example:**
 
-    from prefab_ui.components import H1, H2, P, Muted, Lead
+\`\`\`python
+from prefab_ui.components import H1, H2, P, Muted, Lead
 
-    H1("Dashboard")
-    H2("User Profile")
-    P("Welcome to the application.")
-    Muted("Last updated 5 minutes ago")
-    Lead("A comprehensive guide to getting started.")
+H1("Dashboard")
+H2("User Profile")
+P("Welcome to the application.")
+Muted("Last updated 5 minutes ago")
+Lead("A comprehensive guide to getting started.")
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16277,10 +16593,12 @@ class H1(_TextComponent):
     Args:
         content: Heading text.
 
-    Example::
-
-        H1("Dashboard")
-        H1("{{ title }}")  # With interpolation
+    **Example:**
+    
+    \`\`\`python
+    H1("Dashboard")
+    H1("{{ title }}")  # With interpolation
+    \`\`\`
     """
 
     type: Literal["H1"] = "H1"
@@ -16301,10 +16619,12 @@ class H2(_TextComponent):
     Args:
         content: Heading text.
 
-    Example::
-
-        H2("User Settings")
-        H2("{{ section_name }}")
+    **Example:**
+    
+    \`\`\`python
+    H2("User Settings")
+    H2("{{ section_name }}")
+    \`\`\`
     """
 
     type: Literal["H2"] = "H2"
@@ -16325,9 +16645,11 @@ class H3(_TextComponent):
     Args:
         content: Heading text.
 
-    Example::
-
-        H3("Account Details")
+    **Example:**
+    
+    \`\`\`python
+    H3("Account Details")
+    \`\`\`
     """
 
     type: Literal["H3"] = "H3"
@@ -16348,9 +16670,11 @@ class H4(_TextComponent):
     Args:
         content: Heading text.
 
-    Example::
-
-        H4("Additional Options")
+    **Example:**
+    
+    \`\`\`python
+    H4("Additional Options")
+    \`\`\`
     """
 
     type: Literal["H4"] = "H4"
@@ -16371,10 +16695,12 @@ class P(_TextComponent):
     Args:
         content: Paragraph text.
 
-    Example::
-
-        P("Welcome to the application.")
-        P("Hello, {{ name }}!")
+    **Example:**
+    
+    \`\`\`python
+    P("Welcome to the application.")
+    P("Hello, {{ name }}!")
+    \`\`\`
     """
 
     type: Literal["P"] = "P"
@@ -16395,9 +16721,11 @@ class Lead(_TextComponent):
     Args:
         content: Lead paragraph text.
 
-    Example::
-
-        Lead("A comprehensive guide to building MCP applications.")
+    **Example:**
+    
+    \`\`\`python
+    Lead("A comprehensive guide to building MCP applications.")
+    \`\`\`
     """
 
     type: Literal["Lead"] = "Lead"
@@ -16418,9 +16746,11 @@ class Large(_TextComponent):
     Args:
         content: Text content.
 
-    Example::
-
-        Large("Important information")
+    **Example:**
+    
+    \`\`\`python
+    Large("Important information")
+    \`\`\`
     """
 
     type: Literal["Large"] = "Large"
@@ -16441,9 +16771,11 @@ class Small(_TextComponent):
     Args:
         content: Text content.
 
-    Example::
-
-        Small("Terms and conditions apply")
+    **Example:**
+    
+    \`\`\`python
+    Small("Terms and conditions apply")
+    \`\`\`
     """
 
     type: Literal["Small"] = "Small"
@@ -16464,10 +16796,12 @@ class Muted(_TextComponent):
     Args:
         content: Text content.
 
-    Example::
-
-        Muted("Last updated 5 minutes ago")
-        Muted("{{ subtitle }}")
+    **Example:**
+    
+    \`\`\`python
+    Muted("Last updated 5 minutes ago")
+    Muted("{{ subtitle }}")
+    \`\`\`
     """
 
     type: Literal["Muted"] = "Muted"
@@ -16488,9 +16822,11 @@ class BlockQuote(_TextComponent):
     Args:
         content: Quotation text.
 
-    Example::
-
-        BlockQuote("The best way to predict the future is to invent it.")
+    **Example:**
+    
+    \`\`\`python
+    BlockQuote("The best way to predict the future is to invent it.")
+    \`\`\`
     """
 
     type: Literal["BlockQuote"] = "BlockQuote"
@@ -16528,10 +16864,12 @@ class Video(Component):
         width: CSS width.
         height: CSS height.
 
-    Example::
-
-        Video(src="https://example.com/video.mp4")
-        Video(src="...", controls=True, autoplay=True, muted=True)
+    **Example:**
+    
+    \`\`\`python
+    Video(src="https://example.com/video.mp4")
+    Video(src="...", controls=True, autoplay=True, muted=True)
+    \`\`\`
     """
 
     type: Literal["Video"] = "Video"
@@ -16567,12 +16905,14 @@ client-side renderer.
     Button("Refresh", on_click=CallTool("get_data"))
     Button("Ask AI", on_click=SendMessage("Summarize this"))
 
-Actions compose — pass a list for sequential execution::
+**Actions compose — pass a list for sequential execution:**
 
-    Button("Submit", on_click=[
-        SetState("loading", True),
-        CallTool("process", arguments={"query": "{{ query }}"}),
-    ])
+\`\`\`python
+Button("Submit", on_click=[
+    SetState("loading", True),
+    CallTool("process", arguments={"query": "{{ query }}"}),
+])
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16603,8 +16943,8 @@ __all__ = [
 ]
 `,"prefab_ui/actions/base.py":`"""Base class for all Prefab actions.
 
-Every action type inherits from \`\`Action\`\`, which provides the
-\`\`on_success\`\` and \`\`on_error\`\` lifecycle callbacks. These let you chain
+Every action type inherits from \`Action\`, which provides the
+\`on_success\` and \`on_error\` lifecycle callbacks. These let you chain
 reactions to action outcomes without writing custom logic:
 
     CallTool("save",
@@ -16615,7 +16955,7 @@ reactions to action outcomes without writing custom logic:
 Callbacks can themselves have callbacks (recursive), and the renderer
 enforces a depth limit to prevent infinite loops. When actions compose
 as a list, the first error short-circuits the chain — the failing action's
-\`\`on_error\`\` runs, then execution stops.
+\`on_error\` runs, then execution stops.
 """
 
 from __future__ import annotations
@@ -16630,11 +16970,11 @@ from prefab_ui.rx import _coerce_rx
 class Action(BaseModel):
     """Base for all action types — provides lifecycle callbacks.
 
-    Subclasses add an \`\`action\`\` literal discriminator and their own fields.
-    The renderer serializes \`\`on_success\`\`/\`\`on_error\`\` recursively and
+    Subclasses add an \`action\` literal discriminator and their own fields.
+    The renderer serializes \`on_success\`/\`on_error\` recursively and
     dispatches them after the parent action completes.
 
-    Uses \`\`SerializeAsAny\`\` so that Pydantic serializes callback values
+    Uses \`SerializeAsAny\` so that Pydantic serializes callback values
     using the concrete runtime type (e.g. ShowToast) rather than the
     declared base type (Action), which would strip subclass fields.
     """
@@ -16643,7 +16983,7 @@ class Action(BaseModel):
 
     @model_serializer(mode="wrap")
     def _serialize_rx(self, handler: Any) -> dict[str, Any]:
-        """Resolve any Rx values to \`\`{{ }}\`\` strings at serialization time."""
+        """Resolve any Rx values to \`{{ }}\` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
@@ -16673,10 +17013,12 @@ class CallHandler(Action):
     The handler receives the current state snapshot plus the triggering
     event value, and returns state updates to merge.
 
-    Example::
-
-        Slider(on_change=CallHandler("constrainBudget"))
-        Button(on_click=CallHandler("refresh", arguments={"force": True}))
+    **Example:**
+    
+    \`\`\`python
+    Slider(on_change=CallHandler("constrainBudget"))
+    Button(on_click=CallHandler("refresh", arguments={"force": True}))
+    \`\`\`
     """
 
     action: Literal["callHandler"] = "callHandler"
@@ -16692,21 +17034,23 @@ class CallHandler(Action):
         super().__init__(**kwargs)
 `,"prefab_ui/actions/fetch.py":`"""Client-side HTTP fetch action.
 
-Makes HTTP requests directly from the browser using \`\`fetch()\`\`. Use this
+Makes HTTP requests directly from the browser using \`fetch()\`. Use this
 for REST API calls, loading external data, form submissions — anything
 that talks HTTP without going through an MCP server.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button
-    from prefab_ui.actions import Fetch, SetState, ShowToast
-    from prefab_ui.rx import RESULT
+\`\`\`python
+from prefab_ui.components import Button
+from prefab_ui.actions import Fetch, SetState, ShowToast
+from prefab_ui.rx import RESULT
 
-    Button("Load Users", on_click=Fetch.get(
-        "/api/users",
-        on_success=SetState("users", RESULT),
-        on_error=ShowToast("{{ $error }}", variant="error"),
-    ))
+Button("Load Users", on_click=Fetch.get(
+    "/api/users",
+    on_success=SetState("users", RESULT),
+    on_error=ShowToast("{{ $error }}", variant="error"),
+))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16725,14 +17069,14 @@ Method = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 class Fetch(Action):
     """Make an HTTP request from the browser.
 
-    The parsed response body is available as \`\`$result\`\` in \`\`on_success\`\`
+    The parsed response body is available as \`$result\` in \`on_success\`
     callbacks. JSON responses are parsed automatically; other content types
-    return the raw text. Non-2xx responses trigger \`\`on_error\`\` with the
-    status text as \`\`$error\`\`.
+    return the raw text. Non-2xx responses trigger \`on_error\` with the
+    status text as \`$error\`.
     """
 
     action: Literal["fetch"] = "fetch"
-    url: RxStr = Field(description="URL to fetch. Supports {{ key }} interpolation.")
+    url: RxStr = Field(description="URL to fetch. Supports \`{{ key }}\` interpolation.")
     method: Method = Field(default="GET", description="HTTP method.")
     headers: dict[str, str] | None = Field(
         default=None,
@@ -16755,9 +17099,9 @@ class Fetch(Action):
         params: dict[str, str] | None = None,
         **kwargs: Any,
     ) -> Fetch:
-        """GET request. \`\`params\`\` are appended as a query string.
+        """GET request. \`params\` are appended as a query string.
 
-        Values are kept raw so \`\`{{ key }}\`\` interpolation survives to the
+        Values are kept raw so \`{{ key }}\` interpolation survives to the
         renderer. Only param *names* are percent-encoded.
         """
         if params:
@@ -16793,20 +17137,22 @@ class Fetch(Action):
         return cls(url, method="DELETE", **kwargs)
 `,"prefab_ui/actions/file.py":`"""File upload actions and data types.
 
-Provides the :class:\`OpenFilePicker\` action (triggers the browser file
-picker from any clickable element) and the :class:\`FileUpload\` data type
-(describes the shape of uploaded file data in \`\`$event\`\`).
+Provides the \`OpenFilePicker\` action (triggers the browser file
+picker from any clickable element) and the \`FileUpload\` data type
+(describes the shape of uploaded file data in \`$event\`).
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button
-    from prefab_ui.actions import OpenFilePicker
-    from prefab_ui.actions.mcp import CallTool
+\`\`\`python
+from prefab_ui.components import Button
+from prefab_ui.actions import OpenFilePicker
+from prefab_ui.actions.mcp import CallTool
 
-    Button("Upload CSV", on_click=OpenFilePicker(
-        accept=".csv",
-        on_success=CallTool("process_csv", arguments={"file": "{{ $event }}"}),
-    ))
+Button("Upload CSV", on_click=OpenFilePicker(
+    accept=".csv",
+    on_success=CallTool("process_csv", arguments={"file": "{{ $event }}"}),
+))
+\`\`\`
 """
 
 from __future__ import annotations
@@ -16821,17 +17167,19 @@ from prefab_ui.actions.base import Action
 class FileUpload(BaseModel):
     """Data for a single uploaded file.
 
-    Produced by :class:\`~prefab_ui.components.DropZone\` and
-    :class:\`OpenFilePicker\` events.  Both always produce \`\`list[FileUpload]\`\`
-    as \`\`$event\`\`, even for single-file uploads::
+    Produced by \`DropZone\` and
+    \`OpenFilePicker\` events. Both always produce \`list[FileUpload]\`
+    as \`$event\`, even for single-file uploads:
 
-        from prefab_ui.actions import FileUpload
-
-        @server.tool()
-        def process_csv(files: list[FileUpload]):
-            for f in files:
-                contents = base64.b64decode(f.data)
-                ...
+    \`\`\`python
+    from prefab_ui.actions import FileUpload
+    
+    @server.tool()
+    def process_csv(files: list[FileUpload]):
+        for f in files:
+            contents = base64.b64decode(f.data)
+            ...
+    \`\`\`
     """
 
     name: str = Field(description="Original filename")
@@ -16843,15 +17191,15 @@ class FileUpload(BaseModel):
 class OpenFilePicker(Action):
     """Open the browser file picker and read selected files to base64.
 
-    Fires \`\`onSuccess\`\` with the file data as \`\`$event\`\`:
-    \`\`[{name, size, type, data}, ...]\`\` (always an array, even for single files).
+    Fires \`onSuccess\` with the file data as \`$event\`:
+    \`[{name, size, type, data}, ...]\` (always an array, even for single files).
 
     Must execute before any async server actions in the action chain
     (CallTool, SendMessage) since those break the browser's
     user-activation window needed to open the file picker.
 
     Args:
-        accept: File type filter (e.g. \`\`"image/*"\`\`, \`\`".csv,.xlsx"\`\`).
+        accept: File type filter (e.g. \`"image/*"\`, \`".csv,.xlsx"\`).
         multiple: Allow selecting multiple files.
         max_size: Maximum file size in bytes. Files exceeding this are
             rejected with an error toast.
@@ -16894,17 +17242,17 @@ from prefab_ui.rx import RxStr, _coerce_rx
 
 
 class CallTool(Action):
-    """Call an MCP server tool via \`\`app.callServerTool()\`\`.
+    """Call an MCP server tool via \`app.callServerTool()\`.
 
-    The \`\`tool\`\` argument can be a string name or a callable reference
+    The \`tool\` argument can be a string name or a callable reference
     to the tool function.  Callables are resolved at serialization time
-    via the resolver passed to \`\`PrefabApp.to_json(tool_resolver=...)\`\`.
+    via the resolver passed to \`PrefabApp.to_json(tool_resolver=...)\`.
 
-    The resolver may return a plain name string or a :class:\`ResolvedTool\`
-    carrying the name plus flags (e.g. \`\`unwrap_result\`\`) that the
+    The resolver may return a plain name string or a \`ResolvedTool\`
+    carrying the name plus flags (e.g. \`unwrap_result\`) that the
     renderer can act on.
 
-    The tool's return value is available as \`\`$result\`\` in \`\`on_success\`\`
+    The tool's return value is available as \`$result\` in \`on_success\`
     callbacks.
     """
 
@@ -16912,7 +17260,7 @@ class CallTool(Action):
     tool: RxStr = Field(description="Name of the server tool to call")
     arguments: dict[str, Any] = Field(
         default_factory=dict,
-        description="Arguments to pass. Supports {{ key }} interpolation.",
+        description="Arguments to pass. Supports \`{{ key }}\` interpolation.",
     )
     _tool_ref: Callable[..., Any] | None = PrivateAttr(default=None)
 
@@ -16939,7 +17287,7 @@ class CallTool(Action):
 
 
 class SendMessage(Action):
-    """Send a message to the chat via \`\`app.sendMessage()\`\`."""
+    """Send a message to the chat via \`app.sendMessage()\`."""
 
     action: Literal["sendMessage"] = "sendMessage"
     content: RxStr = Field(description="Message text to send")
@@ -16962,7 +17310,7 @@ class UpdateContext(Action):
 
 
 class RequestDisplayMode(Action):
-    """Request a display mode change via \`\`app.requestDisplayMode()\`\`.
+    """Request a display mode change via \`app.requestDisplayMode()\`.
 
     The host decides whether to honor the request — the actual mode may
     differ from what was asked for.
@@ -17027,10 +17375,10 @@ def _resolve_key(key: _KeyLike) -> str:
 def _validate_path(path: str) -> str:
     """Validate a state key or dot-path.
 
-    Each segment must be either a valid identifier (\`\`[a-zA-Z_][a-zA-Z0-9_]*\`\`)
+    Each segment must be either a valid identifier (\`[a-zA-Z_][a-zA-Z0-9_]*\`)
     or a pure integer (array index). Periods delimit segments.
 
-    Paths containing \`\`{{ }}\`\` template expressions are passed through
+    Paths containing \`{{ }}\` template expressions are passed through
     without validation — the renderer resolves them at runtime.
     """
     if "{{" in path:
@@ -17049,9 +17397,11 @@ def _validate_path(path: str) -> str:
 class SetState(Action):
     """Set a client-side state variable. No server round-trip.
 
-    The \`\`key\`\` supports dot-paths for nested updates::
+    The \`key\` supports dot-paths for nested updates:
 
-        SetState("todos.0.done", True)   # deep-update into a list
+    \`\`\`python
+    SetState("todos.0.done", True)   # deep-update into a list
+    \`\`\`
     """
 
     action: Literal["setState"] = "setState"
@@ -17088,8 +17438,8 @@ class ToggleState(Action):
 class AppendState(Action):
     """Append a value to a state array.
 
-    Appends to the end by default. Pass \`\`index\`\` to insert at a specific
-    position (supports negative indices, e.g. \`\`index=0\`\` to prepend).
+    Appends to the end by default. Pass \`index\` to insert at a specific
+    position (supports negative indices, e.g. \`index=0\` to prepend).
 
     If the key doesn't exist yet, creates a new single-element array.
     """
@@ -17124,13 +17474,13 @@ class AppendState(Action):
 class PopState(Action):
     """Remove an item by index from a state array.
 
-    Supports negative indices (e.g. \`\`-1\`\` for the last element).
+    Supports negative indices (e.g. \`-1\` for the last element).
     """
 
     action: Literal["popState"] = "popState"
     key: str = Field(description="State key or dot-path to the array")
     index: int | str = Field(
-        description="Index to remove (int or template string like '{{ $index }}')."
+        description="Index to remove (int or template string like \`{{ $index }}\`)."
     )
 
     @field_validator("key")
@@ -17157,14 +17507,16 @@ from prefab_ui.rx import RxStr
 class SetInterval(Action):
     """Execute actions on a repeating schedule.
 
-    Starts a client-side timer that fires \`\`on_tick\`\` every \`\`duration\`\`
-    milliseconds.  The interval stops when \`\`while_\`\` evaluates to falsy
-    or \`\`count\`\` ticks have elapsed — whichever comes first.  When it
-    stops, \`\`on_complete\`\` fires.
+    Starts a client-side timer that fires \`on_tick\` every \`duration\`
+    milliseconds.  The interval stops when \`while_\` evaluates to falsy
+    or \`count\` ticks have elapsed — whichever comes first.  When it
+    stops, \`on_complete\` fires.
 
-    Use \`\`count=1\`\` for a one-shot delay::
+    Use \`count=1\` for a one-shot delay:
 
-        SetInterval(3000, count=1, on_complete=ShowToast("Still there?"))
+    \`\`\`python
+    SetInterval(3000, count=1, on_complete=ShowToast("Still there?"))
+    \`\`\`
     """
 
     action: Literal["setInterval"] = "setInterval"
@@ -17234,13 +17586,15 @@ class CloseOverlay(Action):
 `,"prefab_ui/renderer/__init__.py":`"""Renderer resource loader for Prefab.
 
 Ships a pre-built, self-contained HTML file (all JS/CSS inlined) inside the
-Python package.  \`\`get_renderer_html()\`\` reads and returns it directly — no
+Python package.  \`get_renderer_html()\` reads and returns it directly — no
 external server, CDN, or CSP domains required.
 
-Set \`\`PREFAB_RENDERER_URL\`\` to load renderer assets from an external origin
-instead — useful for local development with \`\`npx vite preview\`\` or a CDN::
+Set \`PREFAB_RENDERER_URL\` to load renderer assets from an external origin
+instead — useful for local development with \`npx vite preview\` or a CDN:
 
-    PREFAB_RENDERER_URL=http://localhost:4173 uv run python my_server.py
+\`\`\`bash
+PREFAB_RENDERER_URL=http://localhost:4173 uv run python my_server.py
+\`\`\`
 """
 
 from __future__ import annotations
@@ -17288,11 +17642,11 @@ def _get_origin(url: str) -> str:
 
 
 def get_renderer_head() -> str:
-    """Return the renderer \`\`<head>\`\` content (JS, CSS, meta tags).
+    """Return the renderer \`<head>\` content (JS, CSS, meta tags).
 
-    For bundled mode, extracts everything between \`\`<head>\`\` and
-    \`\`</head>\`\` from the self-contained HTML bundle.  For external mode,
-    returns \`\`<link>\`\`/\`\`<script>\`\` tags pointing at the external URL.
+    For bundled mode, extracts everything between \`<head>\` and
+    \`</head>\` from the self-contained HTML bundle.  For external mode,
+    returns \`<link>\`/\`<script>\` tags pointing at the external URL.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:
@@ -17312,7 +17666,7 @@ def get_renderer_html() -> str:
     """Return the renderer HTML.
 
     By default, returns the bundled single-file HTML with all JS/CSS
-    inlined.  When \`\`PREFAB_RENDERER_URL\`\` is set, returns a lightweight
+    inlined.  When \`PREFAB_RENDERER_URL\` is set, returns a lightweight
     stub that loads assets from that external origin.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
@@ -17325,7 +17679,7 @@ def get_renderer_csp() -> dict[str, list[str]]:
     """Return CSP domains needed for the renderer to load.
 
     The bundled renderer is fully self-contained, so no CSP domains are
-    needed.  When \`\`PREFAB_RENDERER_URL\`\` is set, returns the external
+    needed.  When \`PREFAB_RENDERER_URL\` is set, returns the external
     origin so the host sandbox allows loading those assets.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
@@ -17339,7 +17693,7 @@ def get_generative_renderer_html() -> str:
 
     The generative renderer extends the standard renderer with browser-side
     Pyodide execution, enabling progressive rendering of LLM-generated
-    Prefab Python code via \`\`ontoolinputpartial\`\`.
+    Prefab Python code via \`ontoolinputpartial\`.
 
     Pyodide loads from CDN at runtime — the HTML itself is small.
 
@@ -17371,28 +17725,32 @@ def get_generative_renderer_csp() -> dict[str, list[str]]:
     }
 `,"prefab_ui/rx/__init__.py":`"""Reactive references for Prefab components.
 
-The \`\`Rx\`\` class provides type-safe reactive references that serialize to
-\`\`{{ }}\`\` template expressions.  Components with state bindings expose an
-\`\`.rx\`\` property returning an \`\`Rx\`\` object, which can be passed directly
-to any string-typed component field or embedded in f-strings::
+The \`Rx\` class provides type-safe reactive references that serialize to
+\`{{ }}\` template expressions. Components with state bindings expose an
+\`.rx\` property returning an \`Rx\` object, which can be passed directly
+to any string-typed component field or embedded in f-strings:
 
-    slider = Slider(min=0, max=100)
+\`\`\`python
+slider = Slider(min=0, max=100)
 
-    # Bare ref — Pydantic coerces Rx to str automatically
-    Metric(value=slider.rx)
+# Bare ref — Pydantic coerces Rx to str automatically
+Metric(value=slider.rx)
 
-    # f-string — mixes reactive value with literal text
-    Text(f"Value: {slider.rx}")
+# f-string — mixes reactive value with literal text
+Text(f"Value: {slider.rx}")
+\`\`\`
 
 Rx objects support Python operators and pipe methods, each of which
-returns a new Rx with the compiled \`\`{{ }}\`\` expression::
+returns a new Rx with the compiled \`{{ }}\` expression:
 
-    price = Rx("price")
-    quantity = Rx("quantity")
+\`\`\`python
+price = Rx("price")
+quantity = Rx("quantity")
 
-    price * quantity              # {{ price * quantity }}
-    (price * quantity).currency() # {{ price * quantity | currency }}
-    quantity > 0                  # {{ quantity > 0 }}
+price * quantity              # {{ price * quantity }}
+(price * quantity).currency() # {{ price * quantity | currency }}
+quantity > 0                  # {{ quantity > 0 }}
+\`\`\`
 """
 
 from __future__ import annotations
@@ -17407,7 +17765,7 @@ _counter: ContextVar[dict[str, int]] = ContextVar("_rx_counter")
 
 
 def _generate_key(prefix: str) -> str:
-    """Return a deterministic sequential key like \`\`slider_1\`\`."""
+    """Return a deterministic sequential key like \`slider_1\`."""
     counters = _counter.get(None)
     if counters is None:
         counters = {}
@@ -17509,8 +17867,8 @@ def _resolve_operand(value: object, min_prec: int, *, strict: bool = False) -> s
     """Resolve a child operand (Rx or scalar) for use in an expression.
 
     For Rx children: resolves the key, wraps in parens if the child's
-    precedence is too low.  \`\`strict=True\`\` uses \`\`<=\`\` instead of \`\`<\`\`
-    for non-commutative RHS (e.g. \`\`a - (b - c)\`\`).
+    precedence is too low.  \`strict=True\` uses \`<=\` instead of \`<\`
+    for non-commutative RHS (e.g. \`a - (b - c)\`).
     """
     if isinstance(value, Rx):
         key = value.key
@@ -17523,9 +17881,9 @@ def _resolve(raw: str | Callable[[], Rx] | _Node) -> str:
     """Walk an Rx's internal key to produce the expression string.
 
     Handles three cases:
-    - \`\`str\`\`: leaf key, returned as-is
-    - \`\`_Node\`\`: expression tree node, resolved recursively
-    - \`\`callable\`\`: forward reference, invoked and unwrapped
+    - \`str\`: leaf key, returned as-is
+    - \`_Node\`: expression tree node, resolved recursively
+    - \`callable\`: forward reference, invoked and unwrapped
     """
     if isinstance(raw, str):
         return raw
@@ -17613,19 +17971,23 @@ def _format_pipe_arg(value: object) -> str:
 class Rx:
     """A reactive reference to a client-side state key.
 
-    Serializes to \`\`{{ key }}\`\` via \`\`__str__\`\` / \`\`__format__\`\`.
+    Serializes to \`{{ key }}\` via \`__str__\` / \`__format__\`.
 
-    Supports Python operators that compile to template expressions::
+    Supports Python operators that compile to template expressions:
 
-        count = Rx("count")
-        count + 1              # → {{ count + 1 }}
-        count > 0              # → {{ count > 0 }}
-        (count > 0).then("yes", "no")  # → {{ count > 0 ? 'yes' : 'no' }}
+    \`\`\`python
+    count = Rx("count")
+    count + 1              # → {{ count + 1 }}
+    count > 0              # → {{ count > 0 }}
+    (count > 0).then("yes", "no")  # → {{ count > 0 ? 'yes' : 'no' }}
+    \`\`\`
 
-    Pipe methods format values for display::
+    Pipe methods format values for display:
 
-        Rx("revenue").currency()       # → {{ revenue | currency }}
-        Rx("name").upper().truncate(20) # → {{ name | upper | truncate:20 }}
+    \`\`\`python
+    Rx("revenue").currency()       # → {{ revenue | currency }}
+    Rx("name").upper().truncate(20) # → {{ name | upper | truncate:20 }}
+    \`\`\`
     """
 
     __slots__ = ("_key", "_prec")
@@ -17641,7 +18003,7 @@ class Rx:
 
     @property
     def key(self) -> str:
-        """The resolved expression string (without \`\`{{ }}\`\` wrapper).
+        """The resolved expression string (without \`{{ }}\` wrapper).
 
         Resolution walks the expression tree: leaf nodes return their key,
         operator nodes recurse into their children, and callable nodes
@@ -17785,13 +18147,13 @@ class Rx:
     # ── Ternary ──────────────────────────────────────────────────────
 
     def then(self, if_true: object, if_false: object) -> Rx:
-        """Ternary conditional: \`\`condition ? if_true : if_false\`\`."""
+        """Ternary conditional: \`condition ? if_true : if_false\`."""
         return Rx(_Ternary(self, if_true, if_false), _PREC_TERNARY)
 
     # ── Pipes ────────────────────────────────────────────────────────
 
     def _pipe(self, name: str, arg: object = None) -> Rx:
-        """Apply a pipe: \`\`key | name\`\` or \`\`key | name:arg\`\`."""
+        """Apply a pipe: \`key | name\` or \`key | name:arg\`."""
         return Rx(_Pipe(self, name, arg), _PREC_PIPE)
 
     # Number pipes
@@ -17861,14 +18223,16 @@ class Rx:
 
 
 class LoopItem(Rx):
-    """Rx subclass returned by :class:\`ForEach.__enter__\`.
+    """Rx subclass returned by \`ForEach.__enter__\`.
 
-    Acts as an Rx keyed to an auto-generated \`\`let\`\` binding for \`\`$item\`\`.
-    Provides \`\`get_index()\`\` for the companion \`\`$index\`\` binding and
-    supports tuple destructuring matching \`\`enumerate\`\` order::
+    Acts as an Rx keyed to an auto-generated \`let\` binding for \`$item\`.
+    Provides \`get_index()\` for the companion \`$index\` binding and
+    supports tuple destructuring matching \`enumerate\` order:
 
-        with ForEach("items") as (i, item):
-            Text(f"{i + 1}. {item.name}")
+    \`\`\`python
+    with ForEach("items") as (i, item):
+        Text(f"{i + 1}. {item.name}")
+    \`\`\`
     """
 
     __slots__ = ("_index_rx",)
@@ -17882,7 +18246,7 @@ class LoopItem(Rx):
         return object.__getattribute__(self, "_index_rx")
 
     def __iter__(self):
-        """Support \`\`as (idx, item)\`\` destructuring (enumerate order)."""
+        """Support \`as (idx, item)\` destructuring (enumerate order)."""
         yield object.__getattribute__(self, "_index_rx")
         yield Rx(self.key)
 
@@ -17901,27 +18265,31 @@ def _coerce_rx(value: object) -> object:
 # ── Public type alias ────────────────────────────────────────────────
 
 RxStr = str | Rx
-"""A string that also accepts an \`\`Rx\`\` reactive reference.
+"""A string that also accepts an \`Rx\` reactive reference.
 
 Use this as the type annotation for component/action fields whose value
-can be either a literal string or a reactive reference::
+can be either a literal string or a reactive reference:
 
-    class MyComponent(Component):
-        label: RxStr = ""
+\`\`\`python
+class MyComponent(Component):
+    label: RxStr = ""
+\`\`\`
 """
 
 # ── State proxy ──────────────────────────────────────────────────────
 
 
 class _StateProxy:
-    """Proxy that creates top-level \`\`Rx\`\` references via attribute access.
+    """Proxy that creates top-level \`Rx\` references via attribute access.
 
-    \`\`STATE.groups\`\` is equivalent to \`\`Rx("groups")\`\`, providing a
-    concise way to reference state keys without separate declarations::
+    \`STATE.groups\` is equivalent to \`Rx("groups")\`, providing a
+    concise way to reference state keys without separate declarations:
 
-        state = set_initial_state(groups=[...], count=0)
-        state.groups          # Rx("groups")
-        state.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    \`\`\`python
+    state = set_initial_state(groups=[...], count=0)
+    state.groups          # Rx("groups")
+    state.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    \`\`\`
     """
 
     __slots__ = ()
@@ -17938,22 +18306,26 @@ class _StateProxy:
 class _BoundStateProxy(_StateProxy):
     """State proxy that validates attribute access against declared keys.
 
-    Returned by :func:\`set_initial_state\`, this proxy knows which keys
-    were declared and raises :class:\`AttributeError\` for undeclared ones::
+    Returned by \`set_initial_state()\`, this proxy knows which keys
+    were declared and raises \`AttributeError\` for undeclared ones:
 
-        state = set_initial_state(count=0, items=[])
-        state.count    # ✓ Rx("count")
-        state.countt   # ✗ AttributeError with helpful message
+    \`\`\`python
+    state = set_initial_state(count=0, items=[])
+    state.count    # ✓ Rx("count")
+    state.countt   # ✗ AttributeError with helpful message
+    \`\`\`
 
     The proxy holds a reference to the same dict that
-    \`\`set_initial_state\`\` accumulates into, so multiple calls are fine::
+    \`set_initial_state\` accumulates into, so multiple calls are fine:
 
-        state = set_initial_state(count=0)
-        set_initial_state(items=[])
-        state.items    # ✓ — visible because the backing dict grew
+    \`\`\`python
+    state = set_initial_state(count=0)
+    set_initial_state(items=[])
+    state.items    # ✓ — visible because the backing dict grew
+    \`\`\`
 
-    Use the unrestricted :data:\`STATE\` global for keys defined elsewhere
-    (e.g. by form controls or \`\`SetState\`\` actions).
+    Use the unrestricted \`STATE\` global for keys defined elsewhere
+    (e.g. by form controls or \`SetState\` actions).
     """
 
     __slots__ = ("_declared",)
@@ -17981,26 +18353,26 @@ class _BoundStateProxy(_StateProxy):
 
 
 #: Proxy for accessing state keys as reactive references.
-#: \`\`STATE.count\`\` is equivalent to \`\`Rx("count")\`\`.
+#: \`STATE.count\` is equivalent to \`Rx("count")\`.
 STATE: _StateProxy = _StateProxy()
 
 
 # ── Built-in reactive variables ──────────────────────────────────────
 
-#: The current iteration item inside a :class:\`ForEach\` loop.
-#: Chains via dot-path: \`\`Item.title\`\` → \`\`{{ $item.title }}\`\`.
+#: The current iteration item inside a \`ForEach\` loop.
+#: Chains via dot-path: \`Item.title\` → \`{{ $item.title }}\`.
 ITEM: Rx = Rx("$item")
 
-#: The iteration index inside a :class:\`ForEach\` loop.
+#: The iteration index inside a \`ForEach\` loop.
 INDEX: Rx = Rx("$index")
 
-#: The event value in \`\`on_change\`\` / \`\`on_submit\`\` handlers.
+#: The event value in \`on_change\` / \`on_submit\` handlers.
 EVENT: Rx = Rx("$event")
 
-#: The error message in \`\`on_error\`\` handlers.
+#: The error message in \`on_error\` handlers.
 ERROR: Rx = Rx("$error")
 
-#: The action result in \`\`on_success\`\` handlers.
+#: The action result in \`on_success\` handlers.
 RESULT: Rx = Rx("$result")
 `,"prefab_ui/rx/mcp.py":`"""MCP-specific reactive references.
 
@@ -18012,11 +18384,13 @@ standalone mode they'll be undefined.
 from prefab_ui.rx import Rx
 
 #: The MCP host context. Provides reactive access to host environment
-#: state like display mode and theme::
+#: state like display mode and theme:
 #:
-#:     HOST.displayMode        # {{ $host.displayMode }}
-#:     HOST.theme              # {{ $host.theme }}
-#:     HOST.availableDisplayModes  # {{ $host.availableDisplayModes }}
+#: \`\`\`python
+#: HOST.displayMode        # \`{{ $host.displayMode }}\`
+#: HOST.theme              # \`{{ $host.theme }}\`
+#: HOST.availableDisplayModes  # \`{{ $host.availableDisplayModes }}\`
+#: \`\`\`
 HOST: Rx = Rx("$host")
 `,"prefab_ui/themes/__init__.py":`"""Theme configuration for Prefab applications.
 
@@ -18030,25 +18404,27 @@ three CSS layers:
 The \`accent\` field accepts a Tailwind color name (\`"blue"\`, \`"amber-500"\`),
 a CSS color string (\`"#3b82f6"\`), or an OKLCH hue number (0-360).
 
-Usage::
+**Usage:**
 
-    from prefab_ui import PrefabApp
-    from prefab_ui.themes import Basic, Presentation, Theme
+\`\`\`python
+from prefab_ui import PrefabApp
+from prefab_ui.themes import Basic, Presentation, Theme
 
-    # Single-hue theme
-    app = PrefabApp(view=my_view, theme=Basic(accent="green"))
+# Single-hue theme
+app = PrefabApp(view=my_view, theme=Basic(accent="green"))
 
-    # Always-dark data dashboard theme
-    app = PrefabApp(view=my_view, theme=Presentation())
+# Always-dark data dashboard theme
+app = PrefabApp(view=my_view, theme=Presentation())
 
-    # Custom declarations
-    app = PrefabApp(
-        view=my_view,
-        theme=Theme(
-            light_css="--primary: oklch(0.6 0.24 260);",
-            dark_css="--primary: oklch(0.7 0.18 260);",
-        ),
-    )
+# Custom declarations
+app = PrefabApp(
+    view=my_view,
+    theme=Theme(
+        light_css="--primary: oklch(0.6 0.24 260);",
+        dark_css="--primary: oklch(0.7 0.18 260);",
+    ),
+)
+\`\`\`
 
 If \`dark_css\` is omitted, the \`light_css\` values are used for both modes.
 
