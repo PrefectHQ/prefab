@@ -180,12 +180,10 @@ try:
         try:
             compile(_pg_try, "<string>", "exec")
             _pg_healed = _pg_try
+            _pg_seen_lines = _pg_n
             break
         except SyntaxError:
             continue
-    # Advance floor: all lines except the last are complete (streaming
-    # only appends, so the last line may still be growing).
-    _pg_seen_lines = max(len(_pg_lines) - 1, globals().get("_pg_seen_lines", 0))
 
     if _pg_healed is None:
         raise SyntaxError("Could not heal partial code")

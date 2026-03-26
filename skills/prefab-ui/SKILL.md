@@ -12,6 +12,10 @@ Prefab is a Python DSL for building interactive React UIs. You compose
 components using context managers, wire up actions as Pydantic models, and
 wrap everything in a `PrefabApp`.
 
+This skill covers patterns and layout. For component-specific API details
+(props, variants, examples), use the component search tool with
+`detail=True`.
+
 ## Core Pattern
 
 ```python
@@ -141,6 +145,22 @@ with Card():
 # Simple: direct children, add padding yourself
 with Card(css_class="p-6"):
     Metric(label="Total", value="{{ total }}")
+```
+
+### DataTable
+
+`rows=` (not `data=`), columns use `key=` and `header=` (not `label=`):
+
+```python
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
+    ],
+    rows=users,  # list of dicts, or "{{ state_key }}"
+    search=True,
+    paginated=True,
+)
 ```
 
 ### Layout Props
