@@ -38,7 +38,7 @@ When adding or modifying a component, update the docstring to match. Run `uv run
 
 ## Agent Skills
 
-`skills/writing-prefab-python/` teaches LLMs how to write Prefab UIs:
+`skills/prefab-ui/` teaches how to build Prefab UIs:
 - `SKILL.md` — core patterns (PrefabApp, imports, layout, actions, expressions)
 - `references/charts.md` — ChartSeries and all chart types
 - `references/forms.md` — Form.from_model and manual form composition

@@ -1,13 +1,12 @@
 ---
-name: writing-prefab-python
+name: prefab-ui
 description: >
-  Write interactive UIs in Python using the Prefab DSL. Prefab lets you
-  build React component trees with Python context managers. Use this skill
-  when writing Python code that uses the prefab_ui library, building MCP
-  tools that return interactive interfaces, or creating generative UIs.
+  Build interactive UIs with the Prefab component library. Covers PrefabApp,
+  layout (Grid, Row, Card), actions, expressions, and all component imports.
+  Use when building Prefab UIs, MCP tool interfaces, or generative UIs.
 ---
 
-# Writing Prefab UIs in Python
+# Prefab UI
 
 Prefab is a Python DSL for building interactive React UIs. You compose
 components using context managers, wire up actions as Pydantic models, and
