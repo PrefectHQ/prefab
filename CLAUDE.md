@@ -27,10 +27,12 @@ src/prefab_ui/actions/state.py      →  tests/actions/test_state.py
 
 The renderer validates JSON against the **schema registry** before rendering. A component missing from `SCHEMA_REGISTRY` will show "Unknown component" even if it's in the component `REGISTRY`. When adding a new component, create a schema file in `renderer/src/schemas/` and register it in both places.
 
-**Component docstrings are LLM-facing.** `prefab_ui.generative.search_components()` surfaces class docstrings to LLMs building generative UIs. Every component class needs a docstring with:
+**Component docstrings are LLM-facing and use markdown.** `prefab_ui.generative.search_components()` surfaces class docstrings to LLMs building generative UIs. Every component class needs a docstring with:
 1. A one-line summary of what the component is.
 2. An `Args:` section listing user-facing parameters (skip `type`, `css_class`, `id`, `children`, `let`). One line per arg.
-3. An `Example::` section with a short usage snippet.
+3. An `**Example:**` section with a fenced ` ```python ` code block.
+
+Docstrings are **markdown, not reStructuredText**. Use backticks for inline code, fenced code blocks for examples. Do not use `::` or ` `` `` ` (rST conventions).
 
 When adding or modifying a component, update the docstring to match. Run `uv run python -c "from prefab_ui.generative import search_components; print(search_components('YourComponent', detail=True))"` to verify the LLM-facing output.
 
