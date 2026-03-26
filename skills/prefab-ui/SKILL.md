@@ -3,7 +3,7 @@ name: prefab-ui
 description: >
   Build interactive UIs with the Prefab component library. Covers PrefabApp,
   layout (Grid, Row, Card), actions, expressions, and all component imports.
-  Use when building Prefab UIs, MCP tool interfaces, or generative UIs.
+  Use when building Prefab UI apps, MCP apps with Prefab, FastMCP apps, or generative UIs.
 ---
 
 # Prefab UI
