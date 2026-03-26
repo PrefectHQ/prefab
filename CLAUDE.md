@@ -38,13 +38,13 @@ When adding or modifying a component, update the docstring to match. Run `uv run
 
 ## Agent Skills
 
-`skills/` contains agent skills that teach LLMs how to write Prefab UIs:
-- `writing-prefab-python` — core patterns, imports, layout, actions, expressions
-- `prefab-charts` — ChartSeries and all chart types
-- `prefab-forms` — Form.from_model and manual form composition
-- `prefab-reactive` — Rx bindings, ForEach, conditionals, Define/Use
+`skills/writing-prefab-python/` teaches LLMs how to write Prefab UIs:
+- `SKILL.md` — core patterns (PrefabApp, imports, layout, actions, expressions)
+- `references/charts.md` — ChartSeries and all chart types
+- `references/forms.md` — Form.from_model and manual form composition
+- `references/reactive.md` — Rx bindings, ForEach, conditionals, Define/Use
 
-**Keep skills in sync with code changes.** When modifying components, actions, imports, or layout behavior, update the relevant skill to match. Stale skills teach LLMs wrong patterns.
+**Keep skills in sync with code changes.** When modifying components, actions, imports, or layout behavior, update the relevant skill file to match. Stale skills teach LLMs wrong patterns.
 
 ## Developer Docs
 

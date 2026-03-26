@@ -1,12 +1,3 @@
----
-name: prefab-reactive
-description: >
-  Build reactive Prefab UIs with typed state bindings. Covers Rx expressions,
-  the .rx property on stateful components, set_initial_state, STATE proxy,
-  ForEach with loop variables, Define/Use templates, and conditional rendering.
-  Use when building interactive UIs with dynamic state.
----
-
 # Prefab Reactive Patterns
 
 ## Rx — Typed Reactive References

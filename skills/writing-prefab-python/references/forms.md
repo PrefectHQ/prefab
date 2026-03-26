@@ -1,11 +1,3 @@
----
-name: prefab-forms
-description: >
-  Build forms in Prefab Python UIs. Covers Form.from_model for auto-generating
-  forms from Pydantic models, manual form composition with Field/Input/Select,
-  and form submission with CallTool. Use when adding forms to a Prefab UI.
----
-
 # Prefab Forms
 
 ## Form.from_model

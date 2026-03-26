@@ -1,11 +1,3 @@
----
-name: prefab-charts
-description: >
-  Build charts in Prefab Python UIs. Covers BarChart, LineChart, AreaChart,
-  PieChart, RadarChart, RadialChart, ScatterChart, Sparkline, and ChartSeries.
-  Use when adding data visualizations to a Prefab UI.
----
-
 # Prefab Charts
 
 All charts live in `prefab_ui.components.charts`. Every cartesian chart
