@@ -117,7 +117,7 @@ def _execute_and_serialize(
     if not created:
         raise ValueError("No component found in code block")
 
-    from prefab_ui.components.data_table import DataTable
+    from prefab_ui.components.data_table import DataTable, ExpandableRow
     from prefab_ui.components.text import Text as TextComponent
 
     all_children: set[int] = set()
@@ -132,6 +132,11 @@ def _execute_and_serialize(
             for row in c.rows:
                 if isinstance(row, dict):
                     for v in row.values():
+                        if isinstance(v, Component):
+                            all_children.add(id(v))
+                elif isinstance(row, ExpandableRow):
+                    all_children.add(id(row.detail))
+                    for v in row.data.values():
                         if isinstance(v, Component):
                             all_children.add(id(v))
 

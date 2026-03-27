@@ -42,6 +42,44 @@ def _serialize_cell_value(value: Any) -> Any:
     return value
 
 
+class ExpandableRow:
+    """A DataTable row that can expand to reveal detail content.
+
+    Wraps a row data dict with a detail Component that renders in a
+    full-width sub-row when the user clicks the expand toggle.
+
+    Args:
+        data: Column values for the row (same as a plain row dict).
+        detail: Component tree shown when the row is expanded.
+
+    **Example:**
+
+    ```python
+    from prefab_ui.components import DataTable, DataTableColumn, ExpandableRow, Text
+
+    DataTable(
+        columns=[
+            DataTableColumn(key="time", header="Time", sortable=True),
+            DataTableColumn(key="title", header="Title"),
+        ],
+        rows=[
+            ExpandableRow(
+                {"time": "9:00 AM", "title": "Opening Keynote"},
+                detail=Text("This talk covers..."),
+            ),
+            {"time": "10:30 AM", "title": "Workshop"},
+        ],
+    )
+    ```
+    """
+
+    __slots__ = ("data", "detail")
+
+    def __init__(self, data: dict[str, Any], /, *, detail: Component) -> None:
+        self.data = data
+        self.detail = detail
+
+
 DataTableAlign = Literal["left", "center", "right"]
 
 _ALIGN_CSS: dict[str, str] = {
@@ -110,9 +148,12 @@ class DataTable(Component):
     Also accepts a pandas, polars, or any DataFrame-like object as `rows`.
     Columns are auto-generated from the DataFrame's column names if not provided.
 
+    Rows can be plain dicts or `ExpandableRow` instances. Expandable rows
+    show a toggle that reveals a full-width detail area with arbitrary content.
+
     Args:
         columns: Column definitions.
-        rows: Row data as a list of dicts, a `{{ template }}` string, or a DataFrame.
+        rows: Row data as a list of dicts/ExpandableRows, a `{{ template }}` string, or a DataFrame.
         search: Show a search input above the table.
         paginated: Show pagination controls.
         page_size: Rows per page when paginated.
@@ -126,7 +167,13 @@ class DataTable(Component):
             DataTableColumn(key="name", header="Name", sortable=True),
             DataTableColumn(key="email", header="Email"),
         ],
-        rows=data["users"],
+        rows=[
+            ExpandableRow(
+                {"name": "Alice", "email": "alice@example.com"},
+                detail=Column(Text("Senior engineer, joined 2020.")),
+            ),
+            {"name": "Bob", "email": "bob@example.com"},
+        ],
         search=True,
         paginated=True,
     )
@@ -156,7 +203,7 @@ class DataTable(Component):
         return data
 
     columns: list[DataTableColumn] = Field(description="Column definitions")
-    rows: list[dict[str, Any]] | str | Rx = Field(
+    rows: list[dict[str, Any] | ExpandableRow] | str | Rx = Field(
         default_factory=list,
         description="Row data, `{{ interpolation }}` reference, or DataFrame",
     )
@@ -174,8 +221,15 @@ class DataTable(Component):
     def to_json(self) -> dict[str, Any]:
         d = super().to_json()
         if isinstance(self.rows, list):
-            d["rows"] = [
-                {k: _serialize_cell_value(v) for k, v in row.items()}
-                for row in self.rows
-            ]
+            serialized: list[dict[str, Any]] = []
+            for row in self.rows:
+                if isinstance(row, ExpandableRow):
+                    cells = {k: _serialize_cell_value(v) for k, v in row.data.items()}
+                    cells["_detail"] = row.detail.to_json()
+                    serialized.append(cells)
+                else:
+                    serialized.append(
+                        {k: _serialize_cell_value(v) for k, v in row.items()}
+                    )
+            d["rows"] = serialized
         return d

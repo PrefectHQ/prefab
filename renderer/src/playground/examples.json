@@ -707,17 +707,22 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from prefab_ui.components import DataTable, DataTableColumn, EVENT\nfrom prefab_ui.actions.ui import ShowToast\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"email\", header=\"Email\"),\n        DataTableColumn(key=\"role\", header=\"Role\"),\n    ],\n    rows=[\n        {\"name\": \"Arthur Dent\", \"email\": \"arthur@earth.com\", \"role\": \"Admin\"},\n        {\"name\": \"Ford Prefect\", \"email\": \"ford@betelgeuse.com\", \"role\": \"Editor\"},\n        {\"name\": \"Trillian\", \"email\": \"trillian@hog.com\", \"role\": \"Viewer\"},\n    ],\n    on_row_click=ShowToast(f\"{EVENT.name} ({EVENT.email})\"),\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import (\n    DataTable,\n    DataTableColumn,\n    ExpandableRow,\n    Badge,\n    Text,\n)\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"time\", header=\"Time\", sortable=True),\n        DataTableColumn(key=\"title\", header=\"Title\"),\n        DataTableColumn(key=\"speaker\", header=\"Speaker\"),\n    ],\n    rows=[\n        ExpandableRow(\n            {\"time\": \"9:00 AM\", \"title\": \"Opening Keynote\", \"speaker\": \"Jane Smith\"},\n            detail=Text(\"A sweeping overview of where the industry is headed and what to watch for in the coming year.\"),\n        ),\n        ExpandableRow(\n            {\"time\": \"10:30 AM\", \"title\": \"Building Dashboards\", \"speaker\": \"Bob Lee\"},\n            detail=Text(\"Hands-on workshop covering layout patterns, reactive data binding, and chart integration.\"),\n        ),\n        {\"time\": \"12:00 PM\", \"title\": \"Lunch Break\", \"speaker\": \"—\"},\n        ExpandableRow(\n            {\"time\": \"1:00 PM\", \"title\": \"State Management Deep Dive\", \"speaker\": \"Carol White\"},\n            detail=Text(\"Explores client-side state, server sync, and how to keep your UI responsive under load.\"),\n        ),\n    ],\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from prefab_ui.components import DataTable, DataTableColumn\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"product\", header=\"Product\"),\n        DataTableColumn(\n            key=\"revenue\", header=\"Revenue\",\n            sortable=True, format=\"currency\",\n        ),\n        DataTableColumn(\n            key=\"growth\", header=\"Growth\",\n            sortable=True, format=\"percent:1\",\n        ),\n        DataTableColumn(\n            key=\"units\", header=\"Units\",\n            sortable=True, format=\"number\",\n        ),\n    ],\n    rows=[\n        {\"product\": \"Widget Pro\", \"revenue\": 128450, \"growth\": 0.142, \"units\": 3210},\n        {\"product\": \"Gadget Plus\", \"revenue\": 84200, \"growth\": 0.087, \"units\": 1980},\n        {\"product\": \"Doohickey\", \"revenue\": 52100, \"growth\": -0.031, \"units\": 870},\n    ],\n)"
   },
   {
     "title": "Python expandable icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import DataTable, DataTableColumn, Badge\nfrom prefab_ui.components.charts import Sparkline\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"metric\", header=\"Metric\", sortable=True),\n        DataTableColumn(key=\"trend\", header=\"Trend\"),\n        DataTableColumn(key=\"status\", header=\"Status\"),\n    ],\n    rows=[\n        {\n            \"metric\": \"Revenue\",\n            \"trend\": Sparkline(\n                data=[45, 52, 49, 60, 55, 72, 68, 75],\n                variant=\"success\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Growing\", variant=\"success\"),\n        },\n        {\n            \"metric\": \"Churn\",\n            \"trend\": Sparkline(\n                data=[12, 15, 18, 14, 20, 22, 19, 25],\n                variant=\"destructive\", css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"At risk\", variant=\"destructive\"),\n        },\n        {\n            \"metric\": \"Users\",\n            \"trend\": Sparkline(\n                data=[250, 248, 252, 249, 253, 251, 250, 252],\n                variant=\"info\", fill=True, css_class=\"w-24\",\n            ),\n            \"status\": Badge(\"Stable\", variant=\"secondary\"),\n        },\n    ],\n)"
-  },
-  {
-    "title": "Python icon=\"python\"",
-    "category": "Components",
-    "code": "from prefab_ui.components import DataTable, DataTableColumn, EVENT\nfrom prefab_ui.actions.ui import ShowToast\n\nDataTable(\n    columns=[\n        DataTableColumn(key=\"name\", header=\"Name\", sortable=True),\n        DataTableColumn(key=\"email\", header=\"Email\"),\n        DataTableColumn(key=\"role\", header=\"Role\"),\n    ],\n    rows=[\n        {\"name\": \"Arthur Dent\", \"email\": \"arthur@earth.com\", \"role\": \"Admin\"},\n        {\"name\": \"Ford Prefect\", \"email\": \"ford@betelgeuse.com\", \"role\": \"Editor\"},\n        {\"name\": \"Trillian\", \"email\": \"trillian@hog.com\", \"role\": \"Viewer\"},\n    ],\n    on_row_click=ShowToast(f\"{EVENT.name} ({EVENT.email})\"),\n)"
   },
   {
     "title": "import pandas as pd",

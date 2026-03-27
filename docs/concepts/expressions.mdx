@@ -171,10 +171,10 @@ Sometimes you need a component's `.rx` before the component exists — a label a
 
 Arithmetic expressions can appear anywhere a value is expected: in a `Text` component, in a `SetState` action value, or in a prop like `Progress(value=...)`.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]},"state":{"price":42,"quantity":1}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgUm93LCBUZXh0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKHByaWNlPTQyLCBxdWFudGl0eT0xKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBUZXh0KCJRdWFudGl0eToiKQogICAgICAgIEJ1dHRvbigiLSIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgicXVhbnRpdHkiLCBzdGF0ZS5xdWFudGl0eSAtIDEpKQogICAgICAgIFRleHQoc3RhdGUucXVhbnRpdHkpCiAgICAgICAgQnV0dG9uKCIrIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJxdWFudGl0eSIsIHN0YXRlLnF1YW50aXR5ICsgMSkpCiAgICBUZXh0KGYiVG90YWw6IHsoc3RhdGUucHJpY2UgKiBzdGF0ZS5xdWFudGl0eSkuY3VycmVuY3koKX0iKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"Quantity:","type":"Text"},{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity - 1 }}"}},{"content":"{{ quantity }}","type":"Text"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"quantity","value":"{{ quantity + 1 }}"}}]},{"content":"Total: {{ price * quantity | currency }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU1RBVEUgYXMgc3RhdGUsIEJ1dHRvbiwgQ29sdW1uLCBSb3csIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgIFRleHQoIlF1YW50aXR5OiIpCiAgICAgICAgQnV0dG9uKCItIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJxdWFudGl0eSIsIHN0YXRlLnF1YW50aXR5IC0gMSkpCiAgICAgICAgVGV4dChzdGF0ZS5xdWFudGl0eSkKICAgICAgICBCdXR0b24oIisiLCB2YXJpYW50PSJvdXRsaW5lIiwgb25fY2xpY2s9U2V0U3RhdGUoInF1YW50aXR5Iiwgc3RhdGUucXVhbnRpdHkgKyAxKSkKICAgIFRleHQoZiJUb3RhbDogeyhzdGF0ZS5wcmljZSAqIHN0YXRlLnF1YW50aXR5KS5jdXJyZW5jeSgpfSIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Button, Column, Row, Text
+from prefab_ui.components import STATE as state, Button, Column, Row, Text
 from prefab_ui.actions import SetState
 
 
@@ -218,8 +218,7 @@ with Column(gap=3):
       },
       {"content": "Total: {{ price * quantity | currency }}", "type": "Text"}
     ]
-  },
-  "state": {"price": 42, "quantity": 1}
+  }
 }
 ```
 </CodeGroup>
@@ -302,10 +301,10 @@ This is a Python quirk. The `{{ }}` protocol expressions use standard precedence
 
 `.then(if_true, if_false)` chooses between two values based on a boolean expression. It compiles to the ternary operator `? :` in the protocol:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFJvdywgU3dpdGNoLCBUZXh0CgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKGFjdGl2ZT1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0iYWN0aXZlIikKICAgICAgICBUZXh0KHN0YXRlLmFjdGl2ZS50aGVuKCJPbmxpbmUiLCAiT2ZmbGluZSIpKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"name":"active","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"{{ active ? 'Online' : 'Offline' }}","type":"Text"}]}]},"state":{"active":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU1RBVEUgYXMgc3RhdGUsIENvbHVtbiwgUm93LCBTd2l0Y2gsIFRleHQKCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICB3aXRoIFJvdyhnYXA9MywgYWxpZ249ImNlbnRlciIpOgogICAgICAgIFN3aXRjaChuYW1lPSJhY3RpdmUiKQogICAgICAgIFRleHQoc3RhdGUuYWN0aXZlLnRoZW4oIk9ubGluZSIsICJPZmZsaW5lIikpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Column, Row, Switch, Text
+from prefab_ui.components import STATE as state, Column, Row, Switch, Text
 
 
 with Column(gap=2):
@@ -336,7 +335,7 @@ with Column(gap=2):
       }
     ]
   },
-  "state": {"active": true}
+  "state": {"active": false}
 }
 ```
 </CodeGroup>
@@ -352,11 +351,11 @@ Pipes process values left to right. In `{{ todos | rejectattr:done | length }}`,
 
 ### Number Formatting
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0,"variant":"default","size":"default"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ revenue / target | percent:1 }} of target","type":"Text"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]},"state":{"revenue":2847500,"target":3000000,"growth":0.124}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmREZXNjcmlwdGlvbiwKICAgIENhcmRIZWFkZXIsIENhcmRUaXRsZSwgQ29sdW1uLCBQcm9ncmVzcywgUm93LCBUZXh0LAopCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKHJldmVudWU9Mjg0NzUwMCwgdGFyZ2V0PTMwMDAwMDAsIGdyb3d0aD0wLjEyNCkKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgQ2FyZFRpdGxlKCJRNCBSZXZlbnVlIikKICAgICAgICBDYXJkRGVzY3JpcHRpb24oc3RhdGUucmV2ZW51ZS5jdXJyZW5jeSgpKQogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICAgICAgUHJvZ3Jlc3ModmFsdWU9KHN0YXRlLnJldmVudWUgLyBzdGF0ZS50YXJnZXQgKiAxMDApLCBtYXg9MTAwKQogICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgVGV4dChmInsoc3RhdGUucmV2ZW51ZSAvIHN0YXRlLnRhcmdldCkucGVyY2VudCgxKX0gb2YgdGFyZ2V0IikKICAgICAgICAgICAgICAgIEJhZGdlKGYie3N0YXRlLmdyb3d0aC5wZXJjZW50KDEpfSBZb1kiLCB2YXJpYW50PSJzZWNvbmRhcnkiKQo">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Q4 Revenue"},{"type":"CardDescription","content":"{{ revenue | currency }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":"{{ revenue / target * 100 }}","max":100.0,"variant":"default","size":"default"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ revenue / target | percent:1 }} of target","type":"Text"},{"type":"Badge","label":"{{ growth | percent:1 }} YoY","variant":"secondary"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU1RBVEUgYXMgc3RhdGUsIEJhZGdlLCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZERlc2NyaXB0aW9uLAogICAgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLCBDb2x1bW4sIFByb2dyZXNzLCBSb3csIFRleHQsCikKCgp3aXRoIENhcmQoKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIENhcmRUaXRsZSgiUTQgUmV2ZW51ZSIpCiAgICAgICAgQ2FyZERlc2NyaXB0aW9uKHN0YXRlLnJldmVudWUuY3VycmVuY3koKSkKICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPShzdGF0ZS5yZXZlbnVlIC8gc3RhdGUudGFyZ2V0ICogMTAwKSwgbWF4PTEwMCkKICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgICAgIFRleHQoZiJ7KHN0YXRlLnJldmVudWUgLyBzdGF0ZS50YXJnZXQpLnBlcmNlbnQoMSl9IG9mIHRhcmdldCIpCiAgICAgICAgICAgICAgICBCYWRnZShmIntzdGF0ZS5ncm93dGgucGVyY2VudCgxKX0gWW9ZIiwgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
-    Badge, Card, CardContent, CardDescription,
+    STATE as state, Badge, Card, CardContent, CardDescription,
     CardHeader, CardTitle, Column, Progress, Row, Text,
 )
 
@@ -415,8 +414,7 @@ with Card():
         ]
       }
     ]
-  },
-  "state": {"revenue": 2847500, "target": 3000000, "growth": 0.124}
+  }
 }
 ```
 </CodeGroup>
@@ -435,11 +433,11 @@ with Card():
 
 ### Date and Time
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Team Standup"},{"type":"CardDescription","content":"{{ starts | date:long }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ starts | time }}","variant":"outline"},{"content":"{{ starts | datetime }}","type":"Text"}]}]}]},"state":{"starts":"2025-01-15T14:30:00Z"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmREZXNjcmlwdGlvbiwKICAgIENhcmRIZWFkZXIsIENhcmRUaXRsZSwgUm93LCBUZXh0LAopCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKHN0YXJ0cz0iMjAyNS0wMS0xNVQxNDozMDowMFoiKQoKd2l0aCBDYXJkKCk6CiAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICBDYXJkVGl0bGUoIlRlYW0gU3RhbmR1cCIpCiAgICAgICAgQ2FyZERlc2NyaXB0aW9uKHN0YXRlLnN0YXJ0cy5kYXRlKCJsb25nIikpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgQmFkZ2Uoc3RhdGUuc3RhcnRzLnRpbWUoKSwgdmFyaWFudD0ib3V0bGluZSIpCiAgICAgICAgICAgIFRleHQoc3RhdGUuc3RhcnRzLmRhdGV0aW1lKCkpCg">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Team Standup"},{"type":"CardDescription","content":"{{ starts | date:long }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Badge","label":"{{ starts | time }}","variant":"outline"},{"content":"{{ starts | datetime }}","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU1RBVEUgYXMgc3RhdGUsIEJhZGdlLCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZERlc2NyaXB0aW9uLAogICAgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLCBSb3csIFRleHQsCikKCgp3aXRoIENhcmQoKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIENhcmRUaXRsZSgiVGVhbSBTdGFuZHVwIikKICAgICAgICBDYXJkRGVzY3JpcHRpb24oc3RhdGUuc3RhcnRzLmRhdGUoImxvbmciKSkKICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICBCYWRnZShzdGF0ZS5zdGFydHMudGltZSgpLCB2YXJpYW50PSJvdXRsaW5lIikKICAgICAgICAgICAgVGV4dChzdGF0ZS5zdGFydHMuZGF0ZXRpbWUoKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
-    Badge, Card, CardContent, CardDescription,
+    STATE as state, Badge, Card, CardContent, CardDescription,
     CardHeader, CardTitle, Row, Text,
 )
 
@@ -479,8 +477,7 @@ with Card():
         ]
       }
     ]
-  },
-  "state": {"starts": "2025-01-15T14:30:00Z"}
+  }
 }
 ```
 </CodeGroup>
@@ -498,11 +495,11 @@ Input must be an ISO date string. The `time` pipe also accepts time-only strings
 
 ### String Formatting
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name | upper }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"{{ name | lower }}","variant":"secondary"},{"content":"{{ bio | truncate:80 }}","type":"Text"}]}]}]},"state":{"name":"Arthur Dent","bio":"A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRIZWFkZXIsIENhcmRUaXRsZSwgQ29sdW1uLCBUZXh0LAopCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKAogICAgbmFtZT0iQXJ0aHVyIERlbnQiLAogICAgYmlvPSJBIHBlcmZlY3RseSBvcmRpbmFyeSBtYW4gd2hvIHdva2UgdXAgb25lIFRodXJzZGF5IHRvIGRpc2NvdmVyIGhpcyBob3VzZSIKICAgICIgd2FzIGFib3V0IHRvIGJlIGRlbW9saXNoZWQsIGhpcyBwbGFuZXQgZGVzdHJveWVkLCBhbmQgaGlzIGJlc3QgZnJpZW5kIgogICAgIiB3YXMgYW4gYWxpZW4gZnJvbSBCZXRlbGdldXNlLiIsCikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgQ2FyZFRpdGxlKHN0YXRlLm5hbWUudXBwZXIoKSkKICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgICAgIEJhZGdlKHN0YXRlLm5hbWUubG93ZXIoKSwgdmFyaWFudD0ic2Vjb25kYXJ5IikKICAgICAgICAgICAgVGV4dChzdGF0ZS5iaW8udHJ1bmNhdGUoODApKQo">
+<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ name | upper }}"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Badge","label":"{{ name | lower }}","variant":"secondary"},{"content":"{{ bio | truncate:80 }}","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU1RBVEUgYXMgc3RhdGUsIEJhZGdlLCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLCBDb2x1bW4sIFRleHQsCikKCgp3aXRoIENhcmQoKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIENhcmRUaXRsZShzdGF0ZS5uYW1lLnVwcGVyKCkpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShzdGF0ZS5uYW1lLmxvd2VyKCksIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgIFRleHQoc3RhdGUuYmlvLnRydW5jYXRlKDgwKSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
-    Badge, Card, CardContent, CardHeader, CardTitle, Column, Text,
+    STATE as state, Badge, Card, CardContent, CardHeader, CardTitle, Column, Text,
 )
 
 
@@ -537,10 +534,6 @@ with Card():
         ]
       }
     ]
-  },
-  "state": {
-    "name": "Arthur Dent",
-    "bio": "A perfectly ordinary man who woke up one Thursday to discover his house was about to be demolished, his planet destroyed, and his best friend was an alien from Betelgeuse."
   }
 }
 ```
@@ -562,10 +555,10 @@ Array pipes filter and summarize lists stored in state. Given a list of todo ite
 
 `selectattr("done")` keeps only items where `done` is truthy. `rejectattr("done")` keeps items where it's falsy. Chain `.length()` to count the filtered results. These pipes work together to turn a raw array into meaningful summary numbers.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Total items: {{ todos | length }}","type":"Text"},{"content":"Done: {{ todos | selectattr:done | length }}","type":"Text"},{"content":"Remaining: {{ todos | rejectattr:done | length }}","type":"Text"}]},"state":{"todos":[{"name":"Learn Prefab","done":true},{"name":"Build dashboard","done":false},{"name":"Deploy to production","done":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgQ29sdW1uLCBSb3csIFRleHQKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICB0b2Rvcz1bCiAgICAgICAgeyJuYW1lIjogIkxlYXJuIFByZWZhYiIsICJkb25lIjogVHJ1ZX0sCiAgICAgICAgeyJuYW1lIjogIkJ1aWxkIGRhc2hib2FyZCIsICJkb25lIjogRmFsc2V9LAogICAgICAgIHsibmFtZSI6ICJEZXBsb3kgdG8gcHJvZHVjdGlvbiIsICJkb25lIjogRmFsc2V9LAogICAgXQopCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICBUZXh0KGYiVG90YWwgaXRlbXM6IHtzdGF0ZS50b2Rvcy5sZW5ndGgoKX0iKQogICAgVGV4dChmIkRvbmU6IHtzdGF0ZS50b2Rvcy5zZWxlY3RhdHRyKCdkb25lJykubGVuZ3RoKCl9IikKICAgIFRleHQoZiJSZW1haW5pbmc6IHtzdGF0ZS50b2Rvcy5yZWplY3RhdHRyKCdkb25lJykubGVuZ3RoKCl9IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"content":"Total items: {{ todos | length }}","type":"Text"},{"content":"Done: {{ todos | selectattr:done | length }}","type":"Text"},{"content":"Remaining: {{ todos | rejectattr:done | length }}","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU1RBVEUgYXMgc3RhdGUsIEJhZGdlLCBDb2x1bW4sIFJvdywgVGV4dAoKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIFRleHQoZiJUb3RhbCBpdGVtczoge3N0YXRlLnRvZG9zLmxlbmd0aCgpfSIpCiAgICBUZXh0KGYiRG9uZToge3N0YXRlLnRvZG9zLnNlbGVjdGF0dHIoJ2RvbmUnKS5sZW5ndGgoKX0iKQogICAgVGV4dChmIlJlbWFpbmluZzoge3N0YXRlLnRvZG9zLnJlamVjdGF0dHIoJ2RvbmUnKS5sZW5ndGgoKX0iKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Badge, Column, Row, Text
+from prefab_ui.components import STATE as state, Badge, Column, Row, Text
 
 
 with Column(gap=2):
@@ -582,13 +575,6 @@ with Column(gap=2):
       {"content": "Total items: {{ todos | length }}", "type": "Text"},
       {"content": "Done: {{ todos | selectattr:done | length }}", "type": "Text"},
       {"content": "Remaining: {{ todos | rejectattr:done | length }}", "type": "Text"}
-    ]
-  },
-  "state": {
-    "todos": [
-      {"name": "Learn Prefab", "done": true},
-      {"name": "Build dashboard", "done": false},
-      {"name": "Deploy to production", "done": false}
     ]
   }
 }

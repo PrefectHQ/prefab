@@ -14,9 +14,11 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getExpandedRowModel,
   flexRender,
   type ColumnDef,
   type SortingState,
+  type ExpandedState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -68,72 +70,130 @@ export function PrefabDataTable({
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [clickedRowId, setClickedRowId] = useState<string | null>(null);
   const renderNode = useRenderNode();
 
-  const dataColumns = useMemo<ColumnDef<Record<string, unknown>>[]>(
-    () =>
-      columnSpecs.map((spec) => {
-        const colStyle: React.CSSProperties = {};
-        if (spec.width) colStyle.width = spec.width;
-        if (spec.minWidth) colStyle.minWidth = spec.minWidth;
-        if (spec.maxWidth) colStyle.maxWidth = spec.maxWidth;
-        const hasColStyle = Object.keys(colStyle).length > 0;
-
-        return {
-          accessorKey: spec.key,
-          header: ({ column }) => {
-            if (spec.sortable) {
-              return (
-                <button
-                  className="flex items-center gap-1 hover:text-foreground"
-                  onClick={() =>
-                    column.toggleSorting(column.getIsSorted() === "asc")
-                  }
-                >
-                  {spec.header}
-                  {column.getIsSorted() === "asc" ? (
-                    <span className="text-xs">▲</span>
-                  ) : column.getIsSorted() === "desc" ? (
-                    <span className="text-xs">▼</span>
-                  ) : (
-                    <span className="text-xs text-muted-foreground/50">⇅</span>
-                  )}
-                </button>
-              );
-            }
-            return spec.header;
-          },
-          cell: ({ getValue }) => {
-            const value = getValue();
-            if (renderNode && isComponentNode(value)) {
-              return renderNode(value);
-            }
-            if (spec.format !== undefined && value != null) {
-              return formatCellValue(value, spec.format);
-            }
-            return value != null ? String(value) : "";
-          },
-          meta: {
-            headerClass: spec.headerClass,
-            cellClass: spec.cellClass,
-            colStyle: hasColStyle ? colStyle : undefined,
-          },
-        };
-      }),
-    [columnSpecs, renderNode],
+  const hasExpandableRows = useMemo(
+    () => rows.some((row) => "_detail" in row && row._detail != null),
+    [rows],
   );
+
+  const dataColumns = useMemo<ColumnDef<Record<string, unknown>>[]>(() => {
+    const cols: ColumnDef<Record<string, unknown>>[] = [];
+
+    if (hasExpandableRows) {
+      cols.push({
+        id: "_expand",
+        header: () => null,
+        cell: ({ row }) => {
+          if (!row.getCanExpand()) return null;
+          return (
+            <button
+              className="flex items-center justify-center text-muted-foreground hover:text-foreground"
+              onClick={(e) => {
+                e.stopPropagation();
+                row.toggleExpanded();
+              }}
+            >
+              <span
+                className={cn(
+                  "inline-block text-xs transition-transform duration-200",
+                  row.getIsExpanded() && "rotate-90",
+                )}
+              >
+                ▶
+              </span>
+            </button>
+          );
+        },
+        meta: {
+          colStyle: { width: "40px" } as React.CSSProperties,
+        },
+      });
+    }
+
+    for (const spec of columnSpecs) {
+      const colStyle: React.CSSProperties = {};
+      if (spec.width) colStyle.width = spec.width;
+      if (spec.minWidth) colStyle.minWidth = spec.minWidth;
+      if (spec.maxWidth) colStyle.maxWidth = spec.maxWidth;
+      const hasColStyle = Object.keys(colStyle).length > 0;
+
+      cols.push({
+        accessorKey: spec.key,
+        header: ({ column }) => {
+          if (spec.sortable) {
+            return (
+              <button
+                className="flex items-center gap-1 hover:text-foreground"
+                onClick={() =>
+                  column.toggleSorting(column.getIsSorted() === "asc")
+                }
+              >
+                {spec.header}
+                {column.getIsSorted() === "asc" ? (
+                  <span className="text-xs">▲</span>
+                ) : column.getIsSorted() === "desc" ? (
+                  <span className="text-xs">▼</span>
+                ) : (
+                  <span className="text-xs text-muted-foreground/50">⇅</span>
+                )}
+              </button>
+            );
+          }
+          return spec.header;
+        },
+        cell: ({ getValue }) => {
+          const value = getValue();
+          if (renderNode && isComponentNode(value)) {
+            return renderNode(value);
+          }
+          if (spec.format !== undefined && value != null) {
+            return formatCellValue(value, spec.format);
+          }
+          return value != null ? String(value) : "";
+        },
+        meta: {
+          headerClass: spec.headerClass,
+          cellClass: spec.cellClass,
+          colStyle: hasColStyle ? colStyle : undefined,
+        },
+      });
+    }
+
+    return cols;
+  }, [columnSpecs, renderNode, hasExpandableRows]);
+
+  const globalFilterFn = useMemo(() => {
+    if (!hasExpandableRows) return undefined;
+    return (
+      row: { getValue: (id: string) => unknown },
+      columnId: string,
+      filterValue: string,
+    ) => {
+      if (columnId === "_expand" || columnId === "_detail") return false;
+      const value = row.getValue(columnId);
+      if (value == null) return false;
+      return String(value).toLowerCase().includes(filterValue.toLowerCase());
+    };
+  }, [hasExpandableRows]);
 
   const table = useReactTable({
     data: rows,
     columns: dataColumns,
-    state: { sorting, globalFilter },
+    state: { sorting, globalFilter, expanded },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    onExpandedChange: setExpanded,
+    getRowCanExpand: (row) =>
+      "_detail" in row.original && row.original._detail != null,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: search ? getFilteredRowModel() : undefined,
     getPaginationRowModel: paginated ? getPaginationRowModel() : undefined,
+    getExpandedRowModel: hasExpandableRows ? getExpandedRowModel() : undefined,
+    globalFilterFn: globalFilterFn,
     initialState: paginated ? { pagination: { pageSize } } : undefined,
   });
 
@@ -184,38 +244,57 @@ export function PrefabDataTable({
             <>
               {table.getRowModel().rows.map((row) => {
                 const isSelected = clickedRowId === row.id;
+                const isExpanded = row.getIsExpanded();
+                const detail = row.original._detail;
                 return (
-                  <TableRow
-                    key={row.id}
-                    data-state={isSelected ? "selected" : undefined}
-                    className={isClickable ? "cursor-pointer" : undefined}
-                    onClick={
-                      isClickable
-                        ? () => {
-                            setClickedRowId(row.id);
-                            onRowClick(row.original);
-                          }
-                        : undefined
-                    }
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const meta = cell.column.columnDef.meta as
-                        | { cellClass?: string; colStyle?: React.CSSProperties }
-                        | undefined;
-                      return (
+                  <React.Fragment key={row.id}>
+                    <TableRow
+                      data-state={isSelected ? "selected" : undefined}
+                      className={cn(
+                        isClickable && "cursor-pointer",
+                        isExpanded && "border-b-0",
+                      )}
+                      onClick={
+                        isClickable
+                          ? () => {
+                              setClickedRowId(row.id);
+                              onRowClick(row.original);
+                            }
+                          : undefined
+                      }
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const meta = cell.column.columnDef.meta as
+                          | {
+                              cellClass?: string;
+                              colStyle?: React.CSSProperties;
+                            }
+                          | undefined;
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            className={meta?.cellClass}
+                            style={meta?.colStyle}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                    {isExpanded && renderNode && isComponentNode(detail) && (
+                      <TableRow className="pf-data-table-detail-row hover:bg-transparent">
                         <TableCell
-                          key={cell.id}
-                          className={meta?.cellClass}
-                          style={meta?.colStyle}
+                          colSpan={colCount}
+                          className="pf-data-table-detail-cell"
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          {renderNode(detail)}
                         </TableCell>
-                      );
-                    })}
-                  </TableRow>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 );
               })}
               {/* Pad short pages with empty rows so auto-resize stays stable */}

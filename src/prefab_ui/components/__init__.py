@@ -48,7 +48,7 @@ from prefab_ui.components.column import Column
 from prefab_ui.components.container import Container
 from prefab_ui.components.control_flow import Elif, Else, ForEach, If
 from prefab_ui.components.dashboard import Dashboard, DashboardItem
-from prefab_ui.components.data_table import DataTable, DataTableColumn
+from prefab_ui.components.data_table import DataTable, DataTableColumn, ExpandableRow
 from prefab_ui.components.date_picker import DatePicker
 from prefab_ui.components.dialog import Dialog
 from prefab_ui.components.div import Div, Link, Span
@@ -175,6 +175,7 @@ __all__ = [
     "Elif",
     "Else",
     "Embed",
+    "ExpandableRow",
     "Field",
     "FieldContent",
     "FieldDescription",

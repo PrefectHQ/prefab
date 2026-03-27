@@ -372,6 +372,146 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
+## Rows
+
+### Click
+
+Make rows clickable with `on_row_click`. The clicked row highlights and the action fires with the row's data as `$event`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","role":"Admin"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","role":"Editor"},{"name":"Trillian","email":"trillian@hog.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEVWRU5UCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMudWkgaW1wb3J0IFNob3dUb2FzdAoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ibmFtZSIsIGhlYWRlcj0iTmFtZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImVtYWlsIiwgaGVhZGVyPSJFbWFpbCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InJvbGUiLCBoZWFkZXI9IlJvbGUiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAiZW1haWwiOiAiYXJ0aHVyQGVhcnRoLmNvbSIsICJyb2xlIjogIkFkbWluIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJlbWFpbCI6ICJmb3JkQGJldGVsZ2V1c2UuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImVtYWlsIjogInRyaWxsaWFuQGhvZy5jb20iLCAicm9sZSI6ICJWaWV3ZXIifSwKICAgIF0sCiAgICBvbl9yb3dfY2xpY2s9U2hvd1RvYXN0KGYie0VWRU5ULm5hbWV9ICh7RVZFTlQuZW1haWx9KSIpLAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import DataTable, DataTableColumn, EVENT
+from prefab_ui.actions.ui import ShowToast
+
+DataTable(
+    columns=[
+        DataTableColumn(key="name", header="Name", sortable=True),
+        DataTableColumn(key="email", header="Email"),
+        DataTableColumn(key="role", header="Role"),
+    ],
+    rows=[
+        {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
+        {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
+        {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"},
+    ],
+    on_row_click=ShowToast(f"{EVENT.name} ({EVENT.email})"),
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "name", "header": "Name", "sortable": true},
+      {"key": "email", "header": "Email", "sortable": false},
+      {"key": "role", "header": "Role", "sortable": false}
+    ],
+    "rows": [
+      {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
+      {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
+      {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"}
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10,
+    "onRowClick": {"action": "showToast", "message": "{{ $event.name }} ({{ $event.email }})"}
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Expandable
+
+Wrap a row dict in `ExpandableRow` to make it expandable. Clicking the toggle reveals a full-width detail area below the row where you can put any component layout — text, badges, nested tables, charts, whatever fits.
+
+Rows without `ExpandableRow` render normally. Multiple rows can be expanded at the same time, and expanded state follows the row through sorting and pagination.
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"time","header":"Time","sortable":true},{"key":"title","header":"Title","sortable":false},{"key":"speaker","header":"Speaker","sortable":false}],"rows":[{"time":"9:00 AM","title":"Opening Keynote","speaker":"Jane Smith","_detail":{"content":"A sweeping overview of where the industry is headed and what to watch for in the coming year.","type":"Text"}},{"time":"10:30 AM","title":"Building Dashboards","speaker":"Bob Lee","_detail":{"content":"Hands-on workshop covering layout patterns, reactive data binding, and chart integration.","type":"Text"}},{"time":"12:00 PM","title":"Lunch Break","speaker":"\u2014"},{"time":"1:00 PM","title":"State Management Deep Dive","speaker":"Carol White","_detail":{"content":"Explores client-side state, server sync, and how to keep your UI responsive under load.","type":"Text"}}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgRGF0YVRhYmxlLAogICAgRGF0YVRhYmxlQ29sdW1uLAogICAgRXhwYW5kYWJsZVJvdywKICAgIEJhZGdlLAogICAgVGV4dCwKKQoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0idGltZSIsIGhlYWRlcj0iVGltZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRpdGxlIiwgaGVhZGVyPSJUaXRsZSIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InNwZWFrZXIiLCBoZWFkZXI9IlNwZWFrZXIiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICBFeHBhbmRhYmxlUm93KAogICAgICAgICAgICB7InRpbWUiOiAiOTowMCBBTSIsICJ0aXRsZSI6ICJPcGVuaW5nIEtleW5vdGUiLCAic3BlYWtlciI6ICJKYW5lIFNtaXRoIn0sCiAgICAgICAgICAgIGRldGFpbD1UZXh0KCJBIHN3ZWVwaW5nIG92ZXJ2aWV3IG9mIHdoZXJlIHRoZSBpbmR1c3RyeSBpcyBoZWFkZWQgYW5kIHdoYXQgdG8gd2F0Y2ggZm9yIGluIHRoZSBjb21pbmcgeWVhci4iKSwKICAgICAgICApLAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxMDozMCBBTSIsICJ0aXRsZSI6ICJCdWlsZGluZyBEYXNoYm9hcmRzIiwgInNwZWFrZXIiOiAiQm9iIExlZSJ9LAogICAgICAgICAgICBkZXRhaWw9VGV4dCgiSGFuZHMtb24gd29ya3Nob3AgY292ZXJpbmcgbGF5b3V0IHBhdHRlcm5zLCByZWFjdGl2ZSBkYXRhIGJpbmRpbmcsIGFuZCBjaGFydCBpbnRlZ3JhdGlvbi4iKSwKICAgICAgICApLAogICAgICAgIHsidGltZSI6ICIxMjowMCBQTSIsICJ0aXRsZSI6ICJMdW5jaCBCcmVhayIsICJzcGVha2VyIjogIuKAlCJ9LAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxOjAwIFBNIiwgInRpdGxlIjogIlN0YXRlIE1hbmFnZW1lbnQgRGVlcCBEaXZlIiwgInNwZWFrZXIiOiAiQ2Fyb2wgV2hpdGUifSwKICAgICAgICAgICAgZGV0YWlsPVRleHQoIkV4cGxvcmVzIGNsaWVudC1zaWRlIHN0YXRlLCBzZXJ2ZXIgc3luYywgYW5kIGhvdyB0byBrZWVwIHlvdXIgVUkgcmVzcG9uc2l2ZSB1bmRlciBsb2FkLiIpLAogICAgICAgICksCiAgICBdLAopCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components import (
+    DataTable,
+    DataTableColumn,
+    ExpandableRow,
+    Badge,
+    Text,
+)
+
+DataTable(
+    columns=[
+        DataTableColumn(key="time", header="Time", sortable=True),
+        DataTableColumn(key="title", header="Title"),
+        DataTableColumn(key="speaker", header="Speaker"),
+    ],
+    rows=[
+        ExpandableRow(
+            {"time": "9:00 AM", "title": "Opening Keynote", "speaker": "Jane Smith"},
+            detail=Text("A sweeping overview of where the industry is headed and what to watch for in the coming year."),
+        ),
+        ExpandableRow(
+            {"time": "10:30 AM", "title": "Building Dashboards", "speaker": "Bob Lee"},
+            detail=Text("Hands-on workshop covering layout patterns, reactive data binding, and chart integration."),
+        ),
+        {"time": "12:00 PM", "title": "Lunch Break", "speaker": "—"},
+        ExpandableRow(
+            {"time": "1:00 PM", "title": "State Management Deep Dive", "speaker": "Carol White"},
+            detail=Text("Explores client-side state, server sync, and how to keep your UI responsive under load."),
+        ),
+    ],
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "DataTable",
+    "columns": [
+      {"key": "time", "header": "Time", "sortable": true},
+      {"key": "title", "header": "Title", "sortable": false},
+      {"key": "speaker", "header": "Speaker", "sortable": false}
+    ],
+    "rows": [
+      {
+        "time": "9:00 AM",
+        "title": "Opening Keynote",
+        "speaker": "Jane Smith",
+        "_detail": {
+          "content": "A sweeping overview of where the industry is headed and what to watch for in the coming year.",
+          "type": "Text"
+        }
+      },
+      {
+        "time": "10:30 AM",
+        "title": "Building Dashboards",
+        "speaker": "Bob Lee",
+        "_detail": {
+          "content": "Hands-on workshop covering layout patterns, reactive data binding, and chart integration.",
+          "type": "Text"
+        }
+      },
+      {"time": "12:00 PM", "title": "Lunch Break", "speaker": "\u2014"},
+      {
+        "time": "1:00 PM",
+        "title": "State Management Deep Dive",
+        "speaker": "Carol White",
+        "_detail": {
+          "content": "Explores client-side state, server sync, and how to keep your UI responsive under load.",
+          "type": "Text"
+        }
+      }
+    ],
+    "search": false,
+    "paginated": false,
+    "pageSize": 10
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Expandable rows work alongside all other DataTable features — sorting, search, pagination, row click, and component cells. The detail area is a single full-width canvas, not individual columns, so you have complete control over the layout.
+
 ## Cells
 
 ### Formatting
@@ -535,54 +675,6 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
-## Row Click
-
-Make rows clickable with `on_row_click`. The clicked row highlights and the action fires with the row's data as `$event`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
-
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","role":"Admin"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","role":"Editor"},{"name":"Trillian","email":"trillian@hog.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEVWRU5UCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMudWkgaW1wb3J0IFNob3dUb2FzdAoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ibmFtZSIsIGhlYWRlcj0iTmFtZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImVtYWlsIiwgaGVhZGVyPSJFbWFpbCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InJvbGUiLCBoZWFkZXI9IlJvbGUiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAiZW1haWwiOiAiYXJ0aHVyQGVhcnRoLmNvbSIsICJyb2xlIjogIkFkbWluIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJlbWFpbCI6ICJmb3JkQGJldGVsZ2V1c2UuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImVtYWlsIjogInRyaWxsaWFuQGhvZy5jb20iLCAicm9sZSI6ICJWaWV3ZXIifSwKICAgIF0sCiAgICBvbl9yb3dfY2xpY2s9U2hvd1RvYXN0KGYie0VWRU5ULm5hbWV9ICh7RVZFTlQuZW1haWx9KSIpLAopCg">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import DataTable, DataTableColumn, EVENT
-from prefab_ui.actions.ui import ShowToast
-
-DataTable(
-    columns=[
-        DataTableColumn(key="name", header="Name", sortable=True),
-        DataTableColumn(key="email", header="Email"),
-        DataTableColumn(key="role", header="Role"),
-    ],
-    rows=[
-        {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
-        {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
-        {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"},
-    ],
-    on_row_click=ShowToast(f"{EVENT.name} ({EVENT.email})"),
-)
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "type": "DataTable",
-    "columns": [
-      {"key": "name", "header": "Name", "sortable": true},
-      {"key": "email", "header": "Email", "sortable": false},
-      {"key": "role", "header": "Role", "sortable": false}
-    ],
-    "rows": [
-      {"name": "Arthur Dent", "email": "arthur@earth.com", "role": "Admin"},
-      {"name": "Ford Prefect", "email": "ford@betelgeuse.com", "role": "Editor"},
-      {"name": "Trillian", "email": "trillian@hog.com", "role": "Viewer"}
-    ],
-    "search": false,
-    "paginated": false,
-    "pageSize": 10,
-    "onRowClick": {"action": "showToast", "message": "{{ $event.name }} ({{ $event.email }})"}
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
-
 ## From DataFrame
 
 Pass a pandas or polars DataFrame directly as `rows`. Columns auto-generate from the DataFrame's column names — each column in the DataFrame becomes a `DataTableColumn` with `key` and `header` set to the column name.
@@ -621,8 +713,8 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
   Column definitions. Auto-generated from DataFrame column names when `rows` is a DataFrame and `columns` is omitted.
 </ParamField>
 
-<ParamField body="rows" type="list[dict] | str | DataFrame" default="[]">
-  Row data as a list of dicts, a `{{ field }}` interpolation reference, or a pandas/polars DataFrame.
+<ParamField body="rows" type="list[dict | ExpandableRow] | str | DataFrame" default="[]">
+  Row data as a list of dicts or `ExpandableRow` wrappers, a `{{ field }}` interpolation reference, or a pandas/polars DataFrame.
 </ParamField>
 
 <ParamField body="search" type="bool" default="False">
@@ -685,6 +777,16 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
 
 <ParamField body="cell_class" type="str | None" default="None">
   Tailwind classes applied to every data cell in this column.
+</ParamField>
+</Card>
+
+<Card icon="code" title="ExpandableRow Parameters">
+<ParamField body="data" type="dict[str, Any]" required>
+  Column values for the row — same format as a plain row dict.
+</ParamField>
+
+<ParamField body="detail" type="Component" required>
+  Component tree rendered in a full-width area when the row is expanded.
 </ParamField>
 </Card>
 
