@@ -55,7 +55,7 @@ with Row(gap=3, align="center"):
 
 Click the buttons. The number updates instantly — no server call, no page refresh, no loading spinner. Let's walk through the three pieces that make this work.
 
-**State** is the data behind your UI. `set_initial_state(count=0)` creates a reactive state key called `count` and sets it to zero. You can think of state as a shared dictionary that every component in your UI can read from and write to.
+**State** is the data behind your UI. `PrefabApp(state={"count": 0})` creates a reactive state key called `count` and sets it to zero. You can think of state as a shared dictionary that every component in your UI can read from and write to.
 
 **Expressions** are how components read from state. `{{ count }}` is a template expression — wherever it appears in the component tree, the renderer looks up the current value of `count` and displays it. When `count` is `0`, the text shows `0`. When `count` changes to `1`, every `{{ count }}` in the entire UI re-evaluates and updates. You don't subscribe to changes or wire up listeners; the renderer tracks dependencies for you.
 
@@ -65,7 +65,7 @@ That's the complete model: state holds values, expressions read them, actions ch
 
 ## Data Binding
 
-The counter above creates state explicitly with `set_initial_state()`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
+The counter above creates state explicitly with `PrefabApp(state={...})`. But there's a second, more common way state gets created: **form controls create state keys automatically**.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name","type":"Input","inputType":"text","placeholder":"Your name","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name }}!","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgVGV4dAoKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIElucHV0KG5hbWU9Im5hbWUiLCBwbGFjZWhvbGRlcj0iWW91ciBuYW1lIikKICAgIFRleHQoIkhlbGxvLCB7eyBuYW1lIH19ISIpCg">
 <CodeGroup>
@@ -205,7 +205,7 @@ with Column():
 
 Python closures capture the *name* `slider`, not its current value, so the lambda evaluates successfully once `slider` exists. See [Forward References](/concepts/components#forward-references) for more.
 
-Use `.rx` when you have a component variable in scope. For keys from `set_initial_state()`, use the returned proxy — `` gives you `state.count`, which is equivalent to `Rx("count")`. Use `Rx("key")` directly when the state key was created by a form control's `name` prop elsewhere in the tree and you don't have the component variable handy.
+Use `.rx` when you have a component variable in scope. Use `STATE.count` (equivalent to `Rx("count")`) for quick references to state keys without creating a separate `Rx`. Use `Rx("key")` directly when the state key was created by a form control's `name` prop elsewhere in the tree and you don't have the component variable handy.
 
 Here's a quick reference for the Rx patterns you'll use most often:
 

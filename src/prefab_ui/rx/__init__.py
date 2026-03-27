@@ -561,9 +561,10 @@ class _StateProxy:
     concise way to reference state keys without separate declarations:
 
     ```python
-    state = set_initial_state(groups=[...], count=0)
-    state.groups          # Rx("groups")
-    state.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    from prefab_ui.rx import STATE
+
+    STATE.groups          # Rx("groups")
+    STATE.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
     ```
     """
 
@@ -576,55 +577,6 @@ class _StateProxy:
 
     def __repr__(self) -> str:
         return "STATE"
-
-
-class _BoundStateProxy(_StateProxy):
-    """State proxy that validates attribute access against declared keys.
-
-    Returned by `set_initial_state()`, this proxy knows which keys
-    were declared and raises `AttributeError` for undeclared ones:
-
-    ```python
-    state = set_initial_state(count=0, items=[])
-    state.count    # ✓ Rx("count")
-    state.countt   # ✗ AttributeError with helpful message
-    ```
-
-    The proxy holds a reference to the same dict that
-    `set_initial_state` accumulates into, so multiple calls are fine:
-
-    ```python
-    state = set_initial_state(count=0)
-    set_initial_state(items=[])
-    state.items    # ✓ — visible because the backing dict grew
-    ```
-
-    Use the unrestricted `STATE` global for keys defined elsewhere
-    (e.g. by form controls or `SetState` actions).
-    """
-
-    __slots__ = ("_declared",)
-
-    def __init__(self, declared: dict[str, object]) -> None:
-        object.__setattr__(self, "_declared", declared)
-
-    def __getattr__(self, name: str) -> Rx:
-        if name.startswith("_"):
-            raise AttributeError(name)
-        declared: dict[str, object] = object.__getattribute__(self, "_declared")
-        if name not in declared:
-            known = ", ".join(sorted(declared)) or "(none)"
-            raise AttributeError(
-                f"'{name}' is not a declared state key. "
-                f"Declared keys: {known}. "
-                f"Use STATE.{name} if this key is defined elsewhere."
-            )
-        return Rx(name)
-
-    def __repr__(self) -> str:
-        declared: dict[str, object] = object.__getattribute__(self, "_declared")
-        keys = ", ".join(sorted(declared))
-        return f"State({keys})"
 
 
 #: Proxy for accessing state keys as reactive references.

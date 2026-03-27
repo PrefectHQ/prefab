@@ -29,7 +29,7 @@ count = Rx("count")         # reactive reference to {{ count }}
 items = Rx("items")         # reactive reference to {{ items }}
 ```
 
-Components with a `value` prop seed their state key too. `Input(name="city", value="London")` registers `city` with an initial value of `"London"`, so no separate `set_initial_state` call is needed.
+Components with a `value` prop seed their state key too. `Input(name="city", value="London")` registers `city` with an initial value of `"London"`.
 
 Either way, those keys are immediately available to every expression in your component tree.
 
@@ -106,7 +106,7 @@ The full Rx system, including operators, formatting, and the `.rx` shorthand, is
 
 State values can be nested objects, and you reach into them with dot notation. `{{ profile.name }}` reads the `name` field of the `profile` object. The `name` prop accepts dot paths too, so inputs can bind directly to nested fields:
 
-<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3","type":"Column"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEZpZWxkLCBJbnB1dCwgTGFiZWwsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoInt7IHByb2ZpbGUubmFtZSB9fSIpCiAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbigie3sgcHJvZmlsZS50aXRsZSB9fSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIk5hbWUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUubmFtZSIsIHBsYWNlaG9sZGVyPSJOYW1lIikKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiVGl0bGUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUudGl0bGUiLCBwbGFjZWhvbGRlcj0iVGl0bGUiKQoKYXBwID0gUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJwcm9maWxlIjogewogICAgICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgICAgICJ0aXRsZSI6ICJTYW5kd2ljaCBNYWtlciwgTGFtdWVsbGEiLAogICAgICAgIH0sCiAgICB9LAogICAgdmlldz1Db2x1bW4oZ2FwPTMpLAopCg">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3","type":"Column"}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEZpZWxkLCBJbnB1dCwgTGFiZWwsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoInt7IHByb2ZpbGUubmFtZSB9fSIpCiAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbigie3sgcHJvZmlsZS50aXRsZSB9fSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIk5hbWUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUubmFtZSIsIHBsYWNlaG9sZGVyPSJOYW1lIikKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiVGl0bGUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUudGl0bGUiLCBwbGFjZWhvbGRlcj0iVGl0bGUiKQoKYXBwID0gUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJwcm9maWxlIjogewogICAgICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgICAgICJ0aXRsZSI6ICJTYW5kd2ljaCBNYWtlciwgTGFtdWVsbGEiLAogICAgICAgIH0sCiAgICB9LAogICAgdmlldz1Db2x1bW4oZ2FwPTMpLAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
@@ -143,7 +143,8 @@ app = PrefabApp(
     "cssClass": "pf-app-root",
     "type": "Div",
     "children": [{"cssClass": "gap-3", "type": "Column"}]
-  }
+  },
+  "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}
 }
 ```
 </CodeGroup>

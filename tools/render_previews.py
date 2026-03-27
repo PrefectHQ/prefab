@@ -76,7 +76,7 @@ def _execute_and_serialize(
     shared_ns: dict[str, object] | None = None,
 ) -> dict[str, Any]:
     """Execute a Python snippet and return the JSON envelope as a dict."""
-    from prefab_ui.app import PrefabApp, clear_initial_state, get_initial_state
+    from prefab_ui.app import PrefabApp
     from prefab_ui.components.base import (
         Component,
         ContainerComponent,
@@ -85,7 +85,6 @@ def _execute_and_serialize(
     )
 
     _component_stack.set(None)
-    clear_initial_state()
 
     created: list[Component] = []
     apps: list[PrefabApp] = []
@@ -148,8 +147,8 @@ def _execute_and_serialize(
     else:
         tree = roots[0].to_json()
 
-    # Collect state: explicit set_initial_state() + initial values from
-    # named stateful components (e.g. Slider(value=0.75) → {name: 0.75}).
+    # Collect state from named stateful components
+    # (e.g. Slider(value=0.75) → {name: 0.75}).
     from prefab_ui.app import _serialize_state
     from prefab_ui.rx import Rx
 
@@ -162,10 +161,9 @@ def _execute_and_serialize(
             if isinstance(val, str) and "{{" in val:
                 continue
             state[c.name] = val
-    # Explicit set_initial_state() wins over component defaults.
-    explicit = get_initial_state()
-    if explicit:
-        state.update(explicit)
+    # PrefabApp.state wins over component defaults.
+    if app is not None and app.state:
+        state.update(app.state)
 
     envelope: dict[str, Any] = {"view": tree}
     if state:

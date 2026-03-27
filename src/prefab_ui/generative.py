@@ -151,11 +151,13 @@ def search_components(
 ) -> str:
     """Search the Prefab component library.
 
-    Returns component names, import paths, tags, and a one-line
-    description. This is usually enough to write correct code.
+    Use this tool to look up exact argument names, accepted values,
+    and usage examples before writing component code. The skill
+    covers patterns and layout; this tool has the API details.
 
-    Use `detail=True` to include full docstrings, field listings,
-    and usage examples for matched components.
+    Returns component names, import paths, tags, and a one-line
+    description. Use `detail=True` to include full docstrings,
+    field listings, and usage examples.
 
     The query matches component names. Space-separated terms match
     independently, so `"Card Badge Metric"` returns all three.
@@ -165,9 +167,9 @@ def search_components(
     1. Call with no arguments to see the full catalog — the compact
        listing includes import paths and descriptions, which is
        enough for most components.
-    2. Optionally, call with a query and `detail=True` to get
-       full docs for components with complex APIs (e.g. DataTable,
-       Form, Grid, charts).
+    2. Call with a query and `detail=True` to get exact props for
+       components you're about to use (e.g. Metric's `delta=` vs
+       `trend=`, DataTable's `rows=` vs `data=`).
 
     Args:
         query: Filter by component name. Space-separated terms are

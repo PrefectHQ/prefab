@@ -31,16 +31,9 @@ import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
-from prefab_ui.rx import _BoundStateProxy
 from prefab_ui.themes import Theme
 
 PROTOCOL_VERSION = "0.2"
-
-# ── Initial State ─────────────────────────────────────────────────────
-
-_initial_state: ContextVar[dict[str, Any] | None] = ContextVar(
-    "_initial_state", default=None
-)
 
 # ── Tool Resolver ─────────────────────────────────────────────────────
 
@@ -66,44 +59,6 @@ _tool_resolver: ContextVar[Callable[[Any], ResolvedTool] | None] = ContextVar(
 def get_tool_resolver() -> Callable[[Any], ResolvedTool] | None:
     """Return the active tool resolver, or `None`."""
     return _tool_resolver.get()
-
-
-def set_initial_state(**kwargs: Any) -> _BoundStateProxy:
-    """Declare initial client-side state for the current app.
-
-    Called alongside component construction to define the starting
-    values that templates like `{{ name }}` resolve against.
-
-    Returns a bound state proxy that validates attribute access against
-    the declared keys:
-
-    ```python
-    state = set_initial_state(count=0, items=[])
-    state.count    # Rx("count")
-    state.typo     # AttributeError — catches misspelled keys
-    ```
-
-    The proxy holds a reference to the same accumulator dict, so
-    multiple calls to `set_initial_state` are visible from any proxy.
-    Use the global `STATE` from `prefab_ui.rx` for keys defined
-    elsewhere (form controls, `SetState` actions, etc.).
-    """
-    current = _initial_state.get()
-    if current is None:
-        current = {}
-        _initial_state.set(current)
-    current.update(kwargs)
-    return _BoundStateProxy(current)
-
-
-def get_initial_state() -> dict[str, Any] | None:
-    """Retrieve state set by `set_initial_state()`, or `None`."""
-    return _initial_state.get()
-
-
-def clear_initial_state() -> None:
-    """Reset the initial-state accumulator."""
-    _initial_state.set(None)
 
 
 _PAGE_TEMPLATE = """\
@@ -149,7 +104,7 @@ class PrefabApp(BaseModel):
         default=None,
         description="Extra CSS/Tailwind classes merged onto the pf-app-root wrapper Div",
     )
-    state: dict[str, Any] | _BoundStateProxy | None = Field(
+    state: dict[str, Any] | None = Field(
         default=None,
         description="Initial client-side state",
     )
@@ -207,20 +162,7 @@ class PrefabApp(BaseModel):
             self._context_root = None
 
     @model_validator(mode="after")
-    def _consume_initial_state(self) -> PrefabApp:
-        # Coerce _BoundStateProxy to dict
-        if isinstance(self.state, _BoundStateProxy):
-            self.state = object.__getattribute__(self.state, "_declared")
-
-        accumulated = get_initial_state()
-        if accumulated:
-            clear_initial_state()
-            if self.state is None:
-                self.state = accumulated
-            else:
-                # Explicit state= wins; accumulated values fill in gaps
-                self.state = {**accumulated, **self.state}
-
+    def _validate_state(self) -> PrefabApp:
         if self.state is not None:
             for key in self.state:
                 if key.startswith("$"):
