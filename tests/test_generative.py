@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
+import sys
+
 import pytest
 
 from prefab_ui.app import PrefabApp
@@ -13,6 +16,18 @@ from prefab_ui.generative import (
     list_guides,
     search_components,
 )
+
+_requires_deno = [
+    pytest.mark.timeout(120),
+    pytest.mark.skipif(
+        shutil.which("deno") is None,
+        reason="Deno not installed",
+    ),
+    pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Sandbox tests require Unix",
+    ),
+]
 
 
 @pytest.fixture
@@ -241,6 +256,8 @@ class TestExecuteDocstring:
 
 
 class TestExecute:
+    pytestmark = _requires_deno
+
     async def test_basic_execution(self, sandbox):
         app = await execute(
             'from prefab_ui.components import Text\nview = Text("hello")',
