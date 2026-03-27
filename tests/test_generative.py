@@ -186,29 +186,29 @@ class TestListGuides:
         guides = list_guides()
         assert isinstance(guides, list)
 
-    def test_includes_writing_prefab_python(self):
+    def test_includes_prefab_ui(self):
         guides = list_guides()
-        assert "writing-prefab-python" in guides
+        assert "prefab-ui" in guides
 
 
 class TestGetGuide:
-    def test_loads_writing_prefab_python(self):
-        guide = get_guide("writing-prefab-python")
+    def test_loads_prefab_ui(self):
+        guide = get_guide("prefab-ui")
         assert "Prefab" in guide
-        assert "PrefabApp" in guide or "UIResponse" in guide
+        assert "PrefabApp" in guide
 
     def test_includes_reference_files(self):
-        guide = get_guide("generative-prefab-ui")
+        guide = get_guide("prefab-ui")
         # Should include content from references/ subdirectory
-        assert "expressions" in guide.lower()
-        assert "actions" in guide.lower()
+        assert "chart" in guide.lower()
+        assert "form" in guide.lower()
 
     def test_unknown_guide_raises(self):
         with pytest.raises(ValueError, match="not found"):
             get_guide("nonexistent-guide")
 
     def test_error_lists_available(self):
-        with pytest.raises(ValueError, match="writing-prefab-python"):
+        with pytest.raises(ValueError, match="prefab-ui"):
             get_guide("nonexistent-guide")
 
 
