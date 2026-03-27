@@ -7,7 +7,7 @@ import re
 from collections.abc import Generator
 from contextlib import contextmanager
 from contextvars import ContextVar
-from typing import Annotated, Any, ClassVar, Literal
+from typing import Annotated, Any, ClassVar, Literal, cast
 
 from pydantic import (
     BaseModel,
@@ -19,7 +19,7 @@ from pydantic import (
 from typing_extensions import Self
 
 from prefab_ui.css import Responsive
-from prefab_ui.rx import Rx, _coerce_rx, _generate_key
+from prefab_ui.rx import Rx, _coerce_rx, _generate_key, _sanitize_floats
 
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
@@ -345,7 +345,8 @@ class Component(BaseModel):
         Produces a JSON object with `type` set to the class name plus
         props, with `None` values excluded. Children are serialized recursively.
         """
-        return self.model_dump(by_alias=True, exclude_none=True)
+        data = self.model_dump(by_alias=True, exclude_none=True)
+        return cast(dict[str, Any], _sanitize_floats(data))
 
 
 class ContainerComponent(Component):

@@ -84,6 +84,59 @@ class TestPrefabAppFromJson:
         assert result["view"]["children"] == [view_dict]
 
 
+class TestNonFiniteFloatSanitization:
+    """Non-finite floats (NaN, Inf) must become null in JSON output."""
+
+    def test_nan_in_component_data(self):
+        from prefab_ui.components.charts import BarChart, ChartSeries
+
+        data = [{"x": "a", "y": float("nan")}]
+        chart = BarChart(
+            data=data, series=[ChartSeries(dataKey="y", label="y")], xAxis="x"
+        )
+        result = chart.to_json()
+        assert result["data"][0]["y"] is None
+
+    def test_inf_in_component_data(self):
+        from prefab_ui.components.charts import BarChart, ChartSeries
+
+        data = [{"x": "a", "y": float("inf")}, {"x": "b", "y": float("-inf")}]
+        chart = BarChart(
+            data=data, series=[ChartSeries(dataKey="y", label="y")], xAxis="x"
+        )
+        result = chart.to_json()
+        assert result["data"][0]["y"] is None
+        assert result["data"][1]["y"] is None
+
+    def test_nan_in_state(self):
+        app = PrefabApp(state={"score": float("nan"), "count": 3})
+        result = app.to_json()
+        assert result["state"]["score"] is None
+        assert result["state"]["count"] == 3
+
+    def test_html_output_is_valid_json(self):
+        from prefab_ui.components.charts import BarChart, ChartSeries
+
+        data = [{"x": "a", "y": float("nan")}]
+        with Column() as view:
+            BarChart(data=data, series=[ChartSeries(dataKey="y", label="y")], xAxis="x")
+        app = PrefabApp(view=view)
+        html = app.html()
+        # Extract the JSON blob from the script tag
+        start = html.index('type="application/json">') + len('type="application/json">')
+        end = html.index("</script>", start)
+        raw = html[start:end].replace(r"<\/", "</")
+        parsed = json.loads(raw)
+        assert parsed["view"]["children"][0]["children"][0]["data"][0]["y"] is None
+
+    def test_finite_floats_preserved(self):
+        app = PrefabApp(state={"val": 3.14, "neg": -2.5, "zero": 0.0})
+        result = app.to_json()
+        assert result["state"]["val"] == 3.14
+        assert result["state"]["neg"] == -2.5
+        assert result["state"]["zero"] == 0.0
+
+
 class TestPrefabAppContextManager:
     def test_basic(self):
         with PrefabApp(state={"x": 1}) as app:
