@@ -9709,16 +9709,14 @@ async def execute(
                 Badge("On Track", variant="success")
     \`\`\`
 
-    For interactive UIs, declare state and use \`.rx\` on stateful
-    components for reactive bindings:
+    For interactive UIs, pass initial state as a dict and use \`.rx\`
+    on stateful components for reactive bindings:
 
     \`\`\`python
     from prefab_ui.components import Column, Slider, Text
-    from prefab_ui.app import PrefabApp, set_initial_state
-    
-    state = set_initial_state(threshold=50)
-    
-    with PrefabApp() as app:
+    from prefab_ui.app import PrefabApp
+
+    with PrefabApp(state={"threshold": 50}) as app:
         with Column(gap=4):
             slider = Slider(value=50, min=0, max=100, name="threshold")
             Text(f"Threshold: {slider.rx}%")

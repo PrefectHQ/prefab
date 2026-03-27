@@ -48,10 +48,7 @@ with PrefabApp(state={"query": "", "results": []}) as app:
 4. `{{ key }}` templates resolve against state at render time
 5. Actions like `CallTool` call server tools; `result_key` writes results into state
 
-**Do not pass `set_initial_state()` to `PrefabApp(state=...)`** — it
-returns a proxy, not a dict. Either use `PrefabApp(state={...})` with a
-plain dict, or call `set_initial_state()` separately (it registers state
-globally).
+Always pass state as a plain dict: `PrefabApp(state={"count": 0})`.
 
 ## Imports
 

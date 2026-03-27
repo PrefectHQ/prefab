@@ -31,18 +31,6 @@ quantity > 0                          # {{ quantity > 0 }}
 Pipe methods: `.currency()`, `.percent()`, `.compact()`, `.date()`,
 `.upper()`, `.lower()`, `.truncate(N)`, `.length()`, `.join(sep)`.
 
-## set_initial_state
-
-Declare state and get a typed proxy that catches typos at definition time:
-
-```python
-from prefab_ui.app import set_initial_state
-
-state = set_initial_state(count=0, items=[], query="")
-state.count    # Rx("count") — AttributeError if key is misspelled
-state.items.length()  # {{ items | length }}
-```
-
 ## STATE
 
 For keys defined elsewhere (e.g. by `result_key` on `CallTool`):
