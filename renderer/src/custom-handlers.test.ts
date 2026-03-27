@@ -57,8 +57,8 @@ describe("custom-handlers", () => {
       _resetHandlers({
         pipes: {
           double: (value: unknown) => Number(value) * 2,
-          suffix: (value: unknown, arg?: string) =>
-            String(value) + (arg ?? "!"),
+          suffix: (value: unknown, arg?: unknown) =>
+            String(value) + String(arg ?? "!"),
         },
       });
     });

@@ -470,6 +470,22 @@ describe("evaluate", () => {
       );
     });
 
+    it("default pipe preserves boolean false", () => {
+      expect(evaluate("flag | default:false", {})).toBe(false);
+    });
+
+    it("default pipe preserves boolean true", () => {
+      expect(evaluate("flag | default:true", {})).toBe(true);
+    });
+
+    it("default pipe preserves number 0", () => {
+      expect(evaluate("count | default:0", {})).toBe(0);
+    });
+
+    it("default pipe preserves null", () => {
+      expect(evaluate("value | default:null", {})).toBe(null);
+    });
+
     it("first of array", () => {
       expect(evaluate("items | first", { items: [10, 20, 30] })).toBe(10);
     });
