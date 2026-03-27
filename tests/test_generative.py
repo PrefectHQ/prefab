@@ -234,20 +234,29 @@ class TestGetGuide:
 
 class TestExecuteDocstring:
     def test_has_docstring(self):
-        assert execute.__doc__
+        doc = execute.__doc__
+        assert doc is not None
 
     def test_mentions_prefab_app(self):
-        assert "PrefabApp" in execute.__doc__
+        doc = execute.__doc__
+        assert doc is not None
+        assert "PrefabApp" in doc
 
     def test_mentions_streaming(self):
-        assert "streaming" in execute.__doc__.lower()
+        doc = execute.__doc__
+        assert doc is not None
+        assert "streaming" in doc.lower()
 
     def test_has_code_examples(self):
-        assert "PrefabApp()" in execute.__doc__
+        doc = execute.__doc__
+        assert doc is not None
+        assert "PrefabApp()" in doc
 
     def test_explains_rx(self):
-        assert "Rx" in execute.__doc__
-        assert ".rx" in execute.__doc__
+        doc = execute.__doc__
+        assert doc is not None
+        assert "Rx" in doc
+        assert ".rx" in doc
 
 
 # ---------------------------------------------------------------------------
