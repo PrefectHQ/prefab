@@ -79,10 +79,11 @@ A lone `If` renders its children when the condition is truthy, and renders nothi
 
 Add an `Else` branch to render fallback content when the condition is false. Toggle the switch to see the two branches swap.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"name":"showDetails","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"Show details","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"content":"Heart of Gold \u2014 Infinite Improbability Drive","type":"Text"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":true}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwKICAgIENhcmQsCiAgICBDYXJkQ29udGVudCwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDb2x1bW4sCiAgICBSb3csCiAgICBTd2l0Y2gsCiAgICBUZXh0LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBFbHNlLCBJZgoKc3RhdGUgPSBzZXRfaW5pdGlhbF9zdGF0ZShzaG93RGV0YWlscz1UcnVlKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICBTd2l0Y2gobmFtZT0ic2hvd0RldGFpbHMiKQogICAgICAgIFRleHQoIlNob3cgZGV0YWlscyIpCiAgICB3aXRoIElmKHN0YXRlLnNob3dEZXRhaWxzKToKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUoIlByb2plY3QgRGV0YWlscyIpCiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIFRleHQoIkhlYXJ0IG9mIEdvbGQg4oCUIEluZmluaXRlIEltcHJvYmFiaWxpdHkgRHJpdmUiKQogICAgd2l0aCBFbHNlKCk6CiAgICAgICAgQmFkZ2UoIkRldGFpbHMgaGlkZGVuIiwgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"name":"showDetails","value":false,"type":"Switch","size":"default","disabled":false,"required":false},{"content":"Show details","type":"Text"}]},{"type":"Condition","cases":[{"when":"{{ showDetails }}","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Project Details"}]},{"type":"CardContent","children":[{"content":"Heart of Gold \u2014 Infinite Improbability Drive","type":"Text"}]}]}]}],"else":[{"type":"Badge","label":"Details hidden","variant":"secondary"}]}]},"state":{"showDetails":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU1RBVEUgYXMgc3RhdGUsCiAgICBCYWRnZSwKICAgIENhcmQsCiAgICBDYXJkQ29udGVudCwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDb2x1bW4sCiAgICBSb3csCiAgICBTd2l0Y2gsCiAgICBUZXh0LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBFbHNlLCBJZgoKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgU3dpdGNoKG5hbWU9InNob3dEZXRhaWxzIikKICAgICAgICBUZXh0KCJTaG93IGRldGFpbHMiKQogICAgd2l0aCBJZihzdGF0ZS5zaG93RGV0YWlscyk6CiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICAgICAgQ2FyZFRpdGxlKCJQcm9qZWN0IERldGFpbHMiKQogICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICBUZXh0KCJIZWFydCBvZiBHb2xkIOKAlCBJbmZpbml0ZSBJbXByb2JhYmlsaXR5IERyaXZlIikKICAgIHdpdGggRWxzZSgpOgogICAgICAgIEJhZGdlKCJEZXRhaWxzIGhpZGRlbiIsIHZhcmlhbnQ9InNlY29uZGFyeSIpCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
+    STATE as state,
     Badge,
     Card,
     CardContent,
@@ -158,7 +159,7 @@ with Column(gap=3):
       }
     ]
   },
-  "state": {"showDetails": true}
+  "state": {"showDetails": false}
 }
 ```
 </CodeGroup>
@@ -168,10 +169,11 @@ with Column(gap=3):
 
 Chain multiple conditions with `Elif`. The renderer evaluates them in order and renders the first match. If nothing matches, the `Else` branch renders. Use the select below to change the status and watch the right badge appear.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"status","type":"Select","placeholder":"Choose a status...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"{{ status == 'error' }}","children":[{"type":"Badge","label":"Error \u2014 system down","variant":"destructive"}]},{"when":"{{ status == 'warning' }}","children":[{"type":"Badge","label":"Warning \u2014 degraded","variant":"warning"}]},{"when":"{{ status == 'active' }}","children":[{"type":"Badge","label":"Active \u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]},"state":{"status":"active"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwKICAgIENvbHVtbiwKICAgIFNlbGVjdCwKICAgIFNlbGVjdE9wdGlvbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRWxpZiwgRWxzZSwgSWYKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoc3RhdHVzPSJhY3RpdmUiKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBTZWxlY3QobmFtZT0ic3RhdHVzIiwgcGxhY2Vob2xkZXI9IkNob29zZSBhIHN0YXR1cy4uLiIpOgogICAgICAgIFNlbGVjdE9wdGlvbigiQWN0aXZlIiwgdmFsdWU9ImFjdGl2ZSIpCiAgICAgICAgU2VsZWN0T3B0aW9uKCJXYXJuaW5nIiwgdmFsdWU9Indhcm5pbmciKQogICAgICAgIFNlbGVjdE9wdGlvbigiRXJyb3IiLCB2YWx1ZT0iZXJyb3IiKQogICAgICAgIFNlbGVjdE9wdGlvbigiU29tZXRoaW5nIGVsc2UiLCB2YWx1ZT0ib3RoZXIiKQogICAgd2l0aCBJZihzdGF0ZS5zdGF0dXMgPT0gImVycm9yIik6CiAgICAgICAgQmFkZ2UoIkVycm9yIOKAlCBzeXN0ZW0gZG93biIsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIikKICAgIHdpdGggRWxpZihzdGF0ZS5zdGF0dXMgPT0gIndhcm5pbmciKToKICAgICAgICBCYWRnZSgiV2FybmluZyDigJQgZGVncmFkZWQiLCB2YXJpYW50PSJ3YXJuaW5nIikKICAgIHdpdGggRWxpZihzdGF0ZS5zdGF0dXMgPT0gImFjdGl2ZSIpOgogICAgICAgIEJhZGdlKCJBY3RpdmUg4oCUIGFsbCBzeXN0ZW1zIGdvIiwgdmFyaWFudD0ic3VjY2VzcyIpCiAgICB3aXRoIEVsc2UoKToKICAgICAgICBCYWRnZShmIlVua25vd24gc3RhdHVzOiB7c3RhdGUuc3RhdHVzfSIsIHZhcmlhbnQ9InNlY29uZGFyeSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"status","type":"Select","placeholder":"Choose a status...","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"active","label":"Active","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false},{"type":"SelectOption","value":"other","label":"Something else","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"{{ status == 'error' }}","children":[{"type":"Badge","label":"Error \u2014 system down","variant":"destructive"}]},{"when":"{{ status == 'warning' }}","children":[{"type":"Badge","label":"Warning \u2014 degraded","variant":"warning"}]},{"when":"{{ status == 'active' }}","children":[{"type":"Badge","label":"Active \u2014 all systems go","variant":"success"}]}],"else":[{"type":"Badge","label":"Unknown status: {{ status }}","variant":"secondary"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgU1RBVEUgYXMgc3RhdGUsCiAgICBCYWRnZSwKICAgIENvbHVtbiwKICAgIFNlbGVjdCwKICAgIFNlbGVjdE9wdGlvbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRWxpZiwgRWxzZSwgSWYKCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFNlbGVjdChuYW1lPSJzdGF0dXMiLCBwbGFjZWhvbGRlcj0iQ2hvb3NlIGEgc3RhdHVzLi4uIik6CiAgICAgICAgU2VsZWN0T3B0aW9uKCJBY3RpdmUiLCB2YWx1ZT0iYWN0aXZlIikKICAgICAgICBTZWxlY3RPcHRpb24oIldhcm5pbmciLCB2YWx1ZT0id2FybmluZyIpCiAgICAgICAgU2VsZWN0T3B0aW9uKCJFcnJvciIsIHZhbHVlPSJlcnJvciIpCiAgICAgICAgU2VsZWN0T3B0aW9uKCJTb21ldGhpbmcgZWxzZSIsIHZhbHVlPSJvdGhlciIpCiAgICB3aXRoIElmKHN0YXRlLnN0YXR1cyA9PSAiZXJyb3IiKToKICAgICAgICBCYWRnZSgiRXJyb3Ig4oCUIHN5c3RlbSBkb3duIiwgdmFyaWFudD0iZGVzdHJ1Y3RpdmUiKQogICAgd2l0aCBFbGlmKHN0YXRlLnN0YXR1cyA9PSAid2FybmluZyIpOgogICAgICAgIEJhZGdlKCJXYXJuaW5nIOKAlCBkZWdyYWRlZCIsIHZhcmlhbnQ9Indhcm5pbmciKQogICAgd2l0aCBFbGlmKHN0YXRlLnN0YXR1cyA9PSAiYWN0aXZlIik6CiAgICAgICAgQmFkZ2UoIkFjdGl2ZSDigJQgYWxsIHN5c3RlbXMgZ28iLCB2YXJpYW50PSJzdWNjZXNzIikKICAgIHdpdGggRWxzZSgpOgogICAgICAgIEJhZGdlKGYiVW5rbm93biBzdGF0dXM6IHtzdGF0ZS5zdGF0dXN9IiwgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
+    STATE as state,
     Badge,
     Column,
     Select,
@@ -269,8 +271,7 @@ with Column(gap=3):
         ]
       }
     ]
-  },
-  "state": {"status": "active"}
+  }
 }
 ```
 </CodeGroup>

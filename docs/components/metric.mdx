@@ -14,10 +14,10 @@ At minimum, a Metric needs a `label` and a `value`. The label names the statisti
 
 When the value comes from state, use reactive expressions with [pipes](/expressions/pipes) to format it at display time. Here the raw number `42000000` becomes `$42M` by dividing, rounding, and wrapping in literal `$` and `M` characters — no Python formatting needed.
 
-<ComponentPreview json={{"view":{"type":"Metric","label":"Revenue","value":"${{ revenue / 1000000 | round:0 }}M"},"state":{"revenue":42000000}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBNZXRyaWMKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUocmV2ZW51ZT00Ml8wMDBfMDAwKQoKTWV0cmljKGxhYmVsPSJSZXZlbnVlIiwgdmFsdWU9ZiIkeyhzdGF0ZS5yZXZlbnVlIC8gMV8wMDBfMDAwKS5yb3VuZCgpfU0iKQo">
+<ComponentPreview json={{"view":{"type":"Metric","label":"Revenue","value":"${{ revenue / 1000000 | round:0 }}M"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU1RBVEUgYXMgc3RhdGUsIE1ldHJpYwoKCk1ldHJpYyhsYWJlbD0iUmV2ZW51ZSIsIHZhbHVlPWYiJHsoc3RhdGUucmV2ZW51ZSAvIDFfMDAwXzAwMCkucm91bmQoKX1NIikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Metric
+from prefab_ui.components import STATE as state, Metric
 
 
 Metric(label="Revenue", value=f"${(state.revenue / 1_000_000).round()}M")
@@ -28,8 +28,7 @@ Metric(label="Revenue", value=f"${(state.revenue / 1_000_000).round()}M")
     "type": "Metric",
     "label": "Revenue",
     "value": "${{ revenue / 1000000 | round:0 }}M"
-  },
-  "state": {"revenue": 42000000}
+  }
 }
 ```
 </CodeGroup>

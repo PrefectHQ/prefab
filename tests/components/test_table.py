@@ -7,6 +7,7 @@ from prefab_ui.components import (
     Badge,
     DataTable,
     DataTableColumn,
+    ExpandableRow,
     Table,
     TableBody,
     TableCaption,
@@ -14,6 +15,7 @@ from prefab_ui.components import (
     TableHead,
     TableHeader,
     TableRow,
+    Text,
 )
 from prefab_ui.components.charts import Sparkline
 from prefab_ui.rx import Rx
@@ -165,3 +167,65 @@ class TestDataTableComponent:
         assert isinstance(j["onRowClick"], list)
         assert len(j["onRowClick"]) == 2
         assert j["onRowClick"][0]["action"] == "showToast"
+
+
+class TestExpandableRow:
+    def test_expandable_row_serialization(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[
+                ExpandableRow({"name": "Alice"}, detail=Text("Details here")),
+            ],
+        )
+        j = dt.to_json()
+        row = j["rows"][0]
+        assert row["name"] == "Alice"
+        assert "_detail" in row
+        assert row["_detail"]["type"] == "Text"
+
+    def test_mixed_expandable_and_plain_rows(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[
+                ExpandableRow({"name": "Alice"}, detail=Text("Alice details")),
+                {"name": "Bob"},
+                ExpandableRow({"name": "Charlie"}, detail=Text("Charlie details")),
+            ],
+        )
+        j = dt.to_json()
+        assert j["rows"][0]["name"] == "Alice"
+        assert "_detail" in j["rows"][0]
+        assert j["rows"][1]["name"] == "Bob"
+        assert "_detail" not in j["rows"][1]
+        assert j["rows"][2]["name"] == "Charlie"
+        assert "_detail" in j["rows"][2]
+
+    def test_expandable_row_preserves_cell_components(self):
+        dt = DataTable(
+            columns=[
+                DataTableColumn(key="name", header="Name"),
+                DataTableColumn(key="status", header="Status"),
+            ],
+            rows=[
+                ExpandableRow(
+                    {"name": "Alice", "status": Badge("Active")},
+                    detail=Text("Full profile"),
+                ),
+            ],
+        )
+        j = dt.to_json()
+        row = j["rows"][0]
+        assert row["name"] == "Alice"
+        assert isinstance(row["status"], dict)
+        assert row["status"]["type"] == "Badge"
+        assert row["_detail"]["type"] == "Text"
+
+    def test_no_expandable_rows_unchanged(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[{"name": "Alice"}, {"name": "Bob"}],
+        )
+        j = dt.to_json()
+        assert len(j["rows"]) == 2
+        assert "_detail" not in j["rows"][0]
+        assert "_detail" not in j["rows"][1]
