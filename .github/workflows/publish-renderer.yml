@@ -49,8 +49,12 @@ jobs:
         working-directory: renderer
 
       - name: Purge jsDelivr @latest cache
+        working-directory: renderer
         run: |
-          # The docs loader imports from @latest on jsDelivr. After publishing
-          # a new version, purge the CDN cache so the @latest alias resolves
-          # to the just-published version immediately.
-          curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/dist/_renderer/embed.mjs"
+          # Purge every published file from the CDN cache so @latest resolves
+          # to the just-published version immediately. Individual chunk hashes
+          # change between releases, so purging only the shim is not enough.
+          for f in dist/**/*.{js,mjs,html}; do
+            echo "Purging $f"
+            curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/$f" > /dev/null
+          done
