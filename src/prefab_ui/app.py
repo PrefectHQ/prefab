@@ -31,6 +31,7 @@ import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
+from prefab_ui.rx import _sanitize_floats
 from prefab_ui.themes import Theme
 
 PROTOCOL_VERSION = "0.2"
@@ -78,7 +79,8 @@ _PAGE_TEMPLATE = """\
 def _serialize_state(state: dict[str, Any]) -> dict[str, Any]:
     """Serialize state for the wire protocol."""
     return {
-        key: pydantic_core.to_jsonable_python(value) for key, value in state.items()
+        key: _sanitize_floats(pydantic_core.to_jsonable_python(value))
+        for key, value in state.items()
     }
 
 

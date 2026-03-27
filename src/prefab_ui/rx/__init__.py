@@ -30,6 +30,7 @@ quantity > 0                  # {{ quantity > 0 }}
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from contextvars import ContextVar
 from typing import Any, NamedTuple, Protocol, runtime_checkable
@@ -534,6 +535,17 @@ def _coerce_rx(value: object) -> object:
         return {k: _coerce_rx(v) for k, v in value.items()}
     if isinstance(value, list):
         return [_coerce_rx(v) for v in value]
+    return value
+
+
+def _sanitize_floats(value: object) -> object:
+    """Replace non-finite floats (NaN, Inf, -Inf) with None for JSON safety."""
+    if isinstance(value, float):
+        return None if not math.isfinite(value) else value
+    if isinstance(value, dict):
+        return {k: _sanitize_floats(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_sanitize_floats(v) for v in value]
     return value
 
 
