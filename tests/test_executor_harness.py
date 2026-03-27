@@ -35,6 +35,16 @@ def run_harness(code: str) -> dict:
 
     PrefabApp.__init__ = tracking_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
 
+    # Track all Component instances created during execution
+    all_instances: list[Component] = []
+    real_comp_init = Component.__init__
+
+    def tracking_comp_init(self: Component, /, **kwargs: object) -> None:
+        real_comp_init(self, **kwargs)  # type: ignore[misc]
+        all_instances.append(self)
+
+    Component.__init__ = tracking_comp_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
+
     try:
         # Heal partial code: strip trailing lines until it compiles.
         lines = code.split("\n")
@@ -59,11 +69,7 @@ def run_harness(code: str) -> dict:
             for k, v in ns.items()
             if not k.startswith("_") and isinstance(v, PrefabApp)
         ]
-        comps = [
-            v
-            for k, v in ns.items()
-            if not k.startswith("_") and isinstance(v, Component)
-        ]
+        comps = all_instances
 
         all_children: set[int] = set()
         for c in comps:
@@ -90,6 +96,7 @@ def run_harness(code: str) -> dict:
         json_str = json.dumps(result)
     finally:
         PrefabApp.__init__ = real_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
+        Component.__init__ = real_comp_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
 
     return json.loads(json_str)
 
@@ -294,6 +301,17 @@ from prefab_ui.components import Column, Heading, Text
 with Column() as view:
     Heading("title")
     Text("body")
+""")
+        assert inner_view(result)["type"] == "Column"
+        assert len(inner_view(result)["children"]) == 2
+
+    def test_context_manager_without_variable(self):
+        """Context manager roots not assigned to a variable must still be found."""
+        result = run_harness("""
+from prefab_ui.components import Button, Column, Input
+with Column():
+    Input(name="city", placeholder="Enter a city...")
+    Button("Get Weather")
 """)
         assert inner_view(result)["type"] == "Column"
         assert len(inner_view(result)["children"]) == 2

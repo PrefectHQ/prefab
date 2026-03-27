@@ -164,15 +164,25 @@ def _pg_app_init(self, /, **data):
     _pg_app_instances.append(self)
 _PA.__init__ = _pg_app_init
 
+# Track all Component instances created during execution
+_pg_all_instances = []
+_pg_real_comp_init = _C.__init__
+def _pg_comp_init(self, /, **kwargs):
+    _pg_real_comp_init(self, **kwargs)
+    _pg_all_instances.append(self)
+_C.__init__ = _pg_comp_init
+
 try:
     # Heal partial code: strip trailing lines until it compiles.
     # Tracks the total line count seen so far — since streaming only
     # appends, lines before this point never change and don't need
-    # to be re-scanned.
+    # to be re-scanned.  Reset when the code shrinks (different snippet).
     _pg_code = ${JSON.stringify(code)}
     _pg_lines = _pg_code.split("\\n")
     _pg_healed = None
     _pg_floor = globals().get("_pg_seen_lines", 0)
+    if _pg_floor > len(_pg_lines):
+        _pg_floor = 0
     for _pg_n in range(len(_pg_lines), _pg_floor, -1):
         _pg_try = "\\n".join(_pg_lines[:_pg_n])
         try:
@@ -192,7 +202,7 @@ try:
 
     # Find result: prefer PrefabApp, then root components
     _pg_apps = _pg_app_instances or [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _PA)]
-    _pg_comps = [v for k, v in _pg_ns.items() if not k.startswith("_") and isinstance(v, _C)]
+    _pg_comps = _pg_all_instances
 
     # Filter to roots — components not children of any container
     _pg_all_children = set()
@@ -221,6 +231,7 @@ try:
     _pg_json_result = _json.dumps(_pg_result)
 finally:
     _PA.__init__ = _pg_real_app_init
+    _C.__init__ = _pg_real_comp_init
 
 _pg_json_result
 `;
