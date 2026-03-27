@@ -34,7 +34,7 @@ class Progress(Component):
         gradient: Gradient fill — None inherits theme, True forces on, False forces off.
 
     **Example:**
-    
+
     ```python
     Progress(value=75)
     Progress(value=3, max=10)

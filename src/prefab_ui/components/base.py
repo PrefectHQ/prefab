@@ -44,7 +44,7 @@ def defer() -> Generator[None, None, None]:
             with sidebar:
                 Text("child of sidebar, not outer")
         insert(sidebar)
-    
+
     assert len(outer.children) == 2
     ```
     """
@@ -65,7 +65,7 @@ def insert(component: Component) -> Component:
 
     ```python
     volume = Slider(value=75, defer=True)
-    
+
     with Column():
         Text(f"{volume.rx.number()}%")
         insert(volume)  # volume becomes a child of Column here

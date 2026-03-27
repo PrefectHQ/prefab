@@ -21,7 +21,7 @@ class Audio(Component):
         muted: Mute audio.
 
     **Example:**
-    
+
     ```python
     Audio(src="https://example.com/track.mp3")
     Audio(src="...", controls=True, loop=True)

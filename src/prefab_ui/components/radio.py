@@ -38,7 +38,7 @@ class RadioGroup(StatefulMixin, ContainerComponent):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     with RadioGroup(name="theme", value="light"):
         Radio(option="light", label="Light")
@@ -76,7 +76,7 @@ class Radio(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Radio(option="yes", label="Yes")
     Radio(option="no", label="No", value=True)

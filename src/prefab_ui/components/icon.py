@@ -41,7 +41,7 @@ class Icon(Component):
             spacing), or "lg" (24px).
 
     **Example:**
-    
+
     ```python
     Icon("check")
     Icon("arrow-right", size="lg")

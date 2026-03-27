@@ -44,7 +44,7 @@ class ForEach(ContainerComponent):
         key: Data field containing the list to iterate over.
 
     **Example:**
-    
+
     ```python
     with ForEach("groups") as (gi, group):
         with ForEach(f"groups.{gi}.todos") as (_, todo):

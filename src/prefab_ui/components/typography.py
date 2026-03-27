@@ -100,7 +100,7 @@ class H1(_TextComponent):
         content: Heading text.
 
     **Example:**
-    
+
     ```python
     H1("Dashboard")
     H1("{{ title }}")  # With interpolation
@@ -126,7 +126,7 @@ class H2(_TextComponent):
         content: Heading text.
 
     **Example:**
-    
+
     ```python
     H2("User Settings")
     H2("{{ section_name }}")
@@ -152,7 +152,7 @@ class H3(_TextComponent):
         content: Heading text.
 
     **Example:**
-    
+
     ```python
     H3("Account Details")
     ```
@@ -177,7 +177,7 @@ class H4(_TextComponent):
         content: Heading text.
 
     **Example:**
-    
+
     ```python
     H4("Additional Options")
     ```
@@ -202,7 +202,7 @@ class P(_TextComponent):
         content: Paragraph text.
 
     **Example:**
-    
+
     ```python
     P("Welcome to the application.")
     P("Hello, {{ name }}!")
@@ -228,7 +228,7 @@ class Lead(_TextComponent):
         content: Lead paragraph text.
 
     **Example:**
-    
+
     ```python
     Lead("A comprehensive guide to building MCP applications.")
     ```
@@ -253,7 +253,7 @@ class Large(_TextComponent):
         content: Text content.
 
     **Example:**
-    
+
     ```python
     Large("Important information")
     ```
@@ -278,7 +278,7 @@ class Small(_TextComponent):
         content: Text content.
 
     **Example:**
-    
+
     ```python
     Small("Terms and conditions apply")
     ```
@@ -303,7 +303,7 @@ class Muted(_TextComponent):
         content: Text content.
 
     **Example:**
-    
+
     ```python
     Muted("Last updated 5 minutes ago")
     Muted("{{ subtitle }}")
@@ -329,7 +329,7 @@ class BlockQuote(_TextComponent):
         content: Quotation text.
 
     **Example:**
-    
+
     ```python
     BlockQuote("The best way to predict the future is to invent it.")
     ```

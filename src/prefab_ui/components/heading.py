@@ -20,7 +20,7 @@ class Heading(_TextComponent):
         level: Heading level — 1 (h1, default), 2 (h2), 3 (h3), or 4 (h4).
 
     **Example:**
-    
+
     ```python
     Heading("Dashboard")
     Heading("Details", level=2)

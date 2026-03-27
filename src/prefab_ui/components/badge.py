@@ -49,7 +49,7 @@ class Badge(ContainerComponent):
         css_class: Additional CSS classes to apply
 
     **Example:**
-    
+
     ```python
     Badge("Active")
     Badge("{{ user.role }}")

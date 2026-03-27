@@ -44,7 +44,7 @@ class Calendar(StatefulMixin, Component):
         on_change: Action(s) fired when selection changes.
 
     **Example:**
-    
+
     ```python
     Calendar(value=datetime.date(2026, 5, 4))
     Calendar(mode="range", name="dateRange")

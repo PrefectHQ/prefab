@@ -36,7 +36,7 @@ class Dot(Component):
         shape: Dot shape (circle, square, rounded).
 
     **Example:**
-    
+
     ```python
     Dot()
     Dot(variant="success")

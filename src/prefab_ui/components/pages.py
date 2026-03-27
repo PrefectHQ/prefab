@@ -40,7 +40,7 @@ class Page(ContainerComponent):
         value: Unique value for this page (defaults to title).
 
     **Example:**
-    
+
     ```python
     with Page("Settings"):
         Text("Settings content.")
@@ -76,7 +76,7 @@ class Pages(StatefulMixin, ContainerComponent):
         name: State key for reactive binding. Auto-generated if omitted.
 
     **Example:**
-    
+
     ```python
     with Pages(name="currentPage", value="home"):
         with Page("Home"):

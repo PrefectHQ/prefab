@@ -38,7 +38,7 @@ class Dialog(ContainerComponent):
         description: Subtitle text below the title.
 
     **Example:**
-    
+
     ```python
     with Dialog(title="Edit Profile", description="Update your info."):
         Button("Edit")

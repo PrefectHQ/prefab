@@ -36,7 +36,7 @@ class HoverCard(ContainerComponent):
         close_delay: Delay in milliseconds before closing.
 
     **Example:**
-    
+
     ```python
     with HoverCard(open_delay=0):
         Badge("Healthy")

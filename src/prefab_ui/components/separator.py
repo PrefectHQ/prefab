@@ -35,7 +35,7 @@ class Separator(Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Separator()  # Horizontal by default
     Separator(orientation="vertical")

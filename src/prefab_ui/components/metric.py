@@ -38,7 +38,7 @@ class Metric(Component):
             or "neutral" (muted). If None, inferred: up=positive, down=negative.
 
     **Example:**
-    
+
     ```python
     Metric(label="Revenue", value="$42M", delta="+12%")
     Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")

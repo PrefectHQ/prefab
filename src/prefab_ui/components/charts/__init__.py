@@ -76,10 +76,10 @@ class BarChart(Component):
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
     **Example:**
-    
+
     ```python
     from prefab_ui.components.charts import BarChart, ChartSeries
-    
+
     BarChart(
         data=[{"month": "Jan", "a": 10, "b": 20}],
         series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
@@ -144,10 +144,10 @@ class LineChart(Component):
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
     **Example:**
-    
+
     ```python
     from prefab_ui.components.charts import LineChart, ChartSeries
-    
+
     LineChart(
         data=[{"month": "Jan", "a": 10}],
         series=[ChartSeries(data_key="a")],
@@ -211,10 +211,10 @@ class AreaChart(Component):
         y_axis_format: Y-axis tick format ("auto" or "compact").
 
     **Example:**
-    
+
     ```python
     from prefab_ui.components.charts import AreaChart, ChartSeries
-    
+
     AreaChart(
         data=[{"month": "Jan", "a": 10, "b": 20}],
         series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
@@ -274,7 +274,7 @@ class PieChart(Component):
         show_tooltip: Show tooltip on hover.
 
     **Example:**
-    
+
     ```python
     PieChart(
         data=[
@@ -330,7 +330,7 @@ class ScatterChart(Component):
         show_grid: Show cartesian grid.
 
     **Example:**
-    
+
     ```python
     ScatterChart(
         data=[
@@ -384,7 +384,7 @@ class RadarChart(Component):
         show_grid: Show polar grid.
 
     **Example:**
-    
+
     ```python
     RadarChart(
         data=[
@@ -438,7 +438,7 @@ class RadialChart(Component):
         show_tooltip: Show tooltip on hover.
 
     **Example:**
-    
+
     ```python
     RadialChart(
         data=[
@@ -499,7 +499,7 @@ class Sparkline(Component):
         mode: Chart mode ("line" or "bar").
 
     **Example:**
-    
+
     ```python
     Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
     Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)

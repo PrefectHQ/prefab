@@ -36,7 +36,7 @@ class DatePicker(StatefulMixin, Component):
         on_change: Action(s) fired when the date changes.
 
     **Example:**
-    
+
     ```python
     DatePicker(placeholder="Pick a date", name="deadline")
     ```

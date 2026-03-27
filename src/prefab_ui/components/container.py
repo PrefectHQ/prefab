@@ -14,7 +14,7 @@ class Container(ContainerComponent):
     centering and padding that scales with the viewport.
 
     **Example:**
-    
+
     ```python
     with Container():
         H1("Dashboard")

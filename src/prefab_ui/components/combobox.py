@@ -43,7 +43,7 @@ class ComboboxOption(Component):
         disabled: Whether the option is disabled.
 
     **Example:**
-    
+
     ```python
     ComboboxOption("Next.js", value="nextjs")
     ```
@@ -74,7 +74,7 @@ class ComboboxGroup(ContainerComponent):
     Children should be `ComboboxLabel` and `ComboboxOption` components.
 
     **Example:**
-    
+
     ```python
     with ComboboxGroup():
         ComboboxLabel("Planets")
@@ -93,7 +93,7 @@ class ComboboxLabel(Component):
         label: Label text.
 
     **Example:**
-    
+
     ```python
     ComboboxLabel("Planets")
     ```
@@ -118,7 +118,7 @@ class ComboboxSeparator(Component):
     """A visual divider between combobox options or groups.
 
     **Example:**
-    
+
     ```python
     ComboboxOption("Earth", value="earth")
     ComboboxSeparator()
@@ -145,7 +145,7 @@ class Combobox(StatefulMixin, ContainerComponent):
         invalid: Whether the combobox is in an error state
 
     **Example:**
-    
+
     ```python
     with Combobox(placeholder="Pick a language...", name="lang"):
         ComboboxOption("Python", value="python")

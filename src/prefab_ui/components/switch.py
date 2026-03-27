@@ -42,7 +42,7 @@ class Switch(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Switch(label="Enabled")
     Switch(value=True, label="Active", size="sm")

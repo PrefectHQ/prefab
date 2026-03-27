@@ -31,7 +31,7 @@ class Tooltip(ContainerComponent):
         delay: Delay in milliseconds before showing the tooltip.
 
     **Example:**
-    
+
     ```python
     with Tooltip("Saves the current document"):
         Button("Save")

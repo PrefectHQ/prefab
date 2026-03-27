@@ -31,12 +31,12 @@ class Column(ContainerComponent):
         css_class: Additional Tailwind classes (e.g. "p-6 max-w-2xl").
 
     **Example:**
-    
+
     ```python
     with Column(gap=4):
         Heading("Title")
         Text("Body")
-    
+
     with Column(gap=2, align="center", css_class="p-6"):
         Icon("check")
         Text("Confirmed")

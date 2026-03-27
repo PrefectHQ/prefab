@@ -269,7 +269,7 @@ async def execute(
     ```python
     from prefab_ui.components import Column, Heading, Text, Row, Badge
     from prefab_ui.app import PrefabApp
-    
+
     with PrefabApp() as app:
         with Column(gap=4):
             Heading("Dashboard")
@@ -303,7 +303,7 @@ async def execute(
 
     ```python
     from prefab_ui.components.charts import BarChart, ChartSeries
-    
+
     BarChart(
         data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
         series=[ChartSeries(data_key="rev", label="Revenue")],

@@ -47,7 +47,7 @@ class Select(StatefulMixin, ContainerComponent):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     with Select(placeholder="Pick one...", name="choice"):
         SelectOption(value="a", label="Option A")
@@ -100,7 +100,7 @@ class SelectGroup(ContainerComponent):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     with Select(placeholder="Pick a food..."):
         with SelectGroup():
@@ -127,7 +127,7 @@ class SelectLabel(Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     SelectLabel("Fruits")
     ```
@@ -159,7 +159,7 @@ class SelectSeparator(Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     with Select(placeholder="Pick one..."):
         SelectOption(value="a", label="Option A")
@@ -182,7 +182,7 @@ class SelectOption(Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     SelectOption(value="yes", label="Yes")
     SelectOption(value="no", label="No", selected=True)

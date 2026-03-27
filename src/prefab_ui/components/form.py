@@ -53,7 +53,7 @@ class Form(ContainerComponent):
         on_submit: Action(s) to execute when the form is submitted.
 
     **Example:**
-    
+
     ```python
     with Form():
         Label("Name")

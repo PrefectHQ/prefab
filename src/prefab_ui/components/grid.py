@@ -55,22 +55,22 @@ class Grid(ContainerComponent):
         css_class: Additional CSS classes to apply.
 
     **Example:**
-    
+
     ```python
     with Grid(columns=3):
         Card(...)
         Card(...)
         Card(...)
-    
+
     # Custom widths: sidebar + content
     with Grid(columns=[1, 3]):
         Sidebar(...)
         MainContent(...)
-    
+
     # Responsive: 1 col on mobile, 2 on md, 3 on lg
     with Grid(columns={"default": 1, "md": 2, "lg": 3}):
         Card(...)
-    
+
     # Auto-fill: as many columns as fit, each ≥ 16rem
     with Grid(min_column_width="16rem"):
         Card(...)
@@ -154,7 +154,7 @@ class GridItem(ContainerComponent):
         row_span: Number of rows to span.
 
     **Example:**
-    
+
     ```python
     with Grid(columns=4, gap=4):
         with GridItem(col_span=2):

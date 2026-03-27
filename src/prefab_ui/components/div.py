@@ -22,7 +22,7 @@ class Div(ContainerComponent):
         style: Inline CSS styles as a dict of property/value pairs.
 
     **Example:**
-    
+
     ```python
     with Div(css_class="flex items-center gap-4 px-6 py-4"):
         Badge("deploy", variant="outline")
@@ -55,7 +55,7 @@ class Span(_TextComponent):
         style: Inline CSS styles as a dict of property/value pairs.
 
     **Example:**
-    
+
     ```python
     Span("14m ago", css_class="text-sm text-muted-foreground")
     Span("important", bold=True, underline=True)
@@ -100,7 +100,7 @@ class Link(_TextComponent):
         style: Inline CSS styles as a dict of property/value pairs.
 
     **Example:**
-    
+
     ```python
     Link("Prefab docs", href="https://prefab.prefect.io")
     Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")

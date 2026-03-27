@@ -20,11 +20,11 @@ class Slot(ContainerComponent):
         name: State key containing the component tree to render.
 
     **Example:**
-    
+
     ```python
     with Slot("detail_view"):
         Text("Select an item to see details")
-    
+
     Button(
         "Load Details",
         on_click=CallTool(

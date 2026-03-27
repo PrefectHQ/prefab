@@ -31,11 +31,11 @@ class Label(ContainerComponent):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Label("Username")
     Label("Email", for_id="email-input")
-    
+
     # With children
     with Label():
         Text("Password")

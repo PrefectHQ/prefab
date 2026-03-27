@@ -43,12 +43,12 @@ class Alert(ContainerComponent):
         icon: Lucide icon name in kebab-case (e.g. "circle-alert").
 
     **Example:**
-    
+
     ```python
     with Alert():
         AlertTitle("Note")
         AlertDescription("This is an informational message.")
-    
+
     with Alert(variant="destructive"):
         AlertTitle("Error")
         AlertDescription("Something went wrong.")
@@ -73,7 +73,7 @@ class AlertTitle(Component):
         content: Title text.
 
     **Example:**
-    
+
     ```python
     AlertTitle("Important!")
     AlertTitle("{{ alert_type }}")
@@ -103,7 +103,7 @@ class AlertDescription(Component):
         content: Description text.
 
     **Example:**
-    
+
     ```python
     AlertDescription("Your changes have been saved successfully.")
     AlertDescription("{{ message }}")

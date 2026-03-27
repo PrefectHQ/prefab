@@ -42,7 +42,7 @@ class Tab(ContainerComponent):
         disabled: Disable this tab.
 
     **Example:**
-    
+
     ```python
     with Tab("Settings"):
         Text("Content shown when this tab is active.")
@@ -80,7 +80,7 @@ class Tabs(StatefulMixin, ContainerComponent):
         on_change: Action(s) fired when the active tab changes.
 
     **Example:**
-    
+
     ```python
     with Tabs(value="general"):
         with Tab("General"):

@@ -24,7 +24,7 @@ class Video(Component):
         height: CSS height.
 
     **Example:**
-    
+
     ```python
     Video(src="https://example.com/video.mp4")
     Video(src="...", controls=True, autoplay=True, muted=True)

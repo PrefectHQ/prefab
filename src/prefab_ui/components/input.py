@@ -55,7 +55,7 @@ class Input(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Input(placeholder="Search...")
     Input(input_type="email", placeholder="Email", required=True)

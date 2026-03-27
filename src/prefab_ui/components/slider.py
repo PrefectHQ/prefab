@@ -70,7 +70,7 @@ class Slider(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Slider(min=0, max=100, value=50)
     Slider(min=0, max=1, step=0.1, value=0.5)

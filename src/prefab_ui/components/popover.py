@@ -36,7 +36,7 @@ class Popover(ContainerComponent):
         side: Which side to show the popover (top, right, bottom, left).
 
     **Example:**
-    
+
     ```python
     with Popover(title="Options"):
         Button("Configure")

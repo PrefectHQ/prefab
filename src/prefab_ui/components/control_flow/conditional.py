@@ -34,7 +34,7 @@ class If(ContainerComponent):
         condition: Expression string evaluated against the current state.
 
     **Example:**
-    
+
     ```python
     with If("count > 0"):
         Text("{{ count }} items")
@@ -63,7 +63,7 @@ class Elif(ContainerComponent):
         condition: Expression string evaluated against the current state.
 
     **Example:**
-    
+
     ```python
     with Elif("count == 0"):
         Text("No items")
@@ -91,7 +91,7 @@ class Else(ContainerComponent):
     Takes no arguments beyond children. Must follow an `If` or `Elif`.
 
     **Example:**
-    
+
     ```python
     with Else():
         Text("Fallback content")

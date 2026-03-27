@@ -21,7 +21,7 @@ class Markdown(Component):
         content: Markdown string. Supports `{{ expr }}` templates.
 
     **Example:**
-    
+
     ```python
     Markdown("# Welcome\\n\\nHello, **{{ name }}**!")
     Markdown("{{ ai_response }}")

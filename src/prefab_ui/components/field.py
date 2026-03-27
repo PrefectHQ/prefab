@@ -51,7 +51,7 @@ class Field(ContainerComponent):
         disabled: Whether the field is dimmed and non-interactive.
 
     **Example:**
-    
+
     ```python
     with Field(invalid=True):
         Label("Email")
@@ -81,7 +81,7 @@ class ChoiceCard(Field):
         disabled: Whether the card is dimmed and non-interactive.
 
     **Example:**
-    
+
     ```python
     with ChoiceCard():
         with FieldContent():
@@ -101,7 +101,7 @@ class FieldTitle(Component):
         content: Title text.
 
     **Example:**
-    
+
     ```python
     FieldTitle("Share across devices")
     ```
@@ -129,7 +129,7 @@ class FieldDescription(Component):
         content: Description text.
 
     **Example:**
-    
+
     ```python
     FieldDescription("Focus is shared across devices.")
     ```
@@ -154,7 +154,7 @@ class FieldContent(ContainerComponent):
     """Container that groups title and description in choice card layouts.
 
     **Example:**
-    
+
     ```python
     with FieldContent():
         FieldTitle("Dark mode")
@@ -172,7 +172,7 @@ class FieldError(Component):
         content: Error message text.
 
     **Example:**
-    
+
     ```python
     FieldError("Please select a destination.")
     ```

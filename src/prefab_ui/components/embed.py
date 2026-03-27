@@ -28,7 +28,7 @@ class Embed(Component):
         allow: Iframe allow attribute (e.g. `'fullscreen; autoplay'`).
 
     **Example:**
-    
+
     ```python
     Embed(url="https://www.youtube.com/embed/dQw4w9WgXcQ")
     Embed(html="<canvas id='c'></canvas><script>/*...*/</script>")

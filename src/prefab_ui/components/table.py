@@ -75,7 +75,7 @@ class TableHead(ContainerComponent):
         content: Header text (alternative to children).
 
     **Example:**
-    
+
     ```python
     TableHead("Name")
     ```
@@ -108,7 +108,7 @@ class TableCell(ContainerComponent):
         content: Cell text (alternative to children).
 
     **Example:**
-    
+
     ```python
     TableCell("$250.00")
     # or with children:
@@ -142,7 +142,7 @@ class TableCaption(Component):
         content: Caption text.
 
     **Example:**
-    
+
     ```python
     TableCaption("A list of recent invoices")
     ```

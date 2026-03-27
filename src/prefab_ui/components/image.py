@@ -20,7 +20,7 @@ class Image(Component):
         height: CSS height (e.g. `"auto"`).
 
     **Example:**
-    
+
     ```python
     Image(src="{{ avatar_url }}", alt="{{ name }}")
     ```

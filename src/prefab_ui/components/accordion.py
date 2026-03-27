@@ -33,7 +33,7 @@ class AccordionItem(ContainerComponent):
         value: Unique value identifying this item (defaults to title).
 
     **Example:**
-    
+
     ```python
     with AccordionItem("Details"):
         Text("Hidden content revealed on click.")
@@ -68,7 +68,7 @@ class Accordion(ContainerComponent):
         default_open_items: Initially expanded item(s) by index or value/title.
 
     **Example:**
-    
+
     ```python
     with Accordion(multiple=True, default_open_items=[0, 1]):
         with AccordionItem("Section 1"):

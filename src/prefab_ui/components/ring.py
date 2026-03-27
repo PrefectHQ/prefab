@@ -36,11 +36,11 @@ class Ring(ContainerComponent):
         gradient: Gradient stroke — None inherits theme, True forces on, False forces off.
 
     **Example:**
-    
+
     ```python
     Ring(value=75, label="75%", variant="success")
     Ring(value=3, max=5, label="3/5", variant="info", size="lg")
-    
+
     with Ring(value=75, variant="success", size="lg"):
         H1("75%")
     ```

@@ -85,7 +85,7 @@ class CardHeader(ContainerComponent):
     """Card header section for title and description.
 
     **Example:**
-    
+
     ```python
     with CardHeader():
         CardTitle("Account")
@@ -105,7 +105,7 @@ class CardTitle(ContainerComponent):
         content: Title text (alternative to children).
 
     **Example:**
-    
+
     ```python
     CardTitle("Settings")
     CardTitle("{{ project_name }}")
@@ -138,7 +138,7 @@ class CardDescription(ContainerComponent):
         content: Description text (alternative to children).
 
     **Example:**
-    
+
     ```python
     CardDescription("Make changes to your account here.")
     ```
@@ -167,7 +167,7 @@ class CardContent(ContainerComponent):
     """Card content section for the main body.
 
     **Example:**
-    
+
     ```python
     with CardContent():
         P("Your content here.")
@@ -181,7 +181,7 @@ class CardFooter(ContainerComponent):
     """Card footer section, typically for actions.
 
     **Example:**
-    
+
     ```python
     with CardFooter():
         Button("Cancel", variant="outline")

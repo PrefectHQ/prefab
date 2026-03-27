@@ -36,12 +36,12 @@ class Row(ContainerComponent):
         css_class: Additional Tailwind classes.
 
     **Example:**
-    
+
     ```python
     with Row(gap=2, align="center"):
         Dot(variant="success")
         Text("Online")
-    
+
     with Row(gap=4, align="center", justify="between"):
         Text("Label")
         Badge("Status", variant="success")

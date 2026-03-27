@@ -16,7 +16,7 @@ class CallHandler(Action):
     event value, and returns state updates to merge.
 
     **Example:**
-    
+
     ```python
     Slider(on_change=CallHandler("constrainBudget"))
     Button(on_click=CallHandler("refresh", arguments={"force": True}))

@@ -62,7 +62,7 @@ class Button(Component):
         css_class: Additional CSS classes to apply
 
     **Example:**
-    
+
     ```python
     Button("Save Changes")
     Button("Delete", variant="destructive")

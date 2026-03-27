@@ -40,7 +40,7 @@ class Loader(Component):
         size: Indicator size — "sm", "default", or "lg"
 
     **Example:**
-    
+
     ```python
     Loader()
     Loader(variant="dots")

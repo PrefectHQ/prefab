@@ -42,7 +42,7 @@ class Responsive:
     prefixed with its breakpoint (`default` emits unprefixed classes).
 
     **Usage:**
-    
+
     ```python
     Grid(columns=Responsive(default=1, md=2, lg=3))
     Row(gap=Responsive(default=2, md=4))
@@ -109,7 +109,7 @@ def Hover(classes: str) -> str:
     """Prefix classes with `hover:`.
 
     **Example:**
-    
+
     ```python
     css_class=["p-4", Hover("bg-blue-500 scale-105")]
     # → "p-4 hover:bg-blue-500 hover:scale-105"

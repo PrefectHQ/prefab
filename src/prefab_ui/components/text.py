@@ -30,10 +30,10 @@ class Text(_TextComponent):
         align: Horizontal text alignment.
 
     **Example:**
-    
+
     ```python
     Text("Hello, {{ name }}!")
-    
+
     Text("Click ", Span("here", bold=True), " to continue")
     ```
     """

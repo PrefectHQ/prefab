@@ -36,7 +36,7 @@ class FileUpload(BaseModel):
 
     ```python
     from prefab_ui.actions import FileUpload
-    
+
     @server.tool()
     def process_csv(files: list[FileUpload]):
         for f in files:

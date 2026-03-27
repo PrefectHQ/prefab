@@ -39,7 +39,7 @@ class Checkbox(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Checkbox(label="Remember me")
     Checkbox(value=True, label="Agreed")

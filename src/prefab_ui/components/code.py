@@ -18,7 +18,7 @@ class Code(Component):
         language: Syntax highlighting language.
 
     **Example:**
-    
+
     ```python
     Code("{{ source_code }}", language="python")
     ```

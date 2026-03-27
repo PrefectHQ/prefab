@@ -119,7 +119,7 @@ class DataTable(Component):
         on_row_click: Action(s) when a row is clicked. `$event` is the row dict.
 
     **Example:**
-    
+
     ```python
     DataTable(
         columns=[

@@ -28,7 +28,7 @@ class Dashboard(ContainerComponent):
         gap: Gap between grid cells.
 
     **Example:**
-    
+
     ```python
     with Dashboard(columns=12, row_height=120, gap=4):
         with DashboardItem(col=1, row=1, col_span=8, row_span=3):
@@ -71,7 +71,7 @@ class DashboardItem(ContainerComponent):
         z_index: CSS z-index for layering.
 
     **Example:**
-    
+
     ```python
     DashboardItem(col=1, row=1, col_span=4, row_span=2)
     ```

@@ -40,7 +40,7 @@ class Textarea(StatefulMixin, Component):
         css_class: Additional CSS classes
 
     **Example:**
-    
+
     ```python
     Textarea(placeholder="Write something...")
     Textarea(rows=10, value="{{ comment_text }}")

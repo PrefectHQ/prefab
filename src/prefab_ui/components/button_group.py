@@ -30,14 +30,14 @@ class ButtonGroup(ContainerComponent):
         css_class: Additional CSS classes to apply
 
     **Example:**
-    
+
     ```python
     from prefab_ui.components import Button, ButtonGroup
-    
+
     with ButtonGroup():
         Button("Save")
         Button("Cancel", variant="outline")
-    
+
     with ButtonGroup(orientation="vertical"):
         Button("Top")
         Button("Middle")
