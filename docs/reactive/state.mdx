@@ -19,10 +19,8 @@ STATE.user.name   # → {{ user.name }}
 The return value of `set_initial_state()` is a *bound* state proxy that validates attribute access against the keys you declared. This catches typos at definition time rather than at runtime:
 
 ```python
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Text
 
-state = set_initial_state(count=0, name="Arthur")
 
 Text(f"Count: {state.count}")   # ✓ Rx("count")
 Text(f"Name: {state.countt}")   # ✗ AttributeError — typo caught!

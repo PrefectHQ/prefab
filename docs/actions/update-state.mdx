@@ -10,19 +10,19 @@ State is client-side data that your UI can read and write. Components display st
 
 ## Setting Up State
 
-Use `set_initial_state()` to define starting values. Any component in your UI can then read them through `.rx` or `Rx()` references:
+Pass initial state to `PrefabApp` via the `state` parameter. Any component in your UI can then read them through `Rx()` references or template expressions:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]},"state":{"brightness":50}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBTbGlkZXIsIE11dGVkLCBDb2x1bW4KCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoYnJpZ2h0bmVzcz01MCkKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIFNsaWRlcihuYW1lPSJicmlnaHRuZXNzIiwgbWluPTAsIG1heD0xMDApCiAgICBNdXRlZChmIkJyaWdodG5lc3M6IHtzdGF0ZS5icmlnaHRuZXNzfSUiKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"brightness","type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"content":"Brightness: {{ brightness }}%","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgU2xpZGVyLCBNdXRlZCwgQ29sdW1uCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKYnJpZ2h0bmVzcyA9IFJ4KCJicmlnaHRuZXNzIikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIFNsaWRlcihuYW1lPSJicmlnaHRuZXNzIiwgbWluPTAsIG1heD0xMDApCiAgICBNdXRlZChmIkJyaWdodG5lc3M6IHticmlnaHRuZXNzfSUiKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Slider, Muted, Column
+from prefab_ui.rx import Rx
 
-state = set_initial_state(brightness=50)
+brightness = Rx("brightness")
 
 with Column(gap=3):
     Slider(name="brightness", min=0, max=100)
-    Muted(f"Brightness: {state.brightness}%")
+    Muted(f"Brightness: {brightness}%")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -40,8 +40,7 @@ with Column(gap=3):
       },
       {"content": "Brightness: {{ brightness }}%", "type": "Muted"}
     ]
-  },
-  "state": {"brightness": 50}
+  }
 }
 ```
 </CodeGroup>
@@ -66,14 +65,14 @@ async def settings() -> AppResult:
 
 `SetState` explicitly sets a state key to a value. Both arguments are required — the key and the value to write:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]},"state":{"drive":"improbability"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgQnV0dG9uLCBDb2x1bW4sIFJvdwpmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQoKc3RhdGUgPSBzZXRfaW5pdGlhbF9zdGF0ZShkcml2ZT0iaW1wcm9iYWJpbGl0eSIpCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgQnV0dG9uKCJJbXByb2JhYmlsaXR5IiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgICAgIG9uX2NsaWNrPVNldFN0YXRlKCJkcml2ZSIsICJpbXByb2JhYmlsaXR5IikpCiAgICAgICAgQnV0dG9uKCJDb252ZW50aW9uYWwiLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUoImRyaXZlIiwgImNvbnZlbnRpb25hbCIpKQogICAgICAgIEJ1dHRvbigiQmlzdHJvbWF0aCIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZSgiZHJpdmUiLCAiYmlzdHJvbWF0aCIpKQogICAgQmFkZ2UoZiJBY3RpdmUgZHJpdmU6IHtzdGF0ZS5kcml2ZX0iKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Button","label":"Improbability","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"improbability"}},{"type":"Button","label":"Conventional","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"conventional"}},{"type":"Button","label":"Bistromath","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"drive","value":"bistromath"}}]},{"type":"Badge","label":"Active drive: {{ drive }}","variant":"default"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIEJ1dHRvbiwgQ29sdW1uLCBSb3cKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgpkcml2ZSA9IFJ4KCJkcml2ZSIpCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgQnV0dG9uKCJJbXByb2JhYmlsaXR5IiwgdmFyaWFudD0ib3V0bGluZSIsCiAgICAgICAgICAgICAgIG9uX2NsaWNrPVNldFN0YXRlKCJkcml2ZSIsICJpbXByb2JhYmlsaXR5IikpCiAgICAgICAgQnV0dG9uKCJDb252ZW50aW9uYWwiLCB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUoImRyaXZlIiwgImNvbnZlbnRpb25hbCIpKQogICAgICAgIEJ1dHRvbigiQmlzdHJvbWF0aCIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZSgiZHJpdmUiLCAiYmlzdHJvbWF0aCIpKQogICAgQmFkZ2UoZiJBY3RpdmUgZHJpdmU6IHtkcml2ZX0iKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Badge, Button, Column, Row
 from prefab_ui.actions import SetState
+from prefab_ui.rx import Rx
 
-state = set_initial_state(drive="improbability")
+drive = Rx("drive")
 
 with Column(gap=3):
     with Row(gap=2):
@@ -83,7 +82,7 @@ with Column(gap=3):
                on_click=SetState("drive", "conventional"))
         Button("Bistromath", variant="outline",
                on_click=SetState("drive", "bistromath"))
-    Badge(f"Active drive: {state.drive}")
+    Badge(f"Active drive: {drive}")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -123,8 +122,7 @@ with Column(gap=3):
       },
       {"type": "Badge", "label": "Active drive: {{ drive }}", "variant": "default"}
     ]
-  },
-  "state": {"drive": "improbability"}
+  }
 }
 ```
 </CodeGroup>
@@ -136,27 +134,22 @@ State keys can contain dots to reach into nested objects. `profile.name` means "
 
 The `name` prop works with dot-paths too — type in the inputs below to see the card update:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgSW5wdXQsCikKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcm9maWxlPXsKICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgInRpdGxlIjogIlNhbmR3aWNoIE1ha2VyLCBMYW11ZWxsYSIsCiAgICB9LAopCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIENhcmQoKToKICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgQ2FyZFRpdGxlKHN0YXRlLnByb2ZpbGUubmFtZSkKICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKHN0YXRlLnByb2ZpbGUudGl0bGUpCiAgICBJbnB1dChuYW1lPSJwcm9maWxlLm5hbWUiLCBwbGFjZWhvbGRlcj0iTmFtZSIpCiAgICBJbnB1dChuYW1lPSJwcm9maWxlLnRpdGxlIiwgcGxhY2Vob2xkZXI9IlRpdGxlIikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIElucHV0LAopCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKcHJvZmlsZSA9IFJ4KCJwcm9maWxlIikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUocHJvZmlsZS5uYW1lKQogICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24ocHJvZmlsZS50aXRsZSkKICAgIElucHV0KG5hbWU9InByb2ZpbGUubmFtZSIsIHBsYWNlaG9sZGVyPSJOYW1lIikKICAgIElucHV0KG5hbWU9InByb2ZpbGUudGl0bGUiLCBwbGFjZWhvbGRlcj0iVGl0bGUiKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Card, CardDescription, CardHeader, CardTitle,
     Column, Input,
 )
+from prefab_ui.rx import Rx
 
-state = set_initial_state(
-    profile={
-        "name": "Arthur Dent",
-        "title": "Sandwich Maker, Lamuella",
-    },
-)
+profile = Rx("profile")
 
 with Column(gap=3):
     with Card():
         with CardHeader():
-            CardTitle(state.profile.name)
-            CardDescription(state.profile.title)
+            CardTitle(profile.name)
+            CardDescription(profile.title)
     Input(name="profile.name", placeholder="Name")
     Input(name="profile.title", placeholder="Title")
 ```
@@ -197,8 +190,7 @@ with Column(gap=3):
         "required": false
       }
     ]
-  },
-  "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}
+  }
 }
 ```
 </CodeGroup>
@@ -207,12 +199,8 @@ with Column(gap=3):
 Integer segments address array items. Inside a [ForEach](/components/foreach) loop, combine this with `{{ $index }}` to target the current row:
 
 ```python Array Paths
-set_initial_state(
-    todos=[
-        {"text": "Find Magrathea", "done": False},
-        {"text": "Have lunch", "done": True},
-    ],
-)
+from prefab_ui.components import Checkbox, Text
+from prefab_ui.components.control_flow import ForEach
 
 with ForEach("todos"):
     Checkbox(name="todos.{{ $index }}.done")
@@ -288,19 +276,17 @@ with Column(gap=2):
 
 Type a name and click Add to see it appear in the list. Click × to remove a row.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"let":{"_loop_1":"{{ $item }}","_loop_1_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCdXR0b24sIENvbHVtbiwgRm9yRWFjaCwgSW5wdXQsIE11dGVkLCBSb3csIFRleHQsCikKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgQXBwZW5kU3RhdGUsIFBvcFN0YXRlLCBTZXRTdGF0ZQoKc3RhdGUgPSBzZXRfaW5pdGlhbF9zdGF0ZSgKICAgIGNyZXc9WyJBcnRodXIgRGVudCIsICJGb3JkIFByZWZlY3QiLCAiVHJpbGxpYW4iXSwKICAgIG5ld19tZW1iZXI9IiIsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpOgogICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgIFRleHQoInt7ICRpdGVtIH19IikKICAgICAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAgICAgIsOXIiwgdmFyaWFudD0iZ2hvc3QiLCBzaXplPSJzbSIsCiAgICAgICAgICAgICAgICBvbl9jbGljaz1Qb3BTdGF0ZSgiY3JldyIsICJ7eyAkaW5kZXggfX0iKSwKICAgICAgICAgICAgKQogICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgIElucHV0KG5hbWU9Im5ld19tZW1iZXIiLCBwbGFjZWhvbGRlcj0iQ3JldyBtZW1iZXIgbmFtZS4uLiIpCiAgICAgICAgQnV0dG9uKCJBZGQiLCBvbl9jbGljaz1bCiAgICAgICAgICAgIEFwcGVuZFN0YXRlKCJjcmV3Iiwgc3RhdGUubmV3X21lbWJlciksCiAgICAgICAgICAgIFNldFN0YXRlKCJuZXdfbWVtYmVyIiwgIiIpLAogICAgICAgIF0pCiAgICBNdXRlZChmIntzdGF0ZS5jcmV3Lmxlbmd0aCgpfSBjcmV3IG1lbWJlcnMiKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"let":{"_loop_1":"{{ $item }}","_loop_1_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ $index }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLCBDb2x1bW4sIEZvckVhY2gsIElucHV0LCBNdXRlZCwgUm93LCBUZXh0LAopCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IEFwcGVuZFN0YXRlLCBQb3BTdGF0ZSwgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4CgpuZXdfbWVtYmVyID0gUngoIm5ld19tZW1iZXIiKQpjcmV3ID0gUngoImNyZXciKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBGb3JFYWNoKCJjcmV3Iik6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgVGV4dCgie3sgJGl0ZW0gfX0iKQogICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAiw5ciLCB2YXJpYW50PSJnaG9zdCIsIHNpemU9InNtIiwKICAgICAgICAgICAgICAgIG9uX2NsaWNrPVBvcFN0YXRlKCJjcmV3IiwgInt7ICRpbmRleCB9fSIpLAogICAgICAgICAgICApCiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgSW5wdXQobmFtZT0ibmV3X21lbWJlciIsIHBsYWNlaG9sZGVyPSJDcmV3IG1lbWJlciBuYW1lLi4uIikKICAgICAgICBCdXR0b24oIkFkZCIsIG9uX2NsaWNrPVsKICAgICAgICAgICAgQXBwZW5kU3RhdGUoImNyZXciLCBuZXdfbWVtYmVyKSwKICAgICAgICAgICAgU2V0U3RhdGUoIm5ld19tZW1iZXIiLCAiIiksCiAgICAgICAgXSkKICAgIE11dGVkKGYie2NyZXcubGVuZ3RoKCl9IGNyZXcgbWVtYmVycyIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Button, Column, ForEach, Input, Muted, Row, Text,
 )
 from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.rx import Rx
 
-state = set_initial_state(
-    crew=["Arthur Dent", "Ford Prefect", "Trillian"],
-    new_member="",
-)
+new_member = Rx("new_member")
+crew = Rx("crew")
 
 with Column(gap=3):
     with ForEach("crew"):
@@ -313,10 +299,10 @@ with Column(gap=3):
     with Row(gap=2):
         Input(name="new_member", placeholder="Crew member name...")
         Button("Add", on_click=[
-            AppendState("crew", state.new_member),
+            AppendState("crew", new_member),
             SetState("new_member", ""),
         ])
-    Muted(f"{state.crew.length()} crew members")
+    Muted(f"{crew.length()} crew members")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -374,8 +360,7 @@ with Column(gap=3):
       },
       {"content": "{{ crew | length }} crew members", "type": "Muted"}
     ]
-  },
-  "state": {"crew": ["Arthur Dent", "Ford Prefect", "Trillian"], "new_member": ""}
+  }
 }
 ```
 </CodeGroup>

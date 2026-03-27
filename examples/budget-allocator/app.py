@@ -8,7 +8,7 @@ so the total always equals 100.
 """
 
 from prefab_ui.actions import CallHandler
-from prefab_ui.app import PrefabApp, set_initial_state
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import (
     Card,
     CardContent,
@@ -26,8 +26,6 @@ categories = [
     ("Marketing", "marketing", 15),
     ("Research", "research", 10),
 ]
-
-set_initial_state(**{key: val for _, key, val in categories})
 
 with Card() as card:
     with CardHeader():
@@ -58,6 +56,7 @@ with Card() as card:
                 Text(f"{{{{ {keys_expr} | round }}}}%", bold=True)
 
 app = PrefabApp(
+    state={key: val for _, key, val in categories},
     title="Budget Allocator",
     view=card,
     js_actions={

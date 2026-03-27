@@ -383,14 +383,12 @@ When the data lives in client-side state and can change dynamically, for example
 
 Inside a `ForEach` block, `{{ $item }}` refers to the current item (or its fields directly if the item is a dict), and `{{ $index }}` gives the zero-based position. Because `ForEach` is a component in the tree (not a Python loop that runs and disappears), the renderer knows about the iteration. If an action appends a fourth task to the list, `ForEach` renders a new row for it automatically.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_8":"{{ $item }}","_loop_8_idx":"{{ $index }}"},"type":"ForEach","key":"tasks","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]},"state":{"tasks":["Write docs","Fix bug","Ship feature"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKCnNldF9pbml0aWFsX3N0YXRlKHRhc2tzPVsiV3JpdGUgZG9jcyIsICJGaXggYnVnIiwgIlNoaXAgZmVhdHVyZSJdKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YXNrcyIpOgogICAgICAgIFRleHQoInt7ICRpbmRleCArIDEgfX0uIHt7ICRpdGVtIH19IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_8":"{{ $item }}","_loop_8_idx":"{{ $index }}"},"type":"ForEach","key":"tasks","children":[{"content":"{{ $index + 1 }}. {{ $item }}","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBUZXh0CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YXNrcyIpOgogICAgICAgIFRleHQoInt7ICRpbmRleCArIDEgfX0uIHt7ICRpdGVtIH19IikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Text
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(tasks=["Write docs", "Fix bug", "Ship feature"])
 
 with Column(gap=2):
     with ForEach("tasks"):
@@ -409,8 +407,7 @@ with Column(gap=2):
         "children": [{"content": "{{ $index + 1 }}. {{ $item }}", "type": "Text"}]
       }
     ]
-  },
-  "state": {"tasks": ["Write docs", "Fix bug", "Ship feature"]}
+  }
 }
 ```
 </CodeGroup>
@@ -425,11 +422,9 @@ Change the select below to see the conditional switch between branches.
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"status","type":"Select","placeholder":"Pick a status","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"healthy","label":"Healthy","selected":false,"disabled":false},{"type":"SelectOption","value":"warning","label":"Warning","selected":false,"disabled":false},{"type":"SelectOption","value":"error","label":"Error","selected":false,"disabled":false}]},{"type":"Condition","cases":[{"when":"{{ status == 'error' }}","children":[{"type":"Alert","variant":"destructive","children":[{"type":"AlertTitle","content":"System down"}]}]},{"when":"{{ status == 'warning' }}","children":[{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Degraded performance"}]}]}],"else":[{"type":"Badge","label":"All systems go","variant":"success"}]}]},"state":{"status":"healthy"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBBbGVydCwgQWxlcnRUaXRsZSwgQmFkZ2UsIENvbHVtbiwgU2VsZWN0LCBTZWxlY3RPcHRpb24KZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEVsaWYsIEVsc2UsIElmCgpzdGF0ZSA9IHNldF9pbml0aWFsX3N0YXRlKHN0YXR1cz0iaGVhbHRoeSIpCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIFNlbGVjdChuYW1lPSJzdGF0dXMiLCBwbGFjZWhvbGRlcj0iUGljayBhIHN0YXR1cyIpOgogICAgICAgIFNlbGVjdE9wdGlvbih2YWx1ZT0iaGVhbHRoeSIsIGxhYmVsPSJIZWFsdGh5IikKICAgICAgICBTZWxlY3RPcHRpb24odmFsdWU9Indhcm5pbmciLCBsYWJlbD0iV2FybmluZyIpCiAgICAgICAgU2VsZWN0T3B0aW9uKHZhbHVlPSJlcnJvciIsIGxhYmVsPSJFcnJvciIpCiAgICB3aXRoIElmKHN0YXRlLnN0YXR1cyA9PSAiZXJyb3IiKToKICAgICAgICB3aXRoIEFsZXJ0KHZhcmlhbnQ9ImRlc3RydWN0aXZlIik6CiAgICAgICAgICAgIEFsZXJ0VGl0bGUoIlN5c3RlbSBkb3duIikKICAgIHdpdGggRWxpZihzdGF0ZS5zdGF0dXMgPT0gIndhcm5pbmciKToKICAgICAgICB3aXRoIEFsZXJ0KHZhcmlhbnQ9Indhcm5pbmciKToKICAgICAgICAgICAgQWxlcnRUaXRsZSgiRGVncmFkZWQgcGVyZm9ybWFuY2UiKQogICAgd2l0aCBFbHNlKCk6CiAgICAgICAgQmFkZ2UoIkFsbCBzeXN0ZW1zIGdvIiwgdmFyaWFudD0ic3VjY2VzcyIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Alert, AlertTitle, Badge, Column, Select, SelectOption
 from prefab_ui.components.control_flow import Elif, Else, If
 
-state = set_initial_state(status="healthy")
 
 with Column(gap=3):
     with Select(name="status", placeholder="Pick a status"):

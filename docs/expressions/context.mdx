@@ -14,12 +14,13 @@ This page covers where expression data comes from and how scoping works.
 
 Global state is the foundation. Every expression in your UI can access it, regardless of where it appears in the component tree. Four sources feed into it:
 
-**Initial state** defines starting values. In Python, call `set_initial_state()` with keyword arguments. These keys are immediately available to any `{{ }}` expression or `Rx` reference:
+**Initial state** defines starting values. Pass state to `PrefabApp` or return it from an action. These keys are immediately available to any `{{ }}` expression or `Rx` reference:
 
 ```python
-from prefab_ui.app import set_initial_state
+from prefab_ui.rx import Rx
 
-set_initial_state(count=0, name="Arthur", towel=True)
+count = Rx("count")
+name = Rx("name")
 ```
 
 **AppResult** provides initial state when returning a UI from an MCP tool. This is how server-side data enters the reactive system:

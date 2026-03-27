@@ -12,10 +12,9 @@ Given a list of data, `ForEach` renders its children once per item — a card fo
 
 Pass `ForEach` a state key that contains a list. The `as` variable is a reactive reference to the current item — use dot notation to reach into fields, embed it in f-strings, or pass it directly to components that accept string values.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]},"state":{"crew":[{"name":"Arthur Dent","designation":"Sandwich Maker","email":"arthur@heart-of-gold.ship"},{"name":"Ford Prefect","designation":"Researcher","email":"ford@megadodo.pub"},{"name":"Trillian","designation":"Astrophysicist","email":"trillian@heart-of-gold.ship"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIEJhZGdlLAogICAgQ29sdW1uLAogICAgUm93LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSgKICAgIGNyZXc9WwogICAgICAgIHsibmFtZSI6ICJBcnRodXIgRGVudCIsICJkZXNpZ25hdGlvbiI6ICJTYW5kd2ljaCBNYWtlciIsICJlbWFpbCI6ICJhcnRodXJAaGVhcnQtb2YtZ29sZC5zaGlwIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJkZXNpZ25hdGlvbiI6ICJSZXNlYXJjaGVyIiwgImVtYWlsIjogImZvcmRAbWVnYWRvZG8ucHViIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImRlc2lnbmF0aW9uIjogIkFzdHJvcGh5c2ljaXN0IiwgImVtYWlsIjogInRyaWxsaWFuQGhlYXJ0LW9mLWdvbGQuc2hpcCJ9LAogICAgXSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJjcmV3IikgYXMgbWVtYmVyOgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQ2FyZFRpdGxlKG1lbWJlci5uYW1lKQogICAgICAgICAgICAgICAgICAgIEJhZGdlKG1lbWJlci5kZXNpZ25hdGlvbiwgdmFyaWFudD0ic2Vjb25kYXJ5IikKICAgICAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbihtZW1iZXIuZW1haWwpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_3":"{{ $item }}","_loop_3_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"{{ _loop_3.name }}"},{"type":"Badge","label":"{{ _loop_3.designation }}","variant":"secondary"}]},{"type":"CardDescription","content":"{{ _loop_3.email }}"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDYXJkRGVzY3JpcHRpb24sCiAgICBCYWRnZSwKICAgIENvbHVtbiwKICAgIFJvdywKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKCndpdGggQ29sdW1uKGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIG1lbWJlcjoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZShtZW1iZXIubmFtZSkKICAgICAgICAgICAgICAgICAgICBCYWRnZShtZW1iZXIuZGVzaWduYXRpb24sIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICAgICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24obWVtYmVyLmVtYWlsKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -27,13 +26,6 @@ from prefab_ui.components import (
 )
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(
-    crew=[
-        {"name": "Arthur Dent", "designation": "Sandwich Maker", "email": "arthur@heart-of-gold.ship"},
-        {"name": "Ford Prefect", "designation": "Researcher", "email": "ford@megadodo.pub"},
-        {"name": "Trillian", "designation": "Astrophysicist", "email": "trillian@heart-of-gold.ship"},
-    ],
-)
 
 with Column(gap=2):
     with ForEach("crew") as member:
@@ -77,25 +69,6 @@ with Column(gap=2):
         ]
       }
     ]
-  },
-  "state": {
-    "crew": [
-      {
-        "name": "Arthur Dent",
-        "designation": "Sandwich Maker",
-        "email": "arthur@heart-of-gold.ship"
-      },
-      {
-        "name": "Ford Prefect",
-        "designation": "Researcher",
-        "email": "ford@megadodo.pub"
-      },
-      {
-        "name": "Trillian",
-        "designation": "Astrophysicist",
-        "email": "trillian@heart-of-gold.ship"
-      }
-    ]
   }
 }
 ```
@@ -104,14 +77,12 @@ with Column(gap=2):
 
 When items are simple values (strings, numbers) rather than objects, the context variable represents the value directly — no dot access needed.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"let":{"_loop_4":"{{ $item }}","_loop_4_idx":"{{ $index }}"},"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _loop_4 }}","variant":"secondary"}]}]},"state":{"tags":["earth","magrathea","vogon poetry","42"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCYWRnZSwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZSh0YWdzPVsiZWFydGgiLCAibWFncmF0aGVhIiwgInZvZ29uIHBvZXRyeSIsICI0MiJdKQoKd2l0aCBSb3coZ2FwPTIpOgogICAgd2l0aCBGb3JFYWNoKCJ0YWdzIikgYXMgdGFnOgogICAgICAgIEJhZGdlKHRhZywgdmFyaWFudD0ic2Vjb25kYXJ5IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Row","children":[{"let":{"_loop_4":"{{ $item }}","_loop_4_idx":"{{ $index }}"},"type":"ForEach","key":"tags","children":[{"type":"Badge","label":"{{ _loop_4 }}","variant":"secondary"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIFJvdwpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKCndpdGggUm93KGdhcD0yKToKICAgIHdpdGggRm9yRWFjaCgidGFncyIpIGFzIHRhZzoKICAgICAgICBCYWRnZSh0YWcsIHZhcmlhbnQ9InNlY29uZGFyeSIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Badge, Row
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(tags=["earth", "magrathea", "vogon poetry", "42"])
 
 with Row(gap=2):
     with ForEach("tags") as tag:
@@ -130,8 +101,7 @@ with Row(gap=2):
         "children": [{"type": "Badge", "label": "{{ _loop_4 }}", "variant": "secondary"}]
       }
     ]
-  },
-  "state": {"tags": ["earth", "magrathea", "vogon poetry", "42"]}
+  }
 }
 ```
 </CodeGroup>
@@ -139,10 +109,9 @@ with Row(gap=2):
 
 Dot notation chains through nested objects the same way you'd expect — `project.owner.name` reaches into `{"owner": {"name": "..."}}` without any special syntax.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_5.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_5.owner.name }}"}]}]}]}]},"state":{"projects":[{"name":"Heart of Gold","owner":{"name":"Zaphod Beeblebrox"}},{"name":"Hitchhiker's Guide","owner":{"name":"Ford Prefect"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLAogICAgQ2FyZEhlYWRlciwKICAgIENhcmRUaXRsZSwKICAgIENhcmREZXNjcmlwdGlvbiwKICAgIENvbHVtbiwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcm9qZWN0cz1bCiAgICAgICAgeyJuYW1lIjogIkhlYXJ0IG9mIEdvbGQiLCAib3duZXIiOiB7Im5hbWUiOiAiWmFwaG9kIEJlZWJsZWJyb3gifX0sCiAgICAgICAgeyJuYW1lIjogIkhpdGNoaGlrZXIncyBHdWlkZSIsICJvd25lciI6IHsibmFtZSI6ICJGb3JkIFByZWZlY3QifX0sCiAgICBdLAopCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICB3aXRoIEZvckVhY2goInByb2plY3RzIikgYXMgcHJvamVjdDoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUocHJvamVjdC5uYW1lKQogICAgICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKGYiT3duZXI6IHtwcm9qZWN0Lm93bmVyLm5hbWV9IikK">
+<ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"let":{"_loop_5":"{{ $item }}","_loop_5_idx":"{{ $index }}"},"type":"ForEach","key":"projects","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ _loop_5.name }}"},{"type":"CardDescription","content":"Owner: {{ _loop_5.owner.name }}"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwKICAgIENhcmRIZWFkZXIsCiAgICBDYXJkVGl0bGUsCiAgICBDYXJkRGVzY3JpcHRpb24sCiAgICBDb2x1bW4sCikKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gKCgp3aXRoIENvbHVtbihnYXA9Mik6CiAgICB3aXRoIEZvckVhY2goInByb2plY3RzIikgYXMgcHJvamVjdDoKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUocHJvamVjdC5uYW1lKQogICAgICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKGYiT3duZXI6IHtwcm9qZWN0Lm93bmVyLm5hbWV9IikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import (
     Card,
     CardHeader,
@@ -152,12 +121,6 @@ from prefab_ui.components import (
 )
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(
-    projects=[
-        {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},
-        {"name": "Hitchhiker's Guide", "owner": {"name": "Ford Prefect"}},
-    ],
-)
 
 with Column(gap=2):
     with ForEach("projects") as project:
@@ -192,12 +155,6 @@ with Column(gap=2):
         ]
       }
     ]
-  },
-  "state": {
-    "projects": [
-      {"name": "Heart of Gold", "owner": {"name": "Zaphod Beeblebrox"}},
-      {"name": "Hitchhiker's Guide", "owner": {"name": "Ford Prefect"}}
-    ]
   }
 }
 ```
@@ -210,14 +167,12 @@ The `as` clause supports tuple destructuring — `as (i, item)` — giving you b
 
 The index is valuable for two things: displaying position numbers, and constructing state paths that target specific items. When an action like `SetState` needs to modify one particular item in a list, you need its index to build the path.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-1 w-fit mx-auto","type":"Column","children":[{"content":"The Plan:","type":"H4"},{"let":{"_loop_6":"{{ $item }}","_loop_6_idx":"{{ $index }}"},"type":"ForEach","key":"steps","children":[{"content":"{{ _loop_6_idx + 1 }}. {{ _loop_6 }}","type":"Text"}]}]},"state":{"steps":["Collect underpants","???","Profit"]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBDb2x1bW4sIFRleHQsIEg0CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBGb3JFYWNoCgpzZXRfaW5pdGlhbF9zdGF0ZShzdGVwcz1bIkNvbGxlY3QgdW5kZXJwYW50cyIsICI_Pz8iLCAiUHJvZml0Il0pCgp3aXRoIENvbHVtbihnYXA9MSwgY3NzX2NsYXNzPSJ3LWZpdCBteC1hdXRvIik6CiAgICBINCgiVGhlIFBsYW46IikKICAgIHdpdGggRm9yRWFjaCgic3RlcHMiKSBhcyAoaSwgc3RlcCk6CiAgICAgICAgVGV4dChmIntpICsgMX0uIHtzdGVwfSIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-1 w-fit mx-auto","type":"Column","children":[{"content":"The Plan:","type":"H4"},{"let":{"_loop_6":"{{ $item }}","_loop_6_idx":"{{ $index }}"},"type":"ForEach","key":"steps","children":[{"content":"{{ _loop_6_idx + 1 }}. {{ _loop_6 }}","type":"Text"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBUZXh0LCBINApmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaAoKCndpdGggQ29sdW1uKGdhcD0xLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIEg0KCJUaGUgUGxhbjoiKQogICAgd2l0aCBGb3JFYWNoKCJzdGVwcyIpIGFzIChpLCBzdGVwKToKICAgICAgICBUZXh0KGYie2kgKyAxfS4ge3N0ZXB9IikK">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Column, Text, H4
 from prefab_ui.components.control_flow import ForEach
 
-set_initial_state(steps=["Collect underpants", "???", "Profit"])
 
 with Column(gap=1, css_class="w-fit mx-auto"):
     H4("The Plan:")
@@ -238,8 +193,7 @@ with Column(gap=1, css_class="w-fit mx-auto"):
         "children": [{"content": "{{ _loop_6_idx + 1 }}. {{ _loop_6 }}", "type": "Text"}]
       }
     ]
-  },
-  "state": {"steps": ["Collect underpants", "???", "Profit"]}
+  }
 }
 ```
 </CodeGroup>

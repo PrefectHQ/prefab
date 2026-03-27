@@ -4,7 +4,7 @@ Run with:
     uv run prefab serve examples/custom-pipes/app.py
 """
 
-from prefab_ui.app import PrefabApp, set_initial_state
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import (
     Card,
     CardContent,
@@ -14,8 +14,6 @@ from prefab_ui.components import (
     Slider,
     Text,
 )
-
-set_initial_state(temp=72, score=3, name="Arthur Dent")
 
 with Card() as card:
     with CardHeader():
@@ -41,6 +39,7 @@ with Card() as card:
                 Text("Initials: {{ name | initials }}", bold=True)
 
 app = PrefabApp(
+    state={"temp": 72, "score": 3, "name": "Arthur Dent"},
     title="Custom Pipes",
     view=card,
     js_pipes={

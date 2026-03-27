@@ -296,11 +296,10 @@ Button(on_click=CallHandler(
 Three budget sliders constrained to sum to 100%. Moving one redistributes the others proportionally. This is the kind of client-side coordination that expressions can't do — you need a function that knows about all the sliders and can compute the redistribution.
 
 ```python
-from prefab_ui.app import PrefabApp, set_initial_state
+from prefab_ui.app import PrefabApp
 from prefab_ui.actions import CallHandler
 from prefab_ui.components import Card, CardContent, Column, Row, Slider, Text
 
-set_initial_state(infra=40, people=35, tools=25)
 
 with Card():
     with CardContent():
