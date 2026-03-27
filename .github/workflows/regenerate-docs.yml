@@ -1,21 +1,19 @@
-name: Regenerate docs
+name: Check docs
 
 on:
   pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  regenerate_docs:
+  check_docs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Setup uv
         uses: ./.github/actions/setup-uv
@@ -25,14 +23,22 @@ jobs:
       - name: Install renderer dependencies
         run: cd renderer && npm ci
 
-      - name: Regenerate docs
+      - name: Build docs
         run: uv run prefab dev build-docs
 
-      - name: Commit regenerated docs
+      - name: Check for stale generated files
         run: |
-          git diff --quiet docs/ && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git commit -m "Regenerate docs"
-          git push
+          STALE_FILES=$(git diff --name-only docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json)
+          if [ -n "$STALE_FILES" ]; then
+            echo "::error::Generated docs are out of date. Run 'prefab dev build-docs' and commit the output."
+            echo ""
+            echo "Stale files:"
+            echo "$STALE_FILES"
+            echo ""
+            echo "To fix:"
+            echo "  uv run prefab dev build-docs"
+            echo "  git add docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json"
+            echo "  git commit -m 'Regenerate docs'"
+            exit 1
+          fi
+          echo "All generated files are up to date."
