@@ -3,14 +3,16 @@
 Loaders communicate that something is happening — a request in flight,
 content loading, or a background process running.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Loader
+```python
+from prefab_ui.components import Loader
 
-    Loader()
-    Loader(variant="dots")
-    Loader(variant="pulse")
-    Loader(size="lg")
+Loader()
+Loader(variant="dots")
+Loader(variant="pulse")
+Loader(size="lg")
+```
 """
 
 from __future__ import annotations
@@ -27,23 +29,25 @@ class Loader(Component):
 
     Three visual variants convey "something is happening":
 
-    - ``"spin"`` — a rotating arc (default, classic loading spinner)
-    - ``"dots"`` — three dots bouncing in sequence (typing / processing)
-    - ``"pulse"`` — a pulsing dot (background activity / heartbeat)
-    - ``"bars"`` — three vertical bars oscillating (equalizer / processing)
-    - ``"ios"`` — segmented circle with chasing opacity (iOS-style)
+    - `"spin"` — a rotating arc (default, classic loading spinner)
+    - `"dots"` — three dots bouncing in sequence (typing / processing)
+    - `"pulse"` — a pulsing dot (background activity / heartbeat)
+    - `"bars"` — three vertical bars oscillating (equalizer / processing)
+    - `"ios"` — segmented circle with chasing opacity (iOS-style)
 
     Args:
         variant: Animation style — "spin", "dots", "pulse", "bars", or "ios"
         size: Indicator size — "sm", "default", or "lg"
 
-    Example::
+    **Example:**
 
-        Loader()
-        Loader(variant="dots")
-        Loader(variant="pulse", size="lg")
-        Loader(variant="bars")
-        Loader(variant="ios")
+    ```python
+    Loader()
+    Loader(variant="dots")
+    Loader(variant="pulse", size="lg")
+    Loader(variant="bars")
+    Loader(variant="ios")
+    ```
     """
 
     type: Literal["Loader"] = "Loader"

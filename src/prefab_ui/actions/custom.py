@@ -15,10 +15,12 @@ class CallHandler(Action):
     The handler receives the current state snapshot plus the triggering
     event value, and returns state updates to merge.
 
-    Example::
+    **Example:**
 
-        Slider(on_change=CallHandler("constrainBudget"))
-        Button(on_click=CallHandler("refresh", arguments={"force": True}))
+    ```python
+    Slider(on_change=CallHandler("constrainBudget"))
+    Button(on_click=CallHandler("refresh", arguments={"force": True}))
+    ```
     """
 
     action: Literal["callHandler"] = "callHandler"

@@ -3,17 +3,19 @@
 Uses the lucide-react icon library. Pass any icon name in kebab-case.
 Browse available icons at https://lucide.dev/icons.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Icon, Button
+```python
+from prefab_ui.components import Icon, Button
 
-    # Standalone icon
-    Icon("circle-alert")
+# Standalone icon
+Icon("circle-alert")
 
-    # Inside a button (renders inline)
-    with Button():
-        Icon("download")
-        "Download file"
+# Inside a button (renders inline)
+with Button():
+    Icon("download")
+    "Download file"
+```
 """
 
 from __future__ import annotations
@@ -29,15 +31,21 @@ from prefab_ui.rx import RxStr
 class Icon(Component):
     """Renders a lucide icon by name.
 
+    Use the `size` prop for sizing — avoid css_class for width/height.
+    Browse available icons at https://lucide.dev/icons.
+
     Args:
-        name: Lucide icon name in kebab-case (e.g., "arrow-right", "circle-alert")
-        size: Icon size — "sm" (16px), "default" (16px with standard spacing),
-            or "lg" (24px)
+        name: Lucide icon name in kebab-case (e.g. "arrow-right",
+            "circle-alert"). See https://lucide.dev/icons.
+        size: Icon size — "sm" (16px), "default" (16px with standard
+            spacing), or "lg" (24px).
 
-    Example::
+    **Example:**
 
-        Icon("check")
-        Icon("arrow-right", size="lg")
+    ```python
+    Icon("check")
+    Icon("arrow-right", size="lg")
+    ```
     """
 
     type: Literal["Icon"] = "Icon"

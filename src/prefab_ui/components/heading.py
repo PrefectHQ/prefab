@@ -12,9 +12,20 @@ from prefab_ui.components.typography import _text_init, _TextComponent
 class Heading(_TextComponent):
     """Section heading (h1-h4).
 
-    Example::
+    Renders as an HTML heading element. Level 1 is the largest (page
+    title), level 4 is the smallest.
 
-        Heading("{{ name }}", level=2)
+    Args:
+        content: Heading text. Accepts template expressions.
+        level: Heading level — 1 (h1, default), 2 (h2), 3 (h3), or 4 (h4).
+
+    **Example:**
+
+    ```python
+    Heading("Dashboard")
+    Heading("Details", level=2)
+    Heading("{{ section_title }}", level=3)
+    ```
     """
 
     type: Literal["Heading"] = "Heading"

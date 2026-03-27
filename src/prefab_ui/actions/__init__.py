@@ -17,12 +17,14 @@ client-side renderer.
     Button("Refresh", on_click=CallTool("get_data"))
     Button("Ask AI", on_click=SendMessage("Summarize this"))
 
-Actions compose — pass a list for sequential execution::
+**Actions compose — pass a list for sequential execution:**
 
-    Button("Submit", on_click=[
-        SetState("loading", True),
-        CallTool("process", arguments={"query": "{{ query }}"}),
-    ])
+```python
+Button("Submit", on_click=[
+    SetState("loading", True),
+    CallTool("process", arguments={"query": "{{ query }}"}),
+])
+```
 """
 
 from __future__ import annotations

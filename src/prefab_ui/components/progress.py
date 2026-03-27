@@ -21,13 +21,27 @@ ProgressOrientation = Literal["horizontal", "vertical"]
 class Progress(Component):
     """A progress bar showing completion status.
 
-    Example::
+    Args:
+        value: Current progress value.
+        min: Minimum value (default 0).
+        max: Maximum value (default 100).
+        variant: Visual variant (default, success, warning, destructive, info, muted).
+        size: Bar thickness (sm, default, lg).
+        target: Target marker position (renders a vertical line at this value).
+        indicator_class: Tailwind classes for the indicator bar (e.g. `"bg-green-500"`).
+        target_class: Tailwind classes for the target marker line.
+        orientation: Layout direction (horizontal or vertical).
+        gradient: Gradient fill — None inherits theme, True forces on, False forces off.
 
-        Progress(value=75)
-        Progress(value=3, max=10)
-        Progress(value=80, variant="success")
-        Progress(value=80, indicator_class="bg-green-500")
-        Progress(value=60, orientation="vertical")
+    **Example:**
+
+    ```python
+    Progress(value=75)
+    Progress(value=3, max=10)
+    Progress(value=80, variant="success")
+    Progress(value=80, indicator_class="bg-green-500")
+    Progress(value=60, orientation="vertical")
+    ```
     """
 
     type: Literal["Progress"] = "Progress"

@@ -2,13 +2,15 @@
 
 Groups buttons together with merged borders and adjusted corners.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Button, ButtonGroup
+```python
+from prefab_ui.components import Button, ButtonGroup
 
-    with ButtonGroup():
-        Button("Previous")
-        Button("Next")
+with ButtonGroup():
+    Button("Previous")
+    Button("Next")
+```
 """
 
 from __future__ import annotations
@@ -27,18 +29,20 @@ class ButtonGroup(ContainerComponent):
         orientation: Layout direction - "horizontal" or "vertical"
         css_class: Additional CSS classes to apply
 
-    Example::
+    **Example:**
 
-        from prefab_ui.components import Button, ButtonGroup
+    ```python
+    from prefab_ui.components import Button, ButtonGroup
 
-        with ButtonGroup():
-            Button("Save")
-            Button("Cancel", variant="outline")
+    with ButtonGroup():
+        Button("Save")
+        Button("Cancel", variant="outline")
 
-        with ButtonGroup(orientation="vertical"):
-            Button("Top")
-            Button("Middle")
-            Button("Bottom")
+    with ButtonGroup(orientation="vertical"):
+        Button("Top")
+        Button("Middle")
+        Button("Bottom")
+    ```
     """
 
     type: Literal["ButtonGroup"] = "ButtonGroup"

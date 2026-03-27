@@ -28,10 +28,10 @@ def _resolve_key(key: _KeyLike) -> str:
 def _validate_path(path: str) -> str:
     """Validate a state key or dot-path.
 
-    Each segment must be either a valid identifier (``[a-zA-Z_][a-zA-Z0-9_]*``)
+    Each segment must be either a valid identifier (`[a-zA-Z_][a-zA-Z0-9_]*`)
     or a pure integer (array index). Periods delimit segments.
 
-    Paths containing ``{{ }}`` template expressions are passed through
+    Paths containing `{{ }}` template expressions are passed through
     without validation — the renderer resolves them at runtime.
     """
     if "{{" in path:
@@ -50,9 +50,11 @@ def _validate_path(path: str) -> str:
 class SetState(Action):
     """Set a client-side state variable. No server round-trip.
 
-    The ``key`` supports dot-paths for nested updates::
+    The `key` supports dot-paths for nested updates:
 
-        SetState("todos.0.done", True)   # deep-update into a list
+    ```python
+    SetState("todos.0.done", True)   # deep-update into a list
+    ```
     """
 
     action: Literal["setState"] = "setState"
@@ -89,8 +91,8 @@ class ToggleState(Action):
 class AppendState(Action):
     """Append a value to a state array.
 
-    Appends to the end by default. Pass ``index`` to insert at a specific
-    position (supports negative indices, e.g. ``index=0`` to prepend).
+    Appends to the end by default. Pass `index` to insert at a specific
+    position (supports negative indices, e.g. `index=0` to prepend).
 
     If the key doesn't exist yet, creates a new single-element array.
     """
@@ -125,13 +127,13 @@ class AppendState(Action):
 class PopState(Action):
     """Remove an item by index from a state array.
 
-    Supports negative indices (e.g. ``-1`` for the last element).
+    Supports negative indices (e.g. `-1` for the last element).
     """
 
     action: Literal["popState"] = "popState"
     key: str = Field(description="State key or dot-path to the array")
     index: int | str = Field(
-        description="Index to remove (int or template string like '{{ $index }}')."
+        description="Index to remove (int or template string like `{{ $index }}`)."
     )
 
     @field_validator("key")

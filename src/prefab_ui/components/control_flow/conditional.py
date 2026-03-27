@@ -1,17 +1,19 @@
 """Conditional rendering components: If, Elif, Else.
 
 These components express conditional logic in the Python DSL as natural
-siblings, mirroring Python's own if/elif/else syntax::
+siblings, mirroring Python's own if/elif/else syntax:
 
-    with If("inventory == 0"):
-        Alert("Out of stock", variant="destructive")
-    with Elif("inventory < 10"):
-        Alert("Low stock")
-    with Else():
-        Badge("In stock")
+```python
+with If("inventory == 0"):
+    Alert("Out of stock", variant="destructive")
+with Elif("inventory < 10"):
+    Alert("Low stock")
+with Else():
+    Badge("In stock")
+```
 
 During serialization, the parent container groups consecutive If/Elif/Else
-siblings into a single ``Condition`` node in the wire format. These component
+siblings into a single `Condition` node in the wire format. These component
 types never appear in the JSON directly.
 """
 
@@ -31,10 +33,12 @@ class If(ContainerComponent):
     Args:
         condition: Expression string evaluated against the current state.
 
-    Example::
+    **Example:**
 
-        with If("count > 0"):
-            Text("{{ count }} items")
+    ```python
+    with If("count > 0"):
+        Text("{{ count }} items")
+    ```
     """
 
     type: Literal["If"] = "If"
@@ -58,10 +62,12 @@ class Elif(ContainerComponent):
     Args:
         condition: Expression string evaluated against the current state.
 
-    Example::
+    **Example:**
 
-        with Elif("count == 0"):
-            Text("No items")
+    ```python
+    with Elif("count == 0"):
+        Text("No items")
+    ```
     """
 
     type: Literal["Elif"] = "Elif"
@@ -82,10 +88,14 @@ class Elif(ContainerComponent):
 class Else(ContainerComponent):
     """Default branch — renders when no preceding If/Elif matched.
 
-    Example::
+    Takes no arguments beyond children. Must follow an `If` or `Elif`.
 
-        with Else():
-            Text("Fallback content")
+    **Example:**
+
+    ```python
+    with Else():
+        Text("Fallback content")
+    ```
     """
 
     type: Literal["Else"] = "Else"

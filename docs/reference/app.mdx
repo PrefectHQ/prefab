@@ -83,14 +83,10 @@ with PrefabApp(state={"count": 0, "items": []}) as app:
     Text("Count: {{ count }}")
 ```
 
-You can also use `set_initial_state()` alongside component construction — explicit `state=` values take precedence for the same key:
+Pass state directly to the `PrefabApp` constructor:
 
 ```python
-from prefab_ui.app import set_initial_state
-
-state = set_initial_state(count=0, items=[])
-
-with PrefabApp() as app:
+with PrefabApp(state={"count": 0, "items": []}) as app:
     Text("Count: {{ count }}")
 ```
 

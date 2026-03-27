@@ -1,15 +1,17 @@
 """Typography components following shadcn/ui conventions.
 
 These components provide semantic text styling with automatic dark mode support.
-Example::
+**Example:**
 
-    from prefab_ui.components import H1, H2, P, Muted, Lead
+```python
+from prefab_ui.components import H1, H2, P, Muted, Lead
 
-    H1("Dashboard")
-    H2("User Profile")
-    P("Welcome to the application.")
-    Muted("Last updated 5 minutes ago")
-    Lead("A comprehensive guide to getting started.")
+H1("Dashboard")
+H2("User Profile")
+P("Welcome to the application.")
+Muted("Last updated 5 minutes ago")
+Lead("A comprehensive guide to getting started.")
+```
 """
 
 from __future__ import annotations
@@ -25,7 +27,19 @@ TextAlign = Literal["left", "center", "right", "justify"] | None
 
 
 class _TextComponent(Component):
-    """Base class for text components that accept positional content."""
+    """Base class for text components that accept positional content.
+
+    Args:
+        content: Text content (positional or keyword).
+        bold: Render text in bold.
+        italic: Render text in italic.
+        underline: Render text with underline.
+        strikethrough: Render text with strikethrough.
+        uppercase: Transform text to uppercase.
+        lowercase: Transform text to lowercase.
+        code: Render text in monospace font.
+        align: Horizontal text alignment.
+    """
 
     content: RxStr = Field(description="Text content")
     bold: bool | None = Field(default=None, exclude=True)
@@ -82,10 +96,15 @@ def _text_init(self: _TextComponent, content: str | None = None, **kwargs: Any) 
 class H1(_TextComponent):
     """Large page heading (h1).
 
-    Example::
+    Args:
+        content: Heading text.
 
-        H1("Dashboard")
-        H1("{{ title }}")  # With interpolation
+    **Example:**
+
+    ```python
+    H1("Dashboard")
+    H1("{{ title }}")  # With interpolation
+    ```
     """
 
     type: Literal["H1"] = "H1"
@@ -103,10 +122,15 @@ class H1(_TextComponent):
 class H2(_TextComponent):
     """Section heading (h2).
 
-    Example::
+    Args:
+        content: Heading text.
 
-        H2("User Settings")
-        H2("{{ section_name }}")
+    **Example:**
+
+    ```python
+    H2("User Settings")
+    H2("{{ section_name }}")
+    ```
     """
 
     type: Literal["H2"] = "H2"
@@ -124,9 +148,14 @@ class H2(_TextComponent):
 class H3(_TextComponent):
     """Subsection heading (h3).
 
-    Example::
+    Args:
+        content: Heading text.
 
-        H3("Account Details")
+    **Example:**
+
+    ```python
+    H3("Account Details")
+    ```
     """
 
     type: Literal["H3"] = "H3"
@@ -144,9 +173,14 @@ class H3(_TextComponent):
 class H4(_TextComponent):
     """Small heading (h4).
 
-    Example::
+    Args:
+        content: Heading text.
 
-        H4("Additional Options")
+    **Example:**
+
+    ```python
+    H4("Additional Options")
+    ```
     """
 
     type: Literal["H4"] = "H4"
@@ -164,10 +198,15 @@ class H4(_TextComponent):
 class P(_TextComponent):
     """Paragraph text.
 
-    Example::
+    Args:
+        content: Paragraph text.
 
-        P("Welcome to the application.")
-        P("Hello, {{ name }}!")
+    **Example:**
+
+    ```python
+    P("Welcome to the application.")
+    P("Hello, {{ name }}!")
+    ```
     """
 
     type: Literal["P"] = "P"
@@ -185,9 +224,14 @@ class P(_TextComponent):
 class Lead(_TextComponent):
     """Lead paragraph with larger text for introductions.
 
-    Example::
+    Args:
+        content: Lead paragraph text.
 
-        Lead("A comprehensive guide to building MCP applications.")
+    **Example:**
+
+    ```python
+    Lead("A comprehensive guide to building MCP applications.")
+    ```
     """
 
     type: Literal["Lead"] = "Lead"
@@ -205,9 +249,14 @@ class Lead(_TextComponent):
 class Large(_TextComponent):
     """Large text for emphasis.
 
-    Example::
+    Args:
+        content: Text content.
 
-        Large("Important information")
+    **Example:**
+
+    ```python
+    Large("Important information")
+    ```
     """
 
     type: Literal["Large"] = "Large"
@@ -225,9 +274,14 @@ class Large(_TextComponent):
 class Small(_TextComponent):
     """Small text for fine print or metadata.
 
-    Example::
+    Args:
+        content: Text content.
 
-        Small("Terms and conditions apply")
+    **Example:**
+
+    ```python
+    Small("Terms and conditions apply")
+    ```
     """
 
     type: Literal["Small"] = "Small"
@@ -245,10 +299,15 @@ class Small(_TextComponent):
 class Muted(_TextComponent):
     """Muted/secondary text for less prominent information.
 
-    Example::
+    Args:
+        content: Text content.
 
-        Muted("Last updated 5 minutes ago")
-        Muted("{{ subtitle }}")
+    **Example:**
+
+    ```python
+    Muted("Last updated 5 minutes ago")
+    Muted("{{ subtitle }}")
+    ```
     """
 
     type: Literal["Muted"] = "Muted"
@@ -266,9 +325,14 @@ class Muted(_TextComponent):
 class BlockQuote(_TextComponent):
     """Block quotation.
 
-    Example::
+    Args:
+        content: Quotation text.
 
-        BlockQuote("The best way to predict the future is to invent it.")
+    **Example:**
+
+    ```python
+    BlockQuote("The best way to predict the future is to invent it.")
+    ```
     """
 
     type: Literal["BlockQuote"] = "BlockQuote"

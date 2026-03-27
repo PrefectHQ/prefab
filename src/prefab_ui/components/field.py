@@ -1,27 +1,31 @@
 """Composable form field components.
 
 Field groups a label, control, and error message into a single unit. Its
-main job is validation styling — when ``invalid`` is set, all text inside
+main job is validation styling — when `invalid` is set, all text inside
 turns red automatically via CSS cascade.
 
 ChoiceCard is a Field subclass that renders as a bordered, clickable card.
 Clicking anywhere on the card toggles the wrapped control (Switch, Checkbox,
 etc.).
 
-Form validation::
+**Form validation:**
 
-    with Field(invalid=Rx("!destination")):
-        Label("Destination")
-        Select(name="destination", placeholder="Choose a planet...")
-        FieldError("Please select a destination.")
+```python
+with Field(invalid=Rx("!destination")):
+    Label("Destination")
+    Select(name="destination", placeholder="Choose a planet...")
+    FieldError("Please select a destination.")
+```
 
-Choice card::
+**Choice card:**
 
-    with ChoiceCard():
-        with FieldContent():
-            FieldTitle("Share across devices")
-            FieldDescription("Focus is shared across devices.")
-        Switch()
+```python
+with ChoiceCard():
+    with FieldContent():
+        FieldTitle("Share across devices")
+        FieldDescription("Focus is shared across devices.")
+    Switch()
+```
 """
 
 from __future__ import annotations
@@ -37,21 +41,23 @@ from prefab_ui.rx import RxStr
 class Field(ContainerComponent):
     """Composable form field wrapper.
 
-    Groups a label, control, and error message. Propagates ``data-invalid``
+    Groups a label, control, and error message. Propagates `data-invalid`
     to all children via CSS cascade so labels turn red, controls get error
     styling, and error messages appear — without wiring each individually.
 
     Args:
         invalid: Whether the field is in an error state. Accepts reactive
-            expressions like ``Rx("!email")``.
+            expressions like `Rx("!email")`.
         disabled: Whether the field is dimmed and non-interactive.
 
-    Example::
+    **Example:**
 
-        with Field(invalid=True):
-            Label("Email")
-            Input(name="email")
-            FieldError("Email is required.")
+    ```python
+    with Field(invalid=True):
+        Label("Email")
+        Input(name="email")
+        FieldError("Email is required.")
+    ```
     """
 
     type: Literal["Field"] = "Field"
@@ -70,16 +76,19 @@ class ChoiceCard(Field):
     to-toggle behavior. Use FieldContent to group the title and description,
     and place the toggle control (Switch, Checkbox) alongside it.
 
-    When the control is toggled on, the card highlights with a subtle
-    border and background tint.
+    Args:
+        invalid: Whether the card is in an error state.
+        disabled: Whether the card is dimmed and non-interactive.
 
-    Example::
+    **Example:**
 
-        with ChoiceCard():
-            with FieldContent():
-                FieldTitle("Dark mode")
-                FieldDescription("Use dark theme throughout the app.")
-            Switch()
+    ```python
+    with ChoiceCard():
+        with FieldContent():
+            FieldTitle("Dark mode")
+            FieldDescription("Use dark theme throughout the app.")
+        Switch()
+    ```
     """
 
     type: Literal["ChoiceCard"] = "ChoiceCard"
@@ -88,9 +97,14 @@ class ChoiceCard(Field):
 class FieldTitle(Component):
     """Field heading text.
 
-    Example::
+    Args:
+        content: Title text.
 
-        FieldTitle("Share across devices")
+    **Example:**
+
+    ```python
+    FieldTitle("Share across devices")
+    ```
     """
 
     type: Literal["FieldTitle"] = "FieldTitle"
@@ -111,9 +125,14 @@ class FieldTitle(Component):
 class FieldDescription(Component):
     """Field description text.
 
-    Example::
+    Args:
+        content: Description text.
 
-        FieldDescription("Focus is shared across devices.")
+    **Example:**
+
+    ```python
+    FieldDescription("Focus is shared across devices.")
+    ```
     """
 
     type: Literal["FieldDescription"] = "FieldDescription"
@@ -132,13 +151,15 @@ class FieldDescription(Component):
 
 
 class FieldContent(ContainerComponent):
-    """Groups title and description in choice card layouts.
+    """Container that groups title and description in choice card layouts.
 
-    Example::
+    **Example:**
 
-        with FieldContent():
-            FieldTitle("Dark mode")
-            FieldDescription("Use dark theme throughout the app.")
+    ```python
+    with FieldContent():
+        FieldTitle("Dark mode")
+        FieldDescription("Use dark theme throughout the app.")
+    ```
     """
 
     type: Literal["FieldContent"] = "FieldContent"
@@ -147,9 +168,14 @@ class FieldContent(ContainerComponent):
 class FieldError(Component):
     """Error message text for invalid fields.
 
-    Example::
+    Args:
+        content: Error message text.
 
-        FieldError("Please select a destination.")
+    **Example:**
+
+    ```python
+    FieldError("Please select a destination.")
+    ```
     """
 
     type: Literal["FieldError"] = "FieldError"

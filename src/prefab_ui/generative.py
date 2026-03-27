@@ -1,0 +1,352 @@
+"""Generative UI — component introspection, sandbox execution, and guides.
+
+Prefab-side business logic for generative UI features. This module
+provides the functions and descriptions that MCP servers (like FastMCP's
+`GenerativeUI` provider) wrap as tools and resources.
+
+**Component introspection:**
+
+```python
+from prefab_ui.generative import search_components
+
+# Compact catalog
+print(search_components())
+
+# Detailed view for specific components
+print(search_components("Chart", detail=True))
+```
+
+**Sandbox execution:**
+
+```python
+from prefab_ui.generative import execute
+app = await execute('from prefab_ui.components import Text; Text("hi")')
+```
+
+**Coding guides:**
+
+```python
+from prefab_ui.generative import get_guide
+print(get_guide("writing-prefab-python"))
+```
+"""
+
+from __future__ import annotations
+
+import inspect
+from pathlib import Path
+from typing import Any
+
+from prefab_ui.app import PrefabApp
+from prefab_ui.components.base import Component, ContainerComponent, StatefulMixin
+
+RESOURCE_URI = "ui://prefab/generative.html"
+MIME_TYPE = "text/html;profile=mcp-app"
+
+_SKILLS_DIR = Path(__file__).parent.parent.parent / "skills"
+
+__all__ = [
+    "MIME_TYPE",
+    "RESOURCE_URI",
+    "describe_component",
+    "execute",
+    "get_all_components",
+    "get_guide",
+    "list_guides",
+    "search_components",
+]
+
+
+# ---------------------------------------------------------------------------
+# Component introspection
+# ---------------------------------------------------------------------------
+
+
+def get_all_components() -> dict[str, type[Component]]:
+    """Discover all Prefab component classes from the public API."""
+    import prefab_ui.components
+    import prefab_ui.components.charts
+
+    result: dict[str, type[Component]] = {}
+    for module in (prefab_ui.components, prefab_ui.components.charts):
+        names = getattr(module, "__all__", None) or [
+            n for n in dir(module) if not n.startswith("_")
+        ]
+        for name in names:
+            obj = getattr(module, name)
+            if (
+                isinstance(obj, type)
+                and issubclass(obj, Component)
+                and obj is not Component
+            ):
+                result[name] = obj
+    return result
+
+
+def _import_path(name: str, cls: type[Component]) -> str:
+    """Resolve the shortest public import path for a component."""
+    import prefab_ui.components
+    import prefab_ui.components.charts
+
+    for module in (prefab_ui.components, prefab_ui.components.charts):
+        if getattr(module, name, None) is cls:
+            return f"from {module.__name__} import {name}"
+    return f"from {cls.__module__} import {name}"
+
+
+def _summarize_component(name: str, cls: type[Component]) -> str:
+    """Compact summary: Name (tags) — description. Import path."""
+    tags: list[str] = []
+    if issubclass(cls, ContainerComponent):
+        tags.append("container")
+    if issubclass(cls, StatefulMixin):
+        tags.append("stateful")
+    tag_str = f" ({', '.join(tags)})" if tags else ""
+
+    doc = inspect.getdoc(cls)
+    first_line = (doc or "").split("\n")[0].rstrip(".")
+    desc = f" — {first_line}." if first_line else ""
+
+    return f"{name}{tag_str}{desc} {_import_path(name, cls)}"
+
+
+def describe_component(name: str, cls: type[Component]) -> str:
+    """Full component description: tags, import, docstring, and fields."""
+    parts = [name]
+
+    tags: list[str] = []
+    if issubclass(cls, ContainerComponent):
+        tags.append("container")
+    if issubclass(cls, StatefulMixin):
+        tags.append("stateful")
+    if tags:
+        parts[0] += f" ({', '.join(tags)})"
+
+    parts.append(f"  {_import_path(name, cls)}")
+
+    doc = inspect.getdoc(cls)
+    if doc:
+        parts.append(f"  {doc}")
+
+    parts.append("")
+    parts.append("  Fields:")
+    for field_name, info in cls.model_fields.items():
+        if field_name in ("type", "css_class", "id", "children", "let"):
+            continue
+        desc = info.description or ""
+        anno = str(info.annotation).replace("typing.", "")
+        line = f"    {field_name}: {anno}"
+        if desc:
+            line += f" — {desc[:80]}"
+        parts.append(line)
+
+    return "\n".join(parts)
+
+
+def search_components(
+    query: str = "",
+    *,
+    detail: bool = False,
+    components: dict[str, type[Component]] | None = None,
+) -> str:
+    """Search the Prefab component library.
+
+    Use this tool to look up exact argument names, accepted values,
+    and usage examples before writing component code. The skill
+    covers patterns and layout; this tool has the API details.
+
+    Returns component names, import paths, tags, and a one-line
+    description. Use `detail=True` to include full docstrings,
+    field listings, and usage examples.
+
+    The query matches component names. Space-separated terms match
+    independently, so `"Card Badge Metric"` returns all three.
+
+    Recommended workflow (two calls max):
+
+    1. Call with no arguments to see the full catalog — the compact
+       listing includes import paths and descriptions, which is
+       enough for most components.
+    2. Call with a query and `detail=True` to get exact props for
+       components you're about to use (e.g. Metric's `delta=` vs
+       `trend=`, DataTable's `rows=` vs `data=`).
+
+    Args:
+        query: Filter by component name. Space-separated terms are
+            OR-matched (e.g. `"Card Badge"` returns both).
+        detail: Include full docstrings and field listings.
+    """
+    if components is None:
+        components = get_all_components()
+
+    terms = query.lower().split()
+    matches = {
+        name: cls
+        for name, cls in components.items()
+        if not terms or any(t in name.lower() for t in terms)
+    }
+    if not matches:
+        return f"No components matching '{query}'. Try a broader search."
+
+    header = (
+        f"{len(matches)} components"
+        if not terms
+        else f"{len(matches)} components matching '{query}'"
+    )
+
+    if detail:
+        sections = [
+            describe_component(name, cls) for name, cls in sorted(matches.items())
+        ]
+        return f"{header}:\n\n" + "\n\n".join(sections)
+
+    lines = [_summarize_component(name, cls) for name, cls in sorted(matches.items())]
+    return f"{header}:\n" + "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Coding guides
+# ---------------------------------------------------------------------------
+
+
+def list_guides() -> list[str]:
+    """Return available guide names.
+
+    Guides are Prefab coding references that explain how to write
+    effective Prefab code — the Python DSL, wire protocol, expressions,
+    actions, and more.
+    """
+    if not _SKILLS_DIR.is_dir():
+        return []
+    return sorted(d.name for d in _SKILLS_DIR.iterdir() if (d / "SKILL.md").is_file())
+
+
+def get_guide(name: str) -> str:
+    """Load a Prefab coding guide by name.
+
+    Returns the raw guide content (markdown with frontmatter) as a
+    single string, with any reference files appended.
+    Use `list_guides()` to see available names.
+    """
+    skill_dir = _SKILLS_DIR / name
+    skill_file = skill_dir / "SKILL.md"
+    if not skill_file.is_file():
+        available = list_guides()
+        raise ValueError(
+            f"Guide {name!r} not found. Available: {', '.join(available) or '(none)'}"
+        )
+
+    parts = [skill_file.read_text(encoding="utf-8")]
+
+    refs_dir = skill_dir / "references"
+    if refs_dir.is_dir():
+        for ref_file in sorted(refs_dir.glob("*.md")):
+            parts.append(ref_file.read_text(encoding="utf-8"))
+
+    return "\n\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Sandbox execution
+# ---------------------------------------------------------------------------
+
+
+async def execute(
+    code: str,
+    *,
+    data: dict[str, Any] | None = None,
+    sandbox: Any | None = None,
+) -> PrefabApp:
+    """Execute Prefab Python code in a sandbox and render the result.
+
+    The code runs in a Pyodide WASM sandbox with full Python support.
+    Import everything you use. Use the `components` tool to look up
+    available components and their import paths.
+
+    Always use PrefabApp as the outermost context manager — this enables
+    streaming so the UI renders progressively as code is written:
+
+    ```python
+    from prefab_ui.components import Column, Heading, Text, Row, Badge
+    from prefab_ui.app import PrefabApp
+
+    with PrefabApp() as app:
+        with Column(gap=4):
+            Heading("Dashboard")
+            with Row(gap=2):
+                Text("Revenue: $1.2M")
+                Badge("On Track", variant="success")
+    ```
+
+    For interactive UIs, pass initial state as a dict and use `.rx`
+    on stateful components for reactive bindings:
+
+    ```python
+    from prefab_ui.components import Column, Slider, Text
+    from prefab_ui.app import PrefabApp
+
+    with PrefabApp(state={"threshold": 50}) as app:
+        with Column(gap=4):
+            slider = Slider(value=50, min=0, max=100, name="threshold")
+            Text(f"Threshold: {slider.rx}%")
+    ```
+
+    `slider.rx` produces `{{ threshold }}`, a template expression
+    that resolves against client-side state. Use `Rx("key")` directly,
+    or apply pipe filters: `Rx("balance").currency()` produces
+    `{{ balance | currency }}`.
+
+    Available pipes: upper, lower, currency, length, json, round(n),
+    default(val), truncate(n).
+
+    Charts live in `prefab_ui.components.charts`:
+
+    ```python
+    from prefab_ui.components.charts import BarChart, ChartSeries
+
+    BarChart(
+        data=[{"month": "Jan", "rev": 100}, {"month": "Feb", "rev": 200}],
+        series=[ChartSeries(data_key="rev", label="Revenue")],
+        x_axis="month",
+    )
+    ```
+
+    Values passed via `data` are available as global variables in the
+    code. Python features like loops, f-strings, and comprehensions all
+    work.
+
+    **Layout patterns:**
+
+    - Card sub-components (CardHeader, CardContent, CardFooter) have
+      built-in padding. Don't add extra padding to them. For a simple
+      card without sub-components, use `Card(css_class="p-6")`.
+    - Use `Grid(columns=N, gap=4)` for equal-width cards or panels.
+      Grid handles sizing automatically — no flex classes needed.
+      For unequal widths, pass a list: `Grid(columns=[2, 1], gap=4)`
+      gives a 2:1 ratio.
+    - Row is for inline elements (badges, icons + text, buttons).
+      Prefer Grid when children should have equal or proportional
+      widths. Row does not wrap by default.
+    - Column and Row accept `gap` (Tailwind scale: 1-12),
+      `align` (cross-axis), and `justify` (main-axis) as native
+      props — prefer these over raw css_class for spacing.
+    - Use `css_class="overflow-hidden"` on containers if chart
+      or content edges should clip to the container boundary.
+
+    Args:
+        code: Python code that builds a Prefab component tree.
+        data: Values injected as variables in the sandbox namespace.
+        sandbox: A Sandbox instance. If not provided, a new one is
+            created on each call.
+    """
+    if sandbox is None:
+        from prefab_ui.sandbox import Sandbox
+
+        sandbox = Sandbox()
+
+    try:
+        wire = await sandbox.run(code, data=data)
+    except RuntimeError as exc:
+        raise ValueError(f"Code execution failed: {exc}") from exc
+
+    return PrefabApp.from_json(wire)

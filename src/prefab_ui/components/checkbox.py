@@ -2,16 +2,18 @@
 
 Checkboxes let users select one or more options from a set.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Checkbox, Label
+```python
+from prefab_ui.components import Checkbox, Label
 
-    Checkbox(value=True, label="Accept terms")
-    Checkbox(label="Subscribe to newsletter")
+Checkbox(value=True, label="Accept terms")
+Checkbox(label="Subscribe to newsletter")
 
-    # Access reactive value
-    agree = Checkbox(label="I agree")
-    Text(f"Agreed: {agree.rx}")
+# Access reactive value
+agree = Checkbox(label="I agree")
+Text(f"Agreed: {agree.rx}")
+```
 """
 
 from __future__ import annotations
@@ -36,11 +38,13 @@ class Checkbox(StatefulMixin, Component):
         required: Whether checkbox is required
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        Checkbox(label="Remember me")
-        Checkbox(value=True, label="Agreed")
-        Checkbox(label="Enable {{ feature_name }}", value="{{ is_enabled }}")
+    ```python
+    Checkbox(label="Remember me")
+    Checkbox(value=True, label="Agreed")
+    Checkbox(label="Enable {{ feature_name }}", value="{{ is_enabled }}")
+    ```
     """
 
     _auto_name: ClassVar[str] = "checkbox"
@@ -63,5 +67,5 @@ class Checkbox(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for ``value`` — whether checkbox is checked."""
+        """Alias for `value` — whether checkbox is checked."""
         return self.value

@@ -10,15 +10,17 @@ from prefab_ui.components.base import ContainerComponent
 class Container(ContainerComponent):
     """A centered, max-width container with responsive padding.
 
-    Wraps content in Tailwind's ``container`` with automatic horizontal
+    Wraps content in Tailwind's `container` with automatic horizontal
     centering and padding that scales with the viewport.
 
-    Example::
+    **Example:**
 
-        with Container():
-            H1("Dashboard")
-            Grid(columns=3):
-                ...
+    ```python
+    with Container():
+        H1("Dashboard")
+        Grid(columns=3):
+            ...
+    ```
     """
 
     type: Literal["Container"] = "Container"

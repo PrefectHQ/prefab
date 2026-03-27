@@ -2,7 +2,7 @@
 
 Manages a persistent Deno subprocess running Pyodide with the full
 Prefab library pre-loaded. Code runs inside WASM isolation — context
-managers, ``.rx``, Pydantic validation all work identically to native
+managers, `.rx`, Pydantic validation all work identically to native
 Python.
 """
 
@@ -22,16 +22,20 @@ PREFAB_SRC = Path(__file__).parent.parent  # src/prefab_ui/
 class PyodideSandbox:
     """Pyodide sandbox backed by a warm Deno subprocess.
 
-    Use as an async context manager for explicit lifecycle control::
+    Use as an async context manager for explicit lifecycle control:
 
-        async with PyodideSandbox() as sandbox:
-            result = await sandbox.run(code, data={"key": "value"})
+    ```python
+    async with PyodideSandbox() as sandbox:
+        result = await sandbox.run(code, data={"key": "value"})
+    ```
 
-    Or create a long-lived instance that starts lazily on first use::
+    Or create a long-lived instance that starts lazily on first use:
 
-        sandbox = PyodideSandbox()
-        result = await sandbox.run(code)  # cold start happens here
-        result = await sandbox.run(code)  # warm, ~1ms
+    ```python
+    sandbox = PyodideSandbox()
+    result = await sandbox.run(code)  # cold start happens here
+    result = await sandbox.run(code)  # warm, ~1ms
+    ```
 
     The Deno process auto-restarts if it crashes between calls.
     """
@@ -111,11 +115,11 @@ class PyodideSandbox:
 
         Args:
             code: Python code that builds a Prefab component tree.
-                Must assign a ``PrefabApp`` or ``Component`` to a variable.
+                Must assign a `PrefabApp` or `Component` to a variable.
             data: Values injected as variables in the sandbox namespace.
 
         Returns:
-            Prefab wire protocol dict (``$prefab``, ``view``, ``state``, etc.)
+            Prefab wire protocol dict (`$prefab`, `view`, `state`, etc.)
 
         Raises:
             RuntimeError: If the code fails or the sandbox is unavailable.

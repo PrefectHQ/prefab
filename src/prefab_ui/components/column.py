@@ -19,15 +19,28 @@ from prefab_ui.components.base import (
 class Column(ContainerComponent):
     """Vertical flex container.
 
-    Example::
+    Stacks children top-to-bottom. Use as a context manager to add
+    children declaratively.
 
-        with Column():
-            Heading("Title")
-            Text("Body")
+    Args:
+        gap: Space between children (Tailwind scale, e.g. 2, 4, 6).
+        align: Cross-axis alignment — start, center, end, stretch,
+            or baseline.
+        justify: Main-axis distribution — start, center, end, between,
+            around, evenly, or stretch.
+        css_class: Additional Tailwind classes (e.g. "p-6 max-w-2xl").
 
-        with Column(gap=4):
-            Heading("Title")
-            Text("Body")
+    **Example:**
+
+    ```python
+    with Column(gap=4):
+        Heading("Title")
+        Text("Body")
+
+    with Column(gap=2, align="center", css_class="p-6"):
+        Icon("check")
+        Text("Confirmed")
+    ```
     """
 
     type: Literal["Column"] = "Column"

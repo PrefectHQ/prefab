@@ -13,10 +13,19 @@ from prefab_ui.rx import RxStr
 class Audio(Component):
     """HTML5 audio element.
 
-    Example::
+    Args:
+        src: Audio URL.
+        controls: Show playback controls.
+        autoplay: Auto-start playback.
+        loop: Loop playback.
+        muted: Mute audio.
 
-        Audio(src="https://example.com/track.mp3")
-        Audio(src="...", controls=True, loop=True)
+    **Example:**
+
+    ```python
+    Audio(src="https://example.com/track.mp3")
+    Audio(src="...", controls=True, loop=True)
+    ```
     """
 
     type: Literal["Audio"] = "Audio"

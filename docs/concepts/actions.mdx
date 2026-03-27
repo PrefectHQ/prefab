@@ -67,17 +67,15 @@ To run multiple actions from one event, pass a list. The actions execute in orde
 
 Here's a crew list where the "Add" button chains two actions: `AppendState` pushes the input value onto the array, then `SetState` clears the input field. Both execute before the next render, so the user sees the item appear and the field reset simultaneously.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"let":{"_loop_7":"{{ $item }}","_loop_7_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ _loop_7 }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ _loop_7_idx }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]},"state":{"crew":["Arthur Dent","Ford Prefect","Trillian"],"new_member":""}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgRm9yRWFjaCwgSW5wdXQsIE11dGVkLCBSb3csIFRleHQKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgQXBwZW5kU3RhdGUsIFBvcFN0YXRlLCBTZXRTdGF0ZQoKc3RhdGUgPSBzZXRfaW5pdGlhbF9zdGF0ZSgKICAgIGNyZXc9WyJBcnRodXIgRGVudCIsICJGb3JkIFByZWZlY3QiLCAiVHJpbGxpYW4iXSwKICAgIG5ld19tZW1iZXI9IiIsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggRm9yRWFjaCgiY3JldyIpIGFzIGl0ZW06CiAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgVGV4dChpdGVtKQogICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAiw5ciLAogICAgICAgICAgICAgICAgdmFyaWFudD0iZ2hvc3QiLAogICAgICAgICAgICAgICAgc2l6ZT0ic20iLAogICAgICAgICAgICAgICAgb25fY2xpY2s9UG9wU3RhdGUoImNyZXciLCBpdGVtLmdldF9pbmRleCgpKQogICAgICAgICAgICApCiAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgSW5wdXQobmFtZT0ibmV3X21lbWJlciIsIHBsYWNlaG9sZGVyPSJDcmV3IG1lbWJlciBuYW1lLi4uIikKICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICJBZGQiLAogICAgICAgICAgICBvbl9jbGljaz1bCiAgICAgICAgICAgICAgICBBcHBlbmRTdGF0ZSgiY3JldyIsIHN0YXRlLm5ld19tZW1iZXIpLAogICAgICAgICAgICAgICAgU2V0U3RhdGUoIm5ld19tZW1iZXIiLCAiIiksCiAgICAgICAgICAgIF0KICAgICAgICApCiAgICBNdXRlZChmIntzdGF0ZS5jcmV3Lmxlbmd0aCgpfSBjcmV3IG1lbWJlcnMiKQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"let":{"_loop_7":"{{ $item }}","_loop_7_idx":"{{ $index }}"},"type":"ForEach","key":"crew","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"content":"{{ _loop_7 }}","type":"Text"},{"type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"crew","index":"{{ _loop_7_idx }}"}}]}]},{"cssClass":"gap-2","type":"Row","children":[{"name":"new_member","type":"Input","inputType":"text","placeholder":"Crew member name...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"crew","value":"{{ new_member }}"},{"action":"setState","key":"new_member","value":""}]}]},{"content":"{{ crew | length }} crew members","type":"Muted"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBDb2x1bW4sIEZvckVhY2gsIElucHV0LCBNdXRlZCwgUm93LCBUZXh0CmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IEFwcGVuZFN0YXRlLCBQb3BTdGF0ZSwgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4CgpuZXdfbWVtYmVyID0gUngoIm5ld19tZW1iZXIiKQpjcmV3ID0gUngoImNyZXciKQoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBGb3JFYWNoKCJjcmV3IikgYXMgaXRlbToKICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICBUZXh0KGl0ZW0pCiAgICAgICAgICAgIEJ1dHRvbigKICAgICAgICAgICAgICAgICLDlyIsCiAgICAgICAgICAgICAgICB2YXJpYW50PSJnaG9zdCIsCiAgICAgICAgICAgICAgICBzaXplPSJzbSIsCiAgICAgICAgICAgICAgICBvbl9jbGljaz1Qb3BTdGF0ZSgiY3JldyIsIGl0ZW0uZ2V0X2luZGV4KCkpCiAgICAgICAgICAgICkKICAgIHdpdGggUm93KGdhcD0yKToKICAgICAgICBJbnB1dChuYW1lPSJuZXdfbWVtYmVyIiwgcGxhY2Vob2xkZXI9IkNyZXcgbWVtYmVyIG5hbWUuLi4iKQogICAgICAgIEJ1dHRvbigKICAgICAgICAgICAgIkFkZCIsCiAgICAgICAgICAgIG9uX2NsaWNrPVsKICAgICAgICAgICAgICAgIEFwcGVuZFN0YXRlKCJjcmV3IiwgbmV3X21lbWJlciksCiAgICAgICAgICAgICAgICBTZXRTdGF0ZSgibmV3X21lbWJlciIsICIiKSwKICAgICAgICAgICAgXQogICAgICAgICkKICAgIE11dGVkKGYie2NyZXcubGVuZ3RoKCl9IGNyZXcgbWVtYmVycyIpCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Button, Column, ForEach, Input, Muted, Row, Text
 from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.rx import Rx
 
-state = set_initial_state(
-    crew=["Arthur Dent", "Ford Prefect", "Trillian"],
-    new_member="",
-)
+new_member = Rx("new_member")
+crew = Rx("crew")
 
 with Column(gap=3):
     with ForEach("crew") as item:
@@ -94,11 +92,11 @@ with Column(gap=3):
         Button(
             "Add",
             on_click=[
-                AppendState("crew", state.new_member),
+                AppendState("crew", new_member),
                 SetState("new_member", ""),
             ]
         )
-    Muted(f"{state.crew.length()} crew members")
+    Muted(f"{crew.length()} crew members")
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -156,8 +154,7 @@ with Column(gap=3):
       },
       {"content": "{{ crew | length }} crew members", "type": "Muted"}
     ]
-  },
-  "state": {"crew": ["Arthur Dent", "Ford Prefect", "Trillian"], "new_member": ""}
+  }
 }
 ```
 </CodeGroup>

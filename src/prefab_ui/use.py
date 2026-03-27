@@ -1,23 +1,25 @@
 """Use — reference a defined component template.
 
-A ``Use`` node references a :class:`~prefab_ui.define.Define` template by
-name. On the wire it desugars to ``{"$ref": "name"}``, with optional ``let``
-bindings for scoped overrides and ``cssClass`` for styling.
+A `Use` node references a `Define` template by
+name. On the wire it desugars to `{"$ref": "name"}`, with optional `let`
+bindings for scoped overrides and `cssClass` for styling.
 
-Example::
+**Example:**
 
-    from prefab_ui.define import Define
-    from prefab_ui.use import Use
-    from prefab_ui.components import Card, Column, Heading, Badge
+```python
+from prefab_ui.define import Define
+from prefab_ui.use import Use
+from prefab_ui.components import Card, Column, Heading, Badge
 
-    with Define("user-card") as user_card:
-        with Card():
-            Heading("{{ name }}")
-            Badge("{{ role }}")
+with Define("user-card") as user_card:
+    with Card():
+        Heading("{{ name }}")
+        Badge("{{ role }}")
 
-    with Column() as layout:
-        Use("user-card", name="Alice", role="Engineer")
-        Use("user-card", name="Bob", role="Designer")
+with Column() as layout:
+    Use("user-card", name="Alice", role="Engineer")
+    Use("user-card", name="Bob", role="Designer")
+```
 """
 
 from __future__ import annotations
@@ -35,11 +37,11 @@ _BASE_FIELDS = frozenset(Component.model_fields)
 class Use(Component):
     """Reference a defined component template by name.
 
-    Kwargs that aren't base component fields (``css_class``)
-    become scoped ``let`` bindings on the ``$ref`` node.
+    Kwargs that aren't base component fields (`css_class`)
+    become scoped `let` bindings on the `$ref` node.
 
     Args:
-        name: The template name (must match a ``Define`` name).
+        name: The template name (must match a `Define` name).
         **kwargs: Scoped bindings and/or base component fields.
     """
 
@@ -61,7 +63,7 @@ class Use(Component):
         super().__init__(**init_kwargs)
 
     def to_json(self) -> dict[str, Any]:
-        """Desugar to ``$ref`` with optional ``let`` and ``cssClass``."""
+        """Desugar to `$ref` with optional `let` and `cssClass`."""
         ref: dict[str, Any] = {"$ref": self.name}
 
         if self.overrides:

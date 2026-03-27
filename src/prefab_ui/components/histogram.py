@@ -4,22 +4,24 @@ Binning happens in Python at construction time. The renderer receives a
 standard BarChart payload with pre-computed bin labels and counts, so no
 new React component or Zod schema is needed.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Histogram
+```python
+from prefab_ui.components import Histogram
 
-    Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
 
-    Histogram(
-        values=[10.5, 20.3, 15.7, 30.1, 25.0],
-        bins=5,
-        color="#4f46e5",
-    )
+Histogram(
+    values=[10.5, 20.3, 15.7, 30.1, 25.0],
+    bins=5,
+    color="#4f46e5",
+)
 
-    Histogram(
-        values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        bin_edges=[0, 3, 7, 10],
-    )
+Histogram(
+    values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    bin_edges=[0, 3, 7, 10],
+)
+```
 """
 
 from __future__ import annotations
@@ -50,7 +52,7 @@ def _compute_bins(
 ) -> list[dict[str, Any]]:
     """Compute histogram bin counts from raw values.
 
-    Returns a list of ``{"bin": "lo-hi", "count": n}`` dicts suitable for
+    Returns a list of `{"bin": "lo-hi", "count": n}` dicts suitable for
     BarChart data.
     """
     if not values:
@@ -95,7 +97,7 @@ def _compute_bins(
 class Histogram(Component):
     """Histogram that auto-bins raw values and renders as a BarChart.
 
-    The ``values``, ``bins``, and ``bin_edges`` fields are consumed during
+    The `values`, `bins`, and `bin_edges` fields are consumed during
     construction and excluded from the serialized output. The renderer
     receives a standard BarChart payload.
 
@@ -110,9 +112,11 @@ class Histogram(Component):
         color: Bar fill color (CSS color string).
         bar_radius: Corner radius on bars.
 
-    Example::
+    **Example:**
 
-        Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+    ```python
+    Histogram(values=[1, 2, 2, 3, 3, 3, 4, 4, 5])
+    ```
     """
 
     type: Literal["BarChart"] = "BarChart"

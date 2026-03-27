@@ -1,23 +1,25 @@
 """DropZone component for drag-and-drop file uploads.
 
 A styled drag-and-drop area where users can drop files or click to browse.
-Reads selected files to base64 and fires ``onChange`` with structured file data.
+Reads selected files to base64 and fires `onChange` with structured file data.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import DropZone
-    from prefab_ui.actions.mcp import CallTool
+```python
+from prefab_ui.components import DropZone
+from prefab_ui.actions.mcp import CallTool
 
-    DropZone(
-        label="Drop files here",
-        accept="image/*",
-        multiple=True,
-        on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
-    )
+DropZone(
+    label="Drop files here",
+    accept="image/*",
+    multiple=True,
+    on_change=CallTool("process_images", arguments={"files": "{{ $event }}"}),
+)
 
-    # Access reactive value
-    zone = DropZone(label="Drop files", accept="image/*")
-    Text(f"Files: {zone.rx}")
+# Access reactive value
+zone = DropZone(label="Drop files", accept="image/*")
+Text(f"Files: {zone.rx}")
+```
 """
 
 from __future__ import annotations
@@ -34,17 +36,17 @@ from prefab_ui.rx import RxStr
 class DropZone(StatefulMixin, Component):
     """Drag-and-drop file upload area.
 
-    Fires ``onChange`` with file data as ``$event``:
-    ``[{name, size, type, data}, ...]`` (always an array, even for single files).
+    Fires `onChange` with file data as `$event`:
+    `[{name, size, type, data}, ...]` (always an array, even for single files).
 
-    State value is always ``list[FileUpload]``, defaulting to ``[]``.
-    When ``multiple=False``, uploading a new file overwrites the previous one.
-    When ``multiple=True``, files accumulate.
+    State value is always `list[FileUpload]`, defaulting to `[]`.
+    When `multiple=False`, uploading a new file overwrites the previous one.
+    When `multiple=True`, files accumulate.
 
     Args:
         label: Primary prompt text shown in the drop zone.
         description: Secondary text below the label (e.g. file type hints).
-        accept: File type filter (e.g. ``"image/*"``, ``".csv,.xlsx"``).
+        accept: File type filter (e.g. `"image/*"`, `".csv,.xlsx"`).
         multiple: Allow dropping multiple files.
         max_size: Maximum file size in bytes per file.
         disabled: Whether the drop zone is disabled.

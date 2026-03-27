@@ -2,17 +2,19 @@
 
 Text inputs with full form validation styling and dark mode support.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Input, Label
+```python
+from prefab_ui.components import Input, Label
 
-    Input(placeholder="Enter your name")
-    Input(input_type="email", placeholder="you@example.com")
-    Input(input_type="password", placeholder="••••••••")
+Input(placeholder="Enter your name")
+Input(input_type="email", placeholder="you@example.com")
+Input(input_type="password", placeholder="••••••••")
 
-    # Access reactive value
-    input_field = Input(placeholder="Type something...")
-    Text(f"Value: {input_field.rx}")
+# Access reactive value
+input_field = Input(placeholder="Type something...")
+Text(f"Value: {input_field.rx}")
+```
 """
 
 from __future__ import annotations
@@ -52,11 +54,13 @@ class Input(StatefulMixin, Component):
         required: Whether input is required
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        Input(placeholder="Search...")
-        Input(input_type="email", placeholder="Email", required=True)
-        Input(input_type="password", value="{{ user_password }}")
+    ```python
+    Input(placeholder="Search...")
+    Input(input_type="email", placeholder="Email", required=True)
+    Input(input_type="password", value="{{ user_password }}")
+    ```
     """
 
     _auto_name: ClassVar[str] = "input"

@@ -2,18 +2,20 @@
 
 Select dropdowns let users pick from a list of options.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Select, SelectOption
+```python
+from prefab_ui.components import Select, SelectOption
 
-    with Select(placeholder="Choose size..."):
-        SelectOption(value="sm", label="Small")
-        SelectOption(value="md", label="Medium")
-        SelectOption(value="lg", label="Large")
+with Select(placeholder="Choose size..."):
+    SelectOption(value="sm", label="Small")
+    SelectOption(value="md", label="Medium")
+    SelectOption(value="lg", label="Large")
 
-    # Access reactive value
-    size_select = Select(placeholder="Pick size...")
-    Text(f"Selected: {size_select.rx}")
+# Access reactive value
+size_select = Select(placeholder="Pick size...")
+Text(f"Selected: {size_select.rx}")
+```
 """
 
 from __future__ import annotations
@@ -44,11 +46,13 @@ class Select(StatefulMixin, ContainerComponent):
         required: Whether select is required
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        with Select(placeholder="Pick one...", name="choice"):
-            SelectOption(value="a", label="Option A")
-            SelectOption(value="b", label="Option B")
+    ```python
+    with Select(placeholder="Pick one...", name="choice"):
+        SelectOption(value="a", label="Option A")
+        SelectOption(value="b", label="Option B")
+    ```
     """
 
     _auto_name: ClassVar[str] = "select"
@@ -95,17 +99,19 @@ class SelectGroup(ContainerComponent):
     Args:
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        with Select(placeholder="Pick a food..."):
-            with SelectGroup():
-                SelectLabel("Fruits")
-                SelectOption(value="apple", label="Apple")
-                SelectOption(value="banana", label="Banana")
-            with SelectGroup():
-                SelectLabel("Vegetables")
-                SelectOption(value="carrot", label="Carrot")
-                SelectOption(value="broccoli", label="Broccoli")
+    ```python
+    with Select(placeholder="Pick a food..."):
+        with SelectGroup():
+            SelectLabel("Fruits")
+            SelectOption(value="apple", label="Apple")
+            SelectOption(value="banana", label="Banana")
+        with SelectGroup():
+            SelectLabel("Vegetables")
+            SelectOption(value="carrot", label="Carrot")
+            SelectOption(value="broccoli", label="Broccoli")
+    ```
     """
 
     type: Literal["SelectGroup"] = "SelectGroup"
@@ -120,9 +126,11 @@ class SelectLabel(Component):
         label: Display text for the group header
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        SelectLabel("Fruits")
+    ```python
+    SelectLabel("Fruits")
+    ```
     """
 
     type: Literal["SelectLabel"] = "SelectLabel"
@@ -150,12 +158,14 @@ class SelectSeparator(Component):
     Args:
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        with Select(placeholder="Pick one..."):
-            SelectOption(value="a", label="Option A")
-            SelectSeparator()
-            SelectOption(value="b", label="Option B")
+    ```python
+    with Select(placeholder="Pick one..."):
+        SelectOption(value="a", label="Option A")
+        SelectSeparator()
+        SelectOption(value="b", label="Option B")
+    ```
     """
 
     type: Literal["SelectSeparator"] = "SelectSeparator"
@@ -171,10 +181,12 @@ class SelectOption(Component):
         disabled: Whether option is disabled
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        SelectOption(value="yes", label="Yes")
-        SelectOption(value="no", label="No", selected=True)
+    ```python
+    SelectOption(value="yes", label="Yes")
+    SelectOption(value="no", label="No", selected=True)
+    ```
     """
 
     type: Literal["SelectOption"] = "SelectOption"

@@ -2,15 +2,17 @@
 
 The first child becomes the trigger; remaining children become the content.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import HoverCard, Badge, Column, Text, Progress
+```python
+from prefab_ui.components import HoverCard, Badge, Column, Text, Progress
 
-    with HoverCard(open_delay=0):
-        Badge("In Orbit")          # trigger
-        with Column(gap=2):        # content
-            Text("heart-of-gold")
-            Progress(value=100, indicator_class="bg-green-500")
+with HoverCard(open_delay=0):
+    Badge("In Orbit")          # trigger
+    with Column(gap=2):        # content
+        Text("heart-of-gold")
+        Progress(value=100, indicator_class="bg-green-500")
+```
 """
 
 from __future__ import annotations
@@ -28,13 +30,20 @@ class HoverCard(ContainerComponent):
     First child = trigger, remaining children = content.
     Appears on hover and auto-dismisses on mouse leave.
 
-    Example::
+    Args:
+        side: Which side to show the hover card (top, right, bottom, left).
+        open_delay: Delay in milliseconds before opening.
+        close_delay: Delay in milliseconds before closing.
 
-        with HoverCard(open_delay=0):
-            Badge("Healthy")
-            with Column(gap=2):
-                Text("weather-api")
-                Muted("Uptime: 99.97%")
+    **Example:**
+
+    ```python
+    with HoverCard(open_delay=0):
+        Badge("Healthy")
+        with Column(gap=2):
+            Text("weather-api")
+            Muted("Uptime: 99.97%")
+    ```
     """
 
     type: Literal["HoverCard"] = "HoverCard"

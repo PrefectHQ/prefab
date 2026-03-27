@@ -16,13 +16,26 @@ class Text(_TextComponent):
     """Body text component with inline formatting support.
 
     Accepts a single string for plain text, or mixed positional args
-    of strings and inline components (Span, Link) for rich text:
+    of strings and inline components (Span, Link) for rich text.
 
-    Example::
+    Args:
+        content: Text content (positional or keyword).
+        bold: Render text in bold.
+        italic: Render text in italic.
+        underline: Render text with underline.
+        strikethrough: Render text with strikethrough.
+        uppercase: Transform text to uppercase.
+        lowercase: Transform text to lowercase.
+        code: Render text in monospace font.
+        align: Horizontal text alignment.
 
-        Text("Hello, {{ name }}!")
+    **Example:**
 
-        Text("Click ", Span("here", bold=True), " to continue")
+    ```python
+    Text("Hello, {{ name }}!")
+
+    Text("Click ", Span("here", bold=True), " to continue")
+    ```
     """
 
     type: Literal["Text"] = "Text"

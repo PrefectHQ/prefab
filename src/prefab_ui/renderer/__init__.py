@@ -1,13 +1,15 @@
 """Renderer resource loader for Prefab.
 
 Ships a pre-built, self-contained HTML file (all JS/CSS inlined) inside the
-Python package.  ``get_renderer_html()`` reads and returns it directly — no
+Python package.  `get_renderer_html()` reads and returns it directly — no
 external server, CDN, or CSP domains required.
 
-Set ``PREFAB_RENDERER_URL`` to load renderer assets from an external origin
-instead — useful for local development with ``npx vite preview`` or a CDN::
+Set `PREFAB_RENDERER_URL` to load renderer assets from an external origin
+instead — useful for local development with `npx vite preview` or a CDN:
 
-    PREFAB_RENDERER_URL=http://localhost:4173 uv run python my_server.py
+```bash
+PREFAB_RENDERER_URL=http://localhost:4173 uv run python my_server.py
+```
 """
 
 from __future__ import annotations
@@ -55,11 +57,11 @@ def _get_origin(url: str) -> str:
 
 
 def get_renderer_head() -> str:
-    """Return the renderer ``<head>`` content (JS, CSS, meta tags).
+    """Return the renderer `<head>` content (JS, CSS, meta tags).
 
-    For bundled mode, extracts everything between ``<head>`` and
-    ``</head>`` from the self-contained HTML bundle.  For external mode,
-    returns ``<link>``/``<script>`` tags pointing at the external URL.
+    For bundled mode, extracts everything between `<head>` and
+    `</head>` from the self-contained HTML bundle.  For external mode,
+    returns `<link>`/`<script>` tags pointing at the external URL.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
     if override:
@@ -79,7 +81,7 @@ def get_renderer_html() -> str:
     """Return the renderer HTML.
 
     By default, returns the bundled single-file HTML with all JS/CSS
-    inlined.  When ``PREFAB_RENDERER_URL`` is set, returns a lightweight
+    inlined.  When `PREFAB_RENDERER_URL` is set, returns a lightweight
     stub that loads assets from that external origin.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
@@ -92,7 +94,7 @@ def get_renderer_csp() -> dict[str, list[str]]:
     """Return CSP domains needed for the renderer to load.
 
     The bundled renderer is fully self-contained, so no CSP domains are
-    needed.  When ``PREFAB_RENDERER_URL`` is set, returns the external
+    needed.  When `PREFAB_RENDERER_URL` is set, returns the external
     origin so the host sandbox allows loading those assets.
     """
     override = os.environ.get("PREFAB_RENDERER_URL")
@@ -106,7 +108,7 @@ def get_generative_renderer_html() -> str:
 
     The generative renderer extends the standard renderer with browser-side
     Pyodide execution, enabling progressive rendering of LLM-generated
-    Prefab Python code via ``ontoolinputpartial``.
+    Prefab Python code via `ontoolinputpartial`.
 
     Pyodide loads from CDN at runtime — the HTML itself is small.
 

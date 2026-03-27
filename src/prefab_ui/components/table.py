@@ -2,24 +2,26 @@
 
 Tables display structured data in rows and columns.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import (
-        Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
-    )
+```python
+from prefab_ui.components import (
+    Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption
+)
 
-    with Table():
-        TableCaption("Recent orders")
-        with TableHeader():
-            with TableRow():
-                TableHead("Order")
-                TableHead("Status")
-                TableHead("Amount")
-        with TableBody():
-            with TableRow():
-                TableCell("ORD-001")
-                TableCell("Shipped")
-                TableCell("$250.00")
+with Table():
+    TableCaption("Recent orders")
+    with TableHeader():
+        with TableRow():
+            TableHead("Order")
+            TableHead("Status")
+            TableHead("Amount")
+    with TableBody():
+        with TableRow():
+            TableCell("ORD-001")
+            TableCell("Shipped")
+            TableCell("$250.00")
+```
 """
 
 from __future__ import annotations
@@ -69,9 +71,14 @@ class TableRow(ContainerComponent):
 class TableHead(ContainerComponent):
     """A header cell within a TableRow.
 
-    Example::
+    Args:
+        content: Header text (alternative to children).
 
-        TableHead("Name")
+    **Example:**
+
+    ```python
+    TableHead("Name")
+    ```
     """
 
     type: Literal["TableHead"] = "TableHead"
@@ -97,12 +104,17 @@ class TableCell(ContainerComponent):
 
     Can contain text or arbitrary child components.
 
-    Example::
+    Args:
+        content: Cell text (alternative to children).
 
-        TableCell("$250.00")
-        # or with children:
-        with TableCell():
-            Badge("Active", variant="success")
+    **Example:**
+
+    ```python
+    TableCell("$250.00")
+    # or with children:
+    with TableCell():
+        Badge("Active", variant="success")
+    ```
     """
 
     type: Literal["TableCell"] = "TableCell"
@@ -126,9 +138,14 @@ class TableCell(ContainerComponent):
 class TableCaption(Component):
     """Table caption text.
 
-    Example::
+    Args:
+        content: Caption text.
 
-        TableCaption("A list of recent invoices")
+    **Example:**
+
+    ```python
+    TableCaption("A list of recent invoices")
+    ```
     """
 
     type: Literal["TableCaption"] = "TableCaption"

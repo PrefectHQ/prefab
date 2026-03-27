@@ -8,9 +8,11 @@ standalone mode they'll be undefined.
 from prefab_ui.rx import Rx
 
 #: The MCP host context. Provides reactive access to host environment
-#: state like display mode and theme::
+#: state like display mode and theme:
 #:
-#:     HOST.displayMode        # {{ $host.displayMode }}
-#:     HOST.theme              # {{ $host.theme }}
-#:     HOST.availableDisplayModes  # {{ $host.availableDisplayModes }}
+#: ```python
+#: HOST.displayMode        # `{{ $host.displayMode }}`
+#: HOST.theme              # `{{ $host.theme }}`
+#: HOST.availableDisplayModes  # `{{ $host.availableDisplayModes }}`
+#: ```
 HOST: Rx = Rx("$host")

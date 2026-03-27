@@ -1,12 +1,14 @@
 """Metric/KPI card component for displaying headline numbers with optional deltas.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Metric
+```python
+from prefab_ui.components import Metric
 
-    Metric(label="Revenue", value="$42M")
-    Metric(label="Active Users", value=1842, delta="+23.4%", trend="up")
-    Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+Metric(label="Revenue", value="$42M")
+Metric(label="Active Users", value=1842, delta="+23.4%", trend="up")
+Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+```
 """
 
 from __future__ import annotations
@@ -35,10 +37,12 @@ class Metric(Component):
         trend_sentiment: Color control — "positive" (green), "negative" (red),
             or "neutral" (muted). If None, inferred: up=positive, down=negative.
 
-    Example::
+    **Example:**
 
-        Metric(label="Revenue", value="$42M", delta="+12%")
-        Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+    ```python
+    Metric(label="Revenue", value="$42M", delta="+12%")
+    Metric(label="Costs", value="$1.2M", delta="-15%", trend="down", trend_sentiment="positive")
+    ```
     """
 
     type: Literal["Metric"] = "Metric"

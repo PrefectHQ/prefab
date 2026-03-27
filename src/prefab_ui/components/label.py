@@ -2,12 +2,14 @@
 
 Labels identify form inputs and provide accessible descriptions.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Label, Input
+```python
+from prefab_ui.components import Label, Input
 
-    with Label("Email address"):
-        Input(placeholder="you@example.com")
+with Label("Email address"):
+    Input(placeholder="you@example.com")
+```
 """
 
 from __future__ import annotations
@@ -28,15 +30,17 @@ class Label(ContainerComponent):
         for_id: ID of the associated input element
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        Label("Username")
-        Label("Email", for_id="email-input")
+    ```python
+    Label("Username")
+    Label("Email", for_id="email-input")
 
-        # With children
-        with Label():
-            Text("Password")
-            Input(input_type="password")
+    # With children
+    with Label():
+        Text("Password")
+        Input(input_type="password")
+    ```
     """
 
     type: Literal["Label"] = "Label"

@@ -14,20 +14,20 @@ from prefab_ui.rx import RxStr
 class Div(ContainerComponent):
     """A bare container with no default styling.
 
-    This is the Python equivalent of ``<div className="...">`` in React.
+    The Python equivalent of `<div className="...">` in React.
     Use when you need a wrapper with custom Tailwind classes that
     Column/Row/Grid don't naturally express.
 
-    Example::
+    Args:
+        style: Inline CSS styles as a dict of property/value pairs.
 
-        with Div(css_class="flex items-center gap-4 px-6 py-4"):
-            Badge("deploy", variant="outline")
-            P("Deployed v2.4.1")
+    **Example:**
 
-    For CSS that Tailwind can't express (vendor prefixes, ``clamp()``,
-    ``mask-image``, etc.), use the *style* escape hatch::
-
-        Div(style={"mask-image": "linear-gradient(to bottom, black 70%, transparent)"})
+    ```python
+    with Div(css_class="flex items-center gap-4 px-6 py-4"):
+        Badge("deploy", variant="outline")
+        P("Deployed v2.4.1")
+    ```
     """
 
     type: Literal["Div"] = "Div"
@@ -40,13 +40,27 @@ class Span(_TextComponent):
     """An inline text element with text modifiers.
 
     Supports bold, italic, underline, strikethrough, uppercase, lowercase,
-    `code` for inline code styling, plus arbitrary CSS via `css_class` or `style`.
+    `code` for inline code styling, plus arbitrary CSS via `css_class`
+    or `style`.
 
-    Example::
+    Args:
+        content: Text content.
+        bold: Render text in bold.
+        italic: Render text in italic.
+        underline: Render text with underline.
+        strikethrough: Render text with strikethrough.
+        uppercase: Transform text to uppercase.
+        lowercase: Transform text to lowercase.
+        code: Render as inline `<code>` with monospace font.
+        style: Inline CSS styles as a dict of property/value pairs.
 
-        Span("14m ago", css_class="text-sm text-muted-foreground")
-        Span("important", bold=True, underline=True)
-        Span("pip install prefab-ui", code=True)
+    **Example:**
+
+    ```python
+    Span("14m ago", css_class="text-sm text-muted-foreground")
+    Span("important", bold=True, underline=True)
+    Span("pip install prefab-ui", code=True)
+    ```
     """
 
     type: Literal["Span"] = "Span"
@@ -73,12 +87,24 @@ class Span(_TextComponent):
 class Link(_TextComponent):
     """An inline link that renders as an anchor tag.
 
-    Use inside Text for inline links within prose:
+    Use inside Text for inline links within prose.
 
-    Example::
+    Args:
+        content: Link text.
+        href: URL to navigate to.
+        target: Link target (`'_blank'` for new tab, `'_self'` for same tab).
+        bold: Render link text in bold.
+        italic: Render link text in italic.
+        underline: Render link text with underline.
+        code: Render as inline code with monospace font.
+        style: Inline CSS styles as a dict of property/value pairs.
 
-        Link("Prefab docs", href="https://prefab.prefect.io")
-        Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    **Example:**
+
+    ```python
+    Link("Prefab docs", href="https://prefab.prefect.io")
+    Text("Visit ", Link("our docs", href="https://docs.example.com"), " for more.")
+    ```
     """
 
     type: Literal["Link"] = "Link"

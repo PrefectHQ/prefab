@@ -1,28 +1,30 @@
 """Slider component for range input.
 
-Sliders let users select a numeric value from a range. Set ``range=True``
-for a two-thumb range slider that emits ``[min, max]`` values.
+Sliders let users select a numeric value from a range. Set `range=True`
+for a two-thumb range slider that emits `[min, max]` values.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Slider
+```python
+from prefab_ui.components import Slider
 
-    Slider(min=0, max=100, value=50)
-    Slider(min=0, max=10, step=0.5, value=5)
-    Slider(min=0, max=100, value=[20, 80], range=True)
+Slider(min=0, max=100, value=50)
+Slider(min=0, max=10, step=0.5, value=5)
+Slider(min=0, max=100, value=[20, 80], range=True)
 
-    # Styled slider with variant
-    Slider(min=0, max=100, value=75, variant="success")
+# Styled slider with variant
+Slider(min=0, max=100, value=75, variant="success")
 
-    # Vertical slider
-    Slider(min=0, max=100, value=50, orientation="vertical")
+# Vertical slider
+Slider(min=0, max=100, value=50, orientation="vertical")
 
-    # Bar-style handle
-    Slider(min=0, max=100, value=50, handle_style="bar")
+# Bar-style handle
+Slider(min=0, max=100, value=50, handle_style="bar")
 
-    # Access reactive value
-    slider = Slider(min=0, max=100, value=50)
-    Text(f"Value: {slider.rx}")
+# Access reactive value
+slider = Slider(min=0, max=100, value=50)
+Text(f"Value: {slider.rx}")
+```
 """
 
 from __future__ import annotations
@@ -49,9 +51,9 @@ SliderOrientation = Literal["horizontal", "vertical"]
 class Slider(StatefulMixin, Component):
     """Range slider input component.
 
-    When ``range=True``, renders two thumbs for selecting a range. The
-    ``value`` field accepts a ``[low, high]`` list and ``on_change``
-    emits the pair as ``[low, high]``.
+    When `range=True`, renders two thumbs for selecting a range. The
+    `value` field accepts a `[low, high]` list and `on_change`
+    emits the pair as `[low, high]`.
 
     Args:
         min: Minimum value
@@ -67,14 +69,16 @@ class Slider(StatefulMixin, Component):
         handle_style: Thumb shape (circle or bar)
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        Slider(min=0, max=100, value=50)
-        Slider(min=0, max=1, step=0.1, value=0.5)
-        Slider(min=0, max=100, value=[20, 80], range=True)
-        Slider(min=0, max=100, value=75, variant="success")
-        Slider(min=0, max=100, value=50, orientation="vertical")
-        Slider(min=0, max=100, value=50, handle_style="bar")
+    ```python
+    Slider(min=0, max=100, value=50)
+    Slider(min=0, max=1, step=0.1, value=0.5)
+    Slider(min=0, max=100, value=[20, 80], range=True)
+    Slider(min=0, max=100, value=75, variant="success")
+    Slider(min=0, max=100, value=50, orientation="vertical")
+    Slider(min=0, max=100, value=50, handle_style="bar")
+    ```
     """
 
     _auto_name: ClassVar[str] = "slider"

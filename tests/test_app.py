@@ -6,14 +6,8 @@ import json
 
 import pytest
 
-from prefab_ui.app import (
-    PROTOCOL_VERSION,
-    PrefabApp,
-    clear_initial_state,
-    set_initial_state,
-)
+from prefab_ui.app import PROTOCOL_VERSION, PrefabApp
 from prefab_ui.components import Column, Heading, Text
-from prefab_ui.rx import STATE, Rx, _BoundStateProxy
 
 
 class TestPrefabAppToJson:
@@ -263,101 +257,6 @@ class TestPrefabAppCsp:
         )
         csp = app.csp()
         assert "https://cdn.example.com" in csp["script_domains"]
-
-
-class TestSetInitialState:
-    def setup_method(self):
-        clear_initial_state()
-
-    def teardown_method(self):
-        clear_initial_state()
-
-    def test_consumed_by_prefab_app(self):
-        set_initial_state(name="world")
-        app = PrefabApp(view=Text(content="hi"))
-        assert app.state == {"name": "world"}
-
-    def test_cleared_after_consumption(self):
-        set_initial_state(name="world")
-        PrefabApp()
-        app2 = PrefabApp()
-        assert app2.state is None
-
-    def test_explicit_state_overrides(self):
-        set_initial_state(name="world", count=0)
-        app = PrefabApp(state={"name": "Alice"})
-        assert app.state == {"name": "Alice", "count": 0}
-
-    def test_accumulates_across_calls(self):
-        set_initial_state(name="world")
-        set_initial_state(count=0)
-        app = PrefabApp()
-        assert app.state == {"name": "world", "count": 0}
-
-    def test_no_initial_state_means_none(self):
-        app = PrefabApp()
-        assert app.state is None
-
-
-class TestBoundStateProxy:
-    """set_initial_state returns a proxy that validates key access."""
-
-    def setup_method(self):
-        clear_initial_state()
-
-    def teardown_method(self):
-        clear_initial_state()
-
-    def test_returns_bound_proxy(self):
-        state = set_initial_state(count=0)
-        assert isinstance(state, _BoundStateProxy)
-
-    def test_declared_key_returns_rx(self):
-        state = set_initial_state(count=0, name="Alice")
-        assert isinstance(state.count, Rx)
-        assert state.count.key == "count"
-
-    def test_undeclared_key_raises(self):
-        state = set_initial_state(count=0)
-        with pytest.raises(
-            AttributeError, match="'countt' is not a declared state key"
-        ):
-            state.countt
-
-    def test_error_lists_known_keys(self):
-        state = set_initial_state(count=0, name="Alice")
-        with pytest.raises(AttributeError, match="count, name"):
-            state.typo
-
-    def test_error_suggests_state_escape(self):
-        state = set_initial_state(count=0)
-        with pytest.raises(AttributeError, match="STATE.dynamic"):
-            state.dynamic
-
-    def test_accumulates_across_calls(self):
-        state = set_initial_state(count=0)
-        set_initial_state(items=[])
-        # items visible from original proxy since backing dict grew
-        assert state.items.key == "items"
-
-    def test_global_state_remains_unrestricted(self):
-        set_initial_state(count=0)
-        # STATE doesn't validate — any key works
-        assert STATE.anything.key == "anything"
-
-    def test_chaining_works(self):
-        state = set_initial_state(groups=[])
-        rx = state.groups.length()
-        assert str(rx) == "{{ groups | length }}"
-
-    def test_repr(self):
-        state = set_initial_state(count=0, items=[])
-        assert repr(state) == "State(count, items)"
-
-    def test_underscore_attr_raises_attribute_error(self):
-        state = set_initial_state(count=0)
-        with pytest.raises(AttributeError):
-            state._private
 
 
 class TestPrefabAppWireFormatIsolation:

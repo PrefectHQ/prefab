@@ -33,18 +33,20 @@ _defer_next_component: ContextVar[bool] = ContextVar(
 def defer() -> Generator[None, None, None]:
     """Create components without attaching them to the current parent.
 
-    Components created inside a ``defer()`` block are **not** automatically
-    appended as children to any enclosing context manager.  Use
-    :func:`insert` later to place them in the tree::
+    Components created inside a `defer()` block are **not** automatically
+    appended as children to any enclosing context manager. Use
+    `insert()` later to place them in the tree:
 
-        with Column() as outer:
-            with defer():
-                sidebar = Column()
-                with sidebar:
-                    Text("child of sidebar, not outer")
-            insert(sidebar)
+    ```python
+    with Column() as outer:
+        with defer():
+            sidebar = Column()
+            with sidebar:
+                Text("child of sidebar, not outer")
+        insert(sidebar)
 
-        assert len(outer.children) == 2
+    assert len(outer.children) == 2
+    ```
     """
     saved = _component_stack.get()
     _component_stack.set(None)
@@ -58,16 +60,18 @@ def insert(component: Component) -> Component:
     """Insert a deferred component into the current parent context.
 
     Use this to place a component that was created outside the tree
-    (either before any ``with`` block or inside a ``defer()`` block)
-    as a child of the current container::
+    (either before any `with` block or inside a `defer()` block)
+    as a child of the current container:
 
-        volume = Slider(value=75, defer=True)
+    ```python
+    volume = Slider(value=75, defer=True)
 
-        with Column():
-            Text(f"{volume.rx.number()}%")
-            insert(volume)  # volume becomes a child of Column here
+    with Column():
+        Text(f"{volume.rx.number()}%")
+        insert(volume)  # volume becomes a child of Column here
+    ```
 
-    Raises :class:`RuntimeError` if called outside a container context
+    Raises `RuntimeError` if called outside a container context
     or if the component is already a child of another container.
     """
     stack = _component_stack.get() or []
@@ -201,14 +205,14 @@ _VALID_STATE_KEY = re.compile(r"^[a-zA-Z_$][a-zA-Z0-9_.$]*$")
 
 
 class StatefulMixin:
-    """Mixin for components that support reactive state binding via ``.rx``.
+    """Mixin for components that support reactive state binding via `.rx`.
 
     Stateful components (Slider, Input, Checkbox, etc.) inherit from this
-    mixin to gain the ``.rx`` property, which returns an ``Rx`` object
-    serializing to ``{{ name }}`` for template expressions.
+    mixin to gain the `.rx` property, which returns an `Rx` object
+    serializing to `{{ name }}` for template expressions.
 
-    Subclasses narrow the ``value`` type (e.g. ``bool`` for Checkbox,
-    ``str | None`` for Tabs).
+    Subclasses narrow the `value` type (e.g. `bool` for Checkbox,
+    `str | None` for Tabs).
     """
 
     _auto_name: ClassVar[str]
@@ -233,7 +237,7 @@ class StatefulMixin:
     def rx(self) -> Rx:
         """Reactive reference to this component's state value.
 
-        Returns an ``Rx`` object that serializes to ``{{ key }}`` and can
+        Returns an `Rx` object that serializes to `{{ key }}` and can
         be passed to any string-typed component field or used in f-strings.
         """
         if self.name is None:
@@ -247,24 +251,26 @@ class StatefulMixin:
 class Component(BaseModel):
     """Base class for all UI components.
 
-    Components serialize to JSON via ``to_json()`` for the React renderer.
-    When created inside a ``ContainerComponent`` context manager, they
+    Components serialize to JSON via `to_json()` for the React renderer.
+    When created inside a `ContainerComponent` context manager, they
     automatically append themselves to the parent's children list.
 
-    Alternatively, pass ``parent=<container>`` to attach to a specific
-    container without using a context manager::
+    Alternatively, pass `parent=<container>` to attach to a specific
+    container without using a context manager:
 
-        root = Column(gap=4)
-        Heading("Sales Report", parent=root)
-        Text("Q3 results", parent=root)
+    ```python
+    root = Column(gap=4)
+    Heading("Sales Report", parent=root)
+    Text("Q3 results", parent=root)
+    ```
     """
 
     model_config = {"populate_by_name": True, "arbitrary_types_allowed": True}
 
     _auto_name: ClassVar[str | None] = None
-    """Subclasses set this to a prefix string (e.g. ``"slider"``) to opt in
+    """Subclasses set this to a prefix string (e.g. `"slider"`) to opt in
     to automatic name generation.  When set, components without an explicit
-    ``name`` receive a deterministic sequential key like ``slider-1``."""
+    `name` receive a deterministic sequential key like `slider-1`."""
 
     id: str | None = Field(
         default=None,
@@ -302,7 +308,7 @@ class Component(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _extract_defer(cls, data: Any) -> Any:
-        """Extract the ``defer`` kwarg and unwrap Rx names before validation."""
+        """Extract the `defer` kwarg and unwrap Rx names before validation."""
         if isinstance(data, dict):
             if data.pop("defer", False):
                 _defer_next_component.set(True)
@@ -314,7 +320,7 @@ class Component(BaseModel):
 
     @model_serializer(mode="wrap")
     def _serialize_rx(self, handler: Any) -> dict[str, Any]:
-        """Resolve any Rx values to ``{{ }}`` strings at serialization time."""
+        """Resolve any Rx values to `{{ }}` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
     def model_post_init(self, __context: Any) -> None:
@@ -336,8 +342,8 @@ class Component(BaseModel):
     def to_json(self) -> dict[str, Any]:
         """Serialize to JSON format for the React renderer.
 
-        Produces ``{"type": "ClassName", ...props}`` with ``None`` values
-        excluded. Children are serialized recursively.
+        Produces a JSON object with `type` set to the class name plus
+        props, with `None` values excluded. Children are serialized recursively.
         """
         return self.model_dump(by_alias=True, exclude_none=True)
 
@@ -345,11 +351,13 @@ class Component(BaseModel):
 class ContainerComponent(Component):
     """Component that can contain child components.
 
-    Use as a context manager to build nested layouts::
+    Use as a context manager to build nested layouts:
 
-        with Column():
-            Text("hello")
-            Text("world")
+    ```python
+    with Column():
+        Text("hello")
+        Text("world")
+    ```
     """
 
     children: list[Component] = Field(default_factory=list)

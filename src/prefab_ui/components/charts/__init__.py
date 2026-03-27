@@ -2,26 +2,28 @@
 
 Built on Recharts + shadcn ChartContainer in the renderer.
 
-Example::
+**Example:**
 
-    from prefab_ui.components.charts import BarChart, ChartSeries
+```python
+from prefab_ui.components.charts import BarChart, ChartSeries
 
-    BarChart(
-        data=[
-            {"month": "Jan", "desktop": 186, "mobile": 80},
-            {"month": "Feb", "desktop": 305, "mobile": 200},
-        ],
-        series=[
-            ChartSeries(data_key="desktop", label="Desktop"),
-            ChartSeries(data_key="mobile", label="Mobile"),
-        ],
-        x_axis="month",
-    )
+BarChart(
+    data=[
+        {"month": "Jan", "desktop": 186, "mobile": 80},
+        {"month": "Feb", "desktop": 305, "mobile": 200},
+    ],
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+)
 
-    from prefab_ui.components.charts import Sparkline
+from prefab_ui.components.charts import Sparkline
 
-    Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
-    Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+```
 """
 
 from __future__ import annotations
@@ -35,7 +37,13 @@ from prefab_ui.rx import RxStr
 
 
 class ChartSeries(BaseModel):
-    """Series definition for cartesian charts (Bar, Line, Area)."""
+    """Series definition for cartesian charts (Bar, Line, Area).
+
+    Args:
+        data_key: Data field to plot.
+        label: Display label (defaults to data_key).
+        color: CSS color override.
+    """
 
     model_config = {"populate_by_name": True}
 
@@ -49,19 +57,41 @@ class ChartSeries(BaseModel):
 class BarChart(Component):
     """Bar chart with one or more series.
 
-    Example::
+    Each series is a `ChartSeries(data_key=..., label=..., color=...)`
+    from `prefab_ui.components.charts`. The `data_key` selects which
+    field in each data row to plot.
 
-        BarChart(
-            data=[{"month": "Jan", "a": 10, "b": 20}],
-            series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
-            x_axis="month",
-            stacked=True,
-        )
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as bars.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        stacked: Stack bars instead of grouping side-by-side.
+        horizontal: Render as horizontal bar chart.
+        bar_radius: Corner radius on bars.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
+    **Example:**
+
+    ```python
+    from prefab_ui.components.charts import BarChart, ChartSeries
+
+    BarChart(
+        data=[{"month": "Jan", "a": 10, "b": 20}],
+        series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
+        x_axis="month",
+        stacked=True,
+    )
+    ```
     """
 
     type: Literal["BarChart"] = "BarChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as bars")
     x_axis: str | None = Field(
@@ -97,18 +127,38 @@ class BarChart(Component):
 class LineChart(Component):
     """Line chart with one or more series.
 
-    Example::
+    Series are defined with `ChartSeries` from
+    `prefab_ui.components.charts`.
 
-        LineChart(
-            data=[{"month": "Jan", "a": 10}],
-            series=[ChartSeries(data_key="a")],
-            x_axis="month",
-        )
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as lines.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        curve: Line interpolation style ("linear", "smooth", or "step").
+        show_dots: Show dots at data points.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
+    **Example:**
+
+    ```python
+    from prefab_ui.components.charts import LineChart, ChartSeries
+
+    LineChart(
+        data=[{"month": "Jan", "a": 10}],
+        series=[ChartSeries(data_key="a")],
+        x_axis="month",
+    )
+    ```
     """
 
     type: Literal["LineChart"] = "LineChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as lines")
     x_axis: str | None = Field(
@@ -143,19 +193,40 @@ class LineChart(Component):
 class AreaChart(Component):
     """Area chart with one or more series.
 
-    Example::
+    Series are defined with `ChartSeries` from
+    `prefab_ui.components.charts`.
 
-        AreaChart(
-            data=[{"month": "Jan", "a": 10, "b": 20}],
-            series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
-            x_axis="month",
-            stacked=True,
-        )
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as areas.
+        x_axis: Data key for x-axis labels.
+        height: Chart height in pixels.
+        stacked: Stack areas instead of overlaying.
+        curve: Line interpolation style ("linear", "smooth", or "step").
+        show_dots: Show dots at data points.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
+        show_y_axis: Show y-axis with tick labels.
+        y_axis_format: Y-axis tick format ("auto" or "compact").
+
+    **Example:**
+
+    ```python
+    from prefab_ui.components.charts import AreaChart, ChartSeries
+
+    AreaChart(
+        data=[{"month": "Jan", "a": 10, "b": 20}],
+        series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
+        x_axis="month",
+        stacked=True,
+    )
+    ```
     """
 
     type: Literal["AreaChart"] = "AreaChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as areas")
     x_axis: str | None = Field(
@@ -191,22 +262,35 @@ class AreaChart(Component):
 class PieChart(Component):
     """Pie or donut chart.
 
-    Example::
+    Args:
+        data: Row data or reactive interpolation reference.
+        data_key: Numeric value field.
+        name_key: Label field.
+        height: Chart height in pixels.
+        inner_radius: Inner radius in pixels (> 0 for donut).
+        show_label: Show labels on slices.
+        padding_angle: Gap between slices in degrees.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
 
-        PieChart(
-            data=[
-                {"browser": "Chrome", "visitors": 275},
-                {"browser": "Safari", "visitors": 200},
-            ],
-            data_key="visitors",
-            name_key="browser",
-            inner_radius=60,
-        )
+    **Example:**
+
+    ```python
+    PieChart(
+        data=[
+            {"browser": "Chrome", "visitors": 275},
+            {"browser": "Safari", "visitors": 200},
+        ],
+        data_key="visitors",
+        name_key="browser",
+        inner_radius=60,
+    )
+    ```
     """
 
     type: Literal["PieChart"] = "PieChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
@@ -232,25 +316,38 @@ class ScatterChart(Component):
     """Scatter (or bubble) chart plotting points from shared data.
 
     Each series references the same dataset and plots (x_axis, y_axis) pairs.
-    Optionally set ``z_axis`` to size dots proportionally (bubble chart).
+    Optionally set `z_axis` to size dots proportionally (bubble chart).
 
-    Example::
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as scatter groups.
+        x_axis: Data key for x-axis values.
+        y_axis: Data key for y-axis values.
+        z_axis: Data key for bubble size (optional).
+        height: Chart height in pixels.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show cartesian grid.
 
-        ScatterChart(
-            data=[
-                {"height": 170, "weight": 65, "age": 25},
-                {"height": 180, "weight": 80, "age": 30},
-            ],
-            series=[ChartSeries(data_key="group1", label="Group 1")],
-            x_axis="height",
-            y_axis="weight",
-            z_axis="age",
-        )
+    **Example:**
+
+    ```python
+    ScatterChart(
+        data=[
+            {"height": 170, "weight": 65, "age": 25},
+            {"height": 180, "weight": 80, "age": 30},
+        ],
+        series=[ChartSeries(data_key="group1", label="Group 1")],
+        x_axis="height",
+        y_axis="weight",
+        z_axis="age",
+    )
+    ```
     """
 
     type: Literal["ScatterChart"] = "ScatterChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as scatter groups")
     x_axis: str = Field(alias="xAxis", description="Data key for x-axis values")
@@ -275,21 +372,34 @@ class ScatterChart(Component):
 class RadarChart(Component):
     """Radar (spider) chart with one or more series plotted on radial axes.
 
-    Example::
+    Args:
+        data: Row data or reactive interpolation reference.
+        series: Series to render as radar areas.
+        axis_key: Data key for angular axis labels.
+        height: Chart height in pixels.
+        filled: Fill radar polygons (False for lines only).
+        show_dots: Show dots at vertices.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
+        show_grid: Show polar grid.
 
-        RadarChart(
-            data=[
-                {"subject": "Math", "alice": 120, "bob": 98},
-                {"subject": "English", "alice": 98, "bob": 130},
-            ],
-            series=[ChartSeries(data_key="alice"), ChartSeries(data_key="bob")],
-            axis_key="subject",
-        )
+    **Example:**
+
+    ```python
+    RadarChart(
+        data=[
+            {"subject": "Math", "alice": 120, "bob": 98},
+            {"subject": "English", "alice": 98, "bob": 130},
+        ],
+        series=[ChartSeries(data_key="alice"), ChartSeries(data_key="bob")],
+        axis_key="subject",
+    )
+    ```
     """
 
     type: Literal["RadarChart"] = "RadarChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     series: list[ChartSeries] = Field(description="Series to render as radar areas")
     axis_key: str | None = Field(
@@ -316,21 +426,34 @@ class RadarChart(Component):
 class RadialChart(Component):
     """Radial bar chart — categorical data as concentric rings.
 
-    Example::
+    Args:
+        data: Row data or reactive interpolation reference.
+        data_key: Numeric value field.
+        name_key: Label field.
+        height: Chart height in pixels.
+        inner_radius: Inner radius in pixels.
+        start_angle: Arc start angle in degrees.
+        end_angle: Arc end angle in degrees.
+        show_legend: Show legend.
+        show_tooltip: Show tooltip on hover.
 
-        RadialChart(
-            data=[
-                {"browser": "Chrome", "visitors": 275},
-                {"browser": "Safari", "visitors": 200},
-            ],
-            data_key="visitors",
-            name_key="browser",
-        )
+    **Example:**
+
+    ```python
+    RadialChart(
+        data=[
+            {"browser": "Chrome", "visitors": 275},
+            {"browser": "Safari", "visitors": 200},
+        ],
+        data_key="visitors",
+        name_key="browser",
+    )
+    ```
     """
 
     type: Literal["RadialChart"] = "RadialChart"
     data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or {{ interpolation }} reference"
+        description="Row data or `{{ interpolation }}` reference"
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
@@ -365,17 +488,29 @@ class Sparkline(Component):
     Takes a flat list of numbers and renders a tiny line (or area) chart
     with no axes, labels, or tooltips. Designed to sit inline next to text.
 
-    Example::
+    Args:
+        data: Flat list of numeric values or reactive interpolation reference.
+        height: Chart height in pixels (default 24px via CSS).
+        variant: Visual variant ("default", "success", "warning", "destructive", "info", "muted").
+        indicator_class: Tailwind classes for the line/fill (e.g. "stroke-blue-500").
+        fill: Show area fill under the line.
+        curve: Line interpolation ("linear", "smooth", or "step").
+        stroke_width: Line thickness in pixels.
+        mode: Chart mode ("line" or "bar").
 
-        Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
-        Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
-        Sparkline(data=[5, 12, 8, 3, 15], indicator_class="stroke-blue-500")
-        Sparkline(data=[5, 12, 8, 3, 15], curve="smooth", css_class="w-24")
+    **Example:**
+
+    ```python
+    Sparkline(data=[10, 15, 8, 22, 18, 25, 20])
+    Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
+    Sparkline(data=[5, 12, 8, 3, 15], indicator_class="stroke-blue-500")
+    Sparkline(data=[5, 12, 8, 3, 15], curve="smooth", css_class="w-24")
+    ```
     """
 
     type: Literal["Sparkline"] = "Sparkline"
     data: list[int | float] | RxStr = Field(
-        description="Flat list of numeric values or {{ interpolation }} reference",
+        description="Flat list of numeric values or `{{ interpolation }}` reference",
     )
     height: int | None = Field(
         default=None, description="Chart height in pixels (default 24px via CSS)"

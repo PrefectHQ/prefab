@@ -17,10 +17,8 @@ When the value comes from state, use reactive expressions with [pipes](/expressi
 <ComponentPreview json={{"view":{"type":"Metric","label":"Revenue","value":"${{ revenue / 1000000 | round:0 }}M"},"state":{"revenue":42000000}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBNZXRyaWMKCnN0YXRlID0gc2V0X2luaXRpYWxfc3RhdGUocmV2ZW51ZT00Ml8wMDBfMDAwKQoKTWV0cmljKGxhYmVsPSJSZXZlbnVlIiwgdmFsdWU9ZiIkeyhzdGF0ZS5yZXZlbnVlIC8gMV8wMDBfMDAwKS5yb3VuZCgpfU0iKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
 from prefab_ui.components import Metric
 
-state = set_initial_state(revenue=42_000_000)
 
 Metric(label="Revenue", value=f"${(state.revenue / 1_000_000).round()}M")
 ```

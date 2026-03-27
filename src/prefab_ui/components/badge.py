@@ -2,15 +2,17 @@
 
 Badges display short status indicators or labels.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import Badge
+```python
+from prefab_ui.components import Badge
 
-    Badge("New")
-    Badge("{{ status }}")
-    Badge("Error", variant="destructive")
-    Badge("Draft", variant="secondary")
-    Badge("Custom", variant="outline")
+Badge("New")
+Badge("{{ status }}")
+Badge("Error", variant="destructive")
+Badge("Draft", variant="secondary")
+Badge("Custom", variant="outline")
+```
 """
 
 from __future__ import annotations
@@ -46,14 +48,16 @@ class Badge(ContainerComponent):
             "ghost", "success", "warning", "info"
         css_class: Additional CSS classes to apply
 
-    Example::
+    **Example:**
 
-        Badge("Active")
-        Badge("{{ user.role }}")
-        Badge("Error", variant="destructive")
-        Badge("Draft", variant="secondary")
-        Badge("Custom", variant="outline")
-        Badge("Ghost", variant="ghost")
+    ```python
+    Badge("Active")
+    Badge("{{ user.role }}")
+    Badge("Error", variant="destructive")
+    Badge("Draft", variant="secondary")
+    Badge("Custom", variant="outline")
+    Badge("Ghost", variant="ghost")
+    ```
     """
 
     type: Literal["Badge"] = "Badge"

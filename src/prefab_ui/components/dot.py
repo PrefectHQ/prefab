@@ -30,12 +30,19 @@ DotShape = Literal["circle", "square", "rounded"]
 class Dot(Component):
     """A colored dot indicator.
 
-    Example::
+    Args:
+        variant: Color variant (default, secondary, success, warning, destructive, info, muted).
+        size: Dot size (sm, default, lg).
+        shape: Dot shape (circle, square, rounded).
 
-        Dot()
-        Dot(variant="success")
-        Dot(variant="warning", size="lg")
-        Dot(shape="square", css_class="bg-purple-500")
+    **Example:**
+
+    ```python
+    Dot()
+    Dot(variant="success")
+    Dot(variant="warning", size="lg")
+    Dot(shape="square", css_class="bg-purple-500")
+    ```
     """
 
     type: Literal["Dot"] = "Dot"

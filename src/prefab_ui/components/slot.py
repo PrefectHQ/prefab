@@ -12,23 +12,27 @@ from prefab_ui.components.base import ContainerComponent
 class Slot(ContainerComponent):
     """Render a component tree stored in state.
 
-    ``Slot`` is a named placeholder in your layout. When the state key
+    `Slot` is a named placeholder in your layout. When the state key
     contains a component tree, Slot renders it. When the state key is
-    empty, Slot renders its children as fallback content::
+    empty, Slot renders its children as fallback content.
 
-        with Slot("detail_view"):
-            Text("Select an item to see details")
+    Args:
+        name: State key containing the component tree to render.
 
-    The slot content is typically populated by writing component JSON
-    into state via ``SetState`` in an ``on_success`` callback::
+    **Example:**
 
-        Button(
-            "Load Details",
-            on_click=CallTool(
-                "get_detail",
-                on_success=SetState("detail_view", RESULT),
-            ),
-        )
+    ```python
+    with Slot("detail_view"):
+        Text("Select an item to see details")
+
+    Button(
+        "Load Details",
+        on_click=CallTool(
+            "get_detail",
+            on_success=SetState("detail_view", RESULT),
+        ),
+    )
+    ```
     """
 
     type: Literal["Slot"] = "Slot"

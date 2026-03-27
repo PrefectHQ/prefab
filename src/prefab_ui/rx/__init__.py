@@ -1,27 +1,31 @@
 """Reactive references for Prefab components.
 
-The ``Rx`` class provides type-safe reactive references that serialize to
-``{{ }}`` template expressions.  Components with state bindings expose an
-``.rx`` property returning an ``Rx`` object, which can be passed directly
-to any string-typed component field or embedded in f-strings::
+The `Rx` class provides type-safe reactive references that serialize to
+`{{ }}` template expressions. Components with state bindings expose an
+`.rx` property returning an `Rx` object, which can be passed directly
+to any string-typed component field or embedded in f-strings:
 
-    slider = Slider(min=0, max=100)
+```python
+slider = Slider(min=0, max=100)
 
-    # Bare ref — Pydantic coerces Rx to str automatically
-    Metric(value=slider.rx)
+# Bare ref — Pydantic coerces Rx to str automatically
+Metric(value=slider.rx)
 
-    # f-string — mixes reactive value with literal text
-    Text(f"Value: {slider.rx}")
+# f-string — mixes reactive value with literal text
+Text(f"Value: {slider.rx}")
+```
 
 Rx objects support Python operators and pipe methods, each of which
-returns a new Rx with the compiled ``{{ }}`` expression::
+returns a new Rx with the compiled `{{ }}` expression:
 
-    price = Rx("price")
-    quantity = Rx("quantity")
+```python
+price = Rx("price")
+quantity = Rx("quantity")
 
-    price * quantity              # {{ price * quantity }}
-    (price * quantity).currency() # {{ price * quantity | currency }}
-    quantity > 0                  # {{ quantity > 0 }}
+price * quantity              # {{ price * quantity }}
+(price * quantity).currency() # {{ price * quantity | currency }}
+quantity > 0                  # {{ quantity > 0 }}
+```
 """
 
 from __future__ import annotations
@@ -36,7 +40,7 @@ _counter: ContextVar[dict[str, int]] = ContextVar("_rx_counter")
 
 
 def _generate_key(prefix: str) -> str:
-    """Return a deterministic sequential key like ``slider_1``."""
+    """Return a deterministic sequential key like `slider_1`."""
     counters = _counter.get(None)
     if counters is None:
         counters = {}
@@ -138,8 +142,8 @@ def _resolve_operand(value: object, min_prec: int, *, strict: bool = False) -> s
     """Resolve a child operand (Rx or scalar) for use in an expression.
 
     For Rx children: resolves the key, wraps in parens if the child's
-    precedence is too low.  ``strict=True`` uses ``<=`` instead of ``<``
-    for non-commutative RHS (e.g. ``a - (b - c)``).
+    precedence is too low.  `strict=True` uses `<=` instead of `<`
+    for non-commutative RHS (e.g. `a - (b - c)`).
     """
     if isinstance(value, Rx):
         key = value.key
@@ -152,9 +156,9 @@ def _resolve(raw: str | Callable[[], Rx] | _Node) -> str:
     """Walk an Rx's internal key to produce the expression string.
 
     Handles three cases:
-    - ``str``: leaf key, returned as-is
-    - ``_Node``: expression tree node, resolved recursively
-    - ``callable``: forward reference, invoked and unwrapped
+    - `str`: leaf key, returned as-is
+    - `_Node`: expression tree node, resolved recursively
+    - `callable`: forward reference, invoked and unwrapped
     """
     if isinstance(raw, str):
         return raw
@@ -242,19 +246,23 @@ def _format_pipe_arg(value: object) -> str:
 class Rx:
     """A reactive reference to a client-side state key.
 
-    Serializes to ``{{ key }}`` via ``__str__`` / ``__format__``.
+    Serializes to `{{ key }}` via `__str__` / `__format__`.
 
-    Supports Python operators that compile to template expressions::
+    Supports Python operators that compile to template expressions:
 
-        count = Rx("count")
-        count + 1              # → {{ count + 1 }}
-        count > 0              # → {{ count > 0 }}
-        (count > 0).then("yes", "no")  # → {{ count > 0 ? 'yes' : 'no' }}
+    ```python
+    count = Rx("count")
+    count + 1              # → {{ count + 1 }}
+    count > 0              # → {{ count > 0 }}
+    (count > 0).then("yes", "no")  # → {{ count > 0 ? 'yes' : 'no' }}
+    ```
 
-    Pipe methods format values for display::
+    Pipe methods format values for display:
 
-        Rx("revenue").currency()       # → {{ revenue | currency }}
-        Rx("name").upper().truncate(20) # → {{ name | upper | truncate:20 }}
+    ```python
+    Rx("revenue").currency()       # → {{ revenue | currency }}
+    Rx("name").upper().truncate(20) # → {{ name | upper | truncate:20 }}
+    ```
     """
 
     __slots__ = ("_key", "_prec")
@@ -270,7 +278,7 @@ class Rx:
 
     @property
     def key(self) -> str:
-        """The resolved expression string (without ``{{ }}`` wrapper).
+        """The resolved expression string (without `{{ }}` wrapper).
 
         Resolution walks the expression tree: leaf nodes return their key,
         operator nodes recurse into their children, and callable nodes
@@ -414,13 +422,13 @@ class Rx:
     # ── Ternary ──────────────────────────────────────────────────────
 
     def then(self, if_true: object, if_false: object) -> Rx:
-        """Ternary conditional: ``condition ? if_true : if_false``."""
+        """Ternary conditional: `condition ? if_true : if_false`."""
         return Rx(_Ternary(self, if_true, if_false), _PREC_TERNARY)
 
     # ── Pipes ────────────────────────────────────────────────────────
 
     def _pipe(self, name: str, arg: object = None) -> Rx:
-        """Apply a pipe: ``key | name`` or ``key | name:arg``."""
+        """Apply a pipe: `key | name` or `key | name:arg`."""
         return Rx(_Pipe(self, name, arg), _PREC_PIPE)
 
     # Number pipes
@@ -490,14 +498,16 @@ class Rx:
 
 
 class LoopItem(Rx):
-    """Rx subclass returned by :class:`ForEach.__enter__`.
+    """Rx subclass returned by `ForEach.__enter__`.
 
-    Acts as an Rx keyed to an auto-generated ``let`` binding for ``$item``.
-    Provides ``get_index()`` for the companion ``$index`` binding and
-    supports tuple destructuring matching ``enumerate`` order::
+    Acts as an Rx keyed to an auto-generated `let` binding for `$item`.
+    Provides `get_index()` for the companion `$index` binding and
+    supports tuple destructuring matching `enumerate` order:
 
-        with ForEach("items") as (i, item):
-            Text(f"{i + 1}. {item.name}")
+    ```python
+    with ForEach("items") as (i, item):
+        Text(f"{i + 1}. {item.name}")
+    ```
     """
 
     __slots__ = ("_index_rx",)
@@ -511,7 +521,7 @@ class LoopItem(Rx):
         return object.__getattribute__(self, "_index_rx")
 
     def __iter__(self):
-        """Support ``as (idx, item)`` destructuring (enumerate order)."""
+        """Support `as (idx, item)` destructuring (enumerate order)."""
         yield object.__getattribute__(self, "_index_rx")
         yield Rx(self.key)
 
@@ -530,27 +540,32 @@ def _coerce_rx(value: object) -> object:
 # ── Public type alias ────────────────────────────────────────────────
 
 RxStr = str | Rx
-"""A string that also accepts an ``Rx`` reactive reference.
+"""A string that also accepts an `Rx` reactive reference.
 
 Use this as the type annotation for component/action fields whose value
-can be either a literal string or a reactive reference::
+can be either a literal string or a reactive reference:
 
-    class MyComponent(Component):
-        label: RxStr = ""
+```python
+class MyComponent(Component):
+    label: RxStr = ""
+```
 """
 
 # ── State proxy ──────────────────────────────────────────────────────
 
 
 class _StateProxy:
-    """Proxy that creates top-level ``Rx`` references via attribute access.
+    """Proxy that creates top-level `Rx` references via attribute access.
 
-    ``STATE.groups`` is equivalent to ``Rx("groups")``, providing a
-    concise way to reference state keys without separate declarations::
+    `STATE.groups` is equivalent to `Rx("groups")`, providing a
+    concise way to reference state keys without separate declarations:
 
-        state = set_initial_state(groups=[...], count=0)
-        state.groups          # Rx("groups")
-        state.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    ```python
+    from prefab_ui.rx import STATE
+
+    STATE.groups          # Rx("groups")
+    STATE.groups.name     # Rx("groups.name")  — chains via Rx.__getattr__
+    ```
     """
 
     __slots__ = ()
@@ -564,70 +579,25 @@ class _StateProxy:
         return "STATE"
 
 
-class _BoundStateProxy(_StateProxy):
-    """State proxy that validates attribute access against declared keys.
-
-    Returned by :func:`set_initial_state`, this proxy knows which keys
-    were declared and raises :class:`AttributeError` for undeclared ones::
-
-        state = set_initial_state(count=0, items=[])
-        state.count    # ✓ Rx("count")
-        state.countt   # ✗ AttributeError with helpful message
-
-    The proxy holds a reference to the same dict that
-    ``set_initial_state`` accumulates into, so multiple calls are fine::
-
-        state = set_initial_state(count=0)
-        set_initial_state(items=[])
-        state.items    # ✓ — visible because the backing dict grew
-
-    Use the unrestricted :data:`STATE` global for keys defined elsewhere
-    (e.g. by form controls or ``SetState`` actions).
-    """
-
-    __slots__ = ("_declared",)
-
-    def __init__(self, declared: dict[str, object]) -> None:
-        object.__setattr__(self, "_declared", declared)
-
-    def __getattr__(self, name: str) -> Rx:
-        if name.startswith("_"):
-            raise AttributeError(name)
-        declared: dict[str, object] = object.__getattribute__(self, "_declared")
-        if name not in declared:
-            known = ", ".join(sorted(declared)) or "(none)"
-            raise AttributeError(
-                f"'{name}' is not a declared state key. "
-                f"Declared keys: {known}. "
-                f"Use STATE.{name} if this key is defined elsewhere."
-            )
-        return Rx(name)
-
-    def __repr__(self) -> str:
-        declared: dict[str, object] = object.__getattribute__(self, "_declared")
-        keys = ", ".join(sorted(declared))
-        return f"State({keys})"
-
-
 #: Proxy for accessing state keys as reactive references.
-#: ``STATE.count`` is equivalent to ``Rx("count")``.
+#: `STATE.count` is equivalent to `Rx("count")`.
 STATE: _StateProxy = _StateProxy()
 
 
 # ── Built-in reactive variables ──────────────────────────────────────
 
-#: The current iteration item inside a :class:`ForEach` loop.
-#: Chains via dot-path: ``Item.title`` → ``{{ $item.title }}``.
+#: The current iteration item inside a `ForEach` loop.
+#: Chains via dot-path: `Item.title` → `{{ $item.title }}`.
 ITEM: Rx = Rx("$item")
 
-#: The iteration index inside a :class:`ForEach` loop.
+#: The iteration index inside a `ForEach` loop.
 INDEX: Rx = Rx("$index")
 
-#: The event value in ``on_change`` / ``on_submit`` handlers.
+#: The event value in `on_change` / `on_submit` handlers.
 EVENT: Rx = Rx("$event")
 
-#: The error message in ``on_error`` handlers.
+#: The error message in `on_error` handlers.
 ERROR: Rx = Rx("$error")
 
-#: The action result in ``on_success`` handlers.
+#: The action result in `on_success` handlers.
 RESULT: Rx = Rx("$result")

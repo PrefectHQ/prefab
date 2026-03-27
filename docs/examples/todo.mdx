@@ -9,41 +9,19 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Multiple todo lists with inline editing, validation, and dynamic groups — all running client-side with no server calls.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 items-start","type":"Grid","minColumnWidth":"12rem","children":[{"let":{"_loop_10":"{{ $item }}","_loop_10_idx":"{{ $index }}"},"type":"ForEach","key":"groups","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0","name":"groups.{{ _loop_10_idx }}.name","type":"Input","inputType":"text","disabled":false,"readOnly":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups","index":"{{ _loop_10_idx }}"}}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-0","type":"Form","onSubmit":[{"action":"appendState","key":"groups.{{ _loop_10_idx }}.todos","value":{"text":"{{ _loop_10.new_todo }}","done":false}},{"action":"setState","key":"groups.{{ _loop_10_idx }}.new_todo","value":""}],"children":[{"cssClass":"gap-2","type":"Row","children":[{"name":"groups.{{ _loop_10_idx }}.new_todo","type":"Input","inputType":"text","placeholder":"Add a todo...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":"{{ !_loop_10.new_todo }}"}]}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ _loop_10.todos | length }}","children":[{"cssClass":"my-3","type":"Separator","orientation":"horizontal"}]}]},{"let":{"_loop_11":"{{ $item }}","_loop_11_idx":"{{ $index }}"},"type":"ForEach","key":"groups.{{ _loop_10_idx }}.todos","children":[{"type":"Condition","cases":[{"when":"{{ !_loop_11.done || _loop_10.show_done }}","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"name":"groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.done","value":false,"type":"Checkbox","disabled":false,"required":false},{"cssClass":"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0","name":"groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.text","type":"Input","inputType":"text","disabled":false,"readOnly":false,"required":false},{"cssClass":"ml-auto","type":"Button","label":"\u00d7","variant":"ghost","size":"sm","disabled":false,"onClick":{"action":"popState","key":"groups.{{ _loop_10_idx }}.todos","index":"{{ _loop_11_idx }}"}}]}]}]}]}]}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2 items-center w-full justify-between","type":"Row","children":[{"content":"{{ _loop_10.todos | length }} items","type":"Muted"},{"cssClass":"gap-1 items-center","type":"Row","children":[{"cssClass":"h-3 w-3","name":"groups.{{ _loop_10_idx }}.show_done","value":false,"type":"Checkbox","disabled":false,"required":false},{"content":"Show done","type":"Muted"}]}]}]}]}]},{"cssClass":"border-dashed p-3","type":"Card","children":[{"cssClass":"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md","type":"Button","label":"+","variant":"ghost","size":"lg","disabled":false,"onClick":{"action":"appendState","key":"groups","value":{"name":"New List","todos":[],"new_todo":"","show_done":true}}}]}]},"state":{"groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.done":false,"groups.{{ _loop_10_idx }}.show_done":false,"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":"","show_done":true},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":"","show_done":true}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCdXR0b24sIENhcmQsIENhcmRDb250ZW50LCBDYXJkRm9vdGVyLCBDYXJkSGVhZGVyLAogICAgQ2hlY2tib3gsIENvbHVtbiwgRm9ybSwgR3JpZCwgSW5wdXQsIE11dGVkLCBSb3csIFNlcGFyYXRvciwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaCwgSWYKZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgQXBwZW5kU3RhdGUsIFBvcFN0YXRlLCBTZXRTdGF0ZQoKIyBFYWNoIGdyb3VwIGhhcyBhIG5hbWUsIGEgbGlzdCBvZiB0b2RvcywgYW4gaW5wdXQgYnVmZmVyLCBhbmQgYSB2aXNpYmlsaXR5IGZsYWcKc2V0X2luaXRpYWxfc3RhdGUoCiAgICBncm91cHM9WwogICAgICAgIHsKICAgICAgICAgICAgIm5hbWUiOiAiV29yayIsCiAgICAgICAgICAgICJ0b2RvcyI6IFsKICAgICAgICAgICAgICAgIHsidGV4dCI6ICJGaW5kIE1hZ3JhdGhlYSIsICJkb25lIjogRmFsc2V9LAogICAgICAgICAgICAgICAgeyJ0ZXh0IjogIkVzY2FwZSBWb2dvbnMiLCAiZG9uZSI6IEZhbHNlfSwKICAgICAgICAgICAgXSwKICAgICAgICAgICAgIm5ld190b2RvIjogIiIsCiAgICAgICAgICAgICJzaG93X2RvbmUiOiBUcnVlLAogICAgICAgIH0sCiAgICAgICAgewogICAgICAgICAgICAibmFtZSI6ICJQZXJzb25hbCIsCiAgICAgICAgICAgICJ0b2RvcyI6IFsKICAgICAgICAgICAgICAgIHsidGV4dCI6ICJIYXZlIGx1bmNoIGF0IE1pbGxpd2F5cyIsICJkb25lIjogVHJ1ZX0sCiAgICAgICAgICAgICAgICB7InRleHQiOiAiQnV5IHRvd2VsIiwgImRvbmUiOiBGYWxzZX0sCiAgICAgICAgICAgIF0sCiAgICAgICAgICAgICJuZXdfdG9kbyI6ICIiLAogICAgICAgICAgICAic2hvd19kb25lIjogVHJ1ZSwKICAgICAgICB9LAogICAgXSwKKQoKd2l0aCBHcmlkKG1pbl9jb2x1bW5fd2lkdGg9IjEycmVtIiwgZ2FwPTYsIGFsaWduPSJzdGFydCIpOgoKICAgICMgRGVzdHJ1Y3R1cmUgdG8gY2FwdHVyZSB0aGUgZ3JvdXAgaW5kZXggKGdpKSBhbmQgdGhlIGdyb3VwIGl0c2VsZi4KICAgICMgRWFjaCBGb3JFYWNoIGF1dG8tY2FwdHVyZXMgJGl0ZW0gYW5kICRpbmRleCBpbnRvIHNjb3BlZCBsZXQgYmluZGluZ3MsCiAgICAjIHNvIG5lc3RlZCBsb29wcyBkb24ndCBzaGFkb3cgZWFjaCBvdGhlci4KICAgIHdpdGggRm9yRWFjaCgiZ3JvdXBzIikgYXMgKGdpLCBncm91cCk6CiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgICAgICAgICBJbnB1dCgKICAgICAgICAgICAgICAgICAgICAgICAgbmFtZT1mImdyb3Vwcy57Z2l9Lm5hbWUiLAogICAgICAgICAgICAgICAgICAgICAgICBjc3NfY2xhc3M9ImJvcmRlci0wIHJpbmctMCBzaGFkb3ctbm9uZSBwLTAgaC1hdXRvIGZvbnQtc2VtaWJvbGQgdGV4dC1sZyBmb2N1cy12aXNpYmxlOnJpbmctMCBmb2N1cy12aXNpYmxlOnJpbmctb2Zmc2V0LTAiLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBCdXR0b24oIsOXIiwgdmFyaWFudD0iZ2hvc3QiLCBzaXplPSJzbSIsIGNzc19jbGFzcz0ibWwtYXV0byIsIG9uX2NsaWNrPVBvcFN0YXRlKCJncm91cHMiLCBnaSkpCiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICAgICAgICAgICAgICB3aXRoIEZvcm0oZ2FwPTAsIG9uX3N1Ym1pdD1bCiAgICAgICAgICAgICAgICAgICAgICAgIEFwcGVuZFN0YXRlKGYiZ3JvdXBzLntnaX0udG9kb3MiLCB7InRleHQiOiBncm91cC5uZXdfdG9kbywgImRvbmUiOiBGYWxzZX0pLAogICAgICAgICAgICAgICAgICAgICAgICBTZXRTdGF0ZShmImdyb3Vwcy57Z2l9Lm5ld190b2RvIiwgIiIpLAogICAgICAgICAgICAgICAgICAgIF0pOgogICAgICAgICAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBJbnB1dChuYW1lPWYiZ3JvdXBzLntnaX0ubmV3X3RvZG8iLCBwbGFjZWhvbGRlcj0iQWRkIGEgdG9kby4uLiIpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBCdXR0b24oIkFkZCIsIGRpc2FibGVkPX5ncm91cC5uZXdfdG9kbykKCiAgICAgICAgICAgICAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgICAgICAgICAgICAgICAgICB3aXRoIElmKGdyb3VwLnRvZG9zLmxlbmd0aCgpKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNlcGFyYXRvcihzcGFjaW5nPTMpCiAgICAgICAgICAgICAgICAgICAgICAgIHdpdGggRm9yRWFjaChmImdyb3Vwcy57Z2l9LnRvZG9zIikgYXMgKHRpLCB0b2RvKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHdpdGggSWYofnRvZG8uZG9uZSB8IGdyb3VwLnNob3dfZG9uZSk6CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ2hlY2tib3gobmFtZT1mImdyb3Vwcy57Z2l9LnRvZG9zLnt0aX0uZG9uZSIpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIElucHV0KAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmFtZT1mImdyb3Vwcy57Z2l9LnRvZG9zLnt0aX0udGV4dCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjc3NfY2xhc3M9ImJvcmRlci0wIHJpbmctMCBzaGFkb3ctbm9uZSBwLTAgaC1hdXRvIGZvY3VzLXZpc2libGU6cmluZy0wIGZvY3VzLXZpc2libGU6cmluZy1vZmZzZXQtMCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQnV0dG9uKCLDlyIsIHZhcmlhbnQ9Imdob3N0Iiwgc2l6ZT0ic20iLCBjc3NfY2xhc3M9Im1sLWF1dG8iLCBvbl9jbGljaz1Qb3BTdGF0ZShmImdyb3Vwcy57Z2l9LnRvZG9zIiwgdGkpKQoKICAgICAgICAgICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIsIGNzc19jbGFzcz0idy1mdWxsIGp1c3RpZnktYmV0d2VlbiIpOgogICAgICAgICAgICAgICAgICAgIE11dGVkKGYie2dyb3VwLnRvZG9zLmxlbmd0aCgpfSBpdGVtcyIpCiAgICAgICAgICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTEsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgICAgICAgICAgICAgQ2hlY2tib3gobmFtZT1mImdyb3Vwcy57Z2l9LnNob3dfZG9uZSIsIGNzc19jbGFzcz0iaC0zIHctMyIpCiAgICAgICAgICAgICAgICAgICAgICAgIE11dGVkKCJTaG93IGRvbmUiKQoKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9ImJvcmRlci1kYXNoZWQgcC0zIik6CiAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAiKyIsCiAgICAgICAgICAgIHZhcmlhbnQ9Imdob3N0IiwKICAgICAgICAgICAgc2l6ZT0ibGciLAogICAgICAgICAgICBjc3NfY2xhc3M9InRleHQtNHhsIHRleHQtbXV0ZWQtZm9yZWdyb3VuZCB3LWZ1bGwgaC1mdWxsIG1pbi1oLTQ4IHJvdW5kZWQtbWQiLAogICAgICAgICAgICBvbl9jbGljaz1BcHBlbmRTdGF0ZSgiZ3JvdXBzIiwgeyJuYW1lIjogIk5ldyBMaXN0IiwgInRvZG9zIjogW10sICJuZXdfdG9kbyI6ICIiLCAic2hvd19kb25lIjogVHJ1ZX0pLAogICAgICAgICkK">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-6 items-start","type":"Grid","minColumnWidth":"12rem"}]},"state":{"groups.{{ _loop_9_idx }}.todos.{{ _loop_10_idx }}.done":false,"groups.{{ _loop_9_idx }}.show_done":false,"groups":[{"name":"Work","todos":[{"text":"Find Magrathea","done":false},{"text":"Escape Vogons","done":false}],"new_todo":"","show_done":true},{"name":"Personal","todos":[{"text":"Have lunch at Milliways","done":true},{"text":"Buy towel","done":false}],"new_todo":"","show_done":true}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEZvb3RlciwgQ2FyZEhlYWRlciwKICAgIENoZWNrYm94LCBDb2x1bW4sIEZvcm0sIEdyaWQsIElucHV0LCBNdXRlZCwgUm93LCBTZXBhcmF0b3IsCikKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEZvckVhY2gsIElmCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IEFwcGVuZFN0YXRlLCBQb3BTdGF0ZSwgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4CgojIEVhY2ggZ3JvdXAgaGFzIGEgbmFtZSwgYSBsaXN0IG9mIHRvZG9zLCBhbiBpbnB1dCBidWZmZXIsIGFuZCBhIHZpc2liaWxpdHkgZmxhZwp3aXRoIEdyaWQobWluX2NvbHVtbl93aWR0aD0iMTJyZW0iLCBnYXA9NiwgYWxpZ249InN0YXJ0Iik6CgogICAgIyBEZXN0cnVjdHVyZSB0byBjYXB0dXJlIHRoZSBncm91cCBpbmRleCAoZ2kpIGFuZCB0aGUgZ3JvdXAgaXRzZWxmLgogICAgIyBFYWNoIEZvckVhY2ggYXV0by1jYXB0dXJlcyAkaXRlbSBhbmQgJGluZGV4IGludG8gc2NvcGVkIGxldCBiaW5kaW5ncywKICAgICMgc28gbmVzdGVkIGxvb3BzIGRvbid0IHNoYWRvdyBlYWNoIG90aGVyLgogICAgd2l0aCBGb3JFYWNoKCJncm91cHMiKSBhcyAoZ2ksIGdyb3VwKToKICAgICAgICB3aXRoIENhcmQoKToKICAgICAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgIElucHV0KAogICAgICAgICAgICAgICAgICAgICAgICBuYW1lPWYiZ3JvdXBzLntnaX0ubmFtZSIsCiAgICAgICAgICAgICAgICAgICAgICAgIGNzc19jbGFzcz0iYm9yZGVyLTAgcmluZy0wIHNoYWRvdy1ub25lIHAtMCBoLWF1dG8gZm9udC1zZW1pYm9sZCB0ZXh0LWxnIGZvY3VzLXZpc2libGU6cmluZy0wIGZvY3VzLXZpc2libGU6cmluZy1vZmZzZXQtMCIsCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIEJ1dHRvbigiw5ciLCB2YXJpYW50PSJnaG9zdCIsIHNpemU9InNtIiwgY3NzX2NsYXNzPSJtbC1hdXRvIiwgb25fY2xpY2s9UG9wU3RhdGUoImdyb3VwcyIsIGdpKSkKICAgICAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgICAgICAgICAgICAgICAgIHdpdGggRm9ybShnYXA9MCwgb25fc3VibWl0PVsKICAgICAgICAgICAgICAgICAgICAgICAgQXBwZW5kU3RhdGUoZiJncm91cHMue2dpfS50b2RvcyIsIHsidGV4dCI6IGdyb3VwLm5ld190b2RvLCAiZG9uZSI6IEZhbHNlfSksCiAgICAgICAgICAgICAgICAgICAgICAgIFNldFN0YXRlKGYiZ3JvdXBzLntnaX0ubmV3X3RvZG8iLCAiIiksCiAgICAgICAgICAgICAgICAgICAgXSk6CiAgICAgICAgICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgIElucHV0KG5hbWU9ZiJncm91cHMue2dpfS5uZXdfdG9kbyIsIHBsYWNlaG9sZGVyPSJBZGQgYSB0b2RvLi4uIikKICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJ1dHRvbigiQWRkIiwgZGlzYWJsZWQ9fmdyb3VwLm5ld190b2RvKQoKICAgICAgICAgICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgICAgIHdpdGggSWYoZ3JvdXAudG9kb3MubGVuZ3RoKCkpOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgU2VwYXJhdG9yKHNwYWNpbmc9MykKICAgICAgICAgICAgICAgICAgICAgICAgd2l0aCBGb3JFYWNoKGYiZ3JvdXBzLntnaX0udG9kb3MiKSBhcyAodGksIHRvZG8pOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgd2l0aCBJZih-dG9kby5kb25lIHwgZ3JvdXAuc2hvd19kb25lKToKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MiwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDaGVja2JveChuYW1lPWYiZ3JvdXBzLntnaX0udG9kb3Mue3RpfS5kb25lIikKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSW5wdXQoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuYW1lPWYiZ3JvdXBzLntnaX0udG9kb3Mue3RpfS50ZXh0IiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNzc19jbGFzcz0iYm9yZGVyLTAgcmluZy0wIHNoYWRvdy1ub25lIHAtMCBoLWF1dG8gZm9jdXMtdmlzaWJsZTpyaW5nLTAgZm9jdXMtdmlzaWJsZTpyaW5nLW9mZnNldC0wIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBCdXR0b24oIsOXIiwgdmFyaWFudD0iZ2hvc3QiLCBzaXplPSJzbSIsIGNzc19jbGFzcz0ibWwtYXV0byIsIG9uX2NsaWNrPVBvcFN0YXRlKGYiZ3JvdXBzLntnaX0udG9kb3MiLCB0aSkpCgogICAgICAgICAgICB3aXRoIENhcmRGb290ZXIoKToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIiwgY3NzX2NsYXNzPSJ3LWZ1bGwganVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgICAgICAgICAgICAgTXV0ZWQoZiJ7Z3JvdXAudG9kb3MubGVuZ3RoKCl9IGl0ZW1zIikKICAgICAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9MSwgYWxpZ249ImNlbnRlciIpOgogICAgICAgICAgICAgICAgICAgICAgICBDaGVja2JveChuYW1lPWYiZ3JvdXBzLntnaX0uc2hvd19kb25lIiwgY3NzX2NsYXNzPSJoLTMgdy0zIikKICAgICAgICAgICAgICAgICAgICAgICAgTXV0ZWQoIlNob3cgZG9uZSIpCgogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0iYm9yZGVyLWRhc2hlZCBwLTMiKToKICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICIrIiwKICAgICAgICAgICAgdmFyaWFudD0iZ2hvc3QiLAogICAgICAgICAgICBzaXplPSJsZyIsCiAgICAgICAgICAgIGNzc19jbGFzcz0idGV4dC00eGwgdGV4dC1tdXRlZC1mb3JlZ3JvdW5kIHctZnVsbCBoLWZ1bGwgbWluLWgtNDggcm91bmRlZC1tZCIsCiAgICAgICAgICAgIG9uX2NsaWNrPUFwcGVuZFN0YXRlKCJncm91cHMiLCB7Im5hbWUiOiAiTmV3IExpc3QiLCAidG9kb3MiOiBbXSwgIm5ld190b2RvIjogIiIsICJzaG93X2RvbmUiOiBUcnVlfSksCiAgICAgICAgKQoKYXBwID0gUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJncm91cHMiOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICJuYW1lIjogIldvcmsiLAogICAgICAgICAgICAgICAgInRvZG9zIjogWwogICAgICAgICAgICAgICAgICAgIHsidGV4dCI6ICJGaW5kIE1hZ3JhdGhlYSIsICJkb25lIjogRmFsc2V9LAogICAgICAgICAgICAgICAgICAgIHsidGV4dCI6ICJFc2NhcGUgVm9nb25zIiwgImRvbmUiOiBGYWxzZX0sCiAgICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAgIm5ld190b2RvIjogIiIsCiAgICAgICAgICAgICAgICAic2hvd19kb25lIjogVHJ1ZSwKICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgIm5hbWUiOiAiUGVyc29uYWwiLAogICAgICAgICAgICAgICAgInRvZG9zIjogWwogICAgICAgICAgICAgICAgICAgIHsidGV4dCI6ICJIYXZlIGx1bmNoIGF0IE1pbGxpd2F5cyIsICJkb25lIjogVHJ1ZX0sCiAgICAgICAgICAgICAgICAgICAgeyJ0ZXh0IjogIkJ1eSB0b3dlbCIsICJkb25lIjogRmFsc2V9LAogICAgICAgICAgICAgICAgXSwKICAgICAgICAgICAgICAgICJuZXdfdG9kbyI6ICIiLAogICAgICAgICAgICAgICAgInNob3dfZG9uZSI6IFRydWUsCiAgICAgICAgICAgIH0sCiAgICAgICAgXSwKICAgIH0sCiAgICB2aWV3PUdyaWQobWluX2NvbHVtbl93aWR0aD0iMTJyZW0iLCBnYXA9NiwgYWxpZ249InN0YXJ0IiksCikK">
 <CodeGroup>
 ```python Python icon="python" expandable
-from prefab_ui.app import set_initial_state
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import (
     Button, Card, CardContent, CardFooter, CardHeader,
     Checkbox, Column, Form, Grid, Input, Muted, Row, Separator,
 )
 from prefab_ui.components.control_flow import ForEach, If
 from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.rx import Rx
 
 # Each group has a name, a list of todos, an input buffer, and a visibility flag
-set_initial_state(
-    groups=[
-        {
-            "name": "Work",
-            "todos": [
-                {"text": "Find Magrathea", "done": False},
-                {"text": "Escape Vogons", "done": False},
-            ],
-            "new_todo": "",
-            "show_done": True,
-        },
-        {
-            "name": "Personal",
-            "todos": [
-                {"text": "Have lunch at Milliways", "done": True},
-                {"text": "Buy towel", "done": False},
-            ],
-            "new_todo": "",
-            "show_done": True,
-        },
-    ],
-)
-
 with Grid(min_column_width="12rem", gap=6, align="start"):
 
     # Destructure to capture the group index (gi) and the group itself.
@@ -96,220 +74,43 @@ with Grid(min_column_width="12rem", gap=6, align="start"):
             css_class="text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md",
             on_click=AppendState("groups", {"name": "New List", "todos": [], "new_todo": "", "show_done": True}),
         )
+
+app = PrefabApp(
+    state={
+        "groups": [
+            {
+                "name": "Work",
+                "todos": [
+                    {"text": "Find Magrathea", "done": False},
+                    {"text": "Escape Vogons", "done": False},
+                ],
+                "new_todo": "",
+                "show_done": True,
+            },
+            {
+                "name": "Personal",
+                "todos": [
+                    {"text": "Have lunch at Milliways", "done": True},
+                    {"text": "Buy towel", "done": False},
+                ],
+                "new_todo": "",
+                "show_done": True,
+            },
+        ],
+    },
+    view=Grid(min_column_width="12rem", gap=6, align="start"),
+)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-6 items-start",
-    "type": "Grid",
-    "minColumnWidth": "12rem",
-    "children": [
-      {
-        "let": {"_loop_10": "{{ $item }}", "_loop_10_idx": "{{ $index }}"},
-        "type": "ForEach",
-        "key": "groups",
-        "children": [
-          {
-            "type": "Card",
-            "children": [
-              {
-                "type": "CardHeader",
-                "children": [
-                  {
-                    "cssClass": "gap-2 items-center",
-                    "type": "Row",
-                    "children": [
-                      {
-                        "cssClass": "border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0",
-                        "name": "groups.{{ _loop_10_idx }}.name",
-                        "type": "Input",
-                        "inputType": "text",
-                        "disabled": false,
-                        "readOnly": false,
-                        "required": false
-                      },
-                      {
-                        "cssClass": "ml-auto",
-                        "type": "Button",
-                        "label": "\u00d7",
-                        "variant": "ghost",
-                        "size": "sm",
-                        "disabled": false,
-                        "onClick": {"action": "popState", "key": "groups", "index": "{{ _loop_10_idx }}"}
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "CardContent",
-                "children": [
-                  {
-                    "cssClass": "gap-4",
-                    "type": "Column",
-                    "children": [
-                      {
-                        "cssClass": "gap-0",
-                        "type": "Form",
-                        "onSubmit": [
-                          {
-                            "action": "appendState",
-                            "key": "groups.{{ _loop_10_idx }}.todos",
-                            "value": {"text": "{{ _loop_10.new_todo }}", "done": false}
-                          },
-                          {"action": "setState", "key": "groups.{{ _loop_10_idx }}.new_todo", "value": ""}
-                        ],
-                        "children": [
-                          {
-                            "cssClass": "gap-2",
-                            "type": "Row",
-                            "children": [
-                              {
-                                "name": "groups.{{ _loop_10_idx }}.new_todo",
-                                "type": "Input",
-                                "inputType": "text",
-                                "placeholder": "Add a todo...",
-                                "disabled": false,
-                                "readOnly": false,
-                                "required": false
-                              },
-                              {
-                                "type": "Button",
-                                "label": "Add",
-                                "variant": "default",
-                                "size": "default",
-                                "disabled": "{{ !_loop_10.new_todo }}"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "cssClass": "gap-2",
-                        "type": "Column",
-                        "children": [
-                          {
-                            "type": "Condition",
-                            "cases": [
-                              {
-                                "when": "{{ _loop_10.todos | length }}",
-                                "children": [{"cssClass": "my-3", "type": "Separator", "orientation": "horizontal"}]
-                              }
-                            ]
-                          },
-                          {
-                            "let": {"_loop_11": "{{ $item }}", "_loop_11_idx": "{{ $index }}"},
-                            "type": "ForEach",
-                            "key": "groups.{{ _loop_10_idx }}.todos",
-                            "children": [
-                              {
-                                "type": "Condition",
-                                "cases": [
-                                  {
-                                    "when": "{{ !_loop_11.done || _loop_10.show_done }}",
-                                    "children": [
-                                      {
-                                        "cssClass": "gap-2 items-center",
-                                        "type": "Row",
-                                        "children": [
-                                          {
-                                            "name": "groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.done",
-                                            "value": false,
-                                            "type": "Checkbox",
-                                            "disabled": false,
-                                            "required": false
-                                          },
-                                          {
-                                            "cssClass": "border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0",
-                                            "name": "groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.text",
-                                            "type": "Input",
-                                            "inputType": "text",
-                                            "disabled": false,
-                                            "readOnly": false,
-                                            "required": false
-                                          },
-                                          {
-                                            "cssClass": "ml-auto",
-                                            "type": "Button",
-                                            "label": "\u00d7",
-                                            "variant": "ghost",
-                                            "size": "sm",
-                                            "disabled": false,
-                                            "onClick": {
-                                              "action": "popState",
-                                              "key": "groups.{{ _loop_10_idx }}.todos",
-                                              "index": "{{ _loop_11_idx }}"
-                                            }
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "CardFooter",
-                "children": [
-                  {
-                    "cssClass": "gap-2 items-center w-full justify-between",
-                    "type": "Row",
-                    "children": [
-                      {"content": "{{ _loop_10.todos | length }} items", "type": "Muted"},
-                      {
-                        "cssClass": "gap-1 items-center",
-                        "type": "Row",
-                        "children": [
-                          {
-                            "cssClass": "h-3 w-3",
-                            "name": "groups.{{ _loop_10_idx }}.show_done",
-                            "value": false,
-                            "type": "Checkbox",
-                            "disabled": false,
-                            "required": false
-                          },
-                          {"content": "Show done", "type": "Muted"}
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "cssClass": "border-dashed p-3",
-        "type": "Card",
-        "children": [
-          {
-            "cssClass": "text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md",
-            "type": "Button",
-            "label": "+",
-            "variant": "ghost",
-            "size": "lg",
-            "disabled": false,
-            "onClick": {
-              "action": "appendState",
-              "key": "groups",
-              "value": {"name": "New List", "todos": [], "new_todo": "", "show_done": true}
-            }
-          }
-        ]
-      }
-    ]
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [{"cssClass": "gap-6 items-start", "type": "Grid", "minColumnWidth": "12rem"}]
   },
   "state": {
-    "groups.{{ _loop_10_idx }}.todos.{{ _loop_11_idx }}.done": false,
-    "groups.{{ _loop_10_idx }}.show_done": false,
+    "groups.{{ _loop_9_idx }}.todos.{{ _loop_10_idx }}.done": false,
+    "groups.{{ _loop_9_idx }}.show_done": false,
     "groups": [
       {
         "name": "Work",

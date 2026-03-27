@@ -14,21 +14,9 @@ STATE.count       # → {{ count }}
 STATE.user.name   # → {{ user.name }}
 ```
 
-## With set_initial_state
+## Usage
 
-The return value of `set_initial_state()` is a *bound* state proxy that validates attribute access against the keys you declared. This catches typos at definition time rather than at runtime:
-
-```python
-from prefab_ui.app import set_initial_state
-from prefab_ui.components import Text
-
-state = set_initial_state(count=0, name="Arthur")
-
-Text(f"Count: {state.count}")   # ✓ Rx("count")
-Text(f"Name: {state.countt}")   # ✗ AttributeError — typo caught!
-```
-
-The unbound `STATE` global skips validation, which is useful for keys created dynamically by form controls or actions:
+`STATE` is useful for referencing keys created dynamically by form controls or actions without needing a separate `Rx` declaration:
 
 ```python
 from prefab_ui.rx import STATE
@@ -55,4 +43,4 @@ STATE.todos.length()       # → {{ todos | length }}
 from prefab_ui.rx import STATE
 ```
 
-Or use the bound proxy returned by `set_initial_state()`, which is the recommended approach when you're declaring initial state.
+Use `STATE` anywhere you need a quick reactive reference to a state key without creating a separate `Rx`.

@@ -39,8 +39,8 @@ def run_harness(code: str) -> dict:
         # Heal partial code: strip trailing lines until it compiles.
         lines = code.split("\n")
         healed = None
-        for trim in range(min(len(lines), 5)):
-            attempt = "\n".join(lines[: len(lines) - trim]) if trim else code
+        for n in range(len(lines), 0, -1):
+            attempt = "\n".join(lines[:n])
             try:
                 compile(attempt, "<string>", "exec")
                 healed = attempt

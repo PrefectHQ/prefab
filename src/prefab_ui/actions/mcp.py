@@ -21,17 +21,17 @@ from prefab_ui.rx import RxStr, _coerce_rx
 
 
 class CallTool(Action):
-    """Call an MCP server tool via ``app.callServerTool()``.
+    """Call an MCP server tool via `app.callServerTool()`.
 
-    The ``tool`` argument can be a string name or a callable reference
+    The `tool` argument can be a string name or a callable reference
     to the tool function.  Callables are resolved at serialization time
-    via the resolver passed to ``PrefabApp.to_json(tool_resolver=...)``.
+    via the resolver passed to `PrefabApp.to_json(tool_resolver=...)`.
 
-    The resolver may return a plain name string or a :class:`ResolvedTool`
-    carrying the name plus flags (e.g. ``unwrap_result``) that the
+    The resolver may return a plain name string or a `ResolvedTool`
+    carrying the name plus flags (e.g. `unwrap_result`) that the
     renderer can act on.
 
-    The tool's return value is available as ``$result`` in ``on_success``
+    The tool's return value is available as `$result` in `on_success`
     callbacks.
     """
 
@@ -39,7 +39,7 @@ class CallTool(Action):
     tool: RxStr = Field(description="Name of the server tool to call")
     arguments: dict[str, Any] = Field(
         default_factory=dict,
-        description="Arguments to pass. Supports {{ key }} interpolation.",
+        description="Arguments to pass. Supports `{{ key }}` interpolation.",
     )
     _tool_ref: Callable[..., Any] | None = PrivateAttr(default=None)
 
@@ -66,7 +66,7 @@ class CallTool(Action):
 
 
 class SendMessage(Action):
-    """Send a message to the chat via ``app.sendMessage()``."""
+    """Send a message to the chat via `app.sendMessage()`."""
 
     action: Literal["sendMessage"] = "sendMessage"
     content: RxStr = Field(description="Message text to send")
@@ -89,7 +89,7 @@ class UpdateContext(Action):
 
 
 class RequestDisplayMode(Action):
-    """Request a display mode change via ``app.requestDisplayMode()``.
+    """Request a display mode change via `app.requestDisplayMode()`.
 
     The host decides whether to honor the request — the actual mode may
     differ from what was asked for.

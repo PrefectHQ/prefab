@@ -12,25 +12,24 @@ Because state is centralized and global, components don't own their data. There'
 
 ## Providing initial values
 
-State starts empty unless you seed it. For apps running via `prefab serve` or as a standalone Python script, use `set_initial_state()`. It returns a proxy object whose attributes are reactive references to the keys you just defined — so you can immediately start using them in components without a separate declaration step:
-
-```python
-from prefab_ui.app import set_initial_state
-
-state = set_initial_state(count=0, title="Dashboard", items=[])
-state.count       # reactive reference to {{ count }}
-state.items       # reactive reference to {{ items }}
-```
-
-For MCP tools and API routes that return a `PrefabApp`, pass state to the constructor:
+State starts empty unless you seed it. Pass initial state to `PrefabApp` via the `state` parameter:
 
 ```python
 from prefab_ui.app import PrefabApp
 
-return PrefabApp(view=view, state={"count": 0, "title": "Dashboard"})
+app = PrefabApp(view=view, state={"count": 0, "title": "Dashboard", "items": []})
 ```
 
-Components with a `value` prop seed their state key too. `Input(name="city", value="London")` registers `city` with an initial value of `"London"`, so no separate `set_initial_state` call is needed.
+You can also use `Rx` to create reactive references to state keys:
+
+```python
+from prefab_ui.rx import Rx
+
+count = Rx("count")         # reactive reference to {{ count }}
+items = Rx("items")         # reactive reference to {{ items }}
+```
+
+Components with a `value` prop seed their state key too. `Input(name="city", value="London")` registers `city` with an initial value of `"London"`.
 
 Either way, those keys are immediately available to every expression in your component tree.
 
@@ -80,20 +79,20 @@ Inside component props, `{{ key }}` template expressions resolve to the current 
 
 The expression language itself supports operators and formatting: `{{ count + 10 }}` adds ten, `{{ name | upper }}` uppercases. You can write these directly in any string prop.
 
-In Python, `Rx` objects compile to the same `{{ key }}` expressions in the protocol output, but in your code they behave like Python values — you can apply operators, use them in f-strings, and combine them with other values. The most common way to get an `Rx` is through the return value of `set_initial_state`, which is a proxy whose attributes are reactive references to the keys you defined:
+In Python, `Rx` objects compile to the same `{{ key }}` expressions in the protocol output, but in your code they behave like Python values — you can apply operators, use them in f-strings, and combine them with other values:
 
 ```python
-from prefab_ui.app import set_initial_state
+from prefab_ui.rx import Rx
 
-state = set_initial_state(count=0)
+count = Rx("count")
 
-Text(state.count)                            # {{ count }}
-Text(f"Count: {state.count}")                # Count: {{ count }}
-Text(state.count + 10)                       # {{ count + 10 }}
-Text(f"Items: {state.count} total")          # Items: {{ count }} total
+Text(count)                            # {{ count }}
+Text(f"Count: {count}")                # Count: {{ count }}
+Text(count + 10)                       # {{ count + 10 }}
+Text(f"Items: {count} total")          # Items: {{ count }} total
 ```
 
-The `STATE` constant works identically but doesn't require capturing the return value — useful when state is set by actions rather than initialization, or when you want a quick reference without calling `set_initial_state` first:
+The `STATE` constant works identically but doesn't require capturing the return value — useful when state is set by actions rather than initialization, or when you want a quick reference without creating an `Rx` first:
 
 ```python
 from prefab_ui.components import STATE
@@ -101,26 +100,19 @@ from prefab_ui.components import STATE
 Text(STATE.count)                            # {{ count }}
 ```
 
-For keys not tied to initial state (like `let` bindings or forward references), use `Rx` directly: `Rx("key")`. The full Rx system, including operators, formatting, and the `.rx` shorthand, is covered in [Expressions](/concepts/expressions).
+The full Rx system, including operators, formatting, and the `.rx` shorthand, is covered in [Expressions](/concepts/expressions).
 
 ## Nested state and dot paths
 
 State values can be nested objects, and you reach into them with dot notation. `{{ profile.name }}` reads the `name` field of the `profile` object. The `name` prop accepts dot paths too, so inputs can bind directly to nested fields:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Name","optional":false},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Title","optional":false},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBzZXRfaW5pdGlhbF9zdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBDYXJkLCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgRmllbGQsIElucHV0LCBMYWJlbCwKKQoKc2V0X2luaXRpYWxfc3RhdGUoCiAgICBwcm9maWxlPXsKICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgInRpdGxlIjogIlNhbmR3aWNoIE1ha2VyLCBMYW11ZWxsYSIsCiAgICB9LAopCgp3aXRoIENvbHVtbihnYXA9Myk6CiAgICB3aXRoIENhcmQoKToKICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgQ2FyZFRpdGxlKCJ7eyBwcm9maWxlLm5hbWUgfX0iKQogICAgICAgICAgICBDYXJkRGVzY3JpcHRpb24oInt7IHByb2ZpbGUudGl0bGUgfX0iKQogICAgd2l0aCBGaWVsZCgpOgogICAgICAgIExhYmVsKCJOYW1lIikKICAgICAgICBJbnB1dChuYW1lPSJwcm9maWxlLm5hbWUiLCBwbGFjZWhvbGRlcj0iTmFtZSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIlRpdGxlIikKICAgICAgICBJbnB1dChuYW1lPSJwcm9maWxlLnRpdGxlIiwgcGxhY2Vob2xkZXI9IlRpdGxlIikK">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3","type":"Column"}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEZpZWxkLCBJbnB1dCwgTGFiZWwsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoInt7IHByb2ZpbGUubmFtZSB9fSIpCiAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbigie3sgcHJvZmlsZS50aXRsZSB9fSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIk5hbWUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUubmFtZSIsIHBsYWNlaG9sZGVyPSJOYW1lIikKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiVGl0bGUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUudGl0bGUiLCBwbGFjZWhvbGRlcj0iVGl0bGUiKQoKYXBwID0gUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJwcm9maWxlIjogewogICAgICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgICAgICJ0aXRsZSI6ICJTYW5kd2ljaCBNYWtlciwgTGFtdWVsbGEiLAogICAgICAgIH0sCiAgICB9LAogICAgdmlldz1Db2x1bW4oZ2FwPTMpLAopCg">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.app import set_initial_state
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import (
     Card, CardDescription, CardHeader, CardTitle,
     Column, Field, Input, Label,
-)
-
-set_initial_state(
-    profile={
-        "name": "Arthur Dent",
-        "title": "Sandwich Maker, Lamuella",
-    },
 )
 
 with Column(gap=3):
@@ -134,60 +126,23 @@ with Column(gap=3):
     with Field():
         Label("Title")
         Input(name="profile.title", placeholder="Title")
+
+app = PrefabApp(
+    state={
+        "profile": {
+            "name": "Arthur Dent",
+            "title": "Sandwich Maker, Lamuella",
+        },
+    },
+    view=Column(gap=3),
+)
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3",
-    "type": "Column",
-    "children": [
-      {
-        "type": "Card",
-        "children": [
-          {
-            "type": "CardHeader",
-            "children": [
-              {"type": "CardTitle", "content": "{{ profile.name }}"},
-              {"type": "CardDescription", "content": "{{ profile.title }}"}
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Field",
-        "invalid": false,
-        "disabled": false,
-        "children": [
-          {"type": "Label", "text": "Name", "optional": false},
-          {
-            "name": "profile.name",
-            "type": "Input",
-            "inputType": "text",
-            "placeholder": "Name",
-            "disabled": false,
-            "readOnly": false,
-            "required": false
-          }
-        ]
-      },
-      {
-        "type": "Field",
-        "invalid": false,
-        "disabled": false,
-        "children": [
-          {"type": "Label", "text": "Title", "optional": false},
-          {
-            "name": "profile.title",
-            "type": "Input",
-            "inputType": "text",
-            "placeholder": "Title",
-            "disabled": false,
-            "readOnly": false,
-            "required": false
-          }
-        ]
-      }
-    ]
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [{"cssClass": "gap-3", "type": "Column"}]
   },
   "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}
 }

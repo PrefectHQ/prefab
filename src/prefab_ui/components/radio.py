@@ -2,18 +2,20 @@
 
 Radio buttons let users select exactly one option from a set.
 
-Example::
+**Example:**
 
-    from prefab_ui.components import RadioGroup, Radio
+```python
+from prefab_ui.components import RadioGroup, Radio
 
-    with RadioGroup(name="size"):
-        Radio(option="sm", label="Small")
-        Radio(option="md", label="Medium", value=True)
-        Radio(option="lg", label="Large")
+with RadioGroup(name="size"):
+    Radio(option="sm", label="Small")
+    Radio(option="md", label="Medium", value=True)
+    Radio(option="lg", label="Large")
 
-    # Access reactive value
-    group = RadioGroup()
-    Text(f"Selected: {group.rx}")
+# Access reactive value
+group = RadioGroup()
+Text(f"Selected: {group.rx}")
+```
 """
 
 from __future__ import annotations
@@ -35,11 +37,13 @@ class RadioGroup(StatefulMixin, ContainerComponent):
         name: Form field name (shared by all radios in group)
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        with RadioGroup(name="theme", value="light"):
-            Radio(option="light", label="Light")
-            Radio(option="dark", label="Dark")
+    ```python
+    with RadioGroup(name="theme", value="light"):
+        Radio(option="light", label="Light")
+        Radio(option="dark", label="Dark")
+    ```
     """
 
     _auto_name: ClassVar[str] = "radiogroup"
@@ -71,10 +75,12 @@ class Radio(StatefulMixin, Component):
         required: Whether radio is required
         css_class: Additional CSS classes
 
-    Example::
+    **Example:**
 
-        Radio(option="yes", label="Yes")
-        Radio(option="no", label="No", value=True)
+    ```python
+    Radio(option="yes", label="Yes")
+    Radio(option="no", label="No", value=True)
+    ```
     """
 
     _auto_name: ClassVar[str] = "radio"
@@ -92,7 +98,7 @@ class Radio(StatefulMixin, Component):
     @model_validator(mode="before")
     @classmethod
     def _default_option_from_label(cls, data: Any) -> Any:
-        """Default ``option`` from ``label`` if not provided."""
+        """Default `option` from `label` if not provided."""
         if isinstance(data, dict) and "option" not in data:
             label = data.get("label")
             if label is not None:
@@ -101,5 +107,5 @@ class Radio(StatefulMixin, Component):
 
     @property
     def checked(self) -> bool | RxStr:
-        """Alias for ``value`` — whether radio is selected."""
+        """Alias for `value` — whether radio is selected."""
         return self.value
