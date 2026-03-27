@@ -226,10 +226,18 @@ export async function executeAction(
         break;
       }
       case "openLink": {
-        const result = await app?.openLink({ url: resolved.url as string });
-        if (result?.isError) {
-          success = false;
-          errorMessage = extractErrorText(result);
+        const url = resolved.url as string;
+        if (app) {
+          try {
+            const result = await app.openLink({ url });
+            if (result?.isError) {
+              window.open(url, "_blank", "noopener,noreferrer");
+            }
+          } catch {
+            window.open(url, "_blank", "noopener,noreferrer");
+          }
+        } else {
+          window.open(url, "_blank", "noopener,noreferrer");
         }
         break;
       }
