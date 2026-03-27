@@ -10,7 +10,7 @@
  * Custom action handlers are invoked by the `callHandler` action.
  */
 
-export type PipeFn = (value: unknown, arg?: string) => unknown;
+export type PipeFn = (value: unknown, arg?: unknown) => unknown;
 
 export interface HandlerContext {
   /** Snapshot of the current state (not a live reference). */

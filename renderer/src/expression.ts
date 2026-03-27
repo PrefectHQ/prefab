@@ -31,20 +31,20 @@ import { getCustomPipe } from "./custom-handlers";
 
 // ── Pipe Registry ──────────────────────────────────────────────────────
 
-type PipeFn = (value: unknown, arg?: string) => unknown;
+type PipeFn = (value: unknown, arg?: unknown) => unknown;
 
 const pipes: Record<string, PipeFn> = {
   percent(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return String(value);
-    const decimals = arg ? parseInt(arg) : 0;
+    const decimals = arg != null ? parseInt(String(arg)) : 0;
     return `${(num * 100).toFixed(decimals)}%`;
   },
 
   number(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return String(value);
-    const decimals = arg ? parseInt(arg) : undefined;
+    const decimals = arg != null ? parseInt(String(arg)) : undefined;
     return num.toLocaleString("en-US", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
@@ -54,7 +54,7 @@ const pipes: Record<string, PipeFn> = {
   compact(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return String(value);
-    const decimals = arg ? parseInt(arg) : undefined;
+    const decimals = arg != null ? parseInt(String(arg)) : undefined;
     return num.toLocaleString("en-US", {
       notation: "compact",
       maximumFractionDigits: decimals,
@@ -64,14 +64,14 @@ const pipes: Record<string, PipeFn> = {
   currency(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return String(value);
-    const currency = arg ?? "USD";
+    const currency = String(arg ?? "USD");
     return num.toLocaleString("en-US", { style: "currency", currency });
   },
 
   date(value, arg) {
     const d = new Date(String(value));
     if (isNaN(d.getTime())) return String(value);
-    const style = (arg ?? "medium") as "short" | "medium" | "long";
+    const style = String(arg ?? "medium") as "short" | "medium" | "long";
     if (style === "short") return d.toLocaleDateString("en-US");
     if (style === "long")
       return d.toLocaleDateString("en-US", {
@@ -130,19 +130,19 @@ const pipes: Record<string, PipeFn> = {
   },
 
   join(value, arg) {
-    if (Array.isArray(value)) return value.join(arg ?? ", ");
+    if (Array.isArray(value)) return value.join(String(arg ?? ", "));
     return String(value);
   },
 
   truncate(value, arg) {
     const s = String(value);
-    const n = arg ? parseInt(arg) : 0;
+    const n = arg != null ? parseInt(String(arg)) : 0;
     if (n > 0 && s.length > n) return s.slice(0, n) + "...";
     return s;
   },
 
   default(value, arg) {
-    if (value == null) return arg ?? "";
+    if (value == null) return arg === undefined ? "" : arg;
     return value;
   },
 
@@ -165,34 +165,36 @@ const pipes: Record<string, PipeFn> = {
   round(value, arg) {
     const num = Number(value);
     if (isNaN(num)) return value;
-    const decimals = arg ? parseInt(arg) : 0;
+    const decimals = arg != null ? parseInt(String(arg)) : 0;
     const factor = Math.pow(10, decimals);
     return Math.round(num * factor) / factor;
   },
 
   selectattr(value, arg) {
     if (!Array.isArray(value) || !arg) return value;
+    const key = String(arg);
     return value.filter(
       (item) =>
         item != null &&
         typeof item === "object" &&
-        !!(item as Record<string, unknown>)[arg],
+        !!(item as Record<string, unknown>)[key],
     );
   },
 
   rejectattr(value, arg) {
     if (!Array.isArray(value) || !arg) return value;
+    const key = String(arg);
     return value.filter(
       (item) =>
         item != null &&
         typeof item === "object" &&
-        !(item as Record<string, unknown>)[arg],
+        !(item as Record<string, unknown>)[key],
     );
   },
 
   pluralize(value, arg) {
     const count = Number(value);
-    const singular = arg ?? "item";
+    const singular = String(arg ?? "item");
     return count === 1 ? singular : singular + "s";
   },
 };
@@ -398,11 +400,14 @@ class Parser {
       if (next.type === "ident") {
         // Named pipe transform
         const name = this.advance().value;
-        let arg: string | undefined;
+        let arg: unknown;
         if (this.peek().type === "colon") {
           this.advance(); // consume ':'
           const argTok = this.advance();
-          arg = argTok.value;
+          if (argTok.type === "bool") arg = argTok.value === "true";
+          else if (argTok.type === "number") arg = parseFloat(argTok.value);
+          else if (argTok.type === "null") arg = null;
+          else arg = argTok.value;
         }
         const fn = pipes[name] ?? getCustomPipe(name);
         if (fn) {
