@@ -3,6 +3,7 @@
  * primitives wrapped in shadcn's ChartContainer for theme integration.
  */
 
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -497,6 +498,15 @@ export function PrefabScatterChart({
   className,
 }: ScatterChartWire & { className?: string }) {
   if (typeof data === "string") return null;
+
+  // Stabilize data reference: interpolateProps creates new arrays/objects
+  // on every parent re-render. Unlike Bar/Line/Area (which use string
+  // dataKey props), Scatter receives a data array prop — new references
+  // trigger Recharts' animation setState cascade, causing an infinite
+  // update loop. Memoize so the reference only changes when values change.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const stableData = useMemo(() => data, [JSON.stringify(data)]);
+
   const config = buildConfig(series);
 
   return (
@@ -505,7 +515,7 @@ export function PrefabScatterChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <ScatterChart>
+      <ScatterChart data={stableData}>
         {showGrid && <CartesianGrid />}
         <XAxis
           dataKey={xAxis}
@@ -529,20 +539,18 @@ export function PrefabScatterChart({
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => {
-          // Filter data for this series: include points where the
-          // series dataKey field is truthy, or all data when there's
-          // only one series (single-series mode).
-          const seriesData =
-            series.length === 1
-              ? data
-              : data.filter(
-                  (d) => (d as Record<string, unknown>)._series === s.dataKey,
-                );
           return (
             <Scatter
               key={s.dataKey}
               name={s.label ?? s.dataKey}
-              data={seriesData}
+              data={
+                series.length === 1
+                  ? stableData
+                  : stableData.filter(
+                      (d) =>
+                        (d as Record<string, unknown>)._series === s.dataKey,
+                    )
+              }
               fill={`var(--color-${s.dataKey})`}
             />
           );
