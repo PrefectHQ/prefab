@@ -28,7 +28,7 @@ jobs:
 
       - name: Check for stale generated files
         run: |
-          STALE_FILES=$(git diff --name-only docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json)
+          STALE_FILES=$(git diff --name-only docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json tools/preview-classes.html)
           if [ -n "$STALE_FILES" ]; then
             echo "::error::Generated docs are out of date. Run 'prefab dev build-docs' and commit the output."
             echo ""
@@ -37,7 +37,7 @@ jobs:
             echo ""
             echo "To fix:"
             echo "  uv run prefab dev build-docs"
-            echo "  git add docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json"
+            echo "  git add docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json tools/preview-classes.html"
             echo "  git commit -m 'Regenerate docs'"
             exit 1
           fi
