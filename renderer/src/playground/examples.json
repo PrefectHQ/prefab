@@ -2525,6 +2525,16 @@
     "code": "Card(id=\"status-card\", css_class=\"my-card-styles\")\nColumn(id=\"sidebar\")"
   },
   {
+    "title": "from prefab_ui.components import Div",
+    "category": "Styling",
+    "code": "Div(css_class=\"h-[500px] w-[300px] rounded-[12px]\")"
+  },
+  {
+    "title": "from prefab_ui import PrefabApp",
+    "category": "Styling",
+    "code": "from prefab_ui.css import collect_css_classes\n\n# Views that might fill a slot dynamically\ncard_a = Card(css_class=\"h-[400px]\", children=[...])\ncard_b = Card(css_class=\"h-[600px]\", children=[...])\n\napp = PrefabApp(\n    view=main_view,\n    extra_classes=collect_css_classes(card_a, card_b),\n)"
+  },
+  {
     "title": "from prefab_ui.css import FocusVisible, Hover",
     "category": "Styling",
     "code": "Input(css_class=[\n    \"border-0 ring-0 shadow-none p-0 h-auto\",\n    FocusVisible(\"ring-0 ring-offset-0 border-b border-border rounded-none\"),\n    Hover(\"bg-muted\"),\n])"
