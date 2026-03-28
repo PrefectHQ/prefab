@@ -8,6 +8,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import "@tailwindcss/browser";
 import { generativeBridge } from "./generative-bridge";
 import { GenerativeApp } from "./generative-app";
 
