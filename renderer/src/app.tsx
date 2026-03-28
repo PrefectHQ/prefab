@@ -169,7 +169,12 @@ export function App() {
 
       // Generate and inject CSS for arbitrary Tailwind values
       const extraClasses = structured.extraClasses as string[] | undefined;
-      injectArbitraryCss(view ?? null, extraClasses);
+      injectArbitraryCss(
+        view ?? null,
+        extraClasses,
+        document.head,
+        extractedDefs,
+      );
 
       if (view) {
         setTree(view);

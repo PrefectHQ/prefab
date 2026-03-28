@@ -170,7 +170,7 @@ export function mountPreview(
   // Parse JSON — envelope uses view/state keys
   const parsed = JSON.parse(json);
   const tree: ComponentNode = parsed.view ?? parsed;
-  const reserved = new Set(["view", "state", "theme", "extraClasses"]);
+  const reserved = new Set(["view", "state", "theme", "defs", "extraClasses"]);
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
     if (!reserved.has(k)) userData[k] = v;
@@ -191,7 +191,8 @@ export function mountPreview(
 
   // Generate and inject CSS for arbitrary Tailwind values into shadow DOM
   const extraClasses = parsed.extraClasses as string[] | undefined;
-  injectArbitraryCss(tree, extraClasses, shadow);
+  const parsedDefs = (parsed.defs ?? null) as Record<string, unknown> | null;
+  injectArbitraryCss(tree, extraClasses, shadow, parsedDefs);
 
   // Mount React
   let root: Root | null = createRoot(mount);

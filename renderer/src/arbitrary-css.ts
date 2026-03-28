@@ -107,8 +107,12 @@ export function injectArbitraryCss(
   tree: ComponentNode | null,
   extraClasses: string[] | undefined,
   target: HTMLElement | ShadowRoot = document.head,
+  defs?: Record<string, unknown> | null,
 ): void {
   const classes = tree ? collectClasses(tree) : new Set<string>();
+  if (defs) {
+    for (const cls of collectClasses(defs)) classes.add(cls);
+  }
   if (extraClasses) {
     for (const entry of extraClasses) {
       for (const token of entry.split(" ")) {

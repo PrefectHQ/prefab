@@ -203,11 +203,17 @@ class PrefabApp(BaseModel):
             theme=theme if theme is not None else wire.get("theme"),
         )
 
-    def _generate_css(self, view: dict[str, Any] | None) -> str | None:
-        """Generate CSS for arbitrary Tailwind values in the view tree."""
+    def _generate_css(
+        self,
+        view: dict[str, Any] | None,
+        defs: dict[str, Any] | None = None,
+    ) -> str | None:
+        """Generate CSS for arbitrary Tailwind values in the view tree and defs."""
         classes: set[str] = set()
         if view is not None:
             classes = collect_classes(view)
+        if defs is not None:
+            classes.update(collect_classes(defs))
         if self.extra_classes:
             for entry in self.extra_classes:
                 classes.update(entry.split())
@@ -355,9 +361,11 @@ class PrefabApp(BaseModel):
 
         # Inject CSS for arbitrary Tailwind values directly into <head>
         # so they're available before React mounts (avoids FOUC).
-        css = self._generate_css(wire.get("view"))
+        css = self._generate_css(wire.get("view"), wire.get("defs"))
         if css:
-            head_parts.append(f"  <style>{css}</style>")
+            # Escape </ to prevent breaking out of the style tag (XSS)
+            safe_css = css.replace("</", r"<\/")
+            head_parts.append(f"  <style>{safe_css}</style>")
 
         data_json = json.dumps(wire, separators=(",", ":"))
         # Escape </ to prevent premature closing of the script tag
