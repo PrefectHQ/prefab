@@ -32,11 +32,13 @@ def collect_classes(node: object) -> set[str]:
 
 def _walk(node: object, out: set[str]) -> None:
     if isinstance(node, dict):
-        css = node.get("cssClass")
-        if isinstance(css, str):
-            out.update(css.split())
-        for value in node.values():
-            _walk(value, out)
+        for key, value in node.items():
+            # Collect from any class-carrying prop (cssClass, indicatorClass,
+            # targetClass, headerClass, cellClass, handleClass, etc.)
+            if key.endswith("Class") and isinstance(value, str):
+                out.update(value.split())
+            else:
+                _walk(value, out)
     elif isinstance(node, list):
         for item in node:
             _walk(item, out)
