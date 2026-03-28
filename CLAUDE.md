@@ -50,8 +50,7 @@ When adding or modifying a component, update the docstring to match. Run `uv run
 
 `dev-docs/` contains internal reference documentation for build processes, architecture decisions, and operational knowledge. Check there before asking questions about how things work.
 
-- `build-pipeline.md` — what gets built when, by what command, in CI, and manually before releases
-- `renderer-build-release.md` — renderer bundle structure, CDN routing, npm publish
+- `build-pipeline.md` — all build targets, CLI commands, CSS pipeline, CDN routing, release checklist
 - `theming-architecture.md` — CSS variable system, gradient cascade, theme scoping
 - `generative-ui-architecture.md` — Pyodide sandbox, streaming model
 
