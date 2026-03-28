@@ -84,6 +84,8 @@ export function filterByAccept(
     .map((t) => t.trim().toLowerCase())
     .filter(Boolean);
 
+  if (tokens.includes("*/*")) return files;
+
   const accepted: File[] = [];
   for (const file of files) {
     const fileType = file.type.toLowerCase();
