@@ -454,6 +454,11 @@ def build_docs() -> None:
             None,
         ),
         (
+            "Extracting preview classes",
+            ["uv", "run", str(build_dir / "extract_preview_classes.py")],
+            None,
+        ),
+        (
             "Generating Tailwind content",
             ["uv", "run", str(build_dir / "generate_content.py")],
             None,
