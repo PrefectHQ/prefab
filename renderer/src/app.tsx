@@ -35,6 +35,7 @@ import { useStateStore } from "./state";
 import { earlyBridge } from "./early-bridge";
 import { clearAllIntervals, setAppName } from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
+import { injectArbitraryCss } from "./arbitrary-css";
 
 /** Protocol versions this renderer understands. */
 const SUPPORTED_VERSIONS = new Set(["0.2"]);
@@ -165,6 +166,10 @@ export function App() {
         currentHost != null ? { ...stateData, $host: currentHost } : stateData,
       );
       setDefs(extractedDefs);
+
+      // Generate and inject CSS for arbitrary Tailwind values
+      const extraClasses = structured.extraClasses as string[] | undefined;
+      injectArbitraryCss(view ?? null, extraClasses);
 
       if (view) {
         setTree(view);

@@ -14,6 +14,7 @@ import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
+import { injectArbitraryCss } from "./arbitrary-css";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
@@ -169,7 +170,7 @@ export function mountPreview(
   // Parse JSON — envelope uses view/state keys
   const parsed = JSON.parse(json);
   const tree: ComponentNode = parsed.view ?? parsed;
-  const reserved = new Set(["view", "state", "theme"]);
+  const reserved = new Set(["view", "state", "theme", "extraClasses"]);
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
     if (!reserved.has(k)) userData[k] = v;
@@ -187,6 +188,10 @@ export function mountPreview(
       shadow.appendChild(themeStyle);
     }
   }
+
+  // Generate and inject CSS for arbitrary Tailwind values into shadow DOM
+  const extraClasses = parsed.extraClasses as string[] | undefined;
+  injectArbitraryCss(tree, extraClasses, shadow);
 
   // Mount React
   let root: Root | null = createRoot(mount);

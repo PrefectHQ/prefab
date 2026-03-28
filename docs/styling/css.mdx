@@ -29,6 +29,34 @@ css_class="border-0 ring-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 
 
 The `prefab_ui.css` module provides helpers that eliminate the repetition.
 
+## Custom Values
+
+Tailwind's arbitrary value syntax lets you use exact dimensions, spacing, and other properties without predefined utility classes. Prefab detects these patterns in your view tree and generates the necessary CSS automatically:
+
+```python
+from prefab_ui.components import Div
+
+Div(css_class="h-[500px] w-[300px] rounded-[12px]")
+```
+
+Any unit Tailwind supports works: `px`, `rem`, `%`, `vh`, `calc(...)`, and so on. Supported properties include dimensions (`h`, `w`, `min-h`, `max-w`, `size`), spacing (`p`, `px`, `m`, `mt`, `gap`), positioning (`top`, `inset`), border radius (`rounded`), font size (`text`), and more.
+
+For dynamic content that isn't part of the static view tree, like components that fill a `Slot` at runtime, collect their classes and pass them to `extra_classes`:
+
+```python
+from prefab_ui import PrefabApp
+from prefab_ui.css import collect_css_classes
+
+# Views that might fill a slot dynamically
+card_a = Card(css_class="h-[400px]", children=[...])
+card_b = Card(css_class="h-[600px]", children=[...])
+
+app = PrefabApp(
+    view=main_view,
+    extra_classes=collect_css_classes(card_a, card_b),
+)
+```
+
 ## Composing with Lists
 
 `css_class` accepts a list of strings, joined with spaces at build time. This lets you group related concerns and mix in helpers without worrying about spacing:

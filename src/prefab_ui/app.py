@@ -30,6 +30,7 @@ from typing import Any
 import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
+from prefab_ui.css import collect_classes, generate_arbitrary_css
 from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
 from prefab_ui.rx import _sanitize_floats
 from prefab_ui.themes import Theme
@@ -138,6 +139,11 @@ class PrefabApp(BaseModel):
         default=None,
         description="Custom JS action handlers: name → function expression",
     )
+    extra_classes: list[str] | None = Field(
+        default=None,
+        exclude=True,
+        description="Additional Tailwind classes to generate CSS for (e.g. dynamic/reactive classes not in the view tree)",
+    )
 
     _context_root: Any = PrivateAttr(default=None)
 
@@ -196,6 +202,17 @@ class PrefabApp(BaseModel):
             defs=defs if defs is not None else wire.get("defs"),
             theme=theme if theme is not None else wire.get("theme"),
         )
+
+    def _generate_css(self, view: dict[str, Any] | None) -> str | None:
+        """Generate CSS for arbitrary Tailwind values in the view tree."""
+        classes: set[str] = set()
+        if view is not None:
+            classes = collect_classes(view)
+        if self.extra_classes:
+            for entry in self.extra_classes:
+                classes.update(entry.split())
+        css = generate_arbitrary_css(classes)
+        return css or None
 
     def _wrap_view(self) -> dict[str, Any] | None:
         """Wrap the view in a `Div` with `pf-app-root` and serialize.
@@ -285,6 +302,9 @@ class PrefabApp(BaseModel):
                 else:
                     result["theme"] = self.theme.to_json()
 
+            if self.extra_classes:
+                result["extraClasses"] = list(self.extra_classes)
+
             return result
         finally:
             if token is not None:
@@ -331,10 +351,15 @@ class PrefabApp(BaseModel):
                 f"  <script>\nwindow.__prefab_handlers = {{\n{obj}\n}};\n  </script>"
             )
 
-        data_json = json.dumps(
-            self.to_json(tool_resolver=tool_resolver),
-            separators=(",", ":"),
-        )
+        wire = self.to_json(tool_resolver=tool_resolver)
+
+        # Inject CSS for arbitrary Tailwind values directly into <head>
+        # so they're available before React mounts (avoids FOUC).
+        css = self._generate_css(wire.get("view"))
+        if css:
+            head_parts.append(f"  <style>{css}</style>")
+
+        data_json = json.dumps(wire, separators=(",", ":"))
         # Escape </ to prevent premature closing of the script tag
         safe_json = data_json.replace("</", r"<\/")
 
