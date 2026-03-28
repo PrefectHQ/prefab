@@ -2,6 +2,16 @@
 
 Complete reference for what gets built, when, by whom, and how.
 
+## Bundled Renderers
+
+The Python package ships two self-contained HTML files in `src/prefab_ui/renderer/`. Each is a complete single-file renderer with all JS/CSS inlined — no external requests, no CDN, no CSP domains needed.
+
+**`app.html`** is the standard MCP renderer. When a FastMCP tool returns a `PrefabApp`, the MCP host loads this HTML in an iframe. It connects via the MCP Apps bridge (`ext-apps` SDK), receives the view JSON as `structuredContent`, and renders the component tree. This is what most users interact with.
+
+**`generative.html`** is the generative UI renderer. It extends the standard renderer with Pyodide support for executing streaming Python code from `ontoolinputpartial`. Used when an LLM streams UI code that gets progressively rendered as it arrives. Pyodide is loaded from CDN at runtime (not bundled) to keep the HTML size manageable.
+
+Both are built as single files via `vite-plugin-singlefile` and must be rebuilt with `prefab dev build-renderers` after any renderer source changes.
+
 ## Build Targets
 
 The renderer has 5 Vite build configurations producing different artifacts:
