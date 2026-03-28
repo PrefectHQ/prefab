@@ -14,6 +14,11 @@ import json
 import re
 from pathlib import Path
 
+# Valid Tailwind class: starts with a letter, !, or - and contains only
+# word chars, hyphens, brackets, colons, slashes, dots, percent, parens.
+# Filters out expression fragments like {{ or ? from reactive values.
+_CLASS_RE = re.compile(r"^[!a-zA-Z\-][\w\-\[\]:./%()#,]+$")
+
 DOCS_DIR = Path(__file__).parent.parent / "docs"
 OUTPUT = Path(__file__).parent / "preview-classes.html"
 
@@ -56,8 +61,11 @@ def main() -> None:
             except json.JSONDecodeError:
                 continue
 
+    # Filter out expression fragments and other non-class junk
+    valid_classes = {c for c in all_classes if _CLASS_RE.match(c)}
+
     # Write as an HTML file with classes on a div — Tailwind's scanner picks them up
-    escaped = " ".join(sorted(all_classes))
+    escaped = " ".join(sorted(valid_classes))
     OUTPUT.write_text(f'<div class="{escaped}"></div>\n')
     print(f"Extracted {len(all_classes)} classes → {OUTPUT}")
 
