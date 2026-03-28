@@ -17,7 +17,7 @@ from pathlib import Path
 # Valid Tailwind class: starts with a letter, !, or - and contains only
 # word chars, hyphens, brackets, colons, slashes, dots, percent, parens.
 # Filters out expression fragments like {{ or ? from reactive values.
-_CLASS_RE = re.compile(r"^[!a-zA-Z\-][\w\-\[\]:./%()#,]+$")
+_CLASS_RE = re.compile(r"^[!\w\-][\w\-\[\]:./%()#,]+$")
 
 DOCS_DIR = Path(__file__).parent.parent / "docs"
 OUTPUT = Path(__file__).parent / "preview-classes.html"
