@@ -33,7 +33,7 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        renderer: path.resolve(__dirname, "renderer.html"),
+        renderer: path.resolve(__dirname, "index.html"),
         playground: path.resolve(__dirname, "playground.html"),
       },
       output: {

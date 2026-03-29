@@ -24,10 +24,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * paths, so all files resolve correctly in both contexts.
  */
 export function rewriteEntryLoader(): Plugin {
-  const pkg = JSON.parse(
-    readFileSync(resolve(__dirname, "package.json"), "utf-8"),
-  );
-  const cdnBase = `https://cdn.jsdelivr.net/npm/${pkg.name}@latest/dist/`;
+  const embedCdnBase = `https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui-docs@latest/dist/`;
 
   return {
     name: "rewrite-entry-loader",
@@ -53,9 +50,11 @@ export function rewriteEntryLoader(): Plugin {
         source: `export * from "./${hashedFilename}";\n`,
       });
 
+      // On localhost, load from local files (for `mintlify dev`).
+      // On production, load from the embed package on jsdelivr CDN.
       entry.code = [
         `(function(){`,
-        `var base=window.location.hostname==="localhost"?"/":"${cdnBase}";`,
+        `var base=window.location.hostname==="localhost"?"/":"${embedCdnBase}";`,
         `window.__prefabReady=import(base+"_renderer/embed.mjs");`,
         `})();\n`,
       ].join("");

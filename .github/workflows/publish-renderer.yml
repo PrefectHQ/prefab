@@ -1,8 +1,12 @@
-# Publishes @prefecthq/prefab-ui to npm on release.
+# Publishes renderer packages to npm on release.
+#
+# @prefecthq/prefab-ui            — CDN renderer (loaded by MCP hosts via get_renderer_html)
+# @prefecthq/prefab-ui-docs       — shadow DOM preview renderer for docs (loaded by Mintlify)
+# @prefecthq/prefab-ui-playground — interactive playground (loaded by docs + prefab CLI)
 #
 # docs/renderer.js is a stable loader committed to the repo that imports
-# from @latest on the CDN via a stable _renderer/embed.mjs shim. New
-# releases are picked up automatically — no docs rebuild needed.
+# from @prefecthq/prefab-ui-docs@latest on the CDN via a stable embed.mjs shim.
+# New releases are picked up automatically — no docs rebuild needed.
 name: Publish renderer to npm
 
 on:
@@ -16,9 +20,9 @@ permissions:
 
 jobs:
   publish:
-    name: "Build & publish @prefecthq/prefab-ui"
+    name: "Build & publish npm packages"
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v6
@@ -38,6 +42,8 @@ jobs:
           VERSION="${RAW#v}"
           VERSION=$(echo "$VERSION" | sed -E 's/(a|b|rc)[0-9]+$//')
           npm version "$VERSION" --no-git-tag-version
+          cd docs-package && npm version "$VERSION" --no-git-tag-version
+          cd ../playground-package && npm version "$VERSION" --no-git-tag-version
 
       - run: npm ci
         working-directory: renderer
@@ -45,17 +51,36 @@ jobs:
       - run: npm run build:publish
         working-directory: renderer
 
-      - run: npm publish --access public --tag latest
-        working-directory: renderer
-
-      - name: Purge jsDelivr @latest cache
+      # Prepare satellite packages with build output
+      - name: Prepare docs package
         working-directory: renderer
         run: |
-          # Purge every published file from the CDN cache so @latest resolves
-          # to the just-published version immediately. Individual chunk hashes
-          # change between releases, so purging only the shim is not enough.
-          # This covers both the embed build (_renderer/) and CDN renderer (app/).
-          for f in dist/**/*.{js,mjs,css,html}; do
-            echo "Purging $f"
-            curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/$f" > /dev/null
+          mkdir -p docs-package/dist
+          cp dist/renderer.js docs-package/dist/
+          cp -r dist/_renderer docs-package/dist/
+
+      - name: Prepare playground package
+        working-directory: renderer
+        run: cp dist/playground.html playground-package/
+
+      - name: Publish @prefecthq/prefab-ui
+        working-directory: renderer
+        run: npm publish --access public --tag latest
+
+      - name: Publish @prefecthq/prefab-ui-docs
+        working-directory: renderer/docs-package
+        run: npm publish --access public --tag latest
+
+      - name: Publish @prefecthq/prefab-ui-playground
+        working-directory: renderer/playground-package
+        run: npm publish --access public --tag latest
+
+      - name: Purge jsDelivr docs cache
+        working-directory: renderer
+        run: |
+          # The docs entry loader uses @latest, so purge the CDN cache
+          # so it picks up the new version immediately.
+          for f in dist/_renderer/*.mjs dist/renderer.js; do
+            echo "Purging prefab-ui-docs $f"
+            curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui-docs@latest/$f" > /dev/null
           done
