@@ -117,4 +117,10 @@ PRs are documentation. Structure them as:
 
 ### Renderer
 
-Prefab ships a TypeScript/React renderer (`renderer/`) alongside the Python library. Changes to the wire protocol or component props require coordinated updates on both sides. CSS styling is done via Tailwind utility classes in `style.css` using the `pf-*` class naming convention, not inline styles or component-level Tailwind classes. Consult `dev-docs/` for renderer build and release details.
+Prefab ships a TypeScript/React renderer (`renderer/`) alongside the Python library. The renderer is a single unified application — one bridge handles standard MCP tool results, generative streaming (Pyodide loads lazily on first partial), and standalone baked-in data.
+
+**Delivery:** CDN by default (code-split ESM from jsDelivr, pinned to Python package version). A bundled single-file fallback (`app.html`) ships in the Python package for airgapped use. The Python API `get_renderer_html(mode=...)` controls which is returned. The embed build (`embed.tsx`) is separate — it's for doc preview shadow DOM only and uses build-time CSS.
+
+**CSS:** Runtime Tailwind via `@tailwindcss/browser` — users can use any Tailwind class in `css_class` including arbitrary values like `h-[500px]`. Component-internal styling uses `pf-*` prefixed utility classes in `style.css`, not inline styles.
+
+Changes to the wire protocol or component props require coordinated updates on both sides. Consult `dev-docs/build-pipeline.md` for renderer build and release details.

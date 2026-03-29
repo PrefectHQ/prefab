@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "@tailwindcss/browser";
 import { DevPreview } from "./dev-preview";
-import { earlyBridge } from "./early-bridge";
+import { bridge } from "./bridge";
 
 // Lazy-import App so the MCP SDK (@modelcontextprotocol/ext-apps) is only
 // loaded when we actually need it. The SDK has module-level side effects that
@@ -32,7 +32,7 @@ const isPreview =
 // early tool-result messages from hosts with aggressive delivery timing
 // (e.g. MCPJam's double-iframe sandbox).
 if (!isPreview) {
-  earlyBridge.connect();
+  bridge.connect();
 }
 
 createRoot(document.getElementById("root")!).render(
