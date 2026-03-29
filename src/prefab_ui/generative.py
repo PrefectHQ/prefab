@@ -94,8 +94,14 @@ def _import_path(name: str, cls: type[Component]) -> str:
     return f"from {cls.__module__} import {name}"
 
 
+def _first_doc_line(cls: type[Component]) -> str:
+    """Extract the first line of a component's docstring."""
+    doc = inspect.getdoc(cls)
+    return (doc or "").split("\n")[0].rstrip(".")
+
+
 def _summarize_component(name: str, cls: type[Component]) -> str:
-    """Compact summary: Name (tags) — description. Import path."""
+    """Compact summary: Name (tags) — description."""
     tags: list[str] = []
     if issubclass(cls, ContainerComponent):
         tags.append("container")
@@ -103,15 +109,14 @@ def _summarize_component(name: str, cls: type[Component]) -> str:
         tags.append("stateful")
     tag_str = f" ({', '.join(tags)})" if tags else ""
 
-    doc = inspect.getdoc(cls)
-    first_line = (doc or "").split("\n")[0].rstrip(".")
+    first_line = _first_doc_line(cls)
     desc = f" — {first_line}." if first_line else ""
 
-    return f"{name}{tag_str}{desc} {_import_path(name, cls)}"
+    return f"{name}{tag_str}{desc}"
 
 
 def describe_component(name: str, cls: type[Component]) -> str:
-    """Full component description: tags, import, docstring, and fields."""
+    """Full component description: tags and docstring."""
     parts = [name]
 
     tags: list[str] = []
@@ -122,31 +127,39 @@ def describe_component(name: str, cls: type[Component]) -> str:
     if tags:
         parts[0] += f" ({', '.join(tags)})"
 
-    parts.append(f"  {_import_path(name, cls)}")
-
     doc = inspect.getdoc(cls)
     if doc:
         parts.append(f"  {doc}")
 
-    parts.append("")
-    parts.append("  Fields:")
-    for field_name, info in cls.model_fields.items():
-        if field_name in ("type", "css_class", "id", "children", "let"):
-            continue
-        desc = info.description or ""
-        anno = str(info.annotation).replace("typing.", "")
-        line = f"    {field_name}: {anno}"
-        if desc:
-            line += f" — {desc[:80]}"
-        parts.append(line)
-
     return "\n".join(parts)
+
+
+def _group_by_module(
+    components: dict[str, type[Component]],
+) -> dict[str, dict[str, type[Component]]]:
+    """Group components by their import module."""
+    groups: dict[str, dict[str, type[Component]]] = {}
+    for name, cls in sorted(components.items()):
+        path = _import_path(name, cls)
+        module = path.split(" import ")[0].replace("from ", "")
+        groups.setdefault(module, {})[name] = cls
+    return groups
+
+
+def _module_heading(module: str) -> str:
+    """Convert a module path to a section heading."""
+    return module.split(".")[-1].title()
+
+
+_AUTO_DETAIL_THRESHOLD = 5
+_DEFAULT_DETAIL_LIMIT = 8
 
 
 def search_components(
     query: str = "",
     *,
-    detail: bool = False,
+    detail: bool | None = None,
+    limit: int | None = None,
     components: dict[str, type[Component]] | None = None,
 ) -> str:
     """Search the Prefab component library.
@@ -155,26 +168,22 @@ def search_components(
     and usage examples before writing component code. The skill
     covers patterns and layout; this tool has the API details.
 
-    Returns component names, import paths, tags, and a one-line
-    description. Use `detail=True` to include full docstrings,
-    field listings, and usage examples.
+    The query matches component names and descriptions.
+    Space-separated terms match independently, so
+    `"Card Badge Metric"` returns all three.
 
-    The query matches component names. Space-separated terms match
-    independently, so `"Card Badge Metric"` returns all three.
-
-    Recommended workflow (two calls max):
-
-    1. Call with no arguments to see the full catalog — the compact
-       listing includes import paths and descriptions, which is
-       enough for most components.
-    2. Call with a query and `detail=True` to get exact props for
-       components you're about to use (e.g. Metric's `delta=` vs
-       `trend=`, DataTable's `rows=` vs `data=`).
+    When a query matches a small number of components, full details
+    (docstrings, args, examples) are shown automatically. For broad
+    searches, a compact listing is returned instead. Use `detail` to
+    override this behavior.
 
     Args:
-        query: Filter by component name. Space-separated terms are
-            OR-matched (e.g. `"Card Badge"` returns both).
-        detail: Include full docstrings and field listings.
+        query: Filter by component name or description.
+            Space-separated terms are OR-matched.
+        detail: Show full docstrings and args. Defaults to automatic
+            (detailed for ≤5 matches, compact otherwise).
+        limit: Max components to return in detail mode (default 8).
+            No limit in compact mode.
     """
     if components is None:
         components = get_all_components()
@@ -183,25 +192,46 @@ def search_components(
     matches = {
         name: cls
         for name, cls in components.items()
-        if not terms or any(t in name.lower() for t in terms)
+        if not terms
+        or any(t in name.lower() or t in _first_doc_line(cls).lower() for t in terms)
     }
     if not matches:
         return f"No components matching '{query}'. Try a broader search."
 
-    header = (
-        f"{len(matches)} components"
-        if not terms
-        else f"{len(matches)} components matching '{query}'"
+    # Resolve detail mode: auto-escalate for small result sets.
+    use_detail = (
+        detail if detail is not None else len(matches) <= _AUTO_DETAIL_THRESHOLD
     )
 
-    if detail:
-        sections = [
-            describe_component(name, cls) for name, cls in sorted(matches.items())
-        ]
-        return f"{header}:\n\n" + "\n\n".join(sections)
+    # Apply limit in detail mode.
+    if use_detail and limit is None:
+        limit = _DEFAULT_DETAIL_LIMIT
+    total = len(matches)
+    if limit is not None and len(matches) > limit:
+        matches = dict(sorted(matches.items())[:limit])
 
-    lines = [_summarize_component(name, cls) for name, cls in sorted(matches.items())]
-    return f"{header}:\n" + "\n".join(lines)
+    header = (
+        f"{total} components" if not terms else f"{total} components matching '{query}'"
+    )
+    if limit is not None and total > limit:
+        header += f" (showing {limit})"
+
+    groups = _group_by_module(matches)
+    sections: list[str] = [header + ":"]
+
+    for module, group in groups.items():
+        heading = _module_heading(module)
+        sections.append(f"\n## {heading}")
+        sections.append(f"Import: `from {module} import <name>`")
+
+        if use_detail:
+            entries = [describe_component(name, cls) for name, cls in group.items()]
+            sections.append("\n" + "\n\n".join(entries))
+        else:
+            lines = [_summarize_component(name, cls) for name, cls in group.items()]
+            sections.append("\n".join(lines))
+
+    return "\n".join(sections)
 
 
 # ---------------------------------------------------------------------------

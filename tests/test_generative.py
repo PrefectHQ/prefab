@@ -78,13 +78,6 @@ class TestDescribeComponent:
         desc = describe_component("Text", Text)
         assert desc.startswith("Text")
 
-    def test_includes_import_path(self):
-        from prefab_ui.components import Text
-
-        desc = describe_component("Text", Text)
-        assert "from prefab_ui.components" in desc
-        assert "import Text" in desc
-
     def test_container_tag(self):
         from prefab_ui.components import Column
 
@@ -103,23 +96,19 @@ class TestDescribeComponent:
         desc = describe_component("Slider", Slider)
         assert "slider" in desc.lower()
 
-    def test_includes_fields_section(self):
+    def test_includes_args_from_docstring(self):
         from prefab_ui.components import Slider
 
         desc = describe_component("Slider", Slider)
-        assert "Fields:" in desc
+        assert "Args:" in desc
         assert "min" in desc
         assert "max" in desc
 
-    def test_skips_internal_fields(self):
-        from prefab_ui.components import Column
+    def test_no_fields_section(self):
+        from prefab_ui.components import Slider
 
-        desc = describe_component("Column", Column)
-        lines = desc.split("\n")
-        field_lines = [line.strip() for line in lines if line.startswith("    ")]
-        field_names = [line.split(":")[0] for line in field_lines if ":" in line]
-        assert "type" not in field_names
-        assert "children" not in field_names
+        desc = describe_component("Slider", Slider)
+        assert "Fields:" not in desc
 
 
 # ---------------------------------------------------------------------------
@@ -136,19 +125,18 @@ class TestSearchCompact:
         # Should have many lines (one per component)
         assert result.count("\n") > 10
 
-    def test_compact_has_import_path(self):
-        result = search_components("Button")
-        assert "from prefab_ui" in result
-        assert "import Button" in result
+    def test_group_heading_has_import(self):
+        result = search_components("Button", detail=False)
+        assert "from prefab_ui.components import <name>" in result
 
     def test_compact_has_tags(self):
         result = search_components("Column")
         assert "container" in result
 
     def test_compact_no_fields(self):
-        result = search_components("Slider")
-        # Compact mode should NOT list individual fields
+        result = search_components("Slider", detail=False)
         assert "Fields:" not in result
+        assert "Args:" not in result
 
     def test_query_filters(self):
         result = search_components("Text")
@@ -160,29 +148,57 @@ class TestSearchCompact:
         assert "No components matching" in result
 
     def test_case_insensitive(self):
-        result = search_components("text")
+        result = search_components("text", detail=False)
         assert "Text" in result
+
+    def test_matches_description(self):
+        result = search_components("status", detail=False)
+        assert "Badge" in result
 
 
 class TestSearchDetail:
-    """detail=True: full docstrings and field listings."""
+    """detail=True: full docstrings and args."""
 
     def test_detail_includes_docstring(self):
-
         result = search_components("Slider", detail=True)
-        # Should include the class docstring
         assert "slider" in result.lower()
 
-    def test_detail_includes_fields(self):
+    def test_detail_includes_args(self):
         result = search_components("Slider", detail=True)
-        assert "Fields:" in result
+        assert "Args:" in result
         assert "min" in result
         assert "max" in result
+
+    def test_detail_no_fields_section(self):
+        result = search_components("Slider", detail=True)
+        assert "Fields:" not in result
 
     def test_detail_with_query(self):
         result = search_components("Badge", detail=True)
         assert "1 components matching" in result
-        assert "Fields:" in result
+
+    def test_detail_has_group_heading(self):
+        result = search_components("Badge", detail=True)
+        assert "## Components" in result
+        assert "from prefab_ui.components import <name>" in result
+
+    def test_auto_detail_small_result(self):
+        result = search_components("Badge")
+        # 1 match should auto-escalate to detail
+        assert "Args:" in result
+
+    def test_auto_compact_large_result(self):
+        result = search_components()
+        # All components should stay compact
+        assert "Args:" not in result
+
+    def test_detail_default_limit(self):
+        result = search_components("Chart", detail=True)
+        assert "showing 8" in result
+
+    def test_explicit_limit(self):
+        result = search_components("Chart", detail=True, limit=3)
+        assert "showing 3" in result
 
     def test_accepts_preloaded_components(self):
         from prefab_ui.components import Text
