@@ -11,34 +11,41 @@ The renderer is a single React application (`renderer/src/main.tsx`) that handle
 - **Lazy Pyodide** — loads on first streaming partial, zero cost for non-generative tools
 - **Lazy chunks** — recharts, highlight.js, calendar, icons, and other heavy deps are code-split and only download when used
 
-Two builds are produced from this single entry point:
+## npm Packages
 
-| Build | Config | Output | Purpose |
-|-------|--------|--------|---------|
-| **CDN** | `vite.config.renderer.ts` | `dist/renderer.js` + `.mjs` lazy chunks | Primary delivery — code-split ESM published to npm/jsDelivr |
-| **Bundled** | `vite.config.bundled.ts` | `dist/bundled/app.html` (single file) | Airgapped fallback — all JS/CSS inlined, shipped in Python package |
+Three npm packages are published from the same git tag, all at the same version:
 
-**CDN is the default.** The Python API `get_renderer_html()` returns a lightweight HTML stub that loads the renderer from jsDelivr, pinned to the installed Python package version.
+| Package | Contents | Size | Purpose |
+|---------|----------|------|---------|
+| `@prefecthq/prefab-ui` | `dist/app/` — CDN renderer (code-split) | ~1MB compressed | Primary renderer loaded by MCP hosts via `get_renderer_html()` |
+| `@prefecthq/prefab-ui-docs` | `dist/_renderer/` + `dist/renderer.js` — embed chunks + entry loader | ~1MB compressed | Shadow DOM preview renderer for Mintlify docs |
+| `@prefecthq/prefab-ui-playground` | `playground.html` — self-contained Pyodide editor | ~1MB compressed | Interactive playground for docs and `prefab playground` CLI |
 
-**The bundled renderer ships in the Python package** as `src/prefab_ui/renderer/app.html`. When `get_renderer_html(mode="bundled")` is called, it reads this file directly. A future enhancement may move the bundled renderer to a separate package to reduce the main package size.
+The main renderer package (`@prefecthq/prefab-ui`) contains ONLY the CDN renderer. Doc assets and the playground are in separate packages to keep the main package small — MCP hosts only download what they need.
 
-### Separate artifacts
+### Why three packages?
 
-**Embed** (`embed.tsx` via `vite.config.renderer.ts`) — shadow DOM entry point for doc previews. Uses build-time CSS because `@tailwindcss/browser` can't target shadow roots. This is fundamentally different from the main renderer and stays as a separate entry point.
+The CDN renderer, doc embed, and playground are three different builds from the same source. They share no runtime code at the npm level — each is self-contained. Bundling them together would force every MCP host to download ~3.5MB of doc preview and playground code it never uses.
 
-**Playground** (`playground.html` via `vite.config.playground.ts`) — self-contained Pyodide editor. Inlines all JS/CSS and a serialized Python bundle. Stays as-is.
+## Delivery Modes
 
-## CDN Delivery
+### CDN (default)
 
-The renderer is published to npm as `@prefecthq/prefab-ui`. The Python package loads it from jsDelivr with the version pinned to match:
+`get_renderer_html()` returns a tiny HTML stub that loads from jsDelivr, pinned to the installed Python package version:
 
 ```
-https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@{version}/dist/renderer.js
+https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@{version}/dist/app/renderer.js
 ```
 
-The version comes from `prefab_ui.__version__` at runtime. This ensures the renderer always matches the installed Python library — no version drift between the wire protocol and the renderer.
+The version comes from `prefab_ui.__version__` at runtime. No version drift between the wire protocol and the renderer.
 
-For dev versions (`0.0.0-dev`), the Python API auto-falls back to the bundled `app.html` since no CDN version exists.
+### Bundled (airgapped fallback)
+
+The bundled `app.html` ships in the Python package. Pass `mode="bundled"` or set `PREFAB_BUNDLED_RENDERER=1` to use it. Dev versions (containing "dev" in the version string) auto-fall back to bundled since no CDN version exists.
+
+### External URL (dev override)
+
+Set `PREFAB_RENDERER_URL` to load from a custom URL (e.g. local `vite preview` server).
 
 ### Python API
 
@@ -49,41 +56,22 @@ get_renderer_html(mode: Literal["cdn", "bundled"] | None = None) -> str
 Resolution when `mode=None`:
 1. `PREFAB_RENDERER_URL` env var → external stub with that URL (dev override)
 2. `PREFAB_BUNDLED_RENDERER=1` env var → bundled `app.html`
-3. Default → CDN stub pinned to `__version__`
+3. Dev version → bundled (auto-fallback)
+4. Default → CDN stub pinned to `__version__`
 
 The same `mode` kwarg is on `get_renderer_head()`, `get_renderer_csp()`, `get_generative_renderer_html()`, and `get_generative_renderer_csp()`.
 
-### CDN bundle structure
-```
-dist/renderer.js              ~1KB   IIFE entry loader
-dist/_renderer/embed.mjs         ~1KB  stable re-export shim (unhashed)
-dist/_renderer/embed-HASH.mjs   ~500KB core (React, Radix, shadcn, engine)
-dist/_renderer/charts-HASH.mjs  ~520KB lazy (recharts, on first chart)
-dist/_renderer/content-HASH.mjs ~250KB lazy (highlight.js, react-markdown)
-dist/_renderer/compound-calendar-HASH.mjs ~180KB lazy (date-fns)
-dist/_renderer/icons-HASH.mjs   ~varies lazy (lucide barrel, on dynamic icon lookup)
-```
-
-### CDN routing
-The entry loader (`renderer.js`) picks its base URL at runtime:
-- `localhost` → `/` (local files from `docs/`)
-- Everything else → `https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/dist/`
-
-Both paths load `_renderer/embed.mjs` — a stable (unhashed) re-export shim that forwards to the real hashed chunk. The `@latest` tag is safe because the shim and its hashed chunk are always consistent within a single npm version.
-
-### Why `.mjs` for chunks
-Mintlify inlines ALL `.js` files from `docs/` as `<script>` tags. Using `.mjs` prevents the 500KB+ chunks from being inlined. On deployed Mintlify, `.mjs` files can't be served as static assets, so production loads them from the jsdelivr CDN.
-
 ## Build Targets
 
-| Config | Entry point | Output | Purpose |
-|--------|------------|--------|---------|
-| `vite.config.ts` | `renderer.html` → `main.tsx` | `dist/renderer.html` + assets | Local dev (`npm run dev`), `prefab serve` with `PREFAB_RENDERER_URL` |
-| `vite.config.renderer.ts` | `src/embed.tsx` | `dist/renderer.js` + `.mjs` chunks | CDN library (npm), doc preview shadow DOM |
-| `vite.config.bundled.ts` | `bundled.html` → `main.tsx` | `dist/bundled/app.html` (single file) | Airgapped fallback shipped in Python package |
-| `vite.config.playground.ts` | `playground.html` | `dist/playground.html` (single file) | Published interactive playground |
+| Config | Entry | Output | Purpose |
+|--------|-------|--------|---------|
+| `vite.config.ts` | `index.html` → `main.tsx` | `dist/` + assets | Local dev (`npm run dev`) |
+| `vite.config.cdn.ts` | `index.html` → `main.tsx` | `dist/app/` (code-split) | CDN renderer → `@prefecthq/prefab-ui` |
+| `vite.config.bundled.ts` | `index.html` → `main.tsx` | `dist/bundled/` (single file) | Bundled `app.html` for Python package |
+| `vite.config.renderer.ts` | `src/embed.tsx` | `dist/_renderer/` + `dist/renderer.js` | Doc embed → `@prefecthq/prefab-ui-docs` |
+| `vite.config.playground.ts` | `playground.html` | `dist/playground.html` (single file) | Playground → `@prefecthq/prefab-ui-playground` |
 
-Note: `vite.config.renderer.ts` currently builds the embed entry point. Once the CDN renderer build is added (from unified `main.tsx`), this config will produce both the embed and the primary CDN renderer, or a new config will handle the CDN build separately.
+All configs share `index.html` as the HTML entry point except the embed (library mode, no HTML) and playground (its own HTML).
 
 ## When Things Get Built
 
@@ -103,16 +91,17 @@ If any are stale, CI fails with instructions to rebuild.
 ### On GitHub release (`publish-renderer.yml`)
 
 1. `npm ci` — installs renderer dependencies
-2. `npm version` — sets version from git tag (strips PEP 440 suffixes)
-3. `npm run build:publish` — builds renderer library + playground
-4. `npm publish` — publishes `@prefecthq/prefab-ui` to npm
-5. Purges jsDelivr CDN cache for `@latest`
+2. `npm version` — sets version from git tag on all three packages
+3. `npm run build:publish` — builds embed + CDN renderer + playground
+4. Copies build outputs into satellite package directories
+5. Publishes all three packages to npm
+6. Purges jsDelivr CDN cache for the docs embed (`@latest`)
 
-This publishes the **CDN renderer** and **playground**. The bundled `app.html` must be rebuilt manually before release.
+The CDN renderer uses version-pinned URLs (no `@latest`), so no purge is needed.
 
 ### Manually before release
 
-**Bundled renderer** (`app.html`) ships inside the Python package. It must be rebuilt before any release that includes renderer changes:
+**Bundled renderer** (`app.html`) ships inside the Python package. Rebuild before any release that includes renderer changes:
 
 ```bash
 prefab dev build-renderers
@@ -182,7 +171,7 @@ The playground is a self-contained HTML file (all JS/CSS inlined) that runs Pyth
 | `tools/preview-classes.html` | `extract_preview_classes.py` | Yes | Tailwind source for doc preview CSS |
 | `tools/content.html` | `generate_content.py` | No (gitignored) | All component variants for Tailwind scanning |
 | `docs/css/preview.css` | `scope_css.py` | No (gitignored) | Scoped Tailwind CSS for doc pages |
-| `docs/renderer.js` | `build:renderer` | Yes | CDN entry loader |
+| `docs/renderer.js` | `build:renderer` | Yes | Entry loader for doc previews (points at `@prefecthq/prefab-ui-docs`) |
 | `docs/_renderer/*.mjs` | `build:renderer` | No (gitignored) | Lazy-loaded chunks for local dev |
 | `docs/playground.html` | `build:playground` | No (gitignored) | Built playground for local dev |
 | `renderer/src/playground/bundle.json` | `generate_playground_bundle.py` | Yes | Serialized Python source for Pyodide |
@@ -215,7 +204,7 @@ Before cutting a release with renderer changes:
 2. `prefab dev build-docs` — regenerate all doc assets
 3. Commit the rebuilt files
 4. `prek` — verify all hooks pass
-5. Create GitHub release — triggers npm publish + docs update
+5. Create GitHub release — triggers npm publish (all three packages) + docs update
 
 ## Common Pitfalls
 
