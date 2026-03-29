@@ -19,7 +19,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 _BUNDLED_HTML = Path(__file__).parent / "app.html"
-_GENERATIVE_HTML = Path(__file__).parent / "generative.html"
 
 PYODIDE_CDN_ORIGIN = "https://cdn.jsdelivr.net"
 
@@ -106,18 +105,13 @@ def get_renderer_csp() -> dict[str, list[str]]:
 def get_generative_renderer_html() -> str:
     """Return the generative renderer HTML.
 
-    The generative renderer extends the standard renderer with browser-side
-    Pyodide execution, enabling progressive rendering of LLM-generated
-    Prefab Python code via `ontoolinputpartial`.
-
-    Pyodide loads from CDN at runtime — the HTML itself is small.
-
-    Pyodide loads from CDN at runtime — the HTML itself is small.
+    Returns the same bundled renderer as `get_renderer_html()`. The
+    renderer is generative-capable (Pyodide + streaming bridge), but
+    the generative code is inert unless the host sends
+    `ontoolinputpartial`. The CSP requirements differ — use
+    `get_generative_renderer_csp()` for hosts that use generative features.
     """
-    override = os.environ.get("PREFAB_RENDERER_URL")
-    if override:
-        return _EXTERNAL_TEMPLATE.format(base_url=override.rstrip("/"))
-    return _GENERATIVE_HTML.read_text(encoding="utf-8")
+    return get_renderer_html()
 
 
 def get_generative_renderer_csp() -> dict[str, list[str]]:

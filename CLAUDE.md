@@ -50,6 +50,10 @@ When adding or modifying a component, update the docstring to match. Run `uv run
 
 `dev-docs/` contains internal reference documentation for build processes, architecture decisions, and operational knowledge. Check there before asking questions about how things work.
 
+- `build-pipeline.md` — all build targets, CLI commands, CSS pipeline, CDN routing, release checklist
+- `theming-architecture.md` — CSS variable system, gradient cascade, theme scoping
+- `generative-ui-architecture.md` — Pyodide sandbox, streaming model
+
 ## Component Documentation
 
 Doc conventions are encoded as agent skills in `.claude/skills/`:

@@ -1,0 +1,190 @@
+# Build Pipeline
+
+Complete reference for what gets built, when, by whom, and how.
+
+## Bundled Renderers
+
+The Python package ships two self-contained HTML files in `src/prefab_ui/renderer/`. Each is a complete single-file renderer with all JS/CSS inlined — no external requests, no CDN, no CSP domains needed.
+
+**`app.html`** is the renderer loaded by MCP hosts when a FastMCP tool returns a `PrefabApp`. It connects via the MCP Apps bridge (`ext-apps` SDK), receives the view JSON as `structuredContent`, and renders the component tree.
+
+The renderer is generative-capable: it includes the Pyodide streaming bridge for executing LLM-generated Python code via `ontoolinputpartial`. This code is inert unless the host signals generative mode, so there's no overhead for standard use. Pyodide itself loads from CDN at runtime only when needed. CSP requirements differ between standard and generative use — `get_renderer_csp()` vs `get_generative_renderer_csp()` return different domain lists, but both return the same HTML.
+
+Built as a single file via `vite-plugin-singlefile`. Rebuild with `prefab dev build-renderers` after any renderer source changes.
+
+## CDN Renderer (npm)
+
+The renderer is also published to npm as `@prefecthq/prefab-ui` for doc previews and the playground. This is an ESM bundle with code splitting and lazy loading.
+
+### Bundle structure
+```
+dist/renderer.js              ~1KB   IIFE entry loader
+dist/_renderer/embed.mjs         ~1KB  stable re-export shim (unhashed)
+dist/_renderer/embed-HASH.mjs   ~500KB core (React, Radix, shadcn, engine)
+dist/_renderer/charts-HASH.mjs  ~520KB lazy (recharts, on first chart)
+dist/_renderer/content-HASH.mjs ~250KB lazy (highlight.js, react-markdown)
+dist/_renderer/compound-calendar-HASH.mjs ~180KB lazy (date-fns)
+dist/_renderer/icons-HASH.mjs   ~varies lazy (lucide barrel, on dynamic icon lookup)
+```
+
+### CDN routing
+The entry loader (`renderer.js`) picks its base URL at runtime:
+- `localhost` → `/` (local files from `docs/`)
+- Everything else → `https://cdn.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/dist/`
+
+Both paths load `_renderer/embed.mjs` — a stable (unhashed) re-export shim that forwards to the real hashed chunk. The `@latest` tag is safe because the shim and its hashed chunk are always consistent within a single npm version.
+
+### Why `.mjs` for chunks
+Mintlify inlines ALL `.js` files from `docs/` as `<script>` tags. Using `.mjs` prevents the 500KB+ chunks from being inlined. On deployed Mintlify, `.mjs` files can't be served as static assets, so production loads them from the jsdelivr CDN.
+
+## Build Targets
+
+The renderer has 5 Vite build configurations:
+
+| Config | Entry point | Output | Purpose |
+|--------|------------|--------|---------|
+| `vite.config.ts` | `renderer.html` → `main.tsx` | `dist/renderer.html` + assets | Local dev (`npm run dev`), `prefab serve` with `PREFAB_RENDERER_URL` |
+| `vite.config.renderer.ts` | `src/embed.tsx` | `dist/renderer.js` + `.mjs` chunks | CDN library (npm), doc preview shadow DOM |
+| `vite.config.playground.ts` | `playground.html` | `dist/playground.html` (single file) | Published interactive playground |
+| `vite.config.mcp.ts` | `mcp.html` → `generative-main.tsx` | `dist/mcp/mcp.html` (single file) | Bundled `app.html` shipped in Python package |
+
+## When Things Get Built
+
+### On every commit (CI)
+
+**`regenerate-docs.yml`** runs `prefab dev build-docs` and checks for stale generated files:
+- `docs/**` (preview JSON, protocol pages, CSS)
+- `renderer/src/playground/bundle.json` and `examples.json`
+- `tools/preview-classes.html`
+
+If any are stale, CI fails with instructions to rebuild.
+
+**Tests workflow** runs pytest across Python 3.10/3.13, ubuntu/windows, plus lowest-deps.
+
+**Static analysis** runs ruff, ty, tsc.
+
+### On GitHub release (`publish-renderer.yml`)
+
+1. `npm ci` — installs renderer dependencies
+2. `npm version` — sets version from git tag (strips PEP 440 suffixes)
+3. `npm run build:publish` — builds renderer library + playground
+4. `npm publish` — publishes `@prefecthq/prefab-ui` to npm
+5. Purges jsDelivr CDN cache for `@latest`
+
+This publishes the **CDN renderer** and **playground**. It does NOT build the bundled `app.html`/`generative.html` — those must be rebuilt manually before release.
+
+### Manually before release
+
+**Bundled renderers** (`app.html`, `generative.html`) ship inside the Python package. They must be rebuilt and committed before any release that includes renderer changes:
+
+```bash
+prefab dev build-renderers
+```
+
+### During development (`prefab dev build-docs`)
+
+Runs a multi-step pipeline:
+
+1. Install renderer node deps (if needed)
+2. Build renderer library — `npm run build:renderer` (if source changed)
+3. Render component previews — `tools/render_previews.py`
+4. Extract preview classes — `tools/extract_preview_classes.py`
+5. Generate Tailwind content — `tools/generate_content.py`
+6. Build Tailwind CSS — `@tailwindcss/cli`
+7. Scope CSS — `tools/scope_css.py`
+8. Bundle playground source — `tools/generate_playground_bundle.py`
+9. Extract playground examples — `tools/extract_examples.py`
+10. Build playground (if source changed)
+11. Generate protocol reference pages
+
+Caching: renderer and playground builds are skipped if source hashes haven't changed (`.renderer-hash`, `.playground-hash`).
+
+## CLI Commands
+
+| Command | What it builds |
+|---------|---------------|
+| `prefab dev build-docs` | Everything for docs: renderer library, previews, CSS, playground, protocol ref |
+| `prefab dev build-renderers` | Bundled `app.html` for the Python package |
+| `prefab dev build-playground` | Just the playground (skips previews, CSS, protocol) |
+| `prefab dev docs` | Runs `build-docs` then starts Mintlify with file watcher |
+
+## CSS Pipeline
+
+Three separate CSS paths:
+
+### Main renderer (MCP / standalone)
+- **Runtime**: `@tailwindcss/browser` generates CSS for any Tailwind class at runtime
+- **Build-time**: `@tailwindcss/vite` processes `index.css` for renderer-internal styles
+- Users can use any Tailwind class in `css_class` — no safelist needed
+
+### Doc previews (shadow DOM)
+- Build-time only: `@tailwindcss/vite` processes `index.css`, inlined into shadow DOM via `embed.tsx`
+- `@source "../../tools/preview-classes.html"` pulls in classes extracted from rendered previews
+- `@tailwindcss/browser` cannot observe shadow DOM, so build-time CSS is the only option here
+
+### Doc site pages
+- Separate Tailwind build via `tools/input.css` → `@tailwindcss/cli`
+- Scans `tools/content.html` (generated component variants) and `docs/**/*.mdx`
+- Output scoped to `.prefab-preview { ... }` by `tools/scope_css.py`
+
+## Playground
+
+The playground is a self-contained HTML file (all JS/CSS inlined) that runs Python in the browser via Pyodide.
+
+### How it loads Python
+**Bundled mode (`__LOCAL_BUNDLE__ = true`):** All prefab_ui Python source files are serialized into `renderer/src/playground/bundle.json` and inlined into the playground HTML at build time. At runtime, the files are written to Pyodide's virtual filesystem. No network requests needed.
+
+**Micropip mode (`__LOCAL_BUNDLE__ = false`):** Falls back to `micropip.install("prefab-ui")` from PyPI. This path is broken because pydantic-core has no WASM wheel. Exists only as a dev fallback.
+
+`VITE_LOCAL_PLAYGROUND=1` controls which path Vite compiles in. Both `build-docs` and `build:publish` set this flag.
+
+## Generated Artifacts
+
+| File | Generated by | Committed | Notes |
+|------|-------------|-----------|-------|
+| `tools/preview-classes.html` | `extract_preview_classes.py` | Yes | Tailwind source for doc preview CSS |
+| `tools/content.html` | `generate_content.py` | No (gitignored) | All component variants for Tailwind scanning |
+| `docs/css/preview.css` | `scope_css.py` | No (gitignored) | Scoped Tailwind CSS for doc pages |
+| `docs/renderer.js` | `build:renderer` | Yes | CDN entry loader |
+| `docs/_renderer/*.mjs` | `build:renderer` | No (gitignored) | Lazy-loaded chunks for local dev |
+| `docs/playground.html` | `build:playground` | No (gitignored) | Built playground for local dev |
+| `renderer/src/playground/bundle.json` | `generate_playground_bundle.py` | Yes | Serialized Python source for Pyodide |
+| `renderer/src/playground/examples.json` | `extract_examples.py` | Yes | Playground example catalog |
+| `src/prefab_ui/renderer/app.html` | `build-renderers` | Yes | Bundled renderer (generative-capable) |
+
+## Local Development
+
+```bash
+# First time / after a fresh clone
+npm ci --prefix renderer
+
+# Build renderer + docs assets
+prefab dev build-docs
+
+# Serve docs locally with hot rebuild
+prefab dev docs
+
+# Rebuild bundled renderers for Python package
+prefab dev build-renderers
+```
+
+Local docs serve chunks from `docs/_renderer/` directly (the `localhost` path in the CDN entry loader). After a fresh clone, run `prefab dev build-docs` to copy chunks from `renderer/dist/`.
+
+## Release Checklist
+
+Before cutting a release with renderer changes:
+
+1. `prefab dev build-renderers` — rebuild bundled HTML
+2. `prefab dev build-docs` — regenerate all doc assets
+3. Commit the rebuilt files
+4. `prek` — verify all hooks pass
+5. Create GitHub release — triggers npm publish + docs update
+
+## Common Pitfalls
+
+- **`sh: vite: command not found`** — run `npm ci --prefix renderer` first
+- **`package.json` version is always `0.0.0`** — real version comes from git tag at publish time
+- **`docs/_renderer/` is gitignored** — run `prefab dev build-docs` after a fresh clone
+- **Mintlify caches renderer** at `~/.mintlify/mint/apps/client/public/renderer.js` — restart `mintlify dev` after rebuilding
+- **Production docs URL** is `prefab.prefect.io/docs/` (not root)
+- **Deploy previews use CDN** — renderer source changes won't show until published
