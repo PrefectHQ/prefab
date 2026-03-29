@@ -97,6 +97,7 @@ import { videoSchema, audioSchema } from "./media.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
 import { markdownSchema } from "./markdown.ts";
+import { mermaidSchema } from "./mermaid.ts";
 import { metricSchema } from "./metric.ts";
 import { pageSchema, pagesSchema } from "./pages.ts";
 import { popoverSchema } from "./popover.ts";
@@ -214,6 +215,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Lead: leadSchema,
   LineChart: lineChartSchema,
   Markdown: markdownSchema,
+  Mermaid: mermaidSchema,
   Metric: metricSchema,
   Muted: mutedSchema,
   P: pSchema,

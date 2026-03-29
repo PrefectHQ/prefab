@@ -108,7 +108,7 @@ export function Markdown({
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8 mb-4">
+            <h2 className="scroll-m-20 border-b border-border pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-8 mb-4">
               {children}
             </h2>
           ),
@@ -126,7 +126,7 @@ export function Markdown({
             <p className="leading-7 [&:not(:first-child)]:mt-4">{children}</p>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="mt-6 border-l-2 pl-6 italic text-muted-foreground">
+            <blockquote className="mt-6 border-l-2 border-border pl-6 italic text-muted-foreground">
               {children}
             </blockquote>
           ),
@@ -160,12 +160,12 @@ export function Markdown({
             </div>
           ),
           th: ({ children }) => (
-            <th className="border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
+            <th className="border border-border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
+            <td className="border border-border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right">
               {children}
             </td>
           ),

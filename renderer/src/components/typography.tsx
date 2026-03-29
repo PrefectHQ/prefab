@@ -221,7 +221,7 @@ export function BlockQuote({
   return (
     <blockquote
       className={cn(
-        "border-l-2 pl-6 italic m-0",
+        "border-l-2 border-border pl-6 italic m-0",
         bold && "font-bold",
         italic && "italic",
         className,

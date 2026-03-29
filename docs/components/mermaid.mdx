@@ -1,0 +1,178 @@
+---
+title: Mermaid
+description: Render diagrams from Mermaid text definitions.
+icon: diagram-project
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Mermaid renders diagrams from text definitions — flowcharts, sequence diagrams, state machines, ER diagrams, and more. The mermaid library loads lazily on first use, so apps that don't use diagrams pay zero cost.
+
+Mermaid is particularly useful for generative UI, where LLMs can produce diagram definitions directly without needing image generation or specialized tooling.
+
+## Flowchart
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\ngraph TD\n    A[New Request] --> B{Authenticated?}\n    B -->|Yes| C{Authorized?}\n    B -->|No| D[401 Unauthorized]\n    C -->|Yes| E[Process Request]\n    C -->|No| F[403 Forbidden]\n    E --> G{Success?}\n    G -->|Yes| H[200 OK]\n    G -->|No| I[500 Error]\n\n    style A fill:#818cf8,color:#fff\n    style H fill:#34d399,color:#fff\n    style D fill:#f472b6,color:#fff\n    style F fill:#f472b6,color:#fff\n    style I fill:#fb923c,color:#fff\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKZ3JhcGggVEQKICAgIEFbTmV3IFJlcXVlc3RdIC0tPiBCe0F1dGhlbnRpY2F0ZWQ_fQogICAgQiAtLT58WWVzfCBDe0F1dGhvcml6ZWQ_fQogICAgQiAtLT58Tm98IERbNDAxIFVuYXV0aG9yaXplZF0KICAgIEMgLS0-fFllc3wgRVtQcm9jZXNzIFJlcXVlc3RdCiAgICBDIC0tPnxOb3wgRls0MDMgRm9yYmlkZGVuXQogICAgRSAtLT4gR3tTdWNjZXNzP30KICAgIEcgLS0-fFllc3wgSFsyMDAgT0tdCiAgICBHIC0tPnxOb3wgSVs1MDAgRXJyb3JdCgogICAgc3R5bGUgQSBmaWxsOiM4MThjZjgsY29sb3I6I2ZmZgogICAgc3R5bGUgSCBmaWxsOiMzNGQzOTksY29sb3I6I2ZmZgogICAgc3R5bGUgRCBmaWxsOiNmNDcyYjYsY29sb3I6I2ZmZgogICAgc3R5bGUgRiBmaWxsOiNmNDcyYjYsY29sb3I6I2ZmZgogICAgc3R5bGUgSSBmaWxsOiNmYjkyM2MsY29sb3I6I2ZmZgoiIiIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+graph TD
+    A[New Request] --> B{Authenticated?}
+    B -->|Yes| C{Authorized?}
+    B -->|No| D[401 Unauthorized]
+    C -->|Yes| E[Process Request]
+    C -->|No| F[403 Forbidden]
+    E --> G{Success?}
+    G -->|Yes| H[200 OK]
+    G -->|No| I[500 Error]
+
+    style A fill:#818cf8,color:#fff
+    style H fill:#34d399,color:#fff
+    style D fill:#f472b6,color:#fff
+    style F fill:#f472b6,color:#fff
+    style I fill:#fb923c,color:#fff
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\ngraph TD\n    A[New Request] --> B{Authenticated?}\n    B -->|Yes| C{Authorized?}\n    B -->|No| D[401 Unauthorized]\n    C -->|Yes| E[Process Request]\n    C -->|No| F[403 Forbidden]\n    E --> G{Success?}\n    G -->|Yes| H[200 OK]\n    G -->|No| I[500 Error]\n\n    style A fill:#818cf8,color:#fff\n    style H fill:#34d399,color:#fff\n    style D fill:#f472b6,color:#fff\n    style F fill:#f472b6,color:#fff\n    style I fill:#fb923c,color:#fff\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Sequence Diagram
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\nsequenceDiagram\n    actor User\n    participant App\n    participant Auth\n    participant API\n    participant DB\n\n    User->>App: Click \"Sign In\"\n    App->>Auth: Redirect to OAuth\n    Auth-->>User: Show login form\n    User->>Auth: Enter credentials\n    Auth->>Auth: Validate\n    Auth-->>App: Authorization code\n    App->>Auth: Exchange for token\n    Auth-->>App: Access token\n    App->>API: GET /user (token)\n    API->>DB: Query user\n    DB-->>API: User data\n    API-->>App: User profile\n    App-->>User: Welcome!\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKc2VxdWVuY2VEaWFncmFtCiAgICBhY3RvciBVc2VyCiAgICBwYXJ0aWNpcGFudCBBcHAKICAgIHBhcnRpY2lwYW50IEF1dGgKICAgIHBhcnRpY2lwYW50IEFQSQogICAgcGFydGljaXBhbnQgREIKCiAgICBVc2VyLT4-QXBwOiBDbGljayAiU2lnbiBJbiIKICAgIEFwcC0-PkF1dGg6IFJlZGlyZWN0IHRvIE9BdXRoCiAgICBBdXRoLS0-PlVzZXI6IFNob3cgbG9naW4gZm9ybQogICAgVXNlci0-PkF1dGg6IEVudGVyIGNyZWRlbnRpYWxzCiAgICBBdXRoLT4-QXV0aDogVmFsaWRhdGUKICAgIEF1dGgtLT4-QXBwOiBBdXRob3JpemF0aW9uIGNvZGUKICAgIEFwcC0-PkF1dGg6IEV4Y2hhbmdlIGZvciB0b2tlbgogICAgQXV0aC0tPj5BcHA6IEFjY2VzcyB0b2tlbgogICAgQXBwLT4-QVBJOiBHRVQgL3VzZXIgKHRva2VuKQogICAgQVBJLT4-REI6IFF1ZXJ5IHVzZXIKICAgIERCLS0-PkFQSTogVXNlciBkYXRhCiAgICBBUEktLT4-QXBwOiBVc2VyIHByb2ZpbGUKICAgIEFwcC0tPj5Vc2VyOiBXZWxjb21lIQoiIiIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+sequenceDiagram
+    actor User
+    participant App
+    participant Auth
+    participant API
+    participant DB
+
+    User->>App: Click "Sign In"
+    App->>Auth: Redirect to OAuth
+    Auth-->>User: Show login form
+    User->>Auth: Enter credentials
+    Auth->>Auth: Validate
+    Auth-->>App: Authorization code
+    App->>Auth: Exchange for token
+    Auth-->>App: Access token
+    App->>API: GET /user (token)
+    API->>DB: Query user
+    DB-->>API: User data
+    API-->>App: User profile
+    App-->>User: Welcome!
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\nsequenceDiagram\n    actor User\n    participant App\n    participant Auth\n    participant API\n    participant DB\n\n    User->>App: Click \"Sign In\"\n    App->>Auth: Redirect to OAuth\n    Auth-->>User: Show login form\n    User->>Auth: Enter credentials\n    Auth->>Auth: Validate\n    Auth-->>App: Authorization code\n    App->>Auth: Exchange for token\n    Auth-->>App: Access token\n    App->>API: GET /user (token)\n    API->>DB: Query user\n    DB-->>API: User data\n    API-->>App: User profile\n    App-->>User: Welcome!\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## State Diagram
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start()\n    Running --> Completed: finish()\n    Running --> Failed: error()\n    Running --> Cancelled: cancel()\n    Failed --> Pending: retry()\n    Cancelled --> [*]\n    Completed --> [*]\n\n    state Running {\n        [*] --> Initializing\n        Initializing --> Processing\n        Processing --> Finalizing\n        Finalizing --> [*]\n    }\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKc3RhdGVEaWFncmFtLXYyCiAgICBbKl0gLS0-IFBlbmRpbmcKICAgIFBlbmRpbmcgLS0-IFJ1bm5pbmc6IHN0YXJ0KCkKICAgIFJ1bm5pbmcgLS0-IENvbXBsZXRlZDogZmluaXNoKCkKICAgIFJ1bm5pbmcgLS0-IEZhaWxlZDogZXJyb3IoKQogICAgUnVubmluZyAtLT4gQ2FuY2VsbGVkOiBjYW5jZWwoKQogICAgRmFpbGVkIC0tPiBQZW5kaW5nOiByZXRyeSgpCiAgICBDYW5jZWxsZWQgLS0-IFsqXQogICAgQ29tcGxldGVkIC0tPiBbKl0KCiAgICBzdGF0ZSBSdW5uaW5nIHsKICAgICAgICBbKl0gLS0-IEluaXRpYWxpemluZwogICAgICAgIEluaXRpYWxpemluZyAtLT4gUHJvY2Vzc2luZwogICAgICAgIFByb2Nlc3NpbmcgLS0-IEZpbmFsaXppbmcKICAgICAgICBGaW5hbGl6aW5nIC0tPiBbKl0KICAgIH0KIiIiKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Running: start()
+    Running --> Completed: finish()
+    Running --> Failed: error()
+    Running --> Cancelled: cancel()
+    Failed --> Pending: retry()
+    Cancelled --> [*]
+    Completed --> [*]
+
+    state Running {
+        [*] --> Initializing
+        Initializing --> Processing
+        Processing --> Finalizing
+        Finalizing --> [*]
+    }
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start()\n    Running --> Completed: finish()\n    Running --> Failed: error()\n    Running --> Cancelled: cancel()\n    Failed --> Pending: retry()\n    Cancelled --> [*]\n    Completed --> [*]\n\n    state Running {\n        [*] --> Initializing\n        Initializing --> Processing\n        Processing --> Finalizing\n        Finalizing --> [*]\n    }\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Entity Relationship
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\nerDiagram\n    TEAM ||--o{ MEMBER : has\n    MEMBER ||--o{ TASK : assigned\n    TEAM ||--o{ PROJECT : owns\n    PROJECT ||--o{ TASK : contains\n    TASK ||--o{ COMMENT : has\n    MEMBER ||--o{ COMMENT : writes\n\n    TEAM {\n        string name\n        string department\n    }\n    MEMBER {\n        string name\n        string role\n        string email\n    }\n    PROJECT {\n        string name\n        date deadline\n        string status\n    }\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKZXJEaWFncmFtCiAgICBURUFNIHx8LS1veyBNRU1CRVIgOiBoYXMKICAgIE1FTUJFUiB8fC0tb3sgVEFTSyA6IGFzc2lnbmVkCiAgICBURUFNIHx8LS1veyBQUk9KRUNUIDogb3ducwogICAgUFJPSkVDVCB8fC0tb3sgVEFTSyA6IGNvbnRhaW5zCiAgICBUQVNLIHx8LS1veyBDT01NRU5UIDogaGFzCiAgICBNRU1CRVIgfHwtLW97IENPTU1FTlQgOiB3cml0ZXMKCiAgICBURUFNIHsKICAgICAgICBzdHJpbmcgbmFtZQogICAgICAgIHN0cmluZyBkZXBhcnRtZW50CiAgICB9CiAgICBNRU1CRVIgewogICAgICAgIHN0cmluZyBuYW1lCiAgICAgICAgc3RyaW5nIHJvbGUKICAgICAgICBzdHJpbmcgZW1haWwKICAgIH0KICAgIFBST0pFQ1QgewogICAgICAgIHN0cmluZyBuYW1lCiAgICAgICAgZGF0ZSBkZWFkbGluZQogICAgICAgIHN0cmluZyBzdGF0dXMKICAgIH0KIiIiKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+erDiagram
+    TEAM ||--o{ MEMBER : has
+    MEMBER ||--o{ TASK : assigned
+    TEAM ||--o{ PROJECT : owns
+    PROJECT ||--o{ TASK : contains
+    TASK ||--o{ COMMENT : has
+    MEMBER ||--o{ COMMENT : writes
+
+    TEAM {
+        string name
+        string department
+    }
+    MEMBER {
+        string name
+        string role
+        string email
+    }
+    PROJECT {
+        string name
+        date deadline
+        string status
+    }
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\nerDiagram\n    TEAM ||--o{ MEMBER : has\n    MEMBER ||--o{ TASK : assigned\n    TEAM ||--o{ PROJECT : owns\n    PROJECT ||--o{ TASK : contains\n    TASK ||--o{ COMMENT : has\n    MEMBER ||--o{ COMMENT : writes\n\n    TEAM {\n        string name\n        string department\n    }\n    MEMBER {\n        string name\n        string role\n        string email\n    }\n    PROJECT {\n        string name\n        date deadline\n        string status\n    }\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<ParamField body="chart" type="str" required>
+  Mermaid diagram definition string. Supports all [Mermaid diagram types](https://mermaid.js.org/intro/syntax-reference.html).
+</ParamField>
+
+<ParamField body="css_class" type="str">
+  Additional CSS classes.
+</ParamField>

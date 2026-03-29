@@ -183,7 +183,7 @@ export function PrefabCombobox({
           <ComboboxPrimitive.Popup className="pf-combobox-content group/combobox-content min-w-(--anchor-width) p-0">
             <ComboboxPrimitive.Input
               placeholder={searchPlaceholder}
-              className="pf-input h-8 m-1 mb-0 w-[calc(100%-0.5rem)] border bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="pf-input h-8 m-1 mb-0 w-[calc(100%-0.5rem)] border border-border bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
             <div className="pf-combobox-list">
               {hasGroups
