@@ -75,12 +75,14 @@ jobs:
         working-directory: renderer/playground-package
         run: npm publish --access public --tag latest
 
-      - name: Purge jsDelivr docs cache
-        working-directory: renderer
+      - name: Purge jsDelivr caches
         run: |
-          # The docs entry loader uses @latest, so purge the CDN cache
+          # The docs and playground use @latest, so purge the CDN cache
           # so it picks up the new version immediately.
           for f in dist/_renderer/*.mjs dist/renderer.js; do
             echo "Purging prefab-ui-docs $f"
             curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui-docs@latest/$f" > /dev/null
           done
+          echo "Purging prefab-ui-playground playground.html"
+          curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui-playground@latest/playground.html" > /dev/null
+        working-directory: renderer
