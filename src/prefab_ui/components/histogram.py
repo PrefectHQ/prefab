@@ -134,7 +134,7 @@ class Histogram(Component):
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
