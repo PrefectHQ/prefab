@@ -36,7 +36,7 @@ class TestBarChart:
         j = BarChart(data=SAMPLE_DATA, series=SERIES).to_json()
         assert j["height"] == 300
         assert j["showTooltip"] is True
-        assert j["showLegend"] is False
+        assert j["showLegend"] is True
         assert j["stacked"] is False
 
     def test_stacked_horizontal(self):
@@ -137,7 +137,7 @@ class TestScatterChart:
         assert j["height"] == 300
         assert j["showTooltip"] is True
         assert j["showGrid"] is True
-        assert j["showLegend"] is False
+        assert j["showLegend"] is True
         assert "zAxis" not in j
 
     def test_z_axis_bubble(self):

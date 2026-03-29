@@ -156,10 +156,10 @@ class TestHistogramDefaults:
         h = Histogram(values=[1, 2, 3])
         assert h.to_json()["showGrid"] is True
 
-    def test_show_legend_false_excluded(self):
+    def test_show_legend_true_by_default(self):
         h = Histogram(values=[1, 2, 3])
         j = h.to_json()
-        assert j.get("showLegend", False) is False
+        assert j["showLegend"] is True
 
 
 class TestHistogramEdgeCases:
