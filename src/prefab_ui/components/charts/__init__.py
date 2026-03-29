@@ -106,7 +106,7 @@ class BarChart(Component):
         default=4, alias="barRadius", description="Corner radius on bars"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -172,7 +172,7 @@ class LineChart(Component):
         default=False, alias="showDots", description="Show dots at data points"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -241,7 +241,7 @@ class AreaChart(Component):
         default=False, alias="showDots", description="Show dots at data points"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -305,7 +305,7 @@ class PieChart(Component):
         default=0, alias="paddingAngle", description="Gap between slices in degrees"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -359,7 +359,7 @@ class ScatterChart(Component):
     )
     height: int = Field(default=300, description="Chart height in pixels")
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -413,7 +413,7 @@ class RadarChart(Component):
         default=False, alias="showDots", description="Show dots at vertices"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
@@ -468,7 +468,7 @@ class RadialChart(Component):
         default=0, alias="endAngle", description="Arc end angle in degrees"
     )
     show_legend: bool = Field(
-        default=False, alias="showLegend", description="Show legend"
+        default=True, alias="showLegend", description="Show legend"
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
