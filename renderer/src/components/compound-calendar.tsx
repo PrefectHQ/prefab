@@ -69,7 +69,7 @@ export function PrefabCalendar({
     return !!range.from && !!range.to;
   });
 
-  const calendarClassName = cn("rounded-lg border", className);
+  const calendarClassName = cn("rounded-lg border border-border", className);
 
   if (mode === "range") {
     return (

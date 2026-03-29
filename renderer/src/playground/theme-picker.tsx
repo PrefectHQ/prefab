@@ -98,7 +98,7 @@ export function ThemePicker({ value, onChange }: ThemePickerProps) {
             <button
               key={preset.name}
               onClick={() => onChange(preset.css)}
-              className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs transition-colors ${
                 activePreset?.name === preset.name
                   ? "border-primary bg-primary/10 text-primary"
                   : "hover:bg-accent hover:text-accent-foreground"
@@ -123,7 +123,7 @@ export function ThemePicker({ value, onChange }: ThemePickerProps) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={`:root {\n  --primary: oklch(0.6 0.24 260);\n}`}
-          className="h-[160px] w-full rounded-md border bg-muted/30 px-3 py-2 font-mono text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-[160px] w-full rounded-md border border-border bg-muted/30 px-3 py-2 font-mono text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-ring"
           spellCheck={false}
         />
       </PopoverContent>

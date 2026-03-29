@@ -176,12 +176,12 @@ function ExamplePicker({ onSelect }: { onSelect: (ex: Example) => void }) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="inline-flex h-10 items-center gap-2 rounded-md border bg-background px-3 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground">
+      <PopoverTrigger className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground">
         <Search className="h-4 w-4" />
         Examples...
       </PopoverTrigger>
       <PopoverContent align="start" className="w-[320px] p-0">
-        <div className="border-b px-3 py-2">
+        <div className="border-b border-border px-3 py-2">
           <input
             ref={inputRef}
             value={filter}
@@ -509,7 +509,7 @@ export function Playground() {
   return (
     <div className="flex h-[800px] flex-col bg-background text-foreground">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 border-b px-4 py-2">
+      <div className="flex items-center gap-3 border-b border-border px-4 py-2">
         <ExamplePicker onSelect={handleExampleSelect} />
 
         {mode === "json" && (
@@ -564,7 +564,7 @@ export function Playground() {
 
       {/* Split panes */}
       <div className="flex min-h-0 flex-1">
-        <div className="flex w-1/2 flex-col border-r">
+        <div className="flex w-1/2 flex-col border-r border-border">
           <div className="min-h-0 flex-1 overflow-hidden bg-muted/30">
             {mode === "python" ? (
               <Editor
