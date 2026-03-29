@@ -1207,17 +1207,22 @@
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\ngraph LR\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]\n\"\"\")"
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\ngraph TD\n    A[New Request] --> B{Authenticated?}\n    B -->|Yes| C{Authorized?}\n    B -->|No| D[401 Unauthorized]\n    C -->|Yes| E[Process Request]\n    C -->|No| F[403 Forbidden]\n    E --> G{Success?}\n    G -->|Yes| H[200 OK]\n    G -->|No| I[500 Error]\n\n    style A fill:#818cf8,color:#fff\n    style H fill:#34d399,color:#fff\n    style D fill:#f472b6,color:#fff\n    style F fill:#f472b6,color:#fff\n    style I fill:#fb923c,color:#fff\n\"\"\")"
   },
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nsequenceDiagram\n    participant Client\n    participant Server\n    participant DB\n    Client->>Server: POST /users\n    Server->>DB: INSERT INTO users\n    DB-->>Server: OK\n    Server-->>Client: 201 Created\n\"\"\")"
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nsequenceDiagram\n    actor User\n    participant App\n    participant Auth\n    participant API\n    participant DB\n\n    User->>App: Click \"Sign In\"\n    App->>Auth: Redirect to OAuth\n    Auth-->>User: Show login form\n    User->>Auth: Enter credentials\n    Auth->>Auth: Validate\n    Auth-->>App: Authorization code\n    App->>Auth: Exchange for token\n    Auth-->>App: Access token\n    App->>API: GET /user (token)\n    API->>DB: Query user\n    DB-->>API: User data\n    API-->>App: User profile\n    App-->>User: Welcome!\n\"\"\")"
   },
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start\n    Running --> Completed: finish\n    Running --> Failed: error\n    Failed --> Pending: retry\n    Completed --> [*]\n\"\"\")"
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start()\n    Running --> Completed: finish()\n    Running --> Failed: error()\n    Running --> Cancelled: cancel()\n    Failed --> Pending: retry()\n    Cancelled --> [*]\n    Completed --> [*]\n\n    state Running {\n        [*] --> Initializing\n        Initializing --> Processing\n        Processing --> Finalizing\n        Finalizing --> [*]\n    }\n\"\"\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nerDiagram\n    TEAM ||--o{ MEMBER : has\n    MEMBER ||--o{ TASK : assigned\n    TEAM ||--o{ PROJECT : owns\n    PROJECT ||--o{ TASK : contains\n    TASK ||--o{ COMMENT : has\n    MEMBER ||--o{ COMMENT : writes\n\n    TEAM {\n        string name\n        string department\n    }\n    MEMBER {\n        string name\n        string role\n        string email\n    }\n    PROJECT {\n        string name\n        date deadline\n        string status\n    }\n\"\"\")"
   },
   {
     "title": "Python icon=\"python\"",
