@@ -76,6 +76,7 @@ prefab dev build-docs
 - **Never force-push** on shared/collaborative branches
 - Always run `prek` before opening a PR
 - **Never** comment on an issue, open a PR, or cut a release unless explicitly instructed to do so
+- **Rebuild generated artifacts before pushing.** CI checks that build outputs are up to date. If your changes touch docs, components, or renderer code, run `prefab dev build-docs` and/or `prefab dev build-renderers` and commit any changed files. Stale artifacts will fail CI.
 
 ### Releases
 
