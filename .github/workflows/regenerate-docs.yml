@@ -31,7 +31,7 @@ jobs:
 
       - name: Check for stale generated files
         run: |
-          STALE_FILES=$(git diff --name-only docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json tools/preview-classes.html src/prefab_ui/renderer/app.html)
+          STALE_FILES=$(git diff --name-only)
           if [ -n "$STALE_FILES" ]; then
             echo "::error::Generated files are out of date. Rebuild and commit the output."
             echo ""
@@ -41,8 +41,7 @@ jobs:
             echo "To fix:"
             echo "  uv run prefab dev build-docs"
             echo "  uv run prefab dev build-renderers"
-            echo "  git add docs/ renderer/src/playground/bundle.json renderer/src/playground/examples.json tools/preview-classes.html src/prefab_ui/renderer/app.html"
-            echo "  git commit -m 'Regenerate build artifacts'"
+            echo "  git add -u && git commit -m 'Regenerate build artifacts'"
             exit 1
           fi
           echo "All generated files are up to date."
