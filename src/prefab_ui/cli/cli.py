@@ -553,11 +553,15 @@ def build_docs() -> None:
 
 @dev_app.command(name="build-renderers")
 def build_renderers() -> None:
-    """Rebuild the bundled renderer HTML files shipped with the Python package.
+    """Rebuild the bundled renderer HTML shipped with the Python package.
 
-    Builds the MCP and generative single-file renderers from Vite and
-    copies them into src/prefab_ui/renderer/. Run this after any renderer
-    source changes that should be reflected in the Python package.
+    Builds the single-file renderer from Vite and copies it into
+    src/prefab_ui/renderer/app.html. The renderer is generative-capable
+    (includes Pyodide streaming bridge) but the generative code is inert
+    unless the host sends ontoolinputpartial.
+
+    Run this after any renderer source changes that should be reflected
+    in the Python package.
     """
     repo_root = _find_repo_root()
     renderer_dir = repo_root / "renderer"
@@ -576,30 +580,19 @@ def build_renderers() -> None:
         if r.returncode != 0:
             raise SystemExit(r.returncode)
 
-    builds = [
-        ("MCP renderer", "vite.config.mcp.ts", "dist/mcp/mcp.html", "app.html"),
-        (
-            "Generative renderer",
-            "vite.config.generative.ts",
-            "dist/generative/generative.html",
-            "generative.html",
-        ),
-    ]
+    console.print("  [dim]→[/dim] Building renderer...")
+    r = subprocess.run(
+        ["npx", "vite", "build", "--config", "vite.config.mcp.ts"],
+        cwd=renderer_dir,
+    )
+    if r.returncode != 0:
+        console.print("[bold red]Error:[/bold red] Renderer build failed")
+        raise SystemExit(r.returncode)
 
-    for desc, config, src_rel, dest_name in builds:
-        console.print(f"  [dim]→[/dim] Building {desc}...")
-        r = subprocess.run(
-            ["npx", "vite", "build", "--config", config],
-            cwd=renderer_dir,
-        )
-        if r.returncode != 0:
-            console.print(f"[bold red]Error:[/bold red] {desc} build failed")
-            raise SystemExit(r.returncode)
-
-        src_path = renderer_dir / src_rel
-        dest_path = dest / dest_name
-        shutil.copy2(src_path, dest_path)
-        console.print(f"    → {dest_path.relative_to(repo_root)}")
+    src_path = renderer_dir / "dist" / "mcp" / "mcp.html"
+    dest_path = dest / "app.html"
+    shutil.copy2(src_path, dest_path)
+    console.print(f"    → {dest_path.relative_to(repo_root)}")
 
     console.print("[bold green]✓[/bold green] Bundled renderers rebuilt")
 

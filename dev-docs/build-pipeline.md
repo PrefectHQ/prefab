@@ -6,11 +6,11 @@ Complete reference for what gets built, when, by whom, and how.
 
 The Python package ships two self-contained HTML files in `src/prefab_ui/renderer/`. Each is a complete single-file renderer with all JS/CSS inlined — no external requests, no CDN, no CSP domains needed.
 
-**`app.html`** is the standard MCP renderer. When a FastMCP tool returns a `PrefabApp`, the MCP host loads this HTML in an iframe. It connects via the MCP Apps bridge (`ext-apps` SDK), receives the view JSON as `structuredContent`, and renders the component tree. This is what most users interact with.
+**`app.html`** is the renderer loaded by MCP hosts when a FastMCP tool returns a `PrefabApp`. It connects via the MCP Apps bridge (`ext-apps` SDK), receives the view JSON as `structuredContent`, and renders the component tree.
 
-**`generative.html`** is the generative UI renderer. It extends the standard renderer with Pyodide support for executing streaming Python code from `ontoolinputpartial`. Used when an LLM streams UI code that gets progressively rendered as it arrives. Pyodide is loaded from CDN at runtime (not bundled) to keep the HTML size manageable.
+The renderer is generative-capable: it includes the Pyodide streaming bridge for executing LLM-generated Python code via `ontoolinputpartial`. This code is inert unless the host signals generative mode, so there's no overhead for standard use. Pyodide itself loads from CDN at runtime only when needed. CSP requirements differ between standard and generative use — `get_renderer_csp()` vs `get_generative_renderer_csp()` return different domain lists, but both return the same HTML.
 
-Both are built as single files via `vite-plugin-singlefile` and must be rebuilt with `prefab dev build-renderers` after any renderer source changes.
+Built as a single file via `vite-plugin-singlefile`. Rebuild with `prefab dev build-renderers` after any renderer source changes.
 
 ## CDN Renderer (npm)
 
@@ -47,7 +47,6 @@ The renderer has 5 Vite build configurations:
 | `vite.config.renderer.ts` | `src/embed.tsx` | `dist/renderer.js` + `.mjs` chunks | CDN library (npm), doc preview shadow DOM |
 | `vite.config.playground.ts` | `playground.html` | `dist/playground.html` (single file) | Published interactive playground |
 | `vite.config.mcp.ts` | `mcp.html` → `generative-main.tsx` | `dist/mcp/mcp.html` (single file) | Bundled `app.html` shipped in Python package |
-| `vite.config.generative.ts` | `generative.html` → `generative-main.tsx` | `dist/generative/generative.html` (single file) | Bundled `generative.html` shipped in Python package |
 
 ## When Things Get Built
 
@@ -105,7 +104,7 @@ Caching: renderer and playground builds are skipped if source hashes haven't cha
 | Command | What it builds |
 |---------|---------------|
 | `prefab dev build-docs` | Everything for docs: renderer library, previews, CSS, playground, protocol ref |
-| `prefab dev build-renderers` | Bundled `app.html` + `generative.html` for the Python package |
+| `prefab dev build-renderers` | Bundled `app.html` for the Python package |
 | `prefab dev build-playground` | Just the playground (skips previews, CSS, protocol) |
 | `prefab dev docs` | Runs `build-docs` then starts Mintlify with file watcher |
 
@@ -151,8 +150,7 @@ The playground is a self-contained HTML file (all JS/CSS inlined) that runs Pyth
 | `docs/playground.html` | `build:playground` | No (gitignored) | Built playground for local dev |
 | `renderer/src/playground/bundle.json` | `generate_playground_bundle.py` | Yes | Serialized Python source for Pyodide |
 | `renderer/src/playground/examples.json` | `extract_examples.py` | Yes | Playground example catalog |
-| `src/prefab_ui/renderer/app.html` | `build-renderers` | Yes | Bundled MCP renderer |
-| `src/prefab_ui/renderer/generative.html` | `build-renderers` | Yes | Bundled generative renderer |
+| `src/prefab_ui/renderer/app.html` | `build-renderers` | Yes | Bundled renderer (generative-capable) |
 
 ## Local Development
 
