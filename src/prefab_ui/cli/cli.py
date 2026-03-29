@@ -590,7 +590,7 @@ def build_renderers() -> None:
         console.print("[bold red]Error:[/bold red] Renderer build failed")
         raise SystemExit(r.returncode)
 
-    src_path = renderer_dir / "dist" / "bundled" / "mcp.html"
+    src_path = renderer_dir / "dist" / "bundled" / "renderer.html"
     dest_path = dest / "app.html"
     shutil.copy2(src_path, dest_path)
     console.print(f"    → {dest_path.relative_to(repo_root)}")

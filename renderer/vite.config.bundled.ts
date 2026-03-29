@@ -33,7 +33,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        renderer: path.resolve(__dirname, "mcp.html"),
+        renderer: path.resolve(__dirname, "index.html"),
       },
     },
   },

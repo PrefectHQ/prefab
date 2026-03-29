@@ -39,7 +39,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        renderer: path.resolve(__dirname, "renderer.html"),
+        renderer: path.resolve(__dirname, "index.html"),
       },
       output: {
         entryFileNames: "[name].js",
