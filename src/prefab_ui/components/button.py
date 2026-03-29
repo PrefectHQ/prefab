@@ -56,8 +56,8 @@ class Button(Component):
 
     Args:
         label: Button text
-        variant: Visual style - "default", "destructive", "outline", "secondary", "ghost", "link"
-        size: Button size - "default", "sm", "lg", "icon"
+        variant: Visual style - "default", "destructive", "outline", "secondary", "ghost", "link", "success", "warning", "info"
+        size: Button size - "default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"
         disabled: Whether the button is disabled
         css_class: Additional CSS classes to apply
 
@@ -78,11 +78,11 @@ class Button(Component):
     )
     variant: ButtonVariant = Field(
         default="default",
-        description="Visual variant: default, destructive, outline, secondary, ghost, link",
+        description="Visual variant: default, destructive, outline, secondary, ghost, link, success, warning, info",
     )
     size: ButtonSize = Field(
         default="default",
-        description="Size: default, sm, lg, icon",
+        description="Size: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg",
     )
     button_type: ButtonType | None = Field(
         default=None,

@@ -58,7 +58,7 @@ class Alert(ContainerComponent):
     type: Literal["Alert"] = "Alert"
     variant: AlertVariant = Field(
         default="default",
-        description="Visual variant: default or destructive",
+        description="Visual variant: default, destructive, success, warning, info",
     )
     icon: str | None = Field(
         default=None,
