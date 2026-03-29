@@ -1,0 +1,43 @@
+---
+title: Mermaid
+description: JSON Schema for the Mermaid component.
+---
+
+Render a Mermaid diagram from a text definition.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Mermaid",
+      "default": "Mermaid",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "chart": {
+      "description": "Mermaid diagram definition",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "chart"
+  ]
+}
+```

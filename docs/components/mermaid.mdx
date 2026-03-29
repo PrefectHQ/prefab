@@ -1,0 +1,101 @@
+---
+title: Mermaid
+description: Render diagrams from Mermaid text definitions.
+icon: diagram-project
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Mermaid renders diagrams from text definitions — flowcharts, sequence diagrams, state machines, ER diagrams, and more. The mermaid library loads lazily on first use, so apps that don't use diagrams pay zero cost.
+
+## Flowchart
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\ngraph LR\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKZ3JhcGggTFIKICAgIEFbU3RhcnRdIC0tPiBCe0RlY2lzaW9ufQogICAgQiAtLT58WWVzfCBDW09LXQogICAgQiAtLT58Tm98IERbQ2FuY2VsXQoiIiIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+graph LR
+    A[Start] --> B{Decision}
+    B -->|Yes| C[OK]
+    B -->|No| D[Cancel]
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\ngraph LR\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Sequence Diagram
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\nsequenceDiagram\n    participant Client\n    participant Server\n    participant DB\n    Client->>Server: POST /users\n    Server->>DB: INSERT INTO users\n    DB-->>Server: OK\n    Server-->>Client: 201 Created\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKc2VxdWVuY2VEaWFncmFtCiAgICBwYXJ0aWNpcGFudCBDbGllbnQKICAgIHBhcnRpY2lwYW50IFNlcnZlcgogICAgcGFydGljaXBhbnQgREIKICAgIENsaWVudC0-PlNlcnZlcjogUE9TVCAvdXNlcnMKICAgIFNlcnZlci0-PkRCOiBJTlNFUlQgSU5UTyB1c2VycwogICAgREItLT4-U2VydmVyOiBPSwogICAgU2VydmVyLS0-PkNsaWVudDogMjAxIENyZWF0ZWQKIiIiKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+sequenceDiagram
+    participant Client
+    participant Server
+    participant DB
+    Client->>Server: POST /users
+    Server->>DB: INSERT INTO users
+    DB-->>Server: OK
+    Server-->>Client: 201 Created
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\nsequenceDiagram\n    participant Client\n    participant Server\n    participant DB\n    Client->>Server: POST /users\n    Server->>DB: INSERT INTO users\n    DB-->>Server: OK\n    Server-->>Client: 201 Created\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## State Diagram
+
+<ComponentPreview json={{"view":{"type":"Mermaid","chart":"\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start\n    Running --> Completed: finish\n    Running --> Failed: error\n    Failed --> Pending: retry\n    Completed --> [*]\n"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgTWVybWFpZAoKTWVybWFpZCgiIiIKc3RhdGVEaWFncmFtLXYyCiAgICBbKl0gLS0-IFBlbmRpbmcKICAgIFBlbmRpbmcgLS0-IFJ1bm5pbmc6IHN0YXJ0CiAgICBSdW5uaW5nIC0tPiBDb21wbGV0ZWQ6IGZpbmlzaAogICAgUnVubmluZyAtLT4gRmFpbGVkOiBlcnJvcgogICAgRmFpbGVkIC0tPiBQZW5kaW5nOiByZXRyeQogICAgQ29tcGxldGVkIC0tPiBbKl0KIiIiKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Mermaid
+
+Mermaid("""
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Running: start
+    Running --> Completed: finish
+    Running --> Failed: error
+    Failed --> Pending: retry
+    Completed --> [*]
+""")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Mermaid",
+    "chart": "\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start\n    Running --> Completed: finish\n    Running --> Failed: error\n    Failed --> Pending: retry\n    Completed --> [*]\n"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<ParamField body="chart" type="str" required>
+  Mermaid diagram definition string. Supports all Mermaid diagram types.
+</ParamField>
+
+<ParamField body="css_class" type="str">
+  Additional CSS classes.
+</ParamField>

@@ -1205,6 +1205,21 @@
     "code": "from prefab_ui.components import Markdown\n\nMarkdown(\"\"\"\n# Release Notes\n\nVersion **2.5.0** brings several improvements:\n\n## New Features\n\n- **Dark mode** with automatic system detection\n- Keyboard shortcuts for *all* actions\n- Inline `code` formatting support\n\n## Migration Guide\n\n> Update your config file before upgrading.\n\n| Setting | Old | New |\n|---------|-----|-----|\n| theme | `light` | `auto` |\n| timeout | `30s` | `60s` |\n\"\"\")"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\ngraph LR\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]\n\"\"\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nsequenceDiagram\n    participant Client\n    participant Server\n    participant DB\n    Client->>Server: POST /users\n    Server->>DB: INSERT INTO users\n    DB-->>Server: OK\n    Server-->>Client: 201 Created\n\"\"\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Mermaid\n\nMermaid(\"\"\"\nstateDiagram-v2\n    [*] --> Pending\n    Pending --> Running: start\n    Running --> Completed: finish\n    Running --> Failed: error\n    Failed --> Pending: retry\n    Completed --> [*]\n\"\"\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import STATE as state, Metric\n\n\nMetric(label=\"Revenue\", value=f\"${(state.revenue / 1_000_000).round()}M\")"
