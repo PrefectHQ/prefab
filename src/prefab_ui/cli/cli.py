@@ -563,9 +563,10 @@ def build_renderers() -> None:
     renderer_dir = repo_root / "renderer"
     dest = repo_root / "src" / "prefab_ui" / "renderer"
 
-    if not shutil.which("npm"):
-        console.print("[bold red]Error:[/bold red] npm not found.")
-        raise SystemExit(1)
+    for cmd in ("npm", "npx"):
+        if not shutil.which(cmd):
+            console.print(f"[bold red]Error:[/bold red] [cyan]{cmd}[/cyan] not found.")
+            raise SystemExit(1)
 
     if _should_install_node_deps(renderer_dir):
         console.print("  [dim]→[/dim] Installing renderer dependencies...")
