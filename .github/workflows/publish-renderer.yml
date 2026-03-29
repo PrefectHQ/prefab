@@ -54,7 +54,8 @@ jobs:
           # Purge every published file from the CDN cache so @latest resolves
           # to the just-published version immediately. Individual chunk hashes
           # change between releases, so purging only the shim is not enough.
-          for f in dist/**/*.{js,mjs,html}; do
+          # This covers both the embed build (_renderer/) and CDN renderer (app/).
+          for f in dist/**/*.{js,mjs,css,html}; do
             echo "Purging $f"
             curl -s "https://purge.jsdelivr.net/npm/@prefecthq/prefab-ui@latest/$f" > /dev/null
           done

@@ -1,17 +1,10 @@
 /**
- * Main application — MCP Apps protocol integration + tree rendering.
+ * Unified application — handles all rendering modes.
  *
- * Handles the full lifecycle:
- * 1. Initialize connection with host via ext-apps SDK
- * 2. Receive tool results (component tree JSON + state)
- * 3. Render component tree using shadcn components
- * 4. Handle actions (server tool calls, client state mutations)
- * 5. Re-render on new tool results or state changes
- *
- * Supports two modes:
- * - **MCP mode**: data arrives via ontoolresult from the host bridge
- * - **Standalone mode**: data is baked into the HTML as a <script> tag
- *   (e.g. when served via `prefab serve` or a plain HTTP server)
+ * Supports three sources of content:
+ * 1. **Baked-in data** — `<script id="prefab:initial-data">` in standalone HTML
+ * 2. **ontoolresult** — server-validated component tree via MCP Apps bridge
+ * 3. **ontoolinputpartial / ontoolinput** — Pyodide-executed code from LLM streaming
  *
  * State model: the `state` key in structuredContent holds client-side state.
  * The model sees initial state via structuredContent; all subsequent mutations
@@ -21,23 +14,53 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Toaster } from "sonner";
-import {
-  applyDocumentTheme,
-  applyHostStyleVariables,
-  applyHostFonts,
-} from "@modelcontextprotocol/ext-apps/react";
-import type {
-  App as McpApp,
-  McpUiHostContext,
-} from "@modelcontextprotocol/ext-apps";
+import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
-import { earlyBridge } from "./early-bridge";
+import { bridge } from "./bridge";
 import { clearAllIntervals, setAppName } from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
+import {
+  SUPPORTED_VERSIONS,
+  applyTheme,
+  hostContextToState,
+} from "./shared-app-utils";
+import type { ExecuteResult } from "./pyodide/executor";
 
-/** Protocol versions this renderer understands. */
-const SUPPORTED_VERSIONS = new Set(["0.2"]);
+function FastMCPLogo({
+  size = 24,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 196 196"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M145.747 44.611L145.355 44.3877L144.96 44.611L86.0283 78.5276V171.267L86.4014 171.499L99.6674 179.667V86.3859L159 52.2379L145.747 44.611Z"
+        fill="currentColor"
+      />
+      <path
+        d="M121.616 30.2714L121.224 30.0454L120.832 30.2714L61.8975 64.188V156.928L62.2732 157.156L75.5393 165.325V72.0463L134.869 37.8983L121.616 30.2714Z"
+        fill="currentColor"
+      />
+      <path
+        d="M97.4894 16.3818L97.0973 16.1558L96.7025 16.3818L37.7705 50.3038V142.066L51.4096 150.463V58.1567L110.742 24.0086L97.4894 16.3818Z"
+        fill="currentColor"
+      />
+      <path
+        d="M131.23 113.671L124.979 117.266L124.584 117.494V117.5L116.796 121.987L110.547 125.581L110.152 125.807V141.51L144.564 121.709V121.698L158.999 113.394V97.6851L139.277 109.034L131.23 113.671Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
 
 /** Read baked-in data from the HTML (standalone mode). */
 function readInitialData(): {
@@ -77,45 +100,14 @@ function readInitialData(): {
 // Parse baked-in data once before React mounts.
 const INITIAL = readInitialData();
 
-/** Apply host theme context (dark mode, CSS variables, fonts). */
-function applyTheme(ctx: McpUiHostContext) {
-  if (ctx.theme) {
-    applyDocumentTheme(ctx.theme);
-    // The SDK sets data-theme + colorScheme but not the .dark class.
-    // Tailwind's dark variant requires .dark on an ancestor.
-    document.documentElement.classList.toggle("dark", ctx.theme === "dark");
-  }
-  if (ctx.styles?.variables) {
-    applyHostStyleVariables(ctx.styles.variables);
-  }
-  if (ctx.styles?.css?.fonts) {
-    applyHostFonts(ctx.styles.css.fonts);
-  }
-}
-
-/**
- * Extract the subset of host context fields that are useful as reactive
- * state. Excludes `styles` (CSS variables, not data) and `toolInfo`
- * (static metadata about the originating tool call).
- */
-function hostContextToState(ctx: McpUiHostContext): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  if (ctx.theme != null) result.theme = ctx.theme;
-  if (ctx.displayMode != null) result.displayMode = ctx.displayMode;
-  if (ctx.availableDisplayModes != null)
-    result.availableDisplayModes = ctx.availableDisplayModes;
-  if (ctx.containerDimensions != null)
-    result.containerDimensions = ctx.containerDimensions;
-  return result;
-}
-
 export function App() {
   const [tree, setTree] = useState<ComponentNode | null>(INITIAL?.view ?? null);
   const [defs, setDefs] = useState<Record<string, ComponentNode>>(
     INITIAL?.defs ?? {},
   );
+  const [, setIsStreaming] = useState(false);
   const state = useStateStore();
-  const appRef = useRef<McpApp | null>(earlyBridge.app);
+  const appRef = useRef(bridge.app);
 
   // Initialize state store with baked-in data.
   useEffect(() => {
@@ -124,13 +116,12 @@ export function App() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Handle server-validated tool result (standard + final render after streaming)
   const handleToolResult = useCallback(
     (result: { structuredContent?: Record<string, unknown> }) => {
       const structured = result.structuredContent;
       if (!structured) return;
 
-      // Check protocol version (warn but don't block rendering).
-      // Supports both $prefab.version (new) and top-level version (legacy).
       const prefabMeta = structured.$prefab as { version?: string } | undefined;
       const version =
         prefabMeta?.version ?? (structured.version as string | undefined);
@@ -142,7 +133,6 @@ export function App() {
         );
       }
 
-      // Extract component tree, defs, and state from structuredContent
       const view = structured.view as ComponentNode | undefined;
       const extractedDefs = (structured.defs ?? {}) as Record<
         string,
@@ -150,21 +140,18 @@ export function App() {
       >;
       const stateData = (structured.state ?? {}) as Record<string, unknown>;
 
-      // Scope server tool calls to this app when the server provides
-      // an app identity via _meta.fastmcp.app in the structured content.
       const meta = structured._meta as
         | { fastmcp?: { app?: string } }
         | undefined;
       setAppName(meta?.fastmcp?.app);
 
-      // Full state reset — host is providing a fresh view + state.
-      // Preserve $host across resets so host context stays available.
       clearAllIntervals();
       const currentHost = state.get("$host");
       state.reset(
         currentHost != null ? { ...stateData, $host: currentHost } : stateData,
       );
       setDefs(extractedDefs);
+      setIsStreaming(false);
 
       if (view) {
         setTree(view);
@@ -173,7 +160,25 @@ export function App() {
     [state],
   );
 
-  /** Apply host context: theme + inject $host into state store. */
+  // Handle Pyodide execution result from partial/complete code
+  const handleCodeResult = useCallback(
+    (result: ExecuteResult) => {
+      if (result.tree) {
+        setTree(result.tree);
+        setIsStreaming(true);
+        if (result.state) {
+          const currentHost = state.get("$host");
+          state.reset(
+            currentHost != null
+              ? { ...result.state, $host: currentHost }
+              : result.state,
+          );
+        }
+      }
+    },
+    [state],
+  );
+
   const handleHostContext = useCallback(
     (ctx: McpUiHostContext) => {
       applyTheme(ctx);
@@ -182,23 +187,24 @@ export function App() {
     [state],
   );
 
-  // Subscribe to the early bridge — this replays any buffered tool results
+  // Subscribe to the unified bridge — replays any buffered events
   // that arrived before React mounted.
   useEffect(() => {
-    earlyBridge.onToolResult(handleToolResult);
-    earlyBridge.onHostContext(handleHostContext);
-  }, [handleToolResult, handleHostContext]);
+    bridge.onToolResult(handleToolResult);
+    bridge.onHostContext(handleHostContext);
+    bridge.onCodeResult(handleCodeResult);
+  }, [handleToolResult, handleHostContext, handleCodeResult]);
 
   // Apply initial theme from host context (if already available)
   useEffect(() => {
-    if (earlyBridge.app) {
-      const ctx = earlyBridge.app.getHostContext();
+    if (bridge.app) {
+      const ctx = bridge.app.getHostContext();
       if (ctx) handleHostContext(ctx);
     }
   }, [handleHostContext]);
 
   // Error state — only fatal if we have no content to render
-  if (!earlyBridge.app && !tree) {
+  if (!bridge.app && !tree) {
     return (
       <div className="p-4 text-destructive">
         <p className="font-medium">Connection error</p>
@@ -210,8 +216,32 @@ export function App() {
   // Waiting for content
   if (!tree) {
     return (
-      <div className="p-4 text-sm text-muted-foreground">
-        Waiting for content…
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "50vh",
+          gap: "6px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: 36,
+            height: 36,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <div className="pf-absolute pf-inset-0 pf-rounded-full pf-border-2 pf-border-muted-foreground/20 pf-border-t-muted-foreground pf-animate-spin" />
+          <FastMCPLogo size={16} className="pf-text-muted-foreground" />
+        </div>
+        <span className="pf-text-sm pf-text-muted-foreground">
+          Waiting for content…
+        </span>
       </div>
     );
   }

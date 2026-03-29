@@ -24,13 +24,17 @@ they skip critical steps.
 
 ## What the Pipeline Does
 
-1. **Renderer build** (if TS source changed) — `npm run build:renderer`
+1. **Renderer build** (if TS source changed) — `npm run build:renderer` builds the
+   code-split ESM bundle for CDN delivery (the primary renderer artifact)
 2. **Python bundle generation** — serializes all `src/prefab_ui/**/*.py` into
    `renderer/src/playground/bundle.json` for Pyodide
 3. **Playground build** (if playground source changed) — runs Vite with
    `VITE_LOCAL_PLAYGROUND=1` so the Python bundle is inlined
 4. **Copy to docs/** — puts built files where `prefab playground` and
    `mintlify dev` expect them
+
+Note: `build-docs` builds the CDN renderer. The bundled single-file renderer
+(airgapped fallback) is built separately via `prefab dev build-renderers`.
 
 ## Previewing
 
@@ -60,4 +64,4 @@ locally.
 
 ## Reference
 
-Full build and release details: `dev-docs/renderer-build-release.md`
+Full build and release details: `dev-docs/build-pipeline.md`

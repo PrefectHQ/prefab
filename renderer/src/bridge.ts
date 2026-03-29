@@ -1,9 +1,17 @@
 /**
- * Generative bridge — extends the early bridge with streaming input support.
+ * Unified bridge — connects to the MCP Apps host and handles all modes.
  *
- * Registers `ontoolinputpartial` on the App SDK to receive partial tool
- * arguments as the LLM generates them. Extracts the Python code and
- * feeds it to the Pyodide executor for progressive rendering.
+ * Handles three event types from the host:
+ * 1. `ontoolresult` — server-validated component tree (standard flow)
+ * 2. `ontoolinputpartial` — streaming LLM code for Pyodide execution (generative)
+ * 3. `ontoolinput` — complete LLM code for Pyodide execution (generative)
+ *
+ * Pyodide loads lazily on the first streaming partial — non-generative tools
+ * never trigger it, so there's zero overhead unless the host actually sends
+ * code partials.
+ *
+ * Also buffers events that arrive before React mounts (some hosts like
+ * MCPJam send tool results very quickly after loading the iframe).
  */
 
 import { App } from "@modelcontextprotocol/ext-apps";
@@ -19,19 +27,28 @@ export interface BufferedToolResult {
   structuredContent?: Record<string, unknown>;
 }
 
-export interface GenerativeBridge {
+export interface Bridge {
+  /** Start the connection. Call once, before React mounts. */
   connect(): void;
+  /** The pre-connected App instance (null until connect() resolves). */
   app: App | null;
+  /** Tool results received before React was ready. */
   bufferedResults: BufferedToolResult[];
+  /** Host context received before React was ready. */
   hostContext: McpUiHostContext | null;
+  /** Register a listener for tool results (replays buffered ones immediately). */
   onToolResult(cb: (result: BufferedToolResult) => void): void;
+  /** Register a listener for host context changes. */
   onHostContext(cb: (ctx: McpUiHostContext) => void): void;
+  /** Register a listener for Pyodide code execution results. */
   onCodeResult(cb: (result: ExecuteResult) => void): void;
 }
 
 let toolResultCb: ((result: BufferedToolResult) => void) | null = null;
 let hostContextCb: ((ctx: McpUiHostContext) => void) | null = null;
 let codeResultCb: ((result: ExecuteResult) => void) | null = null;
+
+// ── Pyodide (lazy) ─────────────────────────────────────────────────────
 
 /** The argument key that contains Python code. Defaults to "code". */
 let codeKey = "code";
@@ -102,6 +119,8 @@ function ensurePyodideLoading() {
   });
 }
 
+// ── Debug logging ──────────────────────────────────────────────────────
+
 export const debugMessages: string[] = [];
 let debugCb: ((msg: string) => void) | null = null;
 
@@ -109,7 +128,7 @@ function debug(msg: string) {
   const full = `[${new Date().toLocaleTimeString()}] ${msg}`;
   debugMessages.push(full);
   if (debugCb) debugCb(full);
-  console.log(`[Prefab Generative] ${msg}`);
+  console.log(`[Prefab] ${msg}`);
 }
 
 // Route executor debug messages through the same channel
@@ -124,7 +143,8 @@ export function onDebug(cb: (msg: string) => void) {
   }
 }
 
-/** Throttle: execute at most once per interval, using the latest code. */
+// ── Throttle for streaming partials ────────────────────────────────────
+
 let throttleTimer: ReturnType<typeof setTimeout> | null = null;
 let latestCode: string | null = null;
 const THROTTLE_MS = 50;
@@ -133,6 +153,9 @@ const THROTTLE_MS = 50;
 function handleCode(code: string, immediate = false) {
   if (code === lastCode) return;
   lastCode = code;
+
+  // Lazy-load Pyodide on first code arrival
+  ensurePyodideLoading();
 
   if (!pyodideReady) {
     pendingCode = code;
@@ -163,23 +186,18 @@ function handleCode(code: string, immediate = false) {
   }
 }
 
-export const generativeBridge: GenerativeBridge = {
+// ── Bridge singleton ───────────────────────────────────────────────────
+
+export const bridge: Bridge = {
   app: null,
   bufferedResults: [],
   hostContext: null,
 
   connect() {
-    const app = new App({ name: "Prefab Generative", version: "1.0.0" });
+    const app = new App({ name: "Prefab", version: "1.0.0" });
     this.app = app;
 
-    // Start loading Pyodide immediately. The host creates the iframe in
-    // parallel with the tool call (per MCP spec), so we have the full
-    // LLM generation time to cold-start (~2-3s). This IS the generative
-    // renderer — it will always receive streaming code. Non-streaming
-    // tools use app.html instead.
-    ensurePyodideLoading();
-
-    // Standard tool result handler (same as early-bridge)
+    // Standard tool result handler
     app.ontoolresult = (params) => {
       const result = params as BufferedToolResult;
       if (toolResultCb) {
@@ -189,7 +207,9 @@ export const generativeBridge: GenerativeBridge = {
       }
     };
 
-    // Streaming partial tool arguments — the generative UI hook
+    // Streaming partial tool arguments — generative UI hook.
+    // Pyodide loads lazily on first partial, so non-generative tools
+    // never trigger it.
     let partialCount = 0;
     app.ontoolinputpartial = (params) => {
       partialCount++;
@@ -225,7 +245,7 @@ export const generativeBridge: GenerativeBridge = {
     };
 
     app.connect().catch((err) => {
-      console.error("[Prefab Generative] Bridge connection failed:", err);
+      console.error("[Prefab] Bridge connection failed:", err);
     });
   },
 

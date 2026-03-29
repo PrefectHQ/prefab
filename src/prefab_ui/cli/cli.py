@@ -553,15 +553,16 @@ def build_docs() -> None:
 
 @dev_app.command(name="build-renderers")
 def build_renderers() -> None:
-    """Rebuild the bundled renderer HTML shipped with the Python package.
+    """Rebuild the bundled renderer HTML shipped in the Python package.
 
     Builds the single-file renderer from Vite and copies it into
-    src/prefab_ui/renderer/app.html. The renderer is generative-capable
-    (includes Pyodide streaming bridge) but the generative code is inert
-    unless the host sends ontoolinputpartial.
+    src/prefab_ui/renderer/app.html. Uses the same unified entry point
+    as the CDN build — the bridge handles MCP, generative, and standalone
+    modes. Generative code (Pyodide) is inert unless the host sends
+    ontoolinputpartial.
 
     Run this after any renderer source changes that should be reflected
-    in the Python package.
+    in the bundled package.
     """
     repo_root = _find_repo_root()
     renderer_dir = repo_root / "renderer"
@@ -580,21 +581,21 @@ def build_renderers() -> None:
         if r.returncode != 0:
             raise SystemExit(r.returncode)
 
-    console.print("  [dim]→[/dim] Building renderer...")
+    console.print("  [dim]→[/dim] Building bundled renderer...")
     r = subprocess.run(
-        ["npx", "vite", "build", "--config", "vite.config.mcp.ts"],
+        ["npx", "vite", "build", "--config", "vite.config.bundled.ts"],
         cwd=renderer_dir,
     )
     if r.returncode != 0:
         console.print("[bold red]Error:[/bold red] Renderer build failed")
         raise SystemExit(r.returncode)
 
-    src_path = renderer_dir / "dist" / "mcp" / "mcp.html"
+    src_path = renderer_dir / "dist" / "bundled" / "mcp.html"
     dest_path = dest / "app.html"
     shutil.copy2(src_path, dest_path)
     console.print(f"    → {dest_path.relative_to(repo_root)}")
 
-    console.print("[bold green]✓[/bold green] Bundled renderers rebuilt")
+    console.print("[bold green]✓[/bold green] Bundled renderer rebuilt")
 
 
 @dev_app.command(name="build-playground")

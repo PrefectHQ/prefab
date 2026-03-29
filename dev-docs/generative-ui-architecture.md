@@ -58,7 +58,7 @@ Implementation notes:
 - The harness logic (find root component, extract JSON, reset component stack) mirrors what the server-side `runner.js` does
 - The React rendering code is shared — both paths produce a component tree JSON that the existing `RenderNode` component handles
 
-**This hook does NOT exist yet.** It needs to be built as part of the renderer. The interface might look like a function the renderer exposes (e.g., `executePrefabCode(code: string) → void`) that any external caller can invoke to trigger a render from Python code.
+The renderer's unified bridge registers `ontoolinputpartial` and `ontoolinput` handlers automatically. Pyodide loads lazily on the first streaming partial — non-generative tools never trigger it, so there's zero overhead unless the host actually sends code partials.
 
 ## How Transports Wire These Together
 
@@ -133,15 +133,15 @@ Any system that can deliver code to one of the two primitives works:
 - [x] `$prefab` self-identifying envelope
 - [x] `parent=` kwarg for imperative tree-building
 - [x] Playground Pyodide integration (proof that Prefab runs in browser Pyodide)
+- [x] **Renderer Python execution hook** — the client-side primitive. Takes Python code, executes it in browser Pyodide, renders the result. Error-tolerant, lazy Pyodide loading, fresh namespace per invocation.
+- [x] **Generative capability in the unified renderer** — the single renderer handles `ontoolinputpartial` directly from the MCP App SDK (extracts `params.arguments.code`, feeds to Pyodide hook). Pyodide loads lazily on first streaming partial — zero cost for non-generative tools. There is no separate "generative renderer bundle"; generative is a capability of the unified renderer, delivered via CDN or bundled like everything else.
 
 ### Needed
-- [ ] **Renderer Python execution hook** — the client-side primitive. A function in the renderer that takes Python code, executes it in browser Pyodide, and renders the result. Error-tolerant, lazy Pyodide loading, fresh namespace per invocation.
-- [ ] **Generative renderer bundle** — a version of the renderer that includes Pyodide and the execution hook. Handles `ontoolinputpartial` directly from the MCP App SDK (extracts `params.arguments.code`, feeds to Pyodide hook). Bundled as a single HTML file like the existing renderer.
 - [ ] **User-facing documentation** — conceptual doc explaining generative UI, the sandbox, and how to build a generative UI server
 
 ## What FastMCP Needs to Build
 
-- [ ] **Generative renderer resource** — register the Pyodide-capable renderer as a `ui://prefab/generative.html`
-- [ ] **CSP configuration** — allow `wasm-unsafe-eval` and Pyodide CDN domains for generative renderer apps
-- [ ] **Convenience shorthand** — `app="generative"` alongside `app=True` for the standard renderer
+- [ ] **Renderer resource** — register the renderer as a `ui://` resource. The same renderer handles both standard and generative tools.
+- [ ] **CSP configuration** — for generative tools, allow `wasm-unsafe-eval` and Pyodide CDN domains. For CDN-delivered renderers, allow the jsDelivr origin. `get_renderer_csp()` / `get_generative_renderer_csp()` return the right domains.
+- [ ] **Convenience shorthand** — `app="generative"` alongside `app=True` to signal that the tool uses streaming code execution (affects CSP, not renderer selection)
 - [ ] **Documentation + example** — `generate_ui(code: str)` tool pattern
