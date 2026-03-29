@@ -31,6 +31,25 @@ quantity > 0                          # {{ quantity > 0 }}
 Pipe methods: `.currency()`, `.percent()`, `.compact()`, `.date()`,
 `.upper()`, `.lower()`, `.truncate(N)`, `.length()`, `.join(sep)`.
 
+### F-strings with Rx
+
+Python f-strings work naturally with Rx. When Python evaluates
+`f"{STATE.cpu}%"`, it calls `str()` on the Rx which produces
+`"{{ cpu }}%"`. Prefab detects these embedded template markers and
+expands them into proper expressions automatically:
+
+```python
+# All equivalent — use whichever reads best:
+Metric(value=STATE.cpu + "%")                     # {{ cpu + '%' }}
+Metric(value=f"{STATE.cpu}%")                     # also {{ cpu + '%' }}
+
+# Works inside .then() too:
+STATE.cpu.then(f"{STATE.cpu}%", "...")             # {{ cpu ? cpu + '%' : '...' }}
+
+# Multiple interpolations:
+Text(f"Hello {STATE.name}, {STATE.count} items")  # {{ 'Hello ' + name + ', ' + count + ' items' }}
+```
+
 ## STATE
 
 For keys defined elsewhere (e.g. by `result_key` on `CallTool`):

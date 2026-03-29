@@ -127,6 +127,10 @@ def _format_scalar(value: object) -> str:
     """Format a non-Rx Python value as an expression token.
 
     Strings → single-quoted, numbers → bare, bools → true/false, None → null.
+
+    Strings containing ``{{ expr }}`` templates (e.g. from f-strings like
+    ``f"{STATE.x}%"``) are expanded into concatenation expressions so
+    ``"{{ stats.cpu }}%"`` becomes ``stats.cpu + '%'``.
     """
     if isinstance(value, bool):
         return "true" if value else "false"
@@ -135,8 +139,37 @@ def _format_scalar(value: object) -> str:
     if value is None:
         return "null"
     if isinstance(value, str):
+        if "{{" in value:
+            return _expand_template_string(value)
         return f"'{value}'"
     return str(value)
+
+
+def _expand_template_string(s: str) -> str:
+    """Convert a string with ``{{ }}`` markers into a concatenation expression.
+
+    ``"{{ x }}%"`` → ``x + '%'``
+    ``"Hello {{ name }}, you have {{ count }} items"``
+    → ``'Hello ' + name + ', you have ' + count + ' items'``
+    """
+    import re
+
+    parts: list[str] = []
+    last_end = 0
+    for m in re.finditer(r"\{\{\s*(.*?)\s*\}\}", s):
+        # Text before this template
+        before = s[last_end : m.start()]
+        if before:
+            parts.append(f"'{before}'")
+        # The expression inside {{ }}
+        parts.append(m.group(1))
+        last_end = m.end()
+    # Text after the last template
+    after = s[last_end:]
+    if after:
+        parts.append(f"'{after}'")
+
+    return " + ".join(parts) if parts else "''"
 
 
 def _resolve_operand(value: object, min_prec: int, *, strict: bool = False) -> str:
@@ -423,7 +456,7 @@ class Rx:
     # ── Ternary ──────────────────────────────────────────────────────
 
     def then(self, if_true: object, if_false: object) -> Rx:
-        """Ternary conditional: `condition ? if_true : if_false`."""
+        """Ternary conditional: ``condition ? if_true : if_false``."""
         return Rx(_Ternary(self, if_true, if_false), _PREC_TERNARY)
 
     # ── Pipes ────────────────────────────────────────────────────────
