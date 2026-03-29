@@ -4,7 +4,7 @@
 
 **The generative UI framework that even humans can use.**
 
-🚧 *Don't panic. Prefab is under **extremely** active development. You probably shouldn't use it yet.* 🚧
+🚧 *Don't panic. Prefab is under very active development.* 🚧
 
 [![PyPI - Version](https://img.shields.io/pypi/v/prefab-ui)](https://pypi.org/project/prefab-ui)
 [![Tests](https://github.com/PrefectHQ/prefab/actions/workflows/run-tests.yml/badge.svg)](https://github.com/PrefectHQ/prefab/actions/workflows/run-tests.yml)
