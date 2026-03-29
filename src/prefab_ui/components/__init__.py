@@ -75,6 +75,7 @@ from prefab_ui.components.image import Image
 from prefab_ui.components.input import Input
 from prefab_ui.components.label import Label
 from prefab_ui.components.markdown import Markdown
+from prefab_ui.components.mermaid import Mermaid
 from prefab_ui.components.metric import Metric
 from prefab_ui.components.pages import Page, Pages
 from prefab_ui.components.popover import Popover
@@ -198,6 +199,7 @@ __all__ = [
     "Link",
     "Loader",
     "Markdown",
+    "Mermaid",
     "Metric",
     "Muted",
     "P",

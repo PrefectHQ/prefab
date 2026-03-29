@@ -152,6 +152,10 @@ const contentModule = () => import("./content");
 const LazyCode = lazyNamed(contentModule, "Code");
 const LazyMarkdown = lazyNamed(contentModule, "Markdown");
 
+// Mermaid — mermaid (~1.5 MB)
+const mermaidModule = () => import("./mermaid");
+const LazyMermaid = lazyNamed(mermaidModule, "Mermaid");
+
 // Calendar / DatePicker — date-fns (~169 KB)
 const calendarModule = () => import("./compound-calendar");
 const LazyCalendar = lazyNamed(calendarModule, "PrefabCalendar");
@@ -266,10 +270,11 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Muted,
   BlockQuote,
 
-  // Content (lazy — highlight.js, react-markdown)
+  // Content (lazy — highlight.js, react-markdown, mermaid)
   Code: LazyCode,
   Image,
   Markdown: LazyMarkdown,
+  Mermaid: LazyMermaid,
   Icon: PrefabIcon,
 
   // Media
