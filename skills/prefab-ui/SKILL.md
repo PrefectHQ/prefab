@@ -226,6 +226,30 @@ Button("Save", on_click=[
 ])
 ```
 
+### on_mount
+
+Every component (and PrefabApp) supports `on_mount` — actions that fire
+when the component mounts. Useful for initializing data, starting polling,
+or running setup logic:
+
+```python
+# Poll a server tool every 3 seconds when the app loads
+PrefabApp(
+    view=dashboard_view,
+    on_mount=SetInterval(
+        duration=3000,
+        on_tick=CallTool("refresh", on_success=SetState("stats", RESULT)),
+    ),
+)
+
+# Load data when a conditional section becomes visible
+with Condition("{{ showDetails }}"):
+    Column(
+        on_mount=CallTool("load_details", on_success=SetState("details", RESULT)),
+        children=[Text("{{ details }}")],
+    )
+```
+
 ## Expressions
 
 String props support `{{ expression }}` templates:
