@@ -26,7 +26,9 @@ class SetInterval(Action):
     """
 
     action: Literal["setInterval"] = "setInterval"
-    duration: int = Field(description="Interval between ticks, in milliseconds.")
+    duration: int | RxStr = Field(
+        description="Interval between ticks, in milliseconds. Accepts Rx for reactive values.",
+    )
     while_: RxStr | None = Field(
         default=None,
         alias="while",

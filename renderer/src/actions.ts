@@ -26,7 +26,7 @@ import type { App } from "@modelcontextprotocol/ext-apps";
 import { toast } from "sonner";
 import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
-import { interpolateProps } from "./interpolation";
+import { interpolateProps, interpolateString } from "./interpolation";
 import { validateAction } from "./validation";
 import { readFiles, filterByAccept } from "./file-utils";
 import { evaluateCondition } from "./conditions";
@@ -411,7 +411,16 @@ export async function executeAction(
       }
 
       case "setInterval": {
-        const duration = resolved.duration as number;
+        // Duration can be a number or a {{ template }} expression.
+        // Keep the raw expression so we can re-evaluate it each tick.
+        const rawDuration = action.duration;
+        const resolveDuration = (): number => {
+          if (typeof rawDuration === "number") return rawDuration;
+          const ctx = { ...state.getAll(), ...(scope ?? {}) };
+          const val = interpolateString(String(rawDuration), ctx);
+          return Number(val) || 1000;
+        };
+
         // Use the raw (uninterpolated) while expression — it must be
         // re-evaluated each tick against the live state, not resolved once.
         const whileExpr = action.while as string | undefined;
@@ -425,6 +434,7 @@ export async function executeAction(
           | undefined;
 
         let tickCount = 0;
+        let currentDuration = resolveDuration();
 
         const shouldContinue = (): boolean => {
           if (maxCount != null && tickCount >= maxCount) return false;
@@ -438,8 +448,7 @@ export async function executeAction(
           return true;
         };
 
-        // If condition is already false, fire onComplete immediately
-        if (!shouldContinue()) {
+        const fireComplete = async () => {
           if (onComplete) {
             await executeActions(
               onComplete,
@@ -452,44 +461,55 @@ export async function executeAction(
               overlayClose,
             );
           }
+        };
+
+        // If condition is already false, fire onComplete immediately
+        if (!shouldContinue()) {
+          await fireComplete();
           break;
         }
 
-        const intervalId = globalThis.setInterval(async () => {
-          tickCount++;
+        // Start the interval, restarting if duration changes reactively.
+        const startInterval = (): ReturnType<typeof setInterval> => {
+          const id = globalThis.setInterval(async () => {
+            tickCount++;
 
-          if (onTick) {
-            await executeActions(
-              onTick,
-              app,
-              state,
-              tickCount,
-              depth + 1,
-              undefined,
-              scope,
-              overlayClose,
-            );
-          }
-
-          if (!shouldContinue()) {
-            globalThis.clearInterval(intervalId);
-            activeIntervals.delete(intervalId);
-
-            if (onComplete) {
+            if (onTick) {
               await executeActions(
-                onComplete,
+                onTick,
                 app,
                 state,
-                undefined,
+                tickCount,
                 depth + 1,
                 undefined,
                 scope,
                 overlayClose,
               );
             }
-          }
-        }, duration);
 
+            if (!shouldContinue()) {
+              globalThis.clearInterval(id);
+              activeIntervals.delete(id);
+              await fireComplete();
+              return;
+            }
+
+            // Check if duration changed (reactive {{ template }})
+            if (typeof rawDuration !== "number") {
+              const newDuration = resolveDuration();
+              if (newDuration !== currentDuration) {
+                currentDuration = newDuration;
+                globalThis.clearInterval(id);
+                activeIntervals.delete(id);
+                const newId = startInterval();
+                activeIntervals.add(newId);
+              }
+            }
+          }, currentDuration);
+          return id;
+        };
+
+        const intervalId = startInterval();
         activeIntervals.add(intervalId);
 
         // Fire-and-forget: return immediately
