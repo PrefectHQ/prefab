@@ -154,7 +154,7 @@ with Carousel(visible=3, gap=16, show_dots=True, css_class="w-full"):
 
 ### Peek
 
-A decimal value for `visible` shows partial slides at the edges. `visible=1.3` means "show 1.3 slides" — one full slide plus 30% of the next one peeking in from the side. Set `align="center"` to split the peek evenly, showing 15% of both the previous and next slides:
+A decimal value for `visible` shows partial slides at the edges. `visible=1.3` means "show 1.3 slides" — one full slide plus 30% of the next one peeking in from the side:
 
 <ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1.3,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTEuMywgc2hvd19kb3RzPVRydWUsIGFsaWduPSJjZW50ZXIiLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCg">
 <CodeGroup>
@@ -215,6 +215,14 @@ with Carousel(visible=1.3, show_dots=True, align="center", css_class="w-full"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+### Align
+
+The `align` parameter controls where the active slide sits in the viewport. It only has a visible effect when `visible` is a non-integer (peek) or when showing multiple slides — with `visible=1` every alignment looks the same since the slide fills the viewport.
+
+- `"start"` (default) — active slide flush to the leading edge. Peek appears on the trailing side only.
+- `"center"` — active slide centered. Peek appears equally on both sides.
+- `"end"` — active slide flush to the trailing edge. Peek appears on the leading side only.
 
 ### Dim Inactive
 
