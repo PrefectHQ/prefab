@@ -9575,16 +9575,24 @@ _C.__init__ = _pg_comp_init
 
 try:
     # Heal partial code: strip trailing lines until it compiles.
-    # Tracks the total line count seen so far — since streaming only
-    # appends, lines before this point never change and don't need
-    # to be re-scanned.  Reset when the code shrinks (different snippet).
+    # Fast path: reuse a previously valid floor line count when the
+    # code prefix up to that floor is unchanged.
+    # Fallback: if that fails (or prefix changed), do a full scan.
     _pg_code = ${JSON.stringify(e)}
     _pg_lines = _pg_code.split("\\n")
     _pg_healed = None
     _pg_floor = globals().get("_pg_seen_lines", 0)
+    _pg_prev_lines = globals().get("_pg_prev_lines", [])
+
     if _pg_floor > len(_pg_lines):
         _pg_floor = 0
-    for _pg_n in range(len(_pg_lines), _pg_floor, -1):
+    elif _pg_floor > 0:
+        if len(_pg_prev_lines) < _pg_floor or _pg_prev_lines[:_pg_floor] != _pg_lines[:_pg_floor]:
+            _pg_floor = 0
+
+    # Try from current length down to floor (inclusive) first.
+    _pg_min = _pg_floor if _pg_floor > 0 else 1
+    for _pg_n in range(len(_pg_lines), _pg_min - 1, -1):
         _pg_try = "\\n".join(_pg_lines[:_pg_n])
         try:
             compile(_pg_try, "<string>", "exec")
@@ -9594,8 +9602,22 @@ try:
         except SyntaxError:
             continue
 
+    # If fast path fails, fall back to full scan.
+    if _pg_healed is None:
+        for _pg_n in range(len(_pg_lines), 0, -1):
+            _pg_try = "\\n".join(_pg_lines[:_pg_n])
+            try:
+                compile(_pg_try, "<string>", "exec")
+                _pg_healed = _pg_try
+                _pg_seen_lines = _pg_n
+                break
+            except SyntaxError:
+                continue
+
     if _pg_healed is None:
         raise SyntaxError("Could not heal partial code")
+
+    _pg_prev_lines = _pg_lines
 
     # Execute in a fresh namespace
     _pg_ns = {}
