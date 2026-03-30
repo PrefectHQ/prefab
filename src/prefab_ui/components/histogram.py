@@ -133,6 +133,9 @@ class Histogram(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_legend: bool = Field(
         default=True, alias="showLegend", description="Show legend"
     )

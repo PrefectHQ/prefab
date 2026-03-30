@@ -16,6 +16,7 @@ const cartesianBase = componentBase.extend({
   height: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
   showGrid: z.boolean().optional(),
   showYAxis: z.boolean().optional(),
   yAxisFormat: z.enum(["auto", "compact"]).optional(),
@@ -54,6 +55,7 @@ export const pieChartSchema = componentBase.extend({
   paddingAngle: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
 });
 
 export const radarChartSchema = componentBase.extend({
@@ -68,6 +70,7 @@ export const radarChartSchema = componentBase.extend({
   showDots: z.boolean().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
   showGrid: z.boolean().optional(),
 });
 
@@ -84,6 +87,7 @@ export const radialChartSchema = componentBase.extend({
   endAngle: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
 });
 
 export const scatterChartSchema = componentBase.extend({
@@ -98,6 +102,7 @@ export const scatterChartSchema = componentBase.extend({
   height: z.number().int().optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
   showGrid: z.boolean().optional(),
 });
 

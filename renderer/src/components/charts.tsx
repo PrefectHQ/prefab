@@ -106,6 +106,7 @@ export function PrefabBarChart({
   barRadius = 4,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   showGrid = true,
   showYAxis = true,
   yAxisFormat = "auto",
@@ -156,6 +157,7 @@ export function PrefabBarChart({
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Bar
+            isAnimationActive={animate}
             key={s.dataKey}
             dataKey={s.dataKey}
             fill={`var(--color-${s.dataKey})`}
@@ -186,6 +188,7 @@ export function PrefabLineChart({
   showDots = false,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   showGrid = true,
   showYAxis = true,
   yAxisFormat = "auto",
@@ -224,6 +227,7 @@ export function PrefabLineChart({
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Line
+            isAnimationActive={animate}
             key={s.dataKey}
             dataKey={s.dataKey}
             type={(CURVE_MAP[curve] ?? curve) as "linear" | "monotone" | "step"}
@@ -249,6 +253,7 @@ export function PrefabAreaChart({
   showDots = false,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   showGrid = true,
   showYAxis = true,
   yAxisFormat = "auto",
@@ -287,6 +292,7 @@ export function PrefabAreaChart({
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Area
+            isAnimationActive={animate}
             key={s.dataKey}
             dataKey={s.dataKey}
             type={(CURVE_MAP[curve] ?? curve) as "linear" | "monotone" | "step"}
@@ -314,6 +320,7 @@ export function PrefabPieChart({
   paddingAngle = 0,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   className,
 }: PieChartWire & { className?: string }) {
   if (typeof data === "string") return null;
@@ -349,6 +356,7 @@ export function PrefabPieChart({
             <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
           )}
           <Pie
+            isAnimationActive={animate}
             data={coloredData}
             dataKey={dataKey}
             nameKey={nameKey}
@@ -404,6 +412,7 @@ export function PrefabRadarChart({
   showDots = false,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   showGrid = true,
   className,
 }: RadarChartWire & { className?: string }) {
@@ -423,6 +432,7 @@ export function PrefabRadarChart({
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Radar
+            isAnimationActive={animate}
             key={s.dataKey}
             dataKey={s.dataKey}
             fill={`var(--color-${s.dataKey})`}
@@ -449,6 +459,7 @@ export function PrefabRadialChart({
   endAngle = 0,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   className,
 }: RadialChartWire & { className?: string }) {
   if (typeof data === "string") return null;
@@ -477,7 +488,7 @@ export function PrefabRadialChart({
         {showLegend && (
           <ChartLegend content={<ChartLegendContent nameKey={nameKey} />} />
         )}
-        <RadialBar dataKey={dataKey} />
+        <RadialBar isAnimationActive={animate} dataKey={dataKey} />
       </RadialBarChart>
     </ChartContainer>
   );
@@ -494,6 +505,7 @@ export function PrefabScatterChart({
   height = 300,
   showLegend = false,
   showTooltip = true,
+  animate = true,
   showGrid = true,
   className,
 }: ScatterChartWire & { className?: string }) {
@@ -541,6 +553,7 @@ export function PrefabScatterChart({
         {series.map((s) => {
           return (
             <Scatter
+              isAnimationActive={animate}
               key={s.dataKey}
               name={s.label ?? s.dataKey}
               data={

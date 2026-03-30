@@ -111,6 +111,9 @@ class BarChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -176,6 +179,9 @@ class LineChart(Component):
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
+    )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
     )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
@@ -246,6 +252,9 @@ class AreaChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -310,6 +319,9 @@ class PieChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
 
 
 class ScatterChart(Component):
@@ -363,6 +375,9 @@ class ScatterChart(Component):
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
+    )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
     )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
@@ -418,6 +433,9 @@ class RadarChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show polar grid"
     )
@@ -472,6 +490,9 @@ class RadialChart(Component):
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
+    )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
     )
 
 

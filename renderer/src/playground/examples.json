@@ -1155,6 +1155,11 @@
     "code": "LineChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_dots=True,\n    show_legend=True,\n)"
   },
   {
+    "title": "from prefab_ui.app import PrefabApp",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Heading\nfrom prefab_ui.components.charts import LineChart, ChartSeries\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.actions.timing import SetInterval\nfrom prefab_ui.rx import RESULT\nfrom fastmcp import FastMCP\nimport random\n\nmcp = FastMCP(\"Live Chart\")\npoints = []\n\n@mcp.tool(app=True)\ndef monitor() -> PrefabApp:\n    with PrefabApp(\n        state={\"points\": []},\n        on_mount=SetInterval(\n            duration=500,\n            on_tick=CallTool(\n                \"get_data\",\n                on_success=SetState(\"points\", RESULT),\n            ),\n        ),\n    ) as app:\n        with Column(gap=4, css_class=\"p-6\"):\n            Heading(\"Live Monitor\")\n            LineChart(\n                data=\"{{ points }}\",\n                series=[ChartSeries(data_key=\"value\", label=\"CPU %\")],\n                x_axis=\"time\",\n                height=300,\n                animate=False,\n            )\n    return app\n\n@mcp.tool()\ndef get_data() -> list[dict]:\n    points.append({\"time\": len(points), \"value\": random.randint(20, 80)})\n    return points[-30:]  # keep last 30 points"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Loader\n\nLoader()"
