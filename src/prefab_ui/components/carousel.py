@@ -16,18 +16,27 @@ class Carousel(ContainerComponent):
 
     - **Carousel** (default): one item visible, user navigates with
       arrows/dots/swipe.
-    - **Reel**: all items visible, auto-advances on a timer. Set
-      ``auto_advance`` and ``show_controls=False``.
-    - **Marquee**: all items visible, continuous smooth scroll. Set
-      ``continuous=True``.
+    - **Reel**: auto-advances on a timer. Set ``auto_advance`` and
+      ``show_controls=False``.
+    - **Marquee**: continuous smooth scroll. Set ``continuous=True``.
 
     Args:
+        visible: How many slides are visible at once. Use a float for
+            peek: ``1.3`` shows 1 full slide + 15% of prev/next peeking
+            on each side. ``None`` = natural slide sizing (default for
+            marquee when ``continuous=True`` and ``visible`` is omitted).
+        gap: Pixels between slides.
+        height: Fixed height in pixels. Auto-detected for vertical
+            carousels from the first slide's content.
         direction: Scroll direction.
         loop: Whether to loop back to the start.
-        auto_advance: Milliseconds between auto-advances (reel mode). 0 = off.
-        continuous: Smooth continuous scroll instead of discrete ticks (marquee mode).
+        auto_advance: Milliseconds between auto-advances. 0 = off.
+        continuous: Smooth continuous scroll (marquee mode).
         speed: Scroll speed for continuous mode (1-10).
+        effect: Visual transition effect.
+        dim_inactive: Reduce opacity of non-active slides.
         show_controls: Show navigation arrows.
+        controls_position: Position controls over slides or outside the viewport.
         show_dots: Show pagination dots.
         pause_on_hover: Pause auto-advance/continuous scroll on hover.
         align: Slide alignment within the viewport.
@@ -45,6 +54,18 @@ class Carousel(ContainerComponent):
     """
 
     type: Literal["Carousel"] = "Carousel"
+    visible: float | None = Field(
+        default=1,
+        description="Slides visible at once. Float for peek: 1.3 = 1 slide + 15% peek each side. None = natural sizing (default for marquee when visible is omitted).",
+    )
+    gap: int = Field(
+        default=0,
+        description="Pixels between slides",
+    )
+    height: int | None = Field(
+        default=None,
+        description="Fixed height in pixels. Auto-detected for vertical carousels.",
+    )
     direction: Literal["left", "right", "up", "down"] = Field(
         default="left",
         description="Scroll direction",
@@ -60,16 +81,30 @@ class Carousel(ContainerComponent):
     )
     continuous: bool = Field(
         default=False,
-        description="Smooth continuous scroll (marquee mode) instead of discrete ticks",
+        description="Smooth continuous scroll (marquee mode)",
     )
     speed: int = Field(
         default=2,
         description="Scroll speed for continuous mode (1-10)",
     )
+    effect: Literal["slide", "fade"] = Field(
+        default="slide",
+        description="Transition effect: slide or fade",
+    )
+    dim_inactive: bool = Field(
+        default=False,
+        alias="dimInactive",
+        description="Reduce opacity of non-active slides",
+    )
     show_controls: bool = Field(
         default=True,
         alias="showControls",
         description="Show previous/next navigation arrows",
+    )
+    controls_position: Literal["overlay", "outside"] = Field(
+        default="outside",
+        alias="controlsPosition",
+        description="Position controls over slides (overlay) or outside the viewport",
     )
     show_dots: bool = Field(
         default=False,
@@ -96,4 +131,7 @@ class Carousel(ContainerComponent):
     )
 
     def __init__(self, **kwargs: Any) -> None:
+        # Marquee defaults to natural sizing unless visible is explicitly set.
+        if kwargs.get("continuous") and "visible" not in kwargs:
+            kwargs["visible"] = None
         super().__init__(**kwargs)

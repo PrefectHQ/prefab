@@ -49,6 +49,27 @@ Scrollable container that cycles through children.
       "default": null,
       "description": "Scoped bindings available to children. Values are template strings."
     },
+    "visible": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": 1,
+      "description": "Slides visible at once. Float for peek: 1.3 = 1 slide + 15% peek each side. None = natural sizing (default for marquee when visible is omitted)."
+    },
+    "gap": {
+      "default": 0,
+      "description": "Pixels between slides",
+      "type": "integer"
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Fixed height in pixels. Auto-detected for vertical carousels."
+    },
     "direction": {
       "default": "left",
       "description": "Scroll direction",
@@ -72,7 +93,7 @@ Scrollable container that cycles through children.
     },
     "continuous": {
       "default": false,
-      "description": "Smooth continuous scroll (marquee mode) instead of discrete ticks",
+      "description": "Smooth continuous scroll (marquee mode)",
       "type": "boolean"
     },
     "speed": {
@@ -80,10 +101,33 @@ Scrollable container that cycles through children.
       "description": "Scroll speed for continuous mode (1-10)",
       "type": "integer"
     },
+    "effect": {
+      "default": "slide",
+      "description": "Transition effect: slide or fade",
+      "enum": [
+        "slide",
+        "fade"
+      ],
+      "type": "string"
+    },
+    "dimInactive": {
+      "default": false,
+      "description": "Reduce opacity of non-active slides",
+      "type": "boolean"
+    },
     "showControls": {
       "default": true,
       "description": "Show previous/next navigation arrows",
       "type": "boolean"
+    },
+    "controlsPosition": {
+      "default": "outside",
+      "description": "Position controls over slides (overlay) or outside the viewport",
+      "enum": [
+        "overlay",
+        "outside"
+      ],
+      "type": "string"
     },
     "showDots": {
       "default": false,
