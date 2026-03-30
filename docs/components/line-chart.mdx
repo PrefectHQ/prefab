@@ -259,53 +259,6 @@ LineChart(
 </CodeGroup>
 </ComponentPreview>
 
-## Live Streaming Data
-
-For real-time charts that update from a server, use `on_mount` with `SetInterval` to poll for new data. Set `animate=False` to prevent distracting interpolation between updates:
-
-```python
-from prefab_ui.app import PrefabApp
-from prefab_ui.components import Column, Heading
-from prefab_ui.components.charts import LineChart, ChartSeries
-from prefab_ui.actions import SetState
-from prefab_ui.actions.mcp import CallTool
-from prefab_ui.actions.timing import SetInterval
-from prefab_ui.rx import RESULT
-from fastmcp import FastMCP
-import random
-
-mcp = FastMCP("Live Chart")
-points = []
-
-@mcp.tool(app=True)
-def monitor() -> PrefabApp:
-    with PrefabApp(
-        state={"points": []},
-        on_mount=SetInterval(
-            duration=500,
-            on_tick=CallTool(
-                "get_data",
-                on_success=SetState("points", RESULT),
-            ),
-        ),
-    ) as app:
-        with Column(gap=4, css_class="p-6"):
-            Heading("Live Monitor")
-            LineChart(
-                data="{{ points }}",
-                series=[ChartSeries(data_key="value", label="CPU %")],
-                x_axis="time",
-                height=300,
-                animate=False,
-            )
-    return app
-
-@mcp.tool()
-def get_data() -> list[dict]:
-    points.append({"time": len(points), "value": random.randint(20, 80)})
-    return points[-30:]  # keep last 30 points
-```
-
 ## API Reference
 
 <Card icon="code" title="LineChart Parameters">
