@@ -117,7 +117,7 @@ export const fetchSchema = z.object({
 
 export const setIntervalSchema = z.object({
   action: z.literal("setInterval"),
-  duration: z.number().int().positive(),
+  duration: z.union([z.number().int().positive(), z.string()]),
   // After interpolation, a template like "{{ flag }}" resolves to a boolean,
   // so the post-interpolation schema accepts both. The renderer reads the
   // raw (pre-interpolation) string for re-evaluation each tick.
