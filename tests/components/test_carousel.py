@@ -35,6 +35,30 @@ class TestCarousel:
         j = c.to_json()
         assert j["continuous"] is True
         assert j["speed"] == 5
+        assert j["visible"] is None
+
+    def test_default_visible_in_non_continuous_mode(self):
+        c = Carousel(auto_advance=2000)
+        j = c.to_json()
+        assert j["visible"] == 1
+
+    def test_explicit_visible_none_is_preserved(self):
+        c = Carousel(auto_advance=2000, visible=None)
+        j = c.to_json()
+        assert "visible" in j
+        assert j["visible"] is None
+
+    def test_controls_position_default_and_override(self):
+        assert Carousel().to_json()["controlsPosition"] == "outside"
+        assert (
+            Carousel(controls_position="overlay").to_json()["controlsPosition"]
+            == "overlay"
+        )
+
+    def test_fade_forces_single_visible_slide(self):
+        assert Carousel(effect="fade").to_json()["visible"] == 1
+        assert Carousel(effect="fade", visible=4).to_json()["visible"] == 1
+        assert Carousel(effect="fade", visible=None).to_json()["visible"] == 1
 
     def test_children_via_context_manager(self):
         with Carousel(loop=True) as c:

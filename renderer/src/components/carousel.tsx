@@ -10,6 +10,11 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import Fade from "embla-carousel-fade";
 import { cn } from "@/lib/utils";
 import {
+  getLoopDuplicationRepeats,
+  resolveGap,
+  resolveVisible,
+} from "./carousel-logic";
+import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
@@ -91,11 +96,8 @@ export function PrefabCarousel({
   children,
 }: CarouselProps) {
   const isVertical = direction === "up" || direction === "down";
-  // Distinguish explicit `null` from an omitted prop:
-  // - `visible: null` => natural sizing
-  // - `visible: undefined` => mode default (1 for non-continuous, null for continuous)
-  const effectiveVisible =
-    visible !== undefined ? visible : continuous ? null : 1;
+  // Distinguish explicit `null` from omitted `undefined`.
+  const effectiveVisible = resolveVisible(visible, continuous, effect);
 
   // Filter children
   const validChildren = Children.toArray(children).filter(
@@ -113,7 +115,8 @@ export function PrefabCarousel({
   // Slide sizing
   const visibleCount =
     effectiveVisible != null && effectiveVisible > 0 ? effectiveVisible : null;
-  const halfGap = gap > 0 ? gap / 2 : 0;
+  const effectiveGap = resolveGap(gap, effect, visibleCount);
+  const halfGap = effectiveGap > 0 ? effectiveGap / 2 : 0;
   // For horizontal: basis as % of viewport width.
   // For vertical: basis in px (% doesn't work in flex-column without
   // explicit container height). Use the measured/explicit height.
@@ -126,7 +129,8 @@ export function PrefabCarousel({
 
   // Embla requires more content than viewport for loop to work.
   // For marquee: always duplicate so AutoScroll has content to scroll.
-  // Vertical does not need duplication for standard loop behavior.
+  // For multi-visible loop: duplicate when there are too few slides for
+  // Embla's loop constraints (e.g. visible=3.6 with only 4 slides).
   let effectiveChildren = validChildren;
   if (loop && continuous) {
     effectiveChildren = [
@@ -138,6 +142,27 @@ export function PrefabCarousel({
         React.cloneElement(c as React.ReactElement, { key: `dup2-${i}` }),
       ),
     ];
+  } else if (
+    loop &&
+    visibleCount != null &&
+    visibleCount > 1 &&
+    validChildren.length > 0
+  ) {
+    const repeats = getLoopDuplicationRepeats({
+      loop,
+      continuous,
+      visibleCount,
+      childCount: validChildren.length,
+    });
+    if (repeats > 1) {
+      effectiveChildren = Array.from({ length: repeats }, (_, repeat) =>
+        validChildren.map((child, i) =>
+          React.cloneElement(child as React.ReactElement, {
+            key: `loopdup-${repeat}-${i}`,
+          }),
+        ),
+      ).flat();
+    }
   }
 
   const realSlideCount = validChildren.length;
@@ -351,8 +376,12 @@ function CarouselInner({
 
   const controlsVisible = showControls && !continuous;
   const controlsOutside = controlsPosition === "outside";
+  const dotsVisible = showDots && slideCount > 1;
+  const verticalDotsVisible = dotsVisible && isVertical;
+  const horizontalDotsVisible = dotsVisible && !isVertical;
   const controlSize = 32;
   const outsidePadding = controlSize + 8;
+  const sideDotsPadding = 20;
 
   const viewportShellStyle: React.CSSProperties = {
     position: "relative",
@@ -361,6 +390,7 @@ function CarouselInner({
         ? { paddingTop: outsidePadding, paddingBottom: outsidePadding }
         : { paddingLeft: outsidePadding, paddingRight: outsidePadding }
       : {}),
+    ...(verticalDotsVisible ? { paddingRight: sideDotsPadding } : {}),
   };
 
   const prevControlPosition: React.CSSProperties = controlsOutside
@@ -493,10 +523,44 @@ function CarouselInner({
             </button>
           </>
         )}
+
+        {/* Pagination dots (vertical = side) */}
+        {verticalDotsVisible && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: 0,
+              transform: "translateY(-50%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+            }}
+          >
+            {Array.from({ length: slideCount }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollTo(i)}
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "opacity 150ms",
+                  background: "var(--foreground, #000)",
+                  opacity: i === selectedIndex ? 1 : 0.2,
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Pagination dots */}
-      {showDots && slideCount > 1 && (
+      {/* Pagination dots (horizontal = below) */}
+      {horizontalDotsVisible && (
         <div
           style={{
             display: "flex",

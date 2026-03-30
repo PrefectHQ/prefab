@@ -59,7 +59,7 @@ class Carousel(ContainerComponent):
         description="Slides visible at once. Float for peek: 1.3 = 1 slide + 15% peek each side. None = natural sizing (default for marquee when visible is omitted).",
     )
     gap: int = Field(
-        default=0,
+        default=16,
         description="Pixels between slides",
     )
     height: int | None = Field(
@@ -134,6 +134,9 @@ class Carousel(ContainerComponent):
         # Marquee defaults to natural sizing unless visible is explicitly set.
         if kwargs.get("continuous") and "visible" not in kwargs:
             kwargs["visible"] = None
+        # Fade mode is single-slide only.
+        if kwargs.get("effect") == "fade":
+            kwargs["visible"] = 1
         super().__init__(**kwargs)
 
     def to_json(self) -> dict[str, Any]:
