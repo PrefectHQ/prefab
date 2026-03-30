@@ -12,12 +12,12 @@ Carousel is a single component that handles three use cases through configuratio
 
 Swipe, drag, or use the arrow buttons to navigate. Each slide fills the viewport by default:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSk6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(show_dots=True):
+with Carousel(show_dots=True, css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -26,6 +26,7 @@ with Carousel(show_dots=True):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1,
     "gap": 0,
@@ -75,12 +76,12 @@ with Carousel(show_dots=True):
 
 Use a float for `visible` to show a preview of adjacent slides. `visible=1.3` shows the current slide plus 15% of the previous and next slides peeking from each edge. Pair with `align="center"` to keep the active slide centered:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgdmlzaWJsZT0xLjMsIGFsaWduPSJjZW50ZXIiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgdmlzaWJsZT0xLjMsIGFsaWduPSJjZW50ZXIiLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCg">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(show_dots=True, visible=1.3, align="center"):
+with Carousel(show_dots=True, visible=1.3, align="center", css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -89,6 +90,7 @@ with Carousel(show_dots=True, visible=1.3, align="center"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1.3,
     "gap": 0,
@@ -138,12 +140,12 @@ with Carousel(show_dots=True, visible=1.3, align="center"):
 
 Show several slides at once with `visible=3`. Add `gap` for spacing between them:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":3.0,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTMsIGdhcD0xNiwgc2hvd19kb3RzPVRydWUpOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1waW5rLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWN5YW4tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQo">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":3.0,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTMsIGdhcD0xNiwgc2hvd19kb3RzPVRydWUsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXBpbmstNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctY3lhbi01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCg">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(visible=3, gap=16, show_dots=True):
+with Carousel(visible=3, gap=16, show_dots=True, css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "120px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "120px"})
@@ -154,6 +156,7 @@ with Carousel(visible=3, gap=16, show_dots=True):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 3.0,
     "gap": 16,
@@ -213,12 +216,12 @@ with Carousel(visible=3, gap=16, show_dots=True):
 
 Crossfade between slides instead of sliding. Set `effect="fade"` — works well with auto-advance for ambient displays:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"fade","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChlZmZlY3Q9ImZhZGUiLCBzaG93X2RvdHM9VHJ1ZSwgYXV0b19hZHZhbmNlPTIwMDApOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCg">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"fade","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChlZmZlY3Q9ImZhZGUiLCBzaG93X2RvdHM9VHJ1ZSwgYXV0b19hZHZhbmNlPTIwMDAsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(effect="fade", show_dots=True, auto_advance=2000):
+with Carousel(effect="fade", show_dots=True, auto_advance=2000, css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -226,6 +229,7 @@ with Carousel(effect="fade", show_dots=True, auto_advance=2000):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1,
     "gap": 0,
@@ -270,12 +274,12 @@ with Carousel(effect="fade", show_dots=True, auto_advance=2000):
 
 Reduce opacity on slides that aren't in focus. Combine with `visible` and `align="center"` to highlight the active slide while hinting at what's next:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":true,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTEuMywgZGltX2luYWN0aXZlPVRydWUsIHNob3dfZG90cz1UcnVlLCBhbGlnbj0iY2VudGVyIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":true,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTEuMywgZGltX2luYWN0aXZlPVRydWUsIHNob3dfZG90cz1UcnVlLCBhbGlnbj0iY2VudGVyIiwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(visible=1.3, dim_inactive=True, show_dots=True, align="center"):
+with Carousel(visible=1.3, dim_inactive=True, show_dots=True, align="center", css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -284,6 +288,7 @@ with Carousel(visible=1.3, dim_inactive=True, show_dots=True, align="center"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1.3,
     "gap": 0,
@@ -333,12 +338,12 @@ with Carousel(visible=1.3, dim_inactive=True, show_dots=True, align="center"):
 
 Set `auto_advance` (in milliseconds) to cycle slides on a timer. The carousel pauses on hover by default — set `pause_on_hover=False` to keep it moving:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdXRzaWRlIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdXRzaWRlIiwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(auto_advance=2000, show_dots=True, controls_position="outside"):
+with Carousel(auto_advance=2000, show_dots=True, controls_position="outside", css_class="w-full"):
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
@@ -346,6 +351,7 @@ with Carousel(auto_advance=2000, show_dots=True, controls_position="outside"):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1,
     "gap": 0,
@@ -390,20 +396,20 @@ with Carousel(auto_advance=2000, show_dots=True, controls_position="outside"):
 
 Arrow buttons can overlay the slides (default) or sit outside the carousel viewport. Use `controls_position="outside"` when overlapping buttons would obscure content:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Overlay (default)","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"overlay","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-indigo-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-teal-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-rose-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Outside","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIk92ZXJsYXkgKGRlZmF1bHQpIikKICAgIHdpdGggQ2Fyb3VzZWwoc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdmVybGF5Iik6CiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctaW5kaWdvLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy10ZWFsLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1yb3NlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKCiAgICBIMygiT3V0c2lkZSIpCiAgICB3aXRoIENhcm91c2VsKHNob3dfZG90cz1UcnVlLCBjb250cm9sc19wb3NpdGlvbj0ib3V0c2lkZSIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWN5YW4tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1waW5rLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkK">
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Overlay (default)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"overlay","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-indigo-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-teal-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-rose-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Outside","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIk92ZXJsYXkgKGRlZmF1bHQpIikKICAgIHdpdGggQ2Fyb3VzZWwoc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdmVybGF5IiwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1pbmRpZ28tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXRlYWwtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXJvc2UtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQoKICAgIEgzKCJPdXRzaWRlIikKICAgIHdpdGggQ2Fyb3VzZWwoc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdXRzaWRlIiwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1jeWFuLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctcGluay01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCg">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Column, Div, H3
 
 with Column(gap=6):
     H3("Overlay (default)")
-    with Carousel(show_dots=True, controls_position="overlay"):
+    with Carousel(show_dots=True, controls_position="overlay", css_class="w-full"):
         Div(css_class="bg-indigo-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-teal-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-rose-500 rounded-lg", style={"height": "120px"})
 
     H3("Outside")
-    with Carousel(show_dots=True, controls_position="outside"):
+    with Carousel(show_dots=True, controls_position="outside", css_class="w-full"):
         Div(css_class="bg-cyan-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-pink-500 rounded-lg", style={"height": "120px"})
@@ -416,6 +422,7 @@ with Column(gap=6):
     "children": [
       {"content": "Overlay (default)", "type": "H3"},
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "visible": 1,
         "gap": 0,
@@ -453,6 +460,7 @@ with Column(gap=6):
       },
       {"content": "Outside", "type": "H3"},
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "visible": 1,
         "gap": 0,
@@ -499,20 +507,20 @@ with Column(gap=6):
 
 Set `direction="down"` for vertical scrolling. The carousel auto-detects its height from the first slide. Combine with `auto_advance` for an ambient vertical reel — think airport departure boards or status feeds:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Vertical with controls","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]},{"content":"Vertical reel (auto advance)","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIlZlcnRpY2FsIHdpdGggY29udHJvbHMiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBzaG93X2RvdHM9VHJ1ZSwgY29udHJvbHNfcG9zaXRpb249Im91dHNpZGUiLCBsb29wPVRydWUpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCgogICAgSDMoIlZlcnRpY2FsIHJlZWwgKGF1dG8gYWR2YW5jZSkiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Vertical with controls","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]},{"content":"Vertical reel (auto advance)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIlZlcnRpY2FsIHdpdGggY29udHJvbHMiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBzaG93X2RvdHM9VHJ1ZSwgY29udHJvbHNfcG9zaXRpb249Im91dHNpZGUiLCBsb29wPVRydWUsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKCiAgICBIMygiVmVydGljYWwgcmVlbCAoYXV0byBhZHZhbmNlKSIpCiAgICB3aXRoIENhcm91c2VsKGRpcmVjdGlvbj0iZG93biIsIGF1dG9fYWR2YW5jZT0yMDAwLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Column, Div, H3
 
 with Column(gap=6):
     H3("Vertical with controls")
-    with Carousel(direction="down", show_dots=True, controls_position="outside", loop=True):
+    with Carousel(direction="down", show_dots=True, controls_position="outside", loop=True, css_class="w-full"):
         Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
 
     H3("Vertical reel (auto advance)")
-    with Carousel(direction="down", auto_advance=2000, show_controls=False, loop=True):
+    with Carousel(direction="down", auto_advance=2000, show_controls=False, loop=True, css_class="w-full"):
         Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -525,6 +533,7 @@ with Column(gap=6):
     "children": [
       {"content": "Vertical with controls", "type": "H3"},
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "visible": 1,
         "gap": 0,
@@ -562,6 +571,7 @@ with Column(gap=6):
       },
       {"content": "Vertical reel (auto advance)", "type": "H3"},
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "visible": 1,
         "gap": 0,
@@ -610,13 +620,13 @@ Set `continuous=True` for smooth, never-ending scroll. Control the pace with `sp
 
 Stack multiple marquees at different speeds for a layered, dynamic feel:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":1,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Python","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"React","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"TypeScript","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tailwind","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Embla","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Prefab","variant":"success"}]},{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":3,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Charts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tables","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Forms","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Buttons","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Cards","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Dialogs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Mermaid","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Carousel","variant":"success"}]},{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":6,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgQmFkZ2UKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD0xLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUpOgogICAgICAgIEJhZGdlKCJQeXRob24iLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJSZWFjdCIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlR5cGVTY3JpcHQiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYWlsd2luZCIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkVtYmxhIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlByZWZhYiIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQoKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD0zLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUpOgogICAgICAgIEJhZGdlKCJDaGFydHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYWJsZXMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJGb3JtcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkJ1dHRvbnMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJDYXJkcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkRpYWxvZ3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJNZXJtYWlkIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkNhcm91c2VsIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCgogICAgd2l0aCBDYXJvdXNlbChjb250aW51b3VzPVRydWUsIHNwZWVkPTYsIHNob3dfY29udHJvbHM9RmFsc2UsIGxvb3A9VHJ1ZSk6CiAgICAgICAgQmFkZ2UoIkFsZXJ0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlJlcG9ydHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJFdmVudHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYXNrcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIk1ldHJpY3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJMb2dzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiUmVhbHRpbWUiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiU3RyZWFtaW5nIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"w-full","type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":1,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Python","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"React","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"TypeScript","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tailwind","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Embla","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Prefab","variant":"success"}],"visible":null},{"cssClass":"w-full","type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":3,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Charts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tables","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Forms","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Buttons","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Cards","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Dialogs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Mermaid","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Carousel","variant":"success"}],"visible":null},{"cssClass":"w-full","type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":6,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}],"visible":null}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgQmFkZ2UKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD0xLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICAgICAgQmFkZ2UoIlB5dGhvbiIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlJlYWN0IiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiVHlwZVNjcmlwdCIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlRhaWx3aW5kIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiRW1ibGEiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCgogICAgd2l0aCBDYXJvdXNlbChjb250aW51b3VzPVRydWUsIHNwZWVkPTMsIHNob3dfY29udHJvbHM9RmFsc2UsIGxvb3A9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBCYWRnZSgiQ2hhcnRzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiVGFibGVzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiRm9ybXMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJCdXR0b25zIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiQ2FyZHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJEaWFsb2dzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiTWVybWFpZCIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJDYXJvdXNlbCIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQoKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD02LCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICAgICAgQmFkZ2UoIkFsZXJ0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlJlcG9ydHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJFdmVudHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYXNrcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIk1ldHJpY3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJMb2dzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiUmVhbHRpbWUiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiU3RyZWFtaW5nIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCg">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Column, Badge
 
 with Column(gap=4):
-    with Carousel(continuous=True, speed=1, show_controls=False, loop=True):
+    with Carousel(continuous=True, speed=1, show_controls=False, loop=True, css_class="w-full"):
         Badge("Python", css_class="mx-2")
         Badge("React", css_class="mx-2")
         Badge("TypeScript", css_class="mx-2")
@@ -624,7 +634,7 @@ with Column(gap=4):
         Badge("Embla", variant="success", css_class="mx-2")
         Badge("Prefab", variant="success", css_class="mx-2")
 
-    with Carousel(continuous=True, speed=3, show_controls=False, loop=True):
+    with Carousel(continuous=True, speed=3, show_controls=False, loop=True, css_class="w-full"):
         Badge("Charts", css_class="mx-2")
         Badge("Tables", css_class="mx-2")
         Badge("Forms", css_class="mx-2")
@@ -634,7 +644,7 @@ with Column(gap=4):
         Badge("Mermaid", variant="success", css_class="mx-2")
         Badge("Carousel", variant="success", css_class="mx-2")
 
-    with Carousel(continuous=True, speed=6, show_controls=False, loop=True):
+    with Carousel(continuous=True, speed=6, show_controls=False, loop=True, css_class="w-full"):
         Badge("Alerts", css_class="mx-2")
         Badge("Reports", css_class="mx-2")
         Badge("Events", css_class="mx-2")
@@ -651,6 +661,7 @@ with Column(gap=4):
     "type": "Column",
     "children": [
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "gap": 0,
         "direction": "left",
@@ -679,9 +690,11 @@ with Column(gap=4):
           {"cssClass": "mx-2", "type": "Badge", "label": "Tailwind", "variant": "default"},
           {"cssClass": "mx-2", "type": "Badge", "label": "Embla", "variant": "success"},
           {"cssClass": "mx-2", "type": "Badge", "label": "Prefab", "variant": "success"}
-        ]
+        ],
+        "visible": null
       },
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "gap": 0,
         "direction": "left",
@@ -707,9 +720,11 @@ with Column(gap=4):
           {"cssClass": "mx-2", "type": "Badge", "label": "Dialogs", "variant": "default"},
           {"cssClass": "mx-2", "type": "Badge", "label": "Mermaid", "variant": "success"},
           {"cssClass": "mx-2", "type": "Badge", "label": "Carousel", "variant": "success"}
-        ]
+        ],
+        "visible": null
       },
       {
+        "cssClass": "w-full",
         "type": "Carousel",
         "gap": 0,
         "direction": "left",
@@ -740,7 +755,8 @@ with Column(gap=4):
             "label": "Streaming",
             "variant": "success"
           }
-        ]
+        ],
+        "visible": null
       }
     ]
   }
@@ -753,12 +769,12 @@ with Column(gap=4):
 
 Combine `continuous` with `visible` to control how large each item appears in the marquee:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":3.0,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":4,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKGNvbnRpbnVvdXM9VHJ1ZSwgc3BlZWQ9NCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlLCB2aXNpYmxlPTMpOgogICAgQmFkZ2UoIkFsZXJ0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiUmVwb3J0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiRXZlbnRzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJUYXNrcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTWV0cmljcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTG9ncyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiUmVhbHRpbWUiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJTdHJlYW1pbmciLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikK">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":3.0,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":4,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKGNvbnRpbnVvdXM9VHJ1ZSwgc3BlZWQ9NCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlLCB2aXNpYmxlPTMsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBCYWRnZSgiQWxlcnRzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJSZXBvcnRzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJFdmVudHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIlRhc2tzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJNZXRyaWNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJMb2dzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJSZWFsdGltZSIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIlN0cmVhbWluZyIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Badge
 
-with Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=3):
+with Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=3, css_class="w-full"):
     Badge("Alerts", css_class="mx-2")
     Badge("Reports", css_class="mx-2")
     Badge("Events", css_class="mx-2")
@@ -771,6 +787,7 @@ with Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 3.0,
     "gap": 0,
@@ -813,12 +830,12 @@ with Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=
 
 Disable looping to stop at the ends. The arrow buttons automatically hide when there's nowhere to scroll:
 
-<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":false,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChsb29wPUZhbHNlLCBzaG93X2RvdHM9VHJ1ZSk6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":false,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChsb29wPUZhbHNlLCBzaG93X2RvdHM9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-with Carousel(loop=False, show_dots=True):
+with Carousel(loop=False, show_dots=True, css_class="w-full"):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -826,6 +843,7 @@ with Carousel(loop=False, show_dots=True):
 ```json Protocol icon="brackets-curly"
 {
   "view": {
+    "cssClass": "w-full",
     "type": "Carousel",
     "visible": 1,
     "gap": 0,

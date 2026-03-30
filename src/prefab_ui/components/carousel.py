@@ -135,3 +135,11 @@ class Carousel(ContainerComponent):
         if kwargs.get("continuous") and "visible" not in kwargs:
             kwargs["visible"] = None
         super().__init__(**kwargs)
+
+    def to_json(self) -> dict[str, Any]:
+        data = super().to_json()
+        # Keep explicit visible=None on the wire so the renderer can
+        # differentiate it from an omitted value.
+        if "visible" in self.model_fields_set and self.visible is None:
+            data["visible"] = None
+        return data

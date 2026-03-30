@@ -91,7 +91,11 @@ export function PrefabCarousel({
   children,
 }: CarouselProps) {
   const isVertical = direction === "up" || direction === "down";
-  const effectiveVisible = visible ?? (continuous ? null : 1);
+  // Distinguish explicit `null` from an omitted prop:
+  // - `visible: null` => natural sizing
+  // - `visible: undefined` => mode default (1 for non-continuous, null for continuous)
+  const effectiveVisible =
+    visible !== undefined ? visible : continuous ? null : 1;
 
   // Filter children
   const validChildren = Children.toArray(children).filter(
