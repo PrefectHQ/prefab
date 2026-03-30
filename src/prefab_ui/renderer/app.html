@@ -9615,6 +9615,10 @@ try:
                 continue
 
     if _pg_healed is None:
+        # No compilable prefix found (e.g. first line is mid-edit).
+        # Raise the real syntax error from the current code so the UI
+        # shows a useful line/message instead of a generic healer error.
+        compile(_pg_code, "<string>", "exec")
         raise SyntaxError("Could not heal partial code")
 
     _pg_prev_lines = _pg_lines
