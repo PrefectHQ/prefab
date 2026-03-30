@@ -462,32 +462,57 @@
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Carousel, Card, CardContent, Text, Heading\n\nwith Carousel(show_dots=True, css_class=\"w-full max-w-md\"):\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Welcome\", level=3)\n            Text(\"Get started with Prefab in minutes.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Components\", level=3)\n            Text(\"50+ components, from buttons to charts.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Reactive\", level=3)\n            Text(\"State management built into the framework.\")"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(show_dots=True):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"160px\"})"
   },
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Carousel, Card, CardContent, Heading, Text\n\nwith Carousel(auto_advance=3000, show_dots=True, css_class=\"w-full max-w-md\"):\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 1\", level=3)\n            Text(\"Install prefab-ui from PyPI.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 2\", level=3)\n            Text(\"Create your first PrefabApp.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 3\", level=3)\n            Text(\"Connect it to FastMCP.\")"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(show_dots=True, visible=1.3, align=\"center\"):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"160px\"})"
   },
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Carousel, Badge\n\nwith Carousel(\n    direction=\"down\",\n    auto_advance=2000,\n    show_controls=False,\n    css_class=\"h-[120px] overflow-hidden\",\n):\n    Badge(\"Python\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"TypeScript\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"React\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"Tailwind\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(visible=3, gap=16, show_dots=True):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-pink-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-cyan-500 rounded-lg\", style={\"height\": \"120px\"})"
   },
   {
     "title": "icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Carousel, Badge\n\nwith Carousel(\n    continuous=True,\n    speed=3,\n    show_controls=False,\n    css_class=\"w-full\",\n):\n    Badge(\"Buttons\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Cards\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Charts\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Tables\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Forms\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Dialogs\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Mermaid\", variant=\"success\", css_class=\"mx-2\")\n    Badge(\"Carousel\", variant=\"success\", css_class=\"mx-2\")"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(effect=\"fade\", show_dots=True, auto_advance=2000):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})"
   },
   {
-    "title": "from prefab_ui.components import Carousel, Div",
+    "title": "icon=\"python\"",
     "category": "Components",
-    "code": "# Outside arrows + dots\nwith Carousel(show_controls=True, controls_position=\"outside\", show_dots=True):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n\n# Overlay arrows + no dots\nwith Carousel(show_controls=True, controls_position=\"overlay\", show_dots=False):\n    Div(css_class=\"bg-cyan-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-pink-500 rounded-lg\", style={\"height\": \"160px\"})"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(visible=1.3, dim_inactive=True, show_dots=True, align=\"center\"):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"160px\"})"
   },
   {
-    "title": "from prefab_ui.components import Carousel, Badge, Div",
+    "title": "icon=\"python\"",
     "category": "Components",
-    "code": "# Natural-size marquee (visible omitted)\nwith Carousel(continuous=True, speed=2, show_controls=False):\n    Badge(\"Buttons\", css_class=\"mx-2\")\n    Badge(\"Cards\", css_class=\"mx-2\")\n    Badge(\"Charts\", css_class=\"mx-2\")\n    Badge(\"Tables\", css_class=\"mx-2\")\n\n# 3-up continuous marquee\nwith Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"120px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"120px\"})"
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(auto_advance=2000, show_dots=True, controls_position=\"outside\"):\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Column, Div, H3\n\nwith Column(gap=6):\n    H3(\"Overlay (default)\")\n    with Carousel(show_dots=True, controls_position=\"overlay\"):\n        Div(css_class=\"bg-indigo-500 rounded-lg\", style={\"height\": \"120px\"})\n        Div(css_class=\"bg-teal-500 rounded-lg\", style={\"height\": \"120px\"})\n        Div(css_class=\"bg-rose-500 rounded-lg\", style={\"height\": \"120px\"})\n\n    H3(\"Outside\")\n    with Carousel(show_dots=True, controls_position=\"outside\"):\n        Div(css_class=\"bg-cyan-500 rounded-lg\", style={\"height\": \"120px\"})\n        Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"120px\"})\n        Div(css_class=\"bg-pink-500 rounded-lg\", style={\"height\": \"120px\"})"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Column, Div, H3\n\nwith Column(gap=6):\n    H3(\"Vertical with controls\")\n    with Carousel(direction=\"down\", show_dots=True, controls_position=\"outside\", loop=True):\n        Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n        Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n        Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})\n\n    H3(\"Vertical reel (auto advance)\")\n    with Carousel(direction=\"down\", auto_advance=2000, show_controls=False, loop=True):\n        Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n        Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n        Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Column, Badge\n\nwith Column(gap=4):\n    with Carousel(continuous=True, speed=1, show_controls=False, loop=True):\n        Badge(\"Python\", css_class=\"mx-2\")\n        Badge(\"React\", css_class=\"mx-2\")\n        Badge(\"TypeScript\", css_class=\"mx-2\")\n        Badge(\"Tailwind\", css_class=\"mx-2\")\n        Badge(\"Embla\", variant=\"success\", css_class=\"mx-2\")\n        Badge(\"Prefab\", variant=\"success\", css_class=\"mx-2\")\n\n    with Carousel(continuous=True, speed=3, show_controls=False, loop=True):\n        Badge(\"Charts\", css_class=\"mx-2\")\n        Badge(\"Tables\", css_class=\"mx-2\")\n        Badge(\"Forms\", css_class=\"mx-2\")\n        Badge(\"Buttons\", css_class=\"mx-2\")\n        Badge(\"Cards\", css_class=\"mx-2\")\n        Badge(\"Dialogs\", css_class=\"mx-2\")\n        Badge(\"Mermaid\", variant=\"success\", css_class=\"mx-2\")\n        Badge(\"Carousel\", variant=\"success\", css_class=\"mx-2\")\n\n    with Carousel(continuous=True, speed=6, show_controls=False, loop=True):\n        Badge(\"Alerts\", css_class=\"mx-2\")\n        Badge(\"Reports\", css_class=\"mx-2\")\n        Badge(\"Events\", css_class=\"mx-2\")\n        Badge(\"Tasks\", css_class=\"mx-2\")\n        Badge(\"Metrics\", css_class=\"mx-2\")\n        Badge(\"Logs\", css_class=\"mx-2\")\n        Badge(\"Realtime\", variant=\"success\", css_class=\"mx-2\")\n        Badge(\"Streaming\", variant=\"success\", css_class=\"mx-2\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Badge\n\nwith Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=3):\n    Badge(\"Alerts\", css_class=\"mx-2\")\n    Badge(\"Reports\", css_class=\"mx-2\")\n    Badge(\"Events\", css_class=\"mx-2\")\n    Badge(\"Tasks\", css_class=\"mx-2\")\n    Badge(\"Metrics\", css_class=\"mx-2\")\n    Badge(\"Logs\", css_class=\"mx-2\")\n    Badge(\"Realtime\", variant=\"success\", css_class=\"mx-2\")\n    Badge(\"Streaming\", variant=\"success\", css_class=\"mx-2\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(loop=False, show_dots=True):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"160px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"160px\"})"
   },
   {
     "title": "Python icon=\"python\"",

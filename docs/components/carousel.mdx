@@ -6,41 +6,26 @@ icon: gallery-horizontal-end
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-One component, three personalities. Carousel handles interactive slideshows, ambient reels, and continuous marquees — all through configuration, powered by [Embla Carousel](https://www.embla-carousel.com/).
-
-**Carousel** — user navigates with arrows, dots, or swipe. Use `visible` to control how many items are shown at once.
-
-**Reel** — auto-advances on a timer, then holds between ticks. Think airport departure boards.
-
-**Marquee** — continuous smooth scroll that never stops. Think news tickers.
+Carousel is a single component that handles three use cases through configuration: interactive slideshows where users navigate with arrows and dots, ambient reels that auto-advance on a timer, and continuous marquees that scroll smoothly without stopping. Each child becomes one slide.
 
 ## Carousel
 
-The default mode. Users navigate with arrows (or swipe/drag), with optional dots for direct access:
+Swipe, drag, or use the arrow buttons to navigate. Each slide fills the viewport by default:
 
-<ComponentPreview json={{"view":{"cssClass":"w-full max-w-md","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Welcome","type":"Heading","level":3},{"content":"Get started with Prefab in minutes.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Components","type":"Heading","level":3},{"content":"50+ components, from buttons to charts.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Reactive","type":"Heading","level":3},{"content":"State management built into the framework.","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENhcmQsIENhcmRDb250ZW50LCBUZXh0LCBIZWFkaW5nCgp3aXRoIENhcm91c2VsKHNob3dfZG90cz1UcnVlLCBjc3NfY2xhc3M9InctZnVsbCBtYXgtdy1tZCIpOgogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiV2VsY29tZSIsIGxldmVsPTMpCiAgICAgICAgICAgIFRleHQoIkdldCBzdGFydGVkIHdpdGggUHJlZmFiIGluIG1pbnV0ZXMuIikKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9Im1pbi13LWZ1bGwiKToKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIEhlYWRpbmcoIkNvbXBvbmVudHMiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCI1MCsgY29tcG9uZW50cywgZnJvbSBidXR0b25zIHRvIGNoYXJ0cy4iKQogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiUmVhY3RpdmUiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCJTdGF0ZSBtYW5hZ2VtZW50IGJ1aWx0IGludG8gdGhlIGZyYW1ld29yay4iKQo">
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSk6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
 <CodeGroup>
 ```python icon="python"
-from prefab_ui.components import Carousel, Card, CardContent, Text, Heading
+from prefab_ui.components import Carousel, Div
 
-with Carousel(show_dots=True, css_class="w-full max-w-md"):
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Welcome", level=3)
-            Text("Get started with Prefab in minutes.")
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Components", level=3)
-            Text("50+ components, from buttons to charts.")
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Reactive", level=3)
-            Text("State management built into the framework.")
+with Carousel(show_dots=True):
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-amber-500 rounded-lg", style={"height": "160px"})
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "w-full max-w-md",
     "type": "Carousel",
     "visible": 1,
     "gap": 0,
@@ -60,43 +45,24 @@ with Carousel(show_dots=True, css_class="w-full max-w-md"):
     "drag": true,
     "children": [
       {
-        "cssClass": "min-w-full",
-        "type": "Card",
-        "children": [
-          {
-            "type": "CardContent",
-            "children": [
-              {"content": "Welcome", "type": "Heading", "level": 3},
-              {"content": "Get started with Prefab in minutes.", "type": "Text"}
-            ]
-          }
-        ]
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
       },
       {
-        "cssClass": "min-w-full",
-        "type": "Card",
-        "children": [
-          {
-            "type": "CardContent",
-            "children": [
-              {"content": "Components", "type": "Heading", "level": 3},
-              {"content": "50+ components, from buttons to charts.", "type": "Text"}
-            ]
-          }
-        ]
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
       },
       {
-        "cssClass": "min-w-full",
-        "type": "Card",
-        "children": [
-          {
-            "type": "CardContent",
-            "children": [
-              {"content": "Reactive", "type": "Heading", "level": 3},
-              {"content": "State management built into the framework.", "type": "Text"}
-            ]
-          }
-        ]
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-amber-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
       }
     ]
   }
@@ -105,39 +71,95 @@ with Carousel(show_dots=True, css_class="w-full max-w-md"):
 </CodeGroup>
 </ComponentPreview>
 
-## Auto-Advancing Carousel
+## Peek
 
-Add `auto_advance` to cycle slides automatically. Users can still navigate manually — interaction pauses the timer:
+Use a float for `visible` to show a preview of adjacent slides. `visible=1.3` shows the current slide plus 15% of the previous and next slides peeking from each edge. Pair with `align="center"` to keep the active slide centered:
 
-<ComponentPreview json={{"view":{"cssClass":"w-full max-w-md","type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":3000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 1","type":"Heading","level":3},{"content":"Install prefab-ui from PyPI.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 2","type":"Heading","level":3},{"content":"Create your first PrefabApp.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 3","type":"Heading","level":3},{"content":"Connect it to FastMCP.","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENhcmQsIENhcmRDb250ZW50LCBIZWFkaW5nLCBUZXh0Cgp3aXRoIENhcm91c2VsKGF1dG9fYWR2YW5jZT0zMDAwLCBzaG93X2RvdHM9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwgbWF4LXctbWQiKToKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9Im1pbi13LWZ1bGwiKToKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIEhlYWRpbmcoIlN0ZXAgMSIsIGxldmVsPTMpCiAgICAgICAgICAgIFRleHQoIkluc3RhbGwgcHJlZmFiLXVpIGZyb20gUHlQSS4iKQogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiU3RlcCAyIiwgbGV2ZWw9MykKICAgICAgICAgICAgVGV4dCgiQ3JlYXRlIHlvdXIgZmlyc3QgUHJlZmFiQXBwLiIpCiAgICB3aXRoIENhcmQoY3NzX2NsYXNzPSJtaW4tdy1mdWxsIik6CiAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICBIZWFkaW5nKCJTdGVwIDMiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCJDb25uZWN0IGl0IHRvIEZhc3RNQ1AuIikK">
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgdmlzaWJsZT0xLjMsIGFsaWduPSJjZW50ZXIiKToKICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYW1iZXItNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
-from prefab_ui.components import Carousel, Card, CardContent, Heading, Text
+from prefab_ui.components import Carousel, Div
 
-with Carousel(auto_advance=3000, show_dots=True, css_class="w-full max-w-md"):
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Step 1", level=3)
-            Text("Install prefab-ui from PyPI.")
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Step 2", level=3)
-            Text("Create your first PrefabApp.")
-    with Card(css_class="min-w-full"):
-        with CardContent():
-            Heading("Step 3", level=3)
-            Text("Connect it to FastMCP.")
+with Carousel(show_dots=True, visible=1.3, align="center"):
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-amber-500 rounded-lg", style={"height": "160px"})
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "w-full max-w-md",
     "type": "Carousel",
-    "visible": 1,
+    "visible": 1.3,
     "gap": 0,
     "direction": "left",
     "loop": true,
-    "autoAdvance": 3000,
+    "autoAdvance": 0,
+    "continuous": false,
+    "speed": 2,
+    "effect": "slide",
+    "dimInactive": false,
+    "showControls": true,
+    "controlsPosition": "outside",
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "center",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-amber-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Multiple Slides
+
+Show several slides at once with `visible=3`. Add `gap` for spacing between them:
+
+<ComponentPreview json={{"view":{"type":"Carousel","visible":3.0,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTMsIGdhcD0xNiwgc2hvd19kb3RzPVRydWUpOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1waW5rLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWN5YW4tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Div
+
+with Carousel(visible=3, gap=16, show_dots=True):
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "120px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "120px"})
+    Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
+    Div(css_class="bg-pink-500 rounded-lg", style={"height": "120px"})
+    Div(css_class="bg-cyan-500 rounded-lg", style={"height": "120px"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Carousel",
+    "visible": 3.0,
+    "gap": 16,
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 0,
     "continuous": false,
     "speed": 2,
     "effect": "slide",
@@ -151,41 +173,318 @@ with Carousel(auto_advance=3000, show_dots=True, css_class="w-full max-w-md"):
     "drag": true,
     "children": [
       {
-        "cssClass": "min-w-full",
-        "type": "Card",
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      },
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      },
+      {
+        "cssClass": "bg-amber-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      },
+      {
+        "cssClass": "bg-pink-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      },
+      {
+        "cssClass": "bg-cyan-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "120px"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Fade
+
+Crossfade between slides instead of sliding. Set `effect="fade"` — works well with auto-advance for ambient displays:
+
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"fade","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChlZmZlY3Q9ImZhZGUiLCBzaG93X2RvdHM9VHJ1ZSwgYXV0b19hZHZhbmNlPTIwMDApOgogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Div
+
+with Carousel(effect="fade", show_dots=True, auto_advance=2000):
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Carousel",
+    "visible": 1,
+    "gap": 0,
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 2000,
+    "continuous": false,
+    "speed": 2,
+    "effect": "fade",
+    "dimInactive": false,
+    "showControls": true,
+    "controlsPosition": "outside",
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Dim Inactive
+
+Reduce opacity on slides that aren't in focus. Combine with `visible` and `align="center"` to highlight the active slide while hinting at what's next:
+
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1.3,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":true,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"center","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbCh2aXNpYmxlPTEuMywgZGltX2luYWN0aXZlPVRydWUsIHNob3dfZG90cz1UcnVlLCBhbGlnbj0iY2VudGVyIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Div
+
+with Carousel(visible=1.3, dim_inactive=True, show_dots=True, align="center"):
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-amber-500 rounded-lg", style={"height": "160px"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Carousel",
+    "visible": 1.3,
+    "gap": 0,
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 0,
+    "continuous": false,
+    "speed": 2,
+    "effect": "slide",
+    "dimInactive": true,
+    "showControls": true,
+    "controlsPosition": "outside",
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "center",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-amber-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Auto Advance
+
+Set `auto_advance` (in milliseconds) to cycle slides on a timer. The carousel pauses on hover by default — set `pause_on_hover=False` to keep it moving:
+
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdXRzaWRlIik6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCiAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Div
+
+with Carousel(auto_advance=2000, show_dots=True, controls_position="outside"):
+    Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Carousel",
+    "visible": 1,
+    "gap": 0,
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 2000,
+    "continuous": false,
+    "speed": 2,
+    "effect": "slide",
+    "dimInactive": false,
+    "showControls": true,
+    "controlsPosition": "outside",
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Controls Position
+
+Arrow buttons can overlay the slides (default) or sit outside the carousel viewport. Use `controls_position="outside"` when overlapping buttons would obscure content:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Overlay (default)","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"overlay","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-indigo-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-teal-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-rose-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Outside","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-pink-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIk92ZXJsYXkgKGRlZmF1bHQpIikKICAgIHdpdGggQ2Fyb3VzZWwoc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJvdmVybGF5Iik6CiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctaW5kaWdvLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy10ZWFsLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1yb3NlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKCiAgICBIMygiT3V0c2lkZSIpCiAgICB3aXRoIENhcm91c2VsKHNob3dfZG90cz1UcnVlLCBjb250cm9sc19wb3NpdGlvbj0ib3V0c2lkZSIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWN5YW4tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1waW5rLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Column, Div, H3
+
+with Column(gap=6):
+    H3("Overlay (default)")
+    with Carousel(show_dots=True, controls_position="overlay"):
+        Div(css_class="bg-indigo-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-teal-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-rose-500 rounded-lg", style={"height": "120px"})
+
+    H3("Outside")
+    with Carousel(show_dots=True, controls_position="outside"):
+        Div(css_class="bg-cyan-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-pink-500 rounded-lg", style={"height": "120px"})
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-6",
+    "type": "Column",
+    "children": [
+      {"content": "Overlay (default)", "type": "H3"},
+      {
+        "type": "Carousel",
+        "visible": 1,
+        "gap": 0,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": false,
+        "speed": 2,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": true,
+        "controlsPosition": "overlay",
+        "showDots": true,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
         "children": [
           {
-            "type": "CardContent",
-            "children": [
-              {"content": "Step 1", "type": "Heading", "level": 3},
-              {"content": "Install prefab-ui from PyPI.", "type": "Text"}
-            ]
+            "cssClass": "bg-indigo-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
+          {
+            "cssClass": "bg-teal-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
+          {
+            "cssClass": "bg-rose-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
           }
         ]
       },
+      {"content": "Outside", "type": "H3"},
       {
-        "cssClass": "min-w-full",
-        "type": "Card",
+        "type": "Carousel",
+        "visible": 1,
+        "gap": 0,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": false,
+        "speed": 2,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": true,
+        "controlsPosition": "outside",
+        "showDots": true,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
         "children": [
           {
-            "type": "CardContent",
-            "children": [
-              {"content": "Step 2", "type": "Heading", "level": 3},
-              {"content": "Create your first PrefabApp.", "type": "Text"}
-            ]
-          }
-        ]
-      },
-      {
-        "cssClass": "min-w-full",
-        "type": "Card",
-        "children": [
+            "cssClass": "bg-cyan-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
           {
-            "type": "CardContent",
-            "children": [
-              {"content": "Step 3", "type": "Heading", "level": 3},
-              {"content": "Connect it to FastMCP.", "type": "Text"}
-            ]
+            "cssClass": "bg-amber-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
+          {
+            "cssClass": "bg-pink-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
           }
         ]
       }
@@ -196,71 +495,107 @@ with Carousel(auto_advance=3000, show_dots=True, css_class="w-full max-w-md"):
 </CodeGroup>
 </ComponentPreview>
 
-## Vertical Reel
+## Vertical
 
-Set `direction="down"` for a vertical reel that ticks through items. Turn off controls for an ambient display:
+Set `direction="down"` for vertical scrolling. The carousel auto-detects its height from the first slide. Combine with `auto_advance` for an ambient vertical reel — think airport departure boards or status feeds:
 
-<ComponentPreview json={{"view":{"cssClass":"h-[120px] overflow-hidden","type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"Python","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"TypeScript","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"React","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"Tailwind","variant":"secondary"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKAogICAgZGlyZWN0aW9uPSJkb3duIiwKICAgIGF1dG9fYWR2YW5jZT0yMDAwLAogICAgc2hvd19jb250cm9scz1GYWxzZSwKICAgIGNzc19jbGFzcz0iaC1bMTIwcHhdIG92ZXJmbG93LWhpZGRlbiIsCik6CiAgICBCYWRnZSgiUHl0aG9uIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiwgY3NzX2NsYXNzPSJtaW4taC1bMTIwcHhdIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHRleHQtbGciKQogICAgQmFkZ2UoIlR5cGVTY3JpcHQiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCiAgICBCYWRnZSgiUmVhY3QiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCiAgICBCYWRnZSgiVGFpbHdpbmQiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCg">
+<ComponentPreview json={{"view":{"cssClass":"gap-6","type":"Column","children":[{"content":"Vertical with controls","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]},{"content":"Vertical reel (auto advance)","type":"H3"},{"type":"Carousel","visible":1,"gap":0,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgSDMoIlZlcnRpY2FsIHdpdGggY29udHJvbHMiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBzaG93X2RvdHM9VHJ1ZSwgY29udHJvbHNfcG9zaXRpb249Im91dHNpZGUiLCBsb29wPVRydWUpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCgogICAgSDMoIlZlcnRpY2FsIHJlZWwgKGF1dG8gYWR2YW5jZSkiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
-from prefab_ui.components import Carousel, Badge
+from prefab_ui.components import Carousel, Column, Div, H3
 
-with Carousel(
-    direction="down",
-    auto_advance=2000,
-    show_controls=False,
-    css_class="h-[120px] overflow-hidden",
-):
-    Badge("Python", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
-    Badge("TypeScript", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
-    Badge("React", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
-    Badge("Tailwind", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
+with Column(gap=6):
+    H3("Vertical with controls")
+    with Carousel(direction="down", show_dots=True, controls_position="outside", loop=True):
+        Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+        Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+        Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
+
+    H3("Vertical reel (auto advance)")
+    with Carousel(direction="down", auto_advance=2000, show_controls=False, loop=True):
+        Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
+        Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
+        Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "h-[120px] overflow-hidden",
-    "type": "Carousel",
-    "visible": 1,
-    "gap": 0,
-    "direction": "down",
-    "loop": true,
-    "autoAdvance": 2000,
-    "continuous": false,
-    "speed": 2,
-    "effect": "slide",
-    "dimInactive": false,
-    "showControls": false,
-    "controlsPosition": "outside",
-    "showDots": false,
-    "pauseOnHover": true,
-    "align": "start",
-    "slidesToScroll": 1,
-    "drag": true,
+    "cssClass": "gap-6",
+    "type": "Column",
     "children": [
+      {"content": "Vertical with controls", "type": "H3"},
       {
-        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
-        "type": "Badge",
-        "label": "Python",
-        "variant": "secondary"
+        "type": "Carousel",
+        "visible": 1,
+        "gap": 0,
+        "direction": "down",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": false,
+        "speed": 2,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": true,
+        "controlsPosition": "outside",
+        "showDots": true,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          },
+          {
+            "cssClass": "bg-emerald-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          },
+          {
+            "cssClass": "bg-violet-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          }
+        ]
       },
+      {"content": "Vertical reel (auto advance)", "type": "H3"},
       {
-        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
-        "type": "Badge",
-        "label": "TypeScript",
-        "variant": "secondary"
-      },
-      {
-        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
-        "type": "Badge",
-        "label": "React",
-        "variant": "secondary"
-      },
-      {
-        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
-        "type": "Badge",
-        "label": "Tailwind",
-        "variant": "secondary"
+        "type": "Carousel",
+        "visible": 1,
+        "gap": 0,
+        "direction": "down",
+        "loop": true,
+        "autoAdvance": 2000,
+        "continuous": false,
+        "speed": 2,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": false,
+        "controlsPosition": "outside",
+        "showDots": false,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {
+            "cssClass": "bg-blue-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          },
+          {
+            "cssClass": "bg-emerald-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          },
+          {
+            "cssClass": "bg-violet-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "160px"}
+          }
+        ]
       }
     ]
   }
@@ -271,39 +606,179 @@ with Carousel(
 
 ## Marquee
 
-Set `continuous=True` for smooth, never-ending scroll. Control `speed` (1–10) and `direction`:
+Set `continuous=True` for smooth, never-ending scroll. Control the pace with `speed` (1-10). Children are automatically duplicated for seamless looping — just provide the content and the carousel handles the rest.
 
-<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":3,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Buttons","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Cards","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Charts","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Tables","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Forms","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Dialogs","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Mermaid","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Carousel","variant":"success"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKAogICAgY29udGludW91cz1UcnVlLAogICAgc3BlZWQ9MywKICAgIHNob3dfY29udHJvbHM9RmFsc2UsCiAgICBjc3NfY2xhc3M9InctZnVsbCIsCik6CiAgICBCYWRnZSgiQnV0dG9ucyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiQ2FyZHMiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIkNoYXJ0cyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiVGFibGVzIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJGb3JtcyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiRGlhbG9ncyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTWVybWFpZCIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIkNhcm91c2VsIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCg">
+Stack multiple marquees at different speeds for a layered, dynamic feel:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":1,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Python","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"React","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"TypeScript","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tailwind","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Embla","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Prefab","variant":"success"}]},{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":3,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Charts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tables","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Forms","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Buttons","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Cards","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Dialogs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Mermaid","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Carousel","variant":"success"}]},{"type":"Carousel","gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":6,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgQmFkZ2UKCndpdGggQ29sdW1uKGdhcD00KToKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD0xLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUpOgogICAgICAgIEJhZGdlKCJQeXRob24iLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJSZWFjdCIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlR5cGVTY3JpcHQiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYWlsd2luZCIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkVtYmxhIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlByZWZhYiIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQoKICAgIHdpdGggQ2Fyb3VzZWwoY29udGludW91cz1UcnVlLCBzcGVlZD0zLCBzaG93X2NvbnRyb2xzPUZhbHNlLCBsb29wPVRydWUpOgogICAgICAgIEJhZGdlKCJDaGFydHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYWJsZXMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJGb3JtcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkJ1dHRvbnMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJDYXJkcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkRpYWxvZ3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJNZXJtYWlkIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIkNhcm91c2VsIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCgogICAgd2l0aCBDYXJvdXNlbChjb250aW51b3VzPVRydWUsIHNwZWVkPTYsIHNob3dfY29udHJvbHM9RmFsc2UsIGxvb3A9VHJ1ZSk6CiAgICAgICAgQmFkZ2UoIkFsZXJ0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIlJlcG9ydHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJFdmVudHMiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJUYXNrcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICAgICAgQmFkZ2UoIk1ldHJpY3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgICAgIEJhZGdlKCJMb2dzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiUmVhbHRpbWUiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgICAgICBCYWRnZSgiU3RyZWFtaW5nIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCg">
 <CodeGroup>
 ```python icon="python"
-from prefab_ui.components import Carousel, Badge
+from prefab_ui.components import Carousel, Column, Badge
 
-with Carousel(
-    continuous=True,
-    speed=3,
-    show_controls=False,
-    css_class="w-full",
-):
-    Badge("Buttons", variant="secondary", css_class="mx-2")
-    Badge("Cards", variant="secondary", css_class="mx-2")
-    Badge("Charts", variant="secondary", css_class="mx-2")
-    Badge("Tables", variant="secondary", css_class="mx-2")
-    Badge("Forms", variant="secondary", css_class="mx-2")
-    Badge("Dialogs", variant="secondary", css_class="mx-2")
-    Badge("Mermaid", variant="success", css_class="mx-2")
-    Badge("Carousel", variant="success", css_class="mx-2")
+with Column(gap=4):
+    with Carousel(continuous=True, speed=1, show_controls=False, loop=True):
+        Badge("Python", css_class="mx-2")
+        Badge("React", css_class="mx-2")
+        Badge("TypeScript", css_class="mx-2")
+        Badge("Tailwind", css_class="mx-2")
+        Badge("Embla", variant="success", css_class="mx-2")
+        Badge("Prefab", variant="success", css_class="mx-2")
+
+    with Carousel(continuous=True, speed=3, show_controls=False, loop=True):
+        Badge("Charts", css_class="mx-2")
+        Badge("Tables", css_class="mx-2")
+        Badge("Forms", css_class="mx-2")
+        Badge("Buttons", css_class="mx-2")
+        Badge("Cards", css_class="mx-2")
+        Badge("Dialogs", css_class="mx-2")
+        Badge("Mermaid", variant="success", css_class="mx-2")
+        Badge("Carousel", variant="success", css_class="mx-2")
+
+    with Carousel(continuous=True, speed=6, show_controls=False, loop=True):
+        Badge("Alerts", css_class="mx-2")
+        Badge("Reports", css_class="mx-2")
+        Badge("Events", css_class="mx-2")
+        Badge("Tasks", css_class="mx-2")
+        Badge("Metrics", css_class="mx-2")
+        Badge("Logs", css_class="mx-2")
+        Badge("Realtime", variant="success", css_class="mx-2")
+        Badge("Streaming", variant="success", css_class="mx-2")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "w-full",
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "type": "Carousel",
+        "gap": 0,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": true,
+        "speed": 1,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": false,
+        "controlsPosition": "outside",
+        "showDots": false,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {"cssClass": "mx-2", "type": "Badge", "label": "Python", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "React", "variant": "default"},
+          {
+            "cssClass": "mx-2",
+            "type": "Badge",
+            "label": "TypeScript",
+            "variant": "default"
+          },
+          {"cssClass": "mx-2", "type": "Badge", "label": "Tailwind", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Embla", "variant": "success"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Prefab", "variant": "success"}
+        ]
+      },
+      {
+        "type": "Carousel",
+        "gap": 0,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": true,
+        "speed": 3,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": false,
+        "controlsPosition": "outside",
+        "showDots": false,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {"cssClass": "mx-2", "type": "Badge", "label": "Charts", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Tables", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Forms", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Buttons", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Cards", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Dialogs", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Mermaid", "variant": "success"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Carousel", "variant": "success"}
+        ]
+      },
+      {
+        "type": "Carousel",
+        "gap": 0,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": true,
+        "speed": 6,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": false,
+        "controlsPosition": "outside",
+        "showDots": false,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {"cssClass": "mx-2", "type": "Badge", "label": "Alerts", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Reports", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Events", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Tasks", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Metrics", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Logs", "variant": "default"},
+          {"cssClass": "mx-2", "type": "Badge", "label": "Realtime", "variant": "success"},
+          {
+            "cssClass": "mx-2",
+            "type": "Badge",
+            "label": "Streaming",
+            "variant": "success"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Marquee with Sized Slides
+
+Combine `continuous` with `visible` to control how large each item appears in the marquee:
+
+<ComponentPreview json={{"view":{"type":"Carousel","visible":3.0,"gap":0,"direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":4,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Alerts","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Reports","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Events","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Tasks","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Metrics","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Logs","variant":"default"},{"cssClass":"mx-2","type":"Badge","label":"Realtime","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Streaming","variant":"success"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKGNvbnRpbnVvdXM9VHJ1ZSwgc3BlZWQ9NCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlLCB2aXNpYmxlPTMpOgogICAgQmFkZ2UoIkFsZXJ0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiUmVwb3J0cyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiRXZlbnRzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJUYXNrcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTWV0cmljcyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTG9ncyIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiUmVhbHRpbWUiLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJTdHJlYW1pbmciLCB2YXJpYW50PSJzdWNjZXNzIiwgY3NzX2NsYXNzPSJteC0yIikK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Badge
+
+with Carousel(continuous=True, speed=4, show_controls=False, loop=True, visible=3):
+    Badge("Alerts", css_class="mx-2")
+    Badge("Reports", css_class="mx-2")
+    Badge("Events", css_class="mx-2")
+    Badge("Tasks", css_class="mx-2")
+    Badge("Metrics", css_class="mx-2")
+    Badge("Logs", css_class="mx-2")
+    Badge("Realtime", variant="success", css_class="mx-2")
+    Badge("Streaming", variant="success", css_class="mx-2")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
     "type": "Carousel",
+    "visible": 3.0,
     "gap": 0,
     "direction": "left",
     "loop": true,
     "autoAdvance": 0,
     "continuous": true,
-    "speed": 3,
+    "speed": 4,
     "effect": "slide",
     "dimInactive": false,
     "showControls": false,
@@ -314,24 +789,19 @@ with Carousel(
     "slidesToScroll": 1,
     "drag": true,
     "children": [
+      {"cssClass": "mx-2", "type": "Badge", "label": "Alerts", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Reports", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Events", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Tasks", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Metrics", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Logs", "variant": "default"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Realtime", "variant": "success"},
       {
         "cssClass": "mx-2",
         "type": "Badge",
-        "label": "Buttons",
-        "variant": "secondary"
-      },
-      {"cssClass": "mx-2", "type": "Badge", "label": "Cards", "variant": "secondary"},
-      {"cssClass": "mx-2", "type": "Badge", "label": "Charts", "variant": "secondary"},
-      {"cssClass": "mx-2", "type": "Badge", "label": "Tables", "variant": "secondary"},
-      {"cssClass": "mx-2", "type": "Badge", "label": "Forms", "variant": "secondary"},
-      {
-        "cssClass": "mx-2",
-        "type": "Badge",
-        "label": "Dialogs",
-        "variant": "secondary"
-      },
-      {"cssClass": "mx-2", "type": "Badge", "label": "Mermaid", "variant": "success"},
-      {"cssClass": "mx-2", "type": "Badge", "label": "Carousel", "variant": "success"}
+        "label": "Streaming",
+        "variant": "success"
+      }
     ]
   }
 }
@@ -339,70 +809,67 @@ with Carousel(
 </CodeGroup>
 </ComponentPreview>
 
-## Configuration Patterns
+## No Loop
 
-### Controls Placement and Dots
+Disable looping to stop at the ends. The arrow buttons automatically hide when there's nowhere to scroll:
 
-Use `controls_position` to choose where arrows render:
-
-- `"outside"` (default): arrows sit outside the viewport and do not cover slide content.
-- `"overlay"`: arrows render on top of slides.
-
-Use `show_dots=True` or `False` independently of controls.
-
-```python
+<ComponentPreview json={{"view":{"type":"Carousel","visible":1,"gap":0,"direction":"left","loop":false,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIERpdgoKd2l0aCBDYXJvdXNlbChsb29wPUZhbHNlLCBzaG93X2RvdHM9VHJ1ZSk6CiAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkK">
+<CodeGroup>
+```python icon="python"
 from prefab_ui.components import Carousel, Div
 
-# Outside arrows + dots
-with Carousel(show_controls=True, controls_position="outside", show_dots=True):
+with Carousel(loop=False, show_dots=True):
     Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
     Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
-
-# Overlay arrows + no dots
-with Carousel(show_controls=True, controls_position="overlay", show_dots=False):
-    Div(css_class="bg-cyan-500 rounded-lg", style={"height": "160px"})
-    Div(css_class="bg-amber-500 rounded-lg", style={"height": "160px"})
-    Div(css_class="bg-pink-500 rounded-lg", style={"height": "160px"})
 ```
-
-### Continuous Marquee Sizing
-
-`continuous=True` controls motion, while `visible` controls sizing:
-
-- `continuous=True` with `visible` omitted uses natural child sizing (`visible=None` behavior).
-- `continuous=True, visible=3` creates a 3-up marquee that still scrolls continuously.
-
-```python
-from prefab_ui.components import Carousel, Badge, Div
-
-# Natural-size marquee (visible omitted)
-with Carousel(continuous=True, speed=2, show_controls=False):
-    Badge("Buttons", css_class="mx-2")
-    Badge("Cards", css_class="mx-2")
-    Badge("Charts", css_class="mx-2")
-    Badge("Tables", css_class="mx-2")
-
-# 3-up continuous marquee
-with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
-    Div(css_class="bg-blue-500 rounded-lg", style={"height": "120px"})
-    Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
-    Div(css_class="bg-violet-500 rounded-lg", style={"height": "120px"})
-    Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Carousel",
+    "visible": 1,
+    "gap": 0,
+    "direction": "left",
+    "loop": false,
+    "autoAdvance": 0,
+    "continuous": false,
+    "speed": 2,
+    "effect": "slide",
+    "dimInactive": false,
+    "showControls": true,
+    "controlsPosition": "outside",
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "bg-blue-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-emerald-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      },
+      {
+        "cssClass": "bg-violet-500 rounded-lg",
+        "type": "Div",
+        "style": {"height": "160px"}
+      }
+    ]
+  }
+}
 ```
-
-### Vertical Notes
-
-- Set `direction="up"` or `direction="down"` for vertical carousels.
-- Use `height` (or fixed slide height) so the vertical viewport is deterministic.
-- With `controls_position="outside"`, vertical arrows render above/below the viewport, centered to the slide area.
+</CodeGroup>
+</ComponentPreview>
 
 ## API Reference
 
 <ParamField body="visible" type="float | None" default="1">
-  Slides visible at once. Supports peek values like `1.3`. Set to `None` for
-  natural slide sizing (default behavior when `continuous=True` and `visible`
-  is omitted).
+  Slides visible at once. Use a float for peek: `1.3` shows one slide plus 15% of the adjacent slides on each side. `None` = natural slide sizing.
 </ParamField>
 
 <ParamField body="gap" type="int" default="0">
@@ -410,7 +877,7 @@ with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
 </ParamField>
 
 <ParamField body="height" type="int | None" default="None">
-  Fixed viewport height in pixels. Useful for predictable vertical carousels.
+  Fixed height in pixels. Vertical carousels auto-detect from the first slide's content.
 </ParamField>
 
 <ParamField body="direction" type="str" default="left">
@@ -418,19 +885,19 @@ with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
 </ParamField>
 
 <ParamField body="loop" type="bool" default="True">
-  Loop back to the start after reaching the end.
+  Seamless infinite looping.
 </ParamField>
 
 <ParamField body="auto_advance" type="int" default="0">
-  Milliseconds between auto-advances. `0` = manual navigation only.
+  Milliseconds between auto-advances. `0` = manual only.
 </ParamField>
 
 <ParamField body="continuous" type="bool" default="False">
-  Smooth continuous scroll (marquee mode) instead of discrete ticks.
+  Smooth continuous scroll (marquee mode). Children are auto-duplicated for seamless looping.
 </ParamField>
 
 <ParamField body="speed" type="int" default="2">
-  Scroll speed for continuous mode (1–10).
+  Scroll speed for continuous mode (1-10).
 </ParamField>
 
 <ParamField body="effect" type="str" default="slide">
@@ -438,23 +905,23 @@ with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
 </ParamField>
 
 <ParamField body="dim_inactive" type="bool" default="False">
-  Reduce opacity of non-active slides.
+  Reduce opacity on non-active slides.
 </ParamField>
 
 <ParamField body="show_controls" type="bool" default="True">
   Show previous/next navigation arrows.
 </ParamField>
 
-<ParamField body="controls_position" type="str" default="outside">
-  Arrow placement: `"outside"` (default, off-slide) or `"overlay"` (on-slide).
+<ParamField body="controls_position" type="str" default="overlay">
+  Arrow position: `"overlay"` (on top of slides) or `"outside"` (flanking the viewport).
 </ParamField>
 
 <ParamField body="show_dots" type="bool" default="False">
-  Show pagination dots below the carousel.
+  Show pagination dots.
 </ParamField>
 
 <ParamField body="pause_on_hover" type="bool" default="True">
-  Pause auto-advance or continuous scroll when the mouse hovers.
+  Pause auto-advance or continuous scroll on hover.
 </ParamField>
 
 <ParamField body="align" type="str" default="start">
@@ -462,7 +929,7 @@ with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
 </ParamField>
 
 <ParamField body="slides_to_scroll" type="int" default="1">
-  Number of slides to advance per navigation step.
+  Slides to advance per navigation step.
 </ParamField>
 
 <ParamField body="drag" type="bool" default="True">
@@ -470,5 +937,5 @@ with Carousel(continuous=True, visible=3, gap=12, speed=2, show_controls=False):
 </ParamField>
 
 <ParamField body="css_class" type="str">
-  Additional CSS classes. Use `h-[N]` for vertical carousels to constrain height.
+  Additional CSS classes.
 </ParamField>
