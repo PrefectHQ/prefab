@@ -202,6 +202,48 @@ Grid(columns=3, gap=4)               # grid-cols-3 gap-4
 
 Use `css_class` for anything beyond these: `Column(css_class="max-w-2xl mx-auto")`.
 
+### Carousel
+
+Carousel cycles through children. Each direct child becomes one slide.
+Three modes through configuration:
+
+```python
+# Interactive carousel — arrows, dots, swipe
+with Carousel(show_dots=True):
+    Card(...)
+    Card(...)
+
+# Peek — show partial adjacent slides (1.3 = 1 full + 30% of next)
+with Carousel(visible=1.3, align="center", dim_inactive=True):
+    Card(...)
+
+# Multiple visible slides
+with Carousel(visible=3, gap=16):
+    Card(...)
+
+# Auto-advancing reel
+with Carousel(auto_advance=3000, show_controls=False):
+    Card(...)
+
+# Vertical reel
+with Carousel(direction="down", auto_advance=2000, show_controls=False):
+    Div(style={"height": "160px"})
+
+# Marquee — continuous smooth scroll
+with Carousel(continuous=True, speed=3, show_controls=False):
+    Badge("A")
+    Badge("B")
+
+# Fade transition
+with Carousel(effect="fade", auto_advance=2000, show_controls=False):
+    Card(...)
+```
+
+Key props: `visible` (int/float/None), `gap`, `direction` (left/right/up/down),
+`auto_advance` (ms), `continuous`, `speed` (1-10), `effect` (slide/fade),
+`dim_inactive`, `show_controls`, `controls_position` (overlay/outside),
+`show_dots`, `align` (start/center/end), `loop`.
+
 ## Actions
 
 Actions are Pydantic models. All support `on_success` and `on_error`:
