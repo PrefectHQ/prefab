@@ -1,0 +1,167 @@
+---
+title: Carousel
+description: JSON Schema for the Carousel component.
+---
+
+Scrollable container that cycles through children.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Carousel",
+      "default": "Carousel",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "onMount": {
+      "default": null,
+      "description": "Action(s) to execute when this component mounts."
+    },
+    "children": {
+      "type": "array",
+      "items": {
+        "$ref": "Component"
+      }
+    },
+    "let": {
+      "additionalProperties": true,
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": null,
+      "description": "Scoped bindings available to children. Values are template strings."
+    },
+    "visible": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": 1,
+      "description": "Slides visible at once. Float for peek: 1.3 = 1 slide + 15% peek each side. None = natural sizing (default for marquee when visible is omitted)."
+    },
+    "gap": {
+      "default": 16,
+      "description": "Pixels between slides",
+      "type": "integer"
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": null,
+      "description": "Fixed height in pixels. Auto-detected for vertical carousels."
+    },
+    "direction": {
+      "default": "left",
+      "description": "Scroll direction",
+      "enum": [
+        "left",
+        "right",
+        "up",
+        "down"
+      ],
+      "type": "string"
+    },
+    "loop": {
+      "default": true,
+      "description": "Loop back to start after reaching the end",
+      "type": "boolean"
+    },
+    "autoAdvance": {
+      "default": 0,
+      "description": "Milliseconds between auto-advances. 0 = manual only.",
+      "type": "integer"
+    },
+    "continuous": {
+      "default": false,
+      "description": "Smooth continuous scroll (marquee mode)",
+      "type": "boolean"
+    },
+    "speed": {
+      "default": 2,
+      "description": "Scroll speed for continuous mode (1-10)",
+      "type": "integer"
+    },
+    "effect": {
+      "default": "slide",
+      "description": "Transition effect: slide or fade",
+      "enum": [
+        "slide",
+        "fade"
+      ],
+      "type": "string"
+    },
+    "dimInactive": {
+      "default": false,
+      "description": "Reduce opacity of non-active slides",
+      "type": "boolean"
+    },
+    "showControls": {
+      "default": true,
+      "description": "Show previous/next navigation arrows",
+      "type": "boolean"
+    },
+    "controlsPosition": {
+      "default": "outside",
+      "description": "Position controls over slides (overlay) or outside the viewport",
+      "enum": [
+        "overlay",
+        "outside"
+      ],
+      "type": "string"
+    },
+    "showDots": {
+      "default": false,
+      "description": "Show pagination dots",
+      "type": "boolean"
+    },
+    "pauseOnHover": {
+      "default": true,
+      "description": "Pause auto-advance or continuous scroll on hover",
+      "type": "boolean"
+    },
+    "align": {
+      "default": "start",
+      "description": "Slide alignment within the viewport",
+      "enum": [
+        "start",
+        "center",
+        "end"
+      ],
+      "type": "string"
+    },
+    "slidesToScroll": {
+      "default": 1,
+      "description": "Number of slides to advance per step",
+      "type": "integer"
+    },
+    "drag": {
+      "default": true,
+      "description": "Allow drag/swipe to navigate",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}
+```

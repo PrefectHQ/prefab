@@ -43,6 +43,7 @@ from prefab_ui.components.combobox import (
     ComboboxOption,
     ComboboxSeparator,
 )
+from prefab_ui.components.carousel import Carousel
 from prefab_ui.components.code import Code
 from prefab_ui.components.column import Column
 from prefab_ui.components.container import Container
@@ -152,6 +153,7 @@ __all__ = [
     "CardFooter",
     "CardHeader",
     "CardTitle",
+    "Carousel",
     "Checkbox",
     "ChoiceCard",
     "Code",

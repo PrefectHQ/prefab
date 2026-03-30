@@ -39,6 +39,7 @@ import { badgeSchema } from "./badge.ts";
 import { buttonSchema } from "./button.ts";
 import { buttonGroupSchema } from "./button_group.ts";
 import { calendarSchema } from "./calendar.ts";
+import { carouselSchema } from "./carousel.ts";
 import {
   barChartSchema,
   lineChartSchema,
@@ -165,6 +166,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Button: buttonSchema,
   ButtonGroup: buttonGroupSchema,
   Calendar: calendarSchema,
+  Carousel: carouselSchema,
   Card: cardSchema,
   CardHeader: cardHeaderSchema,
   CardTitle: cardTitleSchema,
