@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   check_docs:
@@ -14,10 +14,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup uv
         uses: ./.github/actions/setup-uv
         with:
+          python-version: "3.12"
           resolution: locked
 
       - name: Install renderer dependencies
@@ -29,19 +33,17 @@ jobs:
       - name: Build bundled renderer
         run: uv run prefab dev build-renderers
 
-      - name: Check for stale generated files
+      - name: Commit regenerated files if stale
         run: |
           STALE_FILES=$(git diff --name-only)
           if [ -n "$STALE_FILES" ]; then
-            echo "::error::Generated files are out of date. Rebuild and commit the output."
-            echo ""
-            echo "Stale files:"
+            echo "Stale files detected:"
             echo "$STALE_FILES"
-            echo ""
-            echo "To fix:"
-            echo "  uv run prefab dev build-docs"
-            echo "  uv run prefab dev build-renderers"
-            echo "  git add -u && git commit -m 'Regenerate build artifacts'"
-            exit 1
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -u
+            git commit -m "Regenerate build artifacts"
+            git push
+          else
+            echo "All generated files are up to date."
           fi
-          echo "All generated files are up to date."

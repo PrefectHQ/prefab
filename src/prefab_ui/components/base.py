@@ -283,6 +283,12 @@ class Component(BaseModel):
         description="CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes.",
     )
 
+    on_mount: Any | None = Field(
+        default=None,
+        alias="onMount",
+        description="Action(s) to execute when this component mounts.",
+    )
+
     def __init__(self, /, **kwargs: Any) -> None:
         parent = kwargs.pop("parent", None)
         if parent is not None:

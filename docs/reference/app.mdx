@@ -64,6 +64,7 @@ app = PrefabApp.from_json(wire, state={"extra": "value"})
 | `stylesheets` | `list[str]` | CSS URLs or inline CSS to load in `<head>` |
 | `scripts` | `list[str]` | External JS URLs to load in `<head>` |
 | `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` (for Fetch actions) |
+| `on_mount` | `Action \| list[Action]` | Action(s) to run when the app loads |
 | `title` | `str` | HTML page title (default: `"Prefab"`) |
 
 ## Methods
@@ -89,6 +90,31 @@ Pass state directly to the `PrefabApp` constructor:
 with PrefabApp(state={"count": 0, "items": []}) as app:
     Text("Count: {{ count }}")
 ```
+
+## on_mount
+
+Run actions when the app loads. This is the place to start polling intervals, fetch initial data, or perform any setup that depends on the renderer being ready:
+
+```python
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.actions.timing import SetInterval
+from prefab_ui.rx import RESULT
+
+with PrefabApp(
+    state={"stats": {}},
+    on_mount=SetInterval(
+        duration=3000,
+        on_tick=CallTool(
+            "get_stats",
+            on_success=SetState("stats", RESULT),
+        ),
+    ),
+) as app:
+    Metric(label="CPU", value=STATE.stats.cpu + "%")
+```
+
+`on_mount` is actually a universal component property — every component supports it, not just PrefabApp. For most components it fires immediately since the entire tree renders at once. But for components inside `Condition`, `Pages`, or `ForEach`, it fires when they actually enter the DOM — useful for lazy data loading when a tab activates or a conditional branch becomes true.
 
 ## Stylesheets
 

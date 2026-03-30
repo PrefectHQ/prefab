@@ -18,6 +18,7 @@ export const ACTION_PROPS = new Set([
   "onChange",
   "onSubmit",
   "onRowClick",
+  "onMount",
 ]);
 
 /**

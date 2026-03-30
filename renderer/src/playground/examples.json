@@ -2425,6 +2425,11 @@
     "code": "Text(\"Count: {{ count }}\")"
   },
   {
+    "title": "from prefab_ui.actions import SetState",
+    "category": "Reference",
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.actions.timing import SetInterval\nfrom prefab_ui.rx import RESULT\n\nwith PrefabApp(\n    state={\"stats\": {}},\n    on_mount=SetInterval(\n        duration=3000,\n        on_tick=CallTool(\n            \"get_stats\",\n            on_success=SetState(\"stats\", RESULT),\n        ),\n    ),\n) as app:\n    Metric(label=\"CPU\", value=STATE.stats.cpu + \"%\")"
+  },
+  {
     "title": "from fastapi import FastAPI",
     "category": "Running",
     "code": "from fastapi.responses import HTMLResponse\n\nfrom prefab_ui.actions import Fetch, SetState\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Column, Input, Text\nfrom prefab_ui.components.control_flow import ForEach\nfrom prefab_ui.rx import RESULT\n\napp = FastAPI()\n\n\n@app.get(\"/api/items\")\ndef list_items(q: str = \"\"):\n    items = [{\"name\": \"Widget\"}, {\"name\": \"Gadget\"}, {\"name\": \"Gizmo\"}]\n    if q:\n        items = [i for i in items if q.lower() in i[\"name\"].lower()]\n    return items\n\n\n@app.get(\"/\", response_class=HTMLResponse)\ndef page():\n    with Column(gap=4) as view:\n        Input(\n            name=\"q\",\n            placeholder=\"Search...\",\n            on_change=[\n                SetState(\"q\", \"{{ $event }}\"),\n                Fetch.get(\n                    \"/api/items\",\n                    params={\"q\": \"{{ $event }}\"},\n                    on_success=SetState(\"items\", RESULT),\n                ),\n            ],\n        )\n        with ForEach(\"items\"):\n            Text(\"{{ name }}\")\n\n    return HTMLResponse(\n        PrefabApp(\n            title=\"My App\",\n            view=view,\n            state={\"q\": \"\", \"items\": []},\n        ).html()\n    )"

@@ -138,6 +138,10 @@ class PrefabApp(BaseModel):
         default=None,
         description="Custom JS action handlers: name → function expression",
     )
+    on_mount: Any | None = Field(
+        default=None,
+        description="Action(s) to execute when the app mounts",
+    )
 
     _context_root: Any = PrivateAttr(default=None)
 
@@ -218,7 +222,7 @@ class PrefabApp(BaseModel):
 
         if isinstance(self.view, dict):
             # Pre-serialized dict — wrap in a serialized Div
-            wrapper = Div(css_class=cls)
+            wrapper = Div(css_class=cls, on_mount=self.on_mount)
             wrapper_json = wrapper.to_json()
             wrapper_json["children"] = [self.view]
             return wrapper_json
@@ -230,10 +234,14 @@ class PrefabApp(BaseModel):
         ):
             # Bare Div from context manager — stamp the class directly
             self.view.css_class = cls
+            if self.on_mount is not None:
+                self.view.on_mount = self.on_mount
             return self.view.to_json()
 
         # Wrap the user's view in a new Div
-        return Div(children=[self.view], css_class=cls).to_json()
+        return Div(
+            children=[self.view], css_class=cls, on_mount=self.on_mount
+        ).to_json()
 
     def to_json(
         self,

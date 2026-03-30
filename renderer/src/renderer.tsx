@@ -11,7 +11,22 @@
  */
 
 import type { App } from "@modelcontextprotocol/ext-apps";
-import { useRef } from "react";
+import React, { useEffect, useRef, type ReactNode } from "react";
+
+/** Fire an action callback once on mount. Renders children transparently. */
+function MountEffect({
+  onMount,
+  children,
+}: {
+  onMount: () => void;
+  children: ReactNode;
+}) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    onMount();
+  }, []);
+  return <>{children}</>;
+}
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
@@ -146,6 +161,12 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Expressions can resolve to numbers/booleans via type preservation.
   const textContent = mapped._textContent as string | number | undefined;
 
+  // Extract onMount — fired via MountEffect wrapper below
+  const onMount = mapped.onMount as (() => void) | undefined;
+  delete mapped.onMount;
+  const wrapMount = (el: React.ReactElement) =>
+    onMount ? <MountEffect onMount={onMount}>{el}</MountEffect> : el;
+
   // Filter internal props before passing to component
   const finalProps = filterInternalProps(mapped);
 
@@ -227,7 +248,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       }
     }
 
-    return <Component {...finalProps}>{textContent}</Component>;
+    return wrapMount(<Component {...finalProps}>{textContent}</Component>);
   }
 
   // --- Custom child handling: composite components ---
@@ -322,7 +343,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       }
     }
 
-    return <Component {...finalProps}>{textContent}</Component>;
+    return wrapMount(<Component {...finalProps}>{textContent}</Component>);
   }
 
   // --- Auto-state for named form inputs ---
@@ -430,7 +451,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     }
 
     finalProps._panels = panels;
-    return <Component {...finalProps} />;
+    return wrapMount(<Component {...finalProps} />);
   }
 
   // Handle ForEach specially — iterate over data array.
@@ -585,14 +606,14 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const hasContent =
     textContent != null || (renderedChildren && renderedChildren.length > 0);
   if (!hasContent) {
-    return <Component {...finalProps} />;
+    return wrapMount(<Component {...finalProps} />);
   }
 
-  return (
+  return wrapMount(
     <Component {...finalProps}>
       {textContent}
       {renderedChildren}
-    </Component>
+    </Component>,
   );
 }
 
