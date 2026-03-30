@@ -1,0 +1,371 @@
+---
+title: Carousel
+description: Scrollable container that cycles through children — carousel, reel, or marquee.
+icon: gallery-horizontal-end
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+One component, three personalities. Carousel handles interactive slideshows, ambient reels, and continuous marquees — all through configuration, powered by [Embla Carousel](https://www.embla-carousel.com/).
+
+**Carousel** — user navigates with arrows, dots, or swipe. Shows one item at a time.
+
+**Reel** — auto-advances on a timer, then holds. All items visible, scrolling periodically. Think airport departure boards.
+
+**Marquee** — continuous smooth scroll that never stops. Think news tickers.
+
+## Carousel
+
+The default mode. Users navigate with arrows that appear on hover, and optional dots for direct access:
+
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-md","type":"Carousel","direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"showControls":true,"showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Welcome","type":"Heading","level":3},{"content":"Get started with Prefab in minutes.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Components","type":"Heading","level":3},{"content":"50+ components, from buttons to charts.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Reactive","type":"Heading","level":3},{"content":"State management built into the framework.","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENhcmQsIENhcmRDb250ZW50LCBUZXh0LCBIZWFkaW5nCgp3aXRoIENhcm91c2VsKHNob3dfZG90cz1UcnVlLCBjc3NfY2xhc3M9InctZnVsbCBtYXgtdy1tZCIpOgogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiV2VsY29tZSIsIGxldmVsPTMpCiAgICAgICAgICAgIFRleHQoIkdldCBzdGFydGVkIHdpdGggUHJlZmFiIGluIG1pbnV0ZXMuIikKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9Im1pbi13LWZ1bGwiKToKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIEhlYWRpbmcoIkNvbXBvbmVudHMiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCI1MCsgY29tcG9uZW50cywgZnJvbSBidXR0b25zIHRvIGNoYXJ0cy4iKQogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiUmVhY3RpdmUiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCJTdGF0ZSBtYW5hZ2VtZW50IGJ1aWx0IGludG8gdGhlIGZyYW1ld29yay4iKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Card, CardContent, Text, Heading
+
+with Carousel(show_dots=True, css_class="w-full max-w-md"):
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Welcome", level=3)
+            Text("Get started with Prefab in minutes.")
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Components", level=3)
+            Text("50+ components, from buttons to charts.")
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Reactive", level=3)
+            Text("State management built into the framework.")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full max-w-md",
+    "type": "Carousel",
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 0,
+    "continuous": false,
+    "speed": 2,
+    "showControls": true,
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Welcome", "type": "Heading", "level": 3},
+              {"content": "Get started with Prefab in minutes.", "type": "Text"}
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Components", "type": "Heading", "level": 3},
+              {"content": "50+ components, from buttons to charts.", "type": "Text"}
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Reactive", "type": "Heading", "level": 3},
+              {"content": "State management built into the framework.", "type": "Text"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Auto-Advancing Carousel
+
+Add `auto_advance` to cycle slides automatically. Users can still navigate manually — interaction pauses the timer:
+
+<ComponentPreview json={{"view":{"cssClass":"w-full max-w-md","type":"Carousel","direction":"left","loop":true,"autoAdvance":3000,"continuous":false,"speed":2,"showControls":true,"showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 1","type":"Heading","level":3},{"content":"Install prefab-ui from PyPI.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 2","type":"Heading","level":3},{"content":"Create your first PrefabApp.","type":"Text"}]}]},{"cssClass":"min-w-full","type":"Card","children":[{"type":"CardContent","children":[{"content":"Step 3","type":"Heading","level":3},{"content":"Connect it to FastMCP.","type":"Text"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENhcmQsIENhcmRDb250ZW50LCBIZWFkaW5nLCBUZXh0Cgp3aXRoIENhcm91c2VsKGF1dG9fYWR2YW5jZT0zMDAwLCBzaG93X2RvdHM9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwgbWF4LXctbWQiKToKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9Im1pbi13LWZ1bGwiKToKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIEhlYWRpbmcoIlN0ZXAgMSIsIGxldmVsPTMpCiAgICAgICAgICAgIFRleHQoIkluc3RhbGwgcHJlZmFiLXVpIGZyb20gUHlQSS4iKQogICAgd2l0aCBDYXJkKGNzc19jbGFzcz0ibWluLXctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgSGVhZGluZygiU3RlcCAyIiwgbGV2ZWw9MykKICAgICAgICAgICAgVGV4dCgiQ3JlYXRlIHlvdXIgZmlyc3QgUHJlZmFiQXBwLiIpCiAgICB3aXRoIENhcmQoY3NzX2NsYXNzPSJtaW4tdy1mdWxsIik6CiAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICBIZWFkaW5nKCJTdGVwIDMiLCBsZXZlbD0zKQogICAgICAgICAgICBUZXh0KCJDb25uZWN0IGl0IHRvIEZhc3RNQ1AuIikK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Card, CardContent, Heading, Text
+
+with Carousel(auto_advance=3000, show_dots=True, css_class="w-full max-w-md"):
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Step 1", level=3)
+            Text("Install prefab-ui from PyPI.")
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Step 2", level=3)
+            Text("Create your first PrefabApp.")
+    with Card(css_class="min-w-full"):
+        with CardContent():
+            Heading("Step 3", level=3)
+            Text("Connect it to FastMCP.")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full max-w-md",
+    "type": "Carousel",
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 3000,
+    "continuous": false,
+    "speed": 2,
+    "showControls": true,
+    "showDots": true,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Step 1", "type": "Heading", "level": 3},
+              {"content": "Install prefab-ui from PyPI.", "type": "Text"}
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Step 2", "type": "Heading", "level": 3},
+              {"content": "Create your first PrefabApp.", "type": "Text"}
+            ]
+          }
+        ]
+      },
+      {
+        "cssClass": "min-w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {"content": "Step 3", "type": "Heading", "level": 3},
+              {"content": "Connect it to FastMCP.", "type": "Text"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Vertical Reel
+
+Set `direction="down"` for a vertical reel that ticks through items. Turn off controls for an ambient display:
+
+<ComponentPreview json={{"view":{"cssClass":"h-[120px] overflow-hidden","type":"Carousel","direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"showControls":false,"showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"Python","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"TypeScript","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"React","variant":"secondary"},{"cssClass":"min-h-[120px] flex items-center justify-center text-lg","type":"Badge","label":"Tailwind","variant":"secondary"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKAogICAgZGlyZWN0aW9uPSJkb3duIiwKICAgIGF1dG9fYWR2YW5jZT0yMDAwLAogICAgc2hvd19jb250cm9scz1GYWxzZSwKICAgIGNzc19jbGFzcz0iaC1bMTIwcHhdIG92ZXJmbG93LWhpZGRlbiIsCik6CiAgICBCYWRnZSgiUHl0aG9uIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiwgY3NzX2NsYXNzPSJtaW4taC1bMTIwcHhdIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHRleHQtbGciKQogICAgQmFkZ2UoIlR5cGVTY3JpcHQiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCiAgICBCYWRnZSgiUmVhY3QiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCiAgICBCYWRnZSgiVGFpbHdpbmQiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im1pbi1oLVsxMjBweF0gZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgdGV4dC1sZyIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Badge
+
+with Carousel(
+    direction="down",
+    auto_advance=2000,
+    show_controls=False,
+    css_class="h-[120px] overflow-hidden",
+):
+    Badge("Python", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
+    Badge("TypeScript", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
+    Badge("React", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
+    Badge("Tailwind", variant="secondary", css_class="min-h-[120px] flex items-center justify-center text-lg")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "h-[120px] overflow-hidden",
+    "type": "Carousel",
+    "direction": "down",
+    "loop": true,
+    "autoAdvance": 2000,
+    "continuous": false,
+    "speed": 2,
+    "showControls": false,
+    "showDots": false,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
+        "type": "Badge",
+        "label": "Python",
+        "variant": "secondary"
+      },
+      {
+        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
+        "type": "Badge",
+        "label": "TypeScript",
+        "variant": "secondary"
+      },
+      {
+        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
+        "type": "Badge",
+        "label": "React",
+        "variant": "secondary"
+      },
+      {
+        "cssClass": "min-h-[120px] flex items-center justify-center text-lg",
+        "type": "Badge",
+        "label": "Tailwind",
+        "variant": "secondary"
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Marquee
+
+Set `continuous=True` for smooth, never-ending scroll. Control `speed` (1–10) and `direction`:
+
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Carousel","direction":"left","loop":true,"autoAdvance":0,"continuous":true,"speed":3,"showControls":false,"showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"mx-2","type":"Badge","label":"Buttons","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Cards","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Charts","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Tables","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Forms","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Dialogs","variant":"secondary"},{"cssClass":"mx-2","type":"Badge","label":"Mermaid","variant":"success"},{"cssClass":"mx-2","type":"Badge","label":"Carousel","variant":"success"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIEJhZGdlCgp3aXRoIENhcm91c2VsKAogICAgY29udGludW91cz1UcnVlLAogICAgc3BlZWQ9MywKICAgIHNob3dfY29udHJvbHM9RmFsc2UsCiAgICBjc3NfY2xhc3M9InctZnVsbCIsCik6CiAgICBCYWRnZSgiQnV0dG9ucyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiQ2FyZHMiLCB2YXJpYW50PSJzZWNvbmRhcnkiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIkNoYXJ0cyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiVGFibGVzIiwgdmFyaWFudD0ic2Vjb25kYXJ5IiwgY3NzX2NsYXNzPSJteC0yIikKICAgIEJhZGdlKCJGb3JtcyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiRGlhbG9ncyIsIHZhcmlhbnQ9InNlY29uZGFyeSIsIGNzc19jbGFzcz0ibXgtMiIpCiAgICBCYWRnZSgiTWVybWFpZCIsIHZhcmlhbnQ9InN1Y2Nlc3MiLCBjc3NfY2xhc3M9Im14LTIiKQogICAgQmFkZ2UoIkNhcm91c2VsIiwgdmFyaWFudD0ic3VjY2VzcyIsIGNzc19jbGFzcz0ibXgtMiIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Carousel, Badge
+
+with Carousel(
+    continuous=True,
+    speed=3,
+    show_controls=False,
+    css_class="w-full",
+):
+    Badge("Buttons", variant="secondary", css_class="mx-2")
+    Badge("Cards", variant="secondary", css_class="mx-2")
+    Badge("Charts", variant="secondary", css_class="mx-2")
+    Badge("Tables", variant="secondary", css_class="mx-2")
+    Badge("Forms", variant="secondary", css_class="mx-2")
+    Badge("Dialogs", variant="secondary", css_class="mx-2")
+    Badge("Mermaid", variant="success", css_class="mx-2")
+    Badge("Carousel", variant="success", css_class="mx-2")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full",
+    "type": "Carousel",
+    "direction": "left",
+    "loop": true,
+    "autoAdvance": 0,
+    "continuous": true,
+    "speed": 3,
+    "showControls": false,
+    "showDots": false,
+    "pauseOnHover": true,
+    "align": "start",
+    "slidesToScroll": 1,
+    "drag": true,
+    "children": [
+      {
+        "cssClass": "mx-2",
+        "type": "Badge",
+        "label": "Buttons",
+        "variant": "secondary"
+      },
+      {"cssClass": "mx-2", "type": "Badge", "label": "Cards", "variant": "secondary"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Charts", "variant": "secondary"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Tables", "variant": "secondary"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Forms", "variant": "secondary"},
+      {
+        "cssClass": "mx-2",
+        "type": "Badge",
+        "label": "Dialogs",
+        "variant": "secondary"
+      },
+      {"cssClass": "mx-2", "type": "Badge", "label": "Mermaid", "variant": "success"},
+      {"cssClass": "mx-2", "type": "Badge", "label": "Carousel", "variant": "success"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<ParamField body="direction" type="str" default="left">
+  Scroll direction: `"left"`, `"right"`, `"up"`, or `"down"`.
+</ParamField>
+
+<ParamField body="loop" type="bool" default="True">
+  Loop back to the start after reaching the end.
+</ParamField>
+
+<ParamField body="auto_advance" type="int" default="0">
+  Milliseconds between auto-advances. `0` = manual navigation only.
+</ParamField>
+
+<ParamField body="continuous" type="bool" default="False">
+  Smooth continuous scroll (marquee mode) instead of discrete ticks.
+</ParamField>
+
+<ParamField body="speed" type="int" default="2">
+  Scroll speed for continuous mode (1–10).
+</ParamField>
+
+<ParamField body="show_controls" type="bool" default="True">
+  Show previous/next navigation arrows on hover.
+</ParamField>
+
+<ParamField body="show_dots" type="bool" default="False">
+  Show pagination dots below the carousel.
+</ParamField>
+
+<ParamField body="pause_on_hover" type="bool" default="True">
+  Pause auto-advance or continuous scroll when the mouse hovers.
+</ParamField>
+
+<ParamField body="align" type="str" default="start">
+  Slide alignment: `"start"`, `"center"`, or `"end"`.
+</ParamField>
+
+<ParamField body="slides_to_scroll" type="int" default="1">
+  Number of slides to advance per navigation step.
+</ParamField>
+
+<ParamField body="drag" type="bool" default="True">
+  Allow drag/swipe to navigate.
+</ParamField>
+
+<ParamField body="css_class" type="str">
+  Additional CSS classes. Use `h-[N]` for vertical carousels to constrain height.
+</ParamField>

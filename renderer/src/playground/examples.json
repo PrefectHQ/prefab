@@ -460,6 +460,26 @@
     "code": "from prefab_ui.components import (\n    Card,\n    CardHeader,\n    CardTitle,\n    CardDescription,\n    Grid,\n)\n\nwith Grid(columns=3, gap=4):\n    for title, desc in [\n        (\"Revenue\", \"$12,450\"),\n        (\"Users\", \"1,234\"),\n        (\"Uptime\", \"99.9%\"),\n    ]:\n        with Card():\n            with CardHeader():\n                CardDescription(title)\n                CardTitle(desc)"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Card, CardContent, Text, Heading\n\nwith Carousel(show_dots=True, css_class=\"w-full max-w-md\"):\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Welcome\", level=3)\n            Text(\"Get started with Prefab in minutes.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Components\", level=3)\n            Text(\"50+ components, from buttons to charts.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Reactive\", level=3)\n            Text(\"State management built into the framework.\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Card, CardContent, Heading, Text\n\nwith Carousel(auto_advance=3000, show_dots=True, css_class=\"w-full max-w-md\"):\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 1\", level=3)\n            Text(\"Install prefab-ui from PyPI.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 2\", level=3)\n            Text(\"Create your first PrefabApp.\")\n    with Card(css_class=\"min-w-full\"):\n        with CardContent():\n            Heading(\"Step 3\", level=3)\n            Text(\"Connect it to FastMCP.\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Badge\n\nwith Carousel(\n    direction=\"down\",\n    auto_advance=2000,\n    show_controls=False,\n    css_class=\"h-[120px] overflow-hidden\",\n):\n    Badge(\"Python\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"TypeScript\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"React\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")\n    Badge(\"Tailwind\", variant=\"secondary\", css_class=\"min-h-[120px] flex items-center justify-center text-lg\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Carousel, Badge\n\nwith Carousel(\n    continuous=True,\n    speed=3,\n    show_controls=False,\n    css_class=\"w-full\",\n):\n    Badge(\"Buttons\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Cards\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Charts\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Tables\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Forms\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Dialogs\", variant=\"secondary\", css_class=\"mx-2\")\n    Badge(\"Mermaid\", variant=\"success\", css_class=\"mx-2\")\n    Badge(\"Carousel\", variant=\"success\", css_class=\"mx-2\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Checkbox\n\nCheckbox(label=\"Accept terms and conditions\")"
@@ -1153,11 +1173,6 @@
     "title": "Python {8} icon=\"python\"",
     "category": "Components",
     "code": "LineChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    show_dots=True,\n    show_legend=True,\n)"
-  },
-  {
-    "title": "from prefab_ui.app import PrefabApp",
-    "category": "Components",
-    "code": "from prefab_ui.components import Column, Heading\nfrom prefab_ui.components.charts import LineChart, ChartSeries\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.actions.timing import SetInterval\nfrom prefab_ui.rx import RESULT\nfrom fastmcp import FastMCP\nimport random\n\nmcp = FastMCP(\"Live Chart\")\npoints = []\n\n@mcp.tool(app=True)\ndef monitor() -> PrefabApp:\n    with PrefabApp(\n        state={\"points\": []},\n        on_mount=SetInterval(\n            duration=500,\n            on_tick=CallTool(\n                \"get_data\",\n                on_success=SetState(\"points\", RESULT),\n            ),\n        ),\n    ) as app:\n        with Column(gap=4, css_class=\"p-6\"):\n            Heading(\"Live Monitor\")\n            LineChart(\n                data=\"{{ points }}\",\n                series=[ChartSeries(data_key=\"value\", label=\"CPU %\")],\n                x_axis=\"time\",\n                height=300,\n                animate=False,\n            )\n    return app\n\n@mcp.tool()\ndef get_data() -> list[dict]:\n    points.append({\"time\": len(points), \"value\": random.randint(20, 80)})\n    return points[-30:]  # keep last 30 points"
   },
   {
     "title": "Python icon=\"python\"",

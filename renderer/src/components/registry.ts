@@ -152,6 +152,10 @@ const contentModule = () => import("./content");
 const LazyCode = lazyNamed(contentModule, "Code");
 const LazyMarkdown = lazyNamed(contentModule, "Markdown");
 
+// Carousel — embla-carousel (~40 KB + plugins)
+const carouselModule = () => import("./carousel");
+const LazyCarousel = lazyNamed(carouselModule, "PrefabCarousel");
+
 // Mermaid — mermaid (~1.5 MB)
 const mermaidModule = () => import("./mermaid");
 const LazyMermaid = lazyNamed(mermaidModule, "Mermaid");
@@ -222,6 +226,9 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   RadialChart: LazyRadialChart,
   ScatterChart: LazyScatterChart,
   Sparkline: LazySparkline,
+
+  // Carousel (lazy — embla-carousel)
+  Carousel: LazyCarousel,
 
   // DataTable (wrapper around @tanstack/react-table)
   DataTable: PrefabDataTable,
