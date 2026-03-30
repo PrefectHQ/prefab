@@ -15,8 +15,15 @@ Execute actions on a repeating schedule.
       "type": "string"
     },
     "duration": {
-      "description": "Interval between ticks, in milliseconds.",
-      "type": "integer"
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Interval between ticks, in milliseconds. Accepts Rx for reactive values."
     },
     "while": {
       "type": [
