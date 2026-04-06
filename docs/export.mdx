@@ -1,0 +1,83 @@
+---
+title: Static Export
+sidebarTitle: Static Export
+description: Export a PrefabApp as a standalone HTML file.
+icon: file-export
+---
+
+Any PrefabApp can be exported as a standalone HTML file. The exported file is a static artifact: open it in a browser, embed it as an iframe in a blog post, or deploy it to any static host. There's no server, no build step, no runtime Python.
+
+This is useful when you want to share a Prefab UI outside of an MCP host, for example embedding an interactive dashboard in documentation or a static site.
+
+If your app needs a backend (database queries, authentication, server-side logic), use an [API server](/running/api) with `Fetch` actions or an [MCP server](/running/fastmcp) with `CallTool` instead. Export is for UIs where all the data and behavior is self-contained in the HTML.
+
+<Note>
+Exported apps run entirely in the browser. Client-side features all work: state, forms, conditionals, `Fetch` actions, and client-side interactivity. `CallTool` actions require an MCP server and will not function in exported files.
+</Note>
+
+## Usage
+
+Given a Python file that defines a `PrefabApp`:
+
+```python app.py
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Heading, Text
+
+with PrefabApp(state={"greeting": "Hello"}, css_class="p-6") as app:
+    Heading("Hello Prefab")
+    Text("This is a static export.")
+```
+
+Export it with `prefab export`:
+
+```bash
+prefab export app.py
+```
+
+This writes `app.html` to the current directory, derived from the input filename. Override the output path with `--output`:
+
+```bash
+prefab export app.py -o dashboard.html
+```
+
+If the file contains multiple `PrefabApp` instances, specify which one:
+
+```bash
+prefab export app.py:dashboard
+```
+
+## CDN vs Bundled
+
+By default, the exported HTML loads the Prefab renderer from CDN (jsDelivr), pinned to your installed `prefab-ui` version. The file itself stays small, around 1 KB of boilerplate plus your component data, but requires a network connection to render.
+
+For fully self-contained output with all JS and CSS inlined, pass `--bundled`:
+
+```bash
+prefab export app.py --bundled
+```
+
+Bundled files are larger (~6 MB) but work offline with no external requests.
+
+## Version Pinning
+
+CDN exports are pinned to your installed version by default. On dev builds, the version defaults to `latest`. You can pin to any published version explicitly:
+
+```bash
+prefab export app.py --cdn-version 0.14.1
+```
+
+## Embedding
+
+The exported file works as a standalone page or inside an iframe:
+
+```html
+<iframe src="dashboard.html" width="100%" height="400" frameborder="0"></iframe>
+```
+
+## Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--output`, `-o` | `<input_stem>.html` | Output file path |
+| `--bundled` | `false` | Inline all JS/CSS (no network needed) |
+| `--cdn-version` | Installed version | Pin CDN renderer to a specific version |
