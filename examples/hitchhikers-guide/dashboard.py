@@ -209,17 +209,13 @@ with PrefabApp(title="Prefab Showcase") as app:
                         ):
                             Muted("Probable")
                             Muted("Infinite")
-            with Carousel(auto_advance=2000, show_controls=False):
+            with Carousel(auto_advance=3000, show_controls=False, direction="up"):
                 with Alert(variant="success", icon="circle-check"):
                     AlertTitle("Don't Panic")
                     AlertDescription("Normality achieved.")
-
-                with Column(gap=3):
-                    with Alert(
-                        variant="destructive",
-                        icon="triangle-alert",
-                    ):
-                        AlertTitle("Beware of the Leopard")
+                with Alert(variant="destructive", icon="triangle-alert"):
+                    AlertTitle("Display Department")
+                    AlertDescription("Beware of the leopard.")
             with Card():
                 with CardHeader():
                     CardTitle("Prefect Horizon Config")
