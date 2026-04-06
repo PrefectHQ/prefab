@@ -18,35 +18,42 @@
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="1000">
 </a>
 
-Prefab is a frontend framework with a Python DSL that compiles to JSON. Build [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), data dashboards, and interactive tools with layouts, forms, charts, data tables, and full interactivity. A bundled React renderer turns the JSON into a self-contained application.
+**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application that runs standalone or against any backend.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because Prefab is a JSON protocol, any source can produce a UI: write one yourself and serve it from any backend, or have an agent generate it dynamically, no templates or predefined views required.
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for component nesting, making it both extremely token-efficient and streaming-compatible. As a result, you (or your agent) can generate UIs on the fly. A reactive state system lets you express client-side interactivity as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes all compile to live template bindings, with no JavaScript required.
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/hello-world-card.png" alt="Hello world card" width="400">
 </div>
 </br>
 
-This card has a live-updating heading, a text input bound to client-side state, and badges — all from a few lines of Python. You can try an interactive version [in the Prefab docs](https://prefab.prefect.io/docs/welcome). In fact, every example in the Prefab docs is rendered with Prefab itself.
-
 ```python
-from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
+from prefab_ui.components import *
+from prefab_ui.rx import Rx
+
+name = Rx("name").default("world")
 
 with Card():
     with CardContent():
         with Column(gap=3):
-            H3("Hello, {{ name }}!")
+            H3(f"Hello, {name}!")
             Muted("Type below and watch this update in real time.")
             Input(name="name", placeholder="Your name...")
     with CardFooter():
         with Row(gap=2):
-            Badge("Name: {{ name }}", variant="default")
+            Badge(f"Name: {name}", variant="default")
             Badge("Prefab", variant="success")
 ```
 
-Since everything compiles to JSON, you can author a UI from a Python script, have an agent generate one on the fly, or serve one from any MCP server or REST API.
+This card has a live-updating heading and a text input bound to client-side state. You can try an interactive version [in the Prefab docs](https://prefab.prefect.io/docs/welcome). Every example in the docs is rendered with Prefab itself.
 
-*Made with 💙 by [Prefect](https://www.prefect.io/)*
+## Why Prefab
+
+Python developers building tools, APIs, and servers regularly need to ship interactive interfaces alongside their logic: dashboards, data tables, forms, charts. Building these interfaces has traditionally meant working in an entirely different language and ecosystem, or settling for static templates and limited tooling.
+
+Prefab takes a different approach, using a Python DSL to naturally compose a library of production-ready components into interactive applications. The component tree compiles to a JSON protocol and is rendered by a bundled React frontend built on shadcn/ui. The interface definition stays in Python, right next to the data it presents. The output is declarative and serializable rather than executable code, which means UIs are safe for agents to generate, easy to validate, and portable across any transport.
+
+Prefab is designed from the ground up for [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), bringing interactive frontend capabilities to the Python MCP ecosystem for the first time. Prefab ships as a native part of [FastMCP](https://github.com/PrefectHQ/fastmcp), supporting everything from hand-authored declarative interfaces to fully agent-generated UIs in a single framework.
 
 ## Installation
 
@@ -56,28 +63,23 @@ pip install prefab-ui
 
 Requires Python 3.10+.
 
-## How It Works
-
-1. Build a component tree in Python (or raw JSON from any source)
-2. The tree compiles to Prefab's JSON format
-3. A bundled React renderer turns the JSON into a live interface
-
-State flows through `{{ templates }}`. When you write `{{ query }}`, the renderer interpolates the current value from client-side state. Named form controls sync automatically — `Input(name="city")` keeps `{{ city }}` up to date on every keystroke. Actions like `CallTool` and `SetState` drive interactivity without custom JavaScript.
-
 ## Components
 
-35+ components covering layout, typography, forms, data display, and interactive elements. Containers nest with Python context managers:
+100+ components covering layout, typography, forms, data display, charts, and interactive elements. Containers nest with Python context managers. State flows through reactive expressions — named form controls sync automatically, and actions like `CallTool` and `SetState` drive interactivity without custom JavaScript.
 
 ```python
 from prefab_ui.components import Card, CardHeader, CardTitle, CardContent, Column, Text, Badge
+from prefab_ui.rx import Rx
+
+user = Rx("user")
 
 with Card():
     with CardHeader():
         CardTitle("User Profile")
     with CardContent():
         with Column():
-            Text("{{ user.name }}")
-            Badge("{{ user.role }}", variant="secondary")
+            Text(f"{user.name}")
+            Badge(f"{user.role}", variant="secondary")
 ```
 
 Pydantic models generate forms automatically — constraints like `min_length` and `ge` become client-side validation:
@@ -103,12 +105,15 @@ Actions define what happens on interaction — state updates, server calls, navi
 from prefab_ui.components import Button
 from prefab_ui.actions import SetState, ShowToast
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.rx import Rx
+
+item = Rx("item")
 
 Button("Save", on_click=[
     SetState("saving", True),
     CallTool(
         "save_data",
-        arguments={"item": "{{ item }}"},
+        arguments={"item": item},
         on_success=ShowToast(title="Saved"),
         on_error=ShowToast(title="Failed", variant="destructive"),
     ),
@@ -119,3 +124,5 @@ Button("Save", on_click=[
 ## Documentation
 
 Full documentation at [prefab.prefect.io](https://prefab.prefect.io), including an interactive [playground](https://prefab.prefect.io/docs/playground) where you can try components live.
+
+*Made with 💙 by [Prefect](https://www.prefect.io/)*
