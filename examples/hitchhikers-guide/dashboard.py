@@ -1,8 +1,8 @@
-"""The Hitchhiker's Guide showcase from the Prefab welcome page.
+"""The Hitchhiker's Guide dashboard from the Prefab welcome page.
 
 Run with:
-    prefab serve examples/showcase.py
-    prefab export examples/showcase.py
+    prefab serve examples/hitchhikers-guide/dashboard.py
+    prefab export examples/hitchhikers-guide/dashboard.py
 """
 
 from prefab_ui import PrefabApp
@@ -19,6 +19,7 @@ from prefab_ui.components import (
     CardFooter,
     CardHeader,
     CardTitle,
+    Carousel,
     Checkbox,
     Column,
     Combobox,
@@ -208,9 +209,17 @@ with PrefabApp(title="Prefab Showcase") as app:
                         ):
                             Muted("Probable")
                             Muted("Infinite")
-            with Alert(variant="success", icon="circle-check"):
-                AlertTitle("Don't Panic")
-                AlertDescription("Normality achieved.")
+            with Carousel(auto_advance=2000, show_controls=False):
+                with Alert(variant="success", icon="circle-check"):
+                    AlertTitle("Don't Panic")
+                    AlertDescription("Normality achieved.")
+
+                with Column(gap=3):
+                    with Alert(
+                        variant="destructive",
+                        icon="triangle-alert",
+                    ):
+                        AlertTitle("Beware of the Leopard")
             with Card():
                 with CardHeader():
                     CardTitle("Prefect Horizon Config")
@@ -382,12 +391,6 @@ with PrefabApp(title="Prefab Showcase") as app:
                                         )
 
                     with Column(gap=4):
-                        with Column(gap=3):
-                            with Alert(
-                                variant="destructive",
-                                icon="triangle-alert",
-                            ):
-                                AlertTitle("Beware of the Leopard")
                         with Card():
                             with CardContent():
                                 DataTable(
@@ -454,59 +457,3 @@ with PrefabApp(title="Prefab Showcase") as app:
                                     search=True,
                                     paginated=False,
                                 )
-                        with Card():
-                            with CardHeader():
-                                CardTitle("MCP Servers")
-                                CardDescription("Deployed on Horizon")
-                            with CardContent():
-                                with Column(gap=2):
-                                    with Row(
-                                        align="center",
-                                        css_class="justify-between",
-                                    ):
-                                        Text("weather-api")
-                                        with Tooltip(
-                                            "Uptime: 99.97%",
-                                            delay=0,
-                                        ):
-                                            Badge(
-                                                "Healthy",
-                                                variant="default",
-                                            )
-                                    Separator()
-                                    with Row(
-                                        align="center",
-                                        css_class="justify-between",
-                                    ):
-                                        Text("doc-search")
-                                        with Tooltip(
-                                            "Uptime: 99.94%",
-                                            delay=0,
-                                        ):
-                                            Badge(
-                                                "Healthy",
-                                                variant="default",
-                                            )
-                                    Separator()
-                                    with Row(
-                                        align="center",
-                                        css_class="justify-between",
-                                    ):
-                                        Text("marvin-brain")
-                                        with HoverCard(
-                                            open_delay=0,
-                                            close_delay=200,
-                                        ):
-                                            Badge(
-                                                "Depressed",
-                                                variant="secondary",
-                                            )
-                                            with Column(gap=2):
-                                                Text("marvin-brain")
-                                                Muted(
-                                                    "Uptime: 100% — not that it matters"
-                                                )
-                                                Progress(
-                                                    value=100,
-                                                    max=100,
-                                                )

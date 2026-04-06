@@ -47,6 +47,7 @@ _HIDE_JSON_RE = re.compile(r"\bhide-json\b")
 _BARE_RE = re.compile(r"\bbare\b")
 _RESIZABLE_RE = re.compile(r"\bresizable\b")
 _ID_RE = re.compile(r'id="([^"]*)"')
+_SRC_RE = re.compile(r'src="([^"]*)"')
 
 # Match <ComponentCode for="..." /> (self-closing) or old generated markers
 _COMPONENT_CODE_RE = re.compile(
@@ -188,12 +189,14 @@ def _extract_attrs(tag_text: str) -> dict[str, Any]:
     """Extract preview attributes from an opening tag."""
     height_m = _HEIGHT_RE.search(tag_text)
     id_m = _ID_RE.search(tag_text)
+    src_m = _SRC_RE.search(tag_text)
     return {
         "height": height_m.group(1) if height_m else None,
         "resizable": bool(_RESIZABLE_RE.search(tag_text)),
         "bare": bool(_BARE_RE.search(tag_text)),
         "hide_json": bool(_HIDE_JSON_RE.search(tag_text)),
         "block_id": id_m.group(1) if id_m else None,
+        "src": src_m.group(1) if src_m else None,
     }
 
 
@@ -212,6 +215,8 @@ def _build_opening_tag(
         parts.append(f' height="{attrs["height"]}"')
     if attrs["hide_json"]:
         parts.append(" hide-json")
+    if attrs.get("src"):
+        parts.append(f' src="{attrs["src"]}"')
     parts.append(f" json={{{json_str}}}")
     if playground and not attrs["bare"]:
         parts.append(f' playground="{playground}"')
@@ -267,14 +272,26 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
     for i, match in enumerate(matches):
         opening_tag = match.group(1)
         interior = match.group(2)
+        attrs = _extract_attrs(opening_tag)
 
-        python_m = _PYTHON_BLOCK_RE.search(interior)
-        if not python_m:
-            continue
-
-        python_fence_open = python_m.group(1)
-        python_source = python_m.group(2)
-        python_fence_close = python_m.group(3)
+        # Resolve Python source: from external file (src=) or inline block
+        src_path = attrs.get("src")
+        if src_path:
+            repo_root = docs_dir.parent
+            src_file = repo_root / src_path
+            if not src_file.is_file():
+                print(f"  ERROR preview {i}: src file not found: {src_path}")
+                continue
+            python_source = src_file.read_text()
+            python_fence_open = '```python Python expandable icon="python"\n'
+            python_fence_close = "```"
+        else:
+            python_m = _PYTHON_BLOCK_RE.search(interior)
+            if not python_m:
+                continue
+            python_fence_open = python_m.group(1)
+            python_source = python_m.group(2)
+            python_fence_close = python_m.group(3)
 
         try:
             envelope = _execute_and_serialize(
@@ -288,8 +305,6 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         # Compact JSON for the inline prop
         inline_json = json.dumps(envelope, separators=(",", ":"))
 
-        # Build new opening tag with inline JSON and playground link
-        attrs = _extract_attrs(opening_tag)
         pg_encoded = (
             base64.urlsafe_b64encode(python_source.encode()).rstrip(b"=").decode()
         )
