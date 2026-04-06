@@ -14,9 +14,8 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 **Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](/running/fastmcp), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for component nesting, making it both extremely token-efficient and streaming-compatible. As a result, you (or your agent) can generate UIs on the fly. A reactive state system lets you express client-side interactivity as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes all compile to live template bindings, with no JavaScript required.
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for nesting components, making it both token-efficient and streaming-compatible. As a result, you (or your agent) can declare UIs in advance or generate them on the fly. A reactive state system handles client-side interactivity with no JavaScript required, and MCP and REST backends are (optionally!) supported out of the box
 
-Here are a few examples:
 
 <div style={{
   margin: '-3rem clamp(-180px, calc(-12vw + 80px), 0px) 2rem',
@@ -1404,7 +1403,7 @@ Every example in the Prefab docs is rendered with Prefab itself. You'll see an i
 Try entering your name here:
 
 {/* @preview:hello-world */}
-<ComponentPreview id="hello-world" json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKgpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShmIk5hbWU6IHtuYW1lfSIsIHZhcmlhbnQ9ImRlZmF1bHQiKQogICAgICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIpCg">
+<ComponentPreview id="hello-world" json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKgpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogIAogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQoKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIHdpdGggUm93KGdhcD0yKToKICAgICAgICAgICAgQmFkZ2UoZiJOYW1lOiB7bmFtZX0iLCB2YXJpYW50PSJkZWZhdWx0IikKICAgICAgICAgICAgQmFkZ2UoIlByZWZhYiIsIHZhcmlhbnQ9InN1Y2Nlc3MiKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import *
@@ -1413,11 +1412,13 @@ from prefab_ui.rx import Rx
 name = Rx("name").default("world")
 
 with Card():
+  
     with CardContent():
         with Column(gap=3):
             H3(f"Hello, {name}!")
             Muted("Type below and watch this update in real time.")
             Input(name="name", placeholder="Your name...")
+
     with CardFooter():
         with Row(gap=2):
             Badge(f"Name: {name}", variant="default")
@@ -1479,7 +1480,7 @@ with Card():
 
 Python developers building tools, APIs, and servers regularly need to ship interactive interfaces alongside their logic: dashboards, data tables, forms, charts. Building these interfaces has traditionally meant working in an entirely different language and ecosystem, or settling for static templates and limited tooling.
 
-Prefab takes a different approach, using a Python DSL to naturally compose a library of production-ready components into interactive applications. The component tree compiles to a JSON protocol and is rendered by a bundled React frontend built on shadcn/ui. The interface definition stays in Python, right next to the data it presents. The output is declarative and serializable rather than executable code, which means UIs are safe for agents to generate, easy to validate, and portable across any transport.
+Prefab takes a different approach, using a Python DSL to naturally compose a library of production-ready components into interactive applications. The north star is composition, not construction: assembling existing components into interfaces, not authoring new ones in Python. The component tree compiles to a JSON protocol and is rendered by a bundled React frontend built on shadcn/ui. This means the interface definition stays in Python, right next to the data it presents. The output is declarative and serializable, which means UIs are safe for agents to generate, simple to validate, and portable across any transport.
 
 Prefab is designed from the ground up for [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), bringing interactive frontend capabilities to the Python MCP ecosystem for the first time. Prefab ships as a native part of [FastMCP](/running/fastmcp), supporting everything from hand-authored declarative interfaces to fully agent-generated UIs in a single framework.
 
