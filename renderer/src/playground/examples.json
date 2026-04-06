@@ -2332,7 +2332,7 @@
   {
     "title": "app.py",
     "category": "Getting Started",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted\nfrom prefab_ui.actions import ShowToast\n\nwith PrefabApp(state={\"name\": \"world\"}, css_class=\"max-w-md mx-auto\") as app:\n    with Card():\n        with CardContent():\n            with Column(gap=3):\n                name_input = Input(name=\"name\", placeholder=\"Your name...\")\n                H3(f\"Hello, {name_input.rx}!\")\n                Muted(\"Type your name and watch the heading update in real time.\")\n        with CardFooter():\n            Button(\"Say hi\", on_click=ShowToast(f\"Hey there, {name_input.rx}!\"))"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Badge, Card, CardContent, CardFooter, Column, H3, Input, Muted, Row\nfrom prefab_ui.rx import Rx\n\nname = Rx(\"name\").default(\"world\")\n\nwith PrefabApp(css_class=\"max-w-md mx-auto\") as app:\n    with Card():\n\n        with CardContent():\n            with Column(gap=3):\n                H3(f\"Hello, {name}!\")\n                Muted(\"Type below and watch this update in real time.\")\n                Input(name=\"name\", placeholder=\"Your name...\")\n\n        with CardFooter():\n            with Row(gap=2):\n                Badge(f\"Name: {name}\", variant=\"default\")\n                Badge(\"Prefab\", variant=\"success\")"
   },
   {
     "title": "from prefab_ui import FastMCP",
@@ -2677,6 +2677,6 @@
   {
     "title": "Python icon=\"python\"",
     "category": "General",
-    "code": "from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row\nfrom prefab_ui.rx import Rx\n\nname = Rx(\"name\").default(\"world\")\n\nwith Card():\n    with CardContent():\n        with Column(gap=3):\n            H3(f\"Hello, {name}!\")\n            Muted(\"Type below and watch this update in real time.\")\n            Input(name=\"name\", placeholder=\"Your name...\")\n    with CardFooter():\n        with Row(gap=2):\n            Badge(f\"Name: {name}\", variant=\"default\")\n            Badge(\"Prefab\", variant=\"success\")"
+    "code": "from prefab_ui.components import *\nfrom prefab_ui.rx import Rx\n\nname = Rx(\"name\").default(\"world\")\n\nwith Card():\n  \n    with CardContent():\n        with Column(gap=3):\n            H3(f\"Hello, {name}!\")\n            Muted(\"Type below and watch this update in real time.\")\n            Input(name=\"name\", placeholder=\"Your name...\")\n\n    with CardFooter():\n        with Row(gap=2):\n            Badge(f\"Name: {name}\", variant=\"default\")\n            Badge(\"Prefab\", variant=\"success\")"
   }
 ]

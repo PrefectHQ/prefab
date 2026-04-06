@@ -7,18 +7,18 @@ mode: center
 ---
 import _C_showcase from '/snippets/gen/welcome/code_showcase.mdx'
 
+
+
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-<Warning>
-*Don't panic. Prefab is under very active development.*
-</Warning>
 
-**Prefab is a frontend framework with a Python DSL that compiles to JSON.** Build [MCP Apps](/running/fastmcp), data dashboards, and interactive tools with layouts, forms, charts, data tables, and full interactivity. A bundled React renderer turns the JSON into a self-contained application.
+**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](/running/fastmcp), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. And because Prefab is a JSON protocol, any source can produce a UI: write one yourself and serve it from any backend, or have an agent generate it dynamically, no templates or predefined views required.
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for nesting components, making it both token-efficient and streaming-compatible. As a result, you (or your agent) can declare UIs in advance or generate them on the fly. A reactive state system handles client-side interactivity with no JavaScript required, and MCP and REST backends are (optionally!) supported out of the box
+
 
 <div style={{
-  margin: '0 clamp(-180px, calc(-12vw + 80px), 0px) 2rem',
+  margin: '-3rem clamp(-180px, calc(-12vw + 80px), 0px) 2rem',
   maxHeight: '900px',
   overflow: 'hidden',
   position: 'relative',
@@ -1387,69 +1387,38 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
 </ComponentPreview>
 </div>
 
-Every component above was generated from the following Python code.
-
-<Tip>
-In fact, **every example in the Prefab docs is rendered by Prefab itself.** The Python code and corresponding Prefab protocol JSON are always shown below the example for reference.
-</Tip>
-
-
+<Accordion description="View the Python code for the components above">
 {/* @code:showcase */}
 <_C_showcase />
+</Accordion>
 
+## Hello, world!
 
+The "hello world" of Prefab is an interactive card. It looks like something you might see in any frontend framework... except, of course, that it's written entirely in Python. Context managers define the component hierarchy, and the reactive `Rx` class is used to bind the form input to client-side state. The heading and badge update in real time as you type because they reference the reactive variable. 
 
+<Tip>
+Every example in the Prefab docs is rendered with Prefab itself. You'll see an interactive preview, along with the Python code that produced it, the corresponding Prefab protocol JSON, and a link to edit it live in the [Playground](/playground).
+</Tip>
 
-## Why Prefab
+Try entering your name here:
 
-Prefab began as a DSL for building [MCP Apps](/running/fastmcp) as part of [FastMCP](https://github.com/PrefectHQ/fastmcp). MCP Apps are an extension of the Model Context Protocol that lets MCP servers render fully interactive UIs directly inside the chat — dashboards, forms, data tables, visualizations — not as static text, but as live interfaces the user can interact with while talking to an agent.
-
-Building an MCP App means shipping a self-contained UI bundle. For TypeScript SDK users, that's natural — they're already in the JavaScript ecosystem. But the vast majority of MCP servers are written in Python, and for those developers, building an MCP App means spinning up an entirely new project in an entirely new language, tightly coupled to their server with no shared types or enforcement. Prefab eliminates that gap entirely: describe your UI in Python, right next to your server logic, and Prefab compiles it to a production React bundle.
-
-### The design philosophy
-
-The goal isn't to port React to Python. Developers who want to build rich, bespoke frontends will — and should — reach for the best tools in the JavaScript ecosystem. Prefab is built on a different insight: the vast majority of interactive experiences appropriate for MCP are not full-fledged web applications. They are forms of **information delivery, visualization, and collection**.
-
-When an agent pulls a large dataset from a database, the user today must choose between asking the agent to summarize it (losing detail) or dumping it into the chat (losing structure). An interactive data table with sorting and filtering is a better answer. When an agent needs structured input, a form beats a multi-turn conversation. When results need context, summary cards and charts communicate more than paragraphs of text.
-
-These use cases don't need the infinite complexity of a full frontend stack. They need a relatively small number of composable components — layout, typography, forms, data display, charts — with enough interactivity for data delivery and collection to cover the vast majority of scenarios.
-
-Prefab is a JSON protocol by design, not just a Python library. This means agents can dynamically construct new UIs on the fly — rendering interfaces that no developer predefined. An agent can decide, mid-conversation, to show a chart, build a form, or compose a dashboard from components, all by producing JSON that the renderer already knows how to paint.
-
-### The landscape
-
-There is a rich ecosystem of projects bringing frontend development to Python — Streamlit, Gradio, NiceGUI, Reflex, and many others. Most assume a running Python server that manages state and serves the UI. [FastUI](https://github.com/pydantic/FastUI) pioneered a different approach: a declarative component protocol rendered by a separate frontend. Prefab builds directly on that insight, from a different starting point — MCP and agent-native use cases where the UI may not have a server at all.
-
-The renderer compiles JSON to real React — production components with state management, forms, and declarative interactivity — and ships as a self-contained static bundle. The Python side has no transport dependencies: it works with MCP servers via FastMCP, with REST APIs via FastAPI, or with anything else that can produce JSON.
-
-Prefab is made with 💙 by [Prefect](https://www.prefect.io/).
-
-## How It Works
-
-The core idea is a pipeline: **JSON → React**. For Python authors, it's **Python → JSON → React**.
-
-1. A component tree is described — in Python via the DSL, or as raw JSON from any source
-2. The tree serializes to Prefab's JSON wire format
-3. A React renderer (shipped as `@prefecthq/prefab-ui` on npm) compiles the JSON into a live interface
-
-State flows through templates. When you write `{{ query }}`, the renderer interpolates the current value of `query` from client-side state. Actions like `CallTool` and `SetState` update that state, keeping the UI reactive.
-
-Here's a simpler example — type in the input and watch the heading update in real time:
-
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRGb290ZXIsIENvbHVtbiwgSDMsIE11dGVkLCBJbnB1dCwgQmFkZ2UsIFJvdwpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShmIk5hbWU6IHtuYW1lfSIsIHZhcmlhbnQ9ImRlZmF1bHQiKQogICAgICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIpCg">
+{/* @preview:hello-world */}
+<ComponentPreview id="hello-world" json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKgpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogIAogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQoKICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgIHdpdGggUm93KGdhcD0yKToKICAgICAgICAgICAgQmFkZ2UoZiJOYW1lOiB7bmFtZX0iLCB2YXJpYW50PSJkZWZhdWx0IikKICAgICAgICAgICAgQmFkZ2UoIlByZWZhYiIsIHZhcmlhbnQ9InN1Y2Nlc3MiKQo">
 <CodeGroup>
 ```python Python icon="python"
-from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
+from prefab_ui.components import *
 from prefab_ui.rx import Rx
 
 name = Rx("name").default("world")
 
 with Card():
+  
     with CardContent():
         with Column(gap=3):
             H3(f"Hello, {name}!")
             Muted("Type below and watch this update in real time.")
             Input(name="name", placeholder="Your name...")
+
     with CardFooter():
         with Row(gap=2):
             Badge(f"Name: {name}", variant="default")
@@ -1506,13 +1475,29 @@ with Card():
 </CodeGroup>
 </ComponentPreview>
 
+
+## Why Prefab
+
+Python developers building tools, APIs, and servers regularly need to ship interactive interfaces alongside their logic: dashboards, data tables, forms, charts. Building these interfaces has traditionally meant working in an entirely different language and ecosystem, or settling for static templates and limited tooling.
+
+Prefab takes a different approach, using a Python DSL to naturally compose a library of production-ready components into interactive applications. The north star is composition, not construction: assembling existing components into interfaces, not authoring new ones in Python. The component tree compiles to a JSON protocol and is rendered by a bundled React frontend built on shadcn/ui. This means the interface definition stays in Python, right next to the data it presents. The output is declarative and serializable, which means UIs are safe for agents to generate, simple to validate, and portable across any transport.
+
+Prefab is designed from the ground up for [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), bringing interactive frontend capabilities to the Python MCP ecosystem for the first time. Prefab ships as a native part of [FastMCP](/running/fastmcp), supporting everything from hand-authored declarative interfaces to fully agent-generated UIs in a single framework.
+
+Prefab's protocol-first approach was inspired by [FastUI](https://github.com/pydantic/FastUI), which pioneered declarative component protocols rendered by a separate frontend. Prefab brings that idea to the MCP ecosystem, with a renderer that ships as a self-contained static bundle and a DSL designed for both developers and agents.
+
 ## Installation
 
 ```bash
 pip install prefab-ui
 ```
 
-Prefab requires Python 3.10+. See [Installation](/getting-started/installation) for version pinning guidance.
+Prefab requires Python 3.10+.
+
+<Warning>
+*Don't panic. Prefab is under very active development. Pin your version to avoid breaking changes.*
+</Warning>
+
 
 ## What's in the Box
 
@@ -1521,13 +1506,15 @@ Prefab requires Python 3.10+. See [Installation](/getting-started/installation) 
     Install, create an app, see it render. Two minutes, no prerequisites.
   </Card>
   <Card title="Components" icon="cube" href="/components/button">
-    35+ components: layout, typography, forms, data display, and interactive elements. Nest them with Python context managers.
+    100+ components: layout, typography, forms, data display, and interactive elements. Nest them with Python context managers.
   </Card>
   <Card title="Actions" icon="bolt" href="/concepts/actions">
     Declarative interactivity — state updates, server calls, navigation, and toast notifications. Chain them with lifecycle callbacks.
   </Card>
   <Card title="Expressions" icon="lightbulb" href="/expressions/overview">
-    Templates, operators, and pipes — build reactive UIs with `{{ }}` syntax, no server required.
+    Reactive state as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes, no JavaScript required.
   </Card>
 </CardGroup>
+
+Prefab is made with 💙 by [Prefect](https://www.prefect.io/).
 

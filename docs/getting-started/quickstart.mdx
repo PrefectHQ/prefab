@@ -21,18 +21,24 @@ Save this as `app.py`:
 
 ```python app.py
 from prefab_ui.app import PrefabApp
-from prefab_ui.components import Button, Card, CardContent, CardFooter, Column, H3, Input, Muted
-from prefab_ui.actions import ShowToast
+from prefab_ui.components import Badge, Card, CardContent, CardFooter, Column, H3, Input, Muted, Row
+from prefab_ui.rx import Rx
 
-with PrefabApp(state={"name": "world"}, css_class="max-w-md mx-auto") as app:
+name = Rx("name").default("world")
+
+with PrefabApp(css_class="max-w-md mx-auto") as app:
     with Card():
+
         with CardContent():
             with Column(gap=3):
-                name_input = Input(name="name", placeholder="Your name...")
-                H3(f"Hello, {name_input.rx}!")
-                Muted("Type your name and watch the heading update in real time.")
+                H3(f"Hello, {name}!")
+                Muted("Type below and watch this update in real time.")
+                Input(name="name", placeholder="Your name...")
+
         with CardFooter():
-            Button("Say hi", on_click=ShowToast(f"Hey there, {name_input.rx}!"))
+            with Row(gap=2):
+                Badge(f"Name: {name}", variant="default")
+                Badge("Prefab", variant="success")
 ```
 
 ## Run it
@@ -43,23 +49,101 @@ prefab serve app.py --reload
 
 Your browser opens to `http://127.0.0.1:5175`. The `--reload` flag watches your file for changes — every time you save `app.py`, the UI regenerates automatically. Here's what you'll see:
 
-<ComponentPreview json={{"view":{"type":"Column","cssClass":"max-w-md mx-auto","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name }}!","type":"H3"},{"content":"Type your name and watch the heading update in real time.","type":"Muted"},{"type":"Input","inputType":"text","placeholder":"Your name...","name":"name","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Say hi","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Hey there, {{ name }}!"}}]}]}]},"state":{"name":"world"}}} />
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root max-w-md mx-auto","type":"Div","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIENhcmQsIENhcmRDb250ZW50LCBDYXJkRm9vdGVyLCBDb2x1bW4sIEgzLCBJbnB1dCwgTXV0ZWQsIFJvdwpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggUHJlZmFiQXBwKGNzc19jbGFzcz0ibWF4LXctbWQgbXgtYXV0byIpIGFzIGFwcDoKICAgIHdpdGggQ2FyZCgpOgoKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgICAgIEgzKGYiSGVsbG8sIHtuYW1lfSEiKQogICAgICAgICAgICAgICAgTXV0ZWQoIlR5cGUgYmVsb3cgYW5kIHdhdGNoIHRoaXMgdXBkYXRlIGluIHJlYWwgdGltZS4iKQogICAgICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQoKICAgICAgICB3aXRoIENhcmRGb290ZXIoKToKICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICAgICAgQmFkZ2UoZiJOYW1lOiB7bmFtZX0iLCB2YXJpYW50PSJkZWZhdWx0IikKICAgICAgICAgICAgICAgIEJhZGdlKCJQcmVmYWIiLCB2YXJpYW50PSJzdWNjZXNzIikK">
+<CodeGroup>
+```python Python hidden icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Badge, Card, CardContent, CardFooter, Column, H3, Input, Muted, Row
+from prefab_ui.rx import Rx
 
-Type in the input — the heading updates instantly. Click the button — toast notification. That's reactive state, event handling, and a production component library, all from a dozen lines of Python.
+name = Rx("name").default("world")
 
-Try editing `app.py` while the server is running. Change the heading text, swap the button variant to `"destructive"`, or add another `Input` — save the file and the browser updates immediately. This is the development loop: write Python, save, see it live.
+with PrefabApp(css_class="max-w-md mx-auto") as app:
+    with Card():
+
+        with CardContent():
+            with Column(gap=3):
+                H3(f"Hello, {name}!")
+                Muted("Type below and watch this update in real time.")
+                Input(name="name", placeholder="Your name...")
+
+        with CardFooter():
+            with Row(gap=2):
+                Badge(f"Name: {name}", variant="default")
+                Badge("Prefab", variant="success")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root max-w-md mx-auto",
+    "type": "Div",
+    "children": [
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-3",
+                "type": "Column",
+                "children": [
+                  {"content": "Hello, {{ name | default:world }}!", "type": "H3"},
+                  {"content": "Type below and watch this update in real time.", "type": "Muted"},
+                  {
+                    "name": "name",
+                    "type": "Input",
+                    "inputType": "text",
+                    "placeholder": "Your name...",
+                    "disabled": false,
+                    "readOnly": false,
+                    "required": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "CardFooter",
+            "children": [
+              {
+                "cssClass": "gap-2",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Badge",
+                    "label": "Name: {{ name | default:world }}",
+                    "variant": "default"
+                  },
+                  {"type": "Badge", "label": "Prefab", "variant": "success"}
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Type in the input and watch the heading and badge update instantly. That's reactive state and a production component library, all from a dozen lines of Python.
+
+Try editing `app.py` while the server is running. Change the heading text, swap a badge variant to `"destructive"`, or add another `Input` — save the file and the browser updates immediately. This is the development loop: write Python, save, see it live.
 
 ## What just happened
 
-Prefab components nest using Python's `with` statement — `Card`, `Column`, `Input` compose into a tree that compiles to JSON, which a bundled React renderer turns into real HTML. The [Composition](/concepts/components) page walks through this in detail.
+Prefab components nest using Python's `with` statement — `Card`, `Column`, `Input` compose into a tree that compiles to JSON, which a bundled React renderer turns into a live interface. The [Composition](/concepts/components) page walks through this in detail.
 
-Every form control syncs its value to a client-side state key. The `.rx` property returns a reactive reference — `name_input.rx` in an f-string becomes `{{ name }}` in the protocol, and any component containing it re-renders whenever the input changes. No server round-trip needed. Read more about [reactive expressions](/expressions/overview).
+`Rx("name")` creates a reactive reference to a client-side state key. When used in an f-string like `f"Hello, {name}!"`, it compiles to `{{ name }}` in the protocol. Any component containing that reference re-renders whenever the value changes. The `Input(name="name")` automatically syncs its value to the same key, so typing in the input updates the heading and badge instantly — no server round-trip needed. Read more about [reactive expressions](/expressions/overview).
 
-`ShowToast` is a client-side [action](/concepts/actions) — it runs entirely in the browser. Prefab has several of these (`SetState`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
+Prefab has a full set of client-side [actions](/concepts/actions) (`SetState`, `ShowToast`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
 
 ## Where to go from here
 
 - [**Composition**](/concepts/components) — learn how to build any interface by nesting components
-- [**Playground**](/playground) — browse all 35+ components interactively
+- [**Playground**](/playground) — browse all 100+ components interactively
 - [**Reactive Expressions**](/expressions/overview) — operators, conditionals, and pipes for client-side logic
 - [**API Server**](/running/api) and [**FastMCP**](/running/fastmcp) — wire up a backend when you need server logic
