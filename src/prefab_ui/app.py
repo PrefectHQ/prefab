@@ -374,13 +374,20 @@ class PrefabApp(BaseModel):
             data=safe_json,
         )
 
-    def csp(self) -> dict[str, list[str]]:
+    def csp(
+        self,
+        *,
+        renderer_mode: RendererMode | None = None,
+    ) -> dict[str, list[str]]:
         """Compute CSP domains from the app's asset configuration.
 
         Merges the renderer's base CSP with origins extracted from
         `stylesheets`, `scripts`, and `connect_domains`.
+
+        `renderer_mode` should match the mode passed to `html()` so
+        the CSP allows the same resources the page actually loads.
         """
-        result = get_renderer_csp()
+        result = get_renderer_csp(mode=renderer_mode)
 
         if self.connect_domains:
             result["connect_domains"] = list(self.connect_domains)
