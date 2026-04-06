@@ -265,6 +265,80 @@ def serve(
 
 
 @app.command
+def export(
+    target: Annotated[
+        str,
+        cyclopts.Parameter(
+            help="Path to a Python file, optionally with :attribute (e.g. app.py:my_app)",
+        ),
+    ],
+    *,
+    output: Annotated[
+        str | None,
+        cyclopts.Parameter(
+            name="--output",
+            alias="-o",
+            help="Output HTML file path (default: <input_stem>.html)",
+        ),
+    ] = None,
+    bundled: Annotated[
+        bool,
+        cyclopts.Parameter(
+            "--bundled",
+            help="Inline all JS/CSS for fully self-contained output (no network needed)",
+        ),
+    ] = False,
+    cdn_version: Annotated[
+        str | None,
+        cyclopts.Parameter(
+            "--cdn-version",
+            help="Pin CDN renderer to a specific version (default: installed version, or 'latest' for dev builds)",
+        ),
+    ] = None,
+) -> None:
+    """Export a PrefabApp as a static HTML file.
+
+    Loads a PrefabApp from a Python file, renders it to HTML, and writes
+    the result to disk. The output is a single file you can open directly,
+    embed in an iframe, or deploy to any static host.
+
+    By default the renderer loads from CDN (small file, version-pinned).
+    Pass --bundled to inline everything for offline use.
+
+    Example:
+        prefab export app.py
+        prefab export app.py -o dashboard.html
+        prefab export app.py --cdn-version 0.14.1
+        prefab export app.py:sidebar --bundled
+    """
+    from prefab_ui.renderer import RendererMode
+
+    if bundled and cdn_version is not None:
+        console.print(
+            "[bold red]Error:[/bold red] --bundled and --cdn-version cannot be used together"
+        )
+        raise SystemExit(1)
+
+    prefab_app = _load_prefab_app(target)
+
+    mode: RendererMode = "bundled" if bundled else "cdn"
+    html = prefab_app.html(renderer_mode=mode, cdn_version=cdn_version, pretty=True)
+
+    if output is None:
+        stem = Path(target.partition(":")[0]).stem
+        output = f"{stem}.html"
+
+    out_path = Path(output)
+    out_path.write_text(html, encoding="utf-8")
+
+    size_kb = out_path.stat().st_size / 1024
+    console.print(
+        f"[bold green]✓[/bold green] Exported to [cyan]{out_path}[/cyan]"
+        f" ({size_kb:.0f} KB, {'bundled' if bundled else 'CDN'})"
+    )
+
+
+@app.command
 def playground(
     *,
     port: Annotated[

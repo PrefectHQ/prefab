@@ -30,7 +30,12 @@ from typing import Any
 import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
-from prefab_ui.renderer import _get_origin, get_renderer_csp, get_renderer_head
+from prefab_ui.renderer import (
+    RendererMode,
+    _get_origin,
+    get_renderer_csp,
+    get_renderer_head,
+)
 from prefab_ui.rx import _sanitize_floats
 from prefab_ui.themes import Theme
 
@@ -301,6 +306,9 @@ class PrefabApp(BaseModel):
     def html(
         self,
         *,
+        renderer_mode: RendererMode | None = None,
+        cdn_version: str | None = None,
+        pretty: bool = False,
         tool_resolver: Callable[[Any], ResolvedTool] | None = None,
     ) -> str:
         """Produce a complete, self-contained HTML page.
@@ -308,8 +316,16 @@ class PrefabApp(BaseModel):
         The page includes the Prefab renderer (JS/CSS), any user-specified
         stylesheets and scripts, and the application data baked in as a
         JSON `<script>` tag.
+
+        `renderer_mode` controls how the renderer is delivered: `"cdn"`
+        (lightweight stub loading JS from jsDelivr, pinned to the installed
+        version) or `"bundled"` (all JS/CSS inlined, no network needed).
+        When `None`, the mode is resolved automatically.
+
+        `cdn_version` overrides the version pinned in CDN URLs. Ignored
+        in bundled mode.
         """
-        head_parts = [get_renderer_head()]
+        head_parts = [get_renderer_head(mode=renderer_mode, cdn_version=cdn_version)]
 
         if self.stylesheets:
             for entry in self.stylesheets:
@@ -339,10 +355,16 @@ class PrefabApp(BaseModel):
                 f"  <script>\nwindow.__prefab_handlers = {{\n{obj}\n}};\n  </script>"
             )
 
-        data_json = json.dumps(
-            self.to_json(tool_resolver=tool_resolver),
-            separators=(",", ":"),
-        )
+        if pretty:
+            data_json = json.dumps(
+                self.to_json(tool_resolver=tool_resolver),
+                indent=2,
+            )
+        else:
+            data_json = json.dumps(
+                self.to_json(tool_resolver=tool_resolver),
+                separators=(",", ":"),
+            )
         # Escape </ to prevent premature closing of the script tag
         safe_json = data_json.replace("</", r"<\/")
 
@@ -352,13 +374,20 @@ class PrefabApp(BaseModel):
             data=safe_json,
         )
 
-    def csp(self) -> dict[str, list[str]]:
+    def csp(
+        self,
+        *,
+        renderer_mode: RendererMode | None = None,
+    ) -> dict[str, list[str]]:
         """Compute CSP domains from the app's asset configuration.
 
         Merges the renderer's base CSP with origins extracted from
         `stylesheets`, `scripts`, and `connect_domains`.
+
+        `renderer_mode` should match the mode passed to `html()` so
+        the CSP allows the same resources the page actually loads.
         """
-        result = get_renderer_csp()
+        result = get_renderer_csp(mode=renderer_mode)
 
         if self.connect_domains:
             result["connect_domains"] = list(self.connect_domains)

@@ -47,7 +47,6 @@ _CDN_TEMPLATE = """\
 _CDN_HEAD = """\
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prefab</title>
   <link rel="stylesheet" crossorigin href="{base_url}/renderer.css">
   <script type="module" crossorigin src="{base_url}/renderer.js"></script>"""
 
@@ -70,7 +69,6 @@ _EXTERNAL_TEMPLATE = """\
 _EXTERNAL_HEAD = """\
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prefab</title>
   <link rel="stylesheet" crossorigin href="{base_url}/renderer.css">
   <script type="module" crossorigin src="{base_url}/renderer.js"></script>"""
 
@@ -134,18 +132,28 @@ def _get_bundled_html() -> str:
     return _BUNDLED_HTML.read_text(encoding="utf-8")
 
 
-def get_renderer_head(mode: RendererMode | None = None) -> str:
+def get_renderer_head(
+    mode: RendererMode | None = None,
+    *,
+    cdn_version: str | None = None,
+) -> str:
     """Return the renderer ``<head>`` content (JS, CSS, meta tags).
 
     For CDN mode, returns ``<link>``/``<script>`` tags pointing at
     jsDelivr.  For bundled mode, extracts everything between ``<head>``
     and ``</head>`` from the self-contained HTML.  For external URL
     overrides, returns tags pointing at that URL.
+
+    `cdn_version` overrides the version used in CDN URLs. When `None`,
+    defaults to the installed version (or `"latest"` for dev builds).
     """
     resolved = _resolve_mode(mode)
 
     if resolved == "cdn":
-        base_url = _cdn_base_url(_get_version())
+        version = cdn_version or _get_version()
+        if cdn_version is None and _is_dev_version(version):
+            version = "latest"
+        base_url = _cdn_base_url(version)
         return _CDN_HEAD.format(base_url=base_url)
 
     if resolved == "bundled":
