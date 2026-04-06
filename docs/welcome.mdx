@@ -5,27 +5,104 @@ description: The generative UI framework that even humans can use.
 icon: hand-wave
 mode: center
 ---
-import _C_showcase from '/snippets/gen/welcome/code_showcase.mdx'
+
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-<Warning>
-*Don't panic. Prefab is under very active development.*
-</Warning>
 
-**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](/running/fastmcp), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application that runs standalone or against any backend.
+**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](/running/fastmcp), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application.
 
-Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for component nesting, making it both extremely token-efficient and streaming-compatible. As a result, you (or your agent) can generate UIs on the fly. A reactive state system lets you express client-side interactivity as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes all compile to live template bindings, with no JavaScript required.
+<Tip>
+Every example in the Prefab docs is rendered with Prefab itself, including this one:
+</Tip>
+
+{/* @preview:hello-world */}
+<ComponentPreview id="hello-world" json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKgpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShmIk5hbWU6IHtuYW1lfSIsIHZhcmlhbnQ9ImRlZmF1bHQiKQogICAgICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIpCg">
+<CodeGroup>
+```python expandable Python icon="python"
+from prefab_ui.components import *
+from prefab_ui.rx import Rx
+
+name = Rx("name").default("world")
+
+with Card():
+    with CardContent():
+        with Column(gap=3):
+            H3(f"Hello, {name}!")
+            Muted("Type below and watch this update in real time.")
+            Input(name="name", placeholder="Your name...")
+    with CardFooter():
+        with Row(gap=2):
+            Badge(f"Name: {name}", variant="default")
+            Badge("Prefab", variant="success")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-3",
+            "type": "Column",
+            "children": [
+              {"content": "Hello, {{ name | default:world }}!", "type": "H3"},
+              {"content": "Type below and watch this update in real time.", "type": "Muted"},
+              {
+                "name": "name",
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "Your name...",
+                "disabled": false,
+                "readOnly": false,
+                "required": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "CardFooter",
+        "children": [
+          {
+            "cssClass": "gap-2",
+            "type": "Row",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "Name: {{ name | default:world }}",
+                "variant": "default"
+              },
+              {"type": "Badge", "label": "Prefab", "variant": "success"}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+
+
+Composing frontends in Python is ~~blasphemous~~ surprisingly natural. 
+
+Prefab's DSL uses context managers for component nesting, making it both extremely token-efficient and streaming-compatible. As a result, you (or your agent) can generate UIs on the fly. A reactive state system lets you express client-side interactivity as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes all compile to live template bindings, with no JavaScript required. Add a backend (MCP or REST) for complex business logic, or easily create custom dashboards for your data:
+
 
 <div style={{
-  margin: '0 clamp(-180px, calc(-12vw + 80px), 0px) 2rem',
+  margin: '-3rem clamp(-180px, calc(-12vw + 80px), 0px) 2rem',
   maxHeight: '900px',
   overflow: 'hidden',
   position: 'relative',
   maskImage: 'linear-gradient(to bottom, black 70%, transparent)',
   WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent)',
 }}>
-<ComponentPreview bare id="showcase" json={{"view":{"cssClass":"gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4","type":"Grid","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Register Towel"},{"type":"CardDescription","content":"The most important item in the galaxy"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"owner","type":"Input","inputType":"text","placeholder":"Owner name...","disabled":false,"readOnly":false,"required":false},{"name":"combobox_12","type":"Combobox","placeholder":"Type...","searchPlaceholder":"Search types...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"bath","label":"Bath","disabled":false},{"type":"ComboboxOption","value":"beach","label":"Beach","disabled":false},{"type":"ComboboxOption","value":"interstellar","label":"Interstellar","disabled":false},{"type":"ComboboxOption","value":"micro","label":"Microfiber","disabled":false}]},{"name":"datepicker_4","type":"DatePicker","placeholder":"Registration date"}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Dialog","title":"Towel Registered!","description":"Your towel has been added to the galactic registry.","children":[{"type":"Button","label":"Register","variant":"default","size":"default","disabled":false},{"type":"Condition","cases":[{"when":"{{ owner }}","children":[{"content":"Thanks, {{ owner }}. Don't forget to bring it.","type":"Text"}]}],"else":[{"content":"Anonymous, I see? Don't forget to bring it.","type":"Text"}]}]},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"dots","size":"sm"},{"content":"Marvin is thinking...","type":"Muted"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Ship Status"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"heart-of-gold","type":"Text"},{"type":"HoverCard","openDelay":0,"closeDelay":200,"children":[{"type":"Badge","label":"In Orbit","variant":"default"},{"cssClass":"gap-2","type":"Column","children":[{"content":"heart-of-gold","type":"Text"},{"content":"Deployed 2h ago","type":"Muted"},{"type":"Progress","value":100.0,"max":100.0,"variant":"success","size":"default"}]}]}]},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-yellow-400"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"vogon-poetry","type":"Text"},{"type":"Tooltip","content":"64% \u2014 ETA 12 min","delay":0,"children":[{"type":"Badge","variant":"secondary","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Deploying","type":"Text"}]}]}]},{"type":"Progress","value":64.0,"max":100.0,"variant":"default","size":"default"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"deep-thought","type":"Text"},{"type":"Tooltip","content":"Computing... 7.5 million years remaining","delay":0,"children":[{"type":"Badge","variant":"outline","children":[{"type":"Loader","variant":"ios","size":"sm"},{"content":"Soon...","type":"Text"}]}]}]},{"type":"Progress","value":12.0,"max":100.0,"variant":"default","size":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Planet Ratings"}]},{"type":"CardContent","children":[{"type":"RadarChart","data":[{"axis":"Views","earth":30,"mag":95},{"axis":"Fjords","earth":65,"mag":100},{"axis":"Pubs","earth":90,"mag":10},{"axis":"Mice","earth":40,"mag":85},{"axis":"Tea","earth":95,"mag":15},{"axis":"Safety","earth":45,"mag":70}],"series":[{"dataKey":"earth","label":"Earth"},{"dataKey":"mag","label":"Magrathea"}],"axisKey":"axis","height":200,"filled":true,"showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true}]}]}]},{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Survival Odds"}]},{"cssClass":"w-fit mx-auto","type":"CardContent","children":[{"type":"Ring","value":42.0,"min":0,"max":100,"label":"42%","variant":"info","size":"lg","thickness":12.0,"indicatorClass":"group-hover:drop-shadow-[0_0_24px_rgba(59,130,246,0.9)]"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Improbability Drive"},{"cssClass":"text-blue-500","type":"Loader","variant":"pulse","size":"sm"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"improbability","value":42.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"Probable","type":"Muted"},{"content":"Infinite","type":"Muted"}]}]}]}]},{"type":"Alert","variant":"success","icon":"circle-check","children":[{"type":"AlertTitle","content":"Don't Panic"},{"type":"AlertDescription","content":"Normality achieved."}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Prefect Horizon Config"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"autoscale","value":true,"type":"Switch","label":"Auto-scale agents","size":"default","disabled":false,"required":false},{"type":"Separator","orientation":"horizontal"},{"name":"code_mode","value":true,"type":"Switch","label":"Code Mode","size":"default","disabled":false,"required":false},{"type":"Separator","orientation":"horizontal"},{"name":"cache","value":false,"type":"Switch","label":"Tool call caching","size":"default","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save Preferences","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Preferences saved!"}}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Travel Class"}]},{"type":"CardContent","children":[{"name":"travel_class","type":"RadioGroup","children":[{"name":"radio_16","value":false,"type":"Radio","option":"economy","label":"Economy","disabled":false,"required":false},{"name":"radio_17","value":false,"type":"Radio","option":"business","label":"Business Class","disabled":false,"required":false},{"name":"radio_18","value":true,"type":"Radio","option":"improbability","label":"Infinite Improbability","disabled":false,"required":false}]}]}]}]},{"cssClass":"md:col-span-2","type":"GridItem","colSpan":1,"rowSpan":1,"children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-4 grid-cols-2 h-32","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Context Window"}]},{"type":"CardContent","children":[{"cssClass":"gap-6 justify-center h-full","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"45% used","type":"Text"},{"content":"90k / 200k tokens","type":"Muted"}]},{"type":"Tooltip","content":"Auto-compact buffer: 12%","delay":0,"children":[{"type":"Progress","value":45.0,"max":100.0,"variant":"default","size":"default"}]}]}]}]},{"cssClass":"pb-0 gap-0","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Fjords designed","value":"1,847","delta":"+3 coastlines"}]},{"cssClass":"h-16","type":"Sparkline","data":[820,950,1100,980,1250,1400,1350,1500,1680,1847],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Towel Incidents"}]},{"type":"CardContent","children":[{"type":"BarChart","data":[{"month":"Jan","lost":8,"found":5},{"month":"Feb","lost":24,"found":15},{"month":"Mar","lost":12,"found":28},{"month":"Apr","lost":35,"found":19},{"month":"May","lost":18,"found":38},{"month":"Jun","lost":42,"found":30}],"series":[{"dataKey":"lost","label":"Lost"},{"dataKey":"found","label":"Found"}],"xAxis":"month","height":200,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}]}]},{"cssClass":"gap-4 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"checkbox_12","value":true,"type":"Checkbox","label":"Towel packed","disabled":false,"required":false},{"name":"checkbox_13","value":true,"type":"Checkbox","label":"Guide charged","disabled":false,"required":false},{"name":"checkbox_14","value":false,"type":"Checkbox","label":"Babel fish inserted","disabled":false,"required":false}]}]}]},{"type":"Condition","cases":[{"when":"{{ !pressed }}","children":[{"type":"Button","label":"This is probably the best button to press.","variant":"success","size":"default","disabled":false,"onClick":{"action":"setState","key":"pressed","value":true}}]}],"else":[{"type":"Button","label":"Please do not press this button again.","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"pressed","value":false}}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Marvin's Mood"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"How's life?","type":"P"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Meh","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Noted. Enthusiasm levels nominal."}},{"type":"Button","label":"Depressed","variant":"info","size":"default","disabled":false,"onClick":{"action":"showToast","message":"I think you ought to know I'm feeling very depressed."}},{"type":"Button","label":"Don't talk to me about life","variant":"warning","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Brain the size of a planet and they ask me to pick up a piece of paper."}}]}]}]}]}]},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Alert","variant":"destructive","icon":"triangle-alert","children":[{"type":"AlertTitle","content":"Beware of the Leopard"}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"type":"DataTable","columns":[{"key":"crew","header":"Crew","sortable":true},{"key":"species","header":"Species","sortable":true},{"key":"towel","header":"Towel?","sortable":true},{"key":"status","header":"Status","sortable":true}],"rows":[{"crew":"Arthur Dent","species":"Human","towel":"Yes","status":"Confused"},{"crew":"Ford Prefect","species":"Betelgeusian","towel":"Always","status":"Drinking"},{"crew":"Zaphod","species":"Betelgeusian","towel":"Lost it","status":"Presidential"},{"crew":"Trillian","species":"Human","towel":"Yes","status":"Navigating"},{"crew":"Marvin","species":"Android","towel":"No point","status":"Depressed"},{"crew":"Slartibartfast","species":"Magrathean","towel":"Somewhere","status":"Designing"}],"search":true,"paginated":false,"pageSize":10}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"MCP Servers"},{"type":"CardDescription","content":"Deployed on Horizon"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"weather-api","type":"Text"},{"type":"Tooltip","content":"Uptime: 99.97%","delay":0,"children":[{"type":"Badge","label":"Healthy","variant":"default"}]}]},{"type":"Separator","orientation":"horizontal"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"doc-search","type":"Text"},{"type":"Tooltip","content":"Uptime: 99.94%","delay":0,"children":[{"type":"Badge","label":"Healthy","variant":"default"}]}]},{"type":"Separator","orientation":"horizontal"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"marvin-brain","type":"Text"},{"type":"HoverCard","openDelay":0,"closeDelay":200,"children":[{"type":"Badge","label":"Depressed","variant":"secondary"},{"cssClass":"gap-2","type":"Column","children":[{"content":"marvin-brain","type":"Text"},{"content":"Uptime: 100% \u2014 not that it matters","type":"Muted"},{"type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default"}]}]}]}]}]}]}]}]}]}]}]},"state":{"improbability":42.0,"autoscale":true,"code_mode":true,"cache":false,"radio_16":false,"radio_17":false,"radio_18":true,"checkbox_12":true,"checkbox_13":true,"checkbox_14":false}}}>
+<ComponentPreview bare json={{"view":{"cssClass":"gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4","type":"Grid","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Register Towel"},{"type":"CardDescription","content":"The most important item in the galaxy"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"owner","type":"Input","inputType":"text","placeholder":"Owner name...","disabled":false,"readOnly":false,"required":false},{"name":"combobox_12","type":"Combobox","placeholder":"Type...","searchPlaceholder":"Search types...","disabled":false,"invalid":false,"children":[{"type":"ComboboxOption","value":"bath","label":"Bath","disabled":false},{"type":"ComboboxOption","value":"beach","label":"Beach","disabled":false},{"type":"ComboboxOption","value":"interstellar","label":"Interstellar","disabled":false},{"type":"ComboboxOption","value":"micro","label":"Microfiber","disabled":false}]},{"name":"datepicker_4","type":"DatePicker","placeholder":"Registration date"}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Dialog","title":"Towel Registered!","description":"Your towel has been added to the galactic registry.","children":[{"type":"Button","label":"Register","variant":"default","size":"default","disabled":false},{"type":"Condition","cases":[{"when":"{{ owner }}","children":[{"content":"Thanks, {{ owner }}. Don't forget to bring it.","type":"Text"}]}],"else":[{"content":"Anonymous, I see? Don't forget to bring it.","type":"Text"}]}]},{"type":"Button","label":"Cancel","variant":"outline","size":"default","disabled":false}]}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"dots","size":"sm"},{"content":"Marvin is thinking...","type":"Muted"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Ship Status"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"heart-of-gold","type":"Text"},{"type":"HoverCard","openDelay":0,"closeDelay":200,"children":[{"type":"Badge","label":"In Orbit","variant":"default"},{"cssClass":"gap-2","type":"Column","children":[{"content":"heart-of-gold","type":"Text"},{"content":"Deployed 2h ago","type":"Muted"},{"type":"Progress","value":100.0,"max":100.0,"variant":"success","size":"default"}]}]}]},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-yellow-400"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"vogon-poetry","type":"Text"},{"type":"Tooltip","content":"64% \u2014 ETA 12 min","delay":0,"children":[{"type":"Badge","variant":"secondary","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Deploying","type":"Text"}]}]}]},{"type":"Progress","value":64.0,"max":100.0,"variant":"default","size":"default"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"deep-thought","type":"Text"},{"type":"Tooltip","content":"Computing... 7.5 million years remaining","delay":0,"children":[{"type":"Badge","variant":"outline","children":[{"type":"Loader","variant":"ios","size":"sm"},{"content":"Soon...","type":"Text"}]}]}]},{"type":"Progress","value":12.0,"max":100.0,"variant":"default","size":"default"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Planet Ratings"}]},{"type":"CardContent","children":[{"type":"RadarChart","data":[{"axis":"Views","earth":30,"mag":95},{"axis":"Fjords","earth":65,"mag":100},{"axis":"Pubs","earth":90,"mag":10},{"axis":"Mice","earth":40,"mag":85},{"axis":"Tea","earth":95,"mag":15},{"axis":"Safety","earth":45,"mag":70}],"series":[{"dataKey":"earth","label":"Earth"},{"dataKey":"mag","label":"Magrathea"}],"axisKey":"axis","height":200,"filled":true,"showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true}]}]}]},{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Survival Odds"}]},{"cssClass":"w-fit mx-auto","type":"CardContent","children":[{"type":"Ring","value":42.0,"min":0,"max":100,"label":"42%","variant":"info","size":"lg","thickness":12.0,"indicatorClass":"group-hover:drop-shadow-[0_0_24px_rgba(59,130,246,0.9)]"}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"CardTitle","content":"Improbability Drive"},{"cssClass":"text-blue-500","type":"Loader","variant":"pulse","size":"sm"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"improbability","value":42.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"Probable","type":"Muted"},{"content":"Infinite","type":"Muted"}]}]}]}]},{"type":"Alert","variant":"success","icon":"circle-check","children":[{"type":"AlertTitle","content":"Don't Panic"},{"type":"AlertDescription","content":"Normality achieved."}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Prefect Horizon Config"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"name":"autoscale","value":true,"type":"Switch","label":"Auto-scale agents","size":"default","disabled":false,"required":false},{"type":"Separator","orientation":"horizontal"},{"name":"code_mode","value":true,"type":"Switch","label":"Code Mode","size":"default","disabled":false,"required":false},{"type":"Separator","orientation":"horizontal"},{"name":"cache","value":false,"type":"Switch","label":"Tool call caching","size":"default","disabled":false,"required":false}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Save Preferences","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Preferences saved!"}}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Travel Class"}]},{"type":"CardContent","children":[{"name":"travel_class","type":"RadioGroup","children":[{"name":"radio_16","value":false,"type":"Radio","option":"economy","label":"Economy","disabled":false,"required":false},{"name":"radio_17","value":false,"type":"Radio","option":"business","label":"Business Class","disabled":false,"required":false},{"name":"radio_18","value":true,"type":"Radio","option":"improbability","label":"Infinite Improbability","disabled":false,"required":false}]}]}]}]},{"cssClass":"md:col-span-2","type":"GridItem","colSpan":1,"rowSpan":1,"children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-4 grid-cols-2 h-32","type":"Grid","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Context Window"}]},{"type":"CardContent","children":[{"cssClass":"gap-6 justify-center h-full","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"45% used","type":"Text"},{"content":"90k / 200k tokens","type":"Muted"}]},{"type":"Tooltip","content":"Auto-compact buffer: 12%","delay":0,"children":[{"type":"Progress","value":45.0,"max":100.0,"variant":"default","size":"default"}]}]}]}]},{"cssClass":"pb-0 gap-0","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Fjords designed","value":"1,847","delta":"+3 coastlines"}]},{"cssClass":"h-16","type":"Sparkline","data":[820,950,1100,980,1250,1400,1350,1500,1680,1847],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Towel Incidents"}]},{"type":"CardContent","children":[{"type":"BarChart","data":[{"month":"Jan","lost":8,"found":5},{"month":"Feb","lost":24,"found":15},{"month":"Mar","lost":12,"found":28},{"month":"Apr","lost":35,"found":19},{"month":"May","lost":18,"found":38},{"month":"Jun","lost":42,"found":30}],"series":[{"dataKey":"lost","label":"Lost"},{"dataKey":"found","label":"Found"}],"xAxis":"month","height":200,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"yAxisFormat":"auto"}]}]},{"cssClass":"gap-4 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"checkbox_12","value":true,"type":"Checkbox","label":"Towel packed","disabled":false,"required":false},{"name":"checkbox_13","value":true,"type":"Checkbox","label":"Guide charged","disabled":false,"required":false},{"name":"checkbox_14","value":false,"type":"Checkbox","label":"Babel fish inserted","disabled":false,"required":false}]}]}]},{"type":"Condition","cases":[{"when":"{{ !pressed }}","children":[{"type":"Button","label":"This is probably the best button to press.","variant":"success","size":"default","disabled":false,"onClick":{"action":"setState","key":"pressed","value":true}}]}],"else":[{"type":"Button","label":"Please do not press this button again.","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"pressed","value":false}}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Marvin's Mood"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"How's life?","type":"P"},{"cssClass":"gap-2","type":"Column","children":[{"type":"Button","label":"Meh","variant":"default","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Noted. Enthusiasm levels nominal."}},{"type":"Button","label":"Depressed","variant":"info","size":"default","disabled":false,"onClick":{"action":"showToast","message":"I think you ought to know I'm feeling very depressed."}},{"type":"Button","label":"Don't talk to me about life","variant":"warning","size":"default","disabled":false,"onClick":{"action":"showToast","message":"Brain the size of a planet and they ask me to pick up a piece of paper."}}]}]}]}]}]},{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Alert","variant":"destructive","icon":"triangle-alert","children":[{"type":"AlertTitle","content":"Beware of the Leopard"}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"type":"DataTable","columns":[{"key":"crew","header":"Crew","sortable":true},{"key":"species","header":"Species","sortable":true},{"key":"towel","header":"Towel?","sortable":true},{"key":"status","header":"Status","sortable":true}],"rows":[{"crew":"Arthur Dent","species":"Human","towel":"Yes","status":"Confused"},{"crew":"Ford Prefect","species":"Betelgeusian","towel":"Always","status":"Drinking"},{"crew":"Zaphod","species":"Betelgeusian","towel":"Lost it","status":"Presidential"},{"crew":"Trillian","species":"Human","towel":"Yes","status":"Navigating"},{"crew":"Marvin","species":"Android","towel":"No point","status":"Depressed"},{"crew":"Slartibartfast","species":"Magrathean","towel":"Somewhere","status":"Designing"}],"search":true,"paginated":false,"pageSize":10}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"MCP Servers"},{"type":"CardDescription","content":"Deployed on Horizon"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"weather-api","type":"Text"},{"type":"Tooltip","content":"Uptime: 99.97%","delay":0,"children":[{"type":"Badge","label":"Healthy","variant":"default"}]}]},{"type":"Separator","orientation":"horizontal"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"doc-search","type":"Text"},{"type":"Tooltip","content":"Uptime: 99.94%","delay":0,"children":[{"type":"Badge","label":"Healthy","variant":"default"}]}]},{"type":"Separator","orientation":"horizontal"},{"cssClass":"items-center justify-between","type":"Row","children":[{"content":"marvin-brain","type":"Text"},{"type":"HoverCard","openDelay":0,"closeDelay":200,"children":[{"type":"Badge","label":"Depressed","variant":"secondary"},{"cssClass":"gap-2","type":"Column","children":[{"content":"marvin-brain","type":"Text"},{"content":"Uptime: 100% \u2014 not that it matters","type":"Muted"},{"type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default"}]}]}]}]}]}]}]}]}]}]}]},"state":{"improbability":42.0,"autoscale":true,"code_mode":true,"cache":false,"radio_16":false,"radio_17":false,"radio_18":true,"checkbox_12":true,"checkbox_13":true,"checkbox_14":false}}}>
 <CodeGroup>
 ```python Python expandable icon="python"
 from prefab_ui.components import *
@@ -1387,13 +1464,6 @@ with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
 </ComponentPreview>
 </div>
 
-Every component above was generated from the following Python code.
-
-<Tip>
-In fact, **every example in the Prefab docs is rendered by Prefab itself.** The Python code and corresponding Prefab protocol JSON are always shown below the example for reference.
-</Tip>
-
-
 {/* @code:showcase */}
 <_C_showcase />
 
@@ -1408,79 +1478,7 @@ Prefab takes a different approach, using a Python DSL to naturally compose a lib
 
 Prefab is designed from the ground up for [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), bringing interactive frontend capabilities to the Python MCP ecosystem for the first time. Prefab ships as a native part of [FastMCP](/running/fastmcp), supporting everything from hand-authored declarative interfaces to fully agent-generated UIs in a single framework.
 
-## A First Example
-
-This card has a live-updating heading and a text input bound to client-side state. Named form controls automatically sync their values, and a reactive expression system binds that state back into any component. Type in the input and watch the heading update in real time:
-
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"content":"Hello, {{ name | default:world }}!","type":"H3"},{"content":"Type below and watch this update in real time.","type":"Muted"},{"name":"name","type":"Input","inputType":"text","placeholder":"Your name...","disabled":false,"readOnly":false,"required":false}]}]},{"type":"CardFooter","children":[{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"Name: {{ name | default:world }}","variant":"default"},{"type":"Badge","label":"Prefab","variant":"success"}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRGb290ZXIsIENvbHVtbiwgSDMsIE11dGVkLCBJbnB1dCwgQmFkZ2UsIFJvdwpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCm5hbWUgPSBSeCgibmFtZSIpLmRlZmF1bHQoIndvcmxkIikKCndpdGggQ2FyZCgpOgogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD0zKToKICAgICAgICAgICAgSDMoZiJIZWxsbywge25hbWV9ISIpCiAgICAgICAgICAgIE11dGVkKCJUeXBlIGJlbG93IGFuZCB3YXRjaCB0aGlzIHVwZGF0ZSBpbiByZWFsIHRpbWUuIikKICAgICAgICAgICAgSW5wdXQobmFtZT0ibmFtZSIsIHBsYWNlaG9sZGVyPSJZb3VyIG5hbWUuLi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBSb3coZ2FwPTIpOgogICAgICAgICAgICBCYWRnZShmIk5hbWU6IHtuYW1lfSIsIHZhcmlhbnQ9ImRlZmF1bHQiKQogICAgICAgICAgICBCYWRnZSgiUHJlZmFiIiwgdmFyaWFudD0ic3VjY2VzcyIpCg">
-<CodeGroup>
-```python Python icon="python"
-from prefab_ui.components import Card, CardContent, CardFooter, Column, H3, Muted, Input, Badge, Row
-from prefab_ui.rx import Rx
-
-name = Rx("name").default("world")
-
-with Card():
-    with CardContent():
-        with Column(gap=3):
-            H3(f"Hello, {name}!")
-            Muted("Type below and watch this update in real time.")
-            Input(name="name", placeholder="Your name...")
-    with CardFooter():
-        with Row(gap=2):
-            Badge(f"Name: {name}", variant="default")
-            Badge("Prefab", variant="success")
-```
-```json Protocol icon="brackets-curly"
-{
-  "view": {
-    "type": "Card",
-    "children": [
-      {
-        "type": "CardContent",
-        "children": [
-          {
-            "cssClass": "gap-3",
-            "type": "Column",
-            "children": [
-              {"content": "Hello, {{ name | default:world }}!", "type": "H3"},
-              {"content": "Type below and watch this update in real time.", "type": "Muted"},
-              {
-                "name": "name",
-                "type": "Input",
-                "inputType": "text",
-                "placeholder": "Your name...",
-                "disabled": false,
-                "readOnly": false,
-                "required": false
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "CardFooter",
-        "children": [
-          {
-            "cssClass": "gap-2",
-            "type": "Row",
-            "children": [
-              {
-                "type": "Badge",
-                "label": "Name: {{ name | default:world }}",
-                "variant": "default"
-              },
-              {"type": "Badge", "label": "Prefab", "variant": "success"}
-            ]
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-</CodeGroup>
-</ComponentPreview>
+Prefab's protocol-first approach was inspired by [FastUI](https://github.com/pydantic/FastUI), which pioneered declarative component protocols rendered by a separate frontend. Prefab brings that idea to the MCP ecosystem, with a renderer that ships as a self-contained static bundle and a DSL designed for both developers and agents.
 
 ## Installation
 
@@ -1489,6 +1487,11 @@ pip install prefab-ui
 ```
 
 Prefab requires Python 3.10+.
+
+<Warning>
+*Don't panic. Prefab is under very active development. Pin your version to avoid breaking changes.*
+</Warning>
+
 
 ## What's in the Box
 
@@ -1503,7 +1506,7 @@ Prefab requires Python 3.10+.
     Declarative interactivity — state updates, server calls, navigation, and toast notifications. Chain them with lifecycle callbacks.
   </Card>
   <Card title="Expressions" icon="lightbulb" href="/expressions/overview">
-    Templates, operators, and pipes — build reactive UIs with `{{ }}` syntax, no server required.
+    Reactive state as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes, no JavaScript required.
   </Card>
 </CardGroup>
 
