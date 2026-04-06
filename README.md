@@ -18,7 +18,7 @@
 <img src="https://raw.githubusercontent.com/PrefectHQ/prefab/main/docs/assets/showcase.png" alt="Prefab" width="1000">
 </a>
 
-**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application that runs standalone or against any backend.
+**Prefab is a UI framework for building rich, interactive interfaces in Python.** Create [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), data dashboards, interactive tools, and more with 100+ prebuilt components. A bundled React renderer turns everything into a self-contained application.
 
 Composing frontends in Python is ~~blasphemous~~ surprisingly natural. Prefab's DSL uses context managers for component nesting, making it both extremely token-efficient and streaming-compatible. As a result, you (or your agent) can generate UIs on the fly. A reactive state system lets you express client-side interactivity as Python expressions — arithmetic, comparisons, conditionals, and formatting pipes all compile to live template bindings, with no JavaScript required.
 
@@ -54,6 +54,8 @@ Python developers building tools, APIs, and servers regularly need to ship inter
 Prefab takes a different approach, using a Python DSL to naturally compose a library of production-ready components into interactive applications. The component tree compiles to a JSON protocol and is rendered by a bundled React frontend built on shadcn/ui. The interface definition stays in Python, right next to the data it presents. The output is declarative and serializable rather than executable code, which means UIs are safe for agents to generate, easy to validate, and portable across any transport.
 
 Prefab is designed from the ground up for [MCP Apps](https://modelcontextprotocol.io/docs/extensions/apps), bringing interactive frontend capabilities to the Python MCP ecosystem for the first time. Prefab ships as a native part of [FastMCP](https://github.com/PrefectHQ/fastmcp), supporting everything from hand-authored declarative interfaces to fully agent-generated UIs in a single framework.
+
+Prefab's protocol-first approach was inspired by [FastUI](https://github.com/pydantic/FastUI), which pioneered declarative component protocols rendered by a separate frontend. Prefab brings that idea to the MCP ecosystem, with a renderer that ships as a self-contained static bundle and a DSL designed for both developers and agents.
 
 ## Installation
 
