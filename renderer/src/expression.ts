@@ -15,7 +15,7 @@
  *   not        → '!' not | comp
  *   comp       → add ( ( '==' | '!=' | '>' | '>=' | '<' | '<=' ) add )?
  *   add        → mul ( ( '+' | '-' ) mul )*
- *   mul        → unary ( ( '*' | '/' ) unary )*
+ *   mul        → unary ( ( '*' | '/' | '%' ) unary )*
  *   unary      → ( '-' | '+' ) unary | primary
  *   primary    → '(' expr ')' | NUMBER | STRING | 'true' | 'false' | 'null' | IDENT
  *   IDENT      → name ( '.' name )*
@@ -249,7 +249,7 @@ function tokenize(input: string): Token[] {
     }
 
     // Arithmetic operators
-    if (ch === "+" || ch === "-" || ch === "*" || ch === "/") {
+    if (ch === "+" || ch === "-" || ch === "*" || ch === "/" || ch === "%") {
       tokens.push({ type: "op", value: ch });
       i++;
       continue;
@@ -545,14 +545,18 @@ class Parser {
 
     while (
       this.peek().type === "op" &&
-      (this.peek().value === "*" || this.peek().value === "/")
+      (this.peek().value === "*" ||
+        this.peek().value === "/" ||
+        this.peek().value === "%")
     ) {
       const op = this.advance().value;
       const right = this.parseUnary();
       if (op === "*") {
         left = Number(left) * Number(right);
-      } else {
+      } else if (op === "/") {
         left = Number(left) / Number(right);
+      } else {
+        left = Number(left) % Number(right);
       }
     }
 

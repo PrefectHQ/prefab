@@ -107,6 +107,14 @@ describe("evaluate", () => {
       expect(evaluate("15 / 3", {})).toBe(5);
     });
 
+    it("modulo", () => {
+      expect(evaluate("10 % 3", {})).toBe(1);
+    });
+
+    it("modulo with variable", () => {
+      expect(evaluate("tick % 5", { tick: 7 })).toBe(2);
+    });
+
     it("chained addition", () => {
       expect(evaluate("1 + 2 + 3", {})).toBe(6);
     });

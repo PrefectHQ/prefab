@@ -247,6 +247,7 @@ _OP_PREC: dict[str, int] = {
     "-": _PREC_ADD,
     "*": _PREC_MUL,
     "/": _PREC_MUL,
+    "%": _PREC_MUL,
     "==": _PREC_COMP,
     "!=": _PREC_COMP,
     ">": _PREC_COMP,
@@ -409,6 +410,12 @@ class Rx:
 
     def __rtruediv__(self, other: object) -> Rx:
         return Rx(_BinOp("/", other, self), _PREC_MUL)
+
+    def __mod__(self, other: object) -> Rx:
+        return Rx(_BinOp("%", self, other), _PREC_MUL)
+
+    def __rmod__(self, other: object) -> Rx:
+        return Rx(_BinOp("%", other, self), _PREC_MUL)
 
     def __neg__(self) -> Rx:
         return Rx(_UnaryOp("-", self), _PREC_UNARY)

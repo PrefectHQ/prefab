@@ -6,7 +6,7 @@ Run with:
 """
 
 from prefab_ui import PrefabApp
-from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.actions import SetInterval, SetState, ShowToast
 from prefab_ui.components import (
     Alert,
     AlertDescription,
@@ -31,7 +31,6 @@ from prefab_ui.components import (
     Grid,
     GridItem,
     HoverCard,
-    Input,
     Loader,
     Metric,
     Muted,
@@ -54,8 +53,24 @@ from prefab_ui.components.charts import (
     Sparkline,
 )
 from prefab_ui.components.control_flow import Else, If
+from prefab_ui.rx import Rx
 
-with PrefabApp(title="Prefab Showcase") as app:
+ctx_tick = Rx("ctx_tick")
+
+# Context window: climbs from 24% to ~78%, then resets
+ctx_pct = (ctx_tick % 19) * 3 + 24
+ctx_variant = (ctx_pct > 70).then(
+    "destructive", (ctx_pct <= 33).then("success", "default")
+)
+
+with PrefabApp(
+    title="Prefab Showcase",
+    state={"ctx_tick": 0, "improbability": 42},
+    on_mount=SetInterval(
+        800,
+        on_tick=SetState("ctx_tick", ctx_tick + 1),
+    ),
+) as app:
     with Grid(columns={"default": 1, "md": 2, "lg": 4}, gap=4):
         # ── Col 1 ─────────────────────────────────────────────────────────
         with Column(gap=4):
@@ -65,10 +80,6 @@ with PrefabApp(title="Prefab Showcase") as app:
                     CardDescription("The most important item in the galaxy")
                 with CardContent():
                     with Column(gap=3):
-                        owner_input = Input(
-                            placeholder="Owner name...",
-                            name="owner",
-                        )
                         with Combobox(
                             placeholder="Type...",
                             search_placeholder="Search types...",
@@ -82,24 +93,23 @@ with PrefabApp(title="Prefab Showcase") as app:
                     with Row(gap=2):
                         with Dialog(
                             title="Towel Registered!",
-                            description=(
-                                "Your towel has been added to the galactic registry."
-                            ),
+                            description="Your towel has been added to the galactic registry.",
                         ):
                             Button("Register")
-                            with If("{{ owner }}"):
-                                Text(
-                                    f"Thanks, {owner_input.rx}. "
-                                    "Don't forget to bring it."
-                                )
-                            with Else():
-                                Text("Anonymous, I see? Don't forget to bring it.")
+                            Text("Don't forget to bring it.")
                         Button("Cancel", variant="outline")
-            with Card():
-                with CardContent():
-                    with Row(gap=2, align="center"):
-                        Loader(variant="dots", size="sm")
-                        Muted("Marvin is thinking...")
+            with If("{{ !pressed }}"):
+                Button(
+                    "This is probably the best button to press.",
+                    variant="success",
+                    on_click=SetState("pressed", True),
+                )
+            with Else():
+                Button(
+                    "Please do not press this button again.",
+                    variant="destructive",
+                    on_click=SetState("pressed", False),
+                )
 
             with Card():
                 with CardHeader():
@@ -273,13 +283,17 @@ with PrefabApp(title="Prefab Showcase") as app:
                                     align="center",
                                     css_class="justify-between",
                                 ):
-                                    Text("45% used")
-                                    Muted("90k / 200k tokens")
+                                    Text(f"{ctx_pct}% used")
+                                    Muted(f"{ctx_pct * 2}k / 200k tokens")
                                 with Tooltip(
                                     "Auto-compact buffer: 12%",
                                     delay=0,
                                 ):
-                                    Progress(value=45, max=100)
+                                    Progress(
+                                        value=ctx_pct,
+                                        max=100,
+                                        variant=ctx_variant,
+                                    )
                     with Card(css_class="pb-0 gap-0"):
                         with CardContent():
                             Metric(
@@ -340,19 +354,6 @@ with PrefabApp(title="Prefab Showcase") as app:
                                         label="Babel fish inserted",
                                         value=False,
                                     )
-                        with If("{{ !pressed }}"):
-                            Button(
-                                "This is probably the best button to press.",
-                                variant="success",
-                                on_click=SetState("pressed", True),
-                            )
-                        with Else():
-                            Button(
-                                "Please do not press this button again.",
-                                variant="destructive",
-                                on_click=SetState("pressed", False),
-                            )
-
                         with Card():
                             with CardHeader():
                                 CardTitle("Marvin's Mood")
@@ -387,6 +388,11 @@ with PrefabApp(title="Prefab Showcase") as app:
                                         )
 
                     with Column(gap=4):
+                        with Card():
+                            with CardContent():
+                                with Row(gap=2, align="center"):
+                                    Loader(variant="dots", size="sm")
+                                    Muted("Marvin is thinking...")
                         with Card():
                             with CardContent():
                                 DataTable(
