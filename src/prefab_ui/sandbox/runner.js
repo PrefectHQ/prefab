@@ -39,7 +39,7 @@ const createdDirs = new Set();
 
 for await (const entry of walk(prefabSrc, { exts: [".py"] })) {
   if (!entry.isFile) continue;
-  const relPath = entry.path.slice(prefabSrc.length);
+  const relPath = entry.path.slice(prefabSrc.length).replaceAll("\\", "/");
   const target = `${sitePackages}/prefab_ui${relPath}`;
   const dir = target.slice(0, target.lastIndexOf("/"));
   if (!createdDirs.has(dir)) {
