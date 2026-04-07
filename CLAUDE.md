@@ -69,6 +69,8 @@ prefab dev build-docs
 
 ## Development Rules
 
+**Read `CONTRIBUTING.md` before opening issues or PRs.** It describes when PRs are appropriate, what we expect from contributions, and what we'll close without review.
+
 ### Git & CI
 
 - Prek hooks run automatically on commits and must pass
