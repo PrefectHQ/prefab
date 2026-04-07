@@ -109,7 +109,7 @@ class _IndexPath(NamedTuple):
 _Node = _BinOp | _UnaryOp | _Ternary | _Pipe | _DotPath | _IndexPath
 
 # Ops where RHS needs strict wrapping (parens at same precedence)
-_STRICT_RHS_OPS = frozenset({"-", "/", "&&", "||"})
+_STRICT_RHS_OPS = frozenset({"-", "/", "%", "&&", "||"})
 
 
 @runtime_checkable
@@ -247,6 +247,7 @@ _OP_PREC: dict[str, int] = {
     "-": _PREC_ADD,
     "*": _PREC_MUL,
     "/": _PREC_MUL,
+    "%": _PREC_MUL,
     "==": _PREC_COMP,
     "!=": _PREC_COMP,
     ">": _PREC_COMP,
@@ -409,6 +410,12 @@ class Rx:
 
     def __rtruediv__(self, other: object) -> Rx:
         return Rx(_BinOp("/", other, self), _PREC_MUL)
+
+    def __mod__(self, other: object) -> Rx:
+        return Rx(_BinOp("%", self, other), _PREC_MUL)
+
+    def __rmod__(self, other: object) -> Rx:
+        return Rx(_BinOp("%", other, self), _PREC_MUL)
 
     def __neg__(self) -> Rx:
         return Rx(_UnaryOp("-", self), _PREC_UNARY)
