@@ -64,9 +64,34 @@ def _find_free_port(start: int) -> int:
 
 
 @app.command
-def version() -> None:
-    """Display the current Prefab version."""
-    console.print(f"prefab-ui [cyan]{prefab_ui.__version__}[/cyan]")
+def version(
+    *,
+    copy: Annotated[
+        bool,
+        cyclopts.Parameter("--copy", help="Copy version information to clipboard"),
+    ] = False,
+) -> None:
+    """Display version information and platform details."""
+    import platform
+
+    info = {
+        "Prefab version": prefab_ui.__version__,
+        "Python version": platform.python_version(),
+        "Platform": platform.platform(),
+    }
+
+    plain_text = "\n".join(f"{k}: {v}" for k, v in info.items())
+    console.print(plain_text)
+
+    if copy:
+        for cmd in (["pbcopy"], ["xclip", "-selection", "clipboard"]):
+            try:
+                subprocess.run(cmd, input=plain_text.encode(), check=True)
+                console.print("[green]Copied to clipboard[/green]")
+                return
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                continue
+        console.print("[yellow]Could not copy to clipboard[/yellow]")
 
 
 def _load_prefab_app(target: str) -> PrefabApp:
