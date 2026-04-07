@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -60,12 +61,18 @@ class PyodideSandbox:
             )
 
         loop = asyncio.get_event_loop()
+        env = {
+            **os.environ,
+            "DENO_V8_FLAGS": "--max-old-space-size=4096",
+            "DENO_UNSTABLE_DETECT_CJS": "1",
+        }
         proc = await loop.run_in_executor(
             None,
             lambda: subprocess.Popen(
                 [
                     deno,
                     "run",
+                    "--unstable-detect-cjs",
                     "--allow-read",
                     "--allow-write",
                     "--allow-net",
@@ -75,6 +82,7 @@ class PyodideSandbox:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                env=env,
             ),
         )
 

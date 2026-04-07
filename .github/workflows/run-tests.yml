@@ -43,6 +43,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           resolution: locked
 
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
       - name: Run tests
         uses: ./.github/actions/run-pytest
 
