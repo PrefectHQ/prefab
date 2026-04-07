@@ -41,6 +41,7 @@ function Progress({
     orientation?: "horizontal" | "vertical";
   }) {
   const isVertical = orientation === "vertical";
+  const clamped = Math.max(0, Math.min(100, value ?? 0));
   const clampedTarget =
     target != null ? Math.max(0, Math.min(100, target)) : undefined;
   const sizeClass = `pf-progress-size-${size}`;
@@ -69,8 +70,8 @@ function Progress({
           className={cn(progressVariants({ variant }), indicatorClassName)}
           style={
             isVertical
-              ? { transform: `translateY(${100 - (value || 0)}%)` }
-              : { transform: `translateX(-${100 - (value || 0)}%)` }
+              ? { transform: `translateY(${100 - clamped}%)` }
+              : { transform: `translateX(-${100 - clamped}%)` }
           }
         />
       </ProgressPrimitive.Track>

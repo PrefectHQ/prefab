@@ -153,9 +153,18 @@ export function PrefabPages({ value, className, _panels }: PrefabPagesProps) {
     }
   }, [value]);
 
-  const activePanel = _panels.find((p) => p.value === active);
-
-  return <div className={className}>{activePanel?.content}</div>;
+  return (
+    <div className={className}>
+      {_panels.map((panel) => (
+        <div
+          key={panel.value}
+          style={panel.value !== active ? { display: "none" } : undefined}
+        >
+          {panel.content}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 // ── Tooltip ────────────────────────────────────────────────────────────
