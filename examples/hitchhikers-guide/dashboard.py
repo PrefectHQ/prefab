@@ -58,7 +58,7 @@ from prefab_ui.rx import Rx
 ctx_tick = Rx("ctx_tick")
 
 # Context window: climbs from 24% to ~78%, then resets
-ctx_pct = (ctx_tick % 19) * 3 + 24
+ctx_pct = (ctx_tick % 20) * 3 + 20
 ctx_variant = (ctx_pct > 70).then(
     "destructive", (ctx_pct <= 33).then("success", "default")
 )
@@ -67,7 +67,7 @@ with PrefabApp(
     title="Prefab Showcase",
     state={"ctx_tick": 0, "improbability": 42},
     on_mount=SetInterval(
-        800,
+        400,
         on_tick=SetState("ctx_tick", ctx_tick + 1),
     ),
 ) as app:

@@ -9,6 +9,11 @@ import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { interpolateString } from "../interpolation";
 import {
+  globalFilter as dataTableGlobalFilter,
+  nextSortAction,
+  toggleRowSelection,
+} from "./data-table-logic";
+import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
@@ -127,9 +132,14 @@ export function PrefabDataTable({
             return (
               <button
                 className="flex items-center gap-1 hover:text-foreground"
-                onClick={() =>
-                  column.toggleSorting(column.getIsSorted() === "asc")
-                }
+                onClick={() => {
+                  const action = nextSortAction(column.getIsSorted());
+                  if (action === "clear") {
+                    column.clearSorting();
+                  } else {
+                    column.toggleSorting(action === "desc");
+                  }
+                }}
               >
                 {spec.header}
                 {column.getIsSorted() === "asc" ? (
@@ -165,20 +175,6 @@ export function PrefabDataTable({
     return cols;
   }, [columnSpecs, renderNode, hasExpandableRows]);
 
-  const globalFilterFn = useMemo(() => {
-    if (!hasExpandableRows) return undefined;
-    return (
-      row: { getValue: (id: string) => unknown },
-      columnId: string,
-      filterValue: string,
-    ) => {
-      if (columnId === "_expand" || columnId === "_detail") return false;
-      const value = row.getValue(columnId);
-      if (value == null) return false;
-      return String(value).toLowerCase().includes(filterValue.toLowerCase());
-    };
-  }, [hasExpandableRows]);
-
   const table = useReactTable({
     data: rows,
     columns: dataColumns,
@@ -193,7 +189,7 @@ export function PrefabDataTable({
     getFilteredRowModel: search ? getFilteredRowModel() : undefined,
     getPaginationRowModel: paginated ? getPaginationRowModel() : undefined,
     getExpandedRowModel: hasExpandableRows ? getExpandedRowModel() : undefined,
-    globalFilterFn: globalFilterFn,
+    globalFilterFn: dataTableGlobalFilter,
     initialState: paginated ? { pagination: { pageSize } } : undefined,
   });
 
@@ -257,8 +253,13 @@ export function PrefabDataTable({
                       onClick={
                         isClickable
                           ? () => {
-                              setClickedRowId(row.id);
-                              onRowClick(row.original);
+                              const result = toggleRowSelection(
+                                clickedRowId,
+                                row.id,
+                              );
+                              setClickedRowId(result.selectedId);
+                              if (result.shouldFireAction)
+                                onRowClick(row.original);
                             }
                           : undefined
                       }
