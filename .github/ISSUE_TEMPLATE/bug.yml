@@ -1,0 +1,45 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Prefab
+labels: [bug]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
+
+        - Make sure you're on the **latest version** of Prefab
+        - Include a **minimal reproducible example** or your issue may be closed
+        - Keep it short: a clear description plus a concise MRE is ideal
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug. What did you do, what happened, and what did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Code
+      description: A self-contained, minimal example demonstrating the bug.
+      placeholder: |
+        from prefab_ui import PrefabApp
+        from prefab_ui.components import Column, Text
+
+        with PrefabApp() as app:
+            with Column():
+                Text("...")  # show the bug here
+      render: Python
+
+  - type: textarea
+    id: version
+    attributes:
+      label: Version Information
+      description: |
+        Run `prefab version --copy` and paste the output below.
+      render: Text
+    validations:
+      required: true
