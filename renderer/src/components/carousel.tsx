@@ -118,23 +118,19 @@ export function PrefabCarousel({
   const visibleCount =
     effectiveVisible != null && effectiveVisible > 0 ? effectiveVisible : null;
   const effectiveGap = resolveGap(gap, effect, visibleCount);
-  const verticalContentHeight = isVertical
+  const verticalViewportHeight = isVertical
     ? height ??
       resolveVerticalViewportHeight(measuredHeight, visibleCount, effectiveGap)
     : undefined;
-  const verticalTrackHeight =
-    isVertical && verticalContentHeight != null
-      ? verticalContentHeight + effectiveGap
-      : undefined;
   const halfGap = effectiveGap > 0 ? effectiveGap / 2 : 0;
   // For horizontal: basis as % of viewport width.
   // For vertical: basis in px. Use the explicit viewport height when one is
   // provided, otherwise use the measured first slide height.
   const slideBasis =
     visibleCount != null
-      ? isVertical && verticalContentHeight != null
+      ? isVertical && verticalViewportHeight != null
         ? `${resolveVerticalSlideBasis(
-            verticalContentHeight,
+            verticalViewportHeight,
             visibleCount,
             effectiveGap,
           )}px`
@@ -197,7 +193,7 @@ export function PrefabCarousel({
   return (
     <CarouselInner
       isVertical={isVertical}
-      viewportHeight={verticalTrackHeight}
+      viewportHeight={verticalViewportHeight}
       validChildren={effectiveChildren}
       realSlideCount={realSlideCount}
       slideBasis={slideBasis}
