@@ -108,6 +108,9 @@ class TestArithmetic:
     def test_rmod(self) -> None:
         assert (10 % Rx("tick")).key == "10 % tick"
 
+    def test_mod_rhs_grouping(self) -> None:
+        assert (Rx("a") % (Rx("b") % Rx("c"))).key == "a % (b % c)"
+
     def test_neg(self) -> None:
         assert (-Rx("score")).key == "-score"
 

@@ -109,7 +109,7 @@ class _IndexPath(NamedTuple):
 _Node = _BinOp | _UnaryOp | _Ternary | _Pipe | _DotPath | _IndexPath
 
 # Ops where RHS needs strict wrapping (parens at same precedence)
-_STRICT_RHS_OPS = frozenset({"-", "/", "&&", "||"})
+_STRICT_RHS_OPS = frozenset({"-", "/", "%", "&&", "||"})
 
 
 @runtime_checkable
