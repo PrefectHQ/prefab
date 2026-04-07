@@ -13,6 +13,8 @@ import {
   getLoopDuplicationRepeats,
   resolveGap,
   resolveVisible,
+  resolveVerticalSlideBasis,
+  resolveVerticalViewportHeight,
 } from "./carousel-logic";
 import {
   ChevronLeft,
@@ -33,7 +35,7 @@ interface CarouselProps {
   effect?: "slide" | "fade";
   dimInactive?: boolean;
   showControls?: boolean;
-  controlsPosition?: "overlay" | "outside";
+  controlsPosition?: "overlay" | "outside" | "gutter";
   showDots?: boolean;
   pauseOnHover?: boolean;
   align?: "start" | "center" | "end";
@@ -106,24 +108,32 @@ export function PrefabCarousel({
 
   // For vertical carousels: measure first child's height before mounting Embla.
   // This ensures Embla sees the correct viewport height at init time.
-  const [measureRef, effectiveHeight] = useMeasuredHeight(isVertical, height);
+  const [measureRef, measuredHeight] = useMeasuredHeight(isVertical, height);
 
   // For vertical without explicit height: don't mount Embla until we know the height.
   // Render a hidden measurement div first, then swap to the real carousel.
-  const verticalReady = !isVertical || effectiveHeight != null;
+  const verticalReady = !isVertical || measuredHeight != null;
 
   // Slide sizing
   const visibleCount =
     effectiveVisible != null && effectiveVisible > 0 ? effectiveVisible : null;
   const effectiveGap = resolveGap(gap, effect, visibleCount);
+  const verticalViewportHeight = isVertical
+    ? height ??
+      resolveVerticalViewportHeight(measuredHeight, visibleCount, effectiveGap)
+    : undefined;
   const halfGap = effectiveGap > 0 ? effectiveGap / 2 : 0;
   // For horizontal: basis as % of viewport width.
-  // For vertical: basis in px (% doesn't work in flex-column without
-  // explicit container height). Use the measured/explicit height.
+  // For vertical: basis in px. Use the explicit viewport height when one is
+  // provided, otherwise use the measured first slide height.
   const slideBasis =
     visibleCount != null
-      ? isVertical && effectiveHeight != null
-        ? `${effectiveHeight / visibleCount}px`
+      ? isVertical && verticalViewportHeight != null
+        ? `${resolveVerticalSlideBasis(
+            verticalViewportHeight,
+            visibleCount,
+            effectiveGap,
+          )}px`
         : `${100 / visibleCount}%`
       : undefined;
 
@@ -183,10 +193,11 @@ export function PrefabCarousel({
   return (
     <CarouselInner
       isVertical={isVertical}
-      effectiveHeight={effectiveHeight}
+      viewportHeight={verticalViewportHeight}
       validChildren={effectiveChildren}
       realSlideCount={realSlideCount}
       slideBasis={slideBasis}
+      effectiveGap={effectiveGap}
       halfGap={halfGap}
       loop={loop}
       align={align}
@@ -211,10 +222,11 @@ export function PrefabCarousel({
 /** Inner component that mounts Embla — only rendered when dimensions are known. */
 function CarouselInner({
   isVertical,
-  effectiveHeight,
+  viewportHeight,
   validChildren,
   realSlideCount,
   slideBasis,
+  effectiveGap,
   halfGap,
   loop,
   align,
@@ -234,10 +246,11 @@ function CarouselInner({
   cssClass,
 }: {
   isVertical: boolean;
-  effectiveHeight: number | undefined;
+  viewportHeight: number | undefined;
   validChildren: React.ReactNode[];
   realSlideCount: number;
   slideBasis: string | undefined;
+  effectiveGap: number;
   halfGap: number;
   loop: boolean;
   align: "start" | "center" | "end";
@@ -251,7 +264,7 @@ function CarouselInner({
   pauseOnHover: boolean;
   dimInactive: boolean;
   showControls: boolean;
-  controlsPosition: "overlay" | "outside";
+  controlsPosition: "overlay" | "outside" | "gutter";
   showDots: boolean;
   className?: string;
   cssClass?: string;
@@ -376,12 +389,35 @@ function CarouselInner({
 
   const controlsVisible = showControls && !continuous;
   const controlsOutside = controlsPosition === "outside";
+  const controlsGutter = controlsPosition === "gutter";
   const dotsVisible = showDots && slideCount > 1;
-  const verticalDotsVisible = dotsVisible && isVertical;
-  const horizontalDotsVisible = dotsVisible && !isVertical;
+  const verticalDotsVisible = dotsVisible && isVertical && !controlsGutter;
+  const horizontalDotsVisible = dotsVisible && !isVertical && !controlsGutter;
   const controlSize = 32;
   const outsidePadding = controlSize + 8;
   const sideDotsPadding = 20;
+  const sideGutterPadding =
+    controlsGutter && (controlsVisible || dotsVisible)
+      ? controlSize + 12
+      : sideDotsPadding;
+  const verticalGutterVisible =
+    isVertical && controlsGutter && (controlsVisible || dotsVisible);
+  const horizontalGutterVisible =
+    !isVertical && controlsGutter && (controlsVisible || dotsVisible);
+  const controlButtonBaseStyle: React.CSSProperties = {
+    zIndex: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: controlSize,
+    height: controlSize,
+    borderRadius: "50%",
+    border: "1px solid var(--border, #e5e7eb)",
+    background: "var(--background, #fff)",
+    boxShadow: "0 1px 3px rgba(0,0,0,.1)",
+    cursor: "pointer",
+    transition: "opacity 150ms",
+  };
 
   const viewportShellStyle: React.CSSProperties = {
     position: "relative",
@@ -390,7 +426,9 @@ function CarouselInner({
         ? { paddingTop: outsidePadding, paddingBottom: outsidePadding }
         : { paddingLeft: outsidePadding, paddingRight: outsidePadding }
       : {}),
-    ...(verticalDotsVisible ? { paddingRight: sideDotsPadding } : {}),
+    ...(isVertical && (verticalDotsVisible || verticalGutterVisible)
+      ? { paddingRight: sideGutterPadding }
+      : {}),
   };
 
   const prevControlPosition: React.CSSProperties = controlsOutside
@@ -419,8 +457,8 @@ function CarouselInner({
             overflow: "hidden",
             // For vertical: set height on the viewport so Embla knows the
             // visible area. This was measured before this component mounted.
-            ...(isVertical && effectiveHeight != null
-              ? { height: effectiveHeight }
+            ...(isVertical && viewportHeight != null
+              ? { height: viewportHeight }
               : {}),
           }}
         >
@@ -431,13 +469,13 @@ function CarouselInner({
               flexDirection: isVertical ? "column" : "row",
               // For vertical carousels, Embla measures the container rect for
               // view size. Keep container height fixed to the viewport height.
-              ...(isVertical && effectiveHeight != null
-                ? { height: effectiveHeight }
+              ...(isVertical && viewportHeight != null
+                ? { height: viewportHeight }
                 : {}),
               touchAction: isVertical ? "pan-x pinch-zoom" : "pan-y pinch-zoom",
-              ...(halfGap > 0
+              ...(effectiveGap > 0
                 ? isVertical
-                  ? { marginTop: -halfGap, marginBottom: -halfGap }
+                  ? { marginTop: -effectiveGap }
                   : { marginLeft: -halfGap, marginRight: -halfGap }
                 : {}),
               ...(effect === "fade" ? { position: "relative" as const } : {}),
@@ -451,11 +489,13 @@ function CarouselInner({
                 style={{
                   flexShrink: 0,
                   flexGrow: 0,
-                  ...(isVertical ? { minHeight: 0 } : { minWidth: 0 }),
+                  ...(isVertical
+                    ? { minHeight: 0, boxSizing: "content-box" as const }
+                    : { minWidth: 0 }),
                   ...(slideBasis != null ? { flexBasis: slideBasis } : {}),
-                  ...(halfGap > 0
+                  ...(effectiveGap > 0
                     ? isVertical
-                      ? { paddingTop: halfGap, paddingBottom: halfGap }
+                      ? { paddingTop: effectiveGap }
                       : { paddingLeft: halfGap, paddingRight: halfGap }
                     : {}),
                   ...(dimInactive && slideOpacities[i] != null
@@ -473,26 +513,15 @@ function CarouselInner({
         </div>
 
         {/* Navigation arrows */}
-        {controlsVisible && (
+        {controlsVisible && !controlsGutter && (
           <>
             <button
               onClick={scrollPrev}
               disabled={!loop && !canScrollPrev}
               style={{
+                ...controlButtonBaseStyle,
                 position: "absolute",
-                zIndex: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: controlSize,
-                height: controlSize,
-                borderRadius: "50%",
-                border: "1px solid var(--border, #e5e7eb)",
-                background: "var(--background, #fff)",
-                boxShadow: "0 1px 3px rgba(0,0,0,.1)",
-                cursor: "pointer",
                 opacity: !loop && !canScrollPrev ? 0 : 1,
-                transition: "opacity 150ms",
                 ...prevControlPosition,
               }}
             >
@@ -502,20 +531,9 @@ function CarouselInner({
               onClick={scrollNext}
               disabled={!loop && !canScrollNext}
               style={{
+                ...controlButtonBaseStyle,
                 position: "absolute",
-                zIndex: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: controlSize,
-                height: controlSize,
-                borderRadius: "50%",
-                border: "1px solid var(--border, #e5e7eb)",
-                background: "var(--background, #fff)",
-                boxShadow: "0 1px 3px rgba(0,0,0,.1)",
-                cursor: "pointer",
                 opacity: !loop && !canScrollNext ? 0 : 1,
-                transition: "opacity 150ms",
                 ...nextControlPosition,
               }}
             >
@@ -557,6 +575,65 @@ function CarouselInner({
             ))}
           </div>
         )}
+
+        {verticalGutterVisible && (
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: 0,
+              transform: "translateY(-50%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              width: sideGutterPadding,
+            }}
+          >
+            {controlsVisible && (
+              <button
+                onClick={scrollPrev}
+                disabled={!loop && !canScrollPrev}
+                style={{
+                  ...controlButtonBaseStyle,
+                  opacity: !loop && !canScrollPrev ? 0 : 1,
+                }}
+              >
+                <PrevIcon style={{ width: 16, height: 16 }} />
+              </button>
+            )}
+            {dotsVisible &&
+              Array.from({ length: slideCount }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollTo(i)}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "opacity 150ms",
+                    background: "var(--foreground, #000)",
+                    opacity: i === selectedIndex ? 1 : 0.2,
+                  }}
+                />
+              ))}
+            {controlsVisible && (
+              <button
+                onClick={scrollNext}
+                disabled={!loop && !canScrollNext}
+                style={{
+                  ...controlButtonBaseStyle,
+                  opacity: !loop && !canScrollNext ? 0 : 1,
+                }}
+              >
+                <NextIcon style={{ width: 16, height: 16 }} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Pagination dots (horizontal = below) */}
@@ -585,6 +662,69 @@ function CarouselInner({
               }}
             />
           ))}
+        </div>
+      )}
+
+      {horizontalGutterVisible && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+            marginTop: 12,
+          }}
+        >
+          {controlsVisible && (
+            <button
+              onClick={scrollPrev}
+              disabled={!loop && !canScrollPrev}
+              style={{
+                ...controlButtonBaseStyle,
+                opacity: !loop && !canScrollPrev ? 0 : 1,
+              }}
+            >
+              <PrevIcon style={{ width: 16, height: 16 }} />
+            </button>
+          )}
+          {dotsVisible && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 6,
+              }}
+            >
+              {Array.from({ length: slideCount }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollTo(i)}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "opacity 150ms",
+                    background: "var(--foreground, #000)",
+                    opacity: i === selectedIndex ? 1 : 0.2,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          {controlsVisible && (
+            <button
+              onClick={scrollNext}
+              disabled={!loop && !canScrollNext}
+              style={{
+                ...controlButtonBaseStyle,
+                opacity: !loop && !canScrollNext ? 0 : 1,
+              }}
+            >
+              <NextIcon style={{ width: 16, height: 16 }} />
+            </button>
+          )}
         </div>
       )}
     </div>

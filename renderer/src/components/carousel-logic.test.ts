@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   getLoopDuplicationRepeats,
+  getVisibleGapCount,
   resolveGap,
   resolveVisible,
+  resolveVerticalSlideBasis,
+  resolveVerticalViewportHeight,
 } from "./carousel-logic";
 
 describe("resolveVisible", () => {
@@ -44,6 +47,30 @@ describe("resolveGap", () => {
   it("keeps user gap for multi-visible fade", () => {
     expect(resolveGap(16, "fade", 4)).toBe(16);
     expect(resolveGap(12, "fade", 1.3)).toBe(12);
+  });
+});
+
+describe("vertical sizing helpers", () => {
+  it("counts only internal visible gaps", () => {
+    expect(getVisibleGapCount(1)).toBe(0);
+    expect(getVisibleGapCount(1.3)).toBe(1);
+    expect(getVisibleGapCount(3)).toBe(2);
+    expect(getVisibleGapCount(3.6)).toBe(3);
+  });
+
+  it("builds auto height from slide height plus visible gaps", () => {
+    expect(resolveVerticalViewportHeight(undefined, 3, 16)).toBeUndefined();
+    expect(resolveVerticalViewportHeight(160, 1, 16)).toBe(160);
+    expect(resolveVerticalViewportHeight(160, 1.3, 16)).toBe(224);
+    expect(resolveVerticalViewportHeight(160, 3, 16)).toBe(512);
+  });
+
+  it("derives per-slide basis from an explicit viewport height", () => {
+    expect(resolveVerticalSlideBasis(400, 1, 16)).toBe(400);
+    expect(resolveVerticalSlideBasis(400, 3, 16)).toBe(122.66666666666667);
+    expect(resolveVerticalSlideBasis(400, 1.3, 16)).toBeCloseTo(
+      295.38461538461536,
+    );
   });
 });
 

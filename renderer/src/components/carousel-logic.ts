@@ -20,6 +20,31 @@ export function resolveGap(
   return gap;
 }
 
+export function getVisibleGapCount(visibleCount: number | null): number {
+  if (visibleCount == null || visibleCount <= 1) return 0;
+  return Math.ceil(visibleCount) - 1;
+}
+
+export function resolveVerticalViewportHeight(
+  slideHeight: number | undefined,
+  visibleCount: number | null,
+  gap: number,
+): number | undefined {
+  if (slideHeight == null) return undefined;
+  if (visibleCount == null || visibleCount <= 0) return slideHeight;
+  return slideHeight * visibleCount + getVisibleGapCount(visibleCount) * gap;
+}
+
+export function resolveVerticalSlideBasis(
+  viewportHeight: number,
+  visibleCount: number,
+  gap: number,
+): number {
+  return (
+    (viewportHeight - getVisibleGapCount(visibleCount) * gap) / visibleCount
+  );
+}
+
 interface LoopDuplicationArgs {
   loop: boolean;
   continuous: boolean;

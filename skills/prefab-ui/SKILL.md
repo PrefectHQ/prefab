@@ -226,7 +226,7 @@ with Carousel(auto_advance=3000, show_controls=False):
     Card(...)
 
 # Vertical reel
-with Carousel(direction="down", auto_advance=2000, show_controls=False):
+with Carousel(direction="down", visible=3, gap=16, auto_advance=2000, show_controls=False):
     Div(style={"height": "160px"})
 
 # Marquee — continuous smooth scroll
@@ -241,7 +241,7 @@ with Carousel(effect="fade", auto_advance=2000, show_controls=False):
 
 Key props: `visible` (int/float/None), `gap`, `direction` (left/right/up/down),
 `auto_advance` (ms), `continuous`, `speed` (1-10), `effect` (slide/fade),
-`dim_inactive`, `show_controls`, `controls_position` (overlay/outside),
+`dim_inactive`, `show_controls`, `controls_position` (overlay/outside/gutter),
 `show_dots`, `align` (start/center/end), `loop`.
 
 ## Actions
