@@ -36,7 +36,8 @@ class Carousel(ContainerComponent):
         effect: Visual transition effect.
         dim_inactive: Reduce opacity of non-active slides.
         show_controls: Show navigation arrows.
-        controls_position: Position controls over slides or outside the viewport.
+        controls_position: Position controls over slides, outside the viewport,
+            or in the same gutter as pagination dots.
         show_dots: Show pagination dots.
         pause_on_hover: Pause auto-advance/continuous scroll on hover.
         align: Slide alignment within the viewport.
@@ -101,10 +102,10 @@ class Carousel(ContainerComponent):
         alias="showControls",
         description="Show previous/next navigation arrows",
     )
-    controls_position: Literal["overlay", "outside"] = Field(
+    controls_position: Literal["overlay", "outside", "gutter"] = Field(
         default="outside",
         alias="controlsPosition",
-        description="Position controls over slides (overlay) or outside the viewport",
+        description="Position controls over slides (overlay), outside the viewport, or in the dots gutter",
     )
     show_dots: bool = Field(
         default=False,

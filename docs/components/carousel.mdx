@@ -410,25 +410,31 @@ with Carousel(auto_advance=2000, show_dots=True, controls_position="outside", cs
 
 ### Controls Position
 
-Arrow buttons default to overlaying the slides. Set `controls_position="outside"` to place them outside the viewport — useful when the overlay would obscure content:
+Arrow buttons sit outside the viewport by default, flanking the slides. Set `controls_position="overlay"` to layer them on top of the slides, or `"gutter"` to place them inline with the pagination dots.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 w-full","type":"Column","children":[{"content":"Overlay (default)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"overlay","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Outside","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-purple-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBIMygiT3ZlcmxheSAoZGVmYXVsdCkiKQogICAgd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgY29udHJvbHNfcG9zaXRpb249Im92ZXJsYXkiLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCgogICAgSDMoIk91dHNpZGUiKQogICAgd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgY29udHJvbHNfcG9zaXRpb249Im91dHNpZGUiLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWFtYmVyLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1wdXJwbGUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-6 w-full","type":"Column","children":[{"content":"Outside (default)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-amber-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-purple-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Overlay","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"overlay","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"120px"}}]},{"content":"Gutter","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"left","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"gutter","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-rose-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-cyan-500 rounded-lg","type":"Div","style":{"height":"120px"}},{"cssClass":"bg-lime-500 rounded-lg","type":"Div","style":{"height":"120px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBIMygiT3V0c2lkZSAoZGVmYXVsdCkiKQogICAgd2l0aCBDYXJvdXNlbChzaG93X2RvdHM9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1hbWJlci01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctcHVycGxlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKCiAgICBIMygiT3ZlcmxheSIpCiAgICB3aXRoIENhcm91c2VsKHNob3dfZG90cz1UcnVlLCBjb250cm9sc19wb3NpdGlvbj0ib3ZlcmxheSIsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctYmx1ZS01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctZW1lcmFsZC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjEyMHB4In0pCiAgICAgICAgRGl2KGNzc19jbGFzcz0iYmctdmlvbGV0LTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTIwcHgifSkKCiAgICBIMygiR3V0dGVyIikKICAgIHdpdGggQ2Fyb3VzZWwoc2hvd19kb3RzPVRydWUsIGNvbnRyb2xzX3Bvc2l0aW9uPSJndXR0ZXIiLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXJvc2UtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWN5YW4tNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWxpbWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxMjBweCJ9KQo">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Column, Div, H3
 
 with Column(gap=6, css_class="w-full"):
-    H3("Overlay (default)")
+    H3("Outside (default)")
+    with Carousel(show_dots=True, css_class="w-full"):
+        Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-purple-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
+
+    H3("Overlay")
     with Carousel(show_dots=True, controls_position="overlay", css_class="w-full"):
         Div(css_class="bg-blue-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
         Div(css_class="bg-violet-500 rounded-lg", style={"height": "120px"})
 
-    H3("Outside")
-    with Carousel(show_dots=True, controls_position="outside", css_class="w-full"):
-        Div(css_class="bg-amber-500 rounded-lg", style={"height": "120px"})
-        Div(css_class="bg-purple-500 rounded-lg", style={"height": "120px"})
-        Div(css_class="bg-emerald-500 rounded-lg", style={"height": "120px"})
+    H3("Gutter")
+    with Carousel(show_dots=True, controls_position="gutter", css_class="w-full"):
+        Div(css_class="bg-rose-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-cyan-500 rounded-lg", style={"height": "120px"})
+        Div(css_class="bg-lime-500 rounded-lg", style={"height": "120px"})
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -436,7 +442,45 @@ with Column(gap=6, css_class="w-full"):
     "cssClass": "gap-6 w-full",
     "type": "Column",
     "children": [
-      {"content": "Overlay (default)", "type": "H3"},
+      {"content": "Outside (default)", "type": "H3"},
+      {
+        "cssClass": "w-full",
+        "type": "Carousel",
+        "visible": 1,
+        "gap": 16,
+        "direction": "left",
+        "loop": true,
+        "autoAdvance": 0,
+        "continuous": false,
+        "speed": 2,
+        "effect": "slide",
+        "dimInactive": false,
+        "showControls": true,
+        "controlsPosition": "outside",
+        "showDots": true,
+        "pauseOnHover": true,
+        "align": "start",
+        "slidesToScroll": 1,
+        "drag": true,
+        "children": [
+          {
+            "cssClass": "bg-amber-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
+          {
+            "cssClass": "bg-purple-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          },
+          {
+            "cssClass": "bg-emerald-500 rounded-lg",
+            "type": "Div",
+            "style": {"height": "120px"}
+          }
+        ]
+      },
+      {"content": "Overlay", "type": "H3"},
       {
         "cssClass": "w-full",
         "type": "Carousel",
@@ -474,7 +518,7 @@ with Column(gap=6, css_class="w-full"):
           }
         ]
       },
-      {"content": "Outside", "type": "H3"},
+      {"content": "Gutter", "type": "H3"},
       {
         "cssClass": "w-full",
         "type": "Carousel",
@@ -488,7 +532,7 @@ with Column(gap=6, css_class="w-full"):
         "effect": "slide",
         "dimInactive": false,
         "showControls": true,
-        "controlsPosition": "outside",
+        "controlsPosition": "gutter",
         "showDots": true,
         "pauseOnHover": true,
         "align": "start",
@@ -496,17 +540,17 @@ with Column(gap=6, css_class="w-full"):
         "drag": true,
         "children": [
           {
-            "cssClass": "bg-amber-500 rounded-lg",
+            "cssClass": "bg-rose-500 rounded-lg",
             "type": "Div",
             "style": {"height": "120px"}
           },
           {
-            "cssClass": "bg-purple-500 rounded-lg",
+            "cssClass": "bg-cyan-500 rounded-lg",
             "type": "Div",
             "style": {"height": "120px"}
           },
           {
-            "cssClass": "bg-emerald-500 rounded-lg",
+            "cssClass": "bg-lime-500 rounded-lg",
             "type": "Div",
             "style": {"height": "120px"}
           }
@@ -579,18 +623,18 @@ with Carousel(loop=False, show_dots=True, css_class="w-full"):
 
 ## Direction
 
-Carousels scroll horizontally by default (`direction="left"`). Set `direction="down"` or `direction="up"` for vertical scrolling. The carousel automatically measures the first slide's height to determine the viewport size.
+Carousels scroll horizontally by default (`direction="left"`). Set `direction="down"` or `direction="up"` for vertical scrolling. The carousel automatically measures the first slide's height to determine the viewport size, and vertical carousels honor `gap` the same way horizontal ones do.
 
-Vertical carousels are great for status feeds, departure boards, or cycling through messages in a fixed-height area:
+Vertical carousels are great for status feeds, departure boards, or cycling through messages in a fixed-height area. When you want arrows and dots to share the same side gutter, set `controls_position="gutter"`:
 
-<ComponentPreview json={{"view":{"cssClass":"gap-6 w-full","type":"Column","children":[{"content":"Vertical with controls","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"down","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"outside","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]},{"content":"Vertical reel (auto advance)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBIMygiVmVydGljYWwgd2l0aCBjb250cm9scyIpCiAgICB3aXRoIENhcm91c2VsKGRpcmVjdGlvbj0iZG93biIsIHNob3dfZG90cz1UcnVlLCBjb250cm9sc19wb3NpdGlvbj0ib3V0c2lkZSIsIGxvb3A9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQoKICAgIEgzKCJWZXJ0aWNhbCByZWVsIChhdXRvIGFkdmFuY2UpIikKICAgIHdpdGggQ2Fyb3VzZWwoZGlyZWN0aW9uPSJkb3duIiwgYXV0b19hZHZhbmNlPTIwMDAsIHNob3dfY29udHJvbHM9RmFsc2UsIGxvb3A9VHJ1ZSwgY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1ibHVlLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy1lbWVyYWxkLTUwMCByb3VuZGVkLWxnIiwgc3R5bGU9eyJoZWlnaHQiOiAiMTYwcHgifSkKICAgICAgICBEaXYoY3NzX2NsYXNzPSJiZy12aW9sZXQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQo">
+<ComponentPreview json={{"view":{"cssClass":"gap-6 w-full","type":"Column","children":[{"content":"Vertical with controls","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"down","loop":true,"autoAdvance":0,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":true,"controlsPosition":"gutter","showDots":true,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]},{"content":"Vertical reel (auto advance)","type":"H3"},{"cssClass":"w-full","type":"Carousel","visible":1,"gap":16,"direction":"down","loop":true,"autoAdvance":2000,"continuous":false,"speed":2,"effect":"slide","dimInactive":false,"showControls":false,"controlsPosition":"outside","showDots":false,"pauseOnHover":true,"align":"start","slidesToScroll":1,"drag":true,"children":[{"cssClass":"bg-blue-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-emerald-500 rounded-lg","type":"Div","style":{"height":"160px"}},{"cssClass":"bg-violet-500 rounded-lg","type":"Div","style":{"height":"160px"}}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2Fyb3VzZWwsIENvbHVtbiwgRGl2LCBIMwoKd2l0aCBDb2x1bW4oZ2FwPTYsIGNzc19jbGFzcz0idy1mdWxsIik6CiAgICBIMygiVmVydGljYWwgd2l0aCBjb250cm9scyIpCiAgICB3aXRoIENhcm91c2VsKGRpcmVjdGlvbj0iZG93biIsIHNob3dfZG90cz1UcnVlLCBjb250cm9sc19wb3NpdGlvbj0iZ3V0dGVyIiwgbG9vcD1UcnVlLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCgogICAgSDMoIlZlcnRpY2FsIHJlZWwgKGF1dG8gYWR2YW5jZSkiKQogICAgd2l0aCBDYXJvdXNlbChkaXJlY3Rpb249ImRvd24iLCBhdXRvX2FkdmFuY2U9MjAwMCwgc2hvd19jb250cm9scz1GYWxzZSwgbG9vcD1UcnVlLCBjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWJsdWUtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLWVtZXJhbGQtNTAwIHJvdW5kZWQtbGciLCBzdHlsZT17ImhlaWdodCI6ICIxNjBweCJ9KQogICAgICAgIERpdihjc3NfY2xhc3M9ImJnLXZpb2xldC01MDAgcm91bmRlZC1sZyIsIHN0eWxlPXsiaGVpZ2h0IjogIjE2MHB4In0pCg">
 <CodeGroup>
 ```python icon="python"
 from prefab_ui.components import Carousel, Column, Div, H3
 
 with Column(gap=6, css_class="w-full"):
     H3("Vertical with controls")
-    with Carousel(direction="down", show_dots=True, controls_position="outside", loop=True, css_class="w-full"):
+    with Carousel(direction="down", show_dots=True, controls_position="gutter", loop=True, css_class="w-full"):
         Div(css_class="bg-blue-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-emerald-500 rounded-lg", style={"height": "160px"})
         Div(css_class="bg-violet-500 rounded-lg", style={"height": "160px"})
@@ -621,7 +665,7 @@ with Column(gap=6, css_class="w-full"):
         "effect": "slide",
         "dimInactive": false,
         "showControls": true,
-        "controlsPosition": "outside",
+        "controlsPosition": "gutter",
         "showDots": true,
         "pauseOnHover": true,
         "align": "start",
@@ -932,7 +976,7 @@ with Carousel(continuous=True, speed=3, show_controls=False, visible=4, gap=12, 
 </ParamField>
 
 <ParamField body="height" type="int | None" default="None">
-  Fixed height in pixels. Vertical carousels auto-detect from the first slide.
+  Fixed height in pixels. Vertical carousels auto-detect from the first slide when omitted.
 </ParamField>
 
 <ParamField body="direction" type="str" default="left">
@@ -967,8 +1011,8 @@ with Carousel(continuous=True, speed=3, show_controls=False, visible=4, gap=12, 
   Show previous/next navigation arrows.
 </ParamField>
 
-<ParamField body="controls_position" type="str" default="overlay">
-  Arrow placement: `"overlay"` positions arrows on top of the slides, `"outside"` places them flanking the viewport.
+<ParamField body="controls_position" type="str" default="outside">
+  Arrow placement: `"overlay"` positions arrows on top of the slides, `"outside"` places them flanking the viewport, and `"gutter"` places them wherever dots render.
 </ParamField>
 
 <ParamField body="show_dots" type="bool" default="False">

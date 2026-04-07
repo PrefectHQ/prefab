@@ -14,7 +14,7 @@ export const carouselSchema = containerBase.extend({
   effect: z.enum(["slide", "fade"]).optional(),
   dimInactive: z.boolean().optional(),
   showControls: z.boolean().optional(),
-  controlsPosition: z.enum(["overlay", "outside"]).optional(),
+  controlsPosition: z.enum(["overlay", "outside", "gutter"]).optional(),
   showDots: z.boolean().optional(),
   pauseOnHover: z.boolean().optional(),
   align: z.enum(["start", "center", "end"]).optional(),

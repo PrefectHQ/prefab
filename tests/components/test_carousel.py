@@ -18,10 +18,14 @@ class TestCarousel:
         c = Carousel()
         j = c.to_json()
         assert j["direction"] == "left"
+        assert j["gap"] == 16
         assert j["loop"] is True
         assert j.get("autoAdvance", 0) == 0
         assert j.get("continuous", False) is False
         assert j["showControls"] is True
+
+    def test_gap_override_serializes(self):
+        assert Carousel(gap=24).to_json()["gap"] == 24
 
     def test_reel_mode(self):
         c = Carousel(auto_advance=3000, show_controls=False, direction="down")
@@ -29,6 +33,7 @@ class TestCarousel:
         assert j["autoAdvance"] == 3000
         assert j["showControls"] is False
         assert j["direction"] == "down"
+        assert j["gap"] == 16
 
     def test_marquee_mode(self):
         c = Carousel(continuous=True, speed=5, direction="left")
@@ -53,6 +58,10 @@ class TestCarousel:
         assert (
             Carousel(controls_position="overlay").to_json()["controlsPosition"]
             == "overlay"
+        )
+        assert (
+            Carousel(controls_position="gutter").to_json()["controlsPosition"]
+            == "gutter"
         )
 
     def test_fade_forces_single_visible_slide(self):
