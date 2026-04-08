@@ -59,6 +59,7 @@ import { Separator } from "@/ui/separator";
 import { Loader } from "@/ui/loader";
 import { Slider } from "@/ui/slider";
 import { Dot } from "@/ui/dot";
+import { Kbd } from "@/ui/kbd";
 import { Progress } from "@/ui/progress";
 import {
   Table,
@@ -283,6 +284,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   Markdown: LazyMarkdown,
   Mermaid: LazyMermaid,
   Icon: PrefabIcon,
+  Kbd,
 
   // Media
   Audio,

@@ -65,6 +65,7 @@ app = PrefabApp.from_json(wire, state={"extra": "value"})
 | `scripts` | `list[str]` | External JS URLs to load in `<head>` |
 | `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` (for Fetch actions) |
 | `on_mount` | `Action \| list[Action]` | Action(s) to run when the app loads |
+| `key_bindings` | `dict[str, Action]` | Keyboard shortcuts mapping key names to actions |
 | `title` | `str` | HTML page title (default: `"Prefab"`) |
 
 ## Methods
@@ -115,6 +116,64 @@ with PrefabApp(
 ```
 
 `on_mount` is actually a universal component property — every component supports it, not just PrefabApp. For most components it fires immediately since the entire tree renders at once. But for components inside `Condition`, `Pages`, or `ForEach`, it fires when they actually enter the DOM — useful for lazy data loading when a tab activates or a conditional branch becomes true.
+
+## Keyboard Shortcuts
+
+`key_bindings` maps keyboard shortcuts to actions. When a user presses a matching key combination, the action fires, same as `on_click` or `on_mount`. Keys are standard DOM `KeyboardEvent.key` values, with optional modifier prefixes:
+
+```python
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.rx import Rx
+
+slide = Rx("slide")
+
+with PrefabApp(
+    state={"slide": 0},
+    key_bindings={
+        "ArrowRight": SetState("slide", slide + 1),
+        "ArrowLeft": SetState("slide", slide - 1),
+        "Shift+?": ShowToast("Help!"),
+    },
+) as app:
+    ...
+```
+
+Modifier prefixes are `Ctrl+`, `Shift+`, `Alt+`, and `Meta+` (⌘ on Mac). They combine naturally: `"Ctrl+Shift+S"` matches Ctrl+Shift+S. The key portion uses the standard [KeyboardEvent.key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) names: `ArrowRight`, `ArrowLeft`, `Enter`, `Escape`, `Tab`, letter keys, etc.
+
+Key bindings are suppressed when the user is typing in an input, textarea, or select, so shortcuts never interfere with form entry.
+
+### Keyboard Shortcuts Dialog
+
+The `KeyboardShortcutsDialog` helper builds a dialog that lists your shortcuts with styled [Kbd](/components/kbd) key indicators. It returns a `SetState` action you can wire directly into `key_bindings`:
+
+```python
+from prefab_ui.shortcuts import KeyboardShortcutsDialog
+
+help_action = KeyboardShortcutsDialog({
+    "ArrowRight": "Next slide",
+    "ArrowLeft": "Previous slide",
+    "Shift+?": "Show shortcuts",
+})
+
+with PrefabApp(
+    key_bindings={
+        "ArrowRight": SetState("slide", slide + 1),
+        "ArrowLeft": SetState("slide", slide - 1),
+        "Shift+?": help_action,
+    },
+) as app:
+    ...
+    # Place the dialog trigger somewhere in your layout
+    KeyboardShortcutsDialog({
+        "ArrowRight": "Next slide",
+        "ArrowLeft": "Previous slide",
+        "Shift+?": "Show shortcuts",
+    })
+```
+
+The dialog binds its open state to a state variable (default `_show_shortcuts`), so the `SetState` action from `key_bindings` opens it programmatically. The trigger button also works for mouse users. No initial state setup is needed; the dialog defaults to closed.
+
+The helper uses the state-controlled [Dialog](/components/dialog#state-controlled-dialog) `name` prop under the hood.
 
 ## Stylesheets
 

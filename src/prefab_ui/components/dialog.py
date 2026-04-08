@@ -53,3 +53,18 @@ class Dialog(ContainerComponent):
     description: RxStr | None = Field(
         default=None, description="Dialog header description"
     )
+    name: str | None = Field(
+        default=None,
+        description=(
+            "State key to bind open/close state. When set, the dialog "
+            "can be opened programmatically via SetState(name, True)."
+        ),
+    )
+    dismissible: bool = Field(
+        default=True,
+        description=(
+            "Whether the dialog can be closed by clicking outside "
+            "or pressing Escape. When False, the user must use an "
+            "explicit close action."
+        ),
+    )

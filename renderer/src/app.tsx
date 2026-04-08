@@ -18,7 +18,12 @@ import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { bridge } from "./bridge";
-import { clearAllIntervals, setAppName } from "./actions";
+import {
+  clearAllIntervals,
+  executeActions,
+  setAppName,
+  type ActionSpec,
+} from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
 import {
   SUPPORTED_VERSIONS,
@@ -63,10 +68,13 @@ function FastMCPLogo({
 }
 
 /** Read baked-in data from the HTML (standalone mode). */
+type KeyBindings = Record<string, ActionSpec | ActionSpec[]>;
+
 function readInitialData(): {
   view: ComponentNode | null;
   defs: Record<string, ComponentNode>;
   state: Record<string, unknown>;
+  keyBindings: KeyBindings;
 } | null {
   const el = document.getElementById("prefab:initial-data");
   if (!el?.textContent) return null;
@@ -90,6 +98,7 @@ function readInitialData(): {
       view: (data.view as ComponentNode) ?? null,
       defs: (data.defs ?? {}) as Record<string, ComponentNode>,
       state: (data.state ?? {}) as Record<string, unknown>,
+      keyBindings: (data.keyBindings ?? {}) as KeyBindings,
     };
   } catch {
     console.error("[Prefab] Failed to parse baked-in initial data");
@@ -114,6 +123,40 @@ export function App() {
     if (INITIAL?.state) {
       state.reset(INITIAL.state);
     }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Key bindings — document-level keyboard shortcuts.
+  const keyBindingsRef = useRef<KeyBindings>(INITIAL?.keyBindings ?? {});
+
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      const bindings = keyBindingsRef.current;
+      if (!bindings || Object.keys(bindings).length === 0) return;
+
+      // Skip when user is typing in an input/textarea/contenteditable
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if ((e.target as HTMLElement)?.isContentEditable) return;
+
+      // Build key string with modifiers
+      const parts: string[] = [];
+      if (e.ctrlKey) parts.push("Ctrl");
+      if (e.altKey) parts.push("Alt");
+      if (e.metaKey) parts.push("Meta");
+      if (e.shiftKey) parts.push("Shift");
+      parts.push(e.key);
+      const keyStr = parts.join("+");
+
+      const action = bindings[keyStr];
+      if (action) {
+        e.preventDefault();
+        const actions = Array.isArray(action) ? action : [action];
+        executeActions(actions, appRef.current, state);
+      }
+    }
+
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle server-validated tool result (standard + final render after streaming)
@@ -144,6 +187,10 @@ export function App() {
         | { fastmcp?: { app?: string } }
         | undefined;
       setAppName(meta?.fastmcp?.app);
+
+      // Update key bindings from tool result (clear if absent)
+      keyBindingsRef.current =
+        (structured.keyBindings as KeyBindings | undefined) ?? {};
 
       clearAllIntervals();
       const currentHost = state.get("$host");

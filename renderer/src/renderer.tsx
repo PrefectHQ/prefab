@@ -30,6 +30,7 @@ function MountEffect({
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
+import { StateContext } from "./state-context";
 import { useOverlayClose } from "./overlay-context";
 import { RenderProvider } from "./render-context";
 import { evaluateCondition } from "./conditions";
@@ -661,8 +662,10 @@ export function RenderTree({
     <RenderNode node={node} scope={scope} state={state} app={app} />
   );
   return (
-    <RenderProvider renderNode={renderNodeFn}>
-      <RenderNode node={tree} scope={scope} state={state} app={app} />
-    </RenderProvider>
+    <StateContext.Provider value={state}>
+      <RenderProvider renderNode={renderNodeFn}>
+        <RenderNode node={tree} scope={scope} state={state} app={app} />
+      </RenderProvider>
+    </StateContext.Provider>
   );
 }
