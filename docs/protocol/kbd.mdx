@@ -1,0 +1,47 @@
+---
+title: Kbd
+description: JSON Schema for the Kbd component.
+---
+
+Keyboard key indicator for displaying shortcuts.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "Kbd",
+      "default": "Kbd",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "onMount": {
+      "default": null,
+      "description": "Action(s) to execute when this component mounts."
+    },
+    "label": {
+      "description": "Key label to display",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "label"
+  ]
+}
+```

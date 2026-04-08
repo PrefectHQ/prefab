@@ -1,0 +1,153 @@
+---
+title: Kbd
+description: Keyboard key indicators for displaying shortcuts and hotkeys.
+icon: keyboard
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Kbd renders an inline keyboard key indicator, the kind you see in documentation and shortcut overlays. Use it to show users which keys to press. A single Kbd can display one key or a full combination:
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Kbd","label":"K"},{"type":"Kbd","label":"\u2318 + K"},{"type":"Kbd","label":"Ctrl + Shift + P"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgS2JkLCBSb3cKCndpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICBLYmQoIksiKQogICAgS2JkKCLijJggKyBLIikKICAgIEtiZCgiQ3RybCArIFNoaWZ0ICsgUCIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Kbd, Row
+
+with Row(gap=2, align="center"):
+    Kbd("K")
+    Kbd("⌘ + K")
+    Kbd("Ctrl + Shift + P")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 items-center",
+    "type": "Row",
+    "children": [
+      {"type": "Kbd", "label": "K"},
+      {"type": "Kbd", "label": "\u2318 + K"},
+      {"type": "Kbd", "label": "Ctrl + Shift + P"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Common Keys
+
+<ComponentPreview json={{"view":{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Kbd","label":"\u2318"},{"type":"Kbd","label":"\u21e7"},{"type":"Kbd","label":"\u2325"},{"type":"Kbd","label":"\u2303"},{"type":"Kbd","label":"\u21b5"},{"type":"Kbd","label":"\u232b"},{"type":"Kbd","label":"\u21e5"},{"type":"Kbd","label":"Esc"},{"type":"Kbd","label":"\u2190"},{"type":"Kbd","label":"\u2192"},{"type":"Kbd","label":"\u2191"},{"type":"Kbd","label":"\u2193"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgS2JkLCBSb3cKCndpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICBLYmQoIuKMmCIpCiAgICBLYmQoIuKHpyIpCiAgICBLYmQoIuKMpSIpCiAgICBLYmQoIuKMgyIpCiAgICBLYmQoIuKGtSIpCiAgICBLYmQoIuKMqyIpCiAgICBLYmQoIuKHpSIpCiAgICBLYmQoIkVzYyIpCiAgICBLYmQoIuKGkCIpCiAgICBLYmQoIuKGkiIpCiAgICBLYmQoIuKGkSIpCiAgICBLYmQoIuKGkyIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Kbd, Row
+
+with Row(gap=2, align="center"):
+    Kbd("⌘")
+    Kbd("⇧")
+    Kbd("⌥")
+    Kbd("⌃")
+    Kbd("↵")
+    Kbd("⌫")
+    Kbd("⇥")
+    Kbd("Esc")
+    Kbd("←")
+    Kbd("→")
+    Kbd("↑")
+    Kbd("↓")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-2 items-center",
+    "type": "Row",
+    "children": [
+      {"type": "Kbd", "label": "\u2318"},
+      {"type": "Kbd", "label": "\u21e7"},
+      {"type": "Kbd", "label": "\u2325"},
+      {"type": "Kbd", "label": "\u2303"},
+      {"type": "Kbd", "label": "\u21b5"},
+      {"type": "Kbd", "label": "\u232b"},
+      {"type": "Kbd", "label": "\u21e5"},
+      {"type": "Kbd", "label": "Esc"},
+      {"type": "Kbd", "label": "\u2190"},
+      {"type": "Kbd", "label": "\u2192"},
+      {"type": "Kbd", "label": "\u2191"},
+      {"type": "Kbd", "label": "\u2193"}
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Shortcut List
+
+Use Kbd with Row and Text to build shortcut reference lists. The label can contain the full key combination:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-4 justify-between items-center","type":"Row","children":[{"content":"Save","type":"Text"},{"type":"Kbd","label":"\u2318 + S"}]},{"cssClass":"gap-4 justify-between items-center","type":"Row","children":[{"content":"Search","type":"Text"},{"type":"Kbd","label":"\u2318 + K"}]},{"cssClass":"gap-4 justify-between items-center","type":"Row","children":[{"content":"Undo","type":"Text"},{"type":"Kbd","label":"\u2318 + Z"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBLYmQsIFJvdywgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgd2l0aCBSb3coZ2FwPTQsIGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgIFRleHQoIlNhdmUiKQogICAgICAgIEtiZCgi4oyYICsgUyIpCiAgICB3aXRoIFJvdyhnYXA9NCwgY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4gaXRlbXMtY2VudGVyIik6CiAgICAgICAgVGV4dCgiU2VhcmNoIikKICAgICAgICBLYmQoIuKMmCArIEsiKQogICAgd2l0aCBSb3coZ2FwPTQsIGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciIpOgogICAgICAgIFRleHQoIlVuZG8iKQogICAgICAgIEtiZCgi4oyYICsgWiIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import Column, Kbd, Row, Text
+
+with Column(gap=3):
+    with Row(gap=4, css_class="justify-between items-center"):
+        Text("Save")
+        Kbd("⌘ + S")
+    with Row(gap=4, css_class="justify-between items-center"):
+        Text("Search")
+        Kbd("⌘ + K")
+    with Row(gap=4, css_class="justify-between items-center"):
+        Text("Undo")
+        Kbd("⌘ + Z")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-4 justify-between items-center",
+        "type": "Row",
+        "children": [{"content": "Save", "type": "Text"}, {"type": "Kbd", "label": "\u2318 + S"}]
+      },
+      {
+        "cssClass": "gap-4 justify-between items-center",
+        "type": "Row",
+        "children": [{"content": "Search", "type": "Text"}, {"type": "Kbd", "label": "\u2318 + K"}]
+      },
+      {
+        "cssClass": "gap-4 justify-between items-center",
+        "type": "Row",
+        "children": [{"content": "Undo", "type": "Text"}, {"type": "Kbd", "label": "\u2318 + Z"}]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="Kbd Parameters">
+<ParamField body="label" type="str" default='""'>
+  The key label to display (e.g. `"⌘"`, `"K"`, `"→"`, `"Shift"`).
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Kbd
+{
+  "type": "Kbd",
+  "label?": "string",
+  "cssClass?": "string"
+}
+```

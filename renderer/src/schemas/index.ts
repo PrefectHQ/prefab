@@ -94,6 +94,7 @@ import { headingSchema } from "./typography.ts";
 import { hoverCardSchema } from "./hover_card.ts";
 import { iconSchema } from "./icon.ts";
 import { imageSchema } from "./image.ts";
+import { KbdSchema } from "./kbd.ts";
 import { videoSchema, audioSchema } from "./media.ts";
 import { inputSchema } from "./input.ts";
 import { labelSchema } from "./label.ts";
@@ -209,6 +210,7 @@ export const SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   Heading: headingSchema,
   HoverCard: hoverCardSchema,
   Icon: iconSchema,
+  Kbd: KbdSchema,
   Image: imageSchema,
   Input: inputSchema,
   Label: labelSchema,

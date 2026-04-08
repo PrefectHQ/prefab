@@ -147,6 +147,15 @@ class PrefabApp(BaseModel):
         default=None,
         description="Action(s) to execute when the app mounts",
     )
+    key_bindings: dict[str, Any] | None = Field(
+        default=None,
+        description=(
+            "Keyboard shortcuts mapping key names to actions. "
+            "Keys are DOM KeyboardEvent.key values, optionally prefixed "
+            "with modifiers: Shift+, Ctrl+, Alt+, Meta+. "
+            "Values are actions or lists of actions."
+        ),
+    )
 
     _context_root: Any = PrivateAttr(default=None)
 
@@ -297,6 +306,26 @@ class PrefabApp(BaseModel):
                     result["theme"] = self.theme
                 else:
                     result["theme"] = self.theme.to_json()
+
+            if self.key_bindings:
+                from prefab_ui.actions import Action
+
+                serialized: dict[str, Any] = {}
+                for key, action in self.key_bindings.items():
+                    if isinstance(action, list):
+                        serialized[key] = [
+                            a.model_dump(by_alias=True, exclude_none=True)
+                            if isinstance(a, Action)
+                            else a
+                            for a in action
+                        ]
+                    elif isinstance(action, Action):
+                        serialized[key] = action.model_dump(
+                            by_alias=True, exclude_none=True
+                        )
+                    else:
+                        serialized[key] = action
+                result["keyBindings"] = serialized
 
             return result
         finally:

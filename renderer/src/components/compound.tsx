@@ -10,7 +10,8 @@
  * the compound parts (triggers + content panels).
  */
 
-import React, { type ReactNode, useState, useEffect } from "react";
+import React, { type ReactNode, useState, useEffect, useCallback } from "react";
+import { useStateContext } from "../state-context";
 import {
   Tabs as ShadcnTabs,
   TabsList,
@@ -266,6 +267,8 @@ export function PrefabPopover({
 interface PrefabDialogProps {
   title?: string;
   description?: string;
+  name?: string;
+  dismissible?: boolean;
   className?: string;
   children?: ReactNode;
 }
@@ -273,17 +276,58 @@ interface PrefabDialogProps {
 export function PrefabDialog({
   title,
   description,
+  name,
+  dismissible = true,
   children,
 }: PrefabDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const state = useStateContext();
+
+  // When name is set, sync with state store
+  const stateOpen = name && state ? !!state.get(name) : undefined;
+  const open = stateOpen ?? localOpen;
+  const setOpen = useCallback(
+    (v: boolean) => {
+      if (name && state) {
+        state.set(name, v);
+      } else {
+        setLocalOpen(v);
+      }
+    },
+    [name, state],
+  );
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      // When not dismissible, only allow opening — closing must go
+      // through CloseOverlay which calls setOpen(false) directly.
+      if (!dismissible && !nextOpen) {
+        return;
+      }
+      setOpen(nextOpen);
+    },
+    [dismissible, setOpen],
+  );
+
+  // React to external state changes
+  useEffect(() => {
+    if (stateOpen !== undefined) {
+      setLocalOpen(stateOpen);
+    }
+  }, [stateOpen]);
+
   const childArray = React.Children.toArray(children);
   const trigger = childArray[0];
   const content = childArray.slice(1);
 
   return (
-    <ShadcnDialog open={open} onOpenChange={setOpen}>
+    <ShadcnDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      disablePointerDismissal={!dismissible}
+    >
       <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent hideClose={!dismissible}>
         <OverlayProvider close={() => setOpen(false)}>
           {(title || description) && (
             <DialogHeader>

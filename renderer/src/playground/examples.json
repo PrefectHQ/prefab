@@ -835,6 +835,16 @@
     "code": "from prefab_ui.actions import CloseOverlay, ShowToast\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.rx import Rx\n\nuser_name = Rx(\"user_name\")\nuser_id = Rx(\"user_id\")\n\nwith Dialog(title=\"Remove User\", description=\"This will revoke all access.\"):\n    Button(\"Remove\", variant=\"destructive\")\n    Text(f\"User {user_name} will lose access to all projects.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Cancel\", variant=\"outline\", on_click=CloseOverlay())\n        Button(\n            \"Remove User\",\n            variant=\"destructive\",\n            on_click=CallTool(\n                \"remove_user\",\n                arguments={\"user_id\": user_id},\n                on_success=[\n                    ShowToast(\"User removed\", variant=\"success\"),\n                    CloseOverlay(),\n                ],\n                on_error=ShowToast(\"{{ $error }}\", variant=\"error\"),\n            ),\n        )"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Button, Column, Dialog, Row, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=3):\n    with Dialog(title=\"Help\", name=\"show_help\"):\n        Button(\"Open via trigger\", variant=\"outline\")\n        Text(\"This dialog can be opened by clicking the trigger or by any action that sets show_help to true.\")\n    Button(\n        \"Open via SetState\",\n        variant=\"secondary\",\n        on_click=SetState(\"show_help\", True),\n    )"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Button, Column, Dialog, Row, Text\nfrom prefab_ui.actions import CloseOverlay\n\nwith Dialog(\n    title=\"Terms of Service\",\n    description=\"You must accept to continue.\",\n    dismissible=False,\n):\n    Button(\"Review Terms\")\n    Text(\"By clicking Accept, you agree to the Galactic Terms of Service.\")\n    with Row(gap=2, css_class=\"justify-end\"):\n        Button(\"Accept\", on_click=CloseOverlay())"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import (\n    Div,\n    P,\n)\n\nwith Div(css_class=\"flex items-center gap-3 rounded-lg border p-4\"):\n    Div(css_class=\"bg-emerald-500 rounded-md h-8 w-8\")\n    P(\"Custom layout with Div\")"
@@ -1168,6 +1178,21 @@
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Column, Input, Text\n\nwith Column(gap=4):\n    inp = Input(placeholder=\"What is your name, traveler?\")\n    Text(f\"Hello, {inp.rx.default('stranger')}!\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Kbd, Row\n\nwith Row(gap=2, align=\"center\"):\n    Kbd(\"K\")\n    Kbd(\"⌘ + K\")\n    Kbd(\"Ctrl + Shift + P\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Kbd, Row\n\nwith Row(gap=2, align=\"center\"):\n    Kbd(\"⌘\")\n    Kbd(\"⇧\")\n    Kbd(\"⌥\")\n    Kbd(\"⌃\")\n    Kbd(\"↵\")\n    Kbd(\"⌫\")\n    Kbd(\"⇥\")\n    Kbd(\"Esc\")\n    Kbd(\"←\")\n    Kbd(\"→\")\n    Kbd(\"↑\")\n    Kbd(\"↓\")"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components import Column, Kbd, Row, Text\n\nwith Column(gap=3):\n    with Row(gap=4, css_class=\"justify-between items-center\"):\n        Text(\"Save\")\n        Kbd(\"⌘ + S\")\n    with Row(gap=4, css_class=\"justify-between items-center\"):\n        Text(\"Search\")\n        Kbd(\"⌘ + K\")\n    with Row(gap=4, css_class=\"justify-between items-center\"):\n        Text(\"Undo\")\n        Kbd(\"⌘ + Z\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -2488,6 +2513,16 @@
     "title": "from prefab_ui.actions import SetState",
     "category": "Reference",
     "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.actions.timing import SetInterval\nfrom prefab_ui.rx import RESULT\n\nwith PrefabApp(\n    state={\"stats\": {}},\n    on_mount=SetInterval(\n        duration=3000,\n        on_tick=CallTool(\n            \"get_stats\",\n            on_success=SetState(\"stats\", RESULT),\n        ),\n    ),\n) as app:\n    Metric(label=\"CPU\", value=STATE.stats.cpu + \"%\")"
+  },
+  {
+    "title": "from prefab_ui.actions import SetState, ShowToast",
+    "category": "Reference",
+    "code": "from prefab_ui.rx import Rx\n\nslide = Rx(\"slide\")\n\nwith PrefabApp(\n    state={\"slide\": 0},\n    key_bindings={\n        \"ArrowRight\": SetState(\"slide\", slide + 1),\n        \"ArrowLeft\": SetState(\"slide\", slide - 1),\n        \"Shift+?\": ShowToast(\"Help!\"),\n    },\n) as app:\n    ..."
+  },
+  {
+    "title": "from prefab_ui.shortcuts import KeyboardShortcutsDialog",
+    "category": "Reference",
+    "code": "help_action = KeyboardShortcutsDialog({\n    \"ArrowRight\": \"Next slide\",\n    \"ArrowLeft\": \"Previous slide\",\n    \"Shift+?\": \"Show shortcuts\",\n})\n\nwith PrefabApp(\n    key_bindings={\n        \"ArrowRight\": SetState(\"slide\", slide + 1),\n        \"ArrowLeft\": SetState(\"slide\", slide - 1),\n        \"Shift+?\": help_action,\n    },\n) as app:\n    ...\n    # Place the dialog trigger somewhere in your layout\n    KeyboardShortcutsDialog({\n        \"ArrowRight\": \"Next slide\",\n        \"ArrowLeft\": \"Previous slide\",\n        \"Shift+?\": \"Show shortcuts\",\n    })"
   },
   {
     "title": "from fastapi import FastAPI",

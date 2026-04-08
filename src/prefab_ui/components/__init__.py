@@ -73,6 +73,7 @@ from prefab_ui.components.histogram import Histogram
 from prefab_ui.components.hover_card import HoverCard
 from prefab_ui.components.icon import Icon
 from prefab_ui.components.image import Image
+from prefab_ui.components.kbd import Kbd
 from prefab_ui.components.input import Input
 from prefab_ui.components.label import Label
 from prefab_ui.components.markdown import Markdown
@@ -195,6 +196,7 @@ __all__ = [
     "If",
     "Image",
     "Input",
+    "Kbd",
     "Label",
     "Large",
     "Lead",
