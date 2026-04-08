@@ -188,11 +188,9 @@ export function App() {
         | undefined;
       setAppName(meta?.fastmcp?.app);
 
-      // Update key bindings from tool result
-      const bindings = structured.keyBindings as KeyBindings | undefined;
-      if (bindings) {
-        keyBindingsRef.current = bindings;
-      }
+      // Update key bindings from tool result (clear if absent)
+      keyBindingsRef.current =
+        (structured.keyBindings as KeyBindings | undefined) ?? {};
 
       clearAllIntervals();
       const currentHost = state.get("$host");
