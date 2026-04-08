@@ -126,11 +126,13 @@ export function App() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Key bindings — document-level keyboard shortcuts.
-  useEffect(() => {
-    const bindings = INITIAL?.keyBindings;
-    if (!bindings || Object.keys(bindings).length === 0) return;
+  const keyBindingsRef = useRef<KeyBindings>(INITIAL?.keyBindings ?? {});
 
+  useEffect(() => {
     function handler(e: KeyboardEvent) {
+      const bindings = keyBindingsRef.current;
+      if (!bindings || Object.keys(bindings).length === 0) return;
+
       // Skip when user is typing in an input/textarea/contenteditable
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
@@ -145,7 +147,7 @@ export function App() {
       parts.push(e.key);
       const keyStr = parts.join("+");
 
-      const action = bindings![keyStr];
+      const action = bindings[keyStr];
       if (action) {
         e.preventDefault();
         const actions = Array.isArray(action) ? action : [action];
@@ -185,6 +187,12 @@ export function App() {
         | { fastmcp?: { app?: string } }
         | undefined;
       setAppName(meta?.fastmcp?.app);
+
+      // Update key bindings from tool result
+      const bindings = structured.keyBindings as KeyBindings | undefined;
+      if (bindings) {
+        keyBindingsRef.current = bindings;
+      }
 
       clearAllIntervals();
       const currentHost = state.get("$host");
