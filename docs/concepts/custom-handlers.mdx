@@ -20,29 +20,27 @@ Register formatting functions that become available in `{{ }}` expressions. Each
    Do not remove the js_pipes from the Python examples — they show users the
    full picture even though the preview ignores them. */}
 
-<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","value":3.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJyYXRpbmciLCB2YWx1ZT0zLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgICAgIFRleHQoInt7IHJhdGluZyB8IHN0YXJzIH19IiwgYm9sZD1UcnVlKQoKYXBwID0gUHJlZmFiQXBwKAogICAgdmlldz12aWV3LAogICAganNfcGlwZXM9ewogICAgICAgICJzdGFycyI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBuID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgY29uc3QgZnVsbCA9IE1hdGguZmxvb3Iobik7CiAgICAgICAgICAgIGNvbnN0IGhhbGYgPSBuICUgMSA-PSAwLjUgPyAxIDogMDsKICAgICAgICAgICAgY29uc3QgZW1wdHkgPSA1IC0gZnVsbCAtIGhhbGY7CiAgICAgICAgICAgIHJldHVybiAn4piFJy5yZXBlYXQoZnVsbCkgKyAoaGFsZiA_ICfCvScgOiAnJykgKyAn4piGJy5yZXBlYXQoZW1wdHkpOwogICAgICAgIH0iIiIsCiAgICB9LAopCg">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"rating","value":3.0,"type":"Slider","min":0.0,"max":5.0,"step":0.5,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ rating | stars }}","type":"Text"}]}]}]},"state":{"rating":3.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKanNfcGlwZXMgPSB7CiAgICAic3RhcnMiOiAiIiIodmFsdWUpID0-IHsKICAgICAgICBjb25zdCBuID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICBjb25zdCBmdWxsID0gTWF0aC5mbG9vcihuKTsKICAgICAgICBjb25zdCBoYWxmID0gbiAlIDEgPj0gMC41ID8gMSA6IDA7CiAgICAgICAgY29uc3QgZW1wdHkgPSA1IC0gZnVsbCAtIGhhbGY7CiAgICAgICAgcmV0dXJuICfimIUnLnJlcGVhdChmdWxsKSArIChoYWxmID8gJ8K9JyA6ICcnKSArICfimIYnLnJlcGVhdChlbXB0eSk7CiAgICB9IiIiLAp9Cgp3aXRoIFByZWZhYkFwcChqc19waXBlcz1qc19waXBlcykgYXMgYXBwOgogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIHdpdGggUm93KGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIGdhcC00Iik6CiAgICAgICAgICAgIFNsaWRlcihuYW1lPSJyYXRpbmciLCB2YWx1ZT0zLCBtaW49MCwgbWF4PTUsIHN0ZXA9MC41KQogICAgICAgICAgICBUZXh0KCJ7eyByYXRpbmcgfCBzdGFycyB9fSIsIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, Row, Slider, Text
 
-with Column(gap=2) as view:
-    with Row(css_class="items-center gap-4"):
-        Slider(name="rating", value=3, min=0, max=5, step=0.5)
-        Text("{{ rating | stars }}", bold=True)
+js_pipes = {
+    "stars": """(value) => {
+        const n = Number(value);
+        const full = Math.floor(n);
+        const half = n % 1 >= 0.5 ? 1 : 0;
+        const empty = 5 - full - half;
+        return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+    }""",
+}
 
-app = PrefabApp(
-    view=view,
-    js_pipes={
-        "stars": """(value) => {
-            const n = Number(value);
-            const full = Math.floor(n);
-            const half = n % 1 >= 0.5 ? 1 : 0;
-            const empty = 5 - full - half;
-            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
-        }""",
-    },
-)
+with PrefabApp(js_pipes=js_pipes) as app:
+    with Column(gap=2):
+        with Row(css_class="items-center gap-4"):
+            Slider(name="rating", value=3, min=0, max=5, step=0.5)
+            Text("{{ rating | stars }}", bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -83,29 +81,27 @@ app = PrefabApp(
 
 The `tempColor` pipe adds contextual emoji based on the value:
 
-<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","value":72.0,"type":"Slider","min":32.0,"max":120.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtNCIpOgogICAgICAgIFNsaWRlcihuYW1lPSJ0ZW1wIiwgdmFsdWU9NzIsIG1pbj0zMiwgbWF4PTEyMCwgc3RlcD0xKQogICAgICAgIFRleHQoInt7IHRlbXAgfCB0ZW1wQ29sb3IgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgInRlbXBDb2xvciI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgICAgICBjb25zdCBmID0gTnVtYmVyKHZhbHVlKTsKICAgICAgICAgICAgaWYgKGYgPj0gMTAwKSByZXR1cm4gZiArICfCsEYg8J-UpSc7CiAgICAgICAgICAgIGlmIChmID49IDgwKSByZXR1cm4gZiArICfCsEYg4piA77iPJzsKICAgICAgICAgICAgaWYgKGYgPj0gNjApIHJldHVybiBmICsgJ8KwRiDwn4yk77iPJzsKICAgICAgICAgICAgcmV0dXJuIGYgKyAnwrBGIOKdhO-4jyc7CiAgICAgICAgfSIiIiwKICAgIH0sCikK">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"cssClass":"items-center gap-4","type":"Row","children":[{"name":"temp","value":72.0,"type":"Slider","min":32.0,"max":120.0,"step":1.0,"disabled":false,"size":"default"},{"cssClass":"font-bold","content":"{{ temp | tempColor }}","type":"Text"}]}]}]},"state":{"temp":72.0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBSb3csIFNsaWRlciwgVGV4dAoKanNfcGlwZXMgPSB7CiAgICAidGVtcENvbG9yIjogIiIiKHZhbHVlKSA9PiB7CiAgICAgICAgY29uc3QgZiA9IE51bWJlcih2YWx1ZSk7CiAgICAgICAgaWYgKGYgPj0gMTAwKSByZXR1cm4gZiArICfCsEYg8J-UpSc7CiAgICAgICAgaWYgKGYgPj0gODApIHJldHVybiBmICsgJ8KwRiDimIDvuI8nOwogICAgICAgIGlmIChmID49IDYwKSByZXR1cm4gZiArICfCsEYg8J-MpO-4jyc7CiAgICAgICAgcmV0dXJuIGYgKyAnwrBGIOKdhO-4jyc7CiAgICB9IiIiLAp9Cgp3aXRoIFByZWZhYkFwcChqc19waXBlcz1qc19waXBlcykgYXMgYXBwOgogICAgd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgICAgIHdpdGggUm93KGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIGdhcC00Iik6CiAgICAgICAgICAgIFNsaWRlcihuYW1lPSJ0ZW1wIiwgdmFsdWU9NzIsIG1pbj0zMiwgbWF4PTEyMCwgc3RlcD0xKQogICAgICAgICAgICBUZXh0KCJ7eyB0ZW1wIHwgdGVtcENvbG9yIH19IiwgYm9sZD1UcnVlKQo">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, Row, Slider, Text
 
-with Column(gap=2) as view:
-    with Row(css_class="items-center gap-4"):
-        Slider(name="temp", value=72, min=32, max=120, step=1)
-        Text("{{ temp | tempColor }}", bold=True)
+js_pipes = {
+    "tempColor": """(value) => {
+        const f = Number(value);
+        if (f >= 100) return f + '°F 🔥';
+        if (f >= 80) return f + '°F ☀️';
+        if (f >= 60) return f + '°F 🌤️';
+        return f + '°F ❄️';
+    }""",
+}
 
-app = PrefabApp(
-    view=view,
-    js_pipes={
-        "tempColor": """(value) => {
-            const f = Number(value);
-            if (f >= 100) return f + '°F 🔥';
-            if (f >= 80) return f + '°F ☀️';
-            if (f >= 60) return f + '°F 🌤️';
-            return f + '°F ❄️';
-        }""",
-    },
-)
+with PrefabApp(js_pipes=js_pipes) as app:
+    with Column(gap=2):
+        with Row(css_class="items-center gap-4"):
+            Slider(name="temp", value=72, min=32, max=120, step=1)
+            Text("{{ temp | tempColor }}", bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -146,26 +142,24 @@ app = PrefabApp(
 
 The `initials` pipe extracts first letters. Type a name to see it update:
 
-<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","value":"Arthur Dent","type":"Input","inputType":"text","placeholder":"Type a name...","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgp3aXRoIENvbHVtbihnYXA9MikgYXMgdmlldzoKICAgIElucHV0KG5hbWU9ImZ1bGxfbmFtZSIsIHZhbHVlPSJBcnRodXIgRGVudCIsIHBsYWNlaG9sZGVyPSJUeXBlIGEgbmFtZS4uLiIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMiIpOgogICAgICAgIFRleHQoIkluaXRpYWxzOiIpCiAgICAgICAgVGV4dCgie3sgZnVsbF9uYW1lIHwgaW5pdGlhbHMgfX0iLCBib2xkPVRydWUpCgphcHAgPSBQcmVmYWJBcHAoCiAgICB2aWV3PXZpZXcsCiAgICBqc19waXBlcz17CiAgICAgICAgImluaXRpYWxzIjogIiIiKHZhbHVlKSA9PiB7CiAgICAgICAgICAgIHJldHVybiBTdHJpbmcodmFsdWUpLnNwbGl0KCcgJykubWFwKHcgPT4gd1swXSkuam9pbignJykudG9VcHBlckNhc2UoKTsKICAgICAgICB9IiIiLAogICAgfSwKKQo">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-2","type":"Column","children":[{"name":"full_name","value":"Arthur Dent","type":"Input","inputType":"text","placeholder":"Type a name...","disabled":false,"readOnly":false,"required":false},{"cssClass":"items-center gap-2","type":"Row","children":[{"content":"Initials:","type":"Text"},{"cssClass":"font-bold","content":"{{ full_name | initials }}","type":"Text"}]}]}]},"state":{"full_name":"Arthur Dent"}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgUm93LCBUZXh0Cgpqc19waXBlcyA9IHsKICAgICJpbml0aWFscyI6ICIiIih2YWx1ZSkgPT4gewogICAgICAgIHJldHVybiBTdHJpbmcodmFsdWUpLnNwbGl0KCcgJykubWFwKHcgPT4gd1swXSkuam9pbignJykudG9VcHBlckNhc2UoKTsKICAgIH0iIiIsCn0KCndpdGggUHJlZmFiQXBwKGpzX3BpcGVzPWpzX3BpcGVzKSBhcyBhcHA6CiAgICB3aXRoIENvbHVtbihnYXA9Mik6CiAgICAgICAgSW5wdXQobmFtZT0iZnVsbF9uYW1lIiwgdmFsdWU9IkFydGh1ciBEZW50IiwgcGxhY2Vob2xkZXI9IlR5cGUgYSBuYW1lLi4uIikKICAgICAgICB3aXRoIFJvdyhjc3NfY2xhc3M9Iml0ZW1zLWNlbnRlciBnYXAtMiIpOgogICAgICAgICAgICBUZXh0KCJJbml0aWFsczoiKQogICAgICAgICAgICBUZXh0KCJ7eyBmdWxsX25hbWUgfCBpbml0aWFscyB9fSIsIGJvbGQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Column, Input, Row, Text
 
-with Column(gap=2) as view:
-    Input(name="full_name", value="Arthur Dent", placeholder="Type a name...")
-    with Row(css_class="items-center gap-2"):
-        Text("Initials:")
-        Text("{{ full_name | initials }}", bold=True)
+js_pipes = {
+    "initials": """(value) => {
+        return String(value).split(' ').map(w => w[0]).join('').toUpperCase();
+    }""",
+}
 
-app = PrefabApp(
-    view=view,
-    js_pipes={
-        "initials": """(value) => {
-            return String(value).split(' ').map(w => w[0]).join('').toUpperCase();
-        }""",
-    },
-)
+with PrefabApp(js_pipes=js_pipes) as app:
+    with Column(gap=2):
+        Input(name="full_name", value="Arthur Dent", placeholder="Type a name...")
+        with Row(css_class="items-center gap-2"):
+            Text("Initials:")
+            Text("{{ full_name | initials }}", bold=True)
 ```
 ```json Protocol icon="brackets-curly"
 {
@@ -220,32 +214,30 @@ from prefab_ui.app import PrefabApp
 from prefab_ui.actions import CallHandler
 from prefab_ui.components import Slider
 
-app = PrefabApp(
-    js_actions={
-        "constrainBudget": """(ctx) => {
-            const keys = ['infra', 'people', 'tools'];
-            const changed = ctx.arguments.key;
-            const newVal = ctx.event;
-            const others = keys.filter(k => k !== changed);
-            const remaining = 100 - newVal;
-            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
-            const updates = {};
-            for (const k of others) {
-                updates[k] = otherTotal > 0
-                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
-                    : Math.round(remaining / others.length);
-            }
-            return updates;
-        }""",
-    },
-    ...
-)
+js_actions = {
+    "constrainBudget": """(ctx) => {
+        const keys = ['infra', 'people', 'tools'];
+        const changed = ctx.arguments.key;
+        const newVal = ctx.event;
+        const others = keys.filter(k => k !== changed);
+        const remaining = 100 - newVal;
+        const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+        const updates = {};
+        for (const k of others) {
+            updates[k] = otherTotal > 0
+                ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                : Math.round(remaining / others.length);
+        }
+        return updates;
+    }""",
+}
 
-# In your UI — pass the slider's key so the handler knows which changed:
-Slider(
-    name="infra",
-    on_change=CallHandler("constrainBudget", arguments={"key": "infra"}),
-)
+# Pass the slider's key so the handler knows which changed:
+with PrefabApp(js_actions=js_actions) as app:
+    Slider(
+        name="infra",
+        on_change=CallHandler("constrainBudget", arguments={"key": "infra"}),
+    )
 ```
 
 The handler context has three fields:
@@ -300,50 +292,48 @@ from prefab_ui.app import PrefabApp
 from prefab_ui.actions import CallHandler
 from prefab_ui.components import Card, CardContent, Column, Row, Slider, Text
 
+js_actions = {
+    "constrain": """(ctx) => {
+        const keys = ['infra', 'people', 'tools'];
+        const changed = ctx.arguments.key;
+        const newVal = ctx.event;
+        const others = keys.filter(k => k !== changed);
+        const remaining = 100 - newVal;
+        const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
+        const updates = {};
+        for (const k of others) {
+            updates[k] = otherTotal > 0
+                ? Math.round((ctx.state[k] / otherTotal) * remaining)
+                : Math.round(remaining / others.length);
+        }
+        return updates;
+    }""",
+}
 
-with Card():
-    with CardContent():
-        with Column(gap=4):
-            for label, key in [
-                ("Infrastructure", "infra"),
-                ("People", "people"),
-                ("Tools", "tools"),
-            ]:
-                with Column(gap=1):
-                    with Row(css_class="justify-between"):
-                        Text(label)
-                        Text(f"{{{{ {key} | round }}}}%", bold=True)
-                    Slider(
-                        name=key, max=100, step=1,
-                        on_change=CallHandler(
-                            "constrain",
-                            arguments={"key": key},
-                        ),
-                    )
+with PrefabApp(js_actions=js_actions) as app:
+    with Card():
+        with CardContent():
+            with Column(gap=4):
+                for label, key in [
+                    ("Infrastructure", "infra"),
+                    ("People", "people"),
+                    ("Tools", "tools"),
+                ]:
+                    with Column(gap=1):
+                        with Row(css_class="justify-between"):
+                            Text(label)
+                            Text(f"{{{{ {key} | round }}}}%", bold=True)
+                        Slider(
+                            name=key, max=100, step=1,
+                            on_change=CallHandler(
+                                "constrain",
+                                arguments={"key": key},
+                            ),
+                        )
 
-            with Row(css_class="justify-between pt-4 border-t"):
-                Text("Total", bold=True)
-                Text("{{ infra + people + tools | round }}%", bold=True)
-
-app = PrefabApp(
-    js_actions={
-        "constrain": """(ctx) => {
-            const keys = ['infra', 'people', 'tools'];
-            const changed = ctx.arguments.key;
-            const newVal = ctx.event;
-            const others = keys.filter(k => k !== changed);
-            const remaining = 100 - newVal;
-            const otherTotal = others.reduce((s, k) => s + ctx.state[k], 0);
-            const updates = {};
-            for (const k of others) {
-                updates[k] = otherTotal > 0
-                    ? Math.round((ctx.state[k] / otherTotal) * remaining)
-                    : Math.round(remaining / others.length);
-            }
-            return updates;
-        }""",
-    },
-)
+                with Row(css_class="justify-between pt-4 border-t"):
+                    Text("Total", bold=True)
+                    Text("{{ infra + people + tools | round }}%", bold=True)
 ```
 
 Run it with `uv run python examples/linked_sliders.py` to see it in action. The handler runs client-side on every drag — no server round-trip, no lag.
