@@ -35,11 +35,12 @@ with PrefabApp(
     },
 ) as app:
     with Column(gap=4):
+        slide_class = "min-h-[520px]"
         with Pages(name="slide", value="fleet"):
             with Page("fleet"):
-                fleet_slide()
+                fleet_slide(css_class=slide_class)
             with Page("cost"):
-                cost_slide()
+                cost_slide(css_class=slide_class)
 
         with Row(css_class="justify-end items-center", gap=3):
             Muted((slide == "fleet").then("1 / 2", "2 / 2"))

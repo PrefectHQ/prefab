@@ -37,9 +37,9 @@ traffic_data = [
 ]
 
 
-def slide():
+def slide(css_class: str = ""):
     """Return the cost & traffic overview slide as a Card."""
-    with Card() as card:
+    with Card(css_class=css_class) as card:
         with CardHeader():
             Muted("March 2026")
             CardTitle("Cost & Traffic Overview", css_class="text-2xl font-bold")

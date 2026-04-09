@@ -60,9 +60,9 @@ for name, unit, avg, peak, burst, target in metrics:
     )
 
 
-def slide():
+def slide(css_class: str = ""):
     """Return the fleet performance slide as a Card."""
-    with Card() as card:
+    with Card(css_class=css_class) as card:
         with CardHeader():
             Text(
                 "Week of Mar 9–16, 2026",
