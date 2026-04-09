@@ -55,6 +55,16 @@ const shadowCss =
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
 }
+/*
+ * The mount is a flex-center container, which makes the prefab root Div
+ * a flex item sized to max-content by default. That breaks any descendant
+ * using width: 100% (sliders, progress bars, etc.) because they resolve
+ * against a content-sized parent. Forcing the root to fill width restores
+ * a block-like width cascade inside the preview.
+ */
+[data-prefab-mount] > .pf-app-root {
+  width: 100%;
+}
 `;
 
 // Portal shadow root: transparent container for overlays
