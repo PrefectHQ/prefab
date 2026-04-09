@@ -7,7 +7,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Toaster } from "sonner";
-import { Moon, Sun, Search, Braces, Link, Check } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  Search,
+  Braces,
+  Link,
+  Check,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import { RenderTree, type ComponentNode } from "../renderer";
 import { useStateStore } from "../state";
 import { Button } from "@/ui/button";
@@ -238,6 +247,17 @@ export function Playground() {
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
+  const [editorCollapsed, setEditorCollapsed] = useState(
+    () => localStorage.getItem("pg-editor-collapsed") === "true",
+  );
+  const [editorWidth, setEditorWidth] = useState(() => {
+    const stored = parseFloat(localStorage.getItem("pg-editor-width") ?? "");
+    return Number.isFinite(stored)
+      ? Math.max(0.15, Math.min(0.85, stored))
+      : 0.5;
+  });
+  const splitRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
   const state = useStateStore({});
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -255,6 +275,43 @@ export function Playground() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  // Persist split layout preferences
+  useEffect(() => {
+    localStorage.setItem("pg-editor-collapsed", String(editorCollapsed));
+  }, [editorCollapsed]);
+  useEffect(() => {
+    localStorage.setItem("pg-editor-width", editorWidth.toFixed(3));
+  }, [editorWidth]);
+
+  // Draggable split divider — update editor width from mouse X
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      if (!draggingRef.current || !splitRef.current) return;
+      const rect = splitRef.current.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      setEditorWidth(Math.max(0.15, Math.min(0.85, pct)));
+    };
+    const handleUp = () => {
+      if (!draggingRef.current) return;
+      draggingRef.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", handleUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", handleUp);
+    };
+  }, []);
+
+  const startDrag = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    draggingRef.current = true;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }, []);
 
   // Inject theme CSS scoped to the preview pane.
   // Rewrite `:root` → `#pg-preview` and `.dark` → `#pg-preview.dark`
@@ -509,7 +566,19 @@ export function Playground() {
   return (
     <div className="flex h-[800px] flex-col bg-background text-foreground">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 border-b border-border px-4 py-2">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2">
+        <button
+          onClick={() => setEditorCollapsed((v) => !v)}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+          aria-label={editorCollapsed ? "Show code panel" : "Hide code panel"}
+          title={editorCollapsed ? "Show code panel" : "Hide code panel"}
+        >
+          {editorCollapsed ? (
+            <PanelLeftOpen className="h-4 w-4" />
+          ) : (
+            <PanelLeftClose className="h-4 w-4" />
+          )}
+        </button>
         <ExamplePicker onSelect={handleExampleSelect} />
 
         {mode === "json" && (
@@ -563,47 +632,62 @@ export function Playground() {
       </div>
 
       {/* Split panes */}
-      <div className="flex min-h-0 flex-1">
-        <div className="flex w-1/2 flex-col border-r border-border">
-          <div className="min-h-0 flex-1 overflow-hidden bg-muted/30">
-            {mode === "python" ? (
-              <Editor
-                value={code}
-                onChange={setCode}
-                language="python"
-                dark={dark}
-              />
-            ) : (
-              <Editor
-                value={jsonCode}
-                onChange={handleJsonChange}
-                language="json"
-                dark={dark}
-              />
-            )}
-          </div>
-          {error && (
-            <Alert variant="destructive" className="m-2">
-              <AlertDescription className="font-mono text-xs">
-                {error}
-                {errorDetail && (
-                  <details className="mt-1">
-                    <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
-                      Traceback
-                    </summary>
-                    <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
-                      {errorDetail}
-                    </pre>
-                  </details>
+      <div ref={splitRef} className="flex min-h-0 flex-1">
+        {!editorCollapsed && (
+          <>
+            <div
+              className="flex min-w-0 flex-col"
+              style={{ width: `${editorWidth * 100}%` }}
+            >
+              <div className="min-h-0 flex-1 overflow-hidden bg-muted/30">
+                {mode === "python" ? (
+                  <Editor
+                    value={code}
+                    onChange={setCode}
+                    language="python"
+                    dark={dark}
+                  />
+                ) : (
+                  <Editor
+                    value={jsonCode}
+                    onChange={handleJsonChange}
+                    language="json"
+                    dark={dark}
+                  />
                 )}
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
+              </div>
+              {error && (
+                <Alert variant="destructive" className="m-2">
+                  <AlertDescription className="font-mono text-xs">
+                    {error}
+                    {errorDetail && (
+                      <details className="mt-1">
+                        <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
+                          Traceback
+                        </summary>
+                        <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
+                          {errorDetail}
+                        </pre>
+                      </details>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+            <div
+              onMouseDown={startDrag}
+              onDoubleClick={() => setEditorWidth(0.5)}
+              className="w-1 shrink-0 cursor-col-resize bg-border transition-colors hover:bg-primary/50"
+              role="separator"
+              aria-label="Resize code panel"
+              title="Drag to resize, double-click to reset"
+            />
+          </>
+        )}
 
         <div
           id="pg-preview"
-          className={`w-1/2 overflow-auto bg-background text-foreground p-6${
+          className={`min-w-0 flex-1 overflow-auto bg-background text-foreground p-6${
             dark ? " dark" : ""
           }`}
         >
