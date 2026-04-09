@@ -26,6 +26,13 @@ from rich.console import Console
 
 import prefab_ui
 from prefab_ui.app import PrefabApp
+from prefab_ui.cli.build_helpers import (
+    should_install_node_deps,
+    should_rebuild_playground,
+    should_rebuild_renderer,
+    source_content_hash,
+    sync_to_mintlify_cache,
+)
 from prefab_ui.cli.docs_server import register_docs_command
 
 console = Console()
@@ -442,58 +449,6 @@ dev_app = cyclopts.App(
 app.command(dev_app)
 
 
-def _should_install_node_deps(renderer_dir: Path) -> bool:
-    """Check whether `npm install` needs to run for the renderer."""
-    node_modules = renderer_dir / "node_modules"
-    if not node_modules.exists():
-        return True
-    lock_file = renderer_dir / "package-lock.json"
-    if lock_file.exists():
-        return lock_file.stat().st_mtime > node_modules.stat().st_mtime
-    return False
-
-
-def _source_content_hash(src_dir: Path, exclude: Path | None = None) -> str:
-    """SHA-256 over sorted file paths + contents under *src_dir*."""
-    import hashlib
-
-    h = hashlib.sha256()
-    for f in sorted(src_dir.rglob("*")):
-        if not f.is_file():
-            continue
-        if exclude and f.is_relative_to(exclude):
-            continue
-        h.update(str(f.relative_to(src_dir)).encode())
-        h.update(f.read_bytes())
-    return h.hexdigest()
-
-
-def _should_rebuild_renderer(repo_root: Path) -> bool:
-    """Check whether the renderer bundle needs rebuilding."""
-    renderer_js = repo_root / "docs" / "renderer.js"
-    if not renderer_js.exists():
-        return True
-    hash_file = repo_root / "renderer" / ".renderer-hash"
-    renderer_src = repo_root / "renderer" / "src"
-    playground_dir = renderer_src / "playground"
-    current_hash = _source_content_hash(renderer_src, exclude=playground_dir)
-    return not (hash_file.exists() and hash_file.read_text().strip() == current_hash)
-
-
-def _should_rebuild_playground(repo_root: Path) -> bool:
-    """Check whether the playground HTML needs rebuilding."""
-    if not (repo_root / "docs" / "playground.html").exists():
-        return True
-    hf = repo_root / "renderer" / ".playground-hash"
-    # Hash ALL renderer source, not just playground/ — CSS, components, and
-    # themes all affect the compiled playground.html.
-    return not (
-        hf.exists()
-        and hf.read_text().strip()
-        == _source_content_hash(repo_root / "renderer" / "src")
-    )
-
-
 @dev_app.command(name="build-docs")
 def build_docs() -> None:
     """Regenerate all doc assets: previews, CSS, playground, and protocol ref."""
@@ -522,7 +477,7 @@ def build_docs() -> None:
 
     steps: list[tuple[str, list[str], dict[str, str] | None]] = []
 
-    if _should_install_node_deps(renderer_dir):
+    if should_install_node_deps(renderer_dir):
         steps.append(
             (
                 "Installing renderer dependencies",
@@ -531,7 +486,7 @@ def build_docs() -> None:
             )
         )
 
-    if _should_rebuild_renderer(repo_root):
+    if should_rebuild_renderer(repo_root):
         steps.append(
             (
                 "Building renderer",
@@ -544,7 +499,7 @@ def build_docs() -> None:
         console.print("  [dim]→[/dim] Renderer up to date, skipping")
         copy_renderer = False
 
-    rebuild_playground = _should_rebuild_playground(repo_root)
+    rebuild_playground = should_rebuild_playground(repo_root)
 
     steps += [
         (
@@ -632,20 +587,22 @@ def build_docs() -> None:
         shutil.copy2(dist_entry, repo_root / "docs" / "renderer.js")
         if dist_renderer_chunks.exists():
             shutil.copytree(dist_renderer_chunks, docs_renderer_chunks)
+        sync_to_mintlify_cache(repo_root, "renderer.js", "_renderer")
 
     if copy_renderer:
         renderer_src = repo_root / "renderer" / "src"
         playground_dir = renderer_src / "playground"
         hash_file = repo_root / "renderer" / ".renderer-hash"
-        hash_file.write_text(_source_content_hash(renderer_src, exclude=playground_dir))
+        hash_file.write_text(source_content_hash(renderer_src, exclude=playground_dir))
 
     if rebuild_playground:
         shutil.copy2(
             renderer_dir / "dist" / "playground.html",
             repo_root / "docs" / "playground.html",
         )
+        sync_to_mintlify_cache(repo_root, "playground.html")
         hash_file = repo_root / "renderer" / ".playground-hash"
-        hash_file.write_text(_source_content_hash(renderer_dir / "src"))
+        hash_file.write_text(source_content_hash(renderer_dir / "src"))
 
     console.print("[bold green]✓[/bold green] All doc assets rebuilt")
 
@@ -672,7 +629,7 @@ def build_renderers() -> None:
             console.print(f"[bold red]Error:[/bold red] [cyan]{cmd}[/cyan] not found.")
             raise SystemExit(1)
 
-    if _should_install_node_deps(renderer_dir):
+    if should_install_node_deps(renderer_dir):
         console.print("  [dim]→[/dim] Installing renderer dependencies...")
         r = subprocess.run(
             ["npm", "install", "--prefix", str(renderer_dir)], cwd=repo_root
@@ -735,8 +692,9 @@ def build_playground() -> None:
         renderer_dir / "dist" / "playground.html",
         repo_root / "docs" / "playground.html",
     )
+    sync_to_mintlify_cache(repo_root, "playground.html")
     hash_file = repo_root / "renderer" / ".playground-hash"
-    hash_file.write_text(_source_content_hash(repo_root / "renderer" / "src"))
+    hash_file.write_text(source_content_hash(repo_root / "renderer" / "src"))
     console.print("[bold green]✓[/bold green] Playground rebuilt")
 
 
