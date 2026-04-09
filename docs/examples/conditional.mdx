@@ -1,0 +1,147 @@
+---
+title: Conditional Rendering
+description: Toggle between UI states with If/Else and reactive switches.
+icon: toggle-on
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Flip a switch and the UI changes. `If` and `Else` render different components based on reactive state, with no server round-trip.
+
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Preferences"}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"name":"dark_mode","value":false,"type":"Switch","label":"Dark Mode","size":"default","disabled":false,"required":false},{"name":"notifications","value":true,"type":"Switch","label":"Notifications","size":"default","disabled":false,"required":false},{"type":"Condition","cases":[{"when":"{{ dark_mode }}","children":[{"type":"Alert","variant":"info","children":[{"type":"AlertTitle","content":"Dark Mode"},{"type":"AlertDescription","content":"Your eyes will thank you."}]}]}],"else":[{"type":"Alert","variant":"warning","children":[{"type":"AlertTitle","content":"Light Mode"},{"type":"AlertDescription","content":"Living dangerously, I see."}]}]},{"type":"Condition","cases":[{"when":"{{ notifications }}","children":[{"cssClass":"text-sm text-muted-foreground","content":"You'll receive alerts for all events.","type":"Text"}]}],"else":[{"cssClass":"text-sm text-muted-foreground","content":"Notifications are off. You're on your own.","type":"Text"}]}]}]}]},"state":{"dark_mode":false,"notifications":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQWxlcnQsIEFsZXJ0RGVzY3JpcHRpb24sIEFsZXJ0VGl0bGUsCiAgICBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLAogICAgQ29sdW1uLCBTd2l0Y2gsIFRleHQsCikKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEVsc2UsIElmCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKZGFya19tb2RlID0gUngoImRhcmtfbW9kZSIpCm5vdGlmaWNhdGlvbnMgPSBSeCgibm90aWZpY2F0aW9ucyIpCgp3aXRoIENhcmQoY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIENhcmRUaXRsZSgiUHJlZmVyZW5jZXMiKQogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICAgICAgU3dpdGNoKGxhYmVsPSJEYXJrIE1vZGUiLCBuYW1lPSJkYXJrX21vZGUiLCB2YWx1ZT1GYWxzZSkKICAgICAgICAgICAgU3dpdGNoKGxhYmVsPSJOb3RpZmljYXRpb25zIiwgbmFtZT0ibm90aWZpY2F0aW9ucyIsIHZhbHVlPVRydWUpCiAgICAgICAgICAgIHdpdGggSWYoZGFya19tb2RlKToKICAgICAgICAgICAgICAgIHdpdGggQWxlcnQodmFyaWFudD0iaW5mbyIpOgogICAgICAgICAgICAgICAgICAgIEFsZXJ0VGl0bGUoIkRhcmsgTW9kZSIpCiAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigiWW91ciBleWVzIHdpbGwgdGhhbmsgeW91LiIpCiAgICAgICAgICAgIHdpdGggRWxzZSgpOgogICAgICAgICAgICAgICAgd2l0aCBBbGVydCh2YXJpYW50PSJ3YXJuaW5nIik6CiAgICAgICAgICAgICAgICAgICAgQWxlcnRUaXRsZSgiTGlnaHQgTW9kZSIpCiAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigiTGl2aW5nIGRhbmdlcm91c2x5LCBJIHNlZS4iKQogICAgICAgICAgICB3aXRoIElmKG5vdGlmaWNhdGlvbnMpOgogICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAiWW91J2xsIHJlY2VpdmUgYWxlcnRzIGZvciBhbGwgZXZlbnRzLiIsCiAgICAgICAgICAgICAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LXNtIHRleHQtbXV0ZWQtZm9yZWdyb3VuZCIsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRWxzZSgpOgogICAgICAgICAgICAgICAgVGV4dCgKICAgICAgICAgICAgICAgICAgICAiTm90aWZpY2F0aW9ucyBhcmUgb2ZmLiBZb3UncmUgb24geW91ciBvd24uIiwKICAgICAgICAgICAgICAgICAgICBjc3NfY2xhc3M9InRleHQtc20gdGV4dC1tdXRlZC1mb3JlZ3JvdW5kIiwKICAgICAgICAgICAgICAgICkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import (
+    Alert, AlertDescription, AlertTitle,
+    Card, CardContent, CardHeader, CardTitle,
+    Column, Switch, Text,
+)
+from prefab_ui.components.control_flow import Else, If
+from prefab_ui.rx import Rx
+
+dark_mode = Rx("dark_mode")
+notifications = Rx("notifications")
+
+with Card(css_class="w-full"):
+    with CardHeader():
+        CardTitle("Preferences")
+    with CardContent():
+        with Column(gap=4):
+            Switch(label="Dark Mode", name="dark_mode", value=False)
+            Switch(label="Notifications", name="notifications", value=True)
+            with If(dark_mode):
+                with Alert(variant="info"):
+                    AlertTitle("Dark Mode")
+                    AlertDescription("Your eyes will thank you.")
+            with Else():
+                with Alert(variant="warning"):
+                    AlertTitle("Light Mode")
+                    AlertDescription("Living dangerously, I see.")
+            with If(notifications):
+                Text(
+                    "You'll receive alerts for all events.",
+                    css_class="text-sm text-muted-foreground",
+                )
+            with Else():
+                Text(
+                    "Notifications are off. You're on your own.",
+                    css_class="text-sm text-muted-foreground",
+                )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [{"type": "CardTitle", "content": "Preferences"}]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-4",
+            "type": "Column",
+            "children": [
+              {
+                "name": "dark_mode",
+                "value": false,
+                "type": "Switch",
+                "label": "Dark Mode",
+                "size": "default",
+                "disabled": false,
+                "required": false
+              },
+              {
+                "name": "notifications",
+                "value": true,
+                "type": "Switch",
+                "label": "Notifications",
+                "size": "default",
+                "disabled": false,
+                "required": false
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ dark_mode }}",
+                    "children": [
+                      {
+                        "type": "Alert",
+                        "variant": "info",
+                        "children": [
+                          {"type": "AlertTitle", "content": "Dark Mode"},
+                          {"type": "AlertDescription", "content": "Your eyes will thank you."}
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "Alert",
+                    "variant": "warning",
+                    "children": [
+                      {"type": "AlertTitle", "content": "Light Mode"},
+                      {"type": "AlertDescription", "content": "Living dangerously, I see."}
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "Condition",
+                "cases": [
+                  {
+                    "when": "{{ notifications }}",
+                    "children": [
+                      {
+                        "cssClass": "text-sm text-muted-foreground",
+                        "content": "You'll receive alerts for all events.",
+                        "type": "Text"
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "cssClass": "text-sm text-muted-foreground",
+                    "content": "Notifications are off. You're on your own.",
+                    "type": "Text"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"dark_mode": false, "notifications": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>

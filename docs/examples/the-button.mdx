@@ -9,251 +9,261 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 A single button that escalates through four states of increasingly urgent warnings — all driven by `If`/`Elif`/`Else` branches and `SetState` actions with no server calls.
 
-<ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"type":"CardTitle","content":"The Button"},{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"type":"Badge","label":"{{ presses }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ presses == 0 }}","children":[{"type":"Button","label":"This is probably the best button to press","variant":"success","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 1 }}","children":[{"type":"Alert","variant":"info","icon":"info","children":[{"type":"AlertTitle","content":"Thank you!"},{"type":"AlertDescription","content":"Your cooperation has been noted and will be reported."}]},{"type":"Button","label":"Please do not press this button again","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 2 }}","children":[{"type":"Alert","variant":"warning","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"We did ask nicely"},{"type":"AlertDescription","content":"Management has been informed."}]},{"cssClass":"pf-progress-flat","type":"Progress","value":66.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-yellow-500"},{"content":"Patience remaining: 34%","type":"Muted"},{"type":"Button","label":"Please do not press this button again","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 3 }}","children":[{"type":"Alert","variant":"destructive","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"Now look what you've done"},{"type":"AlertDescription","content":"The improbability drive has been activated."}]},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Recalculating the probability of your existence...","type":"Muted"}]},{"type":"Button","label":"OK maybe press it one more time","variant":"ghost","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":0}}]}],"else":[{"content":"This should not happen.","type":"Text"}]}]}]},{"type":"CardFooter","children":[{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"content":"Share and Enjoy!","type":"Muted"}]}]}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQWxlcnQsIEFsZXJ0RGVzY3JpcHRpb24sIEFsZXJ0VGl0bGUsIEJhZGdlLCBCdXR0b24sIENhcmQsIENhcmRDb250ZW50LAogICAgQ2FyZEZvb3RlciwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLCBDb2x1bW4sIExvYWRlciwKICAgIE11dGVkLCBQcm9ncmVzcywgUm93LCBUZXh0LAopCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY29udHJvbF9mbG93IGltcG9ydCBFbGlmLCBFbHNlLCBJZgpmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCnByZXNzZXMgPSBSeCgicHJlc3NlcyIpCgp3aXRoIENhcmQoKToKICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgIHdpdGggUm93KGFsaWduPSJjZW50ZXIiLCBjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiIpOgogICAgICAgICAgICBDYXJkVGl0bGUoIlRoZSBCdXR0b24iKQogICAgICAgICAgICB3aXRoIElmKHByZXNzZXMgPiAwKToKICAgICAgICAgICAgICAgIEJhZGdlKHByZXNzZXMsIHZhcmlhbnQ9InNlY29uZGFyeSIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgICAgICAgICB3aXRoIElmKHByZXNzZXMgPT0gMCk6CiAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgIlRoaXMgaXMgcHJvYmFibHkgdGhlIGJlc3QgYnV0dG9uIHRvIHByZXNzIiwKICAgICAgICAgICAgICAgICAgICB2YXJpYW50PSJzdWNjZXNzIiwKICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZShwcmVzc2VzLCBwcmVzc2VzICsgMSksCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRWxpZihwcmVzc2VzID09IDEpOgogICAgICAgICAgICAgICAgd2l0aCBBbGVydCh2YXJpYW50PSJpbmZvIiwgaWNvbj0iaW5mbyIpOgogICAgICAgICAgICAgICAgICAgIEFsZXJ0VGl0bGUoIlRoYW5rIHlvdSEiKQogICAgICAgICAgICAgICAgICAgIEFsZXJ0RGVzY3JpcHRpb24oCiAgICAgICAgICAgICAgICAgICAgICAgICJZb3VyIGNvb3BlcmF0aW9uIGhhcyBiZWVuIG5vdGVkIGFuZCB3aWxsIGJlIHJlcG9ydGVkLiIKICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgIlBsZWFzZSBkbyBub3QgcHJlc3MgdGhpcyBidXR0b24gYWdhaW4iLAogICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICAgICAgIG9uX2NsaWNrPVNldFN0YXRlKHByZXNzZXMsIHByZXNzZXMgKyAxKSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgd2l0aCBFbGlmKHByZXNzZXMgPT0gMik6CiAgICAgICAgICAgICAgICB3aXRoIEFsZXJ0KHZhcmlhbnQ9Indhcm5pbmciLCBpY29uPSJhbGVydC10cmlhbmdsZSIpOgogICAgICAgICAgICAgICAgICAgIEFsZXJ0VGl0bGUoIldlIGRpZCBhc2sgbmljZWx5IikKICAgICAgICAgICAgICAgICAgICBBbGVydERlc2NyaXB0aW9uKCJNYW5hZ2VtZW50IGhhcyBiZWVuIGluZm9ybWVkLiIpCiAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT02NiwgbWF4PTEwMCwgaW5kaWNhdG9yX2NsYXNzPSJiZy15ZWxsb3ctNTAwIikKICAgICAgICAgICAgICAgIE11dGVkKCJQYXRpZW5jZSByZW1haW5pbmc6IDM0JSIpCiAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgIlBsZWFzZSBkbyBub3QgcHJlc3MgdGhpcyBidXR0b24gYWdhaW4iLAogICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwKICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZShwcmVzc2VzLCBwcmVzc2VzICsgMSksCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRWxpZihwcmVzc2VzID09IDMpOgogICAgICAgICAgICAgICAgd2l0aCBBbGVydCh2YXJpYW50PSJkZXN0cnVjdGl2ZSIsIGljb249ImFsZXJ0LXRyaWFuZ2xlIik6CiAgICAgICAgICAgICAgICAgICAgQWxlcnRUaXRsZSgiTm93IGxvb2sgd2hhdCB5b3UndmUgZG9uZSIpCiAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigKICAgICAgICAgICAgICAgICAgICAgICAgIlRoZSBpbXByb2JhYmlsaXR5IGRyaXZlIGhhcyBiZWVuIGFjdGl2YXRlZC4iCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgUHJvZ3Jlc3ModmFsdWU9MTAwLCBtYXg9MTAwLCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgICAgICAgICAgICAgd2l0aCBSb3coZ2FwPTIsIGFsaWduPSJjZW50ZXIiKToKICAgICAgICAgICAgICAgICAgICBMb2FkZXIodmFyaWFudD0ic3BpbiIsIHNpemU9InNtIikKICAgICAgICAgICAgICAgICAgICBNdXRlZCgiUmVjYWxjdWxhdGluZyB0aGUgcHJvYmFiaWxpdHkgb2YgeW91ciBleGlzdGVuY2UuLi4iKQogICAgICAgICAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAgICAgICAgICJPSyBtYXliZSBwcmVzcyBpdCBvbmUgbW9yZSB0aW1lIiwKICAgICAgICAgICAgICAgICAgICB2YXJpYW50PSJnaG9zdCIsCiAgICAgICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUocHJlc3NlcywgMCksCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggRWxzZSgpOgogICAgICAgICAgICAgICAgVGV4dCgiVGhpcyBzaG91bGQgbm90IGhhcHBlbi4iKQogICAgd2l0aCBDYXJkRm9vdGVyKCk6CiAgICAgICAgd2l0aCBJZihwcmVzc2VzID4gMCk6CiAgICAgICAgICAgIE11dGVkKCJTaGFyZSBhbmQgRW5qb3khIikK">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root max-w-none p-0","type":"Div","children":[{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"type":"CardTitle","content":"The Button"},{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"type":"Badge","label":"{{ presses }}","variant":"secondary"}]}]}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"type":"Condition","cases":[{"when":"{{ presses == 0 }}","children":[{"type":"Button","label":"This is probably the best button to press","variant":"success","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 1 }}","children":[{"type":"Alert","variant":"info","icon":"info","children":[{"type":"AlertTitle","content":"Thank you!"},{"type":"AlertDescription","content":"Your cooperation has been noted and will be reported."}]},{"type":"Button","label":"Please do not press this button again","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 2 }}","children":[{"type":"Alert","variant":"warning","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"We did ask nicely"},{"type":"AlertDescription","content":"Management has been informed."}]},{"cssClass":"pf-progress-flat","type":"Progress","value":66.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-yellow-500"},{"content":"Patience remaining: 34%","type":"Muted"},{"type":"Button","label":"Please do not press this button again","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":"{{ presses + 1 }}"}}]},{"when":"{{ presses == 3 }}","children":[{"type":"Alert","variant":"destructive","icon":"alert-triangle","children":[{"type":"AlertTitle","content":"Now look what you've done"},{"type":"AlertDescription","content":"The improbability drive has been activated."}]},{"cssClass":"pf-progress-flat","type":"Progress","value":100.0,"max":100.0,"variant":"default","size":"default","indicatorClass":"bg-red-500"},{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Loader","variant":"spin","size":"sm"},{"content":"Recalculating the probability of your existence...","type":"Muted"}]},{"type":"Button","label":"OK maybe press it one more time","variant":"ghost","size":"default","disabled":false,"onClick":{"action":"setState","key":"presses","value":0}}]}],"else":[{"content":"This should not happen.","type":"Text"}]}]}]},{"type":"CardFooter","children":[{"type":"Condition","cases":[{"when":"{{ presses > 0 }}","children":[{"content":"Share and Enjoy!","type":"Muted"}]}]}]}]}]},"state":{"presses":0}}} playground="ZnJvbSBwcmVmYWJfdWkgaW1wb3J0IFByZWZhYkFwcApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBBbGVydCwgQWxlcnREZXNjcmlwdGlvbiwgQWxlcnRUaXRsZSwgQmFkZ2UsIEJ1dHRvbiwgQ2FyZCwgQ2FyZENvbnRlbnQsCiAgICBDYXJkRm9vdGVyLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsIENvbHVtbiwgTG9hZGVyLAogICAgTXV0ZWQsIFByb2dyZXNzLCBSb3csIFRleHQsCikKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jb250cm9sX2Zsb3cgaW1wb3J0IEVsaWYsIEVsc2UsIElmCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKcHJlc3NlcyA9IFJ4KCJwcmVzc2VzIikKCndpdGggUHJlZmFiQXBwKHN0YXRlPXsicHJlc3NlcyI6IDB9LCBjc3NfY2xhc3M9Im1heC13LW5vbmUgcC0wIik6CiAgICB3aXRoIENhcmQoY3NzX2NsYXNzPSJ3LWZ1bGwiKToKICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgd2l0aCBSb3coYWxpZ249ImNlbnRlciIsIGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgICAgICAgICBDYXJkVGl0bGUoIlRoZSBCdXR0b24iKQogICAgICAgICAgICAgICAgd2l0aCBJZihwcmVzc2VzID4gMCk6CiAgICAgICAgICAgICAgICAgICAgQmFkZ2UocHJlc3NlcywgdmFyaWFudD0ic2Vjb25kYXJ5IikKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICAgICAgICAgIHdpdGggSWYocHJlc3NlcyA9PSAwKToKICAgICAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgICAgICJUaGlzIGlzIHByb2JhYmx5IHRoZSBiZXN0IGJ1dHRvbiB0byBwcmVzcyIsCiAgICAgICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9InN1Y2Nlc3MiLAogICAgICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZShwcmVzc2VzLCBwcmVzc2VzICsgMSksCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgd2l0aCBFbGlmKHByZXNzZXMgPT0gMSk6CiAgICAgICAgICAgICAgICAgICAgd2l0aCBBbGVydCh2YXJpYW50PSJpbmZvIiwgaWNvbj0iaW5mbyIpOgogICAgICAgICAgICAgICAgICAgICAgICBBbGVydFRpdGxlKCJUaGFuayB5b3UhIikKICAgICAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJZb3VyIGNvb3BlcmF0aW9uIGhhcyBiZWVuIG5vdGVkIGFuZCB3aWxsIGJlIHJlcG9ydGVkLiIKICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgICAgIEJ1dHRvbigKICAgICAgICAgICAgICAgICAgICAgICAgIlBsZWFzZSBkbyBub3QgcHJlc3MgdGhpcyBidXR0b24gYWdhaW4iLAogICAgICAgICAgICAgICAgICAgICAgICB2YXJpYW50PSJvdXRsaW5lIiwKICAgICAgICAgICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUocHJlc3NlcywgcHJlc3NlcyArIDEpLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIHdpdGggRWxpZihwcmVzc2VzID09IDIpOgogICAgICAgICAgICAgICAgICAgIHdpdGggQWxlcnQodmFyaWFudD0id2FybmluZyIsIGljb249ImFsZXJ0LXRyaWFuZ2xlIik6CiAgICAgICAgICAgICAgICAgICAgICAgIEFsZXJ0VGl0bGUoIldlIGRpZCBhc2sgbmljZWx5IikKICAgICAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigiTWFuYWdlbWVudCBoYXMgYmVlbiBpbmZvcm1lZC4iKQogICAgICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPTY2LCBtYXg9MTAwLCBpbmRpY2F0b3JfY2xhc3M9ImJnLXllbGxvdy01MDAiKQogICAgICAgICAgICAgICAgICAgIE11dGVkKCJQYXRpZW5jZSByZW1haW5pbmc6IDM0JSIpCiAgICAgICAgICAgICAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAgICAgICAgICAgICAiUGxlYXNlIGRvIG5vdCBwcmVzcyB0aGlzIGJ1dHRvbiBhZ2FpbiIsCiAgICAgICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwKICAgICAgICAgICAgICAgICAgICAgICAgb25fY2xpY2s9U2V0U3RhdGUocHJlc3NlcywgcHJlc3NlcyArIDEpLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIHdpdGggRWxpZihwcmVzc2VzID09IDMpOgogICAgICAgICAgICAgICAgICAgIHdpdGggQWxlcnQodmFyaWFudD0iZGVzdHJ1Y3RpdmUiLCBpY29uPSJhbGVydC10cmlhbmdsZSIpOgogICAgICAgICAgICAgICAgICAgICAgICBBbGVydFRpdGxlKCJOb3cgbG9vayB3aGF0IHlvdSd2ZSBkb25lIikKICAgICAgICAgICAgICAgICAgICAgICAgQWxlcnREZXNjcmlwdGlvbigKICAgICAgICAgICAgICAgICAgICAgICAgICAgICJUaGUgaW1wcm9iYWJpbGl0eSBkcml2ZSBoYXMgYmVlbiBhY3RpdmF0ZWQuIgogICAgICAgICAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICAgICAgUHJvZ3Jlc3ModmFsdWU9MTAwLCBtYXg9MTAwLCBpbmRpY2F0b3JfY2xhc3M9ImJnLXJlZC01MDAiKQogICAgICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgICAgIExvYWRlcih2YXJpYW50PSJzcGluIiwgc2l6ZT0ic20iKQogICAgICAgICAgICAgICAgICAgICAgICBNdXRlZCgiUmVjYWxjdWxhdGluZyB0aGUgcHJvYmFiaWxpdHkgb2YgeW91ciBleGlzdGVuY2UuLi4iKQogICAgICAgICAgICAgICAgICAgIEJ1dHRvbigKICAgICAgICAgICAgICAgICAgICAgICAgIk9LIG1heWJlIHByZXNzIGl0IG9uZSBtb3JlIHRpbWUiLAogICAgICAgICAgICAgICAgICAgICAgICB2YXJpYW50PSJnaG9zdCIsCiAgICAgICAgICAgICAgICAgICAgICAgIG9uX2NsaWNrPVNldFN0YXRlKHByZXNzZXMsIDApLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIHdpdGggRWxzZSgpOgogICAgICAgICAgICAgICAgICAgIFRleHQoIlRoaXMgc2hvdWxkIG5vdCBoYXBwZW4uIikKICAgICAgICB3aXRoIENhcmRGb290ZXIoKToKICAgICAgICAgICAgd2l0aCBJZihwcmVzc2VzID4gMCk6CiAgICAgICAgICAgICAgICBNdXRlZCgiU2hhcmUgYW5kIEVuam95ISIpCg">
 <CodeGroup>
-```python Python icon="python"
+```python icon="python"
+from prefab_ui import PrefabApp
+from prefab_ui.actions import SetState
 from prefab_ui.components import (
     Alert, AlertDescription, AlertTitle, Badge, Button, Card, CardContent,
     CardFooter, CardHeader, CardTitle, Column, Loader,
     Muted, Progress, Row, Text,
 )
 from prefab_ui.components.control_flow import Elif, Else, If
-from prefab_ui.actions import SetState
 from prefab_ui.rx import Rx
 
 presses = Rx("presses")
 
-with Card():
-    with CardHeader():
-        with Row(align="center", css_class="justify-between"):
-            CardTitle("The Button")
+with PrefabApp(state={"presses": 0}, css_class="max-w-none p-0"):
+    with Card(css_class="w-full"):
+        with CardHeader():
+            with Row(align="center", css_class="justify-between"):
+                CardTitle("The Button")
+                with If(presses > 0):
+                    Badge(presses, variant="secondary")
+        with CardContent():
+            with Column(gap=4):
+                with If(presses == 0):
+                    Button(
+                        "This is probably the best button to press",
+                        variant="success",
+                        on_click=SetState(presses, presses + 1),
+                    )
+                with Elif(presses == 1):
+                    with Alert(variant="info", icon="info"):
+                        AlertTitle("Thank you!")
+                        AlertDescription(
+                            "Your cooperation has been noted and will be reported."
+                        )
+                    Button(
+                        "Please do not press this button again",
+                        variant="outline",
+                        on_click=SetState(presses, presses + 1),
+                    )
+                with Elif(presses == 2):
+                    with Alert(variant="warning", icon="alert-triangle"):
+                        AlertTitle("We did ask nicely")
+                        AlertDescription("Management has been informed.")
+                    Progress(value=66, max=100, indicator_class="bg-yellow-500")
+                    Muted("Patience remaining: 34%")
+                    Button(
+                        "Please do not press this button again",
+                        variant="destructive",
+                        on_click=SetState(presses, presses + 1),
+                    )
+                with Elif(presses == 3):
+                    with Alert(variant="destructive", icon="alert-triangle"):
+                        AlertTitle("Now look what you've done")
+                        AlertDescription(
+                            "The improbability drive has been activated."
+                        )
+                    Progress(value=100, max=100, indicator_class="bg-red-500")
+                    with Row(gap=2, align="center"):
+                        Loader(variant="spin", size="sm")
+                        Muted("Recalculating the probability of your existence...")
+                    Button(
+                        "OK maybe press it one more time",
+                        variant="ghost",
+                        on_click=SetState(presses, 0),
+                    )
+                with Else():
+                    Text("This should not happen.")
+        with CardFooter():
             with If(presses > 0):
-                Badge(presses, variant="secondary")
-    with CardContent():
-        with Column(gap=4):
-            with If(presses == 0):
-                Button(
-                    "This is probably the best button to press",
-                    variant="success",
-                    on_click=SetState(presses, presses + 1),
-                )
-            with Elif(presses == 1):
-                with Alert(variant="info", icon="info"):
-                    AlertTitle("Thank you!")
-                    AlertDescription(
-                        "Your cooperation has been noted and will be reported."
-                    )
-                Button(
-                    "Please do not press this button again",
-                    variant="outline",
-                    on_click=SetState(presses, presses + 1),
-                )
-            with Elif(presses == 2):
-                with Alert(variant="warning", icon="alert-triangle"):
-                    AlertTitle("We did ask nicely")
-                    AlertDescription("Management has been informed.")
-                Progress(value=66, max=100, indicator_class="bg-yellow-500")
-                Muted("Patience remaining: 34%")
-                Button(
-                    "Please do not press this button again",
-                    variant="destructive",
-                    on_click=SetState(presses, presses + 1),
-                )
-            with Elif(presses == 3):
-                with Alert(variant="destructive", icon="alert-triangle"):
-                    AlertTitle("Now look what you've done")
-                    AlertDescription(
-                        "The improbability drive has been activated."
-                    )
-                Progress(value=100, max=100, indicator_class="bg-red-500")
-                with Row(gap=2, align="center"):
-                    Loader(variant="spin", size="sm")
-                    Muted("Recalculating the probability of your existence...")
-                Button(
-                    "OK maybe press it one more time",
-                    variant="ghost",
-                    on_click=SetState(presses, 0),
-                )
-            with Else():
-                Text("This should not happen.")
-    with CardFooter():
-        with If(presses > 0):
-            Muted("Share and Enjoy!")
+                Muted("Share and Enjoy!")
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "type": "Card",
+    "cssClass": "pf-app-root max-w-none p-0",
+    "type": "Div",
     "children": [
       {
-        "type": "CardHeader",
+        "cssClass": "w-full",
+        "type": "Card",
         "children": [
           {
-            "cssClass": "items-center justify-between",
-            "type": "Row",
+            "type": "CardHeader",
             "children": [
-              {"type": "CardTitle", "content": "The Button"},
+              {
+                "cssClass": "items-center justify-between",
+                "type": "Row",
+                "children": [
+                  {"type": "CardTitle", "content": "The Button"},
+                  {
+                    "type": "Condition",
+                    "cases": [
+                      {
+                        "when": "{{ presses > 0 }}",
+                        "children": [{"type": "Badge", "label": "{{ presses }}", "variant": "secondary"}]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-4",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "Condition",
+                    "cases": [
+                      {
+                        "when": "{{ presses == 0 }}",
+                        "children": [
+                          {
+                            "type": "Button",
+                            "label": "This is probably the best button to press",
+                            "variant": "success",
+                            "size": "default",
+                            "disabled": false,
+                            "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
+                          }
+                        ]
+                      },
+                      {
+                        "when": "{{ presses == 1 }}",
+                        "children": [
+                          {
+                            "type": "Alert",
+                            "variant": "info",
+                            "icon": "info",
+                            "children": [
+                              {"type": "AlertTitle", "content": "Thank you!"},
+                              {
+                                "type": "AlertDescription",
+                                "content": "Your cooperation has been noted and will be reported."
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Button",
+                            "label": "Please do not press this button again",
+                            "variant": "outline",
+                            "size": "default",
+                            "disabled": false,
+                            "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
+                          }
+                        ]
+                      },
+                      {
+                        "when": "{{ presses == 2 }}",
+                        "children": [
+                          {
+                            "type": "Alert",
+                            "variant": "warning",
+                            "icon": "alert-triangle",
+                            "children": [
+                              {"type": "AlertTitle", "content": "We did ask nicely"},
+                              {"type": "AlertDescription", "content": "Management has been informed."}
+                            ]
+                          },
+                          {
+                            "cssClass": "pf-progress-flat",
+                            "type": "Progress",
+                            "value": 66.0,
+                            "max": 100.0,
+                            "variant": "default",
+                            "size": "default",
+                            "indicatorClass": "bg-yellow-500"
+                          },
+                          {"content": "Patience remaining: 34%", "type": "Muted"},
+                          {
+                            "type": "Button",
+                            "label": "Please do not press this button again",
+                            "variant": "destructive",
+                            "size": "default",
+                            "disabled": false,
+                            "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
+                          }
+                        ]
+                      },
+                      {
+                        "when": "{{ presses == 3 }}",
+                        "children": [
+                          {
+                            "type": "Alert",
+                            "variant": "destructive",
+                            "icon": "alert-triangle",
+                            "children": [
+                              {"type": "AlertTitle", "content": "Now look what you've done"},
+                              {
+                                "type": "AlertDescription",
+                                "content": "The improbability drive has been activated."
+                              }
+                            ]
+                          },
+                          {
+                            "cssClass": "pf-progress-flat",
+                            "type": "Progress",
+                            "value": 100.0,
+                            "max": 100.0,
+                            "variant": "default",
+                            "size": "default",
+                            "indicatorClass": "bg-red-500"
+                          },
+                          {
+                            "cssClass": "gap-2 items-center",
+                            "type": "Row",
+                            "children": [
+                              {"type": "Loader", "variant": "spin", "size": "sm"},
+                              {
+                                "content": "Recalculating the probability of your existence...",
+                                "type": "Muted"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Button",
+                            "label": "OK maybe press it one more time",
+                            "variant": "ghost",
+                            "size": "default",
+                            "disabled": false,
+                            "onClick": {"action": "setState", "key": "presses", "value": 0}
+                          }
+                        ]
+                      }
+                    ],
+                    "else": [{"content": "This should not happen.", "type": "Text"}]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "CardFooter",
+            "children": [
               {
                 "type": "Condition",
                 "cases": [
                   {
                     "when": "{{ presses > 0 }}",
-                    "children": [{"type": "Badge", "label": "{{ presses }}", "variant": "secondary"}]
+                    "children": [{"content": "Share and Enjoy!", "type": "Muted"}]
                   }
                 ]
               }
             ]
           }
         ]
-      },
-      {
-        "type": "CardContent",
-        "children": [
-          {
-            "cssClass": "gap-4",
-            "type": "Column",
-            "children": [
-              {
-                "type": "Condition",
-                "cases": [
-                  {
-                    "when": "{{ presses == 0 }}",
-                    "children": [
-                      {
-                        "type": "Button",
-                        "label": "This is probably the best button to press",
-                        "variant": "success",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
-                      }
-                    ]
-                  },
-                  {
-                    "when": "{{ presses == 1 }}",
-                    "children": [
-                      {
-                        "type": "Alert",
-                        "variant": "info",
-                        "icon": "info",
-                        "children": [
-                          {"type": "AlertTitle", "content": "Thank you!"},
-                          {
-                            "type": "AlertDescription",
-                            "content": "Your cooperation has been noted and will be reported."
-                          }
-                        ]
-                      },
-                      {
-                        "type": "Button",
-                        "label": "Please do not press this button again",
-                        "variant": "outline",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
-                      }
-                    ]
-                  },
-                  {
-                    "when": "{{ presses == 2 }}",
-                    "children": [
-                      {
-                        "type": "Alert",
-                        "variant": "warning",
-                        "icon": "alert-triangle",
-                        "children": [
-                          {"type": "AlertTitle", "content": "We did ask nicely"},
-                          {"type": "AlertDescription", "content": "Management has been informed."}
-                        ]
-                      },
-                      {
-                        "cssClass": "pf-progress-flat",
-                        "type": "Progress",
-                        "value": 66.0,
-                        "max": 100.0,
-                        "variant": "default",
-                        "size": "default",
-                        "indicatorClass": "bg-yellow-500"
-                      },
-                      {"content": "Patience remaining: 34%", "type": "Muted"},
-                      {
-                        "type": "Button",
-                        "label": "Please do not press this button again",
-                        "variant": "destructive",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {"action": "setState", "key": "presses", "value": "{{ presses + 1 }}"}
-                      }
-                    ]
-                  },
-                  {
-                    "when": "{{ presses == 3 }}",
-                    "children": [
-                      {
-                        "type": "Alert",
-                        "variant": "destructive",
-                        "icon": "alert-triangle",
-                        "children": [
-                          {"type": "AlertTitle", "content": "Now look what you've done"},
-                          {
-                            "type": "AlertDescription",
-                            "content": "The improbability drive has been activated."
-                          }
-                        ]
-                      },
-                      {
-                        "cssClass": "pf-progress-flat",
-                        "type": "Progress",
-                        "value": 100.0,
-                        "max": 100.0,
-                        "variant": "default",
-                        "size": "default",
-                        "indicatorClass": "bg-red-500"
-                      },
-                      {
-                        "cssClass": "gap-2 items-center",
-                        "type": "Row",
-                        "children": [
-                          {"type": "Loader", "variant": "spin", "size": "sm"},
-                          {
-                            "content": "Recalculating the probability of your existence...",
-                            "type": "Muted"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "Button",
-                        "label": "OK maybe press it one more time",
-                        "variant": "ghost",
-                        "size": "default",
-                        "disabled": false,
-                        "onClick": {"action": "setState", "key": "presses", "value": 0}
-                      }
-                    ]
-                  }
-                ],
-                "else": [{"content": "This should not happen.", "type": "Text"}]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "CardFooter",
-        "children": [
-          {
-            "type": "Condition",
-            "cases": [
-              {
-                "when": "{{ presses > 0 }}",
-                "children": [{"content": "Share and Enjoy!", "type": "Muted"}]
-              }
-            ]
-          }
-        ]
       }
     ]
-  }
+  },
+  "state": {"presses": 0}
 }
 ```
 </CodeGroup>
