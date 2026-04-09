@@ -1,0 +1,175 @@
+---
+title: Reactive Binding
+description: A slider driving a ring, progress bars, and text in real time.
+icon: sliders
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A single slider drives every other element on the page. The ring, four progress bars, and a text status all update instantly as you drag, demonstrating how `Rx` expressions compose through arithmetic, ternary conditionals, and f-strings.
+
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Power Level"}]},{"type":"CardContent","children":[{"cssClass":"gap-6","type":"Column","children":[{"name":"level","value":50.0,"type":"Slider","min":0.0,"max":100.0,"disabled":false,"size":"default"},{"cssClass":"gap-6 items-center","type":"Row","children":[{"type":"Ring","value":"{{ level }}","min":0,"max":100,"label":"{{ level }}%","variant":"{{ level > 75 ? 'destructive' : (level > 40 ? 'warning' : 'success') }}","size":"lg","thickness":10.0},{"cssClass":"gap-4 grid-cols-2 flex-1","type":"Grid","children":[{"cssClass":"gap-1","type":"Column","children":[{"content":"Primary","type":"Muted"},{"type":"Progress","value":"{{ level }}","max":100.0,"variant":"{{ level > 75 ? 'destructive' : (level > 40 ? 'warning' : 'success') }}","size":"default"}]},{"cssClass":"gap-1","type":"Column","children":[{"content":"Inverse","type":"Muted"},{"type":"Progress","value":"{{ 100 - level }}","max":100.0,"variant":"info","size":"default"}]},{"cssClass":"gap-1","type":"Column","children":[{"content":"Doubled","type":"Muted"},{"type":"Progress","value":"{{ level * 2 }}","max":100.0,"variant":"default","size":"default"}]},{"cssClass":"gap-1","type":"Column","children":[{"content":"Halved","type":"Muted"},{"type":"Progress","value":"{{ level / 2 }}","max":100.0,"variant":"success","size":"default"}]}]}]},{"cssClass":"text-sm text-muted-foreground text-center","content":"Level is {{ level }}% \u2014 {{ level > 75 ? 'critical!' : (level > 40 ? 'nominal' : 'low') }}","type":"Text"}]}]}]},"state":{"level":50.0}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgR3JpZCwgTXV0ZWQsIFByb2dyZXNzLCBSaW5nLCBSb3csIFNsaWRlciwgVGV4dCwKKQpmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgUngKCmxldmVsID0gUngoImxldmVsIikKdmFyaWFudCA9IChsZXZlbCA-IDc1KS50aGVuKAogICAgImRlc3RydWN0aXZlIiwgKGxldmVsID4gNDApLnRoZW4oIndhcm5pbmciLCAic3VjY2VzcyIpCikKCndpdGggQ2FyZChjc3NfY2xhc3M9InctZnVsbCIpOgogICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgQ2FyZFRpdGxlKCJQb3dlciBMZXZlbCIpCiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTYpOgogICAgICAgICAgICBTbGlkZXIobmFtZT0ibGV2ZWwiLCBtaW49MCwgbWF4PTEwMCwgdmFsdWU9NTApCiAgICAgICAgICAgIHdpdGggUm93KGdhcD02LCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICBSaW5nKAogICAgICAgICAgICAgICAgICAgIHZhbHVlPWxldmVsLCBsYWJlbD1mIntsZXZlbH0lIiwKICAgICAgICAgICAgICAgICAgICB2YXJpYW50PXZhcmlhbnQsIHNpemU9ImxnIiwgdGhpY2tuZXNzPTEwLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgd2l0aCBHcmlkKGNvbHVtbnM9MiwgZ2FwPTQsIGNzc19jbGFzcz0iZmxleC0xIik6CiAgICAgICAgICAgICAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTEpOgogICAgICAgICAgICAgICAgICAgICAgICBNdXRlZCgiUHJpbWFyeSIpCiAgICAgICAgICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPWxldmVsLCBtYXg9MTAwLCB2YXJpYW50PXZhcmlhbnQpCiAgICAgICAgICAgICAgICAgICAgd2l0aCBDb2x1bW4oZ2FwPTEpOgogICAgICAgICAgICAgICAgICAgICAgICBNdXRlZCgiSW52ZXJzZSIpCiAgICAgICAgICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPTEwMCAtIGxldmVsLCBtYXg9MTAwLCB2YXJpYW50PSJpbmZvIikKICAgICAgICAgICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9MSk6CiAgICAgICAgICAgICAgICAgICAgICAgIE11dGVkKCJEb3VibGVkIikKICAgICAgICAgICAgICAgICAgICAgICAgUHJvZ3Jlc3ModmFsdWU9bGV2ZWwgKiAyLCBtYXg9MTAwLCB2YXJpYW50PSJkZWZhdWx0IikKICAgICAgICAgICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9MSk6CiAgICAgICAgICAgICAgICAgICAgICAgIE11dGVkKCJIYWx2ZWQiKQogICAgICAgICAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT1sZXZlbCAvIDIsIG1heD0xMDAsIHZhcmlhbnQ9InN1Y2Nlc3MiKQogICAgICAgICAgICBUZXh0KAogICAgICAgICAgICAgICAgZiJMZXZlbCBpcyB7bGV2ZWx9JSDigJQgIgogICAgICAgICAgICAgICAgZiJ7KGxldmVsID4gNzUpLnRoZW4oJ2NyaXRpY2FsIScsIChsZXZlbCA-IDQwKS50aGVuKCdub21pbmFsJywgJ2xvdycpKX0iLAogICAgICAgICAgICAgICAgY3NzX2NsYXNzPSJ0ZXh0LXNtIHRleHQtbXV0ZWQtZm9yZWdyb3VuZCB0ZXh0LWNlbnRlciIsCiAgICAgICAgICAgICkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import (
+    Card, CardContent, CardHeader, CardTitle,
+    Column, Grid, Muted, Progress, Ring, Row, Slider, Text,
+)
+from prefab_ui.rx import Rx
+
+level = Rx("level")
+variant = (level > 75).then(
+    "destructive", (level > 40).then("warning", "success")
+)
+
+with Card(css_class="w-full"):
+    with CardHeader():
+        CardTitle("Power Level")
+    with CardContent():
+        with Column(gap=6):
+            Slider(name="level", min=0, max=100, value=50)
+            with Row(gap=6, align="center"):
+                Ring(
+                    value=level, label=f"{level}%",
+                    variant=variant, size="lg", thickness=10,
+                )
+                with Grid(columns=2, gap=4, css_class="flex-1"):
+                    with Column(gap=1):
+                        Muted("Primary")
+                        Progress(value=level, max=100, variant=variant)
+                    with Column(gap=1):
+                        Muted("Inverse")
+                        Progress(value=100 - level, max=100, variant="info")
+                    with Column(gap=1):
+                        Muted("Doubled")
+                        Progress(value=level * 2, max=100, variant="default")
+                    with Column(gap=1):
+                        Muted("Halved")
+                        Progress(value=level / 2, max=100, variant="success")
+            Text(
+                f"Level is {level}% — "
+                f"{(level > 75).then('critical!', (level > 40).then('nominal', 'low'))}",
+                css_class="text-sm text-muted-foreground text-center",
+            )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [{"type": "CardTitle", "content": "Power Level"}]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "cssClass": "gap-6",
+            "type": "Column",
+            "children": [
+              {
+                "name": "level",
+                "value": 50.0,
+                "type": "Slider",
+                "min": 0.0,
+                "max": 100.0,
+                "disabled": false,
+                "size": "default"
+              },
+              {
+                "cssClass": "gap-6 items-center",
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Ring",
+                    "value": "{{ level }}",
+                    "min": 0,
+                    "max": 100,
+                    "label": "{{ level }}%",
+                    "variant": "{{ level > 75 ? 'destructive' : (level > 40 ? 'warning' : 'success') }}",
+                    "size": "lg",
+                    "thickness": 10.0
+                  },
+                  {
+                    "cssClass": "gap-4 grid-cols-2 flex-1",
+                    "type": "Grid",
+                    "children": [
+                      {
+                        "cssClass": "gap-1",
+                        "type": "Column",
+                        "children": [
+                          {"content": "Primary", "type": "Muted"},
+                          {
+                            "type": "Progress",
+                            "value": "{{ level }}",
+                            "max": 100.0,
+                            "variant": "{{ level > 75 ? 'destructive' : (level > 40 ? 'warning' : 'success') }}",
+                            "size": "default"
+                          }
+                        ]
+                      },
+                      {
+                        "cssClass": "gap-1",
+                        "type": "Column",
+                        "children": [
+                          {"content": "Inverse", "type": "Muted"},
+                          {
+                            "type": "Progress",
+                            "value": "{{ 100 - level }}",
+                            "max": 100.0,
+                            "variant": "info",
+                            "size": "default"
+                          }
+                        ]
+                      },
+                      {
+                        "cssClass": "gap-1",
+                        "type": "Column",
+                        "children": [
+                          {"content": "Doubled", "type": "Muted"},
+                          {
+                            "type": "Progress",
+                            "value": "{{ level * 2 }}",
+                            "max": 100.0,
+                            "variant": "default",
+                            "size": "default"
+                          }
+                        ]
+                      },
+                      {
+                        "cssClass": "gap-1",
+                        "type": "Column",
+                        "children": [
+                          {"content": "Halved", "type": "Muted"},
+                          {
+                            "type": "Progress",
+                            "value": "{{ level / 2 }}",
+                            "max": 100.0,
+                            "variant": "success",
+                            "size": "default"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cssClass": "text-sm text-muted-foreground text-center",
+                "content": "Level is {{ level }}% \u2014 {{ level > 75 ? 'critical!' : (level > 40 ? 'nominal' : 'low') }}",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"level": 50.0}
+}
+```
+</CodeGroup>
+</ComponentPreview>

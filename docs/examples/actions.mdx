@@ -1,0 +1,172 @@
+---
+title: Action Chains
+description: Chain multiple actions from a single click.
+icon: zap
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Each button fires one or more actions in sequence. The counter increments, a toast appears, the progress bar fills, and a save badge replaces a button, all from declarative action lists.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root max-w-none p-0","type":"Div","children":[{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Actions Demo"},{"content":"Chain multiple actions from a single click.","type":"Muted"}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-2 items-center","type":"Row","children":[{"type":"Button","label":"Count + 1","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}},{"type":"Button","label":"Count + 10","variant":"secondary","size":"default","disabled":false,"onClick":[{"action":"setState","key":"count","value":"{{ count + 10 }}"},{"action":"showToast","message":"Jumped ahead by 10!"}]},{"type":"Button","label":"Reset","variant":"outline","size":"default","disabled":false,"onClick":[{"action":"setState","key":"count","value":0},{"action":"setState","key":"saved","value":false}]}]},{"type":"Progress","value":"{{ count }}","max":100.0,"variant":"{{ count >= 100 ? 'success' : 'default' }}","size":"default"},{"cssClass":"gap-2 items-center justify-between","type":"Row","children":[{"content":"Count: {{ count }}","type":"Text"},{"type":"Condition","cases":[{"when":"{{ saved }}","children":[{"type":"Badge","label":"Saved","variant":"success"}]}],"else":[{"type":"Button","label":"Save","variant":"default","size":"sm","disabled":false,"onClick":[{"action":"toggleState","key":"saved"},{"action":"showToast","message":"Saved at {{ count }}!"}]}]}]}]}]}]}]},"state":{"count":0,"saved":false}}} playground="ZnJvbSBwcmVmYWJfdWkgaW1wb3J0IFByZWZhYkFwcApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZSwgU2hvd1RvYXN0LCBUb2dnbGVTdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCAoCiAgICBCYWRnZSwgQnV0dG9uLCBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLAogICAgQ29sdW1uLCBNdXRlZCwgUHJvZ3Jlc3MsIFJvdywgVGV4dCwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRWxzZSwgSWYKZnJvbSBwcmVmYWJfdWkucnggaW1wb3J0IFJ4Cgpjb3VudCA9IFJ4KCJjb3VudCIpCnNhdmVkID0gUngoInNhdmVkIikKCndpdGggUHJlZmFiQXBwKHN0YXRlPXsiY291bnQiOiAwLCAic2F2ZWQiOiBGYWxzZX0sIGNzc19jbGFzcz0ibWF4LXctbm9uZSBwLTAiKToKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoIkFjdGlvbnMgRGVtbyIpCiAgICAgICAgICAgIE11dGVkKCJDaGFpbiBtdWx0aXBsZSBhY3Rpb25zIGZyb20gYSBzaW5nbGUgY2xpY2suIikKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgICAgICAgICAgICAgQnV0dG9uKCJDb3VudCArIDEiLCBvbl9jbGljaz1TZXRTdGF0ZSgiY291bnQiLCBjb3VudCArIDEpKQogICAgICAgICAgICAgICAgICAgIEJ1dHRvbigKICAgICAgICAgICAgICAgICAgICAgICAgIkNvdW50ICsgMTAiLCB2YXJpYW50PSJzZWNvbmRhcnkiLAogICAgICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1bCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBTZXRTdGF0ZSgiY291bnQiLCBjb3VudCArIDEwKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNob3dUb2FzdCgiSnVtcGVkIGFoZWFkIGJ5IDEwISIpLAogICAgICAgICAgICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgICAgICJSZXNldCIsIHZhcmlhbnQ9Im91dGxpbmUiLAogICAgICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1bU2V0U3RhdGUoImNvdW50IiwgMCksIFNldFN0YXRlKCJzYXZlZCIsIEZhbHNlKV0sCiAgICAgICAgICAgICAgICAgICAgKQogICAgICAgICAgICAgICAgUHJvZ3Jlc3MoCiAgICAgICAgICAgICAgICAgICAgdmFsdWU9Y291bnQsIG1heD0xMDAsCiAgICAgICAgICAgICAgICAgICAgdmFyaWFudD0oY291bnQgPj0gMTAwKS50aGVuKCJzdWNjZXNzIiwgImRlZmF1bHQiKSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIiwgY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICAgICAgICAgICAgICBUZXh0KGYiQ291bnQ6IHtjb3VudH0iKQogICAgICAgICAgICAgICAgICAgIHdpdGggSWYoc2F2ZWQpOgogICAgICAgICAgICAgICAgICAgICAgICBCYWRnZSgiU2F2ZWQiLCB2YXJpYW50PSJzdWNjZXNzIikKICAgICAgICAgICAgICAgICAgICB3aXRoIEVsc2UoKToKICAgICAgICAgICAgICAgICAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAgICAgICAgICAgICAgICAgIlNhdmUiLCBzaXplPSJzbSIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBvbl9jbGljaz1bCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVG9nZ2xlU3RhdGUoInNhdmVkIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU2hvd1RvYXN0KGYiU2F2ZWQgYXQge2NvdW50fSEiKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sCiAgICAgICAgICAgICAgICAgICAgICAgICkK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui import PrefabApp
+from prefab_ui.actions import SetState, ShowToast, ToggleState
+from prefab_ui.components import (
+    Badge, Button, Card, CardContent, CardHeader, CardTitle,
+    Column, Muted, Progress, Row, Text,
+)
+from prefab_ui.components.control_flow import Else, If
+from prefab_ui.rx import Rx
+
+count = Rx("count")
+saved = Rx("saved")
+
+with PrefabApp(state={"count": 0, "saved": False}, css_class="max-w-none p-0"):
+    with Card(css_class="w-full"):
+        with CardHeader():
+            CardTitle("Actions Demo")
+            Muted("Chain multiple actions from a single click.")
+        with CardContent():
+            with Column(gap=4):
+                with Row(gap=2, align="center"):
+                    Button("Count + 1", on_click=SetState("count", count + 1))
+                    Button(
+                        "Count + 10", variant="secondary",
+                        on_click=[
+                            SetState("count", count + 10),
+                            ShowToast("Jumped ahead by 10!"),
+                        ],
+                    )
+                    Button(
+                        "Reset", variant="outline",
+                        on_click=[SetState("count", 0), SetState("saved", False)],
+                    )
+                Progress(
+                    value=count, max=100,
+                    variant=(count >= 100).then("success", "default"),
+                )
+                with Row(gap=2, align="center", css_class="justify-between"):
+                    Text(f"Count: {count}")
+                    with If(saved):
+                        Badge("Saved", variant="success")
+                    with Else():
+                        Button(
+                            "Save", size="sm",
+                            on_click=[
+                                ToggleState("saved"),
+                                ShowToast(f"Saved at {count}!"),
+                            ],
+                        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root max-w-none p-0",
+    "type": "Div",
+    "children": [
+      {
+        "cssClass": "w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {"type": "CardTitle", "content": "Actions Demo"},
+              {"content": "Chain multiple actions from a single click.", "type": "Muted"}
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-4",
+                "type": "Column",
+                "children": [
+                  {
+                    "cssClass": "gap-2 items-center",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "type": "Button",
+                        "label": "Count + 1",
+                        "variant": "default",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": {"action": "setState", "key": "count", "value": "{{ count + 1 }}"}
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Count + 10",
+                        "variant": "secondary",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": [
+                          {"action": "setState", "key": "count", "value": "{{ count + 10 }}"},
+                          {"action": "showToast", "message": "Jumped ahead by 10!"}
+                        ]
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Reset",
+                        "variant": "outline",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": [
+                          {"action": "setState", "key": "count", "value": 0},
+                          {"action": "setState", "key": "saved", "value": false}
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Progress",
+                    "value": "{{ count }}",
+                    "max": 100.0,
+                    "variant": "{{ count >= 100 ? 'success' : 'default' }}",
+                    "size": "default"
+                  },
+                  {
+                    "cssClass": "gap-2 items-center justify-between",
+                    "type": "Row",
+                    "children": [
+                      {"content": "Count: {{ count }}", "type": "Text"},
+                      {
+                        "type": "Condition",
+                        "cases": [
+                          {
+                            "when": "{{ saved }}",
+                            "children": [{"type": "Badge", "label": "Saved", "variant": "success"}]
+                          }
+                        ],
+                        "else": [
+                          {
+                            "type": "Button",
+                            "label": "Save",
+                            "variant": "default",
+                            "size": "sm",
+                            "disabled": false,
+                            "onClick": [
+                              {"action": "toggleState", "key": "saved"},
+                              {"action": "showToast", "message": "Saved at {{ count }}!"}
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"count": 0, "saved": false}
+}
+```
+</CodeGroup>
+</ComponentPreview>

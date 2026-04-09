@@ -1,0 +1,226 @@
+---
+title: Deploy Pipeline
+description: CI/CD pipeline tracker with progress gauges and status badges.
+icon: rocket
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A deployment pipeline view with service names, deployment stages, progress bars, and status badges. The DataTable uses component cells for rich inline rendering: badges for stage status and progress bars for rollout completion.
+
+<ComponentPreview json={{"view":{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Deploy Pipeline"},{"type":"CardDescription","content":"Current deployment status across all services"}]},{"type":"CardContent","children":[{"type":"DataTable","columns":[{"key":"service","header":"Service","sortable":true},{"key":"stage","header":"Stage","sortable":false,"headerClass":"text-center","cellClass":"text-center"},{"key":"progress","header":"Rollout","sortable":false,"width":"200px"},{"key":"status","header":"","sortable":false,"headerClass":"text-right","cellClass":"text-right"}],"rows":[{"service":{"cssClass":"font-semibold text-card-foreground","content":"auth-service","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Production","variant":"success"},"progress":{"type":"Progress","value":100.0,"max":100.0,"variant":"success","size":"lg"},"status":{"type":"Badge","label":"100%","variant":"success"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"data-ingest","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Staging","variant":"default"},"progress":{"type":"Progress","value":72.0,"max":100.0,"variant":"default","size":"lg"},"status":{"type":"Badge","label":"72%","variant":"default"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"ml-pipeline","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Canary","variant":"warning"},"progress":{"type":"Progress","value":45.0,"max":100.0,"variant":"warning","size":"lg"},"status":{"type":"Badge","label":"45%","variant":"warning"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"web-frontend","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Rolling","variant":"default"},"progress":{"type":"Progress","value":88.0,"max":100.0,"variant":"default","size":"lg"},"status":{"type":"Badge","label":"88%","variant":"default"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"event-bus","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Blocked","variant":"destructive"},"progress":{"type":"Progress","value":12.0,"max":100.0,"variant":"destructive","size":"lg"},"status":{"type":"Badge","label":"12%","variant":"destructive"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"cache-layer","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Production","variant":"success"},"progress":{"type":"Progress","value":100.0,"max":100.0,"variant":"success","size":"lg"},"status":{"type":"Badge","label":"100%","variant":"success"}},{"service":{"cssClass":"font-semibold text-card-foreground","content":"search-index","code":false,"type":"Span"},"stage":{"type":"Badge","label":"Rolling","variant":"default"},"progress":{"type":"Progress","value":63.0,"max":100.0,"variant":"default","size":"lg"},"status":{"type":"Badge","label":"63%","variant":"default"}}],"search":true,"paginated":false,"pageSize":10}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsIENhcmQsIENhcmRDb250ZW50LCBDYXJkRGVzY3JpcHRpb24sIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIERhdGFUYWJsZSwgRGF0YVRhYmxlQ29sdW1uLCBEaXYsIFByb2dyZXNzLCBTcGFuLAopCgpzZXJ2aWNlcyA9IFsKICAgICgiYXV0aC1zZXJ2aWNlIiwgIlByb2R1Y3Rpb24iLCAxMDAsICJzdWNjZXNzIiksCiAgICAoImRhdGEtaW5nZXN0IiwgIlN0YWdpbmciLCA3MiwgImRlZmF1bHQiKSwKICAgICgibWwtcGlwZWxpbmUiLCAiQ2FuYXJ5IiwgNDUsICJ3YXJuaW5nIiksCiAgICAoIndlYi1mcm9udGVuZCIsICJSb2xsaW5nIiwgODgsICJkZWZhdWx0IiksCiAgICAoImV2ZW50LWJ1cyIsICJCbG9ja2VkIiwgMTIsICJkZXN0cnVjdGl2ZSIpLAogICAgKCJjYWNoZS1sYXllciIsICJQcm9kdWN0aW9uIiwgMTAwLCAic3VjY2VzcyIpLAogICAgKCJzZWFyY2gtaW5kZXgiLCAiUm9sbGluZyIsIDYzLCAiZGVmYXVsdCIpLApdCgpyb3dzID0gW10KZm9yIG5hbWUsIHN0YWdlLCBwY3QsIHZhcmlhbnQgaW4gc2VydmljZXM6CiAgICByb3dzLmFwcGVuZCh7CiAgICAgICAgInNlcnZpY2UiOiBTcGFuKG5hbWUsIGNzc19jbGFzcz0iZm9udC1zZW1pYm9sZCB0ZXh0LWNhcmQtZm9yZWdyb3VuZCIpLAogICAgICAgICJzdGFnZSI6IEJhZGdlKHN0YWdlLCB2YXJpYW50PXZhcmlhbnQpLAogICAgICAgICJwcm9ncmVzcyI6IFByb2dyZXNzKHZhbHVlPXBjdCwgbWF4PTEwMCwgdmFyaWFudD12YXJpYW50LCBzaXplPSJsZyIpLAogICAgICAgICJzdGF0dXMiOiBCYWRnZShmIntwY3R9JSIsIHZhcmlhbnQ9dmFyaWFudCksCiAgICB9KQoKd2l0aCBDYXJkKGNzc19jbGFzcz0idy1mdWxsIik6CiAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICBDYXJkVGl0bGUoIkRlcGxveSBQaXBlbGluZSIpCiAgICAgICAgQ2FyZERlc2NyaXB0aW9uKCJDdXJyZW50IGRlcGxveW1lbnQgc3RhdHVzIGFjcm9zcyBhbGwgc2VydmljZXMiKQogICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgIERhdGFUYWJsZSgKICAgICAgICAgICAgY29sdW1ucz1bCiAgICAgICAgICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzZXJ2aWNlIiwgaGVhZGVyPSJTZXJ2aWNlIiwgc29ydGFibGU9VHJ1ZSksCiAgICAgICAgICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzdGFnZSIsIGhlYWRlcj0iU3RhZ2UiLCBhbGlnbj0iY2VudGVyIiksCiAgICAgICAgICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJwcm9ncmVzcyIsIGhlYWRlcj0iUm9sbG91dCIsIHdpZHRoPSIyMDBweCIpLAogICAgICAgICAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSIiLCBhbGlnbj0icmlnaHQiKSwKICAgICAgICAgICAgXSwKICAgICAgICAgICAgcm93cz1yb3dzLAogICAgICAgICAgICBzZWFyY2g9VHJ1ZSwKICAgICAgICApCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import (
+    Badge, Card, CardContent, CardDescription, CardHeader, CardTitle,
+    DataTable, DataTableColumn, Div, Progress, Span,
+)
+
+services = [
+    ("auth-service", "Production", 100, "success"),
+    ("data-ingest", "Staging", 72, "default"),
+    ("ml-pipeline", "Canary", 45, "warning"),
+    ("web-frontend", "Rolling", 88, "default"),
+    ("event-bus", "Blocked", 12, "destructive"),
+    ("cache-layer", "Production", 100, "success"),
+    ("search-index", "Rolling", 63, "default"),
+]
+
+rows = []
+for name, stage, pct, variant in services:
+    rows.append({
+        "service": Span(name, css_class="font-semibold text-card-foreground"),
+        "stage": Badge(stage, variant=variant),
+        "progress": Progress(value=pct, max=100, variant=variant, size="lg"),
+        "status": Badge(f"{pct}%", variant=variant),
+    })
+
+with Card(css_class="w-full"):
+    with CardHeader():
+        CardTitle("Deploy Pipeline")
+        CardDescription("Current deployment status across all services")
+    with CardContent():
+        DataTable(
+            columns=[
+                DataTableColumn(key="service", header="Service", sortable=True),
+                DataTableColumn(key="stage", header="Stage", align="center"),
+                DataTableColumn(key="progress", header="Rollout", width="200px"),
+                DataTableColumn(key="status", header="", align="right"),
+            ],
+            rows=rows,
+            search=True,
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "w-full",
+    "type": "Card",
+    "children": [
+      {
+        "type": "CardHeader",
+        "children": [
+          {"type": "CardTitle", "content": "Deploy Pipeline"},
+          {
+            "type": "CardDescription",
+            "content": "Current deployment status across all services"
+          }
+        ]
+      },
+      {
+        "type": "CardContent",
+        "children": [
+          {
+            "type": "DataTable",
+            "columns": [
+              {"key": "service", "header": "Service", "sortable": true},
+              {
+                "key": "stage",
+                "header": "Stage",
+                "sortable": false,
+                "headerClass": "text-center",
+                "cellClass": "text-center"
+              },
+              {"key": "progress", "header": "Rollout", "sortable": false, "width": "200px"},
+              {
+                "key": "status",
+                "header": "",
+                "sortable": false,
+                "headerClass": "text-right",
+                "cellClass": "text-right"
+              }
+            ],
+            "rows": [
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "auth-service",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Production", "variant": "success"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 100.0,
+                  "max": 100.0,
+                  "variant": "success",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "100%", "variant": "success"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "data-ingest",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Staging", "variant": "default"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 72.0,
+                  "max": 100.0,
+                  "variant": "default",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "72%", "variant": "default"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "ml-pipeline",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Canary", "variant": "warning"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 45.0,
+                  "max": 100.0,
+                  "variant": "warning",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "45%", "variant": "warning"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "web-frontend",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Rolling", "variant": "default"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 88.0,
+                  "max": 100.0,
+                  "variant": "default",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "88%", "variant": "default"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "event-bus",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Blocked", "variant": "destructive"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 12.0,
+                  "max": 100.0,
+                  "variant": "destructive",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "12%", "variant": "destructive"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "cache-layer",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Production", "variant": "success"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 100.0,
+                  "max": 100.0,
+                  "variant": "success",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "100%", "variant": "success"}
+              },
+              {
+                "service": {
+                  "cssClass": "font-semibold text-card-foreground",
+                  "content": "search-index",
+                  "code": false,
+                  "type": "Span"
+                },
+                "stage": {"type": "Badge", "label": "Rolling", "variant": "default"},
+                "progress": {
+                  "type": "Progress",
+                  "value": 63.0,
+                  "max": 100.0,
+                  "variant": "default",
+                  "size": "lg"
+                },
+                "status": {"type": "Badge", "label": "63%", "variant": "default"}
+              }
+            ],
+            "search": true,
+            "paginated": false,
+            "pageSize": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>

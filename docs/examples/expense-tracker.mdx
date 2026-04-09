@@ -1,0 +1,252 @@
+---
+title: Expense Tracker
+description: DataTable with running totals, pie breakdown, and budget alerts.
+icon: receipt
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+An expense overview combining a sortable DataTable with component cells, a pie chart breakdown by category, and conditional budget alerts. The data is static but the table is fully interactive: sort, search, and watch the category badges light up.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-4 grid-cols-2","type":"Grid","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Total Spend","value":"$82,900","delta":"+6.2% MoM"}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Budget Remaining","value":"$12,100","delta":"13% left"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Monthly Breakdown"},{"type":"CardDescription","content":"March 2026"}]},{"type":"CardContent","children":[{"cssClass":"gap-6","type":"Column","children":[{"type":"PieChart","data":[{"category":"Compute","cost":42000},{"category":"Storage","cost":18500},{"category":"Network","cost":12300},{"category":"Monitoring","cost":4200},{"category":"CI/CD","cost":3800},{"category":"Support","cost":2100}],"dataKey":"cost","nameKey":"category","height":220,"innerRadius":50,"showLabel":false,"paddingAngle":0,"showLegend":true,"showTooltip":true,"animate":true},{"type":"Separator","orientation":"horizontal"},{"type":"DataTable","columns":[{"key":"category","header":"Category","sortable":true},{"key":"amount","header":"Amount","sortable":true,"headerClass":"text-right","cellClass":"text-right"},{"key":"share","header":"Share","sortable":false,"headerClass":"text-right","cellClass":"text-right"}],"rows":[{"category":{"type":"Badge","label":"Compute","variant":"destructive"},"amount":"$42,000","share":{"type":"Badge","label":"51%","variant":"destructive"}},{"category":{"type":"Badge","label":"Storage","variant":"default"},"amount":"$18,500","share":{"type":"Badge","label":"22%","variant":"default"}},{"category":{"type":"Badge","label":"Network","variant":"secondary"},"amount":"$12,300","share":{"type":"Badge","label":"15%","variant":"secondary"}},{"category":{"type":"Badge","label":"Monitoring","variant":"secondary"},"amount":"$4,200","share":{"type":"Badge","label":"5%","variant":"secondary"}},{"category":{"type":"Badge","label":"CI/CD","variant":"secondary"},"amount":"$3,800","share":{"type":"Badge","label":"5%","variant":"secondary"}},{"category":{"type":"Badge","label":"Support","variant":"secondary"},"amount":"$2,100","share":{"type":"Badge","label":"3%","variant":"secondary"}}],"search":true,"paginated":false,"pageSize":10}]}]}]},{"type":"Alert","variant":"warning","icon":"triangle-alert","children":[{"type":"AlertTitle","content":"Approaching Budget Limit"},{"type":"AlertDescription","content":"$82,900 of $95,000 used (87%). Review compute costs for optimization opportunities."}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQWxlcnQsIEFsZXJ0RGVzY3JpcHRpb24sIEFsZXJ0VGl0bGUsCiAgICBCYWRnZSwgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmREZXNjcmlwdGlvbiwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlLAogICAgQ29sdW1uLCBEYXRhVGFibGUsIERhdGFUYWJsZUNvbHVtbiwgR3JpZCwgTWV0cmljLCBSb3csIFNlcGFyYXRvciwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNoYXJ0cyBpbXBvcnQgQ2hhcnRTZXJpZXMsIFBpZUNoYXJ0CgpleHBlbnNlcyA9IFsKICAgICgiQ29tcHV0ZSIsIDQyXzAwMCwgImNsb3VkIiksCiAgICAoIlN0b3JhZ2UiLCAxOF81MDAsICJkYXRhYmFzZSIpLAogICAgKCJOZXR3b3JrIiwgMTJfMzAwLCAid2lmaSIpLAogICAgKCJNb25pdG9yaW5nIiwgNF8yMDAsICJhY3Rpdml0eSIpLAogICAgKCJDSS9DRCIsIDNfODAwLCAiZ2l0LWJyYW5jaCIpLAogICAgKCJTdXBwb3J0IiwgMl8xMDAsICJoZWFkcGhvbmVzIiksCl0KCnRvdGFsID0gc3VtKGNvc3QgZm9yIF8sIGNvc3QsIF8gaW4gZXhwZW5zZXMpCmJ1ZGdldCA9IDk1XzAwMAoKcm93cyA9IFtdCmZvciBuYW1lLCBjb3N0LCBfaWNvbiBpbiBleHBlbnNlczoKICAgIHBjdCA9IHJvdW5kKGNvc3QgLyB0b3RhbCAqIDEwMCkKICAgIHZhcmlhbnQgPSAiZGVzdHJ1Y3RpdmUiIGlmIHBjdCA-IDQwIGVsc2UgImRlZmF1bHQiIGlmIHBjdCA-IDE1IGVsc2UgInNlY29uZGFyeSIKICAgIHJvd3MuYXBwZW5kKHsKICAgICAgICAiY2F0ZWdvcnkiOiBCYWRnZShuYW1lLCB2YXJpYW50PXZhcmlhbnQpLAogICAgICAgICJhbW91bnQiOiBmIiR7Y29zdDosfSIsCiAgICAgICAgInNoYXJlIjogQmFkZ2UoZiJ7cGN0fSUiLCB2YXJpYW50PXZhcmlhbnQpLAogICAgfSkKCnBpZV9kYXRhID0gW3siY2F0ZWdvcnkiOiBuYW1lLCAiY29zdCI6IGNvc3R9IGZvciBuYW1lLCBjb3N0LCBfIGluIGV4cGVuc2VzXQoKd2l0aCBDb2x1bW4oZ2FwPTQpOgogICAgd2l0aCBHcmlkKGNvbHVtbnM9MiwgZ2FwPTQpOgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICBNZXRyaWMobGFiZWw9IlRvdGFsIFNwZW5kIiwgdmFsdWU9ZiIke3RvdGFsOix9IiwgZGVsdGE9Iis2LjIlIE1vTSIpCiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIE1ldHJpYygKICAgICAgICAgICAgICAgICAgICBsYWJlbD0iQnVkZ2V0IFJlbWFpbmluZyIsCiAgICAgICAgICAgICAgICAgICAgdmFsdWU9ZiIke2J1ZGdldCAtIHRvdGFsOix9IiwKICAgICAgICAgICAgICAgICAgICBkZWx0YT1mIntyb3VuZCgoYnVkZ2V0IC0gdG90YWwpIC8gYnVkZ2V0ICogMTAwKX0lIGxlZnQiLAogICAgICAgICAgICAgICAgKQoKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoIk1vbnRobHkgQnJlYWtkb3duIikKICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKCJNYXJjaCAyMDI2IikKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD02KToKICAgICAgICAgICAgICAgIFBpZUNoYXJ0KAogICAgICAgICAgICAgICAgICAgIGRhdGE9cGllX2RhdGEsCiAgICAgICAgICAgICAgICAgICAgZGF0YV9rZXk9ImNvc3QiLAogICAgICAgICAgICAgICAgICAgIG5hbWVfa2V5PSJjYXRlZ29yeSIsCiAgICAgICAgICAgICAgICAgICAgaGVpZ2h0PTIyMCwKICAgICAgICAgICAgICAgICAgICBpbm5lcl9yYWRpdXM9NTAsCiAgICAgICAgICAgICAgICAgICAgc2hvd19sZWdlbmQ9VHJ1ZSwKICAgICAgICAgICAgICAgICAgICBzaG93X3Rvb2x0aXA9VHJ1ZSwKICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIFNlcGFyYXRvcigpCiAgICAgICAgICAgICAgICBEYXRhVGFibGUoCiAgICAgICAgICAgICAgICAgICAgY29sdW1ucz1bCiAgICAgICAgICAgICAgICAgICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImNhdGVnb3J5IiwgaGVhZGVyPSJDYXRlZ29yeSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgICAgICAgICAgICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJhbW91bnQiLCBoZWFkZXI9IkFtb3VudCIsIGFsaWduPSJyaWdodCIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgICAgICAgICAgICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzaGFyZSIsIGhlYWRlcj0iU2hhcmUiLCBhbGlnbj0icmlnaHQiKSwKICAgICAgICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAgICAgIHJvd3M9cm93cywKICAgICAgICAgICAgICAgICAgICBzZWFyY2g9VHJ1ZSwKICAgICAgICAgICAgICAgICkKCiAgICB3aXRoIEFsZXJ0KHZhcmlhbnQ9Indhcm5pbmciLCBpY29uPSJ0cmlhbmdsZS1hbGVydCIpOgogICAgICAgIEFsZXJ0VGl0bGUoIkFwcHJvYWNoaW5nIEJ1ZGdldCBMaW1pdCIpCiAgICAgICAgQWxlcnREZXNjcmlwdGlvbigKICAgICAgICAgICAgZiIke3RvdGFsOix9IG9mICR7YnVkZ2V0Oix9IHVzZWQgKHtyb3VuZCh0b3RhbCAvIGJ1ZGdldCAqIDEwMCl9JSkuICIKICAgICAgICAgICAgIlJldmlldyBjb21wdXRlIGNvc3RzIGZvciBvcHRpbWl6YXRpb24gb3Bwb3J0dW5pdGllcy4iCiAgICAgICAgKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components import (
+    Alert, AlertDescription, AlertTitle,
+    Badge, Card, CardContent, CardDescription, CardHeader, CardTitle,
+    Column, DataTable, DataTableColumn, Grid, Metric, Row, Separator,
+)
+from prefab_ui.components.charts import ChartSeries, PieChart
+
+expenses = [
+    ("Compute", 42_000, "cloud"),
+    ("Storage", 18_500, "database"),
+    ("Network", 12_300, "wifi"),
+    ("Monitoring", 4_200, "activity"),
+    ("CI/CD", 3_800, "git-branch"),
+    ("Support", 2_100, "headphones"),
+]
+
+total = sum(cost for _, cost, _ in expenses)
+budget = 95_000
+
+rows = []
+for name, cost, _icon in expenses:
+    pct = round(cost / total * 100)
+    variant = "destructive" if pct > 40 else "default" if pct > 15 else "secondary"
+    rows.append({
+        "category": Badge(name, variant=variant),
+        "amount": f"${cost:,}",
+        "share": Badge(f"{pct}%", variant=variant),
+    })
+
+pie_data = [{"category": name, "cost": cost} for name, cost, _ in expenses]
+
+with Column(gap=4):
+    with Grid(columns=2, gap=4):
+        with Card():
+            with CardContent():
+                Metric(label="Total Spend", value=f"${total:,}", delta="+6.2% MoM")
+        with Card():
+            with CardContent():
+                Metric(
+                    label="Budget Remaining",
+                    value=f"${budget - total:,}",
+                    delta=f"{round((budget - total) / budget * 100)}% left",
+                )
+
+    with Card():
+        with CardHeader():
+            CardTitle("Monthly Breakdown")
+            CardDescription("March 2026")
+        with CardContent():
+            with Column(gap=6):
+                PieChart(
+                    data=pie_data,
+                    data_key="cost",
+                    name_key="category",
+                    height=220,
+                    inner_radius=50,
+                    show_legend=True,
+                    show_tooltip=True,
+                )
+                Separator()
+                DataTable(
+                    columns=[
+                        DataTableColumn(key="category", header="Category", sortable=True),
+                        DataTableColumn(key="amount", header="Amount", align="right", sortable=True),
+                        DataTableColumn(key="share", header="Share", align="right"),
+                    ],
+                    rows=rows,
+                    search=True,
+                )
+
+    with Alert(variant="warning", icon="triangle-alert"):
+        AlertTitle("Approaching Budget Limit")
+        AlertDescription(
+            f"${total:,} of ${budget:,} used ({round(total / budget * 100)}%). "
+            "Review compute costs for optimization opportunities."
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Column",
+    "children": [
+      {
+        "cssClass": "gap-4 grid-cols-2",
+        "type": "Grid",
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Total Spend",
+                    "value": "$82,900",
+                    "delta": "+6.2% MoM"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "type": "Metric",
+                    "label": "Budget Remaining",
+                    "value": "$12,100",
+                    "delta": "13% left"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {"type": "CardTitle", "content": "Monthly Breakdown"},
+              {"type": "CardDescription", "content": "March 2026"}
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-6",
+                "type": "Column",
+                "children": [
+                  {
+                    "type": "PieChart",
+                    "data": [
+                      {"category": "Compute", "cost": 42000},
+                      {"category": "Storage", "cost": 18500},
+                      {"category": "Network", "cost": 12300},
+                      {"category": "Monitoring", "cost": 4200},
+                      {"category": "CI/CD", "cost": 3800},
+                      {"category": "Support", "cost": 2100}
+                    ],
+                    "dataKey": "cost",
+                    "nameKey": "category",
+                    "height": 220,
+                    "innerRadius": 50,
+                    "showLabel": false,
+                    "paddingAngle": 0,
+                    "showLegend": true,
+                    "showTooltip": true,
+                    "animate": true
+                  },
+                  {"type": "Separator", "orientation": "horizontal"},
+                  {
+                    "type": "DataTable",
+                    "columns": [
+                      {"key": "category", "header": "Category", "sortable": true},
+                      {
+                        "key": "amount",
+                        "header": "Amount",
+                        "sortable": true,
+                        "headerClass": "text-right",
+                        "cellClass": "text-right"
+                      },
+                      {
+                        "key": "share",
+                        "header": "Share",
+                        "sortable": false,
+                        "headerClass": "text-right",
+                        "cellClass": "text-right"
+                      }
+                    ],
+                    "rows": [
+                      {
+                        "category": {"type": "Badge", "label": "Compute", "variant": "destructive"},
+                        "amount": "$42,000",
+                        "share": {"type": "Badge", "label": "51%", "variant": "destructive"}
+                      },
+                      {
+                        "category": {"type": "Badge", "label": "Storage", "variant": "default"},
+                        "amount": "$18,500",
+                        "share": {"type": "Badge", "label": "22%", "variant": "default"}
+                      },
+                      {
+                        "category": {"type": "Badge", "label": "Network", "variant": "secondary"},
+                        "amount": "$12,300",
+                        "share": {"type": "Badge", "label": "15%", "variant": "secondary"}
+                      },
+                      {
+                        "category": {"type": "Badge", "label": "Monitoring", "variant": "secondary"},
+                        "amount": "$4,200",
+                        "share": {"type": "Badge", "label": "5%", "variant": "secondary"}
+                      },
+                      {
+                        "category": {"type": "Badge", "label": "CI/CD", "variant": "secondary"},
+                        "amount": "$3,800",
+                        "share": {"type": "Badge", "label": "5%", "variant": "secondary"}
+                      },
+                      {
+                        "category": {"type": "Badge", "label": "Support", "variant": "secondary"},
+                        "amount": "$2,100",
+                        "share": {"type": "Badge", "label": "3%", "variant": "secondary"}
+                      }
+                    ],
+                    "search": true,
+                    "paginated": false,
+                    "pageSize": 10
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Alert",
+        "variant": "warning",
+        "icon": "triangle-alert",
+        "children": [
+          {"type": "AlertTitle", "content": "Approaching Budget Limit"},
+          {
+            "type": "AlertDescription",
+            "content": "$82,900 of $95,000 used (87%). Review compute costs for optimization opportunities."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>

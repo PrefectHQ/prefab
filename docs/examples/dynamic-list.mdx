@@ -1,0 +1,155 @@
+---
+title: Dynamic List
+description: Add and remove items with ForEach, AppendState, and PopState.
+icon: list-check
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A task list you can add to and remove from. `ForEach` renders the items, `AppendState` adds new ones, and `PopState` removes by index. The item count updates reactively via the `length` pipe.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root max-w-none p-0","type":"Div","children":[{"cssClass":"w-full","type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Task List"},{"content":"{{ tasks | length }} items","type":"Muted"}]},{"type":"CardContent","children":[{"cssClass":"gap-3","type":"Column","children":[{"cssClass":"gap-2","type":"Row","children":[{"name":"new_task","type":"Input","inputType":"text","placeholder":"Add a task...","disabled":false,"readOnly":false,"required":false},{"type":"Button","label":"Add","variant":"default","size":"default","disabled":false,"onClick":[{"action":"appendState","key":"tasks","value":"{{ new_task }}"},{"action":"setState","key":"new_task","value":""}]}]},{"type":"Separator","orientation":"horizontal"},{"let":{"_loop_9":"{{ $item }}","_loop_9_idx":"{{ $index }}"},"type":"ForEach","key":"tasks","children":[{"cssClass":"gap-2 items-center justify-between","type":"Row","children":[{"content":"{{ $item }}","type":"Text"},{"type":"Button","label":"Remove","variant":"outline","size":"sm","disabled":false,"onClick":{"action":"popState","key":"tasks","index":"{{ $index }}"}}]}]}]}]},{"type":"CardFooter","children":[{"type":"Button","label":"Clear All","variant":"destructive","size":"default","disabled":false,"onClick":{"action":"setState","key":"tasks","value":[]}}]}]}]},"state":{"tasks":["Buy towel","Learn Python","Don't panic"],"new_task":""}}} playground="ZnJvbSBwcmVmYWJfdWkgaW1wb3J0IFByZWZhYkFwcApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBBcHBlbmRTdGF0ZSwgUG9wU3RhdGUsIFNldFN0YXRlCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0ICgKICAgIEJ1dHRvbiwgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRGb290ZXIsIENhcmRIZWFkZXIsIENhcmRUaXRsZSwKICAgIENvbHVtbiwgSW5wdXQsIE11dGVkLCBSb3csIFNlcGFyYXRvciwgVGV4dCwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNvbnRyb2xfZmxvdyBpbXBvcnQgRm9yRWFjaApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgSU5ERVgsIElURU0sIFJ4CgpuZXdfdGFzayA9IFJ4KCJuZXdfdGFzayIpCnRhc2tzID0gUngoInRhc2tzIikKCndpdGggUHJlZmFiQXBwKAogICAgc3RhdGU9eyJ0YXNrcyI6IFsiQnV5IHRvd2VsIiwgIkxlYXJuIFB5dGhvbiIsICJEb24ndCBwYW5pYyJdLCAibmV3X3Rhc2siOiAiIn0sCiAgICBjc3NfY2xhc3M9Im1heC13LW5vbmUgcC0wIiwKKToKICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9InctZnVsbCIpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoIlRhc2sgTGlzdCIpCiAgICAgICAgICAgIE11dGVkKGYie3Rhc2tzLmxlbmd0aCgpfSBpdGVtcyIpCiAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICB3aXRoIENvbHVtbihnYXA9Myk6CiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgSW5wdXQobmFtZT0ibmV3X3Rhc2siLCBwbGFjZWhvbGRlcj0iQWRkIGEgdGFzay4uLiIpCiAgICAgICAgICAgICAgICAgICAgQnV0dG9uKAogICAgICAgICAgICAgICAgICAgICAgICAiQWRkIiwKICAgICAgICAgICAgICAgICAgICAgICAgb25fY2xpY2s9WwogICAgICAgICAgICAgICAgICAgICAgICAgICAgQXBwZW5kU3RhdGUoInRhc2tzIiwgbmV3X3Rhc2spLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgU2V0U3RhdGUoIm5ld190YXNrIiwgIiIpLAogICAgICAgICAgICAgICAgICAgICAgICBdLAogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgIFNlcGFyYXRvcigpCiAgICAgICAgICAgICAgICB3aXRoIEZvckVhY2godGFza3MpOgogICAgICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD0yLCBhbGlnbj0iY2VudGVyIiwgY3NzX2NsYXNzPSJqdXN0aWZ5LWJldHdlZW4iKToKICAgICAgICAgICAgICAgICAgICAgICAgVGV4dChJVEVNKQogICAgICAgICAgICAgICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAiUmVtb3ZlIiwgdmFyaWFudD0ib3V0bGluZSIsIHNpemU9InNtIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uX2NsaWNrPVBvcFN0YXRlKCJ0YXNrcyIsIGluZGV4PUlOREVYKSwKICAgICAgICAgICAgICAgICAgICAgICAgKQogICAgICAgIHdpdGggQ2FyZEZvb3RlcigpOgogICAgICAgICAgICBCdXR0b24oIkNsZWFyIEFsbCIsIHZhcmlhbnQ9ImRlc3RydWN0aXZlIiwgb25fY2xpY2s9U2V0U3RhdGUoInRhc2tzIiwgW10pKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui import PrefabApp
+from prefab_ui.actions import AppendState, PopState, SetState
+from prefab_ui.components import (
+    Button, Card, CardContent, CardFooter, CardHeader, CardTitle,
+    Column, Input, Muted, Row, Separator, Text,
+)
+from prefab_ui.components.control_flow import ForEach
+from prefab_ui.rx import INDEX, ITEM, Rx
+
+new_task = Rx("new_task")
+tasks = Rx("tasks")
+
+with PrefabApp(
+    state={"tasks": ["Buy towel", "Learn Python", "Don't panic"], "new_task": ""},
+    css_class="max-w-none p-0",
+):
+    with Card(css_class="w-full"):
+        with CardHeader():
+            CardTitle("Task List")
+            Muted(f"{tasks.length()} items")
+        with CardContent():
+            with Column(gap=3):
+                with Row(gap=2):
+                    Input(name="new_task", placeholder="Add a task...")
+                    Button(
+                        "Add",
+                        on_click=[
+                            AppendState("tasks", new_task),
+                            SetState("new_task", ""),
+                        ],
+                    )
+                Separator()
+                with ForEach(tasks):
+                    with Row(gap=2, align="center", css_class="justify-between"):
+                        Text(ITEM)
+                        Button(
+                            "Remove", variant="outline", size="sm",
+                            on_click=PopState("tasks", index=INDEX),
+                        )
+        with CardFooter():
+            Button("Clear All", variant="destructive", on_click=SetState("tasks", []))
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root max-w-none p-0",
+    "type": "Div",
+    "children": [
+      {
+        "cssClass": "w-full",
+        "type": "Card",
+        "children": [
+          {
+            "type": "CardHeader",
+            "children": [
+              {"type": "CardTitle", "content": "Task List"},
+              {"content": "{{ tasks | length }} items", "type": "Muted"}
+            ]
+          },
+          {
+            "type": "CardContent",
+            "children": [
+              {
+                "cssClass": "gap-3",
+                "type": "Column",
+                "children": [
+                  {
+                    "cssClass": "gap-2",
+                    "type": "Row",
+                    "children": [
+                      {
+                        "name": "new_task",
+                        "type": "Input",
+                        "inputType": "text",
+                        "placeholder": "Add a task...",
+                        "disabled": false,
+                        "readOnly": false,
+                        "required": false
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Add",
+                        "variant": "default",
+                        "size": "default",
+                        "disabled": false,
+                        "onClick": [
+                          {"action": "appendState", "key": "tasks", "value": "{{ new_task }}"},
+                          {"action": "setState", "key": "new_task", "value": ""}
+                        ]
+                      }
+                    ]
+                  },
+                  {"type": "Separator", "orientation": "horizontal"},
+                  {
+                    "let": {"_loop_9": "{{ $item }}", "_loop_9_idx": "{{ $index }}"},
+                    "type": "ForEach",
+                    "key": "tasks",
+                    "children": [
+                      {
+                        "cssClass": "gap-2 items-center justify-between",
+                        "type": "Row",
+                        "children": [
+                          {"content": "{{ $item }}", "type": "Text"},
+                          {
+                            "type": "Button",
+                            "label": "Remove",
+                            "variant": "outline",
+                            "size": "sm",
+                            "disabled": false,
+                            "onClick": {"action": "popState", "key": "tasks", "index": "{{ $index }}"}
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "CardFooter",
+            "children": [
+              {
+                "type": "Button",
+                "label": "Clear All",
+                "variant": "destructive",
+                "size": "default",
+                "disabled": false,
+                "onClick": {"action": "setState", "key": "tasks", "value": []}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"tasks": ["Buy towel", "Learn Python", "Don't panic"], "new_task": ""}
+}
+```
+</CodeGroup>
+</ComponentPreview>

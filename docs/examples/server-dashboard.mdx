@@ -1,0 +1,201 @@
+---
+title: Server Dashboard
+description: Live-updating metrics with sparklines, status badges, and auto-refresh.
+icon: server
+mode: center
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+A simulated server dashboard that auto-refreshes every 400ms. The context window fills up, metrics tick, and the progress bar changes color as utilization climbs. Everything is driven by a single `SetInterval` and reactive expressions.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root max-w-md p-0","onMount":{"action":"setInterval","duration":400,"onTick":{"action":"setState","key":"tick","value":"{{ tick + 1 }}"}},"type":"Div","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-4 grid-cols-2","type":"Grid","children":[{"cssClass":"gap-0 pb-0 overflow-hidden","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"CPU Usage","value":"{{ tick % 20 * 4 + 15 }}%"}]},{"cssClass":"h-10","type":"Sparkline","data":[35,42,38,55,48,62,58,70,65,45],"variant":"info","fill":true,"curve":"linear","strokeWidth":1.5}]},{"cssClass":"gap-0 pb-0 overflow-hidden","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Memory","value":"{{ tick % 30 * 2 + 40 }}%"}]},{"cssClass":"h-10","type":"Sparkline","data":[60,62,58,65,63,68,64,70,66,62],"variant":"success","fill":true,"curve":"linear","strokeWidth":1.5}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"cssClass":"items-center justify-between","type":"Row","children":[{"type":"CardTitle","content":"System Health"},{"type":"Badge","label":"{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}","variant":"{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}"}]}]},{"type":"CardContent","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"gap-4 items-center justify-between","type":"Row","children":[{"content":"CPU: {{ tick % 20 * 4 + 15 }}%","type":"Text"},{"content":"Memory: {{ tick % 30 * 2 + 40 }}%","type":"Muted"}]},{"type":"Progress","value":"{{ tick % 20 * 4 + 15 }}","max":100.0,"variant":"{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}","size":"default"},{"type":"Separator","orientation":"horizontal"},{"cssClass":"gap-6","type":"Row","children":[{"type":"Metric","label":"Uptime","value":"99.9{{ tick % 10 }}%"},{"type":"Metric","label":"Requests/s","value":"{{ 12000 + tick % 50 * 30 | number }}"},{"type":"Metric","label":"p99 Latency","value":"{{ 120 + tick % 30 }}ms"}]}]}]}]}]}]},"state":{"tick":0}}} playground="ZnJvbSBwcmVmYWJfdWkgaW1wb3J0IFByZWZhYkFwcApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRJbnRlcnZhbCwgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQmFkZ2UsIENhcmQsIENhcmRDb250ZW50LCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEdyaWQsIE1ldHJpYywgTXV0ZWQsIFByb2dyZXNzLCBSb3csIFNlcGFyYXRvciwgVGV4dCwKKQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzLmNoYXJ0cyBpbXBvcnQgU3BhcmtsaW5lCmZyb20gcHJlZmFiX3VpLnJ4IGltcG9ydCBSeAoKdGljayA9IFJ4KCJ0aWNrIikKY3B1ID0gdGljayAlIDIwICogNCArIDE1Cm1lbSA9IHRpY2sgJSAzMCAqIDIgKyA0MApjcHVfdmFyaWFudCA9IChjcHUgPiA4MCkudGhlbigiZGVzdHJ1Y3RpdmUiLCAoY3B1ID4gNTApLnRoZW4oIndhcm5pbmciLCAic3VjY2VzcyIpKQoKIyBMaXZlLXRpY2tpbmcgZm9vdGVyIHN0YXRzCnJlcXVlc3RzID0gMTIwMDAgKyB0aWNrICUgNTAgKiAzMApsYXRlbmN5ID0gMTIwICsgdGljayAlIDMwCgp3aXRoIFByZWZhYkFwcCgKICAgIHN0YXRlPXsidGljayI6IDB9LAogICAgb25fbW91bnQ9U2V0SW50ZXJ2YWwoNDAwLCBvbl90aWNrPVNldFN0YXRlKCJ0aWNrIiwgdGljayArIDEpKSwKICAgIGNzc19jbGFzcz0ibWF4LXctbWQgcC0wIiwKKToKICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICB3aXRoIEdyaWQoY29sdW1ucz0yLCBnYXA9NCk6CiAgICAgICAgICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9ImdhcC0wIHBiLTAgb3ZlcmZsb3ctaGlkZGVuIik6CiAgICAgICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJDUFUgVXNhZ2UiLCB2YWx1ZT1mIntjcHV9JSIpCiAgICAgICAgICAgICAgICBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICAgICAgZGF0YT1bMzUsIDQyLCAzOCwgNTUsIDQ4LCA2MiwgNTgsIDcwLCA2NSwgNDVdLAogICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9ImluZm8iLCBmaWxsPVRydWUsIGNzc19jbGFzcz0iaC0xMCIsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgIHdpdGggQ2FyZChjc3NfY2xhc3M9ImdhcC0wIHBiLTAgb3ZlcmZsb3ctaGlkZGVuIik6CiAgICAgICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJNZW1vcnkiLCB2YWx1ZT1mInttZW19JSIpCiAgICAgICAgICAgICAgICBTcGFya2xpbmUoCiAgICAgICAgICAgICAgICAgICAgZGF0YT1bNjAsIDYyLCA1OCwgNjUsIDYzLCA2OCwgNjQsIDcwLCA2NiwgNjJdLAogICAgICAgICAgICAgICAgICAgIHZhcmlhbnQ9InN1Y2Nlc3MiLCBmaWxsPVRydWUsIGNzc19jbGFzcz0iaC0xMCIsCiAgICAgICAgICAgICAgICApCgogICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICB3aXRoIENhcmRIZWFkZXIoKToKICAgICAgICAgICAgICAgIHdpdGggUm93KGFsaWduPSJjZW50ZXIiLCBjc3NfY2xhc3M9Imp1c3RpZnktYmV0d2VlbiIpOgogICAgICAgICAgICAgICAgICAgIENhcmRUaXRsZSgiU3lzdGVtIEhlYWx0aCIpCiAgICAgICAgICAgICAgICAgICAgQmFkZ2UoY3B1X3ZhcmlhbnQsIHZhcmlhbnQ9Y3B1X3ZhcmlhbnQpCiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD00KToKICAgICAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9NCwgYWxpZ249ImNlbnRlciIsIGNzc19jbGFzcz0ianVzdGlmeS1iZXR3ZWVuIik6CiAgICAgICAgICAgICAgICAgICAgICAgIFRleHQoZiJDUFU6IHtjcHV9JSIpCiAgICAgICAgICAgICAgICAgICAgICAgIE11dGVkKGYiTWVtb3J5OiB7bWVtfSUiKQogICAgICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPWNwdSwgbWF4PTEwMCwgdmFyaWFudD1jcHVfdmFyaWFudCkKICAgICAgICAgICAgICAgICAgICBTZXBhcmF0b3IoKQogICAgICAgICAgICAgICAgICAgIHdpdGggUm93KGdhcD02KToKICAgICAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJVcHRpbWUiLCB2YWx1ZT1mIjk5Ljl7dGljayAlIDEwfSUiKQogICAgICAgICAgICAgICAgICAgICAgICBNZXRyaWMobGFiZWw9IlJlcXVlc3RzL3MiLCB2YWx1ZT1yZXF1ZXN0cy5udW1iZXIoKSkKICAgICAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJwOTkgTGF0ZW5jeSIsIHZhbHVlPWYie2xhdGVuY3l9bXMiKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui import PrefabApp
+from prefab_ui.actions import SetInterval, SetState
+from prefab_ui.components import (
+    Badge, Card, CardContent, CardHeader, CardTitle,
+    Column, Grid, Metric, Muted, Progress, Row, Separator, Text,
+)
+from prefab_ui.components.charts import Sparkline
+from prefab_ui.rx import Rx
+
+tick = Rx("tick")
+cpu = tick % 20 * 4 + 15
+mem = tick % 30 * 2 + 40
+cpu_variant = (cpu > 80).then("destructive", (cpu > 50).then("warning", "success"))
+
+# Live-ticking footer stats
+requests = 12000 + tick % 50 * 30
+latency = 120 + tick % 30
+
+with PrefabApp(
+    state={"tick": 0},
+    on_mount=SetInterval(400, on_tick=SetState("tick", tick + 1)),
+    css_class="max-w-md p-0",
+):
+    with Column(gap=4):
+        with Grid(columns=2, gap=4):
+            with Card(css_class="gap-0 pb-0 overflow-hidden"):
+                with CardContent():
+                    Metric(label="CPU Usage", value=f"{cpu}%")
+                Sparkline(
+                    data=[35, 42, 38, 55, 48, 62, 58, 70, 65, 45],
+                    variant="info", fill=True, css_class="h-10",
+                )
+            with Card(css_class="gap-0 pb-0 overflow-hidden"):
+                with CardContent():
+                    Metric(label="Memory", value=f"{mem}%")
+                Sparkline(
+                    data=[60, 62, 58, 65, 63, 68, 64, 70, 66, 62],
+                    variant="success", fill=True, css_class="h-10",
+                )
+
+        with Card():
+            with CardHeader():
+                with Row(align="center", css_class="justify-between"):
+                    CardTitle("System Health")
+                    Badge(cpu_variant, variant=cpu_variant)
+            with CardContent():
+                with Column(gap=4):
+                    with Row(gap=4, align="center", css_class="justify-between"):
+                        Text(f"CPU: {cpu}%")
+                        Muted(f"Memory: {mem}%")
+                    Progress(value=cpu, max=100, variant=cpu_variant)
+                    Separator()
+                    with Row(gap=6):
+                        Metric(label="Uptime", value=f"99.9{tick % 10}%")
+                        Metric(label="Requests/s", value=requests.number())
+                        Metric(label="p99 Latency", value=f"{latency}ms")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root max-w-md p-0",
+    "onMount": {
+      "action": "setInterval",
+      "duration": 400,
+      "onTick": {"action": "setState", "key": "tick", "value": "{{ tick + 1 }}"}
+    },
+    "type": "Div",
+    "children": [
+      {
+        "cssClass": "gap-4",
+        "type": "Column",
+        "children": [
+          {
+            "cssClass": "gap-4 grid-cols-2",
+            "type": "Grid",
+            "children": [
+              {
+                "cssClass": "gap-0 pb-0 overflow-hidden",
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardContent",
+                    "children": [{"type": "Metric", "label": "CPU Usage", "value": "{{ tick % 20 * 4 + 15 }}%"}]
+                  },
+                  {
+                    "cssClass": "h-10",
+                    "type": "Sparkline",
+                    "data": [35, 42, 38, 55, 48, 62, 58, 70, 65, 45],
+                    "variant": "info",
+                    "fill": true,
+                    "curve": "linear",
+                    "strokeWidth": 1.5
+                  }
+                ]
+              },
+              {
+                "cssClass": "gap-0 pb-0 overflow-hidden",
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardContent",
+                    "children": [{"type": "Metric", "label": "Memory", "value": "{{ tick % 30 * 2 + 40 }}%"}]
+                  },
+                  {
+                    "cssClass": "h-10",
+                    "type": "Sparkline",
+                    "data": [60, 62, 58, 65, 63, 68, 64, 70, 66, 62],
+                    "variant": "success",
+                    "fill": true,
+                    "curve": "linear",
+                    "strokeWidth": 1.5
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {
+                    "cssClass": "items-center justify-between",
+                    "type": "Row",
+                    "children": [
+                      {"type": "CardTitle", "content": "System Health"},
+                      {
+                        "type": "Badge",
+                        "label": "{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}",
+                        "variant": "{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "gap-4",
+                    "type": "Column",
+                    "children": [
+                      {
+                        "cssClass": "gap-4 items-center justify-between",
+                        "type": "Row",
+                        "children": [
+                          {"content": "CPU: {{ tick % 20 * 4 + 15 }}%", "type": "Text"},
+                          {"content": "Memory: {{ tick % 30 * 2 + 40 }}%", "type": "Muted"}
+                        ]
+                      },
+                      {
+                        "type": "Progress",
+                        "value": "{{ tick % 20 * 4 + 15 }}",
+                        "max": 100.0,
+                        "variant": "{{ tick % 20 * 4 + 15 > 80 ? 'destructive' : (tick % 20 * 4 + 15 > 50 ? 'warning' : 'success') }}",
+                        "size": "default"
+                      },
+                      {"type": "Separator", "orientation": "horizontal"},
+                      {
+                        "cssClass": "gap-6",
+                        "type": "Row",
+                        "children": [
+                          {"type": "Metric", "label": "Uptime", "value": "99.9{{ tick % 10 }}%"},
+                          {
+                            "type": "Metric",
+                            "label": "Requests/s",
+                            "value": "{{ 12000 + tick % 50 * 30 | number }}"
+                          },
+                          {"type": "Metric", "label": "p99 Latency", "value": "{{ 120 + tick % 30 }}ms"}
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {"tick": 0}
+}
+```
+</CodeGroup>
+</ComponentPreview>
