@@ -284,33 +284,32 @@ export function Playground() {
     localStorage.setItem("pg-editor-width", editorWidth.toFixed(3));
   }, [editorWidth]);
 
-  // Draggable split divider — update editor width from mouse X
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      if (!draggingRef.current || !splitRef.current) return;
-      const rect = splitRef.current.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      setEditorWidth(Math.max(0.15, Math.min(0.85, pct)));
-    };
-    const handleUp = () => {
-      if (!draggingRef.current) return;
-      draggingRef.current = false;
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", handleUp);
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mouseup", handleUp);
-    };
-  }, []);
-
-  const startDrag = useCallback((e: React.MouseEvent) => {
+  // Draggable split divider — uses pointer capture so move/up events
+  // still reach us if the pointer exits the iframe the playground is
+  // embedded in (window-level mouseup would be swallowed there).
+  const startDrag = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
     draggingRef.current = true;
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+  }, []);
+
+  const onDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current || !splitRef.current) return;
+    const rect = splitRef.current.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    setEditorWidth(Math.max(0.15, Math.min(0.85, pct)));
+  }, []);
+
+  const endDrag = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
   }, []);
 
   // Inject theme CSS scoped to the preview pane.
@@ -656,26 +655,12 @@ export function Playground() {
                   />
                 )}
               </div>
-              {error && (
-                <Alert variant="destructive" className="m-2">
-                  <AlertDescription className="font-mono text-xs">
-                    {error}
-                    {errorDetail && (
-                      <details className="mt-1">
-                        <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
-                          Traceback
-                        </summary>
-                        <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
-                          {errorDetail}
-                        </pre>
-                      </details>
-                    )}
-                  </AlertDescription>
-                </Alert>
-              )}
             </div>
             <div
-              onMouseDown={startDrag}
+              onPointerDown={startDrag}
+              onPointerMove={onDragMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
               onDoubleClick={() => setEditorWidth(0.5)}
               className="w-1 shrink-0 cursor-col-resize bg-border transition-colors hover:bg-primary/50"
               role="separator"
@@ -702,6 +687,26 @@ export function Playground() {
           )}
         </div>
       </div>
+
+      {/* Error banner — rendered outside the split so it remains
+          visible even when the code panel is collapsed. */}
+      {error && (
+        <Alert variant="destructive" className="m-2 shrink-0">
+          <AlertDescription className="font-mono text-xs">
+            {error}
+            {errorDetail && (
+              <details className="mt-1">
+                <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
+                  Traceback
+                </summary>
+                <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
+                  {errorDetail}
+                </pre>
+              </details>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Confirm discard dialog */}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
