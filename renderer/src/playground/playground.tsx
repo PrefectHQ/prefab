@@ -7,14 +7,21 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Toaster } from "sonner";
-import { Moon, Sun, Search, Braces, Link, Check } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  Braces,
+  Link,
+  Check,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import { RenderTree, type ComponentNode } from "../renderer";
 import { useStateStore } from "../state";
 import { Button } from "@/ui/button";
 import { Badge } from "@/ui/badge";
 import { Alert, AlertDescription } from "@/ui/alert";
 import { Separator } from "@/ui/separator";
-import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -24,8 +31,9 @@ import {
   DialogTitle,
 } from "@/ui/dialog";
 import { Editor } from "./editor";
+import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
-import { EXAMPLES, type Example } from "./examples";
+import { type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
 import { buildThemeCss } from "../themes";
 import pako from "pako";
@@ -142,83 +150,22 @@ with Card():
 
 const DEBOUNCE_MS = 200;
 
-function ExamplePicker({ onSelect }: { onSelect: (ex: Example) => void }) {
-  const [open, setOpen] = useState(false);
-  const [filter, setFilter] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+/** Wrap localStorage reads — sandboxed iframes or strict privacy
+ *  modes can throw SecurityError on access. */
+function safeStorageGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
 
-  const filtered = useMemo(() => {
-    if (!filter) return EXAMPLES;
-    const q = filter.toLowerCase();
-    return EXAMPLES.filter(
-      (ex) =>
-        ex.title.toLowerCase().includes(q) ||
-        ex.category.toLowerCase().includes(q),
-    );
-  }, [filter]);
-
-  const grouped = useMemo(() => {
-    const groups = new Map<string, Example[]>();
-    for (const ex of filtered) {
-      const list = groups.get(ex.category) ?? [];
-      list.push(ex);
-      groups.set(ex.category, list);
-    }
-    return groups;
-  }, [filtered]);
-
-  useEffect(() => {
-    if (open) {
-      setFilter("");
-      requestAnimationFrame(() => inputRef.current?.focus());
-    }
-  }, [open]);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-        <Search className="h-4 w-4" />
-        Examples...
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-[320px] p-0">
-        <div className="border-b border-border px-3 py-2">
-          <input
-            ref={inputRef}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            placeholder="Filter examples..."
-            className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-          />
-        </div>
-        <div className="max-h-[300px] overflow-y-auto py-1">
-          {filtered.length === 0 && (
-            <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-              No matching examples.
-            </div>
-          )}
-          {[...grouped.entries()].map(([category, items]) => (
-            <div key={category}>
-              <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                {category}
-              </div>
-              {items.map((ex) => (
-                <button
-                  key={ex.title}
-                  className="flex w-full items-center px-3 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
-                  onClick={() => {
-                    onSelect(ex);
-                    setOpen(false);
-                  }}
-                >
-                  {ex.title}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
+function safeStorageSet(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore — persistence is best-effort.
+  }
 }
 
 export function Playground() {
@@ -238,6 +185,17 @@ export function Playground() {
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
+  const [editorCollapsed, setEditorCollapsed] = useState(
+    () => safeStorageGet("pg-editor-collapsed") === "true",
+  );
+  const [editorWidth, setEditorWidth] = useState(() => {
+    const stored = parseFloat(safeStorageGet("pg-editor-width") ?? "");
+    return Number.isFinite(stored)
+      ? Math.max(0.15, Math.min(0.85, stored))
+      : 0.5;
+  });
+  const splitRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
   const state = useStateStore({});
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -255,6 +213,42 @@ export function Playground() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  // Persist split layout preferences
+  useEffect(() => {
+    safeStorageSet("pg-editor-collapsed", String(editorCollapsed));
+  }, [editorCollapsed]);
+  useEffect(() => {
+    safeStorageSet("pg-editor-width", editorWidth.toFixed(3));
+  }, [editorWidth]);
+
+  // Draggable split divider — uses pointer capture so move/up events
+  // still reach us if the pointer exits the iframe the playground is
+  // embedded in (window-level mouseup would be swallowed there).
+  const startDrag = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    draggingRef.current = true;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }, []);
+
+  const onDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current || !splitRef.current) return;
+    const rect = splitRef.current.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    setEditorWidth(Math.max(0.15, Math.min(0.85, pct)));
+  }, []);
+
+  const endDrag = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+  }, []);
 
   // Inject theme CSS scoped to the preview pane.
   // Rewrite `:root` → `#pg-preview` and `.dark` → `#pg-preview.dark`
@@ -509,7 +503,19 @@ export function Playground() {
   return (
     <div className="flex h-[800px] flex-col bg-background text-foreground">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 border-b border-border px-4 py-2">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2">
+        <button
+          onClick={() => setEditorCollapsed((v) => !v)}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+          aria-label={editorCollapsed ? "Show code panel" : "Hide code panel"}
+          title={editorCollapsed ? "Show code panel" : "Hide code panel"}
+        >
+          {editorCollapsed ? (
+            <PanelLeftOpen className="h-4 w-4" />
+          ) : (
+            <PanelLeftClose className="h-4 w-4" />
+          )}
+        </button>
         <ExamplePicker onSelect={handleExampleSelect} />
 
         {mode === "json" && (
@@ -563,47 +569,48 @@ export function Playground() {
       </div>
 
       {/* Split panes */}
-      <div className="flex min-h-0 flex-1">
-        <div className="flex w-1/2 flex-col border-r border-border">
-          <div className="min-h-0 flex-1 overflow-hidden bg-muted/30">
-            {mode === "python" ? (
-              <Editor
-                value={code}
-                onChange={setCode}
-                language="python"
-                dark={dark}
-              />
-            ) : (
-              <Editor
-                value={jsonCode}
-                onChange={handleJsonChange}
-                language="json"
-                dark={dark}
-              />
-            )}
-          </div>
-          {error && (
-            <Alert variant="destructive" className="m-2">
-              <AlertDescription className="font-mono text-xs">
-                {error}
-                {errorDetail && (
-                  <details className="mt-1">
-                    <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
-                      Traceback
-                    </summary>
-                    <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
-                      {errorDetail}
-                    </pre>
-                  </details>
+      <div ref={splitRef} className="flex min-h-0 flex-1">
+        {!editorCollapsed && (
+          <>
+            <div
+              className="flex min-w-0 flex-col"
+              style={{ width: `${editorWidth * 100}%` }}
+            >
+              <div className="min-h-0 flex-1 overflow-hidden bg-muted/30">
+                {mode === "python" ? (
+                  <Editor
+                    value={code}
+                    onChange={setCode}
+                    language="python"
+                    dark={dark}
+                  />
+                ) : (
+                  <Editor
+                    value={jsonCode}
+                    onChange={handleJsonChange}
+                    language="json"
+                    dark={dark}
+                  />
                 )}
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
+              </div>
+            </div>
+            <div
+              onPointerDown={startDrag}
+              onPointerMove={onDragMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+              onDoubleClick={() => setEditorWidth(0.5)}
+              className="w-1 shrink-0 cursor-col-resize bg-border transition-colors hover:bg-primary/50"
+              role="separator"
+              aria-label="Resize code panel"
+              title="Drag to resize, double-click to reset"
+            />
+          </>
+        )}
 
         <div
           id="pg-preview"
-          className={`w-1/2 overflow-auto bg-background text-foreground p-6${
+          className={`min-w-0 flex-1 overflow-auto bg-background text-foreground p-6${
             dark ? " dark" : ""
           }`}
         >
@@ -618,6 +625,26 @@ export function Playground() {
           )}
         </div>
       </div>
+
+      {/* Error banner — rendered outside the split so it remains
+          visible even when the code panel is collapsed. */}
+      {error && (
+        <Alert variant="destructive" className="m-2 shrink-0">
+          <AlertDescription className="font-mono text-xs">
+            {error}
+            {errorDetail && (
+              <details className="mt-1">
+                <summary className="cursor-pointer text-[0.65rem] opacity-70 hover:opacity-100">
+                  Traceback
+                </summary>
+                <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap break-words text-[0.65rem] opacity-80">
+                  {errorDetail}
+                </pre>
+              </details>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Confirm discard dialog */}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
