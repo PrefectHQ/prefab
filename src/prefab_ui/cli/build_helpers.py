@@ -8,6 +8,7 @@ cli.py stays under its size limit.
 from __future__ import annotations
 
 import hashlib
+import json
 import shutil
 from pathlib import Path
 
@@ -47,10 +48,19 @@ def sync_to_mintlify_cache(repo_root: Path, *paths: str) -> None:
 
     Mirroring our generated assets directly into the cache makes
     rebuilds take effect on the next page reload, no restart required.
-    The cache is a no-op when Mintlify has never been run locally.
+
+    No-op in three cases:
+      * Mintlify has never been run locally (cache directory missing).
+      * The cache currently belongs to a different docs project — we
+        compare the `name` field of the cache's docs.json against ours
+        so we never pollute another project's cache.
+      * No matching source file exists for any of the requested paths.
     """
-    mintlify_public = Path.home() / ".mintlify/mint/apps/client/public"
+    mintlify_client = Path.home() / ".mintlify/mint/apps/client"
+    mintlify_public = mintlify_client / "public"
     if not mintlify_public.exists():
+        return
+    if not _cache_belongs_to_us(repo_root, mintlify_client):
         return
     docs_dir = repo_root / "docs"
     for rel in paths:
@@ -65,6 +75,25 @@ def sync_to_mintlify_cache(repo_root: Path, *paths: str) -> None:
         else:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
+
+
+def _cache_belongs_to_us(repo_root: Path, mintlify_client: Path) -> bool:
+    """Return True if the Mintlify cache is currently serving this project.
+
+    Compares the `name` field of `docs/docs.json` against the same field
+    in the cached copy at `src/_props/docs.json` (which Mintlify writes
+    when it loads a project). A mismatch — or any failure to read either
+    file — means another project last ran `mint dev`, so leave its cache
+    alone.
+    """
+    our_docs_json = repo_root / "docs" / "docs.json"
+    cache_docs_json = mintlify_client / "src" / "_props" / "docs.json"
+    try:
+        our_name = json.loads(our_docs_json.read_text()).get("name")
+        cache_name = json.loads(cache_docs_json.read_text()).get("name")
+    except (OSError, ValueError):
+        return False
+    return bool(our_name) and our_name == cache_name
 
 
 def should_rebuild_renderer(repo_root: Path) -> bool:
