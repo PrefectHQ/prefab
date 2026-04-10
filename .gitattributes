@@ -1,0 +1,9 @@
+# Treat the bundled renderer as a build artifact. Line-by-line merging
+# of a minified, chunked bundle produces nonsense conflicts on every
+# branch, so let git resolve the file to the upstream/base version and
+# rely on the `check_generated` CI workflow to regenerate it from source
+# if needed.
+#
+# Each clone needs `git config merge.ours.driver true` once — see
+# CONTRIBUTING.md.
+src/prefab_ui/renderer/app.html merge=ours

@@ -36,6 +36,12 @@ An open issue is not an invitation to submit a PR. Issues track problems; whethe
 - **Write tests.** Bug fixes should include a test that fails without the fix.
 - **Fix the cause, not the symptom.**
 
+## The `app.html` merge driver
+
+The bundled renderer (`src/prefab_ui/renderer/app.html`) is a minified, chunked Vite build. Its line contents aren't stable between builds, so trying to merge two branches' versions of it produces nonsense conflicts. We mark it in `.gitattributes` with `merge=ours` so git resolves conflicts by keeping the upstream side, and the `check_generated` CI workflow regenerates it from source afterwards if the final tree actually warrants a different bundle.
+
+The `ours` driver needs one piece of local git config (`merge.ours.driver = true`). That gets installed automatically by a prek hook on your first commit, so there is nothing to run by hand.
+
 ## What we'll close without review
 
 - PRs that don't reference an issue or address a clearly self-evident bug
