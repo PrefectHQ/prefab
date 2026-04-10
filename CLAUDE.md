@@ -88,6 +88,16 @@ Cut releases with `gh release create`. Tags follow `v<version>` (e.g. `v0.13.0`)
 gh release create v0.13.0 --target main --title "v0.13.0: Value Add" --generate-notes
 ```
 
+**To preview what PRs will be in the release** before it's cut, call the GitHub generate-notes API. This returns the exact auto-generated changelog that `--generate-notes` would append, so you can see the full PR list — useful for picking a pun theme and making sure nothing's been missed:
+
+```bash
+gh api -X POST repos/PrefectHQ/prefab/releases/generate-notes \
+  -f tag_name=v0.18.6 \
+  -f target_commitish=main \
+  -f previous_tag_name=v0.18.5 \
+  --jq '.body'
+```
+
 ### Commit Messages and Agent Attribution
 
 - Keep commit messages brief — a headline is usually enough; avoid detailed blow-by-blow descriptions
