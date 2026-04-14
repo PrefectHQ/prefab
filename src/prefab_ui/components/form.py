@@ -84,6 +84,7 @@ class Form(ContainerComponent):
         fields_only: Literal[True],
         submit_label: str = "Submit",
         on_submit: Action | list[Action] | None = None,
+        defaults: dict[str, Any] | None = None,
         css_class: str | None = None,
     ) -> list[Any]: ...
 
@@ -96,6 +97,7 @@ class Form(ContainerComponent):
         fields_only: Literal[False] = ...,
         submit_label: str = "Submit",
         on_submit: Action | list[Action] | None = None,
+        defaults: dict[str, Any] | None = None,
         css_class: str | None = None,
     ) -> Form: ...
 
@@ -107,6 +109,7 @@ class Form(ContainerComponent):
         fields_only: bool = False,
         submit_label: str = "Submit",
         on_submit: Action | list[Action] | None = None,
+        defaults: dict[str, Any] | None = None,
         css_class: str | None = None,
     ) -> Form | list[Any]:
         """Generate a form from a Pydantic model.
@@ -165,10 +168,22 @@ class Form(ContainerComponent):
             submit_label: Text for the submit button.
             on_submit: Action(s) fired on submit. A `CallTool` with no
                 arguments gets auto-filled from model fields.
+            defaults: Runtime values keyed by field name. These override the
+                model's class-level `Field(default=...)` for this render only,
+                letting callers (e.g. LLM agents) pre-populate the form with
+                context-specific values. Unknown keys raise `ValueError`.
             css_class: Additional CSS classes on the form container.
         """
         from prefab_ui.components.base import _component_stack
         from prefab_ui.components.button import Button
+
+        if defaults:
+            unknown = set(defaults) - set(model.model_fields)
+            if unknown:
+                raise ValueError(
+                    f"defaults contains unknown field(s) for "
+                    f"{model.__name__}: {sorted(unknown)}"
+                )
 
         if fields_only:
             # Suppress auto-parenting during creation to avoid duplicates
@@ -179,7 +194,7 @@ class Form(ContainerComponent):
             with defer():
                 children: list[Any] = []
                 for name, field_info in model.model_fields.items():
-                    component = _field_to_component(name, field_info)
+                    component = _field_to_component(name, field_info, defaults)
                     if component is not None:
                         children.append(component)
 
@@ -201,7 +216,7 @@ class Form(ContainerComponent):
             children = []
 
             for name, field_info in model.model_fields.items():
-                component = _field_to_component(name, field_info)
+                component = _field_to_component(name, field_info, defaults)
                 if component is not None:
                     children.append(component)
 
@@ -245,6 +260,25 @@ def _maybe_enrich_tool_call(
         kwargs["on_error"] = ShowToast("{{ $error }}", variant="error")
 
     return CallTool(**kwargs)
+
+
+def _format_date_default(value: Any, kind: type) -> str | None:
+    """Serialize a date/time/datetime default to the HTML input format."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    if kind is datetime.datetime and isinstance(value, datetime.datetime):
+        return value.strftime("%Y-%m-%dT%H:%M")
+    if (
+        kind is datetime.date
+        and isinstance(value, datetime.date)
+        and not isinstance(value, datetime.datetime)
+    ):
+        return value.isoformat()
+    if kind is datetime.time and isinstance(value, datetime.time):
+        return value.isoformat(timespec="minutes")
+    return None
 
 
 def _humanize(name: str) -> str:
@@ -299,7 +333,11 @@ def _get_ui_hints(field_info: FieldInfo) -> dict[str, Any]:
     return {}
 
 
-def _field_to_component(name: str, field_info: FieldInfo) -> Any:
+def _field_to_component(
+    name: str,
+    field_info: FieldInfo,
+    defaults: dict[str, Any] | None = None,
+) -> Any:
     """Map a single Pydantic field to the appropriate form component(s)."""
     from prefab_ui.components.checkbox import Checkbox
     from prefab_ui.components.column import Column
@@ -320,9 +358,12 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
 
     label_text = field_info.title or _humanize(name)
     placeholder = field_info.description or label_text
-    default = (
-        field_info.default if field_info.default is not PydanticUndefined else None
-    )
+    if defaults is not None and name in defaults:
+        default = defaults[name]
+    elif field_info.default is not PydanticUndefined:
+        default = field_info.default
+    else:
+        default = None
     constraints = _extract_constraints(field_info)
     ui_hints = _get_ui_hints(field_info)
 
@@ -385,26 +426,34 @@ def _field_to_component(name: str, field_info: FieldInfo) -> Any:
 
     # date/time types → specialized input
     if inner is datetime.date:
+        value = _format_date_default(default, datetime.date)
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(input_type="date", name=name, required=required),
+            Input(input_type="date", name=name, value=value, required=required),
         ]
         return col
 
     if inner is datetime.time:
+        value = _format_date_default(default, datetime.time)
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(input_type="time", name=name, required=required),
+            Input(input_type="time", name=name, value=value, required=required),
         ]
         return col
 
     if inner is datetime.datetime:
+        value = _format_date_default(default, datetime.datetime)
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(input_type="datetime-local", name=name, required=required),
+            Input(
+                input_type="datetime-local",
+                name=name,
+                value=value,
+                required=required,
+            ),
         ]
         return col
 

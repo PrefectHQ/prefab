@@ -53,6 +53,27 @@ Form.from_model(
 | `json_schema_extra={"ui": {"rows": N}}` | Textarea rows |
 | `exclude=True` | Skip field entirely |
 
+## Runtime Defaults (Prefill)
+
+Use `defaults=` to pre-populate fields at render time. This is distinct
+from `Field(default=...)` — model defaults are baked into the class,
+while `defaults=` overrides them for a single render. Useful when an
+agent already knows some values and wants the user to edit a filled-in
+form rather than a blank one.
+
+```python
+Form.from_model(
+    BugReport,
+    defaults={"title": "Login broken on Safari", "severity": "high"},
+    on_submit=CallTool("file_bug"),
+)
+```
+
+Partial dicts are fine — missing keys fall back to the model's field
+defaults. Unknown keys raise `ValueError` to catch typos. Date/time
+values accept either Python `date`/`datetime`/`time` objects or ISO
+strings.
+
 ## Auto-filled Arguments
 
 When `on_submit` is a `CallTool` with no explicit `arguments`, they are

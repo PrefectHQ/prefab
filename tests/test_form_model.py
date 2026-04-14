@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime
 from typing import Literal
 
+import pytest
 from pydantic import BaseModel, Field, SecretStr
 
 from prefab_ui.actions import (
@@ -459,6 +460,147 @@ class TestFromModelContextIsolation:
         form = Form.from_model(M)
         assert form.type == "Form"
         assert len(form.children) == 1  # name col, no button (no on_submit)
+
+
+# ---------------------------------------------------------------------------
+# defaults (runtime prefill)
+# ---------------------------------------------------------------------------
+
+
+class TestDefaults:
+    """`defaults=` overrides model Field defaults for this render only."""
+
+    def test_defaults_prefill_text_input(self):
+        class M(BaseModel):
+            title: str
+
+        form = Form.from_model(M, defaults={"title": "Login broken"})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "Login broken"
+
+    def test_defaults_override_field_default(self):
+        class M(BaseModel):
+            severity: str = "low"
+
+        form = Form.from_model(M, defaults={"severity": "high"})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "high"
+
+    def test_defaults_prefill_number(self):
+        class M(BaseModel):
+            age: int
+
+        form = Form.from_model(M, defaults={"age": 42})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "42"
+
+    def test_defaults_prefill_bool(self):
+        class M(BaseModel):
+            active: bool = False
+
+        form = Form.from_model(M, defaults={"active": True})
+        j = form.to_json()
+        checkbox = j["children"][0]
+        assert checkbox["type"] == "Checkbox"
+        assert checkbox["value"] is True
+
+    def test_defaults_prefill_literal_selects_option(self):
+        class M(BaseModel):
+            size: Literal["sm", "md", "lg"] = "sm"
+
+        form = Form.from_model(M, defaults={"size": "lg"})
+        j = form.to_json()
+        select = j["children"][0]["children"][1]
+        selected = [o for o in select["children"] if o.get("selected")]
+        assert len(selected) == 1
+        assert selected[0]["value"] == "lg"
+
+    def test_defaults_prefill_textarea(self):
+        class M(BaseModel):
+            bio: str = Field(
+                default="",
+                json_schema_extra={"ui": {"type": "textarea", "rows": 3}},
+            )
+
+        form = Form.from_model(M, defaults={"bio": "Hello world"})
+        j = form.to_json()
+        textarea = j["children"][0]["children"][1]
+        assert textarea["value"] == "Hello world"
+
+    def test_defaults_prefill_date(self):
+        class M(BaseModel):
+            when: datetime.date
+
+        form = Form.from_model(M, defaults={"when": datetime.date(2026, 4, 14)})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "2026-04-14"
+
+    def test_defaults_prefill_datetime(self):
+        class M(BaseModel):
+            when: datetime.datetime
+
+        form = Form.from_model(
+            M,
+            defaults={"when": datetime.datetime(2026, 4, 14, 9, 30)},
+        )
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "2026-04-14T09:30"
+
+    def test_defaults_prefill_date_from_string(self):
+        """ISO strings pass through — what FastMCP will send over the wire."""
+
+        class M(BaseModel):
+            when: datetime.date
+
+        form = Form.from_model(M, defaults={"when": "2026-04-14"})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["value"] == "2026-04-14"
+
+    def test_defaults_partial_leaves_other_fields_alone(self):
+        class M(BaseModel):
+            title: str
+            severity: str = "low"
+
+        form = Form.from_model(M, defaults={"title": "Only title"})
+        j = form.to_json()
+        title_input = j["children"][0]["children"][1]
+        severity_input = j["children"][1]["children"][1]
+        assert title_input["value"] == "Only title"
+        assert severity_input["value"] == "low"
+
+    def test_defaults_unknown_key_raises(self):
+        class M(BaseModel):
+            title: str
+
+        with pytest.raises(ValueError, match="unknown field"):
+            Form.from_model(M, defaults={"not_a_field": "typo"})
+
+    def test_defaults_works_with_fields_only(self):
+        class M(BaseModel):
+            title: str
+
+        [col] = Form.from_model(M, fields_only=True, defaults={"title": "hi"})
+        input_j = col.children[1].to_json()
+        assert input_j["value"] == "hi"
+
+    def test_defaults_prefill_secret_str(self):
+        """SecretStr input renders without leaking the value back into HTML."""
+
+        class M(BaseModel):
+            password: SecretStr
+
+        # Passing a default should render as a password input; we don't
+        # assert the value is exposed — secrets shouldn't round-trip.
+        form = Form.from_model(M, defaults={"password": "hunter2"})
+        j = form.to_json()
+        input_j = j["children"][0]["children"][1]
+        assert input_j["inputType"] == "password"
 
 
 # ---------------------------------------------------------------------------
