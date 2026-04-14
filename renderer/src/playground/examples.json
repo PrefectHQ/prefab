@@ -1032,6 +1032,11 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
+    "code": "from typing import Literal\nfrom pydantic import BaseModel\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions.mcp import CallTool\n\nclass BugReport(BaseModel):\n    title: str\n    severity: Literal[\"low\", \"medium\", \"high\"] = \"low\"\n    reproducible: bool = False\n\nForm.from_model(\n    BugReport,\n    defaults={\n        \"title\": \"Login button unresponsive on Safari\",\n        \"severity\": \"high\",\n        \"reproducible\": True,\n    },\n    on_submit=CallTool(\"file_bug\"),\n)"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
     "code": "from pydantic import BaseModel, Field\nfrom prefab_ui.components import Form\nfrom prefab_ui.actions import ShowToast\nfrom prefab_ui.actions.mcp import CallTool\n\nclass Contact(BaseModel):\n    name: str = Field(min_length=1)\n    email: str\n\nForm.from_model(\n    Contact,\n    on_submit=CallTool(\n        \"create_contact\",\n        on_success=ShowToast(\"Contact saved!\", variant=\"success\"),\n        on_error=ShowToast(\"Could not save: {{ $error }}\", variant=\"error\"),\n    ),\n)"
   },
   {

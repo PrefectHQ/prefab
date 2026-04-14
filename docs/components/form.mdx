@@ -647,6 +647,132 @@ The full metadata mapping:
 | `Field(exclude=True)` | Skip field entirely |
 | Optional type or default value | Label shows "optional" indicator |
 
+### Runtime Defaults
+
+`Field(default=...)` bakes values into the model class — they're the same on every render. For context-specific prefill — an agent that already knows the user's answers, or a form opened to edit an existing record — pass `defaults=` at render time. The dict overlays onto the model's class-level defaults, so you only need to include the keys you want to set.
+
+<ComponentPreview json={{"view":{"cssClass":"gap-4","type":"Form","onSubmit":{"onError":{"action":"showToast","message":"{{ $error }}","variant":"error"},"action":"toolCall","tool":"file_bug","arguments":{"data":{"title":"{{ title }}","severity":"{{ severity }}","reproducible":"{{ reproducible }}"}}},"children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Title","optional":false},{"name":"title","value":"Login button unresponsive on Safari","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":true}]},{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Severity","optional":true},{"name":"severity","type":"Select","placeholder":"Severity","size":"default","disabled":false,"required":false,"invalid":false,"children":[{"type":"SelectOption","value":"low","label":"Low","selected":false,"disabled":false},{"type":"SelectOption","value":"medium","label":"Medium","selected":false,"disabled":false},{"type":"SelectOption","value":"high","label":"High","selected":true,"disabled":false}]}]},{"name":"reproducible","value":true,"type":"Checkbox","label":"Reproducible","disabled":false,"required":false},{"type":"Button","label":"Submit","variant":"default","size":"default","disabled":false}]},"state":{"title":"Login button unresponsive on Safari","reproducible":true}}} playground="ZnJvbSB0eXBpbmcgaW1wb3J0IExpdGVyYWwKZnJvbSBweWRhbnRpYyBpbXBvcnQgQmFzZU1vZGVsCmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMgaW1wb3J0IEZvcm0KZnJvbSBwcmVmYWJfdWkuYWN0aW9ucy5tY3AgaW1wb3J0IENhbGxUb29sCgpjbGFzcyBCdWdSZXBvcnQoQmFzZU1vZGVsKToKICAgIHRpdGxlOiBzdHIKICAgIHNldmVyaXR5OiBMaXRlcmFsWyJsb3ciLCAibWVkaXVtIiwgImhpZ2giXSA9ICJsb3ciCiAgICByZXByb2R1Y2libGU6IGJvb2wgPSBGYWxzZQoKRm9ybS5mcm9tX21vZGVsKAogICAgQnVnUmVwb3J0LAogICAgZGVmYXVsdHM9ewogICAgICAgICJ0aXRsZSI6ICJMb2dpbiBidXR0b24gdW5yZXNwb25zaXZlIG9uIFNhZmFyaSIsCiAgICAgICAgInNldmVyaXR5IjogImhpZ2giLAogICAgICAgICJyZXByb2R1Y2libGUiOiBUcnVlLAogICAgfSwKICAgIG9uX3N1Ym1pdD1DYWxsVG9vbCgiZmlsZV9idWciKSwKKQo">
+<CodeGroup>
+```python Python icon="python"
+from typing import Literal
+from pydantic import BaseModel
+from prefab_ui.components import Form
+from prefab_ui.actions.mcp import CallTool
+
+class BugReport(BaseModel):
+    title: str
+    severity: Literal["low", "medium", "high"] = "low"
+    reproducible: bool = False
+
+Form.from_model(
+    BugReport,
+    defaults={
+        "title": "Login button unresponsive on Safari",
+        "severity": "high",
+        "reproducible": True,
+    },
+    on_submit=CallTool("file_bug"),
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-4",
+    "type": "Form",
+    "onSubmit": {
+      "onError": {"action": "showToast", "message": "{{ $error }}", "variant": "error"},
+      "action": "toolCall",
+      "tool": "file_bug",
+      "arguments": {
+        "data": {
+          "title": "{{ title }}",
+          "severity": "{{ severity }}",
+          "reproducible": "{{ reproducible }}"
+        }
+      }
+    },
+    "children": [
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Title", "optional": false},
+          {
+            "name": "title",
+            "value": "Login button unresponsive on Safari",
+            "type": "Input",
+            "inputType": "text",
+            "placeholder": "Title",
+            "disabled": false,
+            "readOnly": false,
+            "required": true
+          }
+        ]
+      },
+      {
+        "cssClass": "gap-2",
+        "type": "Column",
+        "children": [
+          {"type": "Label", "text": "Severity", "optional": true},
+          {
+            "name": "severity",
+            "type": "Select",
+            "placeholder": "Severity",
+            "size": "default",
+            "disabled": false,
+            "required": false,
+            "invalid": false,
+            "children": [
+              {
+                "type": "SelectOption",
+                "value": "low",
+                "label": "Low",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "medium",
+                "label": "Medium",
+                "selected": false,
+                "disabled": false
+              },
+              {
+                "type": "SelectOption",
+                "value": "high",
+                "label": "High",
+                "selected": true,
+                "disabled": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "reproducible",
+        "value": true,
+        "type": "Checkbox",
+        "label": "Reproducible",
+        "disabled": false,
+        "required": false
+      },
+      {
+        "type": "Button",
+        "label": "Submit",
+        "variant": "default",
+        "size": "default",
+        "disabled": false
+      }
+    ]
+  },
+  "state": {"title": "Login button unresponsive on Safari", "reproducible": true}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Unknown keys raise `ValueError` so typos don't silently no-op. Date/time values accept either Python `date`/`datetime`/`time` instances or ISO strings — handy when the prefill arrived as JSON over the wire.
+
 ### Error Handling
 
 When `on_submit` is a `CallTool` with no explicit `on_error`, `from_model()` adds a default error toast that displays the server's error message. You can override it with your own feedback.
@@ -773,6 +899,10 @@ The `$error` variable captures the error message from a failed tool call. When n
 
 <ParamField body="on_submit" type="Action | list[Action] | None" default="None">
   Action(s) fired on submit. A `CallTool` with no arguments gets auto-filled from model fields under a `data` key.
+</ParamField>
+
+<ParamField body="defaults" type="dict[str, Any] | None" default="None">
+  Runtime values keyed by field name. Overrides the model's class-level `Field(default=...)` for this render only. Partial dicts are fine — missing keys fall back to the model's defaults. Unknown keys raise `ValueError`.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

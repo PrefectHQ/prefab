@@ -106,7 +106,11 @@ def _execute_and_serialize(
         ns: dict[str, object] = {}
         if shared_ns:
             ns.update(shared_ns)
-        exec(source, ns)  # noqa: S102
+        # `dont_inherit=True` so this module's `from __future__ import annotations`
+        # doesn't propagate into the preview and turn every field annotation into
+        # a ForwardRef string — Pydantic introspection relies on real type objects.
+        code = compile(source, "<preview>", "exec", dont_inherit=True)
+        exec(code, ns)  # noqa: S102
         if shared_ns is not None:
             for k, v in ns.items():
                 if not k.startswith("_"):
