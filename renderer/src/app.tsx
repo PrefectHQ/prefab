@@ -24,7 +24,6 @@ import {
   setAppName,
   type ActionSpec,
 } from "./actions";
-import { resolveTheme, buildThemeCss } from "./themes";
 
 function injectCss(cssStrings: string[], id?: string) {
   const style = document.createElement("style");
@@ -101,7 +100,6 @@ function readInitialData(): {
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
 
-    // New wire format: css list + stylesheets list + mode
     if (data.css) {
       injectCss(data.css as string[], "prefab-css");
     }
@@ -110,19 +108,6 @@ function readInitialData(): {
     }
     if (data.mode) {
       applyMode(data.mode as string);
-    }
-
-    // Backward compat: old wire format shipped theme as structured object
-    if (!data.css && data.theme) {
-      const resolved = resolveTheme(
-        data.theme as string | Record<string, string>,
-      );
-      if (resolved) {
-        injectCss([buildThemeCss(resolved, false)], "prefab-css");
-        if ((data.theme as Record<string, unknown>).mode) {
-          applyMode((data.theme as Record<string, string>).mode);
-        }
-      }
     }
 
     return {
@@ -234,22 +219,6 @@ export function App() {
       }
       if (stylesheetUrls?.length) injectStylesheets(stylesheetUrls);
       if (mode) applyMode(mode);
-
-      // Backward compat: old wire format
-      if (!cssStrings && structured.theme) {
-        const resolved = resolveTheme(
-          structured.theme as Record<string, string>,
-        );
-        if (resolved) {
-          const css = buildThemeCss(resolved, false);
-          const existing = document.getElementById("prefab-css");
-          if (existing) existing.textContent = css;
-          else injectCss([css], "prefab-css");
-          if ((structured.theme as Record<string, unknown>).mode) {
-            applyMode((structured.theme as Record<string, string>).mode);
-          }
-        }
-      }
 
       clearAllIntervals();
       const currentHost = state.get("$host");

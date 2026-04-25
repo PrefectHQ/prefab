@@ -13,7 +13,7 @@ import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
-import { resolveTheme, buildThemeCss, toShadowDomCss } from "./themes";
+import { toShadowDomCss } from "./themes";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
@@ -199,16 +199,6 @@ export function mountPreview(
     const themeStyle = document.createElement("style");
     themeStyle.textContent = cssStrings.map(toShadowDomCss).join("\n");
     shadow.appendChild(themeStyle);
-  } else if (parsed.theme) {
-    // Backward compat: old wire format shipped theme as structured object
-    const resolved = resolveTheme(
-      parsed.theme as string | Record<string, string>,
-    );
-    if (resolved) {
-      const themeStyle = document.createElement("style");
-      themeStyle.textContent = buildThemeCss(resolved, true);
-      shadow.appendChild(themeStyle);
-    }
   }
 
   // Mount React
