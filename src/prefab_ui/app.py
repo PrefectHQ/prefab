@@ -121,7 +121,11 @@ class PrefabApp(BaseModel):
     )
     stylesheets: list[str] | None = Field(
         default=None,
-        description="CSS URLs or inline CSS strings to load in <head>",
+        description="External CSS URLs to load as <link> stylesheets",
+    )
+    css: list[str] | None = Field(
+        default=None,
+        description="Inline CSS strings to inject as <style> blocks",
     )
     scripts: list[str] | None = Field(
         default=None,
@@ -212,7 +216,7 @@ class PrefabApp(BaseModel):
             view=view if view is not None else wire.get("view"),
             state=state if state is not None else wire.get("state"),
             defs=defs if defs is not None else wire.get("defs"),
-            theme=theme if theme is not None else wire.get("theme"),
+            theme=theme,
         )
 
     def _wrap_view(self) -> dict[str, Any] | None:
@@ -301,11 +305,32 @@ class PrefabApp(BaseModel):
             if self.state is not None:
                 result["state"] = _serialize_state(self.state)
 
+            css_parts: list[str] = []
             if self.theme is not None:
                 if isinstance(self.theme, dict):
-                    result["theme"] = self.theme
+                    # Pre-compiled dict — emit mode separately, rest as css
+                    from prefab_ui.themes.base import Theme as _Theme
+
+                    theme_obj = _Theme(
+                        **{k: v for k, v in self.theme.items() if k != "mode"}
+                    )
+                    css_parts.append(theme_obj.to_css())
+                    if "mode" in self.theme:
+                        result["mode"] = self.theme["mode"]
                 else:
-                    result["theme"] = self.theme.to_json()
+                    css_parts.append(self.theme.to_css())
+                    if self.theme.mode is not None:
+                        result["mode"] = self.theme.mode
+
+            if self.css:
+                css_parts.extend(self.css)
+
+            css_parts = [s for s in css_parts if s.strip()]
+            if css_parts:
+                result["css"] = css_parts
+
+            if self.stylesheets:
+                result["stylesheets"] = list(self.stylesheets)
 
             if self.key_bindings:
                 from prefab_ui.actions import Action
@@ -356,12 +381,34 @@ class PrefabApp(BaseModel):
         """
         head_parts = [get_renderer_head(mode=renderer_mode, cdn_version=cdn_version)]
 
+        # Theme CSS — compiled and injected directly into <head>
+        if self.theme is not None:
+            theme_css = (
+                self.theme.to_css() if not isinstance(self.theme, dict) else None
+            )
+            if theme_css:
+                head_parts.append(f"  <style>{theme_css}</style>")
+            if (
+                self.theme.mode
+                if not isinstance(self.theme, dict)
+                else self.theme.get("mode")
+            ):
+                mode_val = (
+                    self.theme.mode
+                    if not isinstance(self.theme, dict)
+                    else self.theme["mode"]
+                )
+                head_parts.append(
+                    f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val == "dark")});</script>'
+                )
+
+        if self.css:
+            for entry in self.css:
+                head_parts.append(f"  <style>{entry}</style>")
+
         if self.stylesheets:
-            for entry in self.stylesheets:
-                if "{" in entry:
-                    head_parts.append(f"  <style>{entry}</style>")
-                else:
-                    head_parts.append(f'  <link rel="stylesheet" href="{entry}">')
+            for url in self.stylesheets:
+                head_parts.append(f'  <link rel="stylesheet" href="{url}">')
 
         if self.scripts:
             for url in self.scripts:
@@ -384,16 +431,16 @@ class PrefabApp(BaseModel):
                 f"  <script>\nwindow.__prefab_handlers = {{\n{obj}\n}};\n  </script>"
             )
 
+        # Strip css/stylesheets/mode from embedded JSON — they're already in <head>
+        wire = self.to_json(tool_resolver=tool_resolver)
+        wire.pop("css", None)
+        wire.pop("stylesheets", None)
+        wire.pop("mode", None)
+
         if pretty:
-            data_json = json.dumps(
-                self.to_json(tool_resolver=tool_resolver),
-                indent=2,
-            )
+            data_json = json.dumps(wire, indent=2)
         else:
-            data_json = json.dumps(
-                self.to_json(tool_resolver=tool_resolver),
-                separators=(",", ":"),
-            )
+            data_json = json.dumps(wire, separators=(",", ":"))
         # Escape </ to prevent premature closing of the script tag
         safe_json = data_json.replace("</", r"<\/")
 
@@ -422,10 +469,8 @@ class PrefabApp(BaseModel):
             result["connect_domains"] = list(self.connect_domains)
 
         if self.stylesheets:
-            urls = [s for s in self.stylesheets if "{" not in s]
-            if urls:
-                origins = sorted({_get_origin(url) for url in urls})
-                result["style_domains"] = origins
+            origins = sorted({_get_origin(url) for url in self.stylesheets})
+            result["style_domains"] = origins
 
         if self.scripts:
             origins = sorted({_get_origin(url) for url in self.scripts})

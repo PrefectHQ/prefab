@@ -25,6 +25,26 @@ import {
   type ActionSpec,
 } from "./actions";
 import { resolveTheme, buildThemeCss } from "./themes";
+
+function injectCss(cssStrings: string[], id?: string) {
+  const style = document.createElement("style");
+  if (id) style.id = id;
+  style.textContent = cssStrings.join("\n");
+  document.head.appendChild(style);
+}
+
+function injectStylesheets(urls: string[]) {
+  for (const url of urls) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = url;
+    document.head.appendChild(link);
+  }
+}
+
+function applyMode(mode: string) {
+  document.documentElement.classList.toggle("dark", mode === "dark");
+}
 import {
   SUPPORTED_VERSIONS,
   applyTheme,
@@ -81,16 +101,27 @@ function readInitialData(): {
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
 
-    // Apply theme overrides (string name or custom object)
-    if (data.theme) {
+    // New wire format: css list + stylesheets list + mode
+    if (data.css) {
+      injectCss(data.css as string[], "prefab-css");
+    }
+    if (data.stylesheets) {
+      injectStylesheets(data.stylesheets as string[]);
+    }
+    if (data.mode) {
+      applyMode(data.mode as string);
+    }
+
+    // Backward compat: old wire format shipped theme as structured object
+    if (!data.css && data.theme) {
       const resolved = resolveTheme(
         data.theme as string | Record<string, string>,
       );
       if (resolved) {
-        const style = document.createElement("style");
-        style.id = "prefab-theme";
-        style.textContent = buildThemeCss(resolved, false);
-        document.head.appendChild(style);
+        injectCss([buildThemeCss(resolved, false)], "prefab-css");
+        if ((data.theme as Record<string, unknown>).mode) {
+          applyMode((data.theme as Record<string, string>).mode);
+        }
       }
     }
 
@@ -191,6 +222,34 @@ export function App() {
       // Update key bindings from tool result (clear if absent)
       keyBindingsRef.current =
         (structured.keyBindings as KeyBindings | undefined) ?? {};
+
+      // Inject CSS/stylesheets from wire
+      const cssStrings = structured.css as string[] | undefined;
+      const stylesheetUrls = structured.stylesheets as string[] | undefined;
+      const mode = structured.mode as string | undefined;
+      if (cssStrings?.length) {
+        const existing = document.getElementById("prefab-css");
+        if (existing) existing.textContent = cssStrings.join("\n");
+        else injectCss(cssStrings, "prefab-css");
+      }
+      if (stylesheetUrls?.length) injectStylesheets(stylesheetUrls);
+      if (mode) applyMode(mode);
+
+      // Backward compat: old wire format
+      if (!cssStrings && structured.theme) {
+        const resolved = resolveTheme(
+          structured.theme as Record<string, string>,
+        );
+        if (resolved) {
+          const css = buildThemeCss(resolved, false);
+          const existing = document.getElementById("prefab-css");
+          if (existing) existing.textContent = css;
+          else injectCss([css], "prefab-css");
+          if ((structured.theme as Record<string, unknown>).mode) {
+            applyMode((structured.theme as Record<string, string>).mode);
+          }
+        }
+      }
 
       clearAllIntervals();
       const currentHost = state.get("$host");
