@@ -13,7 +13,7 @@ import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
-import { resolveTheme, buildThemeCss } from "./themes";
+import { resolveTheme, buildThemeCss, toShadowDomCss } from "./themes";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
 // plugin, which strips @property declarations and emits initial values as
@@ -179,15 +179,28 @@ export function mountPreview(
   // Parse JSON — envelope uses view/state keys
   const parsed = JSON.parse(json);
   const tree: ComponentNode = parsed.view ?? parsed;
-  const reserved = new Set(["view", "state", "theme"]);
+  const reserved = new Set([
+    "view",
+    "state",
+    "theme",
+    "css",
+    "stylesheets",
+    "mode",
+  ]);
   const userData: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(parsed)) {
     if (!reserved.has(k)) userData[k] = v;
   }
   const initialState = { ...userData, ...(parsed.state ?? {}) };
 
-  // Apply theme overrides inside shadow DOM
-  if (parsed.theme) {
+  // New wire format: css list compiled in Python, transform selectors for shadow DOM
+  if (parsed.css) {
+    const cssStrings = parsed.css as string[];
+    const themeStyle = document.createElement("style");
+    themeStyle.textContent = cssStrings.map(toShadowDomCss).join("\n");
+    shadow.appendChild(themeStyle);
+  } else if (parsed.theme) {
+    // Backward compat: old wire format shipped theme as structured object
     const resolved = resolveTheme(
       parsed.theme as string | Record<string, string>,
     );

@@ -127,7 +127,8 @@ await micropip.install("prefab-ui", deps=False)
 export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
-  theme?: { light: string; dark: string; css: string; mode?: string };
+  css?: string[];
+  mode?: string;
   /** Short summary (last line + line number). */
   error?: string;
   /** Full Python traceback for expandable details. */
@@ -251,8 +252,10 @@ try:
     _pg_result = {"tree": _pg_wire.get("view")}
     if _pg_wire.get("state"):
         _pg_result["state"] = _pg_wire["state"]
-    if _pg_wire.get("theme"):
-        _pg_result["theme"] = _pg_wire["theme"]
+    if _pg_wire.get("css"):
+        _pg_result["css"] = _pg_wire["css"]
+    if _pg_wire.get("mode"):
+        _pg_result["mode"] = _pg_wire["mode"]
 
     _pg_json_result = _json.dumps(_pg_result)
 finally:
@@ -268,7 +271,8 @@ _pg_json_result
     return {
       tree: result.tree as ComponentNode,
       state: result.state ?? {},
-      theme: result.theme,
+      css: result.css,
+      mode: result.mode,
     };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
