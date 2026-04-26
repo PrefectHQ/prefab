@@ -10128,7 +10128,10 @@ class PrefabApp(BaseModel):
                 if isinstance(self.theme, dict):
                     # Pre-compiled dict — emit mode separately, rest as css
                     from prefab_ui.themes.base import Theme as _Theme
-                    theme_obj = _Theme(**{k: v for k, v in self.theme.items() if k != "mode"})
+
+                    theme_obj = _Theme(
+                        **{k: v for k, v in self.theme.items() if k != "mode"}
+                    )
                     css_parts.append(theme_obj.to_css())
                     if "mode" in self.theme:
                         result["mode"] = self.theme["mode"]
@@ -10199,16 +10202,22 @@ class PrefabApp(BaseModel):
         # Theme CSS — compiled and injected directly into <head>
         if self.theme is not None:
             theme_css = (
-                self.theme.to_css()
-                if not isinstance(self.theme, dict)
-                else None
+                self.theme.to_css() if not isinstance(self.theme, dict) else None
             )
             if theme_css:
                 head_parts.append(f"  <style>{theme_css}</style>")
-            if self.theme.mode if not isinstance(self.theme, dict) else self.theme.get("mode"):
-                mode_val = self.theme.mode if not isinstance(self.theme, dict) else self.theme["mode"]
+            if (
+                self.theme.mode
+                if not isinstance(self.theme, dict)
+                else self.theme.get("mode")
+            ):
+                mode_val = (
+                    self.theme.mode
+                    if not isinstance(self.theme, dict)
+                    else self.theme["mode"]
+                )
                 head_parts.append(
-                    f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val=="dark")});<\/script>'
+                    f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val == "dark")});<\/script>'
                 )
 
         if self.css:
