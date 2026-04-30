@@ -67,6 +67,12 @@ source = "uv-dynamic-versioning"
 [tool.hatch.build.targets.wheel]
 packages = ["src/prefab_ui"]
 
+[tool.hatch.build.targets.sdist.force-include]
+"skills" = "src/prefab_ui/skills"
+
+[tool.hatch.build.targets.wheel.force-include]
+"skills" = "src/prefab_ui/skills"
+
 [tool.uv-dynamic-versioning]
 vcs = "git"
 style = "pep440"
