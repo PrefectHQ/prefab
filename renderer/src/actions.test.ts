@@ -397,6 +397,20 @@ describe("executeAction", () => {
 
       expect(state.get("err")).toBeUndefined();
     });
+
+    it("preserves $event for deferred onSuccess interpolation", async () => {
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "setState",
+        key: "submitted",
+        value: true,
+        onSuccess: { action: "setState", key: "form", value: "{{ $event }}" },
+      };
+
+      await executeAction(action, null, state, { name: "Alice" });
+
+      expect(state.get("form")).toEqual({ name: "Alice" });
+    });
   });
 
   describe("onError callback", () => {
@@ -426,6 +440,20 @@ describe("executeAction", () => {
       await executeAction(action, appAsApp, state);
 
       expect(state.get("ok")).toBeUndefined();
+    });
+
+    it("preserves $event for deferred onError interpolation", async () => {
+      app.callServerTool.mockResolvedValueOnce({ isError: true });
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "fail",
+        onError: { action: "setState", key: "rollback", value: "{{ $event }}" },
+      };
+
+      await executeAction(action, appAsApp, state, false);
+
+      expect(state.get("rollback")).toBe(false);
     });
   });
 
