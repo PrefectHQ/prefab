@@ -87,9 +87,11 @@ class PyodideSandbox:
         )
 
         # Wait for the runner to signal readiness, collecting stderr
+        assert proc.stderr is not None
+        proc_stderr = proc.stderr
         stderr_lines: list[str] = []
         while True:
-            line = await loop.run_in_executor(None, proc.stderr.readline)
+            line = await loop.run_in_executor(None, proc_stderr.readline)
             if not line and proc.poll() is not None:
                 err = "\n".join(stderr_lines)
                 raise RuntimeError(f"Pyodide sandbox failed to start:\n{err[-1000:]}")

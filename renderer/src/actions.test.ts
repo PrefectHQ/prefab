@@ -188,6 +188,64 @@ describe("executeAction", () => {
       expect(state.get("users")).toEqual([{ name: "Alice" }]);
     });
 
+    it("interpolates mixed $result templates in onSuccess callbacks", async () => {
+      app.callServerTool.mockResolvedValueOnce({
+        content: [{ type: "text", text: "Stay curious" }],
+      });
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "fetch_quote",
+        onSuccess: {
+          action: "sendMessage",
+          content: "Quote: {{ $result }}",
+        },
+      };
+
+      await executeAction(action, appAsApp, state);
+
+      expect(app.sendMessage).toHaveBeenCalledWith({
+        role: "user",
+        content: [{ type: "text", text: "Quote: Stay curious" }],
+      });
+    });
+
+    it("keeps nested onSuccess callbacks bound to the inner result", async () => {
+      app.callServerTool
+        .mockResolvedValueOnce({
+          content: [{ type: "text", text: "outer quote" }],
+        })
+        .mockResolvedValueOnce({
+          content: [{ type: "text", text: "inner explanation" }],
+        });
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "get_quote",
+        onSuccess: {
+          action: "toolCall",
+          tool: "explain_quote",
+          arguments: { quote: "{{ $result }}" },
+          onSuccess: {
+            action: "sendMessage",
+            content: "{{ $result }}",
+          },
+        },
+      };
+
+      await executeAction(action, appAsApp, state);
+
+      expect(app.callServerTool).toHaveBeenNthCalledWith(2, {
+        name: "explain_quote",
+        arguments: { quote: "outer quote" },
+        _meta: undefined,
+      });
+      expect(app.sendMessage).toHaveBeenCalledWith({
+        role: "user",
+        content: [{ type: "text", text: "inner explanation" }],
+      });
+    });
+
     it("parses JSON text content as $result", async () => {
       app.callServerTool.mockResolvedValueOnce({
         content: [
@@ -339,6 +397,20 @@ describe("executeAction", () => {
 
       expect(state.get("err")).toBeUndefined();
     });
+
+    it("preserves $event for deferred onSuccess interpolation", async () => {
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "setState",
+        key: "submitted",
+        value: true,
+        onSuccess: { action: "setState", key: "form", value: "{{ $event }}" },
+      };
+
+      await executeAction(action, null, state, { name: "Alice" });
+
+      expect(state.get("form")).toEqual({ name: "Alice" });
+    });
   });
 
   describe("onError callback", () => {
@@ -368,6 +440,20 @@ describe("executeAction", () => {
       await executeAction(action, appAsApp, state);
 
       expect(state.get("ok")).toBeUndefined();
+    });
+
+    it("preserves $event for deferred onError interpolation", async () => {
+      app.callServerTool.mockResolvedValueOnce({ isError: true });
+      const state = createStateStore();
+      const action: ActionSpec = {
+        action: "toolCall",
+        tool: "fail",
+        onError: { action: "setState", key: "rollback", value: "{{ $event }}" },
+      };
+
+      await executeAction(action, appAsApp, state, false);
+
+      expect(state.get("rollback")).toBe(false);
     });
   });
 
