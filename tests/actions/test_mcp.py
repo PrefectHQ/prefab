@@ -4,6 +4,7 @@ import types
 
 import pytest
 
+import prefab_ui.actions as actions
 from prefab_ui.actions.mcp import (
     CallTool,
     RequestDisplayMode,
@@ -12,6 +13,13 @@ from prefab_ui.actions.mcp import (
 )
 from prefab_ui.app import PrefabApp, ResolvedTool, _tool_resolver
 from prefab_ui.components import Button
+
+
+def test_mcp_actions_export_from_actions_package():
+    assert actions.CallTool is CallTool
+    assert actions.RequestDisplayMode is RequestDisplayMode
+    assert actions.SendMessage is SendMessage
+    assert actions.UpdateContext is UpdateContext
 
 
 class TestCallToolSerialization:
