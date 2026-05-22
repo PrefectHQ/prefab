@@ -144,11 +144,15 @@ export async function executeAction(
     $error: error,
   };
 
-  // Interpolate references in the action's parameters
+  // Interpolate references in the action's parameters. Lifecycle callbacks stay
+  // raw until they execute so their `$result`/`$error` context is current.
+  const { onSuccess, onError, ...actionParams } = action;
   const resolved = interpolateProps(
-    action as Record<string, unknown>,
+    actionParams as Record<string, unknown>,
     ctx,
   ) as ActionSpec;
+  if (onSuccess !== undefined) resolved.onSuccess = onSuccess;
+  if (onError !== undefined) resolved.onError = onError;
 
   // Validate resolved action against its Zod schema
   const validationError = validateAction(resolved);
