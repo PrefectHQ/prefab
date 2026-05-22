@@ -146,13 +146,45 @@ function getOrCreatePortalHost(id: string, dark: boolean): HTMLElement {
   return container;
 }
 
+function isPreviewDark(
+  parsed: Record<string, unknown>,
+  options?: { dark?: boolean },
+): boolean {
+  if (options?.dark !== undefined) return options.dark;
+  return parsed.mode === "dark";
+}
+
+function applyStyleAssets(
+  shadow: ShadowRoot,
+  parsed: Record<string, unknown>,
+): void {
+  if (Array.isArray(parsed.css)) {
+    const themeStyle = document.createElement("style");
+    themeStyle.textContent = parsed.css
+      .filter((entry): entry is string => typeof entry === "string")
+      .map(toShadowDomCss)
+      .join("\n");
+    shadow.appendChild(themeStyle);
+  }
+
+  if (Array.isArray(parsed.stylesheets)) {
+    for (const url of parsed.stylesheets) {
+      if (typeof url !== "string") continue;
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = url;
+      shadow.appendChild(link);
+    }
+  }
+}
+
 export function mountPreview(
   host: HTMLElement,
   json: string,
   options?: { dark?: boolean },
 ): MountHandle {
   // Parse JSON — envelope uses view/state keys
-  const parsed = JSON.parse(json);
+  const parsed = JSON.parse(json) as Record<string, unknown>;
 
   const shadow = host.attachShadow({ mode: "open" });
 
@@ -166,10 +198,7 @@ export function mountPreview(
   mount.setAttribute("data-prefab-mount", "");
   shadow.appendChild(mount);
 
-  const mode = parsed.mode;
-  const isDark =
-    options?.dark ??
-    (mode === "dark" ? true : mode === "light" ? false : false);
+  const isDark = isPreviewDark(parsed, options);
 
   // Apply initial dark mode
   host.classList.toggle("dark", isDark);
@@ -180,39 +209,18 @@ export function mountPreview(
   }`;
   const portalContainer = getOrCreatePortalHost(portalId, isDark);
 
-  const tree: ComponentNode = parsed.view ?? parsed;
-  const reserved = new Set([
-    "view",
-    "state",
-    "theme",
-    "css",
-    "stylesheets",
-    "mode",
-  ]);
-  const userData: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(parsed)) {
-    if (!reserved.has(k)) userData[k] = v;
-  }
-  const initialState = { ...userData, ...(parsed.state ?? {}) };
+  const { view, state, theme, css, stylesheets, mode, ...userData } = parsed;
+  void theme;
+  void css;
+  void stylesheets;
+  void mode;
+  const tree: ComponentNode = (view ?? parsed) as ComponentNode;
+  const initialState = {
+    ...userData,
+    ...((state as Record<string, unknown> | undefined) ?? {}),
+  };
 
-  // New wire format: css list compiled in Python, transform selectors for shadow DOM
-  if (parsed.css) {
-    const cssStrings = parsed.css as string[];
-    const themeStyle = document.createElement("style");
-    themeStyle.textContent = cssStrings.map(toShadowDomCss).join("\n");
-    shadow.appendChild(themeStyle);
-  }
-
-  if (parsed.stylesheets) {
-    const stylesheetUrls = parsed.stylesheets as unknown[];
-    for (const url of stylesheetUrls) {
-      if (typeof url !== "string") continue;
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = url;
-      shadow.appendChild(link);
-    }
-  }
+  applyStyleAssets(shadow, parsed);
 
   // Mount React
   let root: Root | null = createRoot(mount);
