@@ -326,16 +326,9 @@ try:
 
     _pg_wire = _pg_target.to_json()
     _pg_result = {"tree": _pg_wire.get("view")}
-    if _pg_wire.get("state"):
-        _pg_result["state"] = _pg_wire["state"]
-    if _pg_wire.get("theme"):
-        _pg_result["theme"] = _pg_wire["theme"]
-    if _pg_wire.get("css"):
-        _pg_result["css"] = _pg_wire["css"]
-    if _pg_wire.get("stylesheets"):
-        _pg_result["stylesheets"] = _pg_wire["stylesheets"]
-    if _pg_wire.get("mode"):
-        _pg_result["mode"] = _pg_wire["mode"]
+    for _pg_key in ("state", "theme", "css", "stylesheets", "mode"):
+        if _pg_wire.get(_pg_key):
+            _pg_result[_pg_key] = _pg_wire[_pg_key]
 
     _pg_json_result = _json.dumps(_pg_result)
 finally:
