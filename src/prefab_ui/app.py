@@ -89,6 +89,17 @@ def _serialize_state(state: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _theme_from_dict(theme: dict[str, Any]) -> Theme:
+    mode = theme.get("mode")
+    data: dict[str, Any] = {
+        "light_css": theme["light"] if "light" in theme else theme.get("light_css", ""),
+        "dark_css": theme["dark"] if "dark" in theme else theme.get("dark_css"),
+        "css": theme.get("css", ""),
+        "mode": mode if mode in ("light", "dark") else None,
+    }
+    return Theme.model_validate(data)
+
+
 class PrefabApp(BaseModel):
     """A complete Prefab application.
 
@@ -321,11 +332,7 @@ class PrefabApp(BaseModel):
             if self.theme is not None:
                 if isinstance(self.theme, dict):
                     # Pre-compiled dict — emit mode separately, rest as css
-                    from prefab_ui.themes.base import Theme as _Theme
-
-                    theme_obj = _Theme(
-                        **{k: v for k, v in self.theme.items() if k != "mode"}
-                    )
+                    theme_obj = _theme_from_dict(self.theme)
                     css_parts.append(theme_obj.to_css())
                     if "mode" in self.theme:
                         result["mode"] = self.theme["mode"]

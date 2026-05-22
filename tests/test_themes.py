@@ -312,6 +312,27 @@ class TestPrefabAppTheme:
         css = "\n".join(result["css"])
         assert "--primary: #3b82f6;" in css
 
+    def test_precompiled_theme_dict_in_wire_format(self):
+        app = PrefabApp.model_construct(
+            view=Text(content="hi"),
+            theme={
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "css": ".pf-progress { height: 0.625rem; }",
+                "mode": "dark",
+            },
+        )
+
+        result = app.to_json()
+        css = "\n".join(result["css"])
+
+        assert ":root" in css
+        assert "--primary: red;" in css
+        assert ".dark" in css
+        assert "--primary: blue;" in css
+        assert ".pf-progress" in css
+        assert result["mode"] == "dark"
+
 
 class TestCssAndStylesheets:
     def test_css_rendered_as_style_tag(self):
