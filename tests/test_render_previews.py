@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-import json
-import sys
-import types
-
-compact_json_module = types.ModuleType("compact_json")
-setattr(compact_json_module, "compact_json", json.dumps)
-sys.modules.setdefault("compact_json", compact_json_module)
-
 from tools.render_previews import _execute_and_serialize
 
 
