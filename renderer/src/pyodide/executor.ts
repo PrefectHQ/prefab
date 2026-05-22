@@ -136,6 +136,81 @@ export interface ExecuteResult {
   errorDetail?: string;
 }
 
+interface RawExecuteResult {
+  tree?: ComponentNode;
+  state?: Record<string, unknown>;
+  css?: unknown;
+  stylesheets?: unknown;
+  mode?: unknown;
+  theme?: unknown;
+}
+
+function stringProp(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = obj[key];
+  return typeof value === "string" ? value : undefined;
+}
+
+function stringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter(
+    (entry): entry is string => typeof entry === "string",
+  );
+  return strings.length > 0 ? strings : undefined;
+}
+
+function normalizeMode(value: unknown): string | undefined {
+  return value === "light" || value === "dark" ? value : undefined;
+}
+
+export function legacyThemeToCss(theme: unknown): {
+  css?: string[];
+  mode?: string;
+} {
+  if (!theme || typeof theme !== "object" || Array.isArray(theme)) return {};
+
+  const themeObj = theme as Record<string, unknown>;
+  const light =
+    stringProp(themeObj, "light") ?? stringProp(themeObj, "light_css");
+  const dark =
+    stringProp(themeObj, "dark") ?? stringProp(themeObj, "dark_css") ?? light;
+  const freeform = stringProp(themeObj, "css") ?? "";
+  const imports: string[] = [];
+  const rest: string[] = [];
+
+  for (const line of freeform.split("\n")) {
+    (line.trim().startsWith("@import") ? imports : rest).push(line);
+  }
+
+  let css = imports.length > 0 ? `${imports.join("\n")}\n` : "";
+  if (light) css += `:root {\n  ${light}\n}\n`;
+  if (dark) css += `.dark {\n  ${dark}\n}\n`;
+
+  const freeformRest = rest.join("\n").trim();
+  if (freeformRest) css += `${freeformRest}\n`;
+
+  return {
+    css: css.trim() ? [css] : undefined,
+    mode: normalizeMode(themeObj.mode),
+  };
+}
+
+export function normalizeExecuteResult(
+  result: RawExecuteResult,
+): ExecuteResult {
+  const legacyTheme = legacyThemeToCss(result.theme);
+
+  return {
+    tree: result.tree,
+    state: result.state ?? {},
+    css: stringArray(result.css) ?? legacyTheme.css,
+    stylesheets: stringArray(result.stylesheets),
+    mode: normalizeMode(result.mode) ?? legacyTheme.mode,
+  };
+}
+
 /**
  * Execute Python code and return the component JSON tree.
  *
@@ -253,6 +328,8 @@ try:
     _pg_result = {"tree": _pg_wire.get("view")}
     if _pg_wire.get("state"):
         _pg_result["state"] = _pg_wire["state"]
+    if _pg_wire.get("theme"):
+        _pg_result["theme"] = _pg_wire["theme"]
     if _pg_wire.get("css"):
         _pg_result["css"] = _pg_wire["css"]
     if _pg_wire.get("stylesheets"):
@@ -271,13 +348,7 @@ _pg_json_result
   try {
     const resultStr = (await pyodide.runPythonAsync(harness)) as string;
     const result = JSON.parse(resultStr);
-    return {
-      tree: result.tree as ComponentNode,
-      state: result.state ?? {},
-      css: result.css,
-      stylesheets: result.stylesheets,
-      mode: result.mode,
-    };
+    return normalizeExecuteResult(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     const allLines = message.split("\n");
