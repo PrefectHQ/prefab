@@ -24,31 +24,12 @@ import {
   setAppName,
   type ActionSpec,
 } from "./actions";
-
-function injectCss(cssStrings: string[], id?: string) {
-  const style = document.createElement("style");
-  if (id) style.id = id;
-  style.textContent = cssStrings.join("\n");
-  document.head.appendChild(style);
-}
-
-function injectStylesheets(urls: string[]) {
-  for (const url of urls) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = url;
-    document.head.appendChild(link);
-  }
-}
-
-function applyMode(mode: string) {
-  document.documentElement.classList.toggle("dark", mode === "dark");
-}
 import {
   SUPPORTED_VERSIONS,
   applyTheme,
   hostContextToState,
 } from "./shared-app-utils";
+import { applyMode, syncInlineCss, syncStylesheets } from "./style-assets";
 import type { ExecuteResult } from "./pyodide/executor";
 
 function FastMCPLogo({
@@ -100,15 +81,9 @@ function readInitialData(): {
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
 
-    if (data.css) {
-      injectCss(data.css as string[], "prefab-css");
-    }
-    if (data.stylesheets) {
-      injectStylesheets(data.stylesheets as string[]);
-    }
-    if (data.mode) {
-      applyMode(data.mode as string);
-    }
+    syncInlineCss(data.css as string[] | undefined);
+    syncStylesheets(data.stylesheets as string[] | undefined);
+    applyMode(data.mode as string | undefined);
 
     return {
       view: (data.view as ComponentNode) ?? null,
@@ -208,17 +183,12 @@ export function App() {
       keyBindingsRef.current =
         (structured.keyBindings as KeyBindings | undefined) ?? {};
 
-      // Inject CSS/stylesheets from wire
-      const cssStrings = structured.css as string[] | undefined;
-      const stylesheetUrls = structured.stylesheets as string[] | undefined;
-      const mode = structured.mode as string | undefined;
-      if (cssStrings?.length) {
-        const existing = document.getElementById("prefab-css");
-        if (existing) existing.textContent = cssStrings.join("\n");
-        else injectCss(cssStrings, "prefab-css");
-      }
-      if (stylesheetUrls?.length) injectStylesheets(stylesheetUrls);
-      if (mode) applyMode(mode);
+      syncInlineCss(structured.css as string[] | undefined);
+      syncStylesheets(structured.stylesheets as string[] | undefined);
+      applyMode(
+        structured.mode as string | undefined,
+        bridge.app?.getHostContext()?.theme,
+      );
 
       clearAllIntervals();
       const currentHost = state.get("$host");
@@ -239,6 +209,9 @@ export function App() {
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
       if (result.tree) {
+        syncInlineCss(result.css);
+        syncStylesheets(result.stylesheets);
+        applyMode(result.mode, bridge.app?.getHostContext()?.theme);
         setTree(result.tree);
         setIsStreaming(true);
         if (result.state) {

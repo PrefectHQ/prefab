@@ -355,7 +355,8 @@ class TestCssAndStylesheets:
     def test_css_not_double_injected_in_html(self):
         """css/stylesheets are in <head>, not embedded in the JSON data tag."""
         inline = ":root { --primary: red; }"
-        app = PrefabApp(view=Text(content="hi"), css=[inline])
+        url = "https://example.com/style.css"
+        app = PrefabApp(view=Text(content="hi"), css=[inline], stylesheets=[url])
         html = app.html()
         start = html.index('type="application/json">') + len('type="application/json">')
         end = html.index("</script>", start)
@@ -363,6 +364,7 @@ class TestCssAndStylesheets:
 
         baked = json.loads(html[start:end])
         assert "css" not in baked
+        assert "stylesheets" not in baked
 
 
 class TestThemeImport:

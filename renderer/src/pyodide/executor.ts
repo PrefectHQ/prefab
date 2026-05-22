@@ -128,6 +128,7 @@ export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
   css?: string[];
+  stylesheets?: string[];
   mode?: string;
   /** Short summary (last line + line number). */
   error?: string;
@@ -254,6 +255,8 @@ try:
         _pg_result["state"] = _pg_wire["state"]
     if _pg_wire.get("css"):
         _pg_result["css"] = _pg_wire["css"]
+    if _pg_wire.get("stylesheets"):
+        _pg_result["stylesheets"] = _pg_wire["stylesheets"]
     if _pg_wire.get("mode"):
         _pg_result["mode"] = _pg_wire["mode"]
 
@@ -272,6 +275,7 @@ _pg_json_result
       tree: result.tree as ComponentNode,
       state: result.state ?? {},
       css: result.css,
+      stylesheets: result.stylesheets,
       mode: result.mode,
     };
   } catch (err: unknown) {

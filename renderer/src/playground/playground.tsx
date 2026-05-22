@@ -35,6 +35,7 @@ import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
+import { syncStylesheets } from "../style-assets";
 import pako from "pako";
 
 /**
@@ -384,6 +385,7 @@ export function Playground() {
       setTree(result.tree);
       stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
       setCodeThemeCss(result.css?.join("\n") ?? "");
+      syncStylesheets(result.stylesheets);
       if (result.mode) {
         setDark(result.mode === "dark");
       }

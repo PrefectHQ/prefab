@@ -76,6 +76,18 @@ class TestPrefabAppFromJson:
         assert "css" in result
         assert "--primary: #000;" in "\n".join(result["css"])
 
+    def test_preserves_style_fields(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "css": [":root { --primary: red; }"],
+            "stylesheets": ["https://example.com/style.css"],
+            "mode": "dark",
+        }
+        result = PrefabApp.from_json(wire).to_json()
+        assert ":root { --primary: red; }" in result["css"]
+        assert result["stylesheets"] == ["https://example.com/style.css"]
+        assert result["mode"] == "dark"
+
     def test_dict_view_wrapped(self):
         view_dict = {"type": "Column", "children": []}
         app = PrefabApp(view=view_dict)
@@ -336,6 +348,11 @@ class TestPrefabAppWireFormat:
         )
         result = app.to_json()
         assert ":root { --primary: red; }" in result["css"]
+
+    def test_mode_in_wire_format(self):
+        app = PrefabApp(view=Text(content="hi"), mode="dark")
+        result = app.to_json()
+        assert result["mode"] == "dark"
 
     def test_scripts_not_in_wire_format(self):
         app = PrefabApp(

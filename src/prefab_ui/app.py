@@ -25,7 +25,7 @@ import dataclasses
 import json
 from collections.abc import Callable
 from contextvars import ContextVar
-from typing import Any
+from typing import Any, Literal
 
 import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
@@ -39,7 +39,7 @@ from prefab_ui.renderer import (
 from prefab_ui.rx import _sanitize_floats
 from prefab_ui.themes import Theme
 
-PROTOCOL_VERSION = "0.2"
+PROTOCOL_VERSION = "0.3"
 
 # ── Tool Resolver ─────────────────────────────────────────────────────
 
@@ -127,6 +127,10 @@ class PrefabApp(BaseModel):
         default=None,
         description="Inline CSS strings to inject as <style> blocks",
     )
+    mode: Literal["light", "dark"] | None = Field(
+        default=None,
+        description="Force light or dark mode in the renderer",
+    )
     scripts: list[str] | None = Field(
         default=None,
         description="External JS URLs to load in <head>",
@@ -202,6 +206,9 @@ class PrefabApp(BaseModel):
         state: dict[str, Any] | None = None,
         defs: list[Any] | dict[str, Any] | None = None,
         theme: Theme | dict[str, Any] | None = None,
+        css: list[str] | None = None,
+        stylesheets: list[str] | None = None,
+        mode: Literal["light", "dark"] | None = None,
     ) -> PrefabApp:
         """Create a PrefabApp from a wire protocol dict.
 
@@ -217,6 +224,11 @@ class PrefabApp(BaseModel):
             state=state if state is not None else wire.get("state"),
             defs=defs if defs is not None else wire.get("defs"),
             theme=theme,
+            css=css if css is not None else wire.get("css"),
+            stylesheets=(
+                stylesheets if stylesheets is not None else wire.get("stylesheets")
+            ),
+            mode=mode if mode is not None else wire.get("mode"),
         )
 
     def _wrap_view(self) -> dict[str, Any] | None:
@@ -329,6 +341,9 @@ class PrefabApp(BaseModel):
             if css_parts:
                 result["css"] = css_parts
 
+            if self.mode is not None:
+                result["mode"] = self.mode
+
             if self.stylesheets:
                 result["stylesheets"] = list(self.stylesheets)
 
@@ -388,19 +403,17 @@ class PrefabApp(BaseModel):
             )
             if theme_css:
                 head_parts.append(f"  <style>{theme_css}</style>")
-            if (
+        mode_val = self.mode
+        if mode_val is None and self.theme is not None:
+            mode_val = (
                 self.theme.mode
                 if not isinstance(self.theme, dict)
                 else self.theme.get("mode")
-            ):
-                mode_val = (
-                    self.theme.mode
-                    if not isinstance(self.theme, dict)
-                    else self.theme["mode"]
-                )
-                head_parts.append(
-                    f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val == "dark")});</script>'
-                )
+            )
+        if mode_val:
+            head_parts.append(
+                f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val == "dark")});</script>'
+            )
 
         if self.css:
             for entry in self.css:
