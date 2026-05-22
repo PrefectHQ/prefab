@@ -333,6 +333,26 @@ class TestPrefabAppTheme:
         assert ".pf-progress" in css
         assert result["mode"] == "dark"
 
+    def test_precompiled_theme_dict_in_html_output(self):
+        app = PrefabApp.model_construct(
+            view=Text(content="hi"),
+            theme={
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "css": ".pf-progress { height: 0.625rem; }",
+                "mode": "dark",
+            },
+        )
+
+        html = app.html()
+
+        assert ":root" in html
+        assert "--primary: red;" in html
+        assert ".dark" in html
+        assert "--primary: blue;" in html
+        assert ".pf-progress" in html
+        assert 'classList.toggle("dark",true)' in html
+
 
 class TestCssAndStylesheets:
     def test_css_rendered_as_style_tag(self):

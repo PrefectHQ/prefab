@@ -406,7 +406,9 @@ class PrefabApp(BaseModel):
         # Theme CSS — compiled and injected directly into <head>
         if self.theme is not None:
             theme_css = (
-                self.theme.to_css() if not isinstance(self.theme, dict) else None
+                _theme_from_dict(self.theme).to_css()
+                if isinstance(self.theme, dict)
+                else self.theme.to_css()
             )
             if theme_css:
                 head_parts.append(f"  <style>{theme_css}</style>")
