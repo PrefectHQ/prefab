@@ -178,8 +178,10 @@ def _execute_and_serialize(
     envelope: dict[str, Any] = {"view": tree}
     if state:
         envelope["state"] = _serialize_state(state)
-    if app is not None and "theme" in wire:
-        envelope["theme"] = wire["theme"]
+    if app is not None:
+        for key in ("css", "stylesheets", "mode"):
+            if key in wire:
+                envelope[key] = wire[key]
 
     return envelope
 

@@ -106,6 +106,19 @@ class TestPrefabAppFromJson:
         assert result["mode"] == "dark"
         assert "theme" not in result
 
+    def test_invalid_legacy_theme_mode_is_ignored(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "theme": {
+                "light": "--primary: red;",
+                "mode": "system",
+            },
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+
+        assert "mode" not in result
+
     def test_dict_view_wrapped(self):
         view_dict = {"type": "Column", "children": []}
         app = PrefabApp(view=view_dict)

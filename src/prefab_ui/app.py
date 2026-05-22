@@ -334,8 +334,8 @@ class PrefabApp(BaseModel):
                     # Pre-compiled dict — emit mode separately, rest as css
                     theme_obj = _theme_from_dict(self.theme)
                     css_parts.append(theme_obj.to_css())
-                    if "mode" in self.theme:
-                        result["mode"] = self.theme["mode"]
+                    if theme_obj.mode is not None:
+                        result["mode"] = theme_obj.mode
                 else:
                     css_parts.append(self.theme.to_css())
                     if self.theme.mode is not None:
@@ -417,7 +417,7 @@ class PrefabApp(BaseModel):
             mode_val = (
                 self.theme.mode
                 if not isinstance(self.theme, dict)
-                else self.theme.get("mode")
+                else _theme_from_dict(self.theme).mode
             )
         if mode_val:
             head_parts.append(
