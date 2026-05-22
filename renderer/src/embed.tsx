@@ -201,6 +201,17 @@ export function mountPreview(
     shadow.appendChild(themeStyle);
   }
 
+  if (parsed.stylesheets) {
+    const stylesheetUrls = parsed.stylesheets as unknown[];
+    for (const url of stylesheetUrls) {
+      if (typeof url !== "string") continue;
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = url;
+      shadow.appendChild(link);
+    }
+  }
+
   // Mount React
   let root: Root | null = createRoot(mount);
   root.render(

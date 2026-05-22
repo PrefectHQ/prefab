@@ -95,9 +95,13 @@ def _theme_from_dict(theme: dict[str, Any]) -> Theme:
         "light_css": theme["light"] if "light" in theme else theme.get("light_css", ""),
         "dark_css": theme["dark"] if "dark" in theme else theme.get("dark_css"),
         "css": theme.get("css", ""),
-        "mode": mode if mode in ("light", "dark") else None,
+        "mode": _normalize_mode(mode),
     }
     return Theme.model_validate(data)
+
+
+def _normalize_mode(value: Any) -> Literal["light", "dark"] | None:
+    return value if value in ("light", "dark") else None
 
 
 class PrefabApp(BaseModel):
@@ -239,7 +243,7 @@ class PrefabApp(BaseModel):
             stylesheets=(
                 stylesheets if stylesheets is not None else wire.get("stylesheets")
             ),
-            mode=mode if mode is not None else wire.get("mode"),
+            mode=mode if mode is not None else _normalize_mode(wire.get("mode")),
         )
 
     def _wrap_view(self) -> dict[str, Any] | None:

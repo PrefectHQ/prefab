@@ -88,6 +88,16 @@ class TestPrefabAppFromJson:
         assert result["stylesheets"] == ["https://example.com/style.css"]
         assert result["mode"] == "dark"
 
+    def test_invalid_wire_mode_is_ignored(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "mode": "system",
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+
+        assert "mode" not in result
+
     def test_preserves_legacy_theme_field_as_css(self):
         wire = {
             "view": {"type": "Text", "content": "hi"},
