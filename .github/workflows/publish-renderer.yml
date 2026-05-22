@@ -48,8 +48,8 @@ jobs:
       - name: Install renderer dependencies
         working-directory: renderer
         run: |
-          CUTOFF=$(date -u -d "7 days ago" "+%Y-%m-%dT%H:%M:%SZ")
-          npm ci --before "$CUTOFF"
+          node ../.github/scripts/check-npm-package-age.mjs --lockfile package-lock.json --days 7
+          npm ci
 
       - run: npm run build:publish
         working-directory: renderer
