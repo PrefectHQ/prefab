@@ -9924,6 +9924,22 @@ def _normalize_mode(value: Any) -> Literal["light", "dark"] | None:
     return value if value in ("light", "dark") else None
 
 
+def _theme_css(theme: Theme | dict[str, Any] | None) -> str | None:
+    if theme is None:
+        return None
+    return (
+        _theme_from_dict(theme).to_css() if isinstance(theme, dict) else theme.to_css()
+    )
+
+
+def _theme_mode(
+    theme: Theme | dict[str, Any] | None,
+) -> Literal["light", "dark"] | None:
+    if theme is None:
+        return None
+    return _theme_from_dict(theme).mode if isinstance(theme, dict) else theme.mode
+
+
 class PrefabApp(BaseModel):
     """A complete Prefab application.
 
@@ -10227,22 +10243,11 @@ class PrefabApp(BaseModel):
         """
         head_parts = [get_renderer_head(mode=renderer_mode, cdn_version=cdn_version)]
 
-        # Theme CSS — compiled and injected directly into <head>
-        if self.theme is not None:
-            theme_css = (
-                _theme_from_dict(self.theme).to_css()
-                if isinstance(self.theme, dict)
-                else self.theme.to_css()
-            )
-            if theme_css:
-                head_parts.append(f"  <style>{theme_css}</style>")
-        mode_val = self.mode
-        if mode_val is None and self.theme is not None:
-            mode_val = (
-                self.theme.mode
-                if not isinstance(self.theme, dict)
-                else _theme_from_dict(self.theme).mode
-            )
+        theme_css = _theme_css(self.theme)
+        if theme_css:
+            head_parts.append(f"  <style>{theme_css}</style>")
+
+        mode_val = self.mode if self.mode is not None else _theme_mode(self.theme)
         if mode_val:
             head_parts.append(
                 f'  <script>document.documentElement.classList.toggle("dark",{json.dumps(mode_val == "dark")});<\/script>'
