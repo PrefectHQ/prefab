@@ -151,6 +151,9 @@ export function mountPreview(
   json: string,
   options?: { dark?: boolean },
 ): MountHandle {
+  // Parse JSON — envelope uses view/state keys
+  const parsed = JSON.parse(json);
+
   const shadow = host.attachShadow({ mode: "open" });
 
   // Inject processed CSS
@@ -163,12 +166,13 @@ export function mountPreview(
   mount.setAttribute("data-prefab-mount", "");
   shadow.appendChild(mount);
 
-  const isDark = options?.dark ?? false;
+  const mode = parsed.mode;
+  const isDark =
+    options?.dark ??
+    (mode === "dark" ? true : mode === "light" ? false : false);
 
   // Apply initial dark mode
-  if (isDark) {
-    host.classList.add("dark");
-  }
+  host.classList.toggle("dark", isDark);
 
   // Body-level portal host with shadow DOM for overlays
   const portalId = `prefab-portal-${
@@ -176,8 +180,6 @@ export function mountPreview(
   }`;
   const portalContainer = getOrCreatePortalHost(portalId, isDark);
 
-  // Parse JSON — envelope uses view/state keys
-  const parsed = JSON.parse(json);
   const tree: ComponentNode = parsed.view ?? parsed;
   const reserved = new Set([
     "view",
