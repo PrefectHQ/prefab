@@ -36,5 +36,9 @@ jobs:
           cache: "npm"
           cache-dependency-path: renderer/package-lock.json
 
-      - run: npm ci
+      - name: Install renderer dependencies
+        run: |
+          CUTOFF=$(date -u -d "7 days ago" "+%Y-%m-%dT%H:%M:%SZ")
+          npm ci --before "$CUTOFF"
+
       - run: npm test

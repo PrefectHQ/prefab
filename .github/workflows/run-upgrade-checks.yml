@@ -38,7 +38,9 @@ jobs:
           resolution: upgrade
 
       - name: Install renderer dependencies
-        run: cd renderer && npm ci
+        run: |
+          CUTOFF=$(date -u -d "7 days ago" "+%Y-%m-%dT%H:%M:%SZ")
+          cd renderer && npm ci --before "$CUTOFF"
 
       - name: Run prek
         uses: j178/prek-action@v1

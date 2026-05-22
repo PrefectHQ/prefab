@@ -25,7 +25,9 @@ jobs:
           resolution: locked
 
       - name: Install renderer dependencies
-        run: cd renderer && npm ci
+        run: |
+          CUTOFF=$(date -u -d "7 days ago" "+%Y-%m-%dT%H:%M:%SZ")
+          cd renderer && npm ci --before "$CUTOFF"
 
       - name: Build docs
         run: uv run prefab dev build-docs

@@ -45,8 +45,11 @@ jobs:
           cd docs-package && npm version "$VERSION" --no-git-tag-version
           cd ../playground-package && npm version "$VERSION" --no-git-tag-version
 
-      - run: npm ci
+      - name: Install renderer dependencies
         working-directory: renderer
+        run: |
+          CUTOFF=$(date -u -d "7 days ago" "+%Y-%m-%dT%H:%M:%SZ")
+          npm ci --before "$CUTOFF"
 
       - run: npm run build:publish
         working-directory: renderer
