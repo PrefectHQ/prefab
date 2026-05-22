@@ -88,6 +88,24 @@ class TestPrefabAppFromJson:
         assert result["stylesheets"] == ["https://example.com/style.css"]
         assert result["mode"] == "dark"
 
+    def test_preserves_legacy_theme_field_as_css(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "theme": {
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "mode": "dark",
+            },
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+        css = "\n".join(result["css"])
+
+        assert "--primary: red;" in css
+        assert "--primary: blue;" in css
+        assert result["mode"] == "dark"
+        assert "theme" not in result
+
     def test_dict_view_wrapped(self):
         view_dict = {"type": "Column", "children": []}
         app = PrefabApp(view=view_dict)

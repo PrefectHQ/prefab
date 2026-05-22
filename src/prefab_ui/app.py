@@ -234,7 +234,7 @@ class PrefabApp(BaseModel):
             view=view if view is not None else wire.get("view"),
             state=state if state is not None else wire.get("state"),
             defs=defs if defs is not None else wire.get("defs"),
-            theme=theme,
+            theme=theme if theme is not None else wire.get("theme"),
             css=css if css is not None else wire.get("css"),
             stylesheets=(
                 stylesheets if stylesheets is not None else wire.get("stylesheets")
