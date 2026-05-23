@@ -782,14 +782,17 @@ Visual divider between options. No parameters.
 ```json Combobox
 {
   "type": "Combobox",
+  "id?": "string",
+  "onMount?": "any",
   "children?": "[Component]",
   "let?": "object",
   "name?": "string",
+  "value?": "string",
   "placeholder?": "string",
   "searchPlaceholder?": "string",
   "disabled?": false,
-  "side?": "'top' | 'right' | 'bottom' | 'left'",
-  "align?": "'start' | 'center' | 'end'",
+  "side?": "top | right | bottom | left",
+  "align?": "start | center | end",
   "invalid?": false,
   "onChange?": "Action | Action[]",
   "cssClass?": "string"
@@ -799,6 +802,8 @@ Visual divider between options. No parameters.
 ```json ComboboxOption
 {
   "type": "ComboboxOption",
+  "id?": "string",
+  "onMount?": "any",
   "value": "string (required)",
   "label": "string (required)",
   "disabled?": false,
@@ -809,7 +814,10 @@ Visual divider between options. No parameters.
 ```json ComboboxGroup
 {
   "type": "ComboboxGroup",
+  "id?": "string",
+  "onMount?": "any",
   "children?": "[Component]",
+  "let?": "object",
   "cssClass?": "string"
 }
 ```
@@ -817,6 +825,8 @@ Visual divider between options. No parameters.
 ```json ComboboxLabel
 {
   "type": "ComboboxLabel",
+  "id?": "string",
+  "onMount?": "any",
   "label": "string (required)",
   "cssClass?": "string"
 }
@@ -825,8 +835,10 @@ Visual divider between options. No parameters.
 ```json ComboboxSeparator
 {
   "type": "ComboboxSeparator",
+  "id?": "string",
+  "onMount?": "any",
   "cssClass?": "string"
 }
 ```
 
-For the complete protocol schema, see [Combobox](/protocol/combobox), [ComboboxOption](/protocol/combobox-option).
+For the complete protocol schema, see [Combobox](/protocol/combobox), [ComboboxOption](/protocol/combobox-option), [ComboboxGroup](/protocol/combobox-group), [ComboboxLabel](/protocol/combobox-label), [ComboboxSeparator](/protocol/combobox-separator).
