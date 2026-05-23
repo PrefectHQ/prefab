@@ -45,8 +45,11 @@ jobs:
           cd docs-package && npm version "$VERSION" --no-git-tag-version
           cd ../playground-package && npm version "$VERSION" --no-git-tag-version
 
-      - run: npm ci
+      - name: Install renderer dependencies
         working-directory: renderer
+        run: |
+          node ../.github/scripts/check-npm-package-age.mjs --lockfile package-lock.json --days 7
+          npm ci
 
       - run: npm run build:publish
         working-directory: renderer

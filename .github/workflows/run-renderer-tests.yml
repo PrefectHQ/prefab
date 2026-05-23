@@ -36,5 +36,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: renderer/package-lock.json
 
-      - run: npm ci
+      - name: Install renderer dependencies
+        run: |
+          git fetch origin "${{ github.base_ref || github.ref_name }}" --depth=1
+          git show "origin/${{ github.base_ref || github.ref_name }}:renderer/package-lock.json" > /tmp/base-package-lock.json
+          node ../.github/scripts/check-npm-package-age.mjs --lockfile package-lock.json --base-lockfile /tmp/base-package-lock.json --days 7
+          npm ci
+
       - run: npm test
