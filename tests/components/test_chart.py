@@ -46,6 +46,11 @@ class TestBarChart:
         assert j["stacked"] is True
         assert j["horizontal"] is True
 
+    def test_value_format(self):
+        j = BarChart(data=SAMPLE_DATA, series=SERIES, value_format="currency").to_json()
+        assert j["valueFormat"] == "currency"
+        assert "yAxisFormat" not in j
+
 
 class TestLineChart:
     def test_serializes_basic(self):
@@ -60,6 +65,13 @@ class TestLineChart:
         assert j["curve"] == "smooth"
         assert j["showDots"] is True
 
+    def test_percent_format(self):
+        j = LineChart(
+            data=SAMPLE_DATA, series=SERIES, value_format="percent:1"
+        ).to_json()
+        assert j["valueFormat"] == "percent:1"
+        assert "yAxisFormat" not in j
+
 
 class TestAreaChart:
     def test_serializes_basic(self):
@@ -69,6 +81,11 @@ class TestAreaChart:
     def test_stacked(self):
         j = AreaChart(data=SAMPLE_DATA, series=SERIES, stacked=True).to_json()
         assert j["stacked"] is True
+
+    def test_compact_format(self):
+        j = AreaChart(data=SAMPLE_DATA, series=SERIES, value_format="compact").to_json()
+        assert j["valueFormat"] == "compact"
+        assert "yAxisFormat" not in j
 
 
 class TestPieChart:
@@ -88,6 +105,16 @@ class TestPieChart:
             data=data, data_key="val", name_key="name", inner_radius=60
         ).to_json()
         assert j["innerRadius"] == 60
+
+    def test_value_format(self):
+        data = [{"name": "A", "share": 0.4}]
+        j = PieChart(
+            data=data,
+            data_key="share",
+            name_key="name",
+            value_format="percent:1",
+        ).to_json()
+        assert j["valueFormat"] == "percent:1"
 
 
 class TestRadarChart:
@@ -112,6 +139,16 @@ class TestRadialChart:
         assert j["type"] == "RadialChart"
         assert j["dataKey"] == "visitors"
         assert j["nameKey"] == "browser"
+
+    def test_value_format(self):
+        data = [{"browser": "Chrome", "revenue": 275}]
+        j = RadialChart(
+            data=data,
+            data_key="revenue",
+            name_key="browser",
+            value_format="currency",
+        ).to_json()
+        assert j["valueFormat"] == "currency"
 
 
 class TestScatterChart:
