@@ -1,7 +1,11 @@
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, it, expect } from "vitest";
+import { PrefabDataTable } from "./data-display";
 import {
   globalFilter,
   nextSortAction,
+  sortableHeaderButtonClass,
   toggleRowSelection,
 } from "./data-table-logic";
 
@@ -52,6 +56,27 @@ describe("nextSortAction", () => {
   });
 });
 
+describe("sortableHeaderButtonClass", () => {
+  it("matches whole alignment class tokens", () => {
+    expect(sortableHeaderButtonClass("text-right-ish")).toBe("");
+    expect(sortableHeaderButtonClass("font-medium text-right")).toBe(
+      "w-full justify-start flex-row-reverse",
+    );
+  });
+
+  it("preserves responsive variant prefixes", () => {
+    expect(sortableHeaderButtonClass("text-left sm:text-right")).toBe(
+      "w-full justify-start flex-row sm:w-full sm:justify-start sm:flex-row-reverse",
+    );
+  });
+
+  it("resets reversed row direction for later non-right alignments", () => {
+    expect(sortableHeaderButtonClass("text-right sm:text-left")).toBe(
+      "w-full justify-start flex-row-reverse sm:w-full sm:justify-start sm:flex-row",
+    );
+  });
+});
+
 describe("toggleRowSelection", () => {
   it("selects a new row", () => {
     const result = toggleRowSelection(null, "row-1");
@@ -69,5 +94,33 @@ describe("toggleRowSelection", () => {
     const result = toggleRowSelection("row-1", "row-1");
     expect(result.selectedId).toBeNull();
     expect(result.shouldFireAction).toBe(false);
+  });
+});
+
+describe("PrefabDataTable", () => {
+  it("aligns a sortable right-aligned header label with its cell values", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [
+          { key: "fund", header: "Fund", sortable: true },
+          {
+            key: "ytd_expense",
+            header: "YTD Expense",
+            headerClass: "text-right",
+            cellClass: "text-right",
+            sortable: true,
+          },
+        ],
+        rows: [{ fund: "Reserve Pool", ytd_expense: 97336.1 }],
+      }),
+    );
+
+    const header = markup.match(
+      /<th[^>]*text-right[^>]*>.*?YTD Expense.*?<\/th>/,
+    )?.[0];
+
+    expect(header).toContain("w-full");
+    expect(header).toContain("justify-start");
+    expect(header).toContain("flex-row-reverse");
   });
 });
