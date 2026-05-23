@@ -235,7 +235,7 @@ def test_component_json_validates_against_own_schema(cls: type[Component]) -> No
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
         json_output = instance.to_json()
-    schema = cls.model_json_schema()
+    schema = cls.model_json_schema(mode="serialization")
 
     jsonschema.validate(instance=json_output, schema=schema)
 
