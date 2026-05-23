@@ -283,7 +283,7 @@ class PrefabApp(BaseModel):
 
         if isinstance(self.view, dict):
             # Pre-serialized dict — wrap in a serialized Div
-            wrapper = Div(cssClass=cls, onMount=self.on_mount)
+            wrapper = Div(css_class=cls, on_mount=self.on_mount)
             wrapper_json = wrapper.to_json()
             wrapper_json["children"] = [self.view]
             return wrapper_json
@@ -300,7 +300,9 @@ class PrefabApp(BaseModel):
             return self.view.to_json()
 
         # Wrap the user's view in a new Div
-        return Div(children=[self.view], cssClass=cls, onMount=self.on_mount).to_json()
+        return Div(
+            children=[self.view], css_class=cls, on_mount=self.on_mount
+        ).to_json()
 
     def to_json(
         self,

@@ -66,7 +66,7 @@ class Form(ContainerComponent):
     gap: int = Field(default=4, exclude=True)
     on_submit: Action | list[Action] | None = Field(
         default=None,
-        alias="onSubmit",
+        serialization_alias="onSubmit",
         description="Action(s) to execute when the form is submitted",
     )
 
@@ -208,7 +208,7 @@ class Form(ContainerComponent):
 
         # Form is created with the stack active so it auto-parents to any
         # outer context manager (e.g. `with Card(): Form.from_model(...)`).
-        form = cls(onSubmit=on_submit, cssClass=css_class)
+        form = cls(on_submit=on_submit, css_class=css_class)
 
         # Suppress auto-parenting while building internal components so
         # they don't also get auto-added to the outer container.
@@ -380,8 +380,8 @@ def _field_to_component(
                 value=value,
                 rows=rows,
                 required=required,
-                minLength=constraints.get("min_length"),
-                maxLength=constraints.get("max_length"),
+                min_length=constraints.get("min_length"),
+                max_length=constraints.get("max_length"),
             ),
         ]
         return col
@@ -414,12 +414,12 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                inputType="password",
+                input_type="password",
                 name=name,
                 placeholder=placeholder,
                 required=required,
-                minLength=constraints.get("min_length"),
-                maxLength=constraints.get("max_length"),
+                min_length=constraints.get("min_length"),
+                max_length=constraints.get("max_length"),
             ),
         ]
         return col
@@ -430,7 +430,7 @@ def _field_to_component(
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(inputType="date", name=name, value=value, required=required),
+            Input(input_type="date", name=name, value=value, required=required),
         ]
         return col
 
@@ -439,7 +439,7 @@ def _field_to_component(
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(inputType="time", name=name, value=value, required=required),
+            Input(input_type="time", name=name, value=value, required=required),
         ]
         return col
 
@@ -449,7 +449,7 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                inputType="datetime-local",
+                input_type="datetime-local",
                 name=name,
                 value=value,
                 required=required,
@@ -464,7 +464,7 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                inputType="number",
+                input_type="number",
                 name=name,
                 placeholder=placeholder,
                 value=value,
@@ -499,13 +499,13 @@ def _field_to_component(
     col.children = [
         Label(label_text, optional=not required),
         Input(
-            inputType=input_type,
+            input_type=input_type,
             name=name,
             placeholder=placeholder,
             value=value,
             required=required,
-            minLength=constraints.get("min_length"),
-            maxLength=constraints.get("max_length"),
+            min_length=constraints.get("min_length"),
+            max_length=constraints.get("max_length"),
             pattern=constraints.get("pattern"),
         ),
     ]

@@ -106,7 +106,7 @@ def KeyboardShortcutsDialog(
         with Column(gap=3):
             for key, description in shortcuts.items():
                 with Row(
-                    cssClass="justify-between items-center",
+                    css_class="justify-between items-center",
                     gap=4,
                 ):
                     Text(description)
