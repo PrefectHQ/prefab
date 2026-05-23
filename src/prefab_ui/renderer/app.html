@@ -10109,7 +10109,7 @@ class PrefabApp(BaseModel):
 
         if isinstance(self.view, dict):
             # Pre-serialized dict — wrap in a serialized Div
-            wrapper = Div(css_class=cls, on_mount=self.on_mount)
+            wrapper = Div(cssClass=cls, onMount=self.on_mount)
             wrapper_json = wrapper.to_json()
             wrapper_json["children"] = [self.view]
             return wrapper_json
@@ -10126,9 +10126,7 @@ class PrefabApp(BaseModel):
             return self.view.to_json()
 
         # Wrap the user's view in a new Div
-        return Div(
-            children=[self.view], css_class=cls, on_mount=self.on_mount
-        ).to_json()
+        return Div(children=[self.view], cssClass=cls, onMount=self.on_mount).to_json()
 
     def to_json(
         self,
@@ -11066,7 +11064,7 @@ def KeyboardShortcutsDialog(
         with Column(gap=3):
             for key, description in shortcuts.items():
                 with Row(
-                    css_class="justify-between items-center",
+                    cssClass="justify-between items-center",
                     gap=4,
                 ):
                     Text(description)
@@ -15274,7 +15272,7 @@ class Form(ContainerComponent):
 
         # Form is created with the stack active so it auto-parents to any
         # outer context manager (e.g. \`with Card(): Form.from_model(...)\`).
-        form = cls(on_submit=on_submit, css_class=css_class)
+        form = cls(onSubmit=on_submit, cssClass=css_class)
 
         # Suppress auto-parenting while building internal components so
         # they don't also get auto-added to the outer container.
@@ -15446,8 +15444,8 @@ def _field_to_component(
                 value=value,
                 rows=rows,
                 required=required,
-                min_length=constraints.get("min_length"),
-                max_length=constraints.get("max_length"),
+                minLength=constraints.get("min_length"),
+                maxLength=constraints.get("max_length"),
             ),
         ]
         return col
@@ -15480,12 +15478,12 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                input_type="password",
+                inputType="password",
                 name=name,
                 placeholder=placeholder,
                 required=required,
-                min_length=constraints.get("min_length"),
-                max_length=constraints.get("max_length"),
+                minLength=constraints.get("min_length"),
+                maxLength=constraints.get("max_length"),
             ),
         ]
         return col
@@ -15496,7 +15494,7 @@ def _field_to_component(
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(input_type="date", name=name, value=value, required=required),
+            Input(inputType="date", name=name, value=value, required=required),
         ]
         return col
 
@@ -15505,7 +15503,7 @@ def _field_to_component(
         col = Column(gap=2)
         col.children = [
             Label(label_text, optional=not required),
-            Input(input_type="time", name=name, value=value, required=required),
+            Input(inputType="time", name=name, value=value, required=required),
         ]
         return col
 
@@ -15515,7 +15513,7 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                input_type="datetime-local",
+                inputType="datetime-local",
                 name=name,
                 value=value,
                 required=required,
@@ -15530,7 +15528,7 @@ def _field_to_component(
         col.children = [
             Label(label_text, optional=not required),
             Input(
-                input_type="number",
+                inputType="number",
                 name=name,
                 placeholder=placeholder,
                 value=value,
@@ -15565,13 +15563,13 @@ def _field_to_component(
     col.children = [
         Label(label_text, optional=not required),
         Input(
-            input_type=input_type,
+            inputType=input_type,
             name=name,
             placeholder=placeholder,
             value=value,
             required=required,
-            min_length=constraints.get("min_length"),
-            max_length=constraints.get("max_length"),
+            minLength=constraints.get("min_length"),
+            maxLength=constraints.get("max_length"),
             pattern=constraints.get("pattern"),
         ),
     ]
