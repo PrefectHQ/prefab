@@ -12,7 +12,9 @@ const baseLockfilePath = args.get("--base-lockfile");
 const daysArg = args.get("--days") ?? "7";
 
 if (!lockfilePath) {
-  console.error("Usage: check-npm-package-age.mjs --lockfile <path> [--days 7]");
+  console.error(
+    "Usage: check-npm-package-age.mjs --lockfile <path> [--days 7]",
+  );
   process.exit(2);
 }
 
@@ -43,7 +45,10 @@ async function readRegistryPackages(path) {
   const registryPackages = new Map();
 
   for (const [packagePath, details] of Object.entries(packages)) {
-    if (!details?.version || !details?.resolved?.startsWith("https://registry.npmjs.org/")) {
+    if (
+      !details?.version ||
+      !details?.resolved?.startsWith("https://registry.npmjs.org/")
+    ) {
       continue;
     }
 
@@ -76,9 +81,13 @@ async function fetchPackageMetadata(name) {
     return metadataCache.get(name);
   }
 
-  const response = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}`);
+  const response = await fetch(
+    `https://registry.npmjs.org/${encodeURIComponent(name)}`,
+  );
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${name}: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch ${name}: ${response.status} ${response.statusText}`,
+    );
   }
 
   const metadata = await response.json();
@@ -109,7 +118,9 @@ for (const { name, version } of packagesToCheck.values()) {
 
 if (missingTimes.length > 0 || tooNew.length > 0) {
   if (tooNew.length > 0) {
-    console.error(`Found ${tooNew.length} npm packages published within the last ${days} days:`);
+    console.error(
+      `Found ${tooNew.length} npm packages published within the last ${days} days:`,
+    );
     for (const entry of tooNew.slice(0, 25)) {
       console.error(`- ${entry.package} published at ${entry.publishedAt}`);
     }
@@ -132,5 +143,7 @@ if (missingTimes.length > 0 || tooNew.length > 0) {
 }
 
 console.log(
-  `All ${packagesToCheck.size} npm registry packages were published before ${cutoff.toISOString()}.`,
+  `All ${
+    packagesToCheck.size
+  } npm registry packages were published before ${cutoff.toISOString()}.`,
 );
