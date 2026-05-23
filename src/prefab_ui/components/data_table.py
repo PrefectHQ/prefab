@@ -157,7 +157,9 @@ class DataTable(Component):
         search: Show a search input above the table.
         paginated: Show pagination controls.
         page_size: Rows per page when paginated.
-        on_row_click: Action(s) when a row is clicked. `$event` is the row dict.
+        on_row_click: Action(s) when a row is clicked. `$event` is the row dict;
+            access row fields with `$event.<field>`. Clicking anywhere in the
+            row fires the action.
 
     **Example:**
 
@@ -215,7 +217,11 @@ class DataTable(Component):
     on_row_click: Action | list[Action] | None = Field(
         default=None,
         alias="onRowClick",
-        description="Action(s) when a row is clicked. $event is the row data dict.",
+        description=(
+            "Action(s) when a row is clicked. $event is the row data dict; access"
+            " row fields with $event.<field>. Clicking anywhere in the row fires"
+            " the action."
+        ),
     )
 
     def to_json(self) -> dict[str, Any]:

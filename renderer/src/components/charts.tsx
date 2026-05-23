@@ -34,6 +34,7 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/ui/chart";
+import { interpolateString } from "../interpolation";
 import type {
   BarChartWire,
   LineChartWire,
@@ -46,11 +47,15 @@ import type {
 
 export { PrefabSparkline } from "./sparkline";
 
-const compactFormatter = (value: number) =>
-  new Intl.NumberFormat("en", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+function getValueFormatter(format?: string) {
+  if (!format || format === "auto") {
+    return undefined;
+  }
+  return (value: unknown) => {
+    const formatted = interpolateString(`{{ _v | ${format} }}`, { _v: value });
+    return formatted == null ? "" : String(formatted);
+  };
+}
 
 // Auto-assign chart CSS variable colors to series by index
 const CHART_COLORS = [
@@ -109,11 +114,12 @@ export function PrefabBarChart({
   animate = true,
   showGrid = true,
   showYAxis = true,
-  yAxisFormat = "auto",
+  valueFormat = "auto",
   className,
 }: BarChartWire & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
+  const valueFormatter = getValueFormatter(valueFormat);
 
   return (
     <ChartContainer
@@ -134,7 +140,9 @@ export function PrefabBarChart({
             tickMargin={8}
           />
         )}
-        {horizontal && <XAxis type="number" hide />}
+        {horizontal && (
+          <XAxis type="number" hide tickFormatter={valueFormatter} />
+        )}
         {!horizontal && xAxis && (
           <XAxis
             dataKey={xAxis}
@@ -148,12 +156,14 @@ export function PrefabBarChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={
-              yAxisFormat === "compact" ? compactFormatter : undefined
-            }
+            tickFormatter={valueFormatter}
           />
         )}
-        {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+        {showTooltip && (
+          <ChartTooltip
+            content={<ChartTooltipContent valueFormatter={valueFormatter} />}
+          />
+        )}
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Bar
@@ -191,11 +201,12 @@ export function PrefabLineChart({
   animate = true,
   showGrid = true,
   showYAxis = true,
-  yAxisFormat = "auto",
+  valueFormat = "auto",
   className,
 }: LineChartWire & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
+  const valueFormatter = getValueFormatter(valueFormat);
 
   return (
     <ChartContainer
@@ -218,12 +229,14 @@ export function PrefabLineChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={
-              yAxisFormat === "compact" ? compactFormatter : undefined
-            }
+            tickFormatter={valueFormatter}
           />
         )}
-        {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+        {showTooltip && (
+          <ChartTooltip
+            content={<ChartTooltipContent valueFormatter={valueFormatter} />}
+          />
+        )}
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Line
@@ -256,11 +269,12 @@ export function PrefabAreaChart({
   animate = true,
   showGrid = true,
   showYAxis = true,
-  yAxisFormat = "auto",
+  valueFormat = "auto",
   className,
 }: AreaChartWire & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
+  const valueFormatter = getValueFormatter(valueFormat);
 
   return (
     <ChartContainer
@@ -283,12 +297,14 @@ export function PrefabAreaChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={
-              yAxisFormat === "compact" ? compactFormatter : undefined
-            }
+            tickFormatter={valueFormatter}
           />
         )}
-        {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
+        {showTooltip && (
+          <ChartTooltip
+            content={<ChartTooltipContent valueFormatter={valueFormatter} />}
+          />
+        )}
         {showLegend && <ChartLegend content={<ChartLegendContent />} />}
         {series.map((s) => (
           <Area
@@ -321,10 +337,12 @@ export function PrefabPieChart({
   showLegend = false,
   showTooltip = true,
   animate = true,
+  valueFormat = "auto",
   className,
 }: PieChartWire & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildPieConfig(data, nameKey);
+  const valueFormatter = getValueFormatter(valueFormat);
 
   // Inject fill colors into data so Recharts renders them
   const coloredData = data.map((d, i) => ({
@@ -353,7 +371,14 @@ export function PrefabPieChart({
       >
         <PieChart>
           {showTooltip && (
-            <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  nameKey={nameKey}
+                  valueFormatter={valueFormatter}
+                />
+              }
+            />
           )}
           <Pie
             isAnimationActive={animate}
@@ -460,10 +485,12 @@ export function PrefabRadialChart({
   showLegend = false,
   showTooltip = true,
   animate = true,
+  valueFormat = "auto",
   className,
 }: RadialChartWire & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildPieConfig(data, nameKey);
+  const valueFormatter = getValueFormatter(valueFormat);
 
   const coloredData = data.map((d, i) => ({
     ...d,
@@ -483,7 +510,14 @@ export function PrefabRadialChart({
         endAngle={endAngle}
       >
         {showTooltip && (
-          <ChartTooltip content={<ChartTooltipContent nameKey={nameKey} />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                nameKey={nameKey}
+                valueFormatter={valueFormatter}
+              />
+            }
+          />
         )}
         {showLegend && (
           <ChartLegend content={<ChartLegendContent nameKey={nameKey} />} />

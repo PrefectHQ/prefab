@@ -7,6 +7,8 @@ const chartSeriesSchema = z.object({
   color: z.string().optional(),
 });
 
+const valueFormatSchema = z.string();
+
 const cartesianBase = componentBase.extend({
   data: z
     .union([z.array(z.record(z.string(), z.unknown())), z.string()])
@@ -19,7 +21,7 @@ const cartesianBase = componentBase.extend({
   animate: z.boolean().optional(),
   showGrid: z.boolean().optional(),
   showYAxis: z.boolean().optional(),
-  yAxisFormat: z.enum(["auto", "compact"]).optional(),
+  valueFormat: valueFormatSchema.optional(),
 });
 
 export const barChartSchema = cartesianBase.extend({
@@ -56,6 +58,7 @@ export const pieChartSchema = componentBase.extend({
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   animate: z.boolean().optional(),
+  valueFormat: valueFormatSchema.optional(),
 });
 
 export const radarChartSchema = componentBase.extend({
@@ -88,6 +91,7 @@ export const radialChartSchema = componentBase.extend({
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   animate: z.boolean().optional(),
+  valueFormat: valueFormatSchema.optional(),
 });
 
 export const scatterChartSchema = componentBase.extend({

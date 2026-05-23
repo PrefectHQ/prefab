@@ -126,6 +126,9 @@ destructive/info/default), `fill` (shade area), `curve` ("linear"/"smooth").
 
 All cartesian charts share:
 - `show_y_axis`: show Y-axis labels
-- `y_axis_format`: "auto" or "compact" (60K instead of 60000)
+- `value_format`: expression pipe format for value-axis ticks and tooltip values, such as "compact", "compact:0", "currency", "currency:EUR", "percent", or "percent:1". Percent values use fractional input, so `0.8` renders as `80%`.
 - `show_grid`: cartesian grid lines
 - `height`: chart height in pixels
+
+Pie and radial charts use the same `value_format` pipe strings for tooltip
+values.

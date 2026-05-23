@@ -380,7 +380,7 @@ DataTable(
 
 ### Click
 
-Make rows clickable with `on_row_click`. The clicked row highlights and the action fires with the row's data as `$event`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
+Make rows clickable with `on_row_click`. Clicking anywhere in the row highlights it and fires the action with the row's data as `$event`. Access row fields through `$event`, for example `{{ $event.email }}`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
 
 <ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","role":"Admin"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","role":"Editor"},{"name":"Trillian","email":"trillian@hog.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEVWRU5UCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMudWkgaW1wb3J0IFNob3dUb2FzdAoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ibmFtZSIsIGhlYWRlcj0iTmFtZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImVtYWlsIiwgaGVhZGVyPSJFbWFpbCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InJvbGUiLCBoZWFkZXI9IlJvbGUiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAiZW1haWwiOiAiYXJ0aHVyQGVhcnRoLmNvbSIsICJyb2xlIjogIkFkbWluIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJlbWFpbCI6ICJmb3JkQGJldGVsZ2V1c2UuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImVtYWlsIjogInRyaWxsaWFuQGhvZy5jb20iLCAicm9sZSI6ICJWaWV3ZXIifSwKICAgIF0sCiAgICBvbl9yb3dfY2xpY2s9U2hvd1RvYXN0KGYie0VWRU5ULm5hbWV9ICh7RVZFTlQuZW1haWx9KSIpLAopCg">
 <CodeGroup>
@@ -734,7 +734,7 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
 </ParamField>
 
 <ParamField body="on_row_click" type="Action | list[Action] | None" default="None">
-  Action(s) to fire when a row is clicked. `$event` is the row's data dict. The clicked row highlights visually.
+  Action(s) to fire when a row is clicked. `$event` is the row's data dict; access row fields with `$event.<field>`. Clicking anywhere in the row highlights it and fires the action.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
