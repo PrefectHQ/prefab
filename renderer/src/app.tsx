@@ -24,12 +24,17 @@ import {
   setAppName,
   type ActionSpec,
 } from "./actions";
-import { resolveTheme, buildThemeCss } from "./themes";
 import {
   SUPPORTED_VERSIONS,
   applyTheme,
   hostContextToState,
 } from "./shared-app-utils";
+import {
+  applyMode,
+  syncInlineCss,
+  syncStylesheets,
+  wireMode,
+} from "./style-assets";
 import type { ExecuteResult } from "./pyodide/executor";
 
 function FastMCPLogo({
@@ -75,30 +80,24 @@ function readInitialData(): {
   defs: Record<string, ComponentNode>;
   state: Record<string, unknown>;
   keyBindings: KeyBindings;
+  mode?: string;
 } | null {
   const el = document.getElementById("prefab:initial-data");
   if (!el?.textContent) return null;
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
 
-    // Apply theme overrides (string name or custom object)
-    if (data.theme) {
-      const resolved = resolveTheme(
-        data.theme as string | Record<string, string>,
-      );
-      if (resolved) {
-        const style = document.createElement("style");
-        style.id = "prefab-theme";
-        style.textContent = buildThemeCss(resolved, false);
-        document.head.appendChild(style);
-      }
-    }
+    syncInlineCss(data.css);
+    syncStylesheets(data.stylesheets);
+    const mode = wireMode(data.mode);
+    applyMode(mode);
 
     return {
       view: (data.view as ComponentNode) ?? null,
       defs: (data.defs ?? {}) as Record<string, ComponentNode>,
       state: (data.state ?? {}) as Record<string, unknown>,
       keyBindings: (data.keyBindings ?? {}) as KeyBindings,
+      mode,
     };
   } catch {
     console.error("[Prefab] Failed to parse baked-in initial data");
@@ -117,6 +116,7 @@ export function App() {
   const [, setIsStreaming] = useState(false);
   const state = useStateStore();
   const appRef = useRef(bridge.app);
+  const forcedModeRef = useRef<string | undefined>(INITIAL?.mode);
 
   // Initialize state store with baked-in data.
   useEffect(() => {
@@ -192,6 +192,12 @@ export function App() {
       keyBindingsRef.current =
         (structured.keyBindings as KeyBindings | undefined) ?? {};
 
+      const mode = wireMode(structured.mode);
+      forcedModeRef.current = mode;
+      syncInlineCss(structured.css);
+      syncStylesheets(structured.stylesheets);
+      applyMode(mode, bridge.app?.getHostContext()?.theme);
+
       clearAllIntervals();
       const currentHost = state.get("$host");
       state.reset(
@@ -211,6 +217,11 @@ export function App() {
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
       if (result.tree) {
+        const mode = wireMode(result.mode);
+        forcedModeRef.current = mode;
+        syncInlineCss(result.css);
+        syncStylesheets(result.stylesheets);
+        applyMode(mode, bridge.app?.getHostContext()?.theme);
         setTree(result.tree);
         setIsStreaming(true);
         if (result.state) {
@@ -228,7 +239,11 @@ export function App() {
 
   const handleHostContext = useCallback(
     (ctx: McpUiHostContext) => {
-      applyTheme(ctx);
+      if (forcedModeRef.current) {
+        applyMode(forcedModeRef.current);
+      } else {
+        applyTheme(ctx);
+      }
       state.set("$host", hostContextToState(ctx));
     },
     [state],

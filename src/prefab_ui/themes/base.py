@@ -200,3 +200,25 @@ class Theme(BaseModel):
         if self.mode is not None:
             result["mode"] = self.mode
         return result
+
+    def to_css(self) -> str:
+        """Compile theme to a CSS string with standard :root / .dark selectors."""
+        j = self.to_json()
+        light = j.get("light", "")
+        dark = j.get("dark", "")
+        freeform = j.get("css", "")
+
+        imports, rest = [], []
+        for line in freeform.split("\n"):
+            (imports if line.strip().startswith("@import") else rest).append(line)
+        freeform = "\n".join(rest)
+
+        result = "\n".join(imports) + ("\n" if imports else "")
+        if light:
+            result += f":root {{\n  {light}\n}}\n"
+        if dark:
+            result += f".dark {{\n  {dark}\n}}\n"
+        if freeform.strip():
+            result += freeform.strip() + "\n"
+
+        return result

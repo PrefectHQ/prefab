@@ -190,6 +190,10 @@ DataTable(
 )
 ```
 
+`on_row_click=` actions fire when the row is clicked and receive the clicked row
+as `$event`. Access row fields through `$event`, for example
+`{{ $event.email }}` or `EVENT.email`.
+
 ### Layout Props
 
 `Column`, `Row`, `Grid` accept `gap`, `align`, `justify` as native props:
@@ -201,6 +205,10 @@ Grid(columns=3, gap=4)               # grid-cols-3 gap-4
 ```
 
 Use `css_class` for anything beyond these: `Column(css_class="max-w-2xl mx-auto")`.
+
+For app-level styling, use `PrefabApp(css=[...])` for inline CSS strings and
+`PrefabApp(stylesheets=[...])` only for external CSS URLs. Stylesheet URLs are
+loaded as `<link>` tags and may affect CSP; inline CSS is loaded as `<style>`.
 
 ### Carousel
 

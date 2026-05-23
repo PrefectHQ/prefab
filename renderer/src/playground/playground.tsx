@@ -35,7 +35,7 @@ import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
-import { buildThemeCss } from "../themes";
+import { syncStylesheets } from "../style-assets";
 import pako from "pako";
 
 /**
@@ -384,9 +384,10 @@ export function Playground() {
     } else if (result.tree) {
       setTree(result.tree);
       stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
-      setCodeThemeCss(result.theme ? buildThemeCss(result.theme, false) : "");
-      if (result.theme?.mode) {
-        setDark(result.theme.mode === "dark");
+      setCodeThemeCss(result.css?.join("\n") ?? "");
+      syncStylesheets(result.stylesheets);
+      if (result.mode) {
+        setDark(result.mode === "dark");
       }
       setError(null);
       setErrorDetail(null);
