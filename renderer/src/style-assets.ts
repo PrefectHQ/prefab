@@ -2,11 +2,15 @@ const PREFAB_CSS_ID = "prefab-css";
 const PREFAB_CSS_ATTR = "data-prefab-css";
 const PREFAB_STYLESHEET_ATTR = "data-prefab-stylesheet";
 
-export function inlineCssEntries(cssStrings: string[] | undefined) {
-  return cssStrings?.filter((s) => s.trim()) ?? [];
+export function inlineCssEntries(cssStrings: unknown) {
+  if (!Array.isArray(cssStrings)) return [];
+  return cssStrings.filter(
+    (entry): entry is string =>
+      typeof entry === "string" && entry.trim() !== "",
+  );
 }
 
-export function syncInlineCss(cssStrings: string[] | undefined) {
+export function syncInlineCss(cssStrings: unknown) {
   const existing = Array.from(
     document.head.querySelectorAll<HTMLStyleElement>(
       `style#${PREFAB_CSS_ID}, style[${PREFAB_CSS_ATTR}]`,
@@ -31,8 +35,16 @@ export function syncInlineCss(cssStrings: string[] | undefined) {
   }
 }
 
-export function syncStylesheets(urls: string[] | undefined) {
-  const desired = new Set(urls?.filter((url) => url.trim()) ?? []);
+export function stylesheetUrls(urls: unknown) {
+  if (!Array.isArray(urls)) return [];
+  return urls.filter(
+    (entry): entry is string =>
+      typeof entry === "string" && entry.trim() !== "",
+  );
+}
+
+export function syncStylesheets(urls: unknown) {
+  const desired = new Set(stylesheetUrls(urls));
   const existing = Array.from(
     document.head.querySelectorAll<HTMLLinkElement>(
       `link[${PREFAB_STYLESHEET_ATTR}]`,
@@ -55,8 +67,12 @@ export function syncStylesheets(urls: string[] | undefined) {
   }
 }
 
-export function applyMode(mode: string | undefined, fallback?: string) {
-  const nextMode = mode ?? fallback;
+export function wireMode(mode: unknown): string | undefined {
+  return mode === "light" || mode === "dark" ? mode : undefined;
+}
+
+export function applyMode(mode: unknown, fallback?: string) {
+  const nextMode = wireMode(mode) ?? wireMode(fallback);
   if (!nextMode) return;
   document.documentElement.classList.toggle("dark", nextMode === "dark");
 }

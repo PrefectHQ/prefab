@@ -29,7 +29,12 @@ import {
   applyTheme,
   hostContextToState,
 } from "./shared-app-utils";
-import { applyMode, syncInlineCss, syncStylesheets } from "./style-assets";
+import {
+  applyMode,
+  syncInlineCss,
+  syncStylesheets,
+  wireMode,
+} from "./style-assets";
 import type { ExecuteResult } from "./pyodide/executor";
 
 function FastMCPLogo({
@@ -75,21 +80,24 @@ function readInitialData(): {
   defs: Record<string, ComponentNode>;
   state: Record<string, unknown>;
   keyBindings: KeyBindings;
+  mode?: string;
 } | null {
   const el = document.getElementById("prefab:initial-data");
   if (!el?.textContent) return null;
   try {
     const data = JSON.parse(el.textContent) as Record<string, unknown>;
 
-    syncInlineCss(data.css as string[] | undefined);
-    syncStylesheets(data.stylesheets as string[] | undefined);
-    applyMode(data.mode as string | undefined);
+    syncInlineCss(data.css);
+    syncStylesheets(data.stylesheets);
+    const mode = wireMode(data.mode);
+    applyMode(mode);
 
     return {
       view: (data.view as ComponentNode) ?? null,
       defs: (data.defs ?? {}) as Record<string, ComponentNode>,
       state: (data.state ?? {}) as Record<string, unknown>,
       keyBindings: (data.keyBindings ?? {}) as KeyBindings,
+      mode,
     };
   } catch {
     console.error("[Prefab] Failed to parse baked-in initial data");
@@ -108,6 +116,7 @@ export function App() {
   const [, setIsStreaming] = useState(false);
   const state = useStateStore();
   const appRef = useRef(bridge.app);
+  const forcedModeRef = useRef<string | undefined>(INITIAL?.mode);
 
   // Initialize state store with baked-in data.
   useEffect(() => {
@@ -183,12 +192,11 @@ export function App() {
       keyBindingsRef.current =
         (structured.keyBindings as KeyBindings | undefined) ?? {};
 
-      syncInlineCss(structured.css as string[] | undefined);
-      syncStylesheets(structured.stylesheets as string[] | undefined);
-      applyMode(
-        structured.mode as string | undefined,
-        bridge.app?.getHostContext()?.theme,
-      );
+      const mode = wireMode(structured.mode);
+      forcedModeRef.current = mode;
+      syncInlineCss(structured.css);
+      syncStylesheets(structured.stylesheets);
+      applyMode(mode, bridge.app?.getHostContext()?.theme);
 
       clearAllIntervals();
       const currentHost = state.get("$host");
@@ -209,9 +217,11 @@ export function App() {
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
       if (result.tree) {
+        const mode = wireMode(result.mode);
+        forcedModeRef.current = mode;
         syncInlineCss(result.css);
         syncStylesheets(result.stylesheets);
-        applyMode(result.mode, bridge.app?.getHostContext()?.theme);
+        applyMode(mode, bridge.app?.getHostContext()?.theme);
         setTree(result.tree);
         setIsStreaming(true);
         if (result.state) {
@@ -229,7 +239,11 @@ export function App() {
 
   const handleHostContext = useCallback(
     (ctx: McpUiHostContext) => {
-      applyTheme(ctx);
+      if (forcedModeRef.current) {
+        applyMode(forcedModeRef.current);
+      } else {
+        applyTheme(ctx);
+      }
       state.set("$host", hostContextToState(ctx));
     },
     [state],
