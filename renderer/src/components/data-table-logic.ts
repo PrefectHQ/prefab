@@ -31,8 +31,8 @@ export function nextSortAction(
 }
 
 const SORTABLE_HEADER_ALIGN_CLASSES = {
-  "text-left": ["w-full", "justify-start"],
-  "text-center": ["w-full", "justify-center"],
+  "text-left": ["w-full", "justify-start", "flex-row"],
+  "text-center": ["w-full", "justify-center", "flex-row"],
   "text-right": ["w-full", "justify-start", "flex-row-reverse"],
 };
 

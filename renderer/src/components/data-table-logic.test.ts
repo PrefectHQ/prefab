@@ -66,7 +66,13 @@ describe("sortableHeaderButtonClass", () => {
 
   it("preserves responsive variant prefixes", () => {
     expect(sortableHeaderButtonClass("text-left sm:text-right")).toBe(
-      "w-full justify-start sm:w-full sm:justify-start sm:flex-row-reverse",
+      "w-full justify-start flex-row sm:w-full sm:justify-start sm:flex-row-reverse",
+    );
+  });
+
+  it("resets reversed row direction for later non-right alignments", () => {
+    expect(sortableHeaderButtonClass("text-right sm:text-left")).toBe(
+      "w-full justify-start flex-row-reverse sm:w-full sm:justify-start sm:flex-row",
     );
   });
 });
