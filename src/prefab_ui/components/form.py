@@ -66,7 +66,7 @@ class Form(ContainerComponent):
     gap: int = Field(default=4, exclude=True)
     on_submit: Action | list[Action] | None = Field(
         default=None,
-        alias="onSubmit",
+        serialization_alias="onSubmit",
         description="Action(s) to execute when the form is submitted",
     )
 

@@ -12047,13 +12047,13 @@ class Component(BaseModel):
 
     css_class: Annotated[str | None, BeforeValidator(_coerce_css_class)] = Field(
         default=None,
-        alias="cssClass",
+        serialization_alias="cssClass",
         description="CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes.",
     )
 
     on_mount: Any | None = Field(
         default=None,
-        alias="onMount",
+        serialization_alias="onMount",
         description="Action(s) to execute when this component mounts.",
     )
 
@@ -15166,7 +15166,7 @@ class Form(ContainerComponent):
     gap: int = Field(default=4, exclude=True)
     on_submit: Action | list[Action] | None = Field(
         default=None,
-        alias="onSubmit",
+        serialization_alias="onSubmit",
         description="Action(s) to execute when the form is submitted",
     )
 
@@ -16215,7 +16215,7 @@ class Input(StatefulMixin, Component):
     type: Literal["Input"] = "Input"
     input_type: InputType = Field(
         default="text",
-        alias="inputType",
+        serialization_alias="inputType",
         description="Input type (text, email, password, etc.)",
     )
     placeholder: RxStr | None = Field(
@@ -16230,18 +16230,18 @@ class Input(StatefulMixin, Component):
     disabled: bool = Field(default=False, description="Whether input is disabled")
     read_only: bool = Field(
         default=False,
-        alias="readOnly",
+        serialization_alias="readOnly",
         description="Whether input is read-only (visible and selectable but not editable)",
     )
     required: bool = Field(default=False, description="Whether input is required")
     min_length: int | None = Field(
         default=None,
-        alias="minLength",
+        serialization_alias="minLength",
         description="Minimum character length",
     )
     max_length: int | None = Field(
         default=None,
-        alias="maxLength",
+        serialization_alias="maxLength",
         description="Maximum character length",
     )
     min: float | None = Field(
@@ -16258,7 +16258,7 @@ class Input(StatefulMixin, Component):
     )
     on_change: Action | list[Action] | None = Field(
         default=None,
-        alias="onChange",
+        serialization_alias="onChange",
         description="Action(s) to execute when value changes",
     )
 `,"prefab_ui/components/kbd.py":`"""Kbd — keyboard key indicator."""
@@ -18133,17 +18133,17 @@ class Textarea(StatefulMixin, Component):
     required: bool = Field(default=False, description="Whether textarea is required")
     min_length: int | None = Field(
         default=None,
-        alias="minLength",
+        serialization_alias="minLength",
         description="Minimum character length",
     )
     max_length: int | None = Field(
         default=None,
-        alias="maxLength",
+        serialization_alias="maxLength",
         description="Maximum character length",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,
-        alias="onChange",
+        serialization_alias="onChange",
         description="Action(s) to execute when value changes",
     )
 `,"prefab_ui/components/tooltip.py":`"""Tooltip — hover text on any component.

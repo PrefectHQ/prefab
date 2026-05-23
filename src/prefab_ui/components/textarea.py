@@ -63,16 +63,16 @@ class Textarea(StatefulMixin, Component):
     required: bool = Field(default=False, description="Whether textarea is required")
     min_length: int | None = Field(
         default=None,
-        alias="minLength",
+        serialization_alias="minLength",
         description="Minimum character length",
     )
     max_length: int | None = Field(
         default=None,
-        alias="maxLength",
+        serialization_alias="maxLength",
         description="Maximum character length",
     )
     on_change: Action | list[Action] | None = Field(
         default=None,
-        alias="onChange",
+        serialization_alias="onChange",
         description="Action(s) to execute when value changes",
     )

@@ -67,7 +67,7 @@ class Input(StatefulMixin, Component):
     type: Literal["Input"] = "Input"
     input_type: InputType = Field(
         default="text",
-        alias="inputType",
+        serialization_alias="inputType",
         description="Input type (text, email, password, etc.)",
     )
     placeholder: RxStr | None = Field(
@@ -82,18 +82,18 @@ class Input(StatefulMixin, Component):
     disabled: bool = Field(default=False, description="Whether input is disabled")
     read_only: bool = Field(
         default=False,
-        alias="readOnly",
+        serialization_alias="readOnly",
         description="Whether input is read-only (visible and selectable but not editable)",
     )
     required: bool = Field(default=False, description="Whether input is required")
     min_length: int | None = Field(
         default=None,
-        alias="minLength",
+        serialization_alias="minLength",
         description="Minimum character length",
     )
     max_length: int | None = Field(
         default=None,
-        alias="maxLength",
+        serialization_alias="maxLength",
         description="Maximum character length",
     )
     min: float | None = Field(
@@ -110,6 +110,6 @@ class Input(StatefulMixin, Component):
     )
     on_change: Action | list[Action] | None = Field(
         default=None,
-        alias="onChange",
+        serialization_alias="onChange",
         description="Action(s) to execute when value changes",
     )
