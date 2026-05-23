@@ -2,7 +2,7 @@
 
 ## Overview
 
-Themes are Python objects that generate CSS. The wire format is simple: `{"light": "css declarations", "dark": "css declarations", "css": "freeform css"}`. The renderer wraps `light` in `:root {}` and `dark` in `.dark {}`, then injects `css` as-is.
+Themes are Python objects that generate CSS. `Theme.to_css()` compiles declarations to standard CSS with `:root` and `.dark` selectors. `PrefabApp.to_json()` sends compiled inline CSS in the top-level `css` list, external stylesheet URLs in `stylesheets`, and forced color mode in `mode`.
 
 ## Theme class hierarchy
 

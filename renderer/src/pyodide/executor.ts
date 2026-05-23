@@ -127,11 +127,88 @@ await micropip.install("prefab-ui", deps=False)
 export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
-  theme?: { light: string; dark: string; css: string; mode?: string };
+  css?: string[];
+  stylesheets?: string[];
+  mode?: string;
   /** Short summary (last line + line number). */
   error?: string;
   /** Full Python traceback for expandable details. */
   errorDetail?: string;
+}
+
+interface RawExecuteResult {
+  tree?: ComponentNode;
+  state?: Record<string, unknown>;
+  css?: unknown;
+  stylesheets?: unknown;
+  mode?: unknown;
+  theme?: unknown;
+}
+
+function stringProp(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = obj[key];
+  return typeof value === "string" ? value : undefined;
+}
+
+function stringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter(
+    (entry): entry is string => typeof entry === "string",
+  );
+  return strings.length > 0 ? strings : undefined;
+}
+
+function normalizeMode(value: unknown): string | undefined {
+  return value === "light" || value === "dark" ? value : undefined;
+}
+
+export function legacyThemeToCss(theme: unknown): {
+  css?: string[];
+  mode?: string;
+} {
+  if (!theme || typeof theme !== "object" || Array.isArray(theme)) return {};
+
+  const themeObj = theme as Record<string, unknown>;
+  const light =
+    stringProp(themeObj, "light") ?? stringProp(themeObj, "light_css");
+  const dark =
+    stringProp(themeObj, "dark") ?? stringProp(themeObj, "dark_css") ?? light;
+  const freeform = stringProp(themeObj, "css") ?? "";
+  const imports: string[] = [];
+  const rest: string[] = [];
+
+  for (const line of freeform.split("\n")) {
+    (line.trim().startsWith("@import") ? imports : rest).push(line);
+  }
+
+  let css = imports.length > 0 ? `${imports.join("\n")}\n` : "";
+  if (light) css += `:root {\n  ${light}\n}\n`;
+  if (dark) css += `.dark {\n  ${dark}\n}\n`;
+
+  const freeformRest = rest.join("\n").trim();
+  if (freeformRest) css += `${freeformRest}\n`;
+
+  return {
+    css: css.trim() ? [css] : undefined,
+    mode: normalizeMode(themeObj.mode),
+  };
+}
+
+export function normalizeExecuteResult(
+  result: RawExecuteResult,
+): ExecuteResult {
+  const legacyTheme = legacyThemeToCss(result.theme);
+
+  return {
+    tree: result.tree,
+    state: result.state ?? {},
+    css: stringArray(result.css) ?? legacyTheme.css,
+    stylesheets: stringArray(result.stylesheets),
+    mode: normalizeMode(result.mode) ?? legacyTheme.mode,
+  };
 }
 
 /**
@@ -249,10 +326,9 @@ try:
 
     _pg_wire = _pg_target.to_json()
     _pg_result = {"tree": _pg_wire.get("view")}
-    if _pg_wire.get("state"):
-        _pg_result["state"] = _pg_wire["state"]
-    if _pg_wire.get("theme"):
-        _pg_result["theme"] = _pg_wire["theme"]
+    for _pg_key in ("state", "theme", "css", "stylesheets", "mode"):
+        if _pg_wire.get(_pg_key):
+            _pg_result[_pg_key] = _pg_wire[_pg_key]
 
     _pg_json_result = _json.dumps(_pg_result)
 finally:
@@ -265,11 +341,7 @@ _pg_json_result
   try {
     const resultStr = (await pyodide.runPythonAsync(harness)) as string;
     const result = JSON.parse(resultStr);
-    return {
-      tree: result.tree as ComponentNode,
-      state: result.state ?? {},
-      theme: result.theme,
-    };
+    return normalizeExecuteResult(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     const allLines = message.split("\n");

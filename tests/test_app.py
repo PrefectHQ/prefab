@@ -69,11 +69,65 @@ class TestPrefabAppFromJson:
     def test_override_theme(self):
         from prefab_ui.themes import Theme
 
-        theme = Theme(light={"primary": "#000"})
+        theme = Theme(light_css="--primary: #000;")
         wire = {"view": {"type": "Text", "content": "hi"}}
         app = PrefabApp.from_json(wire, theme=theme)
         result = app.to_json()
-        assert "theme" in result
+        assert "css" in result
+        assert "--primary: #000;" in "\n".join(result["css"])
+
+    def test_preserves_style_fields(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "css": [":root { --primary: red; }"],
+            "stylesheets": ["https://example.com/style.css"],
+            "mode": "dark",
+        }
+        result = PrefabApp.from_json(wire).to_json()
+        assert ":root { --primary: red; }" in result["css"]
+        assert result["stylesheets"] == ["https://example.com/style.css"]
+        assert result["mode"] == "dark"
+
+    def test_invalid_wire_mode_is_ignored(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "mode": "system",
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+
+        assert "mode" not in result
+
+    def test_preserves_legacy_theme_field_as_css(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "theme": {
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "mode": "dark",
+            },
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+        css = "\n".join(result["css"])
+
+        assert "--primary: red;" in css
+        assert "--primary: blue;" in css
+        assert result["mode"] == "dark"
+        assert "theme" not in result
+
+    def test_invalid_legacy_theme_mode_is_ignored(self):
+        wire = {
+            "view": {"type": "Text", "content": "hi"},
+            "theme": {
+                "light": "--primary: red;",
+                "mode": "system",
+            },
+        }
+
+        result = PrefabApp.from_json(wire).to_json()
+
+        assert "mode" not in result
 
     def test_dict_view_wrapped(self):
         view_dict = {"type": "Column", "children": []}
@@ -232,11 +286,15 @@ class TestPrefabAppHtml:
         app = PrefabApp(view=Text(content="hi"), state={"x": 1})
         html = app.html()
         assert '<script id="prefab:initial-data" type="application/json">' in html
-        # Parse the baked-in JSON to verify it matches to_json()
+        # Parse the baked-in JSON — css/stylesheets/mode are stripped (they're in <head>)
         start = html.index('type="application/json">') + len('type="application/json">')
         end = html.index("</script>", start)
         baked = json.loads(html[start:end])
-        assert baked == app.to_json()
+        wire = app.to_json()
+        wire.pop("css", None)
+        wire.pop("stylesheets", None)
+        wire.pop("mode", None)
+        assert baked == wire
 
     def test_empty_app_produces_valid_html(self):
         app = PrefabApp()
@@ -312,17 +370,30 @@ class TestPrefabAppCsp:
         assert "https://cdn.example.com" in csp["script_domains"]
 
 
-class TestPrefabAppWireFormatIsolation:
-    """Deployment config (stylesheets, scripts, connect_domains) stays out
-    of the wire format — it only affects HTML and CSP."""
+class TestPrefabAppWireFormat:
+    """css and stylesheets are part of the wire format so the renderer can
+    inject them when delivering via the MCP bridge."""
 
-    def test_stylesheets_not_in_wire_format(self):
+    def test_stylesheets_in_wire_format(self):
         app = PrefabApp(
             view=Text(content="hi"),
             stylesheets=["https://example.com/style.css"],
         )
         result = app.to_json()
-        assert "stylesheets" not in result
+        assert result["stylesheets"] == ["https://example.com/style.css"]
+
+    def test_css_in_wire_format(self):
+        app = PrefabApp(
+            view=Text(content="hi"),
+            css=[":root { --primary: red; }"],
+        )
+        result = app.to_json()
+        assert ":root { --primary: red; }" in result["css"]
+
+    def test_mode_in_wire_format(self):
+        app = PrefabApp(view=Text(content="hi"), mode="dark")
+        result = app.to_json()
+        assert result["mode"] == "dark"
 
     def test_scripts_not_in_wire_format(self):
         app = PrefabApp(
