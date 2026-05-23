@@ -190,6 +190,10 @@ DataTable(
 )
 ```
 
+`on_row_click=` actions fire when the row is clicked and receive the clicked row
+as `$event`. Access row fields through `$event`, for example
+`{{ $event.email }}` or `EVENT.email`.
+
 ### Layout Props
 
 `Column`, `Row`, `Grid` accept `gap`, `align`, `justify` as native props:
