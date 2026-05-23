@@ -11,6 +11,7 @@ import { interpolateString } from "../interpolation";
 import {
   globalFilter as dataTableGlobalFilter,
   nextSortAction,
+  sortableHeaderButtonClass,
   toggleRowSelection,
 } from "./data-table-logic";
 import {
@@ -131,7 +132,10 @@ export function PrefabDataTable({
           if (spec.sortable) {
             return (
               <button
-                className="flex items-center gap-1 hover:text-foreground"
+                className={cn(
+                  "flex items-center gap-1 hover:text-foreground",
+                  sortableHeaderButtonClass(spec.headerClass),
+                )}
                 onClick={() => {
                   const action = nextSortAction(column.getIsSorted());
                   if (action === "clear") {
