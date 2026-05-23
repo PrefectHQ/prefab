@@ -35,6 +35,8 @@ from pydantic import BaseModel, Field
 from prefab_ui.components.base import Component
 from prefab_ui.rx import RxStr
 
+ChartValueFormat = str
+
 
 class ChartSeries(BaseModel):
     """Series definition for cartesian charts (Bar, Line, Area).
@@ -73,7 +75,7 @@ class BarChart(Component):
         show_tooltip: Show tooltip on hover.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
-        y_axis_format: Y-axis tick format ("auto" or "compact").
+        value_format: Pipe format for value-axis ticks and tooltip values.
 
     **Example:**
 
@@ -85,6 +87,7 @@ class BarChart(Component):
         series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
         x_axis="month",
         stacked=True,
+        value_format="compact",
     )
     ```
     """
@@ -120,10 +123,13 @@ class BarChart(Component):
     show_y_axis: bool = Field(
         default=True, alias="showYAxis", description="Show y-axis with tick labels"
     )
-    y_axis_format: Literal["auto", "compact"] = Field(
+    value_format: ChartValueFormat = Field(
         default="auto",
-        alias="yAxisFormat",
-        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
+        alias="valueFormat",
+        description=(
+            "Value-axis tick and tooltip value format pipe, such as 'compact', "
+            "'currency', or 'percent:1'"
+        ),
     )
 
 
@@ -144,7 +150,7 @@ class LineChart(Component):
         show_tooltip: Show tooltip on hover.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
-        y_axis_format: Y-axis tick format ("auto" or "compact").
+        value_format: Pipe format for value-axis ticks and tooltip values.
 
     **Example:**
 
@@ -155,6 +161,7 @@ class LineChart(Component):
         data=[{"month": "Jan", "a": 10}],
         series=[ChartSeries(data_key="a")],
         x_axis="month",
+        value_format="percent:1",
     )
     ```
     """
@@ -189,10 +196,13 @@ class LineChart(Component):
     show_y_axis: bool = Field(
         default=True, alias="showYAxis", description="Show y-axis with tick labels"
     )
-    y_axis_format: Literal["auto", "compact"] = Field(
+    value_format: ChartValueFormat = Field(
         default="auto",
-        alias="yAxisFormat",
-        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
+        alias="valueFormat",
+        description=(
+            "Value-axis tick and tooltip value format pipe, such as 'compact', "
+            "'currency', or 'percent:1'"
+        ),
     )
 
 
@@ -214,7 +224,7 @@ class AreaChart(Component):
         show_tooltip: Show tooltip on hover.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
-        y_axis_format: Y-axis tick format ("auto" or "compact").
+        value_format: Pipe format for value-axis ticks and tooltip values.
 
     **Example:**
 
@@ -226,6 +236,7 @@ class AreaChart(Component):
         series=[ChartSeries(data_key="a"), ChartSeries(data_key="b")],
         x_axis="month",
         stacked=True,
+        value_format="currency",
     )
     ```
     """
@@ -261,10 +272,13 @@ class AreaChart(Component):
     show_y_axis: bool = Field(
         default=True, alias="showYAxis", description="Show y-axis with tick labels"
     )
-    y_axis_format: Literal["auto", "compact"] = Field(
+    value_format: ChartValueFormat = Field(
         default="auto",
-        alias="yAxisFormat",
-        description="Y-axis tick format: 'compact' shows 60K instead of 60000",
+        alias="valueFormat",
+        description=(
+            "Value-axis tick and tooltip value format pipe, such as 'compact', "
+            "'currency', or 'percent:1'"
+        ),
     )
 
 
@@ -281,6 +295,7 @@ class PieChart(Component):
         padding_angle: Gap between slices in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        value_format: Pipe format for tooltip values.
 
     **Example:**
 
@@ -293,6 +308,7 @@ class PieChart(Component):
         data_key="visitors",
         name_key="browser",
         inner_radius=60,
+        value_format="compact",
     )
     ```
     """
@@ -321,6 +337,11 @@ class PieChart(Component):
     )
     animate: bool = Field(
         default=True, description="Animate transitions when data changes"
+    )
+    value_format: ChartValueFormat = Field(
+        default="auto",
+        alias="valueFormat",
+        description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
 
 
@@ -454,6 +475,7 @@ class RadialChart(Component):
         end_angle: Arc end angle in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        value_format: Pipe format for tooltip values.
 
     **Example:**
 
@@ -465,6 +487,7 @@ class RadialChart(Component):
         ],
         data_key="visitors",
         name_key="browser",
+        value_format="compact",
     )
     ```
     """
@@ -493,6 +516,11 @@ class RadialChart(Component):
     )
     animate: bool = Field(
         default=True, description="Animate transitions when data changes"
+    )
+    value_format: ChartValueFormat = Field(
+        default="auto",
+        alias="valueFormat",
+        description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
 
 
