@@ -6,7 +6,7 @@ icon: chart-area
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-AreaChart fills the region between a line and the axis, emphasizing the magnitude of values over time. It supports stacking, which makes it easy to show how parts contribute to a whole.
+AreaChart fills the region between a line and the axis, emphasizing the magnitude of values over time. It supports stacking, which makes it easy to show how parts contribute to a whole. See [Charts](/components/charts) for the shared data, series, and formatting model.
 
 ## Basic Usage
 
@@ -120,14 +120,14 @@ AreaChart(
 
 ## Minimal
 
-Turn off the grid for a cleaner look.
+Set `show_grid=False` to drop the background gridlines. Without them the filled area reads as a single glanceable shape — a good fit for compact trend cards where the silhouette matters more than reading exact values off an axis.
 
-<ComponentPreview json={{"view":{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"value","label":"Requests"}],"xAxis":"month","height":300,"stacked":false,"curve":"linear","showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false,"showYAxis":true,"valueFormat":"auto"}}} playground="QXJlYUNoYXJ0KAogICAgZGF0YT1kYXRhLAogICAgc2VyaWVzPVtDaGFydFNlcmllcyhkYXRhX2tleT0idmFsdWUiLCBsYWJlbD0iUmVxdWVzdHMiKV0sCiAgICB4X2F4aXM9Im1vbnRoIiwKICAgIHNob3dfZ3JpZD1GYWxzZSwKKQo">
+<ComponentPreview json={{"view":{"type":"AreaChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"}],"xAxis":"month","height":300,"stacked":false,"curve":"linear","showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false,"showYAxis":true,"valueFormat":"auto"}}} playground="QXJlYUNoYXJ0KAogICAgZGF0YT1kYXRhLAogICAgc2VyaWVzPVtDaGFydFNlcmllcyhkYXRhX2tleT0iZGVza3RvcCIsIGxhYmVsPSJEZXNrdG9wIildLAogICAgeF9heGlzPSJtb250aCIsCiAgICBzaG93X2dyaWQ9RmFsc2UsCikK">
 <CodeGroup>
 ```python Python {5} icon="python"
 AreaChart(
     data=data,
-    series=[ChartSeries(data_key="value", label="Requests")],
+    series=[ChartSeries(data_key="desktop", label="Desktop")],
     x_axis="month",
     show_grid=False,
 )
@@ -144,7 +144,7 @@ AreaChart(
       {"month": "May", "desktop": 209, "mobile": 130},
       {"month": "Jun", "desktop": 214, "mobile": 140}
     ],
-    "series": [{"dataKey": "value", "label": "Requests"}],
+    "series": [{"dataKey": "desktop", "label": "Desktop"}],
     "xAxis": "month",
     "height": 300,
     "stacked": false,
@@ -366,6 +366,10 @@ AreaChart(
   Show horizontal grid lines.
 </ParamField>
 
+<ParamField body="show_y_axis" type="bool" default="True">
+  Show the y-axis with its tick labels. Set to `False` for a compact, axis-free reading where the shape matters more than exact values.
+</ParamField>
+
 <ParamField body="value_format" type="str" default='"auto"'>
   Format value-axis ticks and tooltip values with an expression pipe such as `currency`, `currency:EUR`, `percent:1`, or `compact:0`.
 </ParamField>
@@ -394,17 +398,21 @@ AreaChart(
 ```json AreaChart
 {
   "type": "AreaChart",
-  "data": "Action[] | string (required)",
+  "id?": "string",
+  "onMount?": "any",
+  "data": "object[] | string (required)",
   "series": "[ChartSeries] (required)",
   "xAxis?": "string",
   "height?": "300",
   "stacked?": false,
   "curve?": "linear | smooth | step",
   "showDots?": false,
-  "showLegend?": false,
+  "showLegend?": true,
   "showTooltip?": true,
+  "animate?": true,
   "showGrid?": true,
-  "valueFormat?": "auto",
+  "showYAxis?": true,
+  "valueFormat?": "string",
   "cssClass?": "string"
 }
 ```

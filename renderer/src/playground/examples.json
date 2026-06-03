@@ -10,9 +10,9 @@
     "code": "from prefab_ui.actions import CallHandler\n\nButton(\"Recalculate\", on_click=CallHandler(\n    \"recalculate\",\n    arguments={\"mode\": \"aggressive\", \"total\": \"{{ budget }}\"},\n))"
   },
   {
-    "title": "from prefab_ui.actions import CallHandler, SetState, ShowToast",
+    "title": "from prefab_ui.actions import CallHandler, ShowToast",
     "category": "Actions",
-    "code": "from prefab_ui.rx import RESULT\n\nButton(\"Validate\", on_click=CallHandler(\n    \"validate\",\n    on_success=ShowToast(\"Valid!\", variant=\"success\"),\n    on_error=ShowToast(\"Validation failed\", variant=\"error\"),\n))"
+    "code": "Button(\"Validate\", on_click=CallHandler(\n    \"validate\",\n    on_success=ShowToast(\"Valid!\", variant=\"success\"),\n    on_error=ShowToast(\"Validation failed\", variant=\"error\"),\n))"
   },
   {
     "title": "from prefab_ui.actions import CallHandler, SetState",
@@ -297,7 +297,7 @@
   {
     "title": "Python {5} icon=\"python\"",
     "category": "Components",
-    "code": "AreaChart(\n    data=data,\n    series=[ChartSeries(data_key=\"value\", label=\"Requests\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
+    "code": "AreaChart(\n    data=data,\n    series=[ChartSeries(data_key=\"desktop\", label=\"Desktop\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
   },
   {
     "title": "Python {8} icon=\"python\"",
@@ -357,7 +357,7 @@
   {
     "title": "Python {5} icon=\"python\"",
     "category": "Components",
-    "code": "BarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"revenue\", label=\"Revenue\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
+    "code": "BarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"desktop\", label=\"Desktop\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
   },
   {
     "title": "Python {8} icon=\"python\"",
@@ -523,6 +523,16 @@
     "title": "icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Carousel, Div\n\nwith Carousel(continuous=True, speed=3, show_controls=False, visible=4, gap=12, css_class=\"w-full\"):\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"80px\"})\n    Div(css_class=\"bg-emerald-500 rounded-lg\", style={\"height\": \"80px\"})\n    Div(css_class=\"bg-violet-500 rounded-lg\", style={\"height\": \"80px\"})\n    Div(css_class=\"bg-amber-500 rounded-lg\", style={\"height\": \"80px\"})\n    Div(css_class=\"bg-purple-500 rounded-lg\", style={\"height\": \"80px\"})\n    Div(css_class=\"bg-blue-500 rounded-lg\", style={\"height\": \"80px\"})"
+  },
+  {
+    "title": "Python icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import BarChart, ChartSeries\n\ndata = [\n    {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n    {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n    {\"month\": \"Mar\", \"desktop\": 237, \"mobile\": 120},\n]\n\nBarChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n)"
+  },
+  {
+    "title": "from prefab_ui.components.charts import ChartSeries",
+    "category": "Components",
+    "code": "ChartSeries(data_key=\"revenue\", label=\"Revenue\", color=\"var(--chart-1)\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1232,7 +1242,7 @@
   {
     "title": "Python {5} icon=\"python\"",
     "category": "Components",
-    "code": "LineChart(\n    data=data,\n    series=[ChartSeries(data_key=\"value\", label=\"Requests\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
+    "code": "LineChart(\n    data=data,\n    series=[ChartSeries(data_key=\"desktop\", label=\"Desktop\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
   },
   {
     "title": "Python {8} icon=\"python\"",
@@ -1327,7 +1337,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import STATE as state, Metric\n\n\nMetric(label=\"Revenue\", value=f\"${(state.revenue / 1_000_000).round()}M\")"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import STATE as state, Metric\n\nwith PrefabApp(state={\"revenue\": 42_000_000}) as app:\n    Metric(label=\"Revenue\", value=f\"${(state.revenue / 1_000_000).round()}M\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1412,7 +1422,7 @@
   {
     "title": "from prefab_ui.components import Button, Popover, Text",
     "category": "Components",
-    "code": "with Popover(title=\"Guide Entry\", side=\"right\"):\n    Button(\"Hover for info\", variant=\"outline\")\n    Text(\"A towel is about the most massively useful thing an interstellar hitchhiker can have.\")"
+    "code": "with Popover(title=\"Guide Entry\", side=\"right\"):\n    Button(\"Click for info\", variant=\"outline\")\n    Text(\"A towel is about the most massively useful thing an interstellar hitchhiker can have.\")"
   },
   {
     "title": "Python icon=\"python\"",
@@ -1467,7 +1477,7 @@
   {
     "title": "Python {5} icon=\"python\"",
     "category": "Components",
-    "code": "RadarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"score\", label=\"Score\")],\n    axis_key=\"subject\",\n    show_grid=False,\n)"
+    "code": "RadarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"alice\", label=\"Alice\")],\n    axis_key=\"subject\",\n    show_grid=False,\n)"
   },
   {
     "title": "Python {8} icon=\"python\"",
@@ -1947,7 +1957,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Components",
-    "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://interactive-examples.mdn.mozilla.net\"\n    \"/media/cc0-videos/flower.webm\",\n    width=\"100%\",\n)"
+    "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://mdn.github.io/shared-assets/videos/flower.mp4\",\n    width=\"100%\",\n)"
   },
   {
     "title": "Autoplay with loop",
@@ -2232,7 +2242,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input, Label,\n)\n\nwith Column(gap=3):\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field():\n        Label(\"Name\")\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field():\n        Label(\"Title\")\n        Input(name=\"profile.title\", placeholder=\"Title\")\n\napp = PrefabApp(\n    state={\n        \"profile\": {\n            \"name\": \"Arthur Dent\",\n            \"title\": \"Sandwich Maker, Lamuella\",\n        },\n    },\n    view=Column(gap=3),\n)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import (\n    Card, CardDescription, CardHeader, CardTitle,\n    Column, Field, Input, Label,\n)\n\nwith Column(gap=3) as view:\n    with Card():\n        with CardHeader():\n            CardTitle(\"{{ profile.name }}\")\n            CardDescription(\"{{ profile.title }}\")\n    with Field():\n        Label(\"Name\")\n        Input(name=\"profile.name\", placeholder=\"Name\")\n    with Field():\n        Label(\"Title\")\n        Input(name=\"profile.title\", placeholder=\"Title\")\n\napp = PrefabApp(\n    state={\n        \"profile\": {\n            \"name\": \"Arthur Dent\",\n            \"title\": \"Sandwich Maker, Lamuella\",\n        },\n    },\n    view=view,\n)"
   },
   {
     "title": "icon=\"python\"",
@@ -2302,7 +2312,7 @@
   {
     "title": "Python icon=\"python\" expandable",
     "category": "Examples",
-    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    Checkbox, Column, Form, Grid, Input, Muted, Row, Separator,\n)\nfrom prefab_ui.components.control_flow import ForEach, If\nfrom prefab_ui.actions import AppendState, PopState, SetState\nfrom prefab_ui.rx import Rx\n\n# Each group has a name, a list of todos, an input buffer, and a visibility flag\nwith Grid(min_column_width=\"12rem\", gap=6, align=\"start\"):\n\n    # Destructure to capture the group index (gi) and the group itself.\n    # Each ForEach auto-captures $item and $index into scoped let bindings,\n    # so nested loops don't shadow each other.\n    with ForEach(\"groups\") as (gi, group):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    Input(\n                        name=f\"groups.{gi}.name\",\n                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0\",\n                    )\n                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups\", gi))\n            with CardContent():\n                with Column(gap=4):\n                    with Form(gap=0, on_submit=[\n                        AppendState(f\"groups.{gi}.todos\", {\"text\": group.new_todo, \"done\": False}),\n                        SetState(f\"groups.{gi}.new_todo\", \"\"),\n                    ]):\n                        with Row(gap=2):\n                            Input(name=f\"groups.{gi}.new_todo\", placeholder=\"Add a todo...\")\n                            Button(\"Add\", disabled=~group.new_todo)\n\n                    with Column(gap=2):\n                        with If(group.todos.length()):\n                            Separator(spacing=3)\n                        with ForEach(f\"groups.{gi}.todos\") as (ti, todo):\n                            with If(~todo.done | group.show_done):\n                                with Row(gap=2, align=\"center\"):\n                                    Checkbox(name=f\"groups.{gi}.todos.{ti}.done\")\n                                    Input(\n                                        name=f\"groups.{gi}.todos.{ti}.text\",\n                                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0\",\n                                    )\n                                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(f\"groups.{gi}.todos\", ti))\n\n            with CardFooter():\n                with Row(gap=2, align=\"center\", css_class=\"w-full justify-between\"):\n                    Muted(f\"{group.todos.length()} items\")\n                    with Row(gap=1, align=\"center\"):\n                        Checkbox(name=f\"groups.{gi}.show_done\", css_class=\"h-3 w-3\")\n                        Muted(\"Show done\")\n\n    with Card(css_class=\"border-dashed p-3\"):\n        Button(\n            \"+\",\n            variant=\"ghost\",\n            size=\"lg\",\n            css_class=\"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md\",\n            on_click=AppendState(\"groups\", {\"name\": \"New List\", \"todos\": [], \"new_todo\": \"\", \"show_done\": True}),\n        )\n\napp = PrefabApp(\n    state={\n        \"groups\": [\n            {\n                \"name\": \"Work\",\n                \"todos\": [\n                    {\"text\": \"Find Magrathea\", \"done\": False},\n                    {\"text\": \"Escape Vogons\", \"done\": False},\n                ],\n                \"new_todo\": \"\",\n                \"show_done\": True,\n            },\n            {\n                \"name\": \"Personal\",\n                \"todos\": [\n                    {\"text\": \"Have lunch at Milliways\", \"done\": True},\n                    {\"text\": \"Buy towel\", \"done\": False},\n                ],\n                \"new_todo\": \"\",\n                \"show_done\": True,\n            },\n        ],\n    },\n    view=Grid(min_column_width=\"12rem\", gap=6, align=\"start\"),\n)"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import (\n    Button, Card, CardContent, CardFooter, CardHeader,\n    Checkbox, Column, Form, Grid, Input, Muted, Row, Separator,\n)\nfrom prefab_ui.components.control_flow import ForEach, If\nfrom prefab_ui.actions import AppendState, PopState, SetState\nfrom prefab_ui.rx import Rx\n\n# Each group has a name, a list of todos, an input buffer, and a visibility flag\nwith Grid(min_column_width=\"12rem\", gap=6, align=\"start\") as view:\n\n    # Destructure to capture the group index (gi) and the group itself.\n    # Each ForEach auto-captures $item and $index into scoped let bindings,\n    # so nested loops don't shadow each other.\n    with ForEach(\"groups\") as (gi, group):\n        with Card():\n            with CardHeader():\n                with Row(gap=2, align=\"center\"):\n                    Input(\n                        name=f\"groups.{gi}.name\",\n                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto font-semibold text-lg focus-visible:ring-0 focus-visible:ring-offset-0\",\n                    )\n                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(\"groups\", gi))\n            with CardContent():\n                with Column(gap=4):\n                    with Form(gap=0, on_submit=[\n                        AppendState(f\"groups.{gi}.todos\", {\"text\": group.new_todo, \"done\": False}),\n                        SetState(f\"groups.{gi}.new_todo\", \"\"),\n                    ]):\n                        with Row(gap=2):\n                            Input(name=f\"groups.{gi}.new_todo\", placeholder=\"Add a todo...\")\n                            Button(\"Add\", disabled=~group.new_todo)\n\n                    with Column(gap=2):\n                        with If(group.todos.length()):\n                            Separator(spacing=3)\n                        with ForEach(f\"groups.{gi}.todos\") as (ti, todo):\n                            with If(~todo.done | group.show_done):\n                                with Row(gap=2, align=\"center\"):\n                                    Checkbox(name=f\"groups.{gi}.todos.{ti}.done\")\n                                    Input(\n                                        name=f\"groups.{gi}.todos.{ti}.text\",\n                                        css_class=\"border-0 ring-0 shadow-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0\",\n                                    )\n                                    Button(\"×\", variant=\"ghost\", size=\"sm\", css_class=\"ml-auto\", on_click=PopState(f\"groups.{gi}.todos\", ti))\n\n            with CardFooter():\n                with Row(gap=2, align=\"center\", css_class=\"w-full justify-between\"):\n                    Muted(f\"{group.todos.length()} items\")\n                    with Row(gap=1, align=\"center\"):\n                        Checkbox(name=f\"groups.{gi}.show_done\", css_class=\"h-3 w-3\")\n                        Muted(\"Show done\")\n\n    with Card(css_class=\"border-dashed p-3\"):\n        Button(\n            \"+\",\n            variant=\"ghost\",\n            size=\"lg\",\n            css_class=\"text-4xl text-muted-foreground w-full h-full min-h-48 rounded-md\",\n            on_click=AppendState(\"groups\", {\"name\": \"New List\", \"todos\": [], \"new_todo\": \"\", \"show_done\": True}),\n        )\n\napp = PrefabApp(\n    state={\n        \"groups\": [\n            {\n                \"name\": \"Work\",\n                \"todos\": [\n                    {\"text\": \"Find Magrathea\", \"done\": False},\n                    {\"text\": \"Escape Vogons\", \"done\": False},\n                ],\n                \"new_todo\": \"\",\n                \"show_done\": True,\n            },\n            {\n                \"name\": \"Personal\",\n                \"todos\": [\n                    {\"text\": \"Have lunch at Milliways\", \"done\": True},\n                    {\"text\": \"Buy towel\", \"done\": False},\n                ],\n                \"new_todo\": \"\",\n                \"show_done\": True,\n            },\n        ],\n    },\n    view=view,\n)"
   },
   {
     "title": "app.py",

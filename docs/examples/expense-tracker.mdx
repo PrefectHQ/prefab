@@ -251,3 +251,13 @@ with Column(gap=4):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The interesting move here is that all the math happens in plain Python *before* any component exists. The `expenses` list is the single source of truth; `total = sum(cost for _, cost, _ in expenses)` and `budget = 95_000` are ordinary Python numbers, and the per-category `pct` and `variant` are computed in a loop. By the time a component is constructed, every value is already a concrete string or number. There is no [state](/concepts/state) and no [reactive expression](/concepts/expressions) on this page — the data is fixed, so the script bakes the answers in and lets the renderer handle only presentation and table interactivity.
+
+That loop is also where the example shows off **component cells**. Instead of putting plain text in the [DataTable](/components/data-table), each row's `category` and `share` values are full [Badge](/components/badge) components: `{"category": Badge(name, variant=variant), ...}`. A DataTable cell can hold any component, not just a string, so the same `variant` that classifies a category (`destructive` over 40% of spend, `secondary` under 15%) colors both badges consistently. The table still sorts and searches across those columns because it works against the underlying row data.
+
+The [PieChart](/components/pie-chart) is fed a separate `pie_data` projection — `[{"category": name, "cost": cost} ...]` — because charts want raw numbers keyed by `data_key="cost"` and `name_key="category"`, not the formatted badges the table displays. Deriving two shapes from one `expenses` list keeps the donut and the table in agreement while giving each component exactly the structure it expects.
+
+The budget [Alert](/components/alert) at the bottom is rendered unconditionally, but its text is computed from the same totals (`round(total / budget * 100)`), so the warning always reflects the real numbers. In a version with editable expenses you would lift `expenses` into state and let the totals, chart, table, and alert all recompute from a reactive expression instead of fixed Python values.

@@ -967,6 +967,7 @@ with Carousel(continuous=True, speed=3, show_controls=False, visible=4, gap=12, 
 
 ## API Reference
 
+<Card icon="code" title="Carousel Parameters">
 <ParamField body="visible" type="float | None" default="1">
   How many slides to show at once. Whole numbers (`3`) show that many full slides. Decimals (`1.3`) show partial slides at the edges — 1.3 means one full slide plus 30% of the next. `None` uses each slide's natural width (default for marquee when `visible` is omitted).
 </ParamField>
@@ -1035,6 +1036,39 @@ with Carousel(continuous=True, speed=3, show_controls=False, visible=4, gap=12, 
   Allow drag/swipe to navigate.
 </ParamField>
 
-<ParamField body="css_class" type="str">
-  Additional CSS classes for the carousel container.
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes for the carousel container.
 </ParamField>
+</Card>
+
+## Protocol Reference
+
+```json Carousel
+{
+  "type": "Carousel",
+  "id?": "string",
+  "onMount?": "any",
+  "children?": "[Component]",
+  "let?": "object",
+  "visible?": "number",
+  "gap?": 16,
+  "height?": "number",
+  "direction?": "left | right | up | down",
+  "loop?": true,
+  "autoAdvance?": 0,
+  "continuous?": false,
+  "speed?": 2,
+  "effect?": "slide | fade",
+  "dimInactive?": false,
+  "showControls?": true,
+  "controlsPosition?": "overlay | outside | gutter",
+  "showDots?": false,
+  "pauseOnHover?": true,
+  "align?": "start | center | end",
+  "slidesToScroll?": 1,
+  "drag?": true,
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [Carousel](/protocol/carousel).

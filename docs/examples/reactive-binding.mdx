@@ -173,3 +173,13 @@ with Card(css_class="w-full"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The entire page is driven by a single piece of [state](/concepts/state): `level`, a number from 0 to 100. The `Slider` declares `name="level"`, which binds it to that key — dragging the slider writes the new value back to state, and every component reading `level` re-renders. Nothing else holds state; the ring, the four bars, and the status line are all derived views of that one number.
+
+`level = Rx("level")` creates a reactive reference to the state key. The power of [`Rx`](/concepts/expressions) is that ordinary Python operators on it build expressions rather than computing values immediately. `100 - level`, `level * 2`, and `level / 2` each compile to an expression string (`{{ 100 - level }}`, `{{ level * 2 }}`, `{{ level / 2 }}`) that the renderer evaluates live. That is how the "Inverse," "Doubled," and "Halved" bars stay in sync with the slider without any extra state or callbacks — they are arithmetic on the same source value.
+
+The shared `variant` shows how to compute a value once and reuse it. `(level > 75).then("destructive", (level > 40).then("warning", "success"))` builds a nested ternary: above 75 it resolves to `destructive`, above 40 to `warning`, otherwise `success`. Assigning it to a Python variable lets the ring and the "Primary" progress bar both reference the same compiled expression, so their colors always agree as you cross each threshold.
+
+Text interpolation works the same way. The `Ring` label `f"{level}%"` and the status line `f"Level is {level}% — ..."` embed reactive references inside f-strings, and an inline `.then()` chain inside the status f-string swaps the words `critical!`, `nominal`, and `low` at the same boundaries. Because every binding traces back to `level`, a single drag updates the whole card in one pass.

@@ -92,4 +92,10 @@ with Column(gap=6, css_class="max-w-sm mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
-The `.then()` chains compile to nested ternary expressions in the wire format — `{{ slider_1 < 20 ? 'bg-red-500' : ... }}` — which the renderer re-evaluates on every state change. Because `val = slider.rx` is a reactive reference, any prop that receives it (here `value`, `indicator_class`, and the `Text` content) updates instantly as the slider moves.
+## How It Works
+
+The meter is driven by one piece of [state](/concepts/state): the value of the `Slider` at the bottom. Rather than passing `name="..."` and referencing a string key, this example uses an *anonymous* binding — the `Slider` auto-generates its own state key, and `val = Rx(lambda: slider)` captures a [reactive reference](/concepts/expressions) to it. The `lambda` defers the lookup, so `val` can be defined at the top of the column even though `slider` itself is created at the bottom. Everything above reads through `val`; the slider is the only thing that writes.
+
+The color logic is a `.then()` chain that reads like nested `if`/`elif`. `(val < 20).then("bg-red-500", (val < 60).then("bg-primary", (val < 75).then("bg-amber-500", "bg-green-500")))` resolves to red below 20, the primary color below 60, amber below 75, and green above — each `.then(a, b)` is "use `a` if the condition holds, otherwise fall through to `b`." The chain compiles to a nested ternary in the wire format — `{{ slider_1 < 20 ? 'bg-red-500' : ... }}` — which the renderer re-evaluates on every state change. Passing it to `indicator_class` swaps the bar's Tailwind color class live as you drag.
+
+The same reference feeds the other reactive props without extra work. `Progress(value=val)` drives the bar's fill, and the readout `Text((val / 100).percent(), bold=True)` divides the value into a fraction and formats it as a percentage. Because `value`, `indicator_class`, and the `Text` content all trace back to the one slider, a single drag updates the number, the fill, and the color in one pass.

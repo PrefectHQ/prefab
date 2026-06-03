@@ -35,6 +35,8 @@ Checkbox(label="Accept terms and conditions")
 
 ## Checked State
 
+Pass `value=True` to render a checkbox already ticked. Use this for options that should be opted in by default, like a newsletter subscription the user can clear if they'd rather not.
+
 <ComponentPreview json={{"view":{"name":"checkbox_2","value":true,"type":"Checkbox","label":"Subscribe to newsletter","disabled":false,"required":false},"state":{"checkbox_2":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2hlY2tib3gKCkNoZWNrYm94KGxhYmVsPSJTdWJzY3JpYmUgdG8gbmV3c2xldHRlciIsIHZhbHVlPVRydWUpCg">
 <CodeGroup>
 ```python Python icon="python"
@@ -59,6 +61,8 @@ Checkbox(label="Subscribe to newsletter", value=True)
 </ComponentPreview>
 
 ## Multiple Checkboxes
+
+Each checkbox binds to its own independent state key, so toggling one never affects the others. Reach for a set of checkboxes when the choices are not mutually exclusive and any combination is valid — unlike a grouped Radio, where selecting one option clears the rest.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_3","value":true,"type":"Checkbox","label":"Email notifications","disabled":false,"required":false},{"name":"checkbox_4","value":false,"type":"Checkbox","label":"SMS notifications","disabled":false,"required":false},{"name":"checkbox_5","value":true,"type":"Checkbox","label":"Push notifications","disabled":false,"required":false}]},"state":{"checkbox_3":true,"checkbox_4":false,"checkbox_5":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0zLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENoZWNrYm94KGxhYmVsPSJFbWFpbCBub3RpZmljYXRpb25zIiwgdmFsdWU9VHJ1ZSkKICAgIENoZWNrYm94KGxhYmVsPSJTTVMgbm90aWZpY2F0aW9ucyIpCiAgICBDaGVja2JveChsYWJlbD0iUHVzaCBub3RpZmljYXRpb25zIiwgdmFsdWU9VHJ1ZSkK">
 <CodeGroup>
@@ -171,6 +175,8 @@ with Column(gap=4, css_class="w-fit mx-auto"):
 </ComponentPreview>
 
 ## With Disabled State
+
+Set `disabled=True` to show an option that can't be changed right now while still keeping its checked or unchecked value visible. This is the right state for a choice that's locked by a permission or a prerequisite the user hasn't met yet.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3 w-fit mx-auto","type":"Column","children":[{"name":"checkbox_6","value":false,"type":"Checkbox","label":"Enabled option","disabled":false,"required":false},{"name":"checkbox_7","value":false,"type":"Checkbox","label":"Disabled option","disabled":true,"required":false},{"name":"checkbox_8","value":true,"type":"Checkbox","label":"Disabled & checked","disabled":true,"required":false}]},"state":{"checkbox_6":false,"checkbox_7":false,"checkbox_8":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2hlY2tib3gsCiAgICBDb2x1bW4sCikKCndpdGggQ29sdW1uKGdhcD0zLCBjc3NfY2xhc3M9InctZml0IG14LWF1dG8iKToKICAgIENoZWNrYm94KGxhYmVsPSJFbmFibGVkIG9wdGlvbiIpCiAgICBDaGVja2JveChsYWJlbD0iRGlzYWJsZWQgb3B0aW9uIiwgZGlzYWJsZWQ9VHJ1ZSkKICAgIENoZWNrYm94KGxhYmVsPSJEaXNhYmxlZCAmIGNoZWNrZWQiLCB2YWx1ZT1UcnVlLCBkaXNhYmxlZD1UcnVlKQo">
 <CodeGroup>

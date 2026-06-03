@@ -327,7 +327,7 @@ For simple "show the current selection" cases, `.rx` is the better approach. Use
 </ParamField>
 
 <ParamField body="on_change" type="Action | list[Action] | None" default="None">
-  Action(s) to execute when the selection changes. `$event` is the `value` string of the selected radio.
+  Action(s) to execute when the selection changes. `$event` is the `option` string of the selected radio.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -379,16 +379,17 @@ For simple "show the current selection" cases, `.rx` is the better approach. Use
 
 ```json Radio
 {
-  "type": "RadioGroup",
+  "type": "Radio",
   "id?": "string",
   "onMount?": "any",
-  "children?": "[Component]",
-  "let?": "object",
   "name?": "string",
-  "value?": "string",
-  "onChange?": "Action | Action[]",
+  "value?": "boolean | string",
+  "option": "string (required)",
+  "label?": "string",
+  "disabled?": false,
+  "required?": false,
   "cssClass?": "string"
 }
 ```
 
-For the complete protocol schema, see [RadioGroup](/protocol/radio-group), [Radio](/protocol/radio-group).
+For the complete protocol schema, see [RadioGroup](/protocol/radio-group), [Radio](/protocol/radio).

@@ -199,3 +199,13 @@ with PrefabApp(
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The whole dashboard runs off a single integer in [state](/concepts/state): `tick`, which starts at `0`. The [PrefabApp](/reference/app) declares `on_mount=SetInterval(400, on_tick=SetState("tick", tick + 1))`, so once the view mounts, a timer fires every 400 milliseconds and writes `tick + 1` back into state. Nothing else changes — every animated number on the screen is a [reactive expression](/concepts/expressions) derived from that one counter.
+
+Those derivations are built in Python using [`Rx`](/concepts/expressions). `tick = Rx("tick")` is a handle to the state key, and ordinary arithmetic on it produces an expression rather than a value: `cpu = tick % 20 * 4 + 15` compiles to the string `{{ tick % 20 * 4 + 15 }}` that the renderer evaluates on every frame. Because `tick` climbs forever, the modulo keeps `cpu` cycling through a bounded range, which is what makes the metrics oscillate instead of running off the chart. `mem`, `requests`, and `latency` are the same trick with different constants.
+
+The color changes come from `cpu_variant = (cpu > 80).then("destructive", (cpu > 50).then("warning", "success"))`. The `.then()` method builds a nested ternary — green below 50, amber below 80, red above — and the result feeds three separate props at once: the [Badge](/components/badge) variant, the [Progress](/components/progress) bar variant, and (implicitly) the badge label. They stay in lockstep because they read the same expression, so the badge and the bar can never disagree about system health.
+
+Notice what is *not* here: no callback, no re-render loop, no server. `SetInterval` and `SetState` are client-side [actions](/concepts/actions) the renderer runs on its own. The Python script executes once to emit the component tree and its embedded expressions; from then on the browser owns the clock. The [Sparkline](/components/sparkline) data is static — the live feel comes entirely from the expressions reacting to `tick`.

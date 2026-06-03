@@ -6,7 +6,7 @@ icon: chart-bar
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-BarChart renders one or more data series as vertical bars. Each `ChartSeries` maps a key from your data to a set of bars, and `x_axis` controls the category labels along the bottom. Colors are automatically assigned from the theme's chart palette.
+BarChart renders one or more data series as vertical bars. Each `ChartSeries` maps a key from your data to a set of bars, and `x_axis` controls the category labels along the bottom. Colors are automatically assigned from the theme's chart palette. See [Charts](/components/charts) for the shared data, series, and formatting model.
 
 ## Basic Usage
 
@@ -120,14 +120,14 @@ BarChart(
 
 ## Minimal
 
-Turn off the grid for a cleaner look.
+Set `show_grid=False` to drop the background gridlines. Bars carry their own baseline, so the chart stays readable without them — cleaner for compact or embedded views where exact values aren't the point.
 
-<ComponentPreview json={{"view":{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"revenue","label":"Revenue"}],"xAxis":"month","height":300,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false,"showYAxis":true,"valueFormat":"auto"}}} playground="QmFyQ2hhcnQoCiAgICBkYXRhPWRhdGEsCiAgICBzZXJpZXM9W0NoYXJ0U2VyaWVzKGRhdGFfa2V5PSJyZXZlbnVlIiwgbGFiZWw9IlJldmVudWUiKV0sCiAgICB4X2F4aXM9Im1vbnRoIiwKICAgIHNob3dfZ3JpZD1GYWxzZSwKKQo">
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120},{"month":"Apr","desktop":73,"mobile":190},{"month":"May","desktop":209,"mobile":130},{"month":"Jun","desktop":214,"mobile":140}],"series":[{"dataKey":"desktop","label":"Desktop"}],"xAxis":"month","height":300,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false,"showYAxis":true,"valueFormat":"auto"}}} playground="QmFyQ2hhcnQoCiAgICBkYXRhPWRhdGEsCiAgICBzZXJpZXM9W0NoYXJ0U2VyaWVzKGRhdGFfa2V5PSJkZXNrdG9wIiwgbGFiZWw9IkRlc2t0b3AiKV0sCiAgICB4X2F4aXM9Im1vbnRoIiwKICAgIHNob3dfZ3JpZD1GYWxzZSwKKQo">
 <CodeGroup>
 ```python Python {5} icon="python"
 BarChart(
     data=data,
-    series=[ChartSeries(data_key="revenue", label="Revenue")],
+    series=[ChartSeries(data_key="desktop", label="Desktop")],
     x_axis="month",
     show_grid=False,
 )
@@ -144,7 +144,7 @@ BarChart(
       {"month": "May", "desktop": 209, "mobile": 130},
       {"month": "Jun", "desktop": 214, "mobile": 140}
     ],
-    "series": [{"dataKey": "revenue", "label": "Revenue"}],
+    "series": [{"dataKey": "desktop", "label": "Desktop"}],
     "xAxis": "month",
     "height": 300,
     "stacked": false,
@@ -308,6 +308,10 @@ BarChart(
   Show horizontal grid lines.
 </ParamField>
 
+<ParamField body="show_y_axis" type="bool" default="True">
+  Show the y-axis with its tick labels. Set to `False` for a compact, axis-free reading where the shape matters more than exact values.
+</ParamField>
+
 <ParamField body="value_format" type="str" default='"auto"'>
   Format value-axis ticks and tooltip values with an expression pipe such as `currency`, `currency:EUR`, `percent:1`, or `compact:0`.
 </ParamField>
@@ -336,16 +340,21 @@ BarChart(
 ```json BarChart
 {
   "type": "BarChart",
-  "data": "Action[] | string (required)",
+  "id?": "string",
+  "onMount?": "any",
+  "data": "object[] | string (required)",
   "series": "[ChartSeries] (required)",
   "xAxis?": "string",
   "height?": "300",
   "stacked?": false,
   "horizontal?": false,
   "barRadius?": 4,
-  "showLegend?": false,
+  "showLegend?": true,
   "showTooltip?": true,
+  "animate?": true,
   "showGrid?": true,
+  "showYAxis?": true,
+  "valueFormat?": "string",
   "cssClass?": "string"
 }
 ```

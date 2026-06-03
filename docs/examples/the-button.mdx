@@ -268,3 +268,13 @@ with PrefabApp(state={"presses": 0}, css_class="max-w-none p-0"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The whole escalation runs off one integer in [state](/concepts/state): `presses`, seeded to `0` by `PrefabApp(state={"presses": 0})`. `presses = Rx("presses")` is a reactive reference used both to branch the UI and to advance it. There is no notion of a "screen" or a "step" stored anywhere — the current screen is purely a function of the press count.
+
+The body is a single [conditional](/concepts/expressions) chain: `If(presses == 0)`, then `Elif(presses == 1)`, `Elif(presses == 2)`, `Elif(presses == 3)`, and a final `Else()`. [`Elif`](/components/conditional) works like Python's, so exactly one branch renders for any value of `presses`. Each comparison (`presses == 1`, and so on) compiles to an expression the renderer evaluates live, swapping the entire content region as the count changes.
+
+The button in each branch advances the count with an [action](/concepts/actions). The first three carry `on_click=SetState(presses, presses + 1)` — `presses + 1` is a reactive expression evaluated at click time, so each press moves to the next state. The fourth branch (`presses == 3`) instead resets with `SetState(presses, 0)`, looping back to the start, which is why "press it one more time" returns you to the original button. The trailing `Else()` is a safety net that never renders in normal use.
+
+The header and footer read the same key independently. `with If(presses > 0):` in the header shows a `Badge` with the live press count, and the matching guard in the footer reveals the "Share and Enjoy!" line once you've pressed at least once. Both update automatically because they depend on `presses`, the single source the button writes to.

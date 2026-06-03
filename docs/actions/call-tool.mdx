@@ -200,6 +200,14 @@ String names go through the same resolver, so they also benefit from `unwrapResu
 <ParamField body="arguments" type="dict[str, Any]" default="{}">
   Arguments to pass to the tool. Values support `{{ key }}` interpolation to reference client-side state at call time.
 </ParamField>
+
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the tool call succeeds. The returned value is available as `$result`.
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the tool call fails. The error message is available as `$error`.
+</ParamField>
 </Card>
 
 ## Protocol Reference
