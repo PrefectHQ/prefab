@@ -56,6 +56,28 @@ def _get_class(name: str) -> type | None:
     return None
 
 
+def _item_label(items: dict[str, Any]) -> str:
+    """Label a single array item type (e.g. ``Action``, ``number``, ``object``)."""
+    if "$ref" in items:
+        return items["$ref"].rsplit("/", 1)[-1]
+    if "anyOf" in items:
+        for opt in items["anyOf"]:
+            if opt.get("type") == "null":
+                continue
+            t = opt.get("type", "any")
+            return "number" if t == "integer" else t
+        return "any"
+    t = items.get("type", "any") if items else "any"
+    return "number" if t == "integer" else t
+
+
+def _array_label(arr: dict[str, Any]) -> str:
+    """Label an array branch by its item type (e.g. ``Action[]``, ``number[]``, ``[number, number]``)."""
+    if "prefixItems" in arr:
+        return "[" + ", ".join(_item_label(it) for it in arr["prefixItems"]) + "]"
+    return _item_label(arr.get("items", {})) + "[]"
+
+
 def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
     """Format a field's type/default as a compact pseudocode value."""
     # Enum → pipe-separated values
@@ -77,8 +99,9 @@ def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
             elif opt.get("type") == "null":
                 continue  # skip null in display, the ? suffix handles optionality
             elif opt.get("type") == "array":
-                if "Action[]" not in parts:
-                    parts.append("Action[]")
+                label = _array_label(opt)
+                if label not in parts:
+                    parts.append(label)
             else:
                 parts.append(_format_value(opt, defs))
         return " | ".join(parts) if parts else "any"
