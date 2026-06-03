@@ -37,6 +37,8 @@ Controls are shown by default. The first positional argument is `src`.
 
 ## Playback Options
 
+`loop`, `autoplay`, and `muted` combine to create ambient background audio that starts on its own and repeats indefinitely. Browsers block autoplaying sound until the user interacts with the page, so `autoplay` only takes effect when paired with `muted` — start muted to satisfy that constraint, and reach for `loop` whenever the track should run continuously rather than play once and stop.
+
 ```python Looping background audio
 from prefab_ui.components import Audio
 

@@ -106,7 +106,7 @@ The full Rx system, including operators, formatting, and the `.rx` shorthand, is
 
 State values can be nested objects, and you reach into them with dot notation. `{{ profile.name }}` reads the `name` field of the `profile` object. The `name` prop accepts dot paths too, so inputs can bind directly to nested fields:
 
-<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3","type":"Column"}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEZpZWxkLCBJbnB1dCwgTGFiZWwsCikKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoInt7IHByb2ZpbGUubmFtZSB9fSIpCiAgICAgICAgICAgIENhcmREZXNjcmlwdGlvbigie3sgcHJvZmlsZS50aXRsZSB9fSIpCiAgICB3aXRoIEZpZWxkKCk6CiAgICAgICAgTGFiZWwoIk5hbWUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUubmFtZSIsIHBsYWNlaG9sZGVyPSJOYW1lIikKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiVGl0bGUiKQogICAgICAgIElucHV0KG5hbWU9InByb2ZpbGUudGl0bGUiLCBwbGFjZWhvbGRlcj0iVGl0bGUiKQoKYXBwID0gUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJwcm9maWxlIjogewogICAgICAgICAgICAibmFtZSI6ICJBcnRodXIgRGVudCIsCiAgICAgICAgICAgICJ0aXRsZSI6ICJTYW5kd2ljaCBNYWtlciwgTGFtdWVsbGEiLAogICAgICAgIH0sCiAgICB9LAogICAgdmlldz1Db2x1bW4oZ2FwPTMpLAopCg">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3","type":"Column","children":[{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"{{ profile.name }}"},{"type":"CardDescription","content":"{{ profile.title }}"}]}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Name","optional":false},{"name":"profile.name","type":"Input","inputType":"text","placeholder":"Name","disabled":false,"readOnly":false,"required":false}]},{"type":"Field","invalid":false,"disabled":false,"children":[{"type":"Label","text":"Title","optional":false},{"name":"profile.title","type":"Input","inputType":"text","placeholder":"Title","disabled":false,"readOnly":false,"required":false}]}]}]},"state":{"profile":{"name":"Arthur Dent","title":"Sandwich Maker, Lamuella"}}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwgQ2FyZERlc2NyaXB0aW9uLCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsCiAgICBDb2x1bW4sIEZpZWxkLCBJbnB1dCwgTGFiZWwsCikKCndpdGggQ29sdW1uKGdhcD0zKSBhcyB2aWV3OgogICAgd2l0aCBDYXJkKCk6CiAgICAgICAgd2l0aCBDYXJkSGVhZGVyKCk6CiAgICAgICAgICAgIENhcmRUaXRsZSgie3sgcHJvZmlsZS5uYW1lIH19IikKICAgICAgICAgICAgQ2FyZERlc2NyaXB0aW9uKCJ7eyBwcm9maWxlLnRpdGxlIH19IikKICAgIHdpdGggRmllbGQoKToKICAgICAgICBMYWJlbCgiTmFtZSIpCiAgICAgICAgSW5wdXQobmFtZT0icHJvZmlsZS5uYW1lIiwgcGxhY2Vob2xkZXI9Ik5hbWUiKQogICAgd2l0aCBGaWVsZCgpOgogICAgICAgIExhYmVsKCJUaXRsZSIpCiAgICAgICAgSW5wdXQobmFtZT0icHJvZmlsZS50aXRsZSIsIHBsYWNlaG9sZGVyPSJUaXRsZSIpCgphcHAgPSBQcmVmYWJBcHAoCiAgICBzdGF0ZT17CiAgICAgICAgInByb2ZpbGUiOiB7CiAgICAgICAgICAgICJuYW1lIjogIkFydGh1ciBEZW50IiwKICAgICAgICAgICAgInRpdGxlIjogIlNhbmR3aWNoIE1ha2VyLCBMYW11ZWxsYSIsCiAgICAgICAgfSwKICAgIH0sCiAgICB2aWV3PXZpZXcsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.app import PrefabApp
@@ -115,7 +115,7 @@ from prefab_ui.components import (
     Column, Field, Input, Label,
 )
 
-with Column(gap=3):
+with Column(gap=3) as view:
     with Card():
         with CardHeader():
             CardTitle("{{ profile.name }}")
@@ -134,7 +134,7 @@ app = PrefabApp(
             "title": "Sandwich Maker, Lamuella",
         },
     },
-    view=Column(gap=3),
+    view=view,
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -142,7 +142,60 @@ app = PrefabApp(
   "view": {
     "cssClass": "pf-app-root",
     "type": "Div",
-    "children": [{"cssClass": "gap-3", "type": "Column"}]
+    "children": [
+      {
+        "cssClass": "gap-3",
+        "type": "Column",
+        "children": [
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [
+                  {"type": "CardTitle", "content": "{{ profile.name }}"},
+                  {"type": "CardDescription", "content": "{{ profile.title }}"}
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Field",
+            "invalid": false,
+            "disabled": false,
+            "children": [
+              {"type": "Label", "text": "Name", "optional": false},
+              {
+                "name": "profile.name",
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "Name",
+                "disabled": false,
+                "readOnly": false,
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": "Field",
+            "invalid": false,
+            "disabled": false,
+            "children": [
+              {"type": "Label", "text": "Title", "optional": false},
+              {
+                "name": "profile.title",
+                "type": "Input",
+                "inputType": "text",
+                "placeholder": "Title",
+                "disabled": false,
+                "readOnly": false,
+                "required": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   "state": {"profile": {"name": "Arthur Dent", "title": "Sandwich Maker, Lamuella"}}
 }

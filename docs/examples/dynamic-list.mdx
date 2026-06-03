@@ -153,3 +153,13 @@ with PrefabApp(
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The list lives in [state](/concepts/state). `PrefabApp` seeds two keys: `tasks`, a list of strings, and `new_task`, the text currently in the input. Everything on screen is a function of those two values, and every button mutates them through client-side [actions](/concepts/actions) — there is no server in the loop.
+
+The input and the add button form a small write/clear cycle. `Input(name="new_task")` two-way binds to the `new_task` state key, so typing keeps that key current. The button fires a *list* of actions in order: `AppendState("tasks", new_task)` pushes the input's current value onto the `tasks` list, then `SetState("new_task", "")` empties the box so it's ready for the next entry. Passing `new_task = Rx("new_task")` as the value (rather than a literal) means the action reads live state at click time, appending whatever the user actually typed.
+
+The list itself is rendered with [`ForEach`](/components/foreach). `with ForEach(tasks):` iterates the `tasks` state key and re-runs whenever it changes — add or remove an item and the rendered rows update with no manual bookkeeping. Inside the loop, `ITEM` is the current element's value and `INDEX` is its position. `Text(ITEM)` shows the task, and the remove button calls `PopState("tasks", index=INDEX)` to delete exactly that row by index. Because `ForEach` supplies a stable `INDEX` per row, each Remove button targets the right element even as the list shifts.
+
+The footer count, `Muted(f"{tasks.length()} items")`, is a [reactive expression](/concepts/expressions): `tasks.length()` compiles to a `length` pipe the renderer recomputes on every state change, so the number tracks the list without any explicit update. `Clear All` is the simplest mutation of all — `SetState("tasks", [])` replaces the whole list with an empty one, and `ForEach`, the count, and the buttons all collapse accordingly.

@@ -44,6 +44,15 @@ def _get_class(name: str) -> type | None:
     except ImportError:
         pass
 
+    try:
+        import prefab_ui.components.charts as charts
+
+        cls = getattr(charts, name, None)
+        if cls is not None:
+            return cls
+    except ImportError:
+        pass
+
     return None
 
 
@@ -204,7 +213,6 @@ def _name_to_class(card_name: str) -> tuple[str, bool]:
         "SetState": ("SetState", True),
         "ToggleState": ("ToggleState", True),
         "ShowToast": ("ShowToast", True),
-        "Radio": ("RadioGroup", False),
         "TableHead / TableCell": ("TableCell", False),
     }
     if card_name in special:

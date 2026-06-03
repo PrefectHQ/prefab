@@ -135,6 +135,8 @@ with Grid(columns=3, gap=8):
 
 ## Sizes
 
+The `size` prop scales a button's padding and text from `xs` through `lg`. Reach for the smaller sizes (`xs`, `sm`) when buttons are packed into dense surfaces like toolbars, table rows, or inline controls, and the larger `lg` when you want a primary call to action to stand out as the focal point of a screen.
+
 <ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"Tiny","variant":"default","size":"xs","disabled":false},{"type":"Button","label":"Small","variant":"default","size":"sm","disabled":false},{"type":"Button","label":"Default","variant":"default","size":"default","disabled":false},{"type":"Button","label":"Large","variant":"default","size":"lg","disabled":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQnV0dG9uLAogICAgUm93LAopCgp3aXRoIFJvdyhnYXA9MywgY3NzX2NsYXNzPSJpdGVtcy1jZW50ZXIiKToKICAgIEJ1dHRvbigiVGlueSIsIHNpemU9InhzIikKICAgIEJ1dHRvbigiU21hbGwiLCBzaXplPSJzbSIpCiAgICBCdXR0b24oIkRlZmF1bHQiLCBzaXplPSJkZWZhdWx0IikKICAgIEJ1dHRvbigiTGFyZ2UiLCBzaXplPSJsZyIpCg">
 <CodeGroup>
 ```python Python icon="python"
@@ -319,6 +321,8 @@ The three standard HTML button types are available: `"submit"` (default in forms
 
 ## Disabled State
 
+Set `disabled=True` to signal that an action is unavailable right now and to block clicks until conditions change. The button dims and stops responding to interaction, which is the right state for a submit button while a form is incomplete or an operation that can't run until a prerequisite is met.
+
 <ComponentPreview json={{"view":{"type":"Button","label":"Unavailable","variant":"default","size":"default","disabled":true}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCgpCdXR0b24oIlVuYXZhaWxhYmxlIiwgZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>
 ```python Python icon="python"
@@ -410,6 +414,10 @@ with Column(gap=3, css_class="items-start w-full"):
 
 <ParamField body="disabled" type="bool | str" default="False">
   Whether the button is non-interactive. Accepts a template expression like `"{{ not $item.name }}"` for conditional disabling.
+</ParamField>
+
+<ParamField body="on_click" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the button is clicked. Pass a list to sequence them; server actions like `CallTool` take their own `on_success`/`on_error` callbacks for follow-ups.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

@@ -33,6 +33,8 @@ Textarea(placeholder="Enter your message...")
 
 ## With Labels
 
+A textarea has no built-in caption, so pair it with a `Label` to tell the user what the field is for. Stacking the two in a `Column` keeps the label directly above its input, the layout people expect when scanning a form.
+
 <ComponentPreview json={{"view":{"cssClass":"gap-2","type":"Column","children":[{"type":"Label","text":"Feedback","optional":false},{"name":"textarea_2","type":"Textarea","placeholder":"Tell us what you think...","rows":5,"disabled":false,"required":false}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ29sdW1uLAogICAgTGFiZWwsCiAgICBUZXh0YXJlYSwKKQoKd2l0aCBDb2x1bW4oZ2FwPTIpOgogICAgTGFiZWwoIkZlZWRiYWNrIikKICAgIFRleHRhcmVhKAogICAgICAgIHBsYWNlaG9sZGVyPSJUZWxsIHVzIHdoYXQgeW91IHRoaW5rLi4uIiwKICAgICAgICByb3dzPTUsCiAgICApCg">
 <CodeGroup>
 ```python Python icon="python"
@@ -73,6 +75,8 @@ with Column(gap=2):
 
 ## With Initial Value
 
+Pass `value=` to seed the field's state with starting text. Use this when you're editing existing content — a saved draft or a record loaded from a database — so the user opens the field already populated with what they're changing.
+
 <ComponentPreview json={{"view":{"name":"textarea_3","value":"This is some initial content that can be edited.","type":"Textarea","rows":4,"disabled":false,"required":false},"state":{"textarea_3":"This is some initial content that can be edited."}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dGFyZWEKClRleHRhcmVhKAogICAgdmFsdWU9IlRoaXMgaXMgc29tZSBpbml0aWFsIGNvbnRlbnQgdGhhdCBjYW4gYmUgZWRpdGVkLiIsCiAgICByb3dzPTQsCikK">
 <CodeGroup>
 ```python Python icon="python"
@@ -100,6 +104,8 @@ Textarea(
 </ComponentPreview>
 
 ## Disabled State
+
+Set `disabled=True` to make a textarea read-only and visually muted, blocking edits and keeping it out of the tab order. This fits a field that can't be changed in the current context, such as a comment box that unlocks only after another action completes.
 
 <ComponentPreview json={{"view":{"name":"textarea_4","type":"Textarea","placeholder":"This textarea is disabled","disabled":true,"required":false}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgVGV4dGFyZWEKClRleHRhcmVhKHBsYWNlaG9sZGVyPSJUaGlzIHRleHRhcmVhIGlzIGRpc2FibGVkIiwgZGlzYWJsZWQ9VHJ1ZSkK">
 <CodeGroup>

@@ -163,6 +163,14 @@ If the request fails, `SetState("loading", False)` never runs (the chain short-c
   Request body. Dicts are JSON-serialized automatically. Ignored for GET requests.
 </ParamField>
 
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the request succeeds. The parsed response is available as `$result`.
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the request fails. The error message is available as `$error`.
+</ParamField>
+
 </Card>
 
 ## Protocol Reference

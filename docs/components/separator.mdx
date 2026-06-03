@@ -41,6 +41,8 @@ with Column():
 
 ## Vertical Orientation
 
+Set `orientation="vertical"` to divide items sitting side by side in a `Row`, such as inline links or breadcrumb segments. A vertical separator has no intrinsic height, so it stays invisible until you give it one — the example sets `css_class="h-4"` on each separator to make the divider tall enough to see between its neighbors.
+
 <ComponentPreview json={{"view":{"cssClass":"gap-4 items-center","type":"Row","children":[{"content":"Left","code":false,"type":"Span"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"content":"Middle","code":false,"type":"Span"},{"cssClass":"h-4","type":"Separator","orientation":"vertical"},{"content":"Right","code":false,"type":"Span"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgUm93LAogICAgU2VwYXJhdG9yLAogICAgU3BhbiwKKQoKd2l0aCBSb3coZ2FwPTQsIGNzc19jbGFzcz0iaXRlbXMtY2VudGVyIik6CiAgICBTcGFuKCJMZWZ0IikKICAgIFNlcGFyYXRvcihvcmllbnRhdGlvbj0idmVydGljYWwiLCBjc3NfY2xhc3M9ImgtNCIpCiAgICBTcGFuKCJNaWRkbGUiKQogICAgU2VwYXJhdG9yKG9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCIsIGNzc19jbGFzcz0iaC00IikKICAgIFNwYW4oIlJpZ2h0IikK">
 <CodeGroup>
 ```python Python icon="python"
@@ -76,6 +78,8 @@ with Row(gap=4, css_class="items-center"):
 </ComponentPreview>
 
 ## In Card Content
+
+Dropping a separator between blocks inside a card visually groups related content into distinct sections without the heavier weight of nesting more cards. Use `spacing` to set the breathing room above and below the line so the sections feel separated but still part of one card.
 
 <ComponentPreview json={{"view":{"type":"Card","children":[{"type":"CardContent","children":[{"content":"First section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Second section","type":"P"},{"cssClass":"my-4","type":"Separator","orientation":"horizontal"},{"content":"Third section","type":"P"}]}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgQ2FyZCwKICAgIENhcmRDb250ZW50LAogICAgUCwKICAgIFNlcGFyYXRvciwKKQoKd2l0aCBDYXJkKCk6CiAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgUCgiRmlyc3Qgc2VjdGlvbiIpCiAgICAgICAgU2VwYXJhdG9yKHNwYWNpbmc9NCkKICAgICAgICBQKCJTZWNvbmQgc2VjdGlvbiIpCiAgICAgICAgU2VwYXJhdG9yKHNwYWNpbmc9NCkKICAgICAgICBQKCJUaGlyZCBzZWN0aW9uIikK">
 <CodeGroup>

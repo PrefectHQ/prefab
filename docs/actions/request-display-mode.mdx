@@ -95,7 +95,15 @@ with Column():
 
 <Card icon="code" title="RequestDisplayMode Parameters">
 <ParamField body="mode" type='"inline" | "fullscreen" | "pip"' required>
-  The display mode to request. Can be passed as a positional argument. The host may not support all modes — use `onError` to handle rejection.
+  The display mode to request. Can be passed as a positional argument. The host may not support every mode.
+</ParamField>
+
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the host grants the requested mode.
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the host rejects or cannot honor the request.
 </ParamField>
 </Card>
 
