@@ -103,7 +103,9 @@ def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
                 if label not in parts:
                     parts.append(label)
             else:
-                parts.append(_format_value(opt, defs))
+                label = _format_value(opt, defs)
+                if label not in parts:
+                    parts.append(label)
         return " | ".join(parts) if parts else "any"
 
     # Array of components (children)
