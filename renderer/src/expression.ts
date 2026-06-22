@@ -180,6 +180,33 @@ const pipes: Record<string, PipeFn> = {
         !!(item as Record<string, unknown>)[key],
     );
   },
+  pievisible(value) {
+    if (!Array.isArray(value)) return value;
+    type PieSegment = {
+      label: string;
+      value: number;
+      visible?: boolean;
+      group?: string;
+    };
+    const segments = (value as PieSegment[]).filter(
+      (s) => s.group === "primary" || s.group === "secondary",
+    );
+    const visible = segments.filter((s) => s.visible);
+    const hidden = segments.filter((s) => !s.visible);
+
+    const slices: Array<{ label: string; value: number }> = visible.map(
+      (s) => ({ label: s.label, value: Number(s.value) }),
+    );
+
+    if (hidden.length > 0) {
+      const otherValue = hidden.reduce((sum, s) => sum + Number(s.value), 0);
+      if (otherValue > 0) {
+        slices.push({ label: "Other", value: otherValue });
+      }
+    }
+
+    return slices;
+  },
 
   rejectattr(value, arg) {
     if (!Array.isArray(value) || !arg) return value;
