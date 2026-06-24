@@ -47,6 +47,11 @@ import type {
 
 export { PrefabSparkline } from "./sparkline";
 
+const CHART_LEGEND_PROPS = {
+  verticalAlign: "bottom" as const,
+  wrapperStyle: { paddingTop: 20 },
+};
+
 function getValueFormatter(format?: string) {
   if (!format || format === "auto") {
     return undefined;
@@ -84,6 +89,45 @@ function buildConfig(series: SeriesSpec[]): ChartConfig {
   return config;
 }
 
+type AxisTitlePosition = "bottom" | "left";
+
+function axisTitleLabel(
+  text: string | undefined,
+  position: AxisTitlePosition,
+) {
+  if (!text) return {};
+  if (position === "bottom") {
+    return {
+      label: {
+        value: text,
+        position: "bottom" as const,
+        offset: 16,
+      },
+    };
+  }
+  return {
+    label: {
+      value: text,
+      angle: -90,
+      position: "left" as const,
+      offset: 16,
+      style: { textAnchor: "middle" },
+    },
+  };
+}
+
+function chartMargin(
+  xAxisLabel: string | undefined,
+  yAxisLabel: string | undefined,
+) {
+  return {
+    top: 8,
+    right: 8,
+    left: yAxisLabel ? 56 : 8,
+    bottom: xAxisLabel ? 40 : 8,
+  };
+}
+
 function buildPieConfig(
   data: Record<string, unknown>[],
   nameKey: string,
@@ -105,6 +149,8 @@ export function PrefabBarChart({
   data = [],
   series,
   xAxis,
+  xAxisLabel,
+  yAxisLabel,
   height = 300,
   stacked = false,
   horizontal = false,
@@ -120,6 +166,10 @@ export function PrefabBarChart({
   if (typeof data === "string") return null;
   const config = buildConfig(series);
   const valueFormatter = getValueFormatter(valueFormat);
+  const margin = chartMargin(
+    xAxisLabel,
+    showYAxis ? yAxisLabel : undefined,
+  );
 
   return (
     <ChartContainer
@@ -127,7 +177,11 @@ export function PrefabBarChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"}>
+      <BarChart
+        data={data}
+        layout={horizontal ? "vertical" : "horizontal"}
+        margin={margin}
+      >
         {showGrid && (
           <CartesianGrid vertical={horizontal} horizontal={!horizontal} />
         )}
@@ -138,6 +192,7 @@ export function PrefabBarChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+            {...axisTitleLabel(xAxisLabel, "left")}
           />
         )}
         {horizontal && (
@@ -149,6 +204,7 @@ export function PrefabBarChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+            {...axisTitleLabel(xAxisLabel, "bottom")}
           />
         )}
         {!horizontal && showYAxis && (
@@ -157,6 +213,7 @@ export function PrefabBarChart({
             axisLine={false}
             tickMargin={8}
             tickFormatter={valueFormatter}
+            {...axisTitleLabel(yAxisLabel, "left")}
           />
         )}
         {showTooltip && (
@@ -164,7 +221,9 @@ export function PrefabBarChart({
             content={<ChartTooltipContent valueFormatter={valueFormatter} />}
           />
         )}
-        {showLegend && <ChartLegend content={<ChartLegendContent />} />}
+        {showLegend && (
+          <ChartLegend {...CHART_LEGEND_PROPS} content={<ChartLegendContent />} />
+        )}
         {series.map((s) => (
           <Bar
             isAnimationActive={animate}
@@ -193,6 +252,8 @@ export function PrefabLineChart({
   data = [],
   series,
   xAxis,
+  xAxisLabel,
+  yAxisLabel,
   height = 300,
   curve = "linear",
   showDots = false,
@@ -208,6 +269,10 @@ export function PrefabLineChart({
   if (typeof series === "string" || !Array.isArray(series)) return null;
   const config = buildConfig(series);
   const valueFormatter = getValueFormatter(valueFormat);
+  const margin = chartMargin(
+    xAxisLabel,
+    showYAxis ? yAxisLabel : undefined,
+  );
 
   return (
     <ChartContainer
@@ -215,7 +280,7 @@ export function PrefabLineChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <LineChart data={data}>
+      <LineChart data={data} margin={margin}>
         {showGrid && <CartesianGrid vertical={false} />}
         {xAxis && (
           <XAxis
@@ -223,6 +288,7 @@ export function PrefabLineChart({
             tickLine={false}
             axisLine={false}
             tickMargin={8}
+            {...axisTitleLabel(xAxisLabel, "bottom")}
           />
         )}
         {showYAxis && (
@@ -231,6 +297,7 @@ export function PrefabLineChart({
             axisLine={false}
             tickMargin={8}
             tickFormatter={valueFormatter}
+            {...axisTitleLabel(yAxisLabel, "left")}
           />
         )}
         {showTooltip && (
@@ -238,7 +305,9 @@ export function PrefabLineChart({
             content={<ChartTooltipContent valueFormatter={valueFormatter} />}
           />
         )}
-        {showLegend && <ChartLegend content={<ChartLegendContent />} />}
+        {showLegend && (
+          <ChartLegend {...CHART_LEGEND_PROPS} content={<ChartLegendContent />} />
+        )}
         {series.map((s) => (
           <Line
             isAnimationActive={animate}
