@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { legacyThemeToCss, normalizeExecuteResult } from "./executor";
+import {
+  legacyThemeToCss,
+  normalizeExecuteData,
+  normalizeExecuteResult,
+} from "./executor";
 
 describe("Pyodide executor result normalization", () => {
   it("maps legacy theme wire data to CSS and mode", () => {
@@ -33,5 +37,19 @@ describe("Pyodide executor result normalization", () => {
     expect(
       legacyThemeToCss({ light: "--background: white;", mode: "system" }).mode,
     ).toBeUndefined();
+  });
+});
+
+describe("Pyodide executor data normalization", () => {
+  it("preserves object data for injection as Python globals", () => {
+    expect(normalizeExecuteData({ devices: [1, 2, 3] })).toEqual({
+      devices: [1, 2, 3],
+    });
+  });
+
+  it("parses JSON string data", () => {
+    expect(normalizeExecuteData('{"devices":[1,2,3]}')).toEqual({
+      devices: [1, 2, 3],
+    });
   });
 });
