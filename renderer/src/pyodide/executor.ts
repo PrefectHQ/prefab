@@ -30,9 +30,7 @@ export interface PyodideInterface {
 
 export type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
-export function normalizeExecuteData(
-  data: unknown,
-): Record<string, unknown> {
+export function normalizeExecuteData(data: unknown): Record<string, unknown> {
   if (typeof data === "string") {
     if (!data.trim()) return {};
     data = JSON.parse(data);
