@@ -52,4 +52,8 @@ describe("Pyodide executor data normalization", () => {
       devices: [1, 2, 3],
     });
   });
+
+  it("ignores incomplete JSON string data during streaming", () => {
+    expect(normalizeExecuteData('{"devices":[')).toEqual({});
+  });
 });
