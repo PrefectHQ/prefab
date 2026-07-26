@@ -164,6 +164,24 @@ class TestActionOnComponents:
         assert j["onClick"][0]["action"] == "setState"
         assert j["onClick"][1]["action"] == "toolCall"
 
+    def test_button_action_chain(self):
+        b = Button(
+            label="Submit",
+            on_click=SetState("loading", True)
+            | CallTool("process")
+            | SetState("loading", False),
+        )
+        j = b.to_json()
+        assert [action["action"] for action in j["onClick"]] == [
+            "setState",
+            "toolCall",
+            "setState",
+        ]
+
+    def test_action_chain_is_a_list(self):
+        actions = SetState("loading", True) | CallTool("process")
+        assert isinstance(actions, list)
+
     def test_slider_on_change(self):
         s = Slider(min=0, max=100, on_change=SetState("volume", EVENT))
         j = s.to_json()
