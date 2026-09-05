@@ -2107,7 +2107,7 @@
   {
     "title": "Python icon=\"python\"",
     "category": "Concepts",
-    "code": "from prefab_ui.components import Button, Row, Badge\nfrom prefab_ui.actions import SetState\n\n\nwith Row(gap=3, align=\"center\"):\n    Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n    Badge(\"{{ count }}\", variant=\"{{ count > 0 ? 'success' : 'destructive' }}\")\n    Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Row, Badge\nfrom prefab_ui.actions import SetState\n\n\nwith PrefabApp(state={\"count\": 0}):\n    with Row(gap=3, align=\"center\"):\n        Button(\"-\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count - 1 }}\"))\n        Badge(\"{{ count }}\", variant=\"{{ count > 0 ? 'success' : 'destructive' }}\")\n        Button(\"+\", variant=\"outline\", on_click=SetState(\"count\", \"{{ count + 1 }}\"))"
   },
   {
     "title": "from prefab_ui.rx import Rx",

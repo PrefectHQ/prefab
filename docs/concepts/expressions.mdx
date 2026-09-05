@@ -13,53 +13,62 @@ The expression language is intentionally bounded. Prefab UIs are designed to be 
 
 The `{{ }}` syntax is the protocol-level unit of reactivity. Any string prop on any component can contain `{{ }}` expressions, and the renderer treats each one as a live dependency.
 
-<ComponentPreview json={{"view":{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"type":"Badge","label":"{{ count }}","variant":"{{ count > 0 ? 'success' : 'destructive' }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3csIEJhZGdlCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCgoKd2l0aCBSb3coZ2FwPTMsIGFsaWduPSJjZW50ZXIiKToKICAgIEJ1dHRvbigiLSIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgiY291bnQiLCAie3sgY291bnQgLSAxIH19IikpCiAgICBCYWRnZSgie3sgY291bnQgfX0iLCB2YXJpYW50PSJ7eyBjb3VudCA-IDAgPyAnc3VjY2VzcycgOiAnZGVzdHJ1Y3RpdmUnIH19IikKICAgIEJ1dHRvbigiKyIsIHZhcmlhbnQ9Im91dGxpbmUiLCBvbl9jbGljaz1TZXRTdGF0ZSgiY291bnQiLCAie3sgY291bnQgKyAxIH19IikpCg">
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-3 items-center","type":"Row","children":[{"type":"Button","label":"-","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count - 1 }}"}},{"type":"Badge","label":"{{ count }}","variant":"{{ count > 0 ? 'success' : 'destructive' }}"},{"type":"Button","label":"+","variant":"outline","size":"default","disabled":false,"onClick":{"action":"setState","key":"count","value":"{{ count + 1 }}"}}]}]},"state":{"count":0}}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uLCBSb3csIEJhZGdlCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMgaW1wb3J0IFNldFN0YXRlCgoKd2l0aCBQcmVmYWJBcHAoc3RhdGU9eyJjb3VudCI6IDB9KToKICAgIHdpdGggUm93KGdhcD0zLCBhbGlnbj0iY2VudGVyIik6CiAgICAgICAgQnV0dG9uKCItIiwgdmFyaWFudD0ib3V0bGluZSIsIG9uX2NsaWNrPVNldFN0YXRlKCJjb3VudCIsICJ7eyBjb3VudCAtIDEgfX0iKSkKICAgICAgICBCYWRnZSgie3sgY291bnQgfX0iLCB2YXJpYW50PSJ7eyBjb3VudCA-IDAgPyAnc3VjY2VzcycgOiAnZGVzdHJ1Y3RpdmUnIH19IikKICAgICAgICBCdXR0b24oIisiLCB2YXJpYW50PSJvdXRsaW5lIiwgb25fY2xpY2s9U2V0U3RhdGUoImNvdW50IiwgInt7IGNvdW50ICsgMSB9fSIpKQo">
 <CodeGroup>
 ```python Python icon="python"
+from prefab_ui.app import PrefabApp
 from prefab_ui.components import Button, Row, Badge
 from prefab_ui.actions import SetState
 
 
-with Row(gap=3, align="center"):
-    Button("-", variant="outline", on_click=SetState("count", "{{ count - 1 }}"))
-    Badge("{{ count }}", variant="{{ count > 0 ? 'success' : 'destructive' }}")
-    Button("+", variant="outline", on_click=SetState("count", "{{ count + 1 }}"))
+with PrefabApp(state={"count": 0}):
+    with Row(gap=3, align="center"):
+        Button("-", variant="outline", on_click=SetState("count", "{{ count - 1 }}"))
+        Badge("{{ count }}", variant="{{ count > 0 ? 'success' : 'destructive' }}")
+        Button("+", variant="outline", on_click=SetState("count", "{{ count + 1 }}"))
 ```
 ```json Protocol icon="brackets-curly"
 {
   "view": {
-    "cssClass": "gap-3 items-center",
-    "type": "Row",
+    "cssClass": "pf-app-root",
+    "type": "Div",
     "children": [
       {
-        "type": "Button",
-        "label": "-",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {"action": "setState", "key": "count", "value": "{{ count - 1 }}"}
-      },
-      {
-        "type": "Badge",
-        "label": "{{ count }}",
-        "variant": "{{ count > 0 ? 'success' : 'destructive' }}"
-      },
-      {
-        "type": "Button",
-        "label": "+",
-        "variant": "outline",
-        "size": "default",
-        "disabled": false,
-        "onClick": {"action": "setState", "key": "count", "value": "{{ count + 1 }}"}
+        "cssClass": "gap-3 items-center",
+        "type": "Row",
+        "children": [
+          {
+            "type": "Button",
+            "label": "-",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {"action": "setState", "key": "count", "value": "{{ count - 1 }}"}
+          },
+          {
+            "type": "Badge",
+            "label": "{{ count }}",
+            "variant": "{{ count > 0 ? 'success' : 'destructive' }}"
+          },
+          {
+            "type": "Button",
+            "label": "+",
+            "variant": "outline",
+            "size": "default",
+            "disabled": false,
+            "onClick": {"action": "setState", "key": "count", "value": "{{ count + 1 }}"}
+          }
+        ]
       }
     ]
-  }
+  },
+  "state": {"count": 0}
 }
 ```
 </CodeGroup>
 </ComponentPreview>
 
-`Text("{{ count }}")` displays whatever `count` holds and updates whenever it changes. The `SetState` actions write new values to `count`, and the text responds automatically. The expression `{{ count + 1 }}` computes before writing: the renderer evaluates it against current state each time. The reactivity is built in, so you write the binding once and the renderer keeps everything in sync.
+`PrefabApp(state={"count": 0})` initializes the counter, and `Badge("{{ count }}")` displays its current value. The badge's `variant` expression uses the `success` style for positive values and the `destructive` style for zero or negative values. The `SetState` actions evaluate `{{ count - 1 }}` or `{{ count + 1 }}` against the current state before writing the result back to `count`.
 
 Expressions can appear anywhere a string prop does. `Button(disabled="{{ loading }}")` disables a button based on state. `Badge(label="{{ items | length }}")` shows a count. `Progress(value="{{ percent }}")` drives a progress bar. The renderer re-evaluates each expression whenever any of its referenced keys change.
 
