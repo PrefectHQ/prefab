@@ -91,9 +91,7 @@ def test_app_tools_use_existing_server_tool_resolver():
     def server_tool():
         pass
 
-    app = PrefabApp(
-        app_tools=[AppTool("x", actions=CallTool(server_tool), result={})]
-    )
+    app = PrefabApp(app_tools=[AppTool("x", actions=CallTool(server_tool), result={})])
     wire = app.to_json(tool_resolver=lambda ref: ResolvedTool("resolved"))
     assert wire["tools"][0]["actions"]["tool"] == "resolved"
 
@@ -172,9 +170,9 @@ def test_callable_compiles_bindings_and_callbacks_without_executing():
 
 def test_projection_preserves_defaults_and_refs_without_mutating_registration():
     interaction = AppTool(backend_increment, bind={"counter_id": "a"}, result={})
-    schema = PrefabApp(app_tools=[interaction]).to_json(
-        tool_resolver=backend_resolver
-    )["tools"][0]["inputSchema"]
+    schema = PrefabApp(app_tools=[interaction]).to_json(tool_resolver=backend_resolver)[
+        "tools"
+    ][0]["inputSchema"]
     assert schema["properties"]["amount"] == {"type": "integer", "default": 1}
     assert schema["properties"]["options"] == {"$ref": "#/$defs/Options"}
     assert schema["$defs"] == BACKEND_SCHEMA["$defs"]
