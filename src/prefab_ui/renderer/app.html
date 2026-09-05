@@ -10029,7 +10029,7 @@ class PrefabApp(BaseModel):
             )
         from prefab_ui.components.div import Div
 
-        root = Div(defer=True)  # type: ignore[call-arg]  # ty:ignore[unknown-argument]
+        root = Div(defer=True)  # type: ignore[call-arg]
         self._context_root = root
         root.__enter__()
         return self
@@ -15665,7 +15665,7 @@ def _get_ui_hints(field_info: FieldInfo) -> dict[str, Any]:
     """Extract UI hints from json_schema_extra."""
     extra = field_info.json_schema_extra
     if isinstance(extra, dict):
-        ui = extra.get("ui")  # type: ignore[union-attr]  # ty:ignore[invalid-argument-type]
+        ui = extra.get("ui")  # type: ignore[union-attr]
         if isinstance(ui, dict):
             return ui
     return {}
