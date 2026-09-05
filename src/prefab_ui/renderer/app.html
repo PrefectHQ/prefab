@@ -10035,7 +10035,7 @@ class PrefabApp(BaseModel):
             )
         from prefab_ui.components.div import Div
 
-        root = Div(defer=True)  # type: ignore[call-arg]  # ty:ignore[unknown-argument]
+        root = Div(defer=True)  # type: ignore[call-arg]
         self._context_root = root
         root.__enter__()
         return self
@@ -15427,7 +15427,7 @@ def _get_ui_hints(field_info: FieldInfo) -> dict[str, Any]:
     """Extract UI hints from json_schema_extra."""
     extra = field_info.json_schema_extra
     if isinstance(extra, dict):
-        ui = extra.get("ui")  # type: ignore[union-attr]  # ty:ignore[invalid-argument-type]
+        ui = extra.get("ui")  # type: ignore[union-attr]
         if isinstance(ui, dict):
             return ui
     return {}
@@ -18709,6 +18709,12 @@ class Action(BaseModel):
         """Resolve any Rx values to \`{{ }}\` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
+    def __or__(self, other: Action) -> _ActionChain:
+        """Chain this action with another action."""
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([self, other])
+
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,
         alias="onSuccess",
@@ -18719,6 +18725,15 @@ class Action(BaseModel):
         alias="onError",
         description="Action(s) to run when this action fails",
     )
+
+
+class _ActionChain(list[Action]):
+    """List-like action chain supporting repeated \`\`|\`\` composition."""
+
+    def __or__(self, other: Action) -> _ActionChain:
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([*self, other])
 `,"prefab_ui/actions/custom.py":`"""Custom JavaScript handler action."""
 
 from __future__ import annotations
