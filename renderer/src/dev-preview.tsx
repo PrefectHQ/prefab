@@ -12,12 +12,14 @@ import { Toaster } from "sonner";
 import { DEMO_DATA, DEMO_TREE } from "./demo-data";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
+import { AppTools } from "./app-tools";
 
 /** Injected preview data from the CLI `prefab apps preview` command. */
 interface PreviewPayload {
   tree: ComponentNode;
   data: Record<string, unknown>;
   state?: Record<string, unknown>;
+  tools?: unknown;
 }
 
 export function DevPreview({ injected }: { injected?: PreviewPayload }) {
@@ -25,41 +27,51 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   const isDocEmbed = hash.startsWith("#docpreview:");
 
   // Parse hash once — supports envelope {$protocol, view, state} or bare tree
-  const { hashTree, hashState, hashData, hashError } = useMemo(() => {
-    const jsonStart = hash.indexOf(":");
-    if (jsonStart === -1)
-      return { hashTree: null, hashState: {}, hashData: {}, hashError: null };
-    try {
-      const raw = decodeURIComponent(hash.slice(jsonStart + 1));
-      const obj = JSON.parse(raw);
-      if (obj.view) {
-        const reserved = new Set(["view", "state"]);
-        const userData: Record<string, unknown> = {};
-        for (const [k, v] of Object.entries(obj)) {
-          if (!reserved.has(k)) userData[k] = v;
-        }
+  const { hashTree, hashState, hashData, hashTools, hashError } =
+    useMemo(() => {
+      const jsonStart = hash.indexOf(":");
+      if (jsonStart === -1)
         return {
-          hashTree: obj.view as ComponentNode,
-          hashState: (obj.state ?? {}) as Record<string, unknown>,
-          hashData: userData,
+          hashTree: null,
+          hashState: {},
+          hashData: {},
+          hashTools: undefined,
           hashError: null,
         };
+      try {
+        const raw = decodeURIComponent(hash.slice(jsonStart + 1));
+        const obj = JSON.parse(raw);
+        if (obj.view) {
+          const reserved = new Set(["view", "state", "tools"]);
+          const userData: Record<string, unknown> = {};
+          for (const [k, v] of Object.entries(obj)) {
+            if (!reserved.has(k)) userData[k] = v;
+          }
+          return {
+            hashTree: obj.view as ComponentNode,
+            hashState: (obj.state ?? {}) as Record<string, unknown>,
+            hashData: userData,
+            hashTools: obj.tools,
+            hashError: null,
+          };
+        }
+        return {
+          hashTree: obj as ComponentNode,
+          hashState: {} as Record<string, unknown>,
+          hashData: {},
+          hashTools: undefined,
+          hashError: null,
+        };
+      } catch (e) {
+        return {
+          hashTree: null,
+          hashState: {},
+          hashData: {},
+          hashTools: undefined,
+          hashError: (e as Error).message,
+        };
       }
-      return {
-        hashTree: obj as ComponentNode,
-        hashState: {} as Record<string, unknown>,
-        hashData: {},
-        hashError: null,
-      };
-    } catch (e) {
-      return {
-        hashTree: null,
-        hashState: {},
-        hashData: {},
-        hashError: (e as Error).message,
-      };
-    }
-  }, []);
+    }, []);
 
   const hasCustomTree = !!(injected?.tree ?? hashTree);
   const defaultData = hasCustomTree ? hashData : { ...DEMO_DATA, ...hashData };
@@ -68,20 +80,27 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
     ...(injected?.state ?? hashState),
   };
   const state = useStateStore(initialState);
+  const appToolsRef = useRef(new AppTools(null));
   const [customTree, setCustomTree] = useState<ComponentNode | null>(
     injected?.tree ?? hashTree,
   );
   const [parseError] = useState<string | null>(hashError);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    appToolsRef.current.replace(injected?.tools ?? hashTools, state);
+    return () => appToolsRef.current.clear();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Listen for postMessage updates from playground shell
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (event.data?.type === "prefab:render") {
-        const { tree, data: newData, state: newState } = event.data;
+        const { tree, data: newData, state: newState, tools } = event.data;
         if (tree) setCustomTree(tree);
         // Merge data into state (data is legacy, state is canonical)
         state.reset({ ...(newData ?? {}), ...(newState ?? {}) });
+        appToolsRef.current.replace(tools, state);
       }
     };
     window.addEventListener("message", handler);
