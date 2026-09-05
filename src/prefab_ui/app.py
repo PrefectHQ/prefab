@@ -209,7 +209,7 @@ class PrefabApp(BaseModel):
             )
         from prefab_ui.components.div import Div
 
-        root = Div(defer=True)  # type: ignore[call-arg]  # ty:ignore[unknown-argument]
+        root = Div(defer=True)  # type: ignore[call-arg]
         self._context_root = root
         root.__enter__()
         return self
