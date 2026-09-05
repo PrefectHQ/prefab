@@ -98,6 +98,31 @@ describe("toggleRowSelection", () => {
 });
 
 describe("PrefabDataTable", () => {
+  it("keeps the default search placeholder", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [{ key: "name", header: "Name" }],
+        rows: [{ name: "Arthur Dent" }],
+        search: true,
+      }),
+    );
+
+    expect(markup).toContain('placeholder="Filter..."');
+  });
+
+  it("uses a custom search placeholder", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [{ key: "name", header: "Name" }],
+        rows: [{ name: "Arthur Dent" }],
+        search: true,
+        searchPlaceholder: "Search contacts...",
+      }),
+    );
+
+    expect(markup).toContain('placeholder="Search contacts..."');
+  });
+
   it("aligns a sortable right-aligned header label with its cell values", () => {
     const markup = renderToStaticMarkup(
       React.createElement(PrefabDataTable, {

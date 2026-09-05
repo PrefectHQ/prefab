@@ -32,7 +32,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from prefab_ui.actions import Action
 from prefab_ui.components.base import Component, _merge_css_classes
-from prefab_ui.rx import Rx
+from prefab_ui.rx import Rx, RxStr
 
 
 def _serialize_cell_value(value: Any) -> Any:
@@ -155,6 +155,7 @@ class DataTable(Component):
         columns: Column definitions.
         rows: Row data as a list of dicts/ExpandableRows, a `{{ template }}` string, or a DataFrame.
         search: Show a search input above the table.
+        search_placeholder: Placeholder text in the search input.
         paginated: Show pagination controls.
         page_size: Rows per page when paginated.
         on_row_click: Action(s) when a row is clicked. `$event` is the row dict;
@@ -210,6 +211,11 @@ class DataTable(Component):
         description="Row data, `{{ interpolation }}` reference, or DataFrame",
     )
     search: bool = Field(default=False, description="Show search input")
+    search_placeholder: RxStr | None = Field(
+        default=None,
+        alias="searchPlaceholder",
+        description="Placeholder text in the search input",
+    )
     paginated: bool = Field(default=False, description="Show pagination controls")
     page_size: int = Field(
         default=10, alias="pageSize", description="Rows per page when paginated"

@@ -104,9 +104,9 @@ DataTable(
 
 ## Search
 
-Set `search=True` to show a text input above the table that narrows visible rows across all columns. Search works alongside sorting and pagination — the search applies first, then sort order, then page boundaries.
+Set `search=True` to show a text input above the table that narrows visible rows across all columns. Use `search_placeholder=` to customize the input's placeholder. Search works alongside sorting and pagination — the search applies first, then sort order, then page boundaries.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"species","header":"Species","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"name":"Arthur Dent","species":"Human","status":"Confused"},{"name":"Ford Prefect","species":"Betelgeusian","status":"Drinking"},{"name":"Zaphod","species":"Betelgeusian","status":"Presidential"},{"name":"Trillian","species":"Human","status":"Navigating"},{"name":"Marvin","species":"Android","status":"Depressed"}],"search":true,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzcGVjaWVzIiwgaGVhZGVyPSJTcGVjaWVzIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAic3BlY2llcyI6ICJIdW1hbiIsICJzdGF0dXMiOiAiQ29uZnVzZWQifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgInNwZWNpZXMiOiAiQmV0ZWxnZXVzaWFuIiwgInN0YXR1cyI6ICJEcmlua2luZyJ9LAogICAgICAgIHsibmFtZSI6ICJaYXBob2QiLCAic3BlY2llcyI6ICJCZXRlbGdldXNpYW4iLCAic3RhdHVzIjogIlByZXNpZGVudGlhbCJ9LAogICAgICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJzcGVjaWVzIjogIkh1bWFuIiwgInN0YXR1cyI6ICJOYXZpZ2F0aW5nIn0sCiAgICAgICAgeyJuYW1lIjogIk1hcnZpbiIsICJzcGVjaWVzIjogIkFuZHJvaWQiLCAic3RhdHVzIjogIkRlcHJlc3NlZCJ9LAogICAgXSwKICAgIHNlYXJjaD1UcnVlLAopCg">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"species","header":"Species","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"name":"Arthur Dent","species":"Human","status":"Confused"},{"name":"Ford Prefect","species":"Betelgeusian","status":"Drinking"},{"name":"Zaphod","species":"Betelgeusian","status":"Presidential"},{"name":"Trillian","species":"Human","status":"Navigating"},{"name":"Marvin","species":"Android","status":"Depressed"}],"search":true,"searchPlaceholder":"Search the crew...","paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzcGVjaWVzIiwgaGVhZGVyPSJTcGVjaWVzIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAic3BlY2llcyI6ICJIdW1hbiIsICJzdGF0dXMiOiAiQ29uZnVzZWQifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgInNwZWNpZXMiOiAiQmV0ZWxnZXVzaWFuIiwgInN0YXR1cyI6ICJEcmlua2luZyJ9LAogICAgICAgIHsibmFtZSI6ICJaYXBob2QiLCAic3BlY2llcyI6ICJCZXRlbGdldXNpYW4iLCAic3RhdHVzIjogIlByZXNpZGVudGlhbCJ9LAogICAgICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJzcGVjaWVzIjogIkh1bWFuIiwgInN0YXR1cyI6ICJOYXZpZ2F0aW5nIn0sCiAgICAgICAgeyJuYW1lIjogIk1hcnZpbiIsICJzcGVjaWVzIjogIkFuZHJvaWQiLCAic3RhdHVzIjogIkRlcHJlc3NlZCJ9LAogICAgXSwKICAgIHNlYXJjaD1UcnVlLAogICAgc2VhcmNoX3BsYWNlaG9sZGVyPSJTZWFyY2ggdGhlIGNyZXcuLi4iLAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -125,6 +125,7 @@ DataTable(
         {"name": "Marvin", "species": "Android", "status": "Depressed"},
     ],
     search=True,
+    search_placeholder="Search the crew...",
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -144,6 +145,7 @@ DataTable(
       {"name": "Marvin", "species": "Android", "status": "Depressed"}
     ],
     "search": true,
+    "searchPlaceholder": "Search the crew...",
     "paginated": false,
     "pageSize": 10
   }
