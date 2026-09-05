@@ -43,6 +43,44 @@ describe("selectattr / rejectattr pipes", () => {
   });
 });
 
+describe("pievisible pipe", () => {
+  it("shows visible slices plus Other for hidden rows", () => {
+    const chart_segments = [
+      { label: "US", value: 100, visible: true, group: "primary" },
+      { label: "MX", value: 20, visible: false, group: "secondary" },
+      { label: "IN", value: 10, visible: false, group: "secondary" },
+    ];
+    expect(evaluate("chart_segments | pievisible", { chart_segments })).toEqual([
+      { label: "US", value: 100 },
+      { label: "Other", value: 30 },
+    ]);
+  });
+
+  it("promotes toggled rows and shrinks Other", () => {
+    const chart_segments = [
+      { label: "US", value: 100, visible: true, group: "primary" },
+      { label: "MX", value: 20, visible: true, group: "secondary" },
+      { label: "IN", value: 10, visible: false, group: "secondary" },
+    ];
+    expect(evaluate("chart_segments | pievisible", { chart_segments })).toEqual([
+      { label: "US", value: 100 },
+      { label: "MX", value: 20 },
+      { label: "Other", value: 10 },
+    ]);
+  });
+
+  it("omits Other when every row is visible", () => {
+    const chart_segments = [
+      { label: "US", value: 100, visible: true, group: "primary" },
+      { label: "MX", value: 20, visible: true, group: "secondary" },
+    ];
+    expect(evaluate("chart_segments | pievisible", { chart_segments })).toEqual([
+      { label: "US", value: 100 },
+      { label: "MX", value: 20 },
+    ]);
+  });
+});
+
 describe("pluralize pipe", () => {
   it("returns singular for count of 1", () => {
     expect(evaluate("count | pluralize:'file'", { count: 1 })).toBe("file");
