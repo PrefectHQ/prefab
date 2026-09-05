@@ -727,6 +727,10 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
   Show a search input above the table for narrowing visible rows.
 </ParamField>
 
+<ParamField body="search_placeholder" type="str | None" default="None">
+  Placeholder text in the search input. When omitted or `None`, the renderer uses `"Filter..."`.
+</ParamField>
+
 <ParamField body="paginated" type="bool" default="False">
   Show pagination controls below the table.
 </ParamField>
@@ -806,6 +810,7 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
   "columns": "[DataTableColumn] (required)",
   "rows?": "object[] | string",
   "search?": false,
+  "searchPlaceholder?": "string | null (defaults to Filter...)",
   "paginated?": false,
   "pageSize?": 10,
   "onRowClick?": "Action | Action[]",
