@@ -247,15 +247,17 @@ export function PrefabPopover({
       <PopoverTrigger>{trigger}</PopoverTrigger>
       <PopoverContent side={side} className="w-80">
         <OverlayProvider close={() => setOpen(false)}>
-          {title && (
-            <div className="mb-4 space-y-1">
-              <h4 className="font-medium leading-none">{title}</h4>
-              {description && (
-                <p className="text-sm text-muted-foreground">{description}</p>
-              )}
-            </div>
-          )}
-          {content}
+        <div className="flex min-h-0 flex-col gap-2.5">
+            {title && (
+              <div className="space-y-1">
+                <h4 className="font-medium leading-none">{title}</h4>
+                {description && (
+                  <p className="text-sm text-muted-foreground">{description}</p>
+                )}
+              </div>
+            )}
+            <div className="min-h-0 overflow-y-auto">{content}</div>
+          </div>
         </OverlayProvider>
       </PopoverContent>
     </ShadcnPopover>

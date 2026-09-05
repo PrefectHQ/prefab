@@ -15,6 +15,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Toaster } from "sonner";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
+import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { bridge } from "./bridge";
@@ -107,6 +108,22 @@ function readInitialData(): {
 
 // Parse baked-in data once before React mounts.
 const INITIAL = readInitialData();
+/** Fixed overlay root so portaled popovers don't inflate iframe scroll height. */
+function McpOverlayPortal({ children }: { children: React.ReactNode }) {
+  const [portal, setPortal] = useState<HTMLElement | undefined>();
+  useEffect(() => {
+    const host = document.createElement("div");
+    host.setAttribute("data-prefab-overlay-portal", "");
+    host.style.cssText =
+      "position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden;";
+    document.body.appendChild(host);
+    setPortal(host);
+    return () => host.remove();
+  }, []);
+  return (
+    <PortalContainerProvider container={portal}>{children}</PortalContainerProvider>
+  );
+}
 
 export function App() {
   const [tree, setTree] = useState<ComponentNode | null>(INITIAL?.view ?? null);
@@ -310,9 +327,9 @@ export function App() {
 
   // Render component tree
   return (
-    <>
+    <McpOverlayPortal>
       <RenderTree tree={tree} defs={defs} state={state} app={appRef.current} />
       <Toaster />
-    </>
+    </McpOverlayPortal>
   );
 }
