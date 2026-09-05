@@ -268,12 +268,16 @@ CallTool("search", arguments={"q": "{{ query }}"}, result_key="results")
 SendMessage("Summarize {{ item }}")
 UpdateContext(content="User selected {{ item }}")
 
-# Chaining — list runs sequentially
-Button("Save", on_click=[
-    SetState("loading", True),
-    CallTool("save", result_key="saved"),
-    SetState("loading", False),
-])
+# Chaining — | composes actions into a sequential list
+Button(
+    "Save",
+    on_click=SetState("loading", True)
+    | CallTool("save", result_key="saved")
+    | SetState("loading", False),
+)
+
+# Explicit lists remain supported
+Button("Reset", on_click=[SetState("count", 0), ShowToast("Reset")])
 ```
 
 ### on_mount
