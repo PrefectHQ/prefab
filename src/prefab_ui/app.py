@@ -1,12 +1,12 @@
-"""PrefabApp — the central application object for Prefab.
+"""Application declarations for Prefab.
 
-Describes what to render, what state to initialize, and what external
-assets to load.  Pure data model — transport-agnostic.
+`PrefabApp` describes what to render and which state and assets to load.
+`AppTool` describes an operation an MCP host can expose on a running app.
 
 **Usage:**
 
 ```python
-from prefab_ui.app import PrefabApp
+from prefab_ui.app import AppTool, PrefabApp
 from prefab_ui.components import Column, Heading, DataTable
 
 app = PrefabApp(
@@ -30,6 +30,7 @@ from typing import Any, Literal
 import pydantic_core
 from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
+from prefab_ui.app_tools import AppTool
 from prefab_ui.renderer import (
     RendererMode,
     _get_origin,
@@ -38,6 +39,8 @@ from prefab_ui.renderer import (
 )
 from prefab_ui.rx import _sanitize_floats
 from prefab_ui.themes import Theme
+
+__all__ = ["AppTool", "PrefabApp", "ResolvedTool"]
 
 PROTOCOL_VERSION = "0.3"
 
@@ -48,13 +51,18 @@ PROTOCOL_VERSION = "0.3"
 class ResolvedTool:
     """Enriched result from a tool resolver.
 
-    Beyond the tool `name`, the resolver can set flags that influence
-    how the renderer handles the tool's result.  This keeps the contract
-    typed and extensible without allowing arbitrary key injection.
+    `name` is the backend address, including routing prefixes. `local_name`
+    is the registered name before routing, used by callable-backed AppTool
+    definitions. `description` and `input_schema` come from that registration.
+    These metadata fields are optional for ordinary CallTool resolution.
+    `unwrap_result` controls extraction of wrapped backend return values.
     """
 
     name: str
     unwrap_result: bool = False
+    local_name: str | None = None
+    description: str | None = None
+    input_schema: dict[str, Any] | None = None
 
 
 _tool_resolver: ContextVar[Callable[[Any], ResolvedTool] | None] = ContextVar(
@@ -146,6 +154,10 @@ class PrefabApp(BaseModel):
         default=None,
         description="Initial client-side state",
     )
+    app_tools: list[AppTool] | None = Field(
+        default=None,
+        description="App-provided tools exposed to an MCP Apps host",
+    )
     defs: list[Any] | None = Field(
         default=None,
         description="Reusable component definitions (Define instances)",
@@ -222,6 +234,9 @@ class PrefabApp(BaseModel):
 
     @model_validator(mode="after")
     def _validate_state(self) -> PrefabApp:
+        names = [tool.name for tool in self.app_tools or [] if tool.name is not None]
+        if len(names) != len(set(names)):
+            raise ValueError("App tool names must be unique")
         if self.state is not None:
             for key in self.state:
                 if key.startswith("$"):
@@ -251,6 +266,7 @@ class PrefabApp(BaseModel):
         ```
         """
         return cls.model_construct(
+            app_tools=[AppTool.model_validate(tool) for tool in wire.get("tools", [])],
             view=view if view is not None else wire.get("view"),
             state=state if state is not None else wire.get("state"),
             defs=defs if defs is not None else wire.get("defs"),
@@ -311,7 +327,7 @@ class PrefabApp(BaseModel):
     ) -> dict[str, Any]:
         """Produce the Prefab wire format.
 
-        Returns a dict with `$prefab`, `view`, `defs`, and `state`
+        Returns a dict with `$prefab`, `view`, `defs`, `state`, and `tools`
         as top-level keys (omitting any that are None).
 
         The view is always wrapped in a root `Div` carrying the
@@ -347,6 +363,15 @@ class PrefabApp(BaseModel):
 
             if self.state is not None:
                 result["state"] = _serialize_state(self.state)
+
+            if self.app_tools:
+                result["tools"] = [
+                    tool.model_dump(by_alias=True, exclude_none=True)
+                    for tool in self.app_tools
+                ]
+                names = [tool["name"] for tool in result["tools"]]
+                if len(names) != len(set(names)):
+                    raise ValueError("App tool names must be unique after resolution")
 
             css_parts: list[str] = []
             if self.theme is not None:

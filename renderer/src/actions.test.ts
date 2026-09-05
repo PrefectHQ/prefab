@@ -159,13 +159,13 @@ describe("executeAction", () => {
       expect(result).toBe(false);
     });
 
-    it("handles null app gracefully", async () => {
+    it("reports a missing host connection instead of a successful server call", async () => {
       const state = createStateStore();
       const action: ActionSpec = { action: "toolCall", tool: "test" };
 
       const result = await executeAction(action, null, state);
 
-      expect(result).toBe(true);
+      expect(result).toBe(false);
     });
 
     it("passes $result to onSuccess callbacks", async () => {

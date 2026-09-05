@@ -31,6 +31,7 @@ import { validateAction } from "./validation";
 import { readFiles, filterByAccept } from "./file-utils";
 import { evaluateCondition } from "./conditions";
 import { getCustomActionHandler } from "./custom-handlers";
+import { dispatchAppTool, InactiveAppToolError } from "./app-tool-dispatch";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -38,6 +39,12 @@ export interface ActionSpec {
   onSuccess?: ActionSpec | ActionSpec[];
   onError?: ActionSpec | ActionSpec[];
   [key: string]: unknown;
+}
+
+/** Invocation-scoped cancellation and failure reporting for app tools. */
+export interface ActionExecution {
+  signal?: AbortSignal;
+  reportError?: (message: string) => void;
 }
 
 /** Maximum callback nesting depth to prevent runaway recursion. */
@@ -129,9 +136,12 @@ export async function executeAction(
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
   result?: unknown,
+  execution?: ActionExecution,
 ): Promise<boolean> {
+  execution?.signal?.throwIfAborted();
   if (depth > MAX_DEPTH) {
     console.warn("[Prefab] Action callback depth limit exceeded");
+    execution?.reportError?.("Action callback depth limit exceeded");
     return false;
   }
 
@@ -157,6 +167,9 @@ export async function executeAction(
   // Validate resolved action against its Zod schema
   const validationError = validateAction(resolved);
   if (validationError) {
+    execution?.reportError?.(
+      `${validationError.message}: ${validationError.issues.join("; ")}`,
+    );
     return false;
   }
 
@@ -168,13 +181,23 @@ export async function executeAction(
     switch (resolved.action) {
       // ── Server actions ──────────────────────────────────────────
       case "toolCall": {
+        if (!app)
+          throw new Error(
+            "Calling a server tool requires an MCP host connection",
+          );
         const name = resolved.tool as string;
-        const args = (resolved.arguments ?? {}) as Record<string, string>;
-        const toolResult = await app?.callServerTool({
+        const args = resolved.arguments ?? {};
+        if (typeof args !== "object" || args === null || Array.isArray(args)) {
+          throw new Error("Tool arguments must resolve to an object");
+        }
+        const request = {
           name,
-          arguments: args,
+          arguments: args as Record<string, unknown>,
           _meta: appName ? { fastmcp: { app: appName } } : undefined,
-        });
+        };
+        const toolResult = execution?.signal
+          ? await app.callServerTool(request, { signal: execution.signal })
+          : await app.callServerTool(request);
         if (toolResult?.isError) {
           success = false;
           errorMessage = extractErrorText(toolResult);
@@ -198,6 +221,21 @@ export async function executeAction(
           resultData = toolResult
             ? extractToolResultData(toolResult)
             : undefined;
+        }
+        break;
+      }
+      case "invokeAppTool": {
+        const toolResult = await dispatchAppTool(
+          state,
+          resolved.tool as string,
+          resolved.arguments ?? {},
+          { signal: execution?.signal, depth: depth + 1, overlayClose },
+        );
+        if (toolResult.isError) {
+          success = false;
+          errorMessage = extractErrorText(toolResult);
+        } else {
+          resultData = toolResult.structuredContent;
         }
         break;
       }
@@ -463,6 +501,8 @@ export async function executeAction(
               undefined,
               scope,
               overlayClose,
+              undefined,
+              execution,
             );
           }
         };
@@ -488,6 +528,8 @@ export async function executeAction(
                 undefined,
                 scope,
                 overlayClose,
+                undefined,
+                execution,
               );
             }
 
@@ -542,13 +584,22 @@ export async function executeAction(
       }
     }
   } catch (e: unknown) {
+    // An old button invocation must not run even its error callbacks against
+    // the state of a replacement application.
+    if (e instanceof InactiveAppToolError) {
+      execution?.reportError?.(e.message);
+      return false;
+    }
     success = false;
     errorMessage = e instanceof Error ? e.message : String(e);
   }
 
   // Dispatch lifecycle callbacks: $result to onSuccess, $error to onError
+  execution?.signal?.throwIfAborted();
+  if (!success)
+    execution?.reportError?.(errorMessage ?? "Action execution failed");
   if (success && resolved.onSuccess) {
-    await executeActions(
+    success = await executeActions(
       resolved.onSuccess,
       app,
       state,
@@ -558,6 +609,7 @@ export async function executeAction(
       scope,
       overlayClose,
       resultData,
+      execution,
     );
   } else if (!success && resolved.onError) {
     await executeActions(
@@ -569,6 +621,8 @@ export async function executeAction(
       errorMessage,
       scope,
       overlayClose,
+      undefined,
+      execution,
     );
   }
 
@@ -580,7 +634,8 @@ export async function executeAction(
  *
  * Accepts a single ActionSpec or an array (for composed action chains).
  * The first action that fails stops the chain — its onError callback runs,
- * then no further actions execute.
+ * then no further actions execute. Returns whether the entire chain succeeded,
+ * including success callbacks, so app-provided tools can report failures.
  */
 export async function executeActions(
   actions: ActionSpec | ActionSpec[],
@@ -592,7 +647,8 @@ export async function executeActions(
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
   result?: unknown,
-): Promise<void> {
+  execution?: ActionExecution,
+): Promise<boolean> {
   const list = Array.isArray(actions) ? actions : [actions];
   for (const action of list) {
     const ok = await executeAction(
@@ -605,7 +661,9 @@ export async function executeActions(
       scope,
       overlayClose,
       result,
+      execution,
     );
-    if (!ok) break;
+    if (!ok) return false;
   }
+  return true;
 }

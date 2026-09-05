@@ -2435,6 +2435,36 @@
     "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Badge, Card, CardContent, CardFooter, Column, H3, Input, Muted, Row\nfrom prefab_ui.rx import Rx\n\nname = Rx(\"name\").default(\"world\")\n\nwith PrefabApp(css_class=\"max-w-md mx-auto\") as app:\n    with Card():\n\n        with CardContent():\n            with Column(gap=3):\n                H3(f\"Hello, {name}!\")\n                Muted(\"Type below and watch this update in real time.\")\n                Input(name=\"name\", placeholder=\"Your name...\")\n\n        with CardFooter():\n            with Row(gap=2):\n                Badge(f\"Name: {name}\", variant=\"default\")\n                Badge(\"Prefab\", variant=\"success\")"
   },
   {
+    "title": "from prefab_ui.actions import SetState, ShowToast",
+    "category": "Mcp",
+    "code": "from prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx import ERROR, RESULT, STATE\n\nwith PrefabApp(state={\"service\": \"api\", \"status\": \"Unknown\"}) as app:\n    Text(STATE.status)\n    Button(\n        \"Refresh\",\n        on_click=CallTool(\n            \"get_status\",\n            arguments={\"service\": STATE.service},\n            on_success=SetState(\"status\", RESULT.status),\n            on_error=ShowToast(ERROR, variant=\"error\"),\n        ),\n    )"
+  },
+  {
+    "title": "from uuid import uuid4",
+    "category": "Mcp",
+    "code": "from fastmcp import FastMCP, FastMCPApp\nfrom prefab_ui.actions import SetState, ShowToast\nfrom prefab_ui.app import AppTool, PrefabApp\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx import ERROR, RESULT, STATE\n\ncounters = FastMCPApp(\"Counters\")\ncounts: dict[str, int] = {}\n\n\n@counters.tool()\ndef increment(counter_id: str, amount: int = 1) -> dict[str, int]:\n    \"\"\"Add to this counter and return its new count.\"\"\"\n    counts[counter_id] += amount\n    return {\"count\": counts[counter_id]}\n\n\n@counters.ui()\ndef open_counter() -> PrefabApp:\n    \"\"\"Open a new counter.\"\"\"\n    counter_id = uuid4().hex\n    counts[counter_id] = 0\n\n    increment_tool = AppTool(\n        increment,\n        bind={\"counter_id\": STATE.counter_id},\n        on_success=SetState(\"count\", RESULT.count),\n        on_error=ShowToast(ERROR, variant=\"error\"),\n        result={\"count\": STATE.count},\n    )\n    with PrefabApp(\n        state={\"counter_id\": counter_id, \"count\": 0},\n        app_tools=[\n            AppTool(\"get_count\", result={\"count\": STATE.count}),\n            increment_tool,\n        ],\n    ) as app:\n        Text(STATE.count)\n        Button(\"Increment\", on_click=increment_tool.invoke(amount=1))\n    return app\n\n\nmcp = FastMCP(\"Counter Server\", providers=[counters])\n\nif __name__ == \"__main__\":\n    mcp.run()"
+  },
+  {
+    "title": "from prefab_ui.actions import SetState",
+    "category": "Mcp",
+    "code": "from prefab_ui.app import AppTool, PrefabApp\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx import STATE\n\nreset = AppTool(\n    \"reset\",\n    actions=SetState(\"count\", 0),\n    result={\"count\": STATE.count},\n)\nwith PrefabApp(\n    state={\"count\": 10},\n    app_tools=[reset, AppTool(\"get_count\", result={\"count\": STATE.count})],\n) as app:\n    Text(STATE.count)\n    Button(\"Reset\", on_click=reset.invoke())"
+  },
+  {
+    "title": "from prefab_ui.actions.mcp import SendMessage, UpdateContext",
+    "category": "Mcp",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Input\nfrom prefab_ui.rx import EVENT, STATE\n\nwith PrefabApp(state={\"topic\": \"Orbital mechanics\"}) as app:\n    Input(\n        name=\"topic\",\n        on_change=UpdateContext(structured_content={\"topic\": EVENT}),\n    )\n    Button(\"Explain this\", on_click=SendMessage(f\"Explain {STATE.topic}.\"))"
+  },
+  {
+    "title": "from prefab_ui.actions import SetState",
+    "category": "Mcp",
+    "code": "from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext\nfrom prefab_ui.app import AppTool, PrefabApp\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx import ERROR, EVENT, RESULT, STATE\n\nmove_schema = {\n    \"type\": \"object\",\n    \"properties\": {\"position\": {\"type\": \"string\"}},\n    \"required\": [\"position\"],\n    \"additionalProperties\": False,\n}\n\nget_game_state = AppTool(\n    \"get_game_state\",\n    description=\"Read the current board, turn, and revision.\",\n    result={\n        \"board\": STATE.board,\n        \"turn\": STATE.turn,\n        \"revision\": STATE.revision,\n        \"valid_moves\": STATE.valid_moves,\n    },\n)\n\nmake_move = AppTool(\n    \"make_move\",\n    description=\"Play a move in the current game.\",\n    input_schema=move_schema,\n    actions=CallTool(\n        \"play_agent_move\",\n        arguments={\n            \"game_id\": STATE.game_id,\n            \"position\": EVENT.position,\n            \"revision\": STATE.revision,\n        },\n        on_success=[\n            SetState(\"board\", RESULT.board),\n            SetState(\"turn\", RESULT.turn),\n            SetState(\"revision\", RESULT.revision),\n            SetState(\"valid_moves\", RESULT.valid_moves),\n        ],\n        on_error=SetState(\"error\", ERROR),\n    ),\n    result={\n        \"board\": STATE.board,\n        \"turn\": STATE.turn,\n        \"revision\": STATE.revision,\n        \"valid_moves\": STATE.valid_moves,\n    },\n)\n\nwith PrefabApp(\n    state={\n        \"game_id\": \"game-42\",\n        \"board\": [],\n        \"turn\": \"human\",\n        \"revision\": 0,\n        \"valid_moves\": [\"B4\"],\n        \"error\": \"\",\n    },\n    app_tools=[get_game_state, make_move],\n) as app:\n    Text(f\"Turn: {STATE.turn}\")\n    Button(\n        \"Move to B4\",\n        on_click=CallTool(\n            \"play_human_move\",\n            arguments={\n                \"game_id\": STATE.game_id,\n                \"position\": \"B4\",\n                \"revision\": STATE.revision,\n            },\n            on_success=[\n                SetState(\"board\", RESULT.board),\n                SetState(\"turn\", RESULT.turn),\n                SetState(\"revision\", RESULT.revision),\n                SetState(\"valid_moves\", RESULT.valid_moves),\n                UpdateContext(\n                    structured_content={\n                        \"board\": RESULT.board,\n                        \"turn\": RESULT.turn,\n                        \"revision\": RESULT.revision,\n                        \"valid_moves\": RESULT.valid_moves,\n                    }\n                ),\n                SendMessage(\n                    \"I made my move. It is your turn. \"\n                    \"Use get_game_state and make_move to play.\"\n                ),\n            ],\n            on_error=SetState(\"error\", ERROR),\n        ),\n    )\n    Text(STATE.error)"
+  },
+  {
+    "title": "from prefab_ui.actions.mcp import RequestDisplayMode",
+    "category": "Mcp",
+    "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx.mcp import HOST\n\nwith PrefabApp() as app:\n    Text(f\"Display: {HOST.displayMode.default('inline')}\")\n    Button(\"Expand\", on_click=RequestDisplayMode(\"fullscreen\"))"
+  },
+  {
     "title": "from prefab_ui import FastMCP",
     "category": "General",
     "code": "from prefab_ui.components import Text\n\nmcp = FastMCP(\"Demo\")\n\n@mcp.tool(ui=True)\nasync def hello(name: str) -> Text:\n    return Text(f\"Hello, {name}!\")"
@@ -2558,6 +2588,11 @@
     "title": "from prefab_ui.rx import STATE",
     "category": "Reactive",
     "code": "STATE.user.address.city    # → {{ user.address.city }}\nSTATE.todos.length()       # → {{ todos | length }}"
+  },
+  {
+    "title": "from prefab_ui.app import AppTool, PrefabApp",
+    "category": "Reference",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Button, Text\nfrom prefab_ui.rx import STATE\n\nreset = AppTool(\n    \"reset\",\n    actions=SetState(\"count\", 0),\n    result={\"count\": STATE.count},\n)\nwith PrefabApp(state={\"count\": 10}, app_tools=[reset]) as app:\n    Text(STATE.count)\n    Button(\"Reset\", on_click=reset.invoke())"
   },
   {
     "title": "from prefab_ui.app import PrefabApp",
@@ -2688,16 +2723,6 @@
     "title": "@mcp.tool",
     "category": "Running",
     "code": "def add_entry(title: str) -> PrefabApp:\n    if not title.strip():\n        raise ValueError(\"Title is required\")\n    # ..."
-  },
-  {
-    "title": "from prefab_ui.actions.mcp import SendMessage",
-    "category": "Running",
-    "code": "Button(\"Explain this\",\n       on_click=SendMessage(\"Explain {{ title }} in more detail.\"))"
-  },
-  {
-    "title": "from prefab_ui.actions import ShowToast",
-    "category": "Running",
-    "code": "from prefab_ui.actions.mcp import UpdateContext\n\nButton(\n    \"Send to Chat\",\n    on_click=[\n        UpdateContext(\n            content=\"Selected item: {{ name }} ({{ category }})\"\n        ),\n        ShowToast(\"Added to context\", variant=\"success\"),\n    ],\n)"
   },
   {
     "title": "{1,8}",

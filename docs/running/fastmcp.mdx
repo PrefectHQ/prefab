@@ -37,10 +37,10 @@ When a host like Claude Desktop calls this tool, the user sees a fully interacti
 The flow has three steps:
 
 1. **Tool call** — the host calls your tool via MCP
-2. **PrefabApp → structuredContent** — FastMCP serializes your return value into the Prefab JSON envelope (`version`, `view`, `state`, `defs`)
-3. **Renderer** — the host loads the Prefab renderer (from `ui://prefab/renderer.html`) and passes it the structured content. The renderer builds the UI.
+2. **PrefabApp → structuredContent** — FastMCP serializes your return value into the Prefab JSON envelope, including the view, initial state, and any app tools
+3. **Renderer** — the host loads the registered Prefab renderer resource and passes it the structured content. The renderer builds the UI.
 
-When the user interacts with the UI (clicks a button, submits a form), [`CallTool`](/actions/call-tool) sends a new tool call through MCP back to your server. The tool returns a fresh `PrefabApp`, and the renderer updates.
+When the user interacts with the UI (clicks a button, submits a form), [`CallTool`](/actions/call-tool) can send a request through MCP back to your server. Its response can contain data or a new component tree; response actions decide how to apply it to the UI. [App-provided tools](/mcp/overview#app-provided-tools) let the agent invoke an interaction on the open app as well.
 
 ## Returning UI
 
@@ -161,40 +161,6 @@ def add_entry(title: str) -> PrefabApp:
     # ...
 ```
 
-### Communicating with the Host
-
-Beyond `CallTool`, MCP Apps can interact with the host conversation using [`SendMessage`](/actions/send-message) and [`UpdateContext`](/actions/update-context).
-
-[`SendMessage`](/actions/send-message) sends a message to the conversation as if the user typed it — useful for quick-action buttons that trigger follow-up questions:
-
-```python
-from prefab_ui.actions.mcp import SendMessage
-
-Button("Explain this",
-       on_click=SendMessage("Explain {{ title }} in more detail."))
-```
-
-[`UpdateContext`](/actions/update-context) silently updates what the model knows without creating a visible message. The context is attached to the next conversation turn, so the model can reference it without the user needing to re-explain:
-
-```python
-from prefab_ui.actions import ShowToast
-from prefab_ui.actions.mcp import UpdateContext
-
-Button(
-    "Send to Chat",
-    on_click=[
-        UpdateContext(
-            content="Selected item: {{ name }} ({{ category }})"
-        ),
-        ShowToast("Added to context", variant="success"),
-    ],
-)
-```
-
-<Note>
-`UpdateContext` depends on host support. The context is delivered to the host, but whether the model sees it depends on the host's implementation of the MCP Apps `ui/update-model-context` method.
-</Note>
-
 ### Tool Visibility
 
 By default, all tools registered on your server are visible to the model — including helper tools meant only for UI interactions. When the model can see tools like `search` or `delete_item`, it may call them directly instead of letting the user interact through the UI.
@@ -220,6 +186,15 @@ The entry point tool uses `app=True` so the model can invoke it. Helper tools us
 <Note>
 Tool visibility is metadata that the host is responsible for enforcing. The server returns all tools from `tools/list` regardless of visibility — the host filters based on the `visibility` field in the tool's app metadata.
 </Note>
+
+## Host Capabilities
+
+Once your app is running, its [MCP host](/mcp/overview) connects it to the
+conversation. Use [Messages](/actions/send-message) for user-initiated follow-up
+requests and [Model Context](/actions/update-context) to share the current
+selection or other useful state. [App-provided tools](/mcp/overview#app-provided-tools) let the agent invoke
+operations on the open view, and [Display Modes](/actions/request-display-mode)
+let the UI request more space. Availability depends on the host.
 
 ## API Server vs FastMCP
 

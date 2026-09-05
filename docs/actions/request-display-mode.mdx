@@ -99,11 +99,12 @@ with Column():
 </ParamField>
 
 <ParamField body="on_success" type="Action | list[Action] | None" default="None">
-  Action(s) to run when the host grants the requested mode.
+  Action(s) to run when the host responds successfully. Read `HOST.displayMode`
+  for the current mode; it may differ from the requested one.
 </ParamField>
 
 <ParamField body="on_error" type="Action | list[Action] | None" default="None">
-  Action(s) to run when the host rejects or cannot honor the request.
+  Action(s) to run when the request fails.
 </ParamField>
 </Card>
 

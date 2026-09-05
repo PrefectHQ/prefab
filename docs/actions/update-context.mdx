@@ -7,7 +7,9 @@ icon: database
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`UpdateContext` feeds information into the conversation without triggering a visible response. Where `SendMessage` creates a chat message the user sees, `UpdateContext` works behind the scenes — it updates what the model knows without interrupting the flow.
+`UpdateContext` shares information from the app for the agent to use in future turns. When the user selects a product or filters a table, you can send the relevant details so their next question has that context. You choose which fields to share, and the MCP host decides how to include them in the model's context.
+
+The update does not ask the agent to respond. Use [Messages](/actions/send-message) for a button that requests a follow-up, such as "Compare these products."
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Use Advanced Mode","variant":"default","size":"default","disabled":false,"onClick":{"action":"updateContext","content":"User has selected advanced mode. Provide detailed technical responses."}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBVcGRhdGVDb250ZXh0CgpCdXR0b24oCiAgICAiVXNlIEFkdmFuY2VkIE1vZGUiLAogICAgb25fY2xpY2s9VXBkYXRlQ29udGV4dCgKICAgICAgICBjb250ZW50PSJVc2VyIGhhcyBzZWxlY3RlZCBhZHZhbmNlZCBtb2RlLiBQcm92aWRlIGRldGFpbGVkIHRlY2huaWNhbCByZXNwb25zZXMuIgogICAgKSwKKQo">
 <CodeGroup>

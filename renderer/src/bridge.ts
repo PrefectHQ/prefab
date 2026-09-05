@@ -16,7 +16,9 @@
 
 import { App } from "@modelcontextprotocol/ext-apps";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
+import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { ExecuteResult } from "./pyodide/executor";
+import { AppTools } from "./app-tools";
 import {
   loadPyodideRuntime,
   executePrefabCode,
@@ -29,19 +31,20 @@ export interface BufferedToolResult {
 
 export interface Bridge {
   /** Start the connection. Call once, before React mounts. */
-  connect(): void;
+  connect(transport?: Transport): Promise<void>;
   /** The pre-connected App instance (null until connect() resolves). */
   app: App | null;
+  tools: AppTools | null;
   /** Tool results received before React was ready. */
   bufferedResults: BufferedToolResult[];
   /** Host context received before React was ready. */
   hostContext: McpUiHostContext | null;
   /** Register a listener for tool results (replays buffered ones immediately). */
-  onToolResult(cb: (result: BufferedToolResult) => void): void;
+  onToolResult(cb: (result: BufferedToolResult) => void): () => void;
   /** Register a listener for host context changes. */
-  onHostContext(cb: (ctx: McpUiHostContext) => void): void;
+  onHostContext(cb: (ctx: McpUiHostContext) => void): () => void;
   /** Register a listener for Pyodide code execution results. */
-  onCodeResult(cb: (result: ExecuteResult) => void): void;
+  onCodeResult(cb: (result: ExecuteResult) => void): () => void;
 }
 
 let toolResultCb: ((result: BufferedToolResult) => void) | null = null;
@@ -190,11 +193,17 @@ function handleCode(code: string, immediate = false) {
 
 export const bridge: Bridge = {
   app: null,
+  tools: null,
   bufferedResults: [],
   hostContext: null,
 
-  connect() {
-    const app = new App({ name: "Prefab", version: "1.0.0" });
+  connect(transport) {
+    const app = new App(
+      { name: "Prefab", version: "1.0.0" },
+      { tools: { listChanged: true } },
+    );
+    const tools = new AppTools(app);
+    this.tools = tools;
     this.app = app;
 
     // Standard tool result handler
@@ -244,9 +253,12 @@ export const bridge: Bridge = {
       }
     };
 
-    app.connect().catch((err) => {
-      console.error("[Prefab] Bridge connection failed:", err);
-    });
+    return app
+      .connect(transport)
+      .then(() => tools.connected())
+      .catch((err) => {
+        console.error("[Prefab] Bridge connection failed:", err);
+      });
   },
 
   onToolResult(cb) {
@@ -255,6 +267,9 @@ export const bridge: Bridge = {
       cb(result);
     }
     this.bufferedResults.length = 0;
+    return () => {
+      if (toolResultCb === cb) toolResultCb = null;
+    };
   },
 
   onHostContext(cb) {
@@ -262,9 +277,15 @@ export const bridge: Bridge = {
     if (this.hostContext) {
       cb(this.hostContext);
     }
+    return () => {
+      if (hostContextCb === cb) hostContextCb = null;
+    };
   },
 
   onCodeResult(cb) {
     codeResultCb = cb;
+    return () => {
+      if (codeResultCb === cb) codeResultCb = null;
+    };
   },
 };

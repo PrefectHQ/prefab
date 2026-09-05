@@ -29,6 +29,7 @@ Button("Submit", on_click=[
 
 from __future__ import annotations
 
+from prefab_ui.actions.app_tool import InvokeAppTool
 from prefab_ui.actions.base import Action
 from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
@@ -52,6 +53,7 @@ __all__ = [
     "CloseOverlay",
     "Fetch",
     "FileUpload",
+    "InvokeAppTool",
     "OpenFilePicker",
     "OpenLink",
     "PopState",

@@ -276,6 +276,60 @@ Button("Save", on_click=[
 ])
 ```
 
+### App-provided tools
+
+`PrefabApp(app_tools=[...])` lets an MCP Apps host invoke actions against the same
+live state as human UI interactions. Import `AppTool` from `prefab_ui.app`.
+Pass a registered backend function or a name with browser-only `actions`.
+Every tool requires an explicit `result` object. `.invoke(**arguments)` creates a
+local action invoking that same definition; include it in `PrefabApp.app_tools`.
+Callable metadata is resolved during serialization, never by executing the
+function. A backend interaction and its button can share one definition:
+
+Keep the direction clear: `AppTool` is an entry point from the host into the
+running app. Its actions may contain `CallTool`, which sends a request back out
+through the host to the MCP server. Python remains on the server.
+
+```python
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.actions import SetState
+from prefab_ui.components import Button
+from prefab_ui.rx import RESULT, STATE
+
+# increment(counter_id, amount=1) is already registered with FastMCP.
+interaction = AppTool(
+    increment,
+    bind={"counter_id": STATE.counter_id},
+    on_success=SetState("count", RESULT.count),
+    result={"count": STATE.count},
+)
+app = PrefabApp(
+    view=Button("Increment", on_click=interaction.invoke(amount=1)),
+    state={"counter_id": counter_id, "count": 0},
+    app_tools=[interaction],
+)
+```
+
+FastMCP's enriched resolver must supply the registered local name, description,
+and input schema. Bound parameters are hidden from callers and cannot be
+overridden. Omitted optional arguments stay absent so backend defaults apply.
+`name=` and `description=` override exposed metadata, not the backend address.
+
+For browser-only behavior, use `AppTool("increment", actions=SetState(...),
+result={...})`. `input_schema` accepts a Pydantic model or object JSON Schema;
+omitting it means no arguments. Arguments (plus bindings) are available as
+`EVENT`. `AppTool("get_count", result={"count": STATE.count})` is read-only.
+Results resolve after actions and response callbacks finish. Browser-only
+callbacks go on the individual actions.
+
+Tools survive `to_json()` and use the standard FastMCP renderer. Both invocation
+paths share validation, execution ordering, and replacement cleanup. Only JSON
+Schema validation runs in the browser; Python code stays on the MCP server.
+Host support and an updated renderer are required for model calls. See
+`docs/mcp/overview.mdx` (App-Provided Tools), `docs/reference/app-tools.mdx`,
+`examples/app_tools.py`, and
+`examples/app_tools_backend.py`.
+
 ### on_mount
 
 Every component (and PrefabApp) supports `on_mount` — actions that fire

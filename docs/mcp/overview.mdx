@@ -1,0 +1,391 @@
+---
+title: MCP Apps
+sidebarTitle: MCP Apps
+description: Connect a Prefab UI to its server, the agent, and the conversation.
+icon: plug
+---
+
+An MCP app is a UI running inside a conversation. Your MCP server supplies a
+`PrefabApp`, and the host displays it with the Prefab renderer. Components,
+state, expressions, and actions work as usual. The host also connects the app
+to server tools, the agent, and the surrounding conversation.
+
+The server owns your Python logic and persistent data. The renderer owns the
+open view's state and handles interactions. The host connects that view to the
+server and conversation, and decides how to present it. These boundaries matter:
+changing a state key updates the display; calling a backend tool can save that
+change; sharing context lets the agent learn about it.
+
+Use [FastMCP](/running/fastmcp) to register and serve the app. This guide covers
+the interactions you can build once it opens. Host support varies, particularly
+for app-provided tools, conversation updates, and display modes.
+
+## How the Pieces Connect
+
+The host is the application displaying the Prefab renderer. It owns both the
+connection to your MCP server and the bridge to each open app. The agent uses
+the capabilities that host makes available.
+
+Calls can move in either direction:
+
+| Trigger | Path | Use it for |
+| --- | --- | --- |
+| A person interacts with the UI | Renderer → `CallTool` → host → MCP server | Run Python or access backend data in response to a click, form submission, or other UI event |
+| The agent invokes an app-provided tool | Agent → host → selected renderer → `AppTool` actions | Inspect or change one open app; its actions can use `CallTool` to run Python |
+
+App-provided tools are discovered from each running app rather than added to the
+server's static tool list. The host already knows which bridge advertised a
+tool, so two open apps can expose the same name without an app-instance argument.
+
+## Calling Server Tools
+
+[`CallTool`](/actions/call-tool) sends an operation from the UI to your MCP
+server. Use it for work that needs your database, services, or Python code.
+Arguments can read the app's live state, so a search button can send the current
+query or a save button can submit the current form.
+
+The response is available as `RESULT` inside `on_success`. Your response actions
+decide what to do with it: update state, show feedback, or populate a
+[`Slot`](/components/slot) with returned components. The following view assumes
+a registered `get_status(service: str)` tool returning an object such as
+`{"status": "healthy"}`. Refreshing writes that response into the displayed
+status; a failed call shows the error instead.
+
+```python
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.actions.mcp import CallTool
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import ERROR, RESULT, STATE
+
+with PrefabApp(state={"service": "api", "status": "Unknown"}) as app:
+    Text(STATE.status)
+    Button(
+        "Refresh",
+        on_click=CallTool(
+            "get_status",
+            arguments={"service": STATE.service},
+            on_success=SetState("status", RESULT.status),
+            on_error=ShowToast(ERROR, variant="error"),
+        ),
+    )
+```
+
+You can also pass a registered function to `CallTool`. FastMCP resolves the
+function's backend address when serializing the view, including routing prefixes.
+The [CallTool reference](/actions/call-tool#callable-references-fastmcp) covers
+callable references and result handling. Backend helpers can be
+[app-only](/running/fastmcp#tool-visibility), so the host offers them to the UI
+without presenting them as direct model tools.
+
+## App-Provided Tools
+
+<Warning>
+App-provided tools require explicit host support, which is currently limited.
+Without it, the app may render normally, but the agent cannot discover or invoke
+its tools.
+</Warning>
+
+[App-provided tools](https://github.com/modelcontextprotocol/ext-apps/blob/v1.7.5/specification/draft/apps.mdx#app-provided-tools)
+let an agent interact with a particular app after it opens. The user
+might click "Increment" while the agent asks to add five; both should change
+the same counter and update its display. Define that interaction once with
+[`AppTool`](/reference/app-tools), expose it through `PrefabApp.app_tools`, and
+use its `.invoke()` method to connect the button.
+
+For an operation backed by Python, pass the registered function to `AppTool`.
+The function runs on your MCP server. The app supplies context from its live
+state through `bind`, applies the response through `on_success`, and returns
+the explicit `result` to the agent. In the counter below, `bind` supplies
+`counter_id`, so the agent only needs to provide `amount`. The result reads the
+count after the response has updated the view's state.
+
+This server stores counters in memory. `FastMCPApp` groups the backend function
+and the tool that opens a counter. Each call to `open_counter` creates a new
+counter and returns its own `PrefabApp`. The backend function is registered once
+and serves all those views.
+
+```python
+from uuid import uuid4
+
+from fastmcp import FastMCP, FastMCPApp
+from prefab_ui.actions import SetState, ShowToast
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import ERROR, RESULT, STATE
+
+counters = FastMCPApp("Counters")
+counts: dict[str, int] = {}
+
+
+@counters.tool()
+def increment(counter_id: str, amount: int = 1) -> dict[str, int]:
+    """Add to this counter and return its new count."""
+    counts[counter_id] += amount
+    return {"count": counts[counter_id]}
+
+
+@counters.ui()
+def open_counter() -> PrefabApp:
+    """Open a new counter."""
+    counter_id = uuid4().hex
+    counts[counter_id] = 0
+
+    increment_tool = AppTool(
+        increment,
+        bind={"counter_id": STATE.counter_id},
+        on_success=SetState("count", RESULT.count),
+        on_error=ShowToast(ERROR, variant="error"),
+        result={"count": STATE.count},
+    )
+    with PrefabApp(
+        state={"counter_id": counter_id, "count": 0},
+        app_tools=[
+            AppTool("get_count", result={"count": STATE.count}),
+            increment_tool,
+        ],
+    ) as app:
+        Text(STATE.count)
+        Button("Increment", on_click=increment_tool.invoke(amount=1))
+    return app
+
+
+mcp = FastMCP("Counter Server", providers=[counters])
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+Once a counter opens, the host can offer its `get_count()` and
+`increment(amount)` tools to the agent. Starting from zero, an increment with
+`amount=5` sends this view's counter ID and the amount to the Python function,
+updates the displayed count, and returns `{"count": 5}`. Calling `get_count`
+then reads that same live state. Clicking the button next invokes the increment
+interaction directly in the app and displays 6.
+
+### Local Operations
+
+An app tool can also run Prefab actions entirely in the browser. Pass a name and
+`actions` instead of a backend function. Declare arguments with `input_schema`
+using a Pydantic model or JSON Schema, and read them through `EVENT` in the
+actions. Omitting the schema declares an operation with no arguments.
+
+This example gives both the user and the agent a reset operation. It also
+exposes `get_count`, which omits actions and returns the current value. The
+required `result` object chooses what the caller receives from either operation.
+
+```python
+from prefab_ui.actions import SetState
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import STATE
+
+reset = AppTool(
+    "reset",
+    actions=SetState("count", 0),
+    result={"count": STATE.count},
+)
+with PrefabApp(
+    state={"count": 10},
+    app_tools=[reset, AppTool("get_count", result={"count": STATE.count})],
+) as app:
+    Text(STATE.count)
+    Button("Reset", on_click=reset.invoke())
+```
+
+### Calls and Lifetime
+
+Each open view has its own app tools. Two counters can both expose `increment`;
+the host routes a call to the selected view, and that view supplies its bound ID.
+The caller cannot override bound arguments. These IDs identify application data;
+your backend remains responsible for authorizing access to it.
+
+Button and agent invocations validate their arguments and execute in order for
+that view. Bindings read current state when a call starts, and the declared
+result is evaluated after its response actions finish. If the backend fails,
+`on_error` can display feedback while the agent receives a tool error. Completed
+state changes and backend operations remain in effect.
+
+Replacing or closing the view removes its app tools and invalidates pending
+calls. An old response cannot update a replacement view, although a backend
+operation already in progress may still finish. The
+[AppTool reference](/reference/app-tools) covers validation, result scopes, and
+the full parameter contract.
+
+## Messages and Context
+
+The app can share what the user is looking at or help them ask about it.
+[`UpdateContext`](/actions/update-context) supplies information for future model
+turns. [`SendMessage`](/actions/send-message) sends a user message, such as a
+request to explain a chart. The host decides how to include context and how to
+handle the message and any resulting agent turn.
+
+Use context updates when a selection, preference, or filter should inform the
+next question. You choose the fields to share; updating local state alone does
+not send those fields to the model. Use a message when the user explicitly asks
+to continue the conversation. Here, editing the topic shares it as context, and
+clicking "Explain this" sends a request containing the current topic.
+
+```python
+from prefab_ui.actions.mcp import SendMessage, UpdateContext
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Button, Input
+from prefab_ui.rx import EVENT, STATE
+
+with PrefabApp(state={"topic": "Orbital mechanics"}) as app:
+    Input(
+        name="topic",
+        on_change=UpdateContext(structured_content={"topic": EVENT}),
+    )
+    Button("Explain this", on_click=SendMessage(f"Explain {STATE.topic}."))
+```
+
+App tools provide another way for the agent to learn about the view: a read-only
+tool such as `get_count` returns the current value when called. Choose context
+updates for information that should accompany future turns and app tools for
+operations the agent can request explicitly.
+
+### Agent Turns
+
+An app-provided tool permits the agent to interact with the open app; it does not
+cause the agent to act. `UpdateContext` supplies state for a future turn, while
+`SendMessage` asks the host to start one. If the user will prompt the agent
+themselves, you can omit the message.
+
+For a turn-based game, expose both a read operation and a move operation. After
+a human move, update the rendered board, publish the new state, and send a short
+message. The agent can then refresh the state with `get_game_state` and act with
+`make_move`. This example assumes the MCP server provides app-only
+`play_human_move` and `play_agent_move` tools.
+
+```python
+from prefab_ui.actions import SetState
+from prefab_ui.actions.mcp import CallTool, SendMessage, UpdateContext
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import ERROR, EVENT, RESULT, STATE
+
+move_schema = {
+    "type": "object",
+    "properties": {"position": {"type": "string"}},
+    "required": ["position"],
+    "additionalProperties": False,
+}
+
+get_game_state = AppTool(
+    "get_game_state",
+    description="Read the current board, turn, and revision.",
+    result={
+        "board": STATE.board,
+        "turn": STATE.turn,
+        "revision": STATE.revision,
+        "valid_moves": STATE.valid_moves,
+    },
+)
+
+make_move = AppTool(
+    "make_move",
+    description="Play a move in the current game.",
+    input_schema=move_schema,
+    actions=CallTool(
+        "play_agent_move",
+        arguments={
+            "game_id": STATE.game_id,
+            "position": EVENT.position,
+            "revision": STATE.revision,
+        },
+        on_success=[
+            SetState("board", RESULT.board),
+            SetState("turn", RESULT.turn),
+            SetState("revision", RESULT.revision),
+            SetState("valid_moves", RESULT.valid_moves),
+        ],
+        on_error=SetState("error", ERROR),
+    ),
+    result={
+        "board": STATE.board,
+        "turn": STATE.turn,
+        "revision": STATE.revision,
+        "valid_moves": STATE.valid_moves,
+    },
+)
+
+with PrefabApp(
+    state={
+        "game_id": "game-42",
+        "board": [],
+        "turn": "human",
+        "revision": 0,
+        "valid_moves": ["B4"],
+        "error": "",
+    },
+    app_tools=[get_game_state, make_move],
+) as app:
+    Text(f"Turn: {STATE.turn}")
+    Button(
+        "Move to B4",
+        on_click=CallTool(
+            "play_human_move",
+            arguments={
+                "game_id": STATE.game_id,
+                "position": "B4",
+                "revision": STATE.revision,
+            },
+            on_success=[
+                SetState("board", RESULT.board),
+                SetState("turn", RESULT.turn),
+                SetState("revision", RESULT.revision),
+                SetState("valid_moves", RESULT.valid_moves),
+                UpdateContext(
+                    structured_content={
+                        "board": RESULT.board,
+                        "turn": RESULT.turn,
+                        "revision": RESULT.revision,
+                        "valid_moves": RESULT.valid_moves,
+                    }
+                ),
+                SendMessage(
+                    "I made my move. It is your turn. "
+                    "Use get_game_state and make_move to play."
+                ),
+            ],
+            on_error=SetState("error", ERROR),
+        ),
+    )
+    Text(STATE.error)
+```
+
+The `make_move` app tool calls the backend, applies its response to the same
+state the components render, and returns the updated game to the agent. The
+revision lets the backend reject stale moves. For games with hidden information,
+return only the caller's permitted view; do not expose the entire browser state
+through context or `result`.
+
+## Display Modes
+
+The host controls where the app appears.
+[`RequestDisplayMode`](/actions/request-display-mode) asks for inline,
+fullscreen, or picture-in-picture presentation. The host decides which modes
+are available and may return a different mode from the one requested.
+
+The reactive [`HOST`](/reactive/host) variable reports the host's current display
+mode, theme, and container dimensions when supplied. Use it in expressions to
+adapt the UI as its environment changes. For example, this view requests more
+space and displays the mode the host actually reports.
+
+```python
+from prefab_ui.actions.mcp import RequestDisplayMode
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Button, Text
+from prefab_ui.rx.mcp import HOST
+
+with PrefabApp() as app:
+    Text(f"Display: {HOST.displayMode.default('inline')}")
+    Button("Expand", on_click=RequestDisplayMode("fullscreen"))
+```
+
+Use `HOST.availableDisplayModes` when deciding which controls to offer, and
+`HOST.displayMode` to read the current mode. Fields depend on what the host
+provides. In a standalone preview, `HOST` is absent; defaults let the view
+render there while you develop. Exercise server and conversation interactions
+in an MCP host to verify their behavior in that environment.
