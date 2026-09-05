@@ -3,6 +3,11 @@
 All charts live in `prefab_ui.components.charts`. Every cartesian chart
 (Bar, Line, Area, Scatter) uses `ChartSeries` to define what to plot.
 
+Charts animate literal data by default. When `data` is an `Rx` binding or
+interpolation string, animation defaults to off because replacing reactive data
+mid-animation can make Recharts v2 enter a render loop. Pass `animate=True`
+explicitly to override this safety default.
+
 ## ChartSeries
 
 ```python
