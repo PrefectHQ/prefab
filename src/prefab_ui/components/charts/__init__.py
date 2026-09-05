@@ -141,7 +141,8 @@ class LineChart(Component):
 
     Args:
         data: Row data or reactive interpolation reference.
-        series: Series to render as lines.
+        series: Series to render as lines, or a sole ``{{ ... }}`` template
+            (e.g. a visibility-filtered list from state).
         x_axis: Data key for x-axis labels.
         height: Chart height in pixels.
         curve: Line interpolation style ("linear", "smooth", or "step").
@@ -170,7 +171,9 @@ class LineChart(Component):
     data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or `{{ interpolation }}` reference"
     )
-    series: list[ChartSeries] = Field(description="Series to render as lines")
+    series: list[ChartSeries] | RxStr = Field(
+        description="Series to render as lines, or `{{ interpolation }}` for a filtered list"
+    )
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
     )
