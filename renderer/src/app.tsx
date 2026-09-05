@@ -8,8 +8,8 @@
  *
  * State model: the `state` key in structuredContent holds client-side state.
  * The model sees initial state via structuredContent; all subsequent mutations
- * (SetState, form inputs, action callbacks) are renderer-private and never
- * propagate back.
+ * (SetState, form inputs, action callbacks) stay in the renderer. App-provided
+ * tools expose only their explicitly declared results to the host.
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
@@ -80,6 +80,7 @@ function readInitialData(): {
   defs: Record<string, ComponentNode>;
   state: Record<string, unknown>;
   keyBindings: KeyBindings;
+  tools?: unknown;
   mode?: string;
 } | null {
   const el = document.getElementById("prefab:initial-data");
@@ -97,6 +98,7 @@ function readInitialData(): {
       defs: (data.defs ?? {}) as Record<string, ComponentNode>,
       state: (data.state ?? {}) as Record<string, unknown>,
       keyBindings: (data.keyBindings ?? {}) as KeyBindings,
+      tools: data.tools,
       mode,
     };
   } catch {
@@ -114,15 +116,18 @@ export function App() {
     INITIAL?.defs ?? {},
   );
   const [, setIsStreaming] = useState(false);
-  const state = useStateStore();
+  const state = useStateStore(INITIAL?.state);
   const appRef = useRef(bridge.app);
   const forcedModeRef = useRef<string | undefined>(INITIAL?.mode);
+  const toolsRef = useRef<unknown>(INITIAL?.tools);
 
-  // Initialize state store with baked-in data.
+  // Restore the current tool set during StrictMode's effect replay too.
   useEffect(() => {
-    if (INITIAL?.state) {
-      state.reset(INITIAL.state);
-    }
+    bridge.tools?.replace(toolsRef.current, state);
+    return () => {
+      bridge.tools?.clear();
+      clearAllIntervals();
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Key bindings — document-level keyboard shortcuts.
@@ -203,6 +208,8 @@ export function App() {
       state.reset(
         currentHost != null ? { ...stateData, $host: currentHost } : stateData,
       );
+      toolsRef.current = structured.tools;
+      bridge.tools?.replace(toolsRef.current, state);
       setDefs(extractedDefs);
       setIsStreaming(false);
 
@@ -210,13 +217,17 @@ export function App() {
         setTree(view);
       }
     },
-    [state],
+    // Store methods are stable and read the live ref. Depending on the wrapper
+    // object would resubscribe on every state update.
+    [state.get, state.reset],
   );
 
   // Handle Pyodide execution result from partial/complete code
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
       if (result.tree) {
+        toolsRef.current = undefined;
+        bridge.tools?.clear();
         const mode = wireMode(result.mode);
         forcedModeRef.current = mode;
         syncInlineCss(result.css);
@@ -234,7 +245,7 @@ export function App() {
         }
       }
     },
-    [state],
+    [state.get, state.reset],
   );
 
   const handleHostContext = useCallback(
@@ -246,15 +257,18 @@ export function App() {
       }
       state.set("$host", hostContextToState(ctx));
     },
-    [state],
+    [state.set],
   );
 
   // Subscribe to the unified bridge — replays any buffered events
   // that arrived before React mounted.
   useEffect(() => {
-    bridge.onToolResult(handleToolResult);
-    bridge.onHostContext(handleHostContext);
-    bridge.onCodeResult(handleCodeResult);
+    const unsubscribe = [
+      bridge.onToolResult(handleToolResult),
+      bridge.onHostContext(handleHostContext),
+      bridge.onCodeResult(handleCodeResult),
+    ];
+    return () => unsubscribe.forEach((off) => off());
   }, [handleToolResult, handleHostContext, handleCodeResult]);
 
   // Apply initial theme from host context (if already available)

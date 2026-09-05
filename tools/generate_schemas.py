@@ -22,6 +22,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import Action
+from prefab_ui.actions.app_tool import InvokeAppTool
 from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
@@ -204,6 +205,7 @@ def discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
         CallHandler,
+        InvokeAppTool,
         CallTool,
         RequestDisplayMode,
         SendMessage,

@@ -1,0 +1,30 @@
+---
+title: InvokeAppTool
+description: JSON Schema for the InvokeAppTool action.
+---
+
+Invoke an app tool locally, using the same dispatcher as the host.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "action": {
+      "const": "invokeAppTool",
+      "default": "invokeAppTool",
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "arguments": {
+      "additionalProperties": true,
+      "type": "object"
+    }
+  },
+  "required": [
+    "action",
+    "tool"
+  ]
+}
+```

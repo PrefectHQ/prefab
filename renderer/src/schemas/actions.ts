@@ -25,6 +25,15 @@ const actionCallbacks = {
 export const toolCallSchema = z.object({
   action: z.literal("toolCall"),
   tool: z.string(),
+  arguments: z
+    .union([z.record(z.string(), z.unknown()), z.string()])
+    .optional(),
+  ...actionCallbacks,
+});
+
+export const invokeAppToolSchema = z.object({
+  action: z.literal("invokeAppTool"),
+  tool: z.string(),
   arguments: z.record(z.string(), z.unknown()).optional(),
   ...actionCallbacks,
 });
@@ -139,6 +148,7 @@ export const callHandlerSchema = z.object({
 
 export const actionSchema = z.discriminatedUnion("action", [
   toolCallSchema,
+  invokeAppToolSchema,
   sendMessageSchema,
   updateContextSchema,
   openLinkSchema,
@@ -161,6 +171,7 @@ export const actionOrList = z.union([actionSchema, z.array(actionSchema)]);
 /** The set of action discriminators the renderer handles. */
 export const HANDLED_ACTIONS = new Set([
   "toolCall",
+  "invokeAppTool",
   "sendMessage",
   "updateContext",
   "openLink",
@@ -183,6 +194,7 @@ export const HANDLED_ACTIONS = new Set([
  */
 export const ACTION_SCHEMA_REGISTRY: Record<string, z.ZodType> = {
   toolCall: toolCallSchema,
+  invokeAppTool: invokeAppToolSchema,
   sendMessage: sendMessageSchema,
   updateContext: updateContextSchema,
   openLink: openLinkSchema,

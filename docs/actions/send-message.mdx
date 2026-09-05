@@ -7,7 +7,7 @@ icon: paper-plane
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-`SendMessage` puts words in the user's mouth — when triggered, it sends a message to the conversation as if the user typed it. This is useful for creating quick-action buttons that trigger follow-up questions or commands.
+`SendMessage` lets a UI control continue the conversation on the user's behalf. A button can ask the agent to explain a chart, compare selected items, or help with the next step. Its message can include the app's current selection, so the user can ask about what they see without typing those details again.
 
 <ComponentPreview json={{"view":{"type":"Button","label":"Summarize","variant":"default","size":"default","disabled":false,"onClick":{"action":"sendMessage","content":"Please summarize the data above."}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQnV0dG9uCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMubWNwIGltcG9ydCBTZW5kTWVzc2FnZQoKQnV0dG9uKCJTdW1tYXJpemUiLCBvbl9jbGljaz1TZW5kTWVzc2FnZSgiUGxlYXNlIHN1bW1hcml6ZSB0aGUgZGF0YSBhYm92ZS4iKSkK">
 <CodeGroup>
@@ -32,7 +32,7 @@ Button("Summarize", on_click=SendMessage("Please summarize the data above."))
 </CodeGroup>
 </ComponentPreview>
 
-The message appears in the chat attributed to the user, which means the AI assistant will respond to it naturally.
+The renderer sends the message with the user role. The MCP host controls how it appears in the conversation and whether it starts an agent response. To share a selection for a later turn, use [Model Context](/actions/update-context).
 
 ## Quick Action Buttons
 
