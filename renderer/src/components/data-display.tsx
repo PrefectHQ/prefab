@@ -59,7 +59,7 @@ interface DataTableProps {
   columns: DataTableColumnSpec[];
   rows: Record<string, unknown>[];
   search?: boolean;
-  searchPlaceholder?: string;
+  searchPlaceholder?: string | null;
   paginated?: boolean;
   pageSize?: number;
   onRowClick?: (rowData: Record<string, unknown>) => void;
@@ -70,7 +70,7 @@ export function PrefabDataTable({
   columns: columnSpecs,
   rows,
   search = false,
-  searchPlaceholder = "Filter...",
+  searchPlaceholder,
   paginated = false,
   pageSize = 10,
   onRowClick,
@@ -207,7 +207,7 @@ export function PrefabDataTable({
       {search && (
         <div className="mb-4">
           <Input
-            placeholder={searchPlaceholder}
+            placeholder={searchPlaceholder ?? "Filter..."}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="max-w-sm"

@@ -110,6 +110,19 @@ describe("PrefabDataTable", () => {
     expect(markup).toContain('placeholder="Filter..."');
   });
 
+  it("uses the default search placeholder for a null wire value", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [{ key: "name", header: "Name" }],
+        rows: [{ name: "Arthur Dent" }],
+        search: true,
+        searchPlaceholder: null,
+      }),
+    );
+
+    expect(markup).toContain('placeholder="Filter..."');
+  });
+
   it("uses a custom search placeholder", () => {
     const markup = renderToStaticMarkup(
       React.createElement(PrefabDataTable, {
