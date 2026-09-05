@@ -113,6 +113,10 @@ class PyodideSandbox:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.communicate()
+            finally:
+                for stream in (proc.stdin, proc.stdout, proc.stderr):
+                    if stream is not None:
+                        stream.close()
 
     async def run(
         self,
