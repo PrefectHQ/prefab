@@ -29,12 +29,17 @@ export const barChartSchema = cartesianBase.extend({
   stacked: z.boolean().optional(),
   horizontal: z.boolean().optional(),
   barRadius: z.number().int().optional(),
+  xAxisLabel: z.string().optional(),
+  yAxisLabel: z.string().optional(),
 });
 
 export const lineChartSchema = cartesianBase.extend({
   type: z.literal("LineChart"),
+  series: z.union([z.array(chartSeriesSchema), z.string()]),
   curve: z.enum(["linear", "smooth", "step"]).optional(),
   showDots: z.boolean().optional(),
+  xAxisLabel: z.string().optional(),
+  yAxisLabel: z.string().optional(),
 });
 
 export const areaChartSchema = cartesianBase.extend({
