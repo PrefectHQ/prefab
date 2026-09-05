@@ -12872,7 +12872,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from prefab_ui.components.base import Component
-from prefab_ui.rx import RxStr
+from prefab_ui.rx import Rx, RxStr
 
 ChartValueFormat = str
 
@@ -12895,7 +12895,21 @@ class ChartSeries(BaseModel):
     color: str | None = Field(default=None, description="CSS color override")
 
 
-class BarChart(Component):
+class _AnimatedChart(Component):
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
+
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
+
+
+class BarChart(_AnimatedChart):
     """Bar chart with one or more series.
 
     Each series is a \`ChartSeries(data_key=..., label=..., color=...)\`
@@ -12912,6 +12926,7 @@ class BarChart(Component):
         bar_radius: Corner radius on bars.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -12932,9 +12947,6 @@ class BarChart(Component):
     """
 
     type: Literal["BarChart"] = "BarChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     series: list[ChartSeries] = Field(description="Series to render as bars")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -12953,9 +12965,6 @@ class BarChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -12972,7 +12981,7 @@ class BarChart(Component):
     )
 
 
-class LineChart(Component):
+class LineChart(_AnimatedChart):
     """Line chart with one or more series.
 
     Series are defined with \`ChartSeries\` from
@@ -12987,6 +12996,7 @@ class LineChart(Component):
         show_dots: Show dots at data points.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -13006,9 +13016,6 @@ class LineChart(Component):
     """
 
     type: Literal["LineChart"] = "LineChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     series: list[ChartSeries] = Field(description="Series to render as lines")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -13026,9 +13033,6 @@ class LineChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -13045,7 +13049,7 @@ class LineChart(Component):
     )
 
 
-class AreaChart(Component):
+class AreaChart(_AnimatedChart):
     """Area chart with one or more series.
 
     Series are defined with \`ChartSeries\` from
@@ -13061,6 +13065,7 @@ class AreaChart(Component):
         show_dots: Show dots at data points.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -13081,9 +13086,6 @@ class AreaChart(Component):
     """
 
     type: Literal["AreaChart"] = "AreaChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     series: list[ChartSeries] = Field(description="Series to render as areas")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -13102,9 +13104,6 @@ class AreaChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -13121,7 +13120,7 @@ class AreaChart(Component):
     )
 
 
-class PieChart(Component):
+class PieChart(_AnimatedChart):
     """Pie or donut chart.
 
     Args:
@@ -13134,6 +13133,7 @@ class PieChart(Component):
         padding_angle: Gap between slices in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         value_format: Pipe format for tooltip values.
 
     **Example:**
@@ -13153,9 +13153,6 @@ class PieChart(Component):
     """
 
     type: Literal["PieChart"] = "PieChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
     height: int = Field(default=300, description="Chart height in pixels")
@@ -13174,9 +13171,6 @@ class PieChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     value_format: ChartValueFormat = Field(
         default="auto",
         alias="valueFormat",
@@ -13184,7 +13178,7 @@ class PieChart(Component):
     )
 
 
-class ScatterChart(Component):
+class ScatterChart(_AnimatedChart):
     """Scatter (or bubble) chart plotting points from shared data.
 
     Each series references the same dataset and plots (x_axis, y_axis) pairs.
@@ -13199,6 +13193,7 @@ class ScatterChart(Component):
         height: Chart height in pixels.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         show_grid: Show cartesian grid.
 
     **Example:**
@@ -13218,9 +13213,6 @@ class ScatterChart(Component):
     """
 
     type: Literal["ScatterChart"] = "ScatterChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     series: list[ChartSeries] = Field(description="Series to render as scatter groups")
     x_axis: str = Field(alias="xAxis", description="Data key for x-axis values")
     y_axis: str = Field(alias="yAxis", description="Data key for y-axis values")
@@ -13236,15 +13228,12 @@ class ScatterChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
 
 
-class RadarChart(Component):
+class RadarChart(_AnimatedChart):
     """Radar (spider) chart with one or more series plotted on radial axes.
 
     Args:
@@ -13256,6 +13245,7 @@ class RadarChart(Component):
         show_dots: Show dots at vertices.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         show_grid: Show polar grid.
 
     **Example:**
@@ -13273,9 +13263,6 @@ class RadarChart(Component):
     """
 
     type: Literal["RadarChart"] = "RadarChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     series: list[ChartSeries] = Field(description="Series to render as radar areas")
     axis_key: str | None = Field(
         default=None, alias="axisKey", description="Data key for angular axis labels"
@@ -13293,15 +13280,12 @@ class RadarChart(Component):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show polar grid"
     )
 
 
-class RadialChart(Component):
+class RadialChart(_AnimatedChart):
     """Radial bar chart — categorical data as concentric rings.
 
     Args:
@@ -13314,6 +13298,7 @@ class RadialChart(Component):
         end_angle: Arc end angle in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to \`False\` for reactive data.
         value_format: Pipe format for tooltip values.
 
     **Example:**
@@ -13332,9 +13317,6 @@ class RadialChart(Component):
     """
 
     type: Literal["RadialChart"] = "RadialChart"
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
     height: int = Field(default=300, description="Chart height in pixels")
@@ -13352,9 +13334,6 @@ class RadialChart(Component):
     )
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
-    )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
     )
     value_format: ChartValueFormat = Field(
         default="auto",
@@ -18709,6 +18688,12 @@ class Action(BaseModel):
         """Resolve any Rx values to \`{{ }}\` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
+    def __or__(self, other: Action) -> _ActionChain:
+        """Chain this action with another action."""
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([self, other])
+
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,
         alias="onSuccess",
@@ -18719,6 +18704,15 @@ class Action(BaseModel):
         alias="onError",
         description="Action(s) to run when this action fails",
     )
+
+
+class _ActionChain(list[Action]):
+    """List-like action chain supporting repeated \`\`|\`\` composition."""
+
+    def __or__(self, other: Action) -> _ActionChain:
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([*self, other])
 `,"prefab_ui/actions/custom.py":`"""Custom JavaScript handler action."""
 
 from __future__ import annotations
