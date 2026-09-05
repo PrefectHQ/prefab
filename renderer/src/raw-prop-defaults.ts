@@ -10,6 +10,19 @@ const CHART_TYPES = new Set([
   "RadialChart",
 ]);
 
+function containsBinding(value: unknown): boolean {
+  if (typeof value === "string") {
+    return value.includes("{{") && value.includes("}}");
+  }
+  if (Array.isArray(value)) {
+    return value.some(containsBinding);
+  }
+  if (value !== null && typeof value === "object") {
+    return Object.values(value).some(containsBinding);
+  }
+  return false;
+}
+
 /**
  * Disable Recharts animation when protocol JSON binds chart data reactively.
  *
@@ -23,7 +36,7 @@ export function applyRawPropDefaults(
 ): Record<string, unknown> {
   if (
     CHART_TYPES.has(type) &&
-    typeof props.data === "string" &&
+    (typeof props.data === "string" || containsBinding(props.data)) &&
     props.animate === undefined
   ) {
     return { ...props, animate: false };

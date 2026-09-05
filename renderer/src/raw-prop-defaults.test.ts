@@ -28,6 +28,17 @@ describe("applyRawPropDefaults", () => {
     ).toEqual({ data: "{{ rows }}", animate: true });
   });
 
+  it("disables animation for bindings nested in chart data", () => {
+    expect(
+      applyRawPropDefaults("BarChart", {
+        data: [{ category: "A", value: "{{ value }}" }],
+      }),
+    ).toEqual({
+      data: [{ category: "A", value: "{{ value }}" }],
+      animate: false,
+    });
+  });
+
   it("leaves literal chart data at the component default", () => {
     const props = { data: [{ value: 1 }] };
     expect(applyRawPropDefaults("BarChart", props)).toBe(props);

@@ -28,6 +28,7 @@ Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -36,6 +37,22 @@ from prefab_ui.components.base import Component
 from prefab_ui.rx import Rx, RxStr
 
 ChartValueFormat = str
+
+
+def _contains_reactive_value(value: object) -> bool:
+    if isinstance(value, Rx):
+        return True
+    if isinstance(value, str):
+        return "{{" in value and "}}" in value
+    if isinstance(value, Mapping):
+        return any(_contains_reactive_value(item) for item in value.values())
+    if isinstance(value, Sequence):
+        return any(_contains_reactive_value(item) for item in value)
+    return False
+
+
+def _is_reactive_chart_data(data: object) -> bool:
+    return isinstance(data, (str, Rx)) or _contains_reactive_value(data)
 
 
 class ChartSeries(BaseModel):
@@ -134,7 +151,9 @@ class BarChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -213,7 +232,9 @@ class LineChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -295,7 +316,9 @@ class AreaChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -364,7 +387,9 @@ class PieChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -430,7 +455,9 @@ class ScatterChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -493,7 +520,9 @@ class RadarChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 
@@ -561,7 +590,9 @@ class RadialChart(Component):
     )
 
     def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
             self.animate = False
         super().model_post_init(__context)
 

@@ -61,6 +61,16 @@ def test_reactive_chart_data_can_explicitly_animate(chart_type, kwargs):
     assert chart.to_json()["animate"] is True
 
 
+@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
+@pytest.mark.parametrize("reactive_value", [Rx("value"), "{{ value }}"])
+def test_nested_reactive_chart_data_does_not_animate_by_default(
+    chart_type, kwargs, reactive_value
+):
+    chart = chart_type(data=[{"month": "Jan", "desktop": reactive_value}], **kwargs)
+
+    assert chart.to_json()["animate"] is False
+
+
 class TestBarChart:
     def test_serializes_basic(self):
         j = BarChart(data=SAMPLE_DATA, series=SERIES, x_axis="month").to_json()
