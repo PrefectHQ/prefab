@@ -30,6 +30,23 @@ export interface PyodideInterface {
 
 export type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
+export function normalizeExecuteData(data: unknown): Record<string, unknown> {
+  if (typeof data === "string") {
+    if (!data.trim()) return {};
+    try {
+      data = JSON.parse(data);
+    } catch {
+      return {};
+    }
+  }
+
+  if (data !== null && typeof data === "object" && !Array.isArray(data)) {
+    return data as Record<string, unknown>;
+  }
+
+  return {};
+}
+
 /** Debug callback — set by the bridge to route messages to the UI. */
 let debugFn: ((msg: string) => void) | null = null;
 export function setExecutorDebug(fn: (msg: string) => void) {
@@ -220,10 +237,15 @@ export function normalizeExecuteResult(
  * 3. Finds the root component or PrefabApp
  * 4. Calls to_json() to extract the wire format
  */
-export async function executePrefabCode(code: string): Promise<ExecuteResult> {
+export async function executePrefabCode(
+  code: string,
+  data?: unknown,
+): Promise<ExecuteResult> {
   if (!pyodide) {
     return { error: "Pyodide not loaded" };
   }
+
+  const executeData = normalizeExecuteData(data);
 
   const harness = `
 import json as _json
@@ -299,8 +321,8 @@ try:
 
     _pg_prev_lines = _pg_lines
 
-    # Execute in a fresh namespace
-    _pg_ns = {}
+    # Execute with data keys available as globals
+    _pg_ns = _json.loads(${JSON.stringify(JSON.stringify(executeData))})
     exec(_pg_healed, _pg_ns)
 
     # Find result: prefer PrefabApp, then root components
