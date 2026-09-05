@@ -12895,21 +12895,7 @@ class ChartSeries(BaseModel):
     color: str | None = Field(default=None, description="CSS color override")
 
 
-class _AnimatedChart(Component):
-    data: list[dict[str, Any]] | RxStr = Field(
-        description="Row data or \`{{ interpolation }}\` reference"
-    )
-    animate: bool = Field(
-        default=True, description="Animate transitions when data changes"
-    )
-
-    def model_post_init(self, __context: Any) -> None:
-        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
-            self.animate = False
-        super().model_post_init(__context)
-
-
-class BarChart(_AnimatedChart):
+class BarChart(Component):
     """Bar chart with one or more series.
 
     Each series is a \`ChartSeries(data_key=..., label=..., color=...)\`
@@ -12947,6 +12933,9 @@ class BarChart(_AnimatedChart):
     """
 
     type: Literal["BarChart"] = "BarChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     series: list[ChartSeries] = Field(description="Series to render as bars")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -12965,6 +12954,9 @@ class BarChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -12980,8 +12972,13 @@ class BarChart(_AnimatedChart):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class LineChart(_AnimatedChart):
+
+class LineChart(Component):
     """Line chart with one or more series.
 
     Series are defined with \`ChartSeries\` from
@@ -13016,6 +13013,9 @@ class LineChart(_AnimatedChart):
     """
 
     type: Literal["LineChart"] = "LineChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     series: list[ChartSeries] = Field(description="Series to render as lines")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -13033,6 +13033,9 @@ class LineChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -13048,8 +13051,13 @@ class LineChart(_AnimatedChart):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class AreaChart(_AnimatedChart):
+
+class AreaChart(Component):
     """Area chart with one or more series.
 
     Series are defined with \`ChartSeries\` from
@@ -13086,6 +13094,9 @@ class AreaChart(_AnimatedChart):
     """
 
     type: Literal["AreaChart"] = "AreaChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     series: list[ChartSeries] = Field(description="Series to render as areas")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
@@ -13104,6 +13115,9 @@ class AreaChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
@@ -13119,8 +13133,13 @@ class AreaChart(_AnimatedChart):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class PieChart(_AnimatedChart):
+
+class PieChart(Component):
     """Pie or donut chart.
 
     Args:
@@ -13153,6 +13172,9 @@ class PieChart(_AnimatedChart):
     """
 
     type: Literal["PieChart"] = "PieChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
     height: int = Field(default=300, description="Chart height in pixels")
@@ -13171,14 +13193,22 @@ class PieChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     value_format: ChartValueFormat = Field(
         default="auto",
         alias="valueFormat",
         description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class ScatterChart(_AnimatedChart):
+
+class ScatterChart(Component):
     """Scatter (or bubble) chart plotting points from shared data.
 
     Each series references the same dataset and plots (x_axis, y_axis) pairs.
@@ -13213,6 +13243,9 @@ class ScatterChart(_AnimatedChart):
     """
 
     type: Literal["ScatterChart"] = "ScatterChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     series: list[ChartSeries] = Field(description="Series to render as scatter groups")
     x_axis: str = Field(alias="xAxis", description="Data key for x-axis values")
     y_axis: str = Field(alias="yAxis", description="Data key for y-axis values")
@@ -13228,12 +13261,20 @@ class ScatterChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show cartesian grid"
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class RadarChart(_AnimatedChart):
+
+class RadarChart(Component):
     """Radar (spider) chart with one or more series plotted on radial axes.
 
     Args:
@@ -13263,6 +13304,9 @@ class RadarChart(_AnimatedChart):
     """
 
     type: Literal["RadarChart"] = "RadarChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     series: list[ChartSeries] = Field(description="Series to render as radar areas")
     axis_key: str | None = Field(
         default=None, alias="axisKey", description="Data key for angular axis labels"
@@ -13280,12 +13324,20 @@ class RadarChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     show_grid: bool = Field(
         default=True, alias="showGrid", description="Show polar grid"
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
-class RadialChart(_AnimatedChart):
+
+class RadialChart(Component):
     """Radial bar chart — categorical data as concentric rings.
 
     Args:
@@ -13317,6 +13369,9 @@ class RadialChart(_AnimatedChart):
     """
 
     type: Literal["RadialChart"] = "RadialChart"
+    data: list[dict[str, Any]] | RxStr = Field(
+        description="Row data or \`{{ interpolation }}\` reference"
+    )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
     height: int = Field(default=300, description="Chart height in pixels")
@@ -13335,11 +13390,19 @@ class RadialChart(_AnimatedChart):
     show_tooltip: bool = Field(
         default=True, alias="showTooltip", description="Show tooltip on hover"
     )
+    animate: bool = Field(
+        default=True, description="Animate transitions when data changes"
+    )
     value_format: ChartValueFormat = Field(
         default="auto",
         alias="valueFormat",
         description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
+
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and isinstance(self.data, (str, Rx)):
+            self.animate = False
+        super().model_post_init(__context)
 
 
 SparklineVariant = (
