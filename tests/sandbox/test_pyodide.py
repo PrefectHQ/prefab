@@ -20,6 +20,9 @@ def test_stop_terminates_and_communicates_with_process() -> None:
     assert sandbox._process is None
     process.terminate.assert_called_once_with()
     process.communicate.assert_called_once_with(timeout=5)
+    process.stdin.close.assert_called_once_with()
+    process.stdout.close.assert_called_once_with()
+    process.stderr.close.assert_called_once_with()
 
 
 def test_stop_kills_process_when_graceful_shutdown_times_out() -> None:
@@ -36,3 +39,6 @@ def test_stop_kills_process_when_graceful_shutdown_times_out() -> None:
 
     process.kill.assert_called_once_with()
     assert process.communicate.call_count == 2
+    process.stdin.close.assert_called_once_with()
+    process.stdout.close.assert_called_once_with()
+    process.stderr.close.assert_called_once_with()
