@@ -9,9 +9,10 @@ Themes are Python objects that generate CSS. `Theme.to_css()` compiles declarati
 ```
 Theme (base)
 ├── Basic (accent-driven colors, no layout opinions)
-│   └── Dashboard (Inter font, tabular numerals, thicker progress)
 ├── Presentation (dark chrome, generous padding, styled badges/tables)
-└── Minimal (strips all renderer defaults)
+├── Minimal (strips all renderer defaults)
+├── Windows2000 (total conversion: beveled gray chrome, VGA palette)
+└── MySpace (total conversion: neon glow on black, Comic Neue)
 ```
 
 All themes accept: `accent`, `font`, `font_mono`, `mode`, `gradient`.
@@ -50,6 +51,24 @@ Three forms, handled in `Theme.to_json()`:
 
 Tailwind color names (`"amber"`, `"blue-600"`) are resolved to hex in `_coerce_accent` validator using `_TAILWIND_COLORS` dict.
 
+## Total-conversion themes
+
+`Windows2000` and `MySpace` restyle every `pf-*` component rather than a handful
+of bespoke classes, so any app converts with a one-line change. Two constraints
+came out of building them and apply to any theme in this class:
+
+- **Same-element variant classes.** `pf-progress-indicator` and
+  `pf-progress-variant-*` sit on one element, not nested. A rule written as a
+  descendant selector silently never matches. `Windows2000` also sets
+  `gradient=False`, whose `_NO_GRADIENT_CSS` targets `.pf-progress-variant-*` at
+  the same specificity and is appended later — so its segmented fill doubles up
+  the class (`.pf-progress-indicator.pf-progress-variant-default`) to win.
+- **Nested `pf-progress`.** Progress renders `.pf-progress` inside
+  `.pf-progress`. Borders and padding applied to the class land twice; reset the
+  inner one with `.pf-progress .pf-progress`.
+
+Tab active state is `[data-active]`, not `[data-state="active"]`.
+
 ## Gradient system
 
 ### CSS cascade
@@ -75,6 +94,14 @@ Ring uses SVG `<linearGradient>` `<defs>` in `ring.tsx` with `style={{ stopColor
 
 Tailwind v4's `@theme inline` declares `--color-background: var(--background)` at `:root`. When themes are scoped to `#pg-preview`, setting `--background: #0f1117` in `#pg-preview` doesn't affect `--color-background` inherited from `:root`. The `COLOR_REBIND` constant in `playground.tsx` redeclares all `--color-*` aliases inside `#pg-preview` so they re-resolve.
 
+### Preset generation
+
+`theme-picker.tsx` reads `playground/themes.json`, which
+`tools/generate_theme_presets.py` compiles from the Python theme classes via
+`Theme.to_css()`. The picker previously held hand-written TypeScript ports of
+each theme, which drifted whenever the Python side changed. Do not reintroduce
+ports — register the theme in `PRESETS` in the generator instead.
+
 ### Theme picker interaction
 
 - `#pg-code-theme`: CSS from PrefabApp in code (suppressed when picker is active)
@@ -99,17 +126,20 @@ renderer/src/
 └── playground/
     ├── playground.tsx      Theme injection, COLOR_REBIND, scopeThemeCss()
     ├── pyodide.ts          Python harness, PrefabApp __init__ patching
-    └── theme-picker.tsx    Preset themes, custom CSS textarea
+    ├── theme-picker.tsx    Preset picker (reads generated themes.json)
+    └── themes.json         Generated — compiled CSS for every built-in theme
 
 src/prefab_ui/themes/
-├── __init__.py             Exports: Basic, Dashboard, Minimal, Presentation, Theme
+├── __init__.py             Exports: Basic, Minimal, MySpace, Presentation, Theme, Windows2000
 ├── base.py                 Theme base class, _TAILWIND_COLORS, _NO_GRADIENT_CSS
 ├── basic.py                Accent-only theme
-├── dashboard.py            Inter + tabular numerals
 ├── minimal.py              Strips all defaults
-└── presentation.py         Dark chrome, generous padding, styled components
+├── presentation.py         Dark chrome, generous padding, styled components
+├── windows_2000.py         Beveled gray chrome, VGA palette, window-chrome classes
+└── myspace.py              Neon glow on black, Comic Neue, profile-decor classes
 
 tools/
 ├── render_previews.py      Executes Python, detects PrefabApp, extracts theme
+├── generate_theme_presets.py  Compiles themes to playground/themes.json
 └── scope_css.py            Scopes Tailwind output + appends gradients.css raw
 ```

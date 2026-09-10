@@ -8,7 +8,7 @@ import { ComponentPreview } from '/snippets/component-preview.mdx'
 
 Prefab renders with sensible defaults out of the box: system fonts, automatic gaps between cards, comfortable card padding, and gradient fills on progress bars. No theme is required for a polished look.
 
-Themes let you go further: accent colors, custom fonts, dark chrome, and data-oriented styling. Pass a `theme` to `PrefabApp`:
+Themes let you go further: accent colors, custom fonts, dark chrome, data-oriented styling, and — since a theme can restyle every component — total conversions like rendering your dashboard as a Windows 2000 program. Pass a `theme` to `PrefabApp`:
 
 ```python
 from prefab_ui.app import PrefabApp
@@ -315,7 +315,360 @@ PrefabApp(view=view, theme=Minimal())
 </CodeGroup>
 </ComponentPreview>
 </Tab>
+<Tab title="Windows 2000">
+
+A total conversion: beveled gray controls, square corners, Tahoma, sunken white text fields, list-view tables with raised column headers, and progress bars that march across in chunky segments. Charts use the VGA palette. Because it restyles the standard components rather than bespoke classes, an existing dashboard becomes a Windows 2000 program by changing one line.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"pf-window","type":"Div","children":[{"cssClass":"pf-title-bar","type":"Row","children":[{"content":"Fusion Issue Explorer","code":false,"type":"Span"},{"type":"Div","children":[{"cssClass":"pf-title-bar-button","content":"_","code":false,"type":"Span"},{"cssClass":"pf-title-bar-button","content":"[]","code":false,"type":"Span"},{"cssClass":"pf-title-bar-button","content":"X","code":false,"type":"Span"}]}]},{"cssClass":"pf-menu-bar","type":"Row","children":[{"content":"File","code":false,"type":"Span"},{"content":"Edit","code":false,"type":"Span"},{"content":"View","code":false,"type":"Span"},{"content":"Help","code":false,"type":"Span"}]},{"cssClass":"gap-2 p-2","type":"Column","children":[{"cssClass":"grid-cols-3","type":"Grid","children":[{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Open Issues","value":"1,284"}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Net Flow","value":"-37"}]}]},{"type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"48h SLA","value":"82%"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Pipeline"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":92.0,"variant":"success","size":"default"},{"type":"Progress","value":67.0,"variant":"default","size":"default"},{"type":"Progress","value":34.0,"variant":"warning","size":"default"}]}]}]}]},{"cssClass":"pf-status-bar","type":"Row","children":[{"cssClass":"pf-status-segment","content":"Ready","code":false,"type":"Span"},{"cssClass":"pf-status-segment","content":"1,284 issues loaded","code":false,"type":"Span"}]}]}]},"css":[":root {\n  --radius: 0; --card-padding-y: 0.75rem; --layout-gap: 0.5rem; --background: #3a6ea5; --foreground: #000000; --card: #d4d0c8; --card-foreground: #000000; --popover: #d4d0c8; --popover-foreground: #000000; --primary: #0a246a; --primary-foreground: #ffffff; --secondary: #d4d0c8; --secondary-foreground: #000000; --muted: #d4d0c8; --muted-foreground: #404040; --accent: #0a246a; --accent-foreground: #ffffff; --border: #808080; --input: #ffffff; --ring: #0a246a; --destructive: #800000; --success: #008000; --warning: #808000; --info: #000080; --chart-1: #000080; --chart-2: #008080; --chart-3: #800000; --chart-4: #808000; --chart-5: #800080; --font-sans: Tahoma, 'MS Sans Serif', Verdana, Geneva, sans-serif; --w2k-raised: inset -1px -1px 0 0 #0a0a0a, inset 1px 1px 0 0 #ffffff, inset -2px -2px 0 0 #808080, inset 2px 2px 0 0 #dfdfdf; --w2k-sunken: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #0a0a0a, inset -2px -2px 0 0 #dfdfdf; --w2k-pressed: inset 1px 1px 0 0 #0a0a0a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #808080, inset -2px -2px 0 0 #dfdfdf;\n}\n.dark {\n  --radius: 0; --card-padding-y: 0.75rem; --layout-gap: 0.5rem; --background: #3a6ea5; --foreground: #000000; --card: #d4d0c8; --card-foreground: #000000; --popover: #d4d0c8; --popover-foreground: #000000; --primary: #0a246a; --primary-foreground: #ffffff; --secondary: #d4d0c8; --secondary-foreground: #000000; --muted: #d4d0c8; --muted-foreground: #404040; --accent: #0a246a; --accent-foreground: #ffffff; --border: #808080; --input: #ffffff; --ring: #0a246a; --destructive: #800000; --success: #008000; --warning: #808000; --info: #000080; --chart-1: #000080; --chart-2: #008080; --chart-3: #800000; --chart-4: #808000; --chart-5: #800080; --font-sans: Tahoma, 'MS Sans Serif', Verdana, Geneva, sans-serif; --w2k-raised: inset -1px -1px 0 0 #0a0a0a, inset 1px 1px 0 0 #ffffff, inset -2px -2px 0 0 #808080, inset 2px 2px 0 0 #dfdfdf; --w2k-sunken: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #0a0a0a, inset -2px -2px 0 0 #dfdfdf; --w2k-pressed: inset 1px 1px 0 0 #0a0a0a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #808080, inset -2px -2px 0 0 #dfdfdf;\n}\n/* Nothing in Windows 2000 has a rounded corner. `--radius: 0` handles most of\n   it; this catches the utilities that hardcode a pill radius. Portal content\n   (dialogs, tooltips, popovers) renders outside .pf-app-root, so match on the\n   class prefix rather than descendants of the root. */\n[class^=\"pf-\"],\n[class*=\" pf-\"] {\n  border-radius: 0;\n}\n\n.pf-app-root {\n  font-family: var(--font-sans);\n  font-size: 12px;\n  color: #000;\n  padding: 0.75rem;\n}\n\n/* Cards read as raised panels. The ring utility would draw a rounded halo\n   over the bevel, so drop it. */\n.pf-card {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  --tw-ring-shadow: 0 0 #0000;\n  padding: 3px;\n}\n.pf-card-header,\n.pf-card-content,\n.pf-card-footer {\n  padding-left: 0.75rem;\n  padding-right: 0.75rem;\n}\n.pf-card-title {\n  font-size: 12px;\n  font-weight: 700;\n}\n.pf-card-description {\n  font-size: 11px;\n  color: #404040;\n}\n\n/* Buttons: raised until pressed, then the bevel inverts and the label\n   nudges down and right \u2014 the detail that sells it. */\n.pf-button {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  font-size: 12px;\n  font-weight: 400;\n  min-height: 23px;\n  padding: 0 12px;\n  transition: none;\n}\n.pf-button:hover {\n  background: #d4d0c8;\n}\n.pf-button:active:not(:disabled) {\n  box-shadow: var(--w2k-pressed);\n  padding-top: 2px;\n  padding-left: 13px;\n  padding-right: 11px;\n}\n.pf-button:focus-visible {\n  outline: 1px dotted #000;\n  outline-offset: -4px;\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-button-variant-default {\n  background: #d4d0c8;\n  color: #000;\n  font-weight: 700;\n}\n.pf-button-variant-default:hover {\n  background: #d4d0c8;\n  color: #000;\n}\n.pf-button-variant-ghost:not(:hover),\n.pf-button-variant-link {\n  box-shadow: none;\n  background: transparent;\n}\n.pf-button-variant-link {\n  color: #0000ee;\n  text-decoration: underline;\n}\n\n/* Text entry is sunken and white \u2014 the universal \"you can type here\" cue. */\n.pf-input,\n.pf-textarea,\n.pf-select-trigger,\n.pf-combobox-trigger,\n.pf-native-select {\n  background: #ffffff;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-sunken);\n  font-size: 12px;\n  padding-left: 4px;\n  transition: none;\n}\n.pf-input:focus-visible,\n.pf-textarea:focus-visible,\n.pf-select-trigger:focus-visible,\n.pf-combobox-trigger:focus-visible {\n  box-shadow: var(--w2k-sunken);\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-checkbox,\n.pf-radio-group-item {\n  background: #ffffff;\n  border: none;\n  box-shadow: var(--w2k-sunken);\n}\n.pf-checkbox[data-checked],\n.pf-checkbox[data-state=\"checked\"] {\n  background: #ffffff;\n  color: #000;\n}\n.pf-switch {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  border: none;\n}\n.pf-switch-thumb {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n}\n\n/* Tables are list views: a sunken white well with raised column headers that\n   look like the clickable sort buttons they are. */\n.pf-table-container {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  padding: 2px;\n}\n.pf-table {\n  font-size: 12px;\n}\n.pf-table-head {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  color: #000;\n  font-size: 11px;\n  font-weight: 400;\n  text-transform: none;\n  letter-spacing: normal;\n  height: 22px;\n}\n.pf-table-cell {\n  padding: 3px 6px;\n  color: #000;\n}\n.pf-table-row {\n  border-color: #d4d0c8;\n}\n.pf-table-row:hover {\n  background: #0a246a;\n  color: #ffffff;\n}\n.pf-table-row:hover .pf-table-cell {\n  color: #ffffff;\n}\n\n/* Segmented progress \u2014 the chunky blue blocks marching across a sunken well.\n   Progress nests .pf-progress inside .pf-progress, so the well is drawn on the\n   outer element and the inner one is flattened out of the way. The variant\n   class sits on the indicator itself, so the fill rules double up the class to\n   outrank the flat-fill CSS that `gradient=False` emits. */\n.pf-progress,\n.pf-progress-track {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  height: 20px;\n  padding: 3px;\n}\n.pf-progress .pf-progress,\n.pf-progress .pf-progress-track {\n  background: transparent;\n  box-shadow: none;\n  height: 100%;\n  padding: 0;\n}\n.pf-progress-indicator.pf-progress-variant-default,\n.pf-progress-indicator.pf-progress-variant-success,\n.pf-progress-indicator.pf-progress-variant-warning,\n.pf-progress-indicator.pf-progress-variant-destructive,\n.pf-progress-indicator.pf-progress-variant-info,\n.pf-progress-indicator.pf-progress-variant-muted {\n  background-color: transparent;\n  background-image: repeating-linear-gradient(\n    to right,\n    currentColor 0 10px,\n    transparent 10px 12px\n  );\n}\n.pf-progress-indicator.pf-progress-variant-default { color: #0a246a; }\n.pf-progress-indicator.pf-progress-variant-success { color: #008000; }\n.pf-progress-indicator.pf-progress-variant-warning { color: #808000; }\n.pf-progress-indicator.pf-progress-variant-destructive { color: #800000; }\n.pf-progress-indicator.pf-progress-variant-info { color: #000080; }\n.pf-progress-indicator.pf-progress-variant-muted { color: #808080; }\n.pf-progress-label,\n.pf-progress-value {\n  font-size: 11px;\n  color: #000;\n}\n\n.pf-slider-track {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  height: 4px;\n}\n.pf-slider-range {\n  background: #0a246a;\n}\n.pf-slider-thumb {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  border: none;\n  width: 11px;\n  height: 21px;\n}\n\n/* Badges are tiny raised chips rather than pills. */\n.pf-badge {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  font-size: 11px;\n  font-weight: 400;\n  padding: 1px 7px;\n}\n.pf-badge-variant-default { color: #0a246a; font-weight: 700; }\n.pf-badge-variant-success { color: #008000; }\n.pf-badge-variant-warning { color: #808000; }\n.pf-badge-variant-destructive { color: #800000; }\n.pf-badge-variant-info { color: #000080; }\n\n/* Notebook tabs \u2014 the active one sits proud of the strip. */\n.pf-tabs-list {\n  background: transparent;\n  gap: 2px;\n  padding: 0;\n}\n.pf-tabs-trigger {\n  background: #d4d0c8;\n  color: #000;\n  box-shadow: var(--w2k-raised);\n  font-size: 12px;\n  padding: 3px 12px;\n}\n.pf-tabs-trigger[data-active] {\n  background: #d4d0c8;\n  font-weight: 700;\n  padding-bottom: 5px;\n}\n.pf-tabs-content {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  padding: 0.75rem;\n}\n\n/* Dialogs are windows: gray face, navy title bar via .pf-dialog-header. */\n.pf-dialog-content,\n.pf-alert-dialog-content,\n.pf-popover-content,\n.pf-hover-card-content,\n.pf-dropdown-menu-content,\n.pf-select-content,\n.pf-combobox-content,\n.pf-command-dialog {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  padding: 3px;\n  font-size: 12px;\n}\n.pf-dialog-header,\n.pf-alert-dialog-header {\n  background: linear-gradient(90deg, #0a246a 0%, #a6caf0 100%);\n  color: #ffffff;\n  padding: 3px 4px;\n  margin: 0 0 6px;\n}\n.pf-dialog-title,\n.pf-alert-dialog-title {\n  color: #ffffff;\n  font-size: 12px;\n  font-weight: 700;\n}\n.pf-dropdown-menu-item:hover,\n.pf-select-item[data-highlighted],\n.pf-combobox-item[data-highlighted] {\n  background: #0a246a;\n  color: #ffffff;\n}\n\n/* The famous pale-yellow tooltip. */\n.pf-tooltip-content {\n  background: #ffffe1;\n  color: #000;\n  border: 1px solid #000;\n  box-shadow: none;\n  font-size: 11px;\n  padding: 2px 4px;\n}\n\n/* Etched groove: a shadow line above a highlight line. */\n.pf-separator {\n  background: transparent;\n  border-top: 1px solid #808080;\n  border-bottom: 1px solid #ffffff;\n  height: 2px;\n}\n\n.pf-alert {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  border: none;\n  padding: 0.75rem;\n}\n\n.pf-code,\n.pf-kbd {\n  font-family: 'Courier New', monospace;\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  border: none;\n  color: #000;\n}\n\n/* \u2500\u2500 Window chrome \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n   Utility classes the theme brings with it. They only exist while this theme\n   is applied, and compose onto ordinary components: a Row for the title bar,\n   Spans for the buttons, a Div for the inset well. */\n\n.pf-window {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  padding: 3px;\n}\n.pf-title-bar {\n  align-items: center;\n  background: linear-gradient(90deg, #0a246a 0%, #a6caf0 100%);\n  color: #ffffff;\n  display: flex;\n  font-weight: 700;\n  justify-content: space-between;\n  min-height: 22px;\n  padding: 3px 3px 3px 6px;\n}\n.pf-title-bar > * {\n  color: #ffffff;\n}\n.pf-title-bar-button {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  color: #000;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 10px;\n  font-weight: 700;\n  height: 16px;\n  min-width: 18px;\n  margin-left: 2px;\n}\n.pf-menu-bar {\n  background: #d4d0c8;\n  display: flex;\n  gap: 2px;\n  padding: 2px 4px;\n}\n.pf-menu-bar > * {\n  color: #000;\n  font-size: 12px;\n  padding: 2px 8px;\n}\n.pf-menu-bar > *:hover {\n  background: #0a246a;\n  color: #ffffff;\n}\n.pf-status-bar {\n  background: #d4d0c8;\n  display: flex;\n  gap: 3px;\n  padding: 2px;\n}\n.pf-status-segment {\n  box-shadow: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff;\n  color: #000;\n  flex: 1;\n  font-size: 11px;\n  padding: 2px 6px;\n}\n/* Sunken white well \u2014 wrap charts and lists in it the way Explorer does. */\n.pf-inset {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  padding: 6px;\n}\n\n.pf-progress-variant-default,\n.pf-progress-variant-success,\n.pf-progress-variant-warning,\n.pf-progress-variant-destructive,\n.pf-progress-variant-info,\n.pf-slider-variant-default,\n.pf-slider-variant-success,\n.pf-slider-variant-warning,\n.pf-slider-variant-destructive,\n.pf-slider-variant-info { background-image: none; }\n.pf-ring-variant-default { stroke: var(--primary); }\n.pf-ring-variant-success { stroke: var(--success); }\n.pf-ring-variant-warning { stroke: var(--warning); }\n.pf-ring-variant-destructive { stroke: var(--destructive); }\n.pf-ring-variant-info { stroke: var(--info); }\n"],"mode":"light"}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRIZWFkZXIsIENhcmRUaXRsZSwgQ29sdW1uLCBEaXYsIEdyaWQsIE1ldHJpYywgUHJvZ3Jlc3MsIFJvdywgU3Bhbgpmcm9tIHByZWZhYl91aS50aGVtZXMgaW1wb3J0IFdpbmRvd3MyMDAwCgp3aXRoIERpdihjc3NfY2xhc3M9InBmLXdpbmRvdyIpIGFzIHZpZXc6CiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9InBmLXRpdGxlLWJhciIpOgogICAgICAgIFNwYW4oIkZ1c2lvbiBJc3N1ZSBFeHBsb3JlciIpCiAgICAgICAgd2l0aCBEaXYoKToKICAgICAgICAgICAgU3BhbigiXyIsIGNzc19jbGFzcz0icGYtdGl0bGUtYmFyLWJ1dHRvbiIpCiAgICAgICAgICAgIFNwYW4oIltdIiwgY3NzX2NsYXNzPSJwZi10aXRsZS1iYXItYnV0dG9uIikKICAgICAgICAgICAgU3BhbigiWCIsIGNzc19jbGFzcz0icGYtdGl0bGUtYmFyLWJ1dHRvbiIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9InBmLW1lbnUtYmFyIik6CiAgICAgICAgU3BhbigiRmlsZSIpCiAgICAgICAgU3BhbigiRWRpdCIpCiAgICAgICAgU3BhbigiVmlldyIpCiAgICAgICAgU3BhbigiSGVscCIpCiAgICB3aXRoIENvbHVtbihnYXA9MiwgY3NzX2NsYXNzPSJwLTIiKToKICAgICAgICB3aXRoIEdyaWQoY29sdW1ucz0zKToKICAgICAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJPcGVuIElzc3VlcyIsIHZhbHVlPSIxLDI4NCIpCiAgICAgICAgICAgIHdpdGggQ2FyZCgpOgogICAgICAgICAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICAgICAgICAgIE1ldHJpYyhsYWJlbD0iTmV0IEZsb3ciLCB2YWx1ZT0iLTM3IikKICAgICAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSI0OGggU0xBIiwgdmFsdWU9IjgyJSIpCiAgICAgICAgd2l0aCBDYXJkKCk6CiAgICAgICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICAgICAgQ2FyZFRpdGxlKCJQaXBlbGluZSIpCiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT05MiwgdmFyaWFudD0ic3VjY2VzcyIsIGxhYmVsPSJCdWlsZHMiKQogICAgICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPTY3LCBsYWJlbD0iRGVwbG95IikKICAgICAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT0zNCwgdmFyaWFudD0id2FybmluZyIsIGxhYmVsPSJUZXN0cyIpCiAgICB3aXRoIFJvdyhjc3NfY2xhc3M9InBmLXN0YXR1cy1iYXIiKToKICAgICAgICBTcGFuKCJSZWFkeSIsIGNzc19jbGFzcz0icGYtc3RhdHVzLXNlZ21lbnQiKQogICAgICAgIFNwYW4oIjEsMjg0IGlzc3VlcyBsb2FkZWQiLCBjc3NfY2xhc3M9InBmLXN0YXR1cy1zZWdtZW50IikKClByZWZhYkFwcCh2aWV3PXZpZXcsIHRoZW1lPVdpbmRvd3MyMDAwKCkpCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Card, CardContent, CardHeader, CardTitle, Column, Div, Grid, Metric, Progress, Row, Span
+from prefab_ui.themes import Windows2000
+
+with Div(css_class="pf-window") as view:
+    with Row(css_class="pf-title-bar"):
+        Span("Fusion Issue Explorer")
+        with Div():
+            Span("_", css_class="pf-title-bar-button")
+            Span("[]", css_class="pf-title-bar-button")
+            Span("X", css_class="pf-title-bar-button")
+    with Row(css_class="pf-menu-bar"):
+        Span("File")
+        Span("Edit")
+        Span("View")
+        Span("Help")
+    with Column(gap=2, css_class="p-2"):
+        with Grid(columns=3):
+            with Card():
+                with CardContent():
+                    Metric(label="Open Issues", value="1,284")
+            with Card():
+                with CardContent():
+                    Metric(label="Net Flow", value="-37")
+            with Card():
+                with CardContent():
+                    Metric(label="48h SLA", value="82%")
+        with Card():
+            with CardHeader():
+                CardTitle("Pipeline")
+            with CardContent():
+                with Column(gap=2):
+                    Progress(value=92, variant="success", label="Builds")
+                    Progress(value=67, label="Deploy")
+                    Progress(value=34, variant="warning", label="Tests")
+    with Row(css_class="pf-status-bar"):
+        Span("Ready", css_class="pf-status-segment")
+        Span("1,284 issues loaded", css_class="pf-status-segment")
+
+PrefabApp(view=view, theme=Windows2000())
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "cssClass": "pf-window",
+        "type": "Div",
+        "children": [
+          {
+            "cssClass": "pf-title-bar",
+            "type": "Row",
+            "children": [
+              {"content": "Fusion Issue Explorer", "code": false, "type": "Span"},
+              {
+                "type": "Div",
+                "children": [
+                  {
+                    "cssClass": "pf-title-bar-button",
+                    "content": "_",
+                    "code": false,
+                    "type": "Span"
+                  },
+                  {
+                    "cssClass": "pf-title-bar-button",
+                    "content": "[]",
+                    "code": false,
+                    "type": "Span"
+                  },
+                  {
+                    "cssClass": "pf-title-bar-button",
+                    "content": "X",
+                    "code": false,
+                    "type": "Span"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "cssClass": "pf-menu-bar",
+            "type": "Row",
+            "children": [
+              {"content": "File", "code": false, "type": "Span"},
+              {"content": "Edit", "code": false, "type": "Span"},
+              {"content": "View", "code": false, "type": "Span"},
+              {"content": "Help", "code": false, "type": "Span"}
+            ]
+          },
+          {
+            "cssClass": "gap-2 p-2",
+            "type": "Column",
+            "children": [
+              {
+                "cssClass": "grid-cols-3",
+                "type": "Grid",
+                "children": [
+                  {
+                    "type": "Card",
+                    "children": [
+                      {
+                        "type": "CardContent",
+                        "children": [{"type": "Metric", "label": "Open Issues", "value": "1,284"}]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Card",
+                    "children": [
+                      {
+                        "type": "CardContent",
+                        "children": [{"type": "Metric", "label": "Net Flow", "value": "-37"}]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Card",
+                    "children": [
+                      {
+                        "type": "CardContent",
+                        "children": [{"type": "Metric", "label": "48h SLA", "value": "82%"}]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardHeader",
+                    "children": [{"type": "CardTitle", "content": "Pipeline"}]
+                  },
+                  {
+                    "type": "CardContent",
+                    "children": [
+                      {
+                        "cssClass": "gap-2",
+                        "type": "Column",
+                        "children": [
+                          {"type": "Progress", "value": 92.0, "variant": "success", "size": "default"},
+                          {"type": "Progress", "value": 67.0, "variant": "default", "size": "default"},
+                          {"type": "Progress", "value": 34.0, "variant": "warning", "size": "default"}
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "cssClass": "pf-status-bar",
+            "type": "Row",
+            "children": [
+              {
+                "cssClass": "pf-status-segment",
+                "content": "Ready",
+                "code": false,
+                "type": "Span"
+              },
+              {
+                "cssClass": "pf-status-segment",
+                "content": "1,284 issues loaded",
+                "code": false,
+                "type": "Span"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "css": [
+    ":root {\n  --radius: 0; --card-padding-y: 0.75rem; --layout-gap: 0.5rem; --background: #3a6ea5; --foreground: #000000; --card: #d4d0c8; --card-foreground: #000000; --popover: #d4d0c8; --popover-foreground: #000000; --primary: #0a246a; --primary-foreground: #ffffff; --secondary: #d4d0c8; --secondary-foreground: #000000; --muted: #d4d0c8; --muted-foreground: #404040; --accent: #0a246a; --accent-foreground: #ffffff; --border: #808080; --input: #ffffff; --ring: #0a246a; --destructive: #800000; --success: #008000; --warning: #808000; --info: #000080; --chart-1: #000080; --chart-2: #008080; --chart-3: #800000; --chart-4: #808000; --chart-5: #800080; --font-sans: Tahoma, 'MS Sans Serif', Verdana, Geneva, sans-serif; --w2k-raised: inset -1px -1px 0 0 #0a0a0a, inset 1px 1px 0 0 #ffffff, inset -2px -2px 0 0 #808080, inset 2px 2px 0 0 #dfdfdf; --w2k-sunken: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #0a0a0a, inset -2px -2px 0 0 #dfdfdf; --w2k-pressed: inset 1px 1px 0 0 #0a0a0a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #808080, inset -2px -2px 0 0 #dfdfdf;\n}\n.dark {\n  --radius: 0; --card-padding-y: 0.75rem; --layout-gap: 0.5rem; --background: #3a6ea5; --foreground: #000000; --card: #d4d0c8; --card-foreground: #000000; --popover: #d4d0c8; --popover-foreground: #000000; --primary: #0a246a; --primary-foreground: #ffffff; --secondary: #d4d0c8; --secondary-foreground: #000000; --muted: #d4d0c8; --muted-foreground: #404040; --accent: #0a246a; --accent-foreground: #ffffff; --border: #808080; --input: #ffffff; --ring: #0a246a; --destructive: #800000; --success: #008000; --warning: #808000; --info: #000080; --chart-1: #000080; --chart-2: #008080; --chart-3: #800000; --chart-4: #808000; --chart-5: #800080; --font-sans: Tahoma, 'MS Sans Serif', Verdana, Geneva, sans-serif; --w2k-raised: inset -1px -1px 0 0 #0a0a0a, inset 1px 1px 0 0 #ffffff, inset -2px -2px 0 0 #808080, inset 2px 2px 0 0 #dfdfdf; --w2k-sunken: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #0a0a0a, inset -2px -2px 0 0 #dfdfdf; --w2k-pressed: inset 1px 1px 0 0 #0a0a0a, inset -1px -1px 0 0 #ffffff, inset 2px 2px 0 0 #808080, inset -2px -2px 0 0 #dfdfdf;\n}\n/* Nothing in Windows 2000 has a rounded corner. `--radius: 0` handles most of\n   it; this catches the utilities that hardcode a pill radius. Portal content\n   (dialogs, tooltips, popovers) renders outside .pf-app-root, so match on the\n   class prefix rather than descendants of the root. */\n[class^=\"pf-\"],\n[class*=\" pf-\"] {\n  border-radius: 0;\n}\n\n.pf-app-root {\n  font-family: var(--font-sans);\n  font-size: 12px;\n  color: #000;\n  padding: 0.75rem;\n}\n\n/* Cards read as raised panels. The ring utility would draw a rounded halo\n   over the bevel, so drop it. */\n.pf-card {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  --tw-ring-shadow: 0 0 #0000;\n  padding: 3px;\n}\n.pf-card-header,\n.pf-card-content,\n.pf-card-footer {\n  padding-left: 0.75rem;\n  padding-right: 0.75rem;\n}\n.pf-card-title {\n  font-size: 12px;\n  font-weight: 700;\n}\n.pf-card-description {\n  font-size: 11px;\n  color: #404040;\n}\n\n/* Buttons: raised until pressed, then the bevel inverts and the label\n   nudges down and right \u2014 the detail that sells it. */\n.pf-button {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  font-size: 12px;\n  font-weight: 400;\n  min-height: 23px;\n  padding: 0 12px;\n  transition: none;\n}\n.pf-button:hover {\n  background: #d4d0c8;\n}\n.pf-button:active:not(:disabled) {\n  box-shadow: var(--w2k-pressed);\n  padding-top: 2px;\n  padding-left: 13px;\n  padding-right: 11px;\n}\n.pf-button:focus-visible {\n  outline: 1px dotted #000;\n  outline-offset: -4px;\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-button-variant-default {\n  background: #d4d0c8;\n  color: #000;\n  font-weight: 700;\n}\n.pf-button-variant-default:hover {\n  background: #d4d0c8;\n  color: #000;\n}\n.pf-button-variant-ghost:not(:hover),\n.pf-button-variant-link {\n  box-shadow: none;\n  background: transparent;\n}\n.pf-button-variant-link {\n  color: #0000ee;\n  text-decoration: underline;\n}\n\n/* Text entry is sunken and white \u2014 the universal \"you can type here\" cue. */\n.pf-input,\n.pf-textarea,\n.pf-select-trigger,\n.pf-combobox-trigger,\n.pf-native-select {\n  background: #ffffff;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-sunken);\n  font-size: 12px;\n  padding-left: 4px;\n  transition: none;\n}\n.pf-input:focus-visible,\n.pf-textarea:focus-visible,\n.pf-select-trigger:focus-visible,\n.pf-combobox-trigger:focus-visible {\n  box-shadow: var(--w2k-sunken);\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-checkbox,\n.pf-radio-group-item {\n  background: #ffffff;\n  border: none;\n  box-shadow: var(--w2k-sunken);\n}\n.pf-checkbox[data-checked],\n.pf-checkbox[data-state=\"checked\"] {\n  background: #ffffff;\n  color: #000;\n}\n.pf-switch {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  border: none;\n}\n.pf-switch-thumb {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n}\n\n/* Tables are list views: a sunken white well with raised column headers that\n   look like the clickable sort buttons they are. */\n.pf-table-container {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  padding: 2px;\n}\n.pf-table {\n  font-size: 12px;\n}\n.pf-table-head {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  color: #000;\n  font-size: 11px;\n  font-weight: 400;\n  text-transform: none;\n  letter-spacing: normal;\n  height: 22px;\n}\n.pf-table-cell {\n  padding: 3px 6px;\n  color: #000;\n}\n.pf-table-row {\n  border-color: #d4d0c8;\n}\n.pf-table-row:hover {\n  background: #0a246a;\n  color: #ffffff;\n}\n.pf-table-row:hover .pf-table-cell {\n  color: #ffffff;\n}\n\n/* Segmented progress \u2014 the chunky blue blocks marching across a sunken well.\n   Progress nests .pf-progress inside .pf-progress, so the well is drawn on the\n   outer element and the inner one is flattened out of the way. The variant\n   class sits on the indicator itself, so the fill rules double up the class to\n   outrank the flat-fill CSS that `gradient=False` emits. */\n.pf-progress,\n.pf-progress-track {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  height: 20px;\n  padding: 3px;\n}\n.pf-progress .pf-progress,\n.pf-progress .pf-progress-track {\n  background: transparent;\n  box-shadow: none;\n  height: 100%;\n  padding: 0;\n}\n.pf-progress-indicator.pf-progress-variant-default,\n.pf-progress-indicator.pf-progress-variant-success,\n.pf-progress-indicator.pf-progress-variant-warning,\n.pf-progress-indicator.pf-progress-variant-destructive,\n.pf-progress-indicator.pf-progress-variant-info,\n.pf-progress-indicator.pf-progress-variant-muted {\n  background-color: transparent;\n  background-image: repeating-linear-gradient(\n    to right,\n    currentColor 0 10px,\n    transparent 10px 12px\n  );\n}\n.pf-progress-indicator.pf-progress-variant-default { color: #0a246a; }\n.pf-progress-indicator.pf-progress-variant-success { color: #008000; }\n.pf-progress-indicator.pf-progress-variant-warning { color: #808000; }\n.pf-progress-indicator.pf-progress-variant-destructive { color: #800000; }\n.pf-progress-indicator.pf-progress-variant-info { color: #000080; }\n.pf-progress-indicator.pf-progress-variant-muted { color: #808080; }\n.pf-progress-label,\n.pf-progress-value {\n  font-size: 11px;\n  color: #000;\n}\n\n.pf-slider-track {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  height: 4px;\n}\n.pf-slider-range {\n  background: #0a246a;\n}\n.pf-slider-thumb {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  border: none;\n  width: 11px;\n  height: 21px;\n}\n\n/* Badges are tiny raised chips rather than pills. */\n.pf-badge {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  font-size: 11px;\n  font-weight: 400;\n  padding: 1px 7px;\n}\n.pf-badge-variant-default { color: #0a246a; font-weight: 700; }\n.pf-badge-variant-success { color: #008000; }\n.pf-badge-variant-warning { color: #808000; }\n.pf-badge-variant-destructive { color: #800000; }\n.pf-badge-variant-info { color: #000080; }\n\n/* Notebook tabs \u2014 the active one sits proud of the strip. */\n.pf-tabs-list {\n  background: transparent;\n  gap: 2px;\n  padding: 0;\n}\n.pf-tabs-trigger {\n  background: #d4d0c8;\n  color: #000;\n  box-shadow: var(--w2k-raised);\n  font-size: 12px;\n  padding: 3px 12px;\n}\n.pf-tabs-trigger[data-active] {\n  background: #d4d0c8;\n  font-weight: 700;\n  padding-bottom: 5px;\n}\n.pf-tabs-content {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  padding: 0.75rem;\n}\n\n/* Dialogs are windows: gray face, navy title bar via .pf-dialog-header. */\n.pf-dialog-content,\n.pf-alert-dialog-content,\n.pf-popover-content,\n.pf-hover-card-content,\n.pf-dropdown-menu-content,\n.pf-select-content,\n.pf-combobox-content,\n.pf-command-dialog {\n  background: #d4d0c8;\n  color: #000;\n  border: none;\n  box-shadow: var(--w2k-raised);\n  padding: 3px;\n  font-size: 12px;\n}\n.pf-dialog-header,\n.pf-alert-dialog-header {\n  background: linear-gradient(90deg, #0a246a 0%, #a6caf0 100%);\n  color: #ffffff;\n  padding: 3px 4px;\n  margin: 0 0 6px;\n}\n.pf-dialog-title,\n.pf-alert-dialog-title {\n  color: #ffffff;\n  font-size: 12px;\n  font-weight: 700;\n}\n.pf-dropdown-menu-item:hover,\n.pf-select-item[data-highlighted],\n.pf-combobox-item[data-highlighted] {\n  background: #0a246a;\n  color: #ffffff;\n}\n\n/* The famous pale-yellow tooltip. */\n.pf-tooltip-content {\n  background: #ffffe1;\n  color: #000;\n  border: 1px solid #000;\n  box-shadow: none;\n  font-size: 11px;\n  padding: 2px 4px;\n}\n\n/* Etched groove: a shadow line above a highlight line. */\n.pf-separator {\n  background: transparent;\n  border-top: 1px solid #808080;\n  border-bottom: 1px solid #ffffff;\n  height: 2px;\n}\n\n.pf-alert {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  border: none;\n  padding: 0.75rem;\n}\n\n.pf-code,\n.pf-kbd {\n  font-family: 'Courier New', monospace;\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  border: none;\n  color: #000;\n}\n\n/* \u2500\u2500 Window chrome \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n   Utility classes the theme brings with it. They only exist while this theme\n   is applied, and compose onto ordinary components: a Row for the title bar,\n   Spans for the buttons, a Div for the inset well. */\n\n.pf-window {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  padding: 3px;\n}\n.pf-title-bar {\n  align-items: center;\n  background: linear-gradient(90deg, #0a246a 0%, #a6caf0 100%);\n  color: #ffffff;\n  display: flex;\n  font-weight: 700;\n  justify-content: space-between;\n  min-height: 22px;\n  padding: 3px 3px 3px 6px;\n}\n.pf-title-bar > * {\n  color: #ffffff;\n}\n.pf-title-bar-button {\n  background: #d4d0c8;\n  box-shadow: var(--w2k-raised);\n  color: #000;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 10px;\n  font-weight: 700;\n  height: 16px;\n  min-width: 18px;\n  margin-left: 2px;\n}\n.pf-menu-bar {\n  background: #d4d0c8;\n  display: flex;\n  gap: 2px;\n  padding: 2px 4px;\n}\n.pf-menu-bar > * {\n  color: #000;\n  font-size: 12px;\n  padding: 2px 8px;\n}\n.pf-menu-bar > *:hover {\n  background: #0a246a;\n  color: #ffffff;\n}\n.pf-status-bar {\n  background: #d4d0c8;\n  display: flex;\n  gap: 3px;\n  padding: 2px;\n}\n.pf-status-segment {\n  box-shadow: inset 1px 1px 0 0 #808080, inset -1px -1px 0 0 #ffffff;\n  color: #000;\n  flex: 1;\n  font-size: 11px;\n  padding: 2px 6px;\n}\n/* Sunken white well \u2014 wrap charts and lists in it the way Explorer does. */\n.pf-inset {\n  background: #ffffff;\n  box-shadow: var(--w2k-sunken);\n  padding: 6px;\n}\n\n.pf-progress-variant-default,\n.pf-progress-variant-success,\n.pf-progress-variant-warning,\n.pf-progress-variant-destructive,\n.pf-progress-variant-info,\n.pf-slider-variant-default,\n.pf-slider-variant-success,\n.pf-slider-variant-warning,\n.pf-slider-variant-destructive,\n.pf-slider-variant-info { background-image: none; }\n.pf-ring-variant-default { stroke: var(--primary); }\n.pf-ring-variant-success { stroke: var(--success); }\n.pf-ring-variant-warning { stroke: var(--warning); }\n.pf-ring-variant-destructive { stroke: var(--destructive); }\n.pf-ring-variant-info { stroke: var(--info); }\n"
+  ],
+  "mode": "light"
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The window chrome above is not made of special components. `pf-window`, `pf-title-bar`, `pf-title-bar-button`, `pf-menu-bar`, `pf-status-bar`, `pf-status-segment`, and `pf-inset` are utility classes the theme ships with, applied to ordinary `Div`, `Row`, and `Span` components. They exist only while the theme is applied.
+
+</Tab>
+<Tab title="MySpace">
+
+Black ground with a tiled star field, neon pink and cyan glow on every border, Comic Neue, and lime body text. Charts run hot pink, cyan, lime, yellow, and magenta.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"cssClass":"gap-4","type":"Column","children":[{"cssClass":"text-center","type":"Div","children":[{"cssClass":"pf-visitor-counter","content":"You are visitor #13,337","code":false,"type":"Span"}]},{"cssClass":"pf-construction","type":"Div","children":[{"cssClass":"pf-blink","content":"!! UNDER CONSTRUCTION !!","code":false,"type":"Span"}]},{"cssClass":"grid-cols-3","type":"Grid","children":[{"cssClass":"pf-neon-pink","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Open Issues","value":"1,284"}]}]},{"cssClass":"pf-neon-lime","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"Net Flow","value":"-37"}]}]},{"cssClass":"pf-neon-yellow","type":"Card","children":[{"type":"CardContent","children":[{"type":"Metric","label":"48h SLA","value":"82%"}]}]}]},{"type":"Card","children":[{"type":"CardHeader","children":[{"type":"CardTitle","content":"Da Stats"}]},{"type":"CardContent","children":[{"cssClass":"gap-2","type":"Column","children":[{"type":"Progress","value":92.0,"variant":"success","size":"default"},{"type":"Progress","value":67.0,"variant":"default","size":"default"},{"cssClass":"gap-2","type":"Row","children":[{"type":"Badge","label":"3 healthy","variant":"success"},{"type":"Badge","label":"1 degraded","variant":"warning"}]}]}]}]}]}]},"css":["@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;500;600;700&display=swap');\n:root {\n  --radius: 0; --card-padding-y: 1rem; --layout-gap: 1rem; --background: #0a0a0a; --foreground: #39ff14; --card: rgba(10, 10, 10, 0.92); --card-foreground: #39ff14; --popover: #0a0a0a; --popover-foreground: #39ff14; --primary: #ff69b4; --primary-foreground: #0a0a0a; --secondary: #1a0a14; --secondary-foreground: #00ffff; --muted: #14141e; --muted-foreground: #00ffff; --accent: #ff1493; --accent-foreground: #0a0a0a; --border: #ff69b4; --input: #0a0a0a; --ring: #00ffff; --destructive: #ff2d55; --success: #39ff14; --warning: #ffff00; --info: #00ffff; --chart-1: #ff69b4; --chart-2: #00ffff; --chart-3: #39ff14; --chart-4: #ffff00; --chart-5: #ff1493; --ms-glow-pink: 0 0 10px #ff69b4, 0 0 20px rgba(255, 20, 147, 0.5); --ms-glow-cyan: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.4); --ms-glow-lime: 0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.4); --font-sans: 'Comic Neue', ui-sans-serif, system-ui, sans-serif;\n}\n.dark {\n  --radius: 0; --card-padding-y: 1rem; --layout-gap: 1rem; --background: #0a0a0a; --foreground: #39ff14; --card: rgba(10, 10, 10, 0.92); --card-foreground: #39ff14; --popover: #0a0a0a; --popover-foreground: #39ff14; --primary: #ff69b4; --primary-foreground: #0a0a0a; --secondary: #1a0a14; --secondary-foreground: #00ffff; --muted: #14141e; --muted-foreground: #00ffff; --accent: #ff1493; --accent-foreground: #0a0a0a; --border: #ff69b4; --input: #0a0a0a; --ring: #00ffff; --destructive: #ff2d55; --success: #39ff14; --warning: #ffff00; --info: #00ffff; --chart-1: #ff69b4; --chart-2: #00ffff; --chart-3: #39ff14; --chart-4: #ffff00; --chart-5: #ff1493; --ms-glow-pink: 0 0 10px #ff69b4, 0 0 20px rgba(255, 20, 147, 0.5); --ms-glow-cyan: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.4); --ms-glow-lime: 0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.4); --font-sans: 'Comic Neue', ui-sans-serif, system-ui, sans-serif;\n}\n.pf-app-root {\n  background-color: #0a0a0a;\n  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Ctext x='10' y='34' font-size='19' opacity='0.05'%3E%E2%AD%90%3C/text%3E%3C/svg%3E\");\n  color: #39ff14;\n  padding: 1.5rem;\n}\n\nh1, h2, h3, h4,\n.pf-card-title {\n  color: #ff69b4;\n  text-shadow: var(--ms-glow-pink);\n  font-weight: 700;\n}\n\n/* Cards glow cyan by default. The .pf-neon-* utilities below recolor\n   individual cards the way a 2003 profile alternated section colors. */\n.pf-card {\n  background: rgba(10, 10, 10, 0.92);\n  border: 2px solid #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-card-description {\n  color: #00ffff;\n}\n\n.pf-button {\n  color: #0a0a0a;\n  border: 2px solid #00ffff;\n  font-weight: 700;\n}\n.pf-button-variant-default {\n  background: linear-gradient(180deg, #ff69b4 0%, #ff1493 100%);\n  box-shadow: var(--ms-glow-pink);\n}\n.pf-button-variant-default:hover {\n  background: linear-gradient(180deg, #00ffff 0%, #00b8b8 100%);\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-destructive {\n  background: linear-gradient(180deg, #ff2d55 0%, #b3122f 100%);\n  border-color: #ff2d55;\n  box-shadow: 0 0 10px #ff2d55;\n}\n.pf-button-variant-secondary {\n  background: linear-gradient(180deg, #39ff14 0%, #1faa06 100%);\n  border-color: #39ff14;\n  box-shadow: var(--ms-glow-lime);\n}\n.pf-button-variant-outline {\n  background: transparent;\n  color: #00ffff;\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-ghost,\n.pf-button-variant-link {\n  background: none;\n  border-color: transparent;\n  box-shadow: none;\n  color: #00ffff;\n}\n.pf-button-variant-ghost:hover {\n  background: rgba(0, 255, 255, 0.12);\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-link {\n  text-decoration: underline;\n}\n\n.pf-input,\n.pf-textarea,\n.pf-select-trigger,\n.pf-combobox-trigger,\n.pf-native-select {\n  background: #0a0a0a;\n  color: #39ff14;\n  border: 2px solid #ff69b4;\n  box-shadow: inset 0 0 8px rgba(255, 105, 180, 0.4);\n}\n.pf-input:focus-visible,\n.pf-textarea:focus-visible,\n.pf-select-trigger:focus-visible {\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n  --tw-ring-shadow: 0 0 #0000;\n}\n\n.pf-table-head {\n  color: #ff69b4;\n  text-shadow: 0 0 6px #ff69b4;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n}\n.pf-table-cell {\n  color: #39ff14;\n}\n.pf-table-row {\n  border-color: rgba(255, 105, 180, 0.35);\n}\n.pf-table-row:hover {\n  background: rgba(255, 20, 147, 0.15);\n}\n\n.pf-progress,\n.pf-progress-track {\n  background: #0a0a0a;\n  border: 1px solid #ff69b4;\n  height: 14px;\n}\n/* Progress nests .pf-progress inside .pf-progress \u2014 flatten the inner one so\n   the neon border is drawn once. */\n.pf-progress .pf-progress,\n.pf-progress .pf-progress-track {\n  border: none;\n  height: 100%;\n}\n.pf-progress-indicator {\n  box-shadow: 0 0 12px currentColor;\n}\n.pf-progress-label,\n.pf-progress-value {\n  color: #00ffff;\n}\n\n.pf-slider-track {\n  background: #0a0a0a;\n  border: 1px solid #ff69b4;\n}\n.pf-slider-thumb {\n  background: #ff69b4;\n  border: 2px solid #00ffff;\n  box-shadow: var(--ms-glow-pink);\n}\n\n.pf-badge {\n  background: rgba(255, 20, 147, 0.15);\n  border: 1px solid #ff69b4;\n  color: #ff69b4;\n  box-shadow: 0 0 6px rgba(255, 105, 180, 0.6);\n  font-weight: 700;\n}\n.pf-badge-variant-success { color: #39ff14; border-color: #39ff14; background: rgba(57, 255, 20, 0.12); }\n.pf-badge-variant-warning { color: #ffff00; border-color: #ffff00; background: rgba(255, 255, 0, 0.12); }\n.pf-badge-variant-info { color: #00ffff; border-color: #00ffff; background: rgba(0, 255, 255, 0.12); }\n\n.pf-tabs-trigger {\n  color: #00ffff;\n  border: 1px solid transparent;\n}\n.pf-tabs-trigger[data-active] {\n  color: #ff69b4;\n  border-color: #ff69b4;\n  box-shadow: var(--ms-glow-pink);\n}\n\n.pf-dialog-content,\n.pf-alert-dialog-content,\n.pf-popover-content,\n.pf-dropdown-menu-content,\n.pf-select-content,\n.pf-combobox-content {\n  background: #0a0a0a;\n  color: #39ff14;\n  border: 2px solid #ff69b4;\n  box-shadow: var(--ms-glow-pink);\n}\n.pf-tooltip-content {\n  background: #0a0a0a;\n  color: #00ffff;\n  border: 1px solid #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n\n.pf-separator {\n  background: linear-gradient(90deg, transparent, #ff69b4, #00ffff, transparent);\n  height: 2px;\n}\n\n.pf-alert {\n  background: rgba(10, 10, 10, 0.92);\n  border: 2px dashed #ffff00;\n  color: #39ff14;\n}\n\n.pf-code,\n.pf-kbd {\n  background: #000;\n  color: #39ff14;\n  border: 1px solid #39ff14;\n  font-family: 'Courier New', monospace;\n}\n\n/* Carousel(continuous=True) is the scrolling marquee \u2014 give it the\n   cyan rails a 2003 profile banner had. */\n.pf-carousel {\n  border-top: 2px solid #00ffff;\n  border-bottom: 2px solid #00ffff;\n  padding: 6px 0;\n}\n\n/* \u2500\u2500 Profile decor \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n   Utility classes the theme brings with it, for the parts of a MySpace page\n   that are content rather than styling. They compose onto ordinary Spans\n   and Divs and only exist while this theme is applied. */\n\n.pf-neon-pink { border-color: #ff69b4; box-shadow: var(--ms-glow-pink); }\n.pf-neon-cyan { border-color: #00ffff; box-shadow: var(--ms-glow-cyan); }\n.pf-neon-lime { border-color: #39ff14; box-shadow: var(--ms-glow-lime); }\n.pf-neon-yellow { border-color: #ffff00; box-shadow: 0 0 10px #ffff00; }\n\n/* The hit counter: sunken black LED digits. */\n.pf-visitor-counter {\n  background: #000;\n  border: 2px inset #808080;\n  color: #39ff14;\n  display: inline-block;\n  font-family: 'Courier New', monospace;\n  letter-spacing: 0.15em;\n  padding: 4px 12px;\n}\n\n.pf-construction {\n  border: 3px dashed #ffff00;\n  background: repeating-linear-gradient(\n    45deg,\n    rgba(255, 255, 0, 0.06) 0 10px,\n    rgba(0, 0, 0, 0.1) 10px 20px\n  );\n  padding: 0.75rem;\n  text-align: center;\n}\n\n/* Animations stay behind a reduced-motion guard. Blinking text at 1Hz is a\n   genuine vestibular and photosensitivity risk, so viewers who have asked\n   their OS for less motion get the styling without the movement. */\n@media (prefers-reduced-motion: no-preference) {\n  @keyframes pf-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }\n  @keyframes pf-rainbow {\n    0% { color: #ff0000; } 16% { color: #ff8800; } 33% { color: #ffff00; }\n    50% { color: #39ff14; } 66% { color: #00ffff; } 83% { color: #ff69b4; }\n    100% { color: #ff0000; }\n  }\n  @keyframes pf-sparkle {\n    0%, 100% { opacity: 1; transform: scale(1); }\n    50% { opacity: 0.5; transform: scale(1.3); }\n  }\n  .pf-blink { animation: pf-blink 1s step-end infinite; }\n  .pf-rainbow { animation: pf-rainbow 3s linear infinite; }\n  .pf-sparkle { animation: pf-sparkle 2s ease-in-out infinite; display: inline-block; }\n}\n.pf-rainbow { font-weight: 700; }\n"],"mode":"dark"}} playground="ZnJvbSBwcmVmYWJfdWkuYXBwIGltcG9ydCBQcmVmYWJBcHAKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQmFkZ2UsIENhcmQsIENhcmRDb250ZW50LCBDYXJkSGVhZGVyLCBDYXJkVGl0bGUsIENvbHVtbiwgRGl2LCBHcmlkLCBNZXRyaWMsIFByb2dyZXNzLCBSb3csIFNwYW4KZnJvbSBwcmVmYWJfdWkudGhlbWVzIGltcG9ydCBNeVNwYWNlCgp3aXRoIENvbHVtbihnYXA9NCkgYXMgdmlldzoKICAgIHdpdGggRGl2KGNzc19jbGFzcz0idGV4dC1jZW50ZXIiKToKICAgICAgICBTcGFuKCJZb3UgYXJlIHZpc2l0b3IgIzEzLDMzNyIsIGNzc19jbGFzcz0icGYtdmlzaXRvci1jb3VudGVyIikKICAgIHdpdGggRGl2KGNzc19jbGFzcz0icGYtY29uc3RydWN0aW9uIik6CiAgICAgICAgU3BhbigiISEgVU5ERVIgQ09OU1RSVUNUSU9OICEhIiwgY3NzX2NsYXNzPSJwZi1ibGluayIpCiAgICB3aXRoIEdyaWQoY29sdW1ucz0zKToKICAgICAgICB3aXRoIENhcmQoY3NzX2NsYXNzPSJwZi1uZW9uLXBpbmsiKToKICAgICAgICAgICAgd2l0aCBDYXJkQ29udGVudCgpOgogICAgICAgICAgICAgICAgTWV0cmljKGxhYmVsPSJPcGVuIElzc3VlcyIsIHZhbHVlPSIxLDI4NCIpCiAgICAgICAgd2l0aCBDYXJkKGNzc19jbGFzcz0icGYtbmVvbi1saW1lIik6CiAgICAgICAgICAgIHdpdGggQ2FyZENvbnRlbnQoKToKICAgICAgICAgICAgICAgIE1ldHJpYyhsYWJlbD0iTmV0IEZsb3ciLCB2YWx1ZT0iLTM3IikKICAgICAgICB3aXRoIENhcmQoY3NzX2NsYXNzPSJwZi1uZW9uLXllbGxvdyIpOgogICAgICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgICAgICBNZXRyaWMobGFiZWw9IjQ4aCBTTEEiLCB2YWx1ZT0iODIlIikKICAgIHdpdGggQ2FyZCgpOgogICAgICAgIHdpdGggQ2FyZEhlYWRlcigpOgogICAgICAgICAgICBDYXJkVGl0bGUoIkRhIFN0YXRzIikKICAgICAgICB3aXRoIENhcmRDb250ZW50KCk6CiAgICAgICAgICAgIHdpdGggQ29sdW1uKGdhcD0yKToKICAgICAgICAgICAgICAgIFByb2dyZXNzKHZhbHVlPTkyLCB2YXJpYW50PSJzdWNjZXNzIiwgbGFiZWw9IkJ1aWxkcyIpCiAgICAgICAgICAgICAgICBQcm9ncmVzcyh2YWx1ZT02NywgbGFiZWw9IkRlcGxveSIpCiAgICAgICAgICAgICAgICB3aXRoIFJvdyhnYXA9Mik6CiAgICAgICAgICAgICAgICAgICAgQmFkZ2UoIjMgaGVhbHRoeSIsIHZhcmlhbnQ9InN1Y2Nlc3MiKQogICAgICAgICAgICAgICAgICAgIEJhZGdlKCIxIGRlZ3JhZGVkIiwgdmFyaWFudD0id2FybmluZyIpCgpQcmVmYWJBcHAodmlldz12aWV3LCB0aGVtZT1NeVNwYWNlKCkpCg">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.app import PrefabApp
+from prefab_ui.components import Badge, Card, CardContent, CardHeader, CardTitle, Column, Div, Grid, Metric, Progress, Row, Span
+from prefab_ui.themes import MySpace
+
+with Column(gap=4) as view:
+    with Div(css_class="text-center"):
+        Span("You are visitor #13,337", css_class="pf-visitor-counter")
+    with Div(css_class="pf-construction"):
+        Span("!! UNDER CONSTRUCTION !!", css_class="pf-blink")
+    with Grid(columns=3):
+        with Card(css_class="pf-neon-pink"):
+            with CardContent():
+                Metric(label="Open Issues", value="1,284")
+        with Card(css_class="pf-neon-lime"):
+            with CardContent():
+                Metric(label="Net Flow", value="-37")
+        with Card(css_class="pf-neon-yellow"):
+            with CardContent():
+                Metric(label="48h SLA", value="82%")
+    with Card():
+        with CardHeader():
+            CardTitle("Da Stats")
+        with CardContent():
+            with Column(gap=2):
+                Progress(value=92, variant="success", label="Builds")
+                Progress(value=67, label="Deploy")
+                with Row(gap=2):
+                    Badge("3 healthy", variant="success")
+                    Badge("1 degraded", variant="warning")
+
+PrefabApp(view=view, theme=MySpace())
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "cssClass": "gap-4",
+        "type": "Column",
+        "children": [
+          {
+            "cssClass": "text-center",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "pf-visitor-counter",
+                "content": "You are visitor #13,337",
+                "code": false,
+                "type": "Span"
+              }
+            ]
+          },
+          {
+            "cssClass": "pf-construction",
+            "type": "Div",
+            "children": [
+              {
+                "cssClass": "pf-blink",
+                "content": "!! UNDER CONSTRUCTION !!",
+                "code": false,
+                "type": "Span"
+              }
+            ]
+          },
+          {
+            "cssClass": "grid-cols-3",
+            "type": "Grid",
+            "children": [
+              {
+                "cssClass": "pf-neon-pink",
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardContent",
+                    "children": [{"type": "Metric", "label": "Open Issues", "value": "1,284"}]
+                  }
+                ]
+              },
+              {
+                "cssClass": "pf-neon-lime",
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardContent",
+                    "children": [{"type": "Metric", "label": "Net Flow", "value": "-37"}]
+                  }
+                ]
+              },
+              {
+                "cssClass": "pf-neon-yellow",
+                "type": "Card",
+                "children": [
+                  {
+                    "type": "CardContent",
+                    "children": [{"type": "Metric", "label": "48h SLA", "value": "82%"}]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Card",
+            "children": [
+              {
+                "type": "CardHeader",
+                "children": [{"type": "CardTitle", "content": "Da Stats"}]
+              },
+              {
+                "type": "CardContent",
+                "children": [
+                  {
+                    "cssClass": "gap-2",
+                    "type": "Column",
+                    "children": [
+                      {"type": "Progress", "value": 92.0, "variant": "success", "size": "default"},
+                      {"type": "Progress", "value": 67.0, "variant": "default", "size": "default"},
+                      {
+                        "cssClass": "gap-2",
+                        "type": "Row",
+                        "children": [
+                          {"type": "Badge", "label": "3 healthy", "variant": "success"},
+                          {"type": "Badge", "label": "1 degraded", "variant": "warning"}
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "css": [
+    "@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;500;600;700&display=swap');\n:root {\n  --radius: 0; --card-padding-y: 1rem; --layout-gap: 1rem; --background: #0a0a0a; --foreground: #39ff14; --card: rgba(10, 10, 10, 0.92); --card-foreground: #39ff14; --popover: #0a0a0a; --popover-foreground: #39ff14; --primary: #ff69b4; --primary-foreground: #0a0a0a; --secondary: #1a0a14; --secondary-foreground: #00ffff; --muted: #14141e; --muted-foreground: #00ffff; --accent: #ff1493; --accent-foreground: #0a0a0a; --border: #ff69b4; --input: #0a0a0a; --ring: #00ffff; --destructive: #ff2d55; --success: #39ff14; --warning: #ffff00; --info: #00ffff; --chart-1: #ff69b4; --chart-2: #00ffff; --chart-3: #39ff14; --chart-4: #ffff00; --chart-5: #ff1493; --ms-glow-pink: 0 0 10px #ff69b4, 0 0 20px rgba(255, 20, 147, 0.5); --ms-glow-cyan: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.4); --ms-glow-lime: 0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.4); --font-sans: 'Comic Neue', ui-sans-serif, system-ui, sans-serif;\n}\n.dark {\n  --radius: 0; --card-padding-y: 1rem; --layout-gap: 1rem; --background: #0a0a0a; --foreground: #39ff14; --card: rgba(10, 10, 10, 0.92); --card-foreground: #39ff14; --popover: #0a0a0a; --popover-foreground: #39ff14; --primary: #ff69b4; --primary-foreground: #0a0a0a; --secondary: #1a0a14; --secondary-foreground: #00ffff; --muted: #14141e; --muted-foreground: #00ffff; --accent: #ff1493; --accent-foreground: #0a0a0a; --border: #ff69b4; --input: #0a0a0a; --ring: #00ffff; --destructive: #ff2d55; --success: #39ff14; --warning: #ffff00; --info: #00ffff; --chart-1: #ff69b4; --chart-2: #00ffff; --chart-3: #39ff14; --chart-4: #ffff00; --chart-5: #ff1493; --ms-glow-pink: 0 0 10px #ff69b4, 0 0 20px rgba(255, 20, 147, 0.5); --ms-glow-cyan: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.4); --ms-glow-lime: 0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.4); --font-sans: 'Comic Neue', ui-sans-serif, system-ui, sans-serif;\n}\n.pf-app-root {\n  background-color: #0a0a0a;\n  background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Ctext x='10' y='34' font-size='19' opacity='0.05'%3E%E2%AD%90%3C/text%3E%3C/svg%3E\");\n  color: #39ff14;\n  padding: 1.5rem;\n}\n\nh1, h2, h3, h4,\n.pf-card-title {\n  color: #ff69b4;\n  text-shadow: var(--ms-glow-pink);\n  font-weight: 700;\n}\n\n/* Cards glow cyan by default. The .pf-neon-* utilities below recolor\n   individual cards the way a 2003 profile alternated section colors. */\n.pf-card {\n  background: rgba(10, 10, 10, 0.92);\n  border: 2px solid #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n  --tw-ring-shadow: 0 0 #0000;\n}\n.pf-card-description {\n  color: #00ffff;\n}\n\n.pf-button {\n  color: #0a0a0a;\n  border: 2px solid #00ffff;\n  font-weight: 700;\n}\n.pf-button-variant-default {\n  background: linear-gradient(180deg, #ff69b4 0%, #ff1493 100%);\n  box-shadow: var(--ms-glow-pink);\n}\n.pf-button-variant-default:hover {\n  background: linear-gradient(180deg, #00ffff 0%, #00b8b8 100%);\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-destructive {\n  background: linear-gradient(180deg, #ff2d55 0%, #b3122f 100%);\n  border-color: #ff2d55;\n  box-shadow: 0 0 10px #ff2d55;\n}\n.pf-button-variant-secondary {\n  background: linear-gradient(180deg, #39ff14 0%, #1faa06 100%);\n  border-color: #39ff14;\n  box-shadow: var(--ms-glow-lime);\n}\n.pf-button-variant-outline {\n  background: transparent;\n  color: #00ffff;\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-ghost,\n.pf-button-variant-link {\n  background: none;\n  border-color: transparent;\n  box-shadow: none;\n  color: #00ffff;\n}\n.pf-button-variant-ghost:hover {\n  background: rgba(0, 255, 255, 0.12);\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n.pf-button-variant-link {\n  text-decoration: underline;\n}\n\n.pf-input,\n.pf-textarea,\n.pf-select-trigger,\n.pf-combobox-trigger,\n.pf-native-select {\n  background: #0a0a0a;\n  color: #39ff14;\n  border: 2px solid #ff69b4;\n  box-shadow: inset 0 0 8px rgba(255, 105, 180, 0.4);\n}\n.pf-input:focus-visible,\n.pf-textarea:focus-visible,\n.pf-select-trigger:focus-visible {\n  border-color: #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n  --tw-ring-shadow: 0 0 #0000;\n}\n\n.pf-table-head {\n  color: #ff69b4;\n  text-shadow: 0 0 6px #ff69b4;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n}\n.pf-table-cell {\n  color: #39ff14;\n}\n.pf-table-row {\n  border-color: rgba(255, 105, 180, 0.35);\n}\n.pf-table-row:hover {\n  background: rgba(255, 20, 147, 0.15);\n}\n\n.pf-progress,\n.pf-progress-track {\n  background: #0a0a0a;\n  border: 1px solid #ff69b4;\n  height: 14px;\n}\n/* Progress nests .pf-progress inside .pf-progress \u2014 flatten the inner one so\n   the neon border is drawn once. */\n.pf-progress .pf-progress,\n.pf-progress .pf-progress-track {\n  border: none;\n  height: 100%;\n}\n.pf-progress-indicator {\n  box-shadow: 0 0 12px currentColor;\n}\n.pf-progress-label,\n.pf-progress-value {\n  color: #00ffff;\n}\n\n.pf-slider-track {\n  background: #0a0a0a;\n  border: 1px solid #ff69b4;\n}\n.pf-slider-thumb {\n  background: #ff69b4;\n  border: 2px solid #00ffff;\n  box-shadow: var(--ms-glow-pink);\n}\n\n.pf-badge {\n  background: rgba(255, 20, 147, 0.15);\n  border: 1px solid #ff69b4;\n  color: #ff69b4;\n  box-shadow: 0 0 6px rgba(255, 105, 180, 0.6);\n  font-weight: 700;\n}\n.pf-badge-variant-success { color: #39ff14; border-color: #39ff14; background: rgba(57, 255, 20, 0.12); }\n.pf-badge-variant-warning { color: #ffff00; border-color: #ffff00; background: rgba(255, 255, 0, 0.12); }\n.pf-badge-variant-info { color: #00ffff; border-color: #00ffff; background: rgba(0, 255, 255, 0.12); }\n\n.pf-tabs-trigger {\n  color: #00ffff;\n  border: 1px solid transparent;\n}\n.pf-tabs-trigger[data-active] {\n  color: #ff69b4;\n  border-color: #ff69b4;\n  box-shadow: var(--ms-glow-pink);\n}\n\n.pf-dialog-content,\n.pf-alert-dialog-content,\n.pf-popover-content,\n.pf-dropdown-menu-content,\n.pf-select-content,\n.pf-combobox-content {\n  background: #0a0a0a;\n  color: #39ff14;\n  border: 2px solid #ff69b4;\n  box-shadow: var(--ms-glow-pink);\n}\n.pf-tooltip-content {\n  background: #0a0a0a;\n  color: #00ffff;\n  border: 1px solid #00ffff;\n  box-shadow: var(--ms-glow-cyan);\n}\n\n.pf-separator {\n  background: linear-gradient(90deg, transparent, #ff69b4, #00ffff, transparent);\n  height: 2px;\n}\n\n.pf-alert {\n  background: rgba(10, 10, 10, 0.92);\n  border: 2px dashed #ffff00;\n  color: #39ff14;\n}\n\n.pf-code,\n.pf-kbd {\n  background: #000;\n  color: #39ff14;\n  border: 1px solid #39ff14;\n  font-family: 'Courier New', monospace;\n}\n\n/* Carousel(continuous=True) is the scrolling marquee \u2014 give it the\n   cyan rails a 2003 profile banner had. */\n.pf-carousel {\n  border-top: 2px solid #00ffff;\n  border-bottom: 2px solid #00ffff;\n  padding: 6px 0;\n}\n\n/* \u2500\u2500 Profile decor \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n   Utility classes the theme brings with it, for the parts of a MySpace page\n   that are content rather than styling. They compose onto ordinary Spans\n   and Divs and only exist while this theme is applied. */\n\n.pf-neon-pink { border-color: #ff69b4; box-shadow: var(--ms-glow-pink); }\n.pf-neon-cyan { border-color: #00ffff; box-shadow: var(--ms-glow-cyan); }\n.pf-neon-lime { border-color: #39ff14; box-shadow: var(--ms-glow-lime); }\n.pf-neon-yellow { border-color: #ffff00; box-shadow: 0 0 10px #ffff00; }\n\n/* The hit counter: sunken black LED digits. */\n.pf-visitor-counter {\n  background: #000;\n  border: 2px inset #808080;\n  color: #39ff14;\n  display: inline-block;\n  font-family: 'Courier New', monospace;\n  letter-spacing: 0.15em;\n  padding: 4px 12px;\n}\n\n.pf-construction {\n  border: 3px dashed #ffff00;\n  background: repeating-linear-gradient(\n    45deg,\n    rgba(255, 255, 0, 0.06) 0 10px,\n    rgba(0, 0, 0, 0.1) 10px 20px\n  );\n  padding: 0.75rem;\n  text-align: center;\n}\n\n/* Animations stay behind a reduced-motion guard. Blinking text at 1Hz is a\n   genuine vestibular and photosensitivity risk, so viewers who have asked\n   their OS for less motion get the styling without the movement. */\n@media (prefers-reduced-motion: no-preference) {\n  @keyframes pf-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }\n  @keyframes pf-rainbow {\n    0% { color: #ff0000; } 16% { color: #ff8800; } 33% { color: #ffff00; }\n    50% { color: #39ff14; } 66% { color: #00ffff; } 83% { color: #ff69b4; }\n    100% { color: #ff0000; }\n  }\n  @keyframes pf-sparkle {\n    0%, 100% { opacity: 1; transform: scale(1); }\n    50% { opacity: 0.5; transform: scale(1.3); }\n  }\n  .pf-blink { animation: pf-blink 1s step-end infinite; }\n  .pf-rainbow { animation: pf-rainbow 3s linear infinite; }\n  .pf-sparkle { animation: pf-sparkle 2s ease-in-out infinite; display: inline-block; }\n}\n.pf-rainbow { font-weight: 700; }\n"
+  ],
+  "mode": "dark"
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+`pf-neon-pink`, `pf-neon-cyan`, `pf-neon-lime`, `pf-neon-yellow`, `pf-visitor-counter`, `pf-construction`, `pf-blink`, `pf-rainbow`, and `pf-sparkle` come with the theme. The three animated classes sit behind a `prefers-reduced-motion` guard, so they hold still for viewers who have asked their OS for less motion — blinking text at 1Hz is a real vestibular and photosensitivity risk, not just a stylistic one. For a scrolling banner, use `Carousel(continuous=True)`, which the theme styles with cyan rails.
+
+</Tab>
 </Tabs>
+
+<Note>
+**Windows 2000** and **MySpace** are inspired by [Anders Swanson's](https://github.com/dataders) mods of Prefab, built for his [dashboard bake-off](https://dashboard-bakeoff.anders.omg.lol/?tab=prefab) comparing dashboarding tools on the same dbt-fusion issue data. His originals live in [dataders/fusion_issue_analysis](https://github.com/dataders/fusion_issue_analysis).
+</Note>
 
 ## Accent
 
@@ -480,3 +833,5 @@ Prefab's CSS variables follow [shadcn/ui naming conventions](https://ui.shadcn.c
 ## Themes in the Playground
 
 Themes apply in the [playground](/playground) exactly as in production. The toolbar's theme picker overrides the code theme when active; selecting "Code" restores whatever your code defines.
+
+Every built-in theme is a picker preset, so any example in these docs can be flipped into Windows 2000 or MySpace without touching its code. The presets are compiled from the Python classes at build time by `tools/generate_theme_presets.py`, which means the picker and `PrefabApp(theme=...)` cannot disagree.

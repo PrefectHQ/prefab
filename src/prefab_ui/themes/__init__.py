@@ -22,6 +22,9 @@ app = PrefabApp(view=my_view, theme=Basic(accent="green"))
 # Always-dark data dashboard theme
 app = PrefabApp(view=my_view, theme=Presentation())
 
+# Total-conversion novelty themes
+app = PrefabApp(view=my_view, theme=Windows2000())
+
 # Custom declarations
 app = PrefabApp(
     view=my_view,
@@ -42,6 +45,8 @@ automatically converted to declaration strings.
 from prefab_ui.themes.base import Theme
 from prefab_ui.themes.basic import Basic
 from prefab_ui.themes.minimal import Minimal
+from prefab_ui.themes.myspace import MySpace
 from prefab_ui.themes.presentation import Presentation
+from prefab_ui.themes.windows_2000 import Windows2000
 
-__all__ = ["Basic", "Minimal", "Presentation", "Theme"]
+__all__ = ["Basic", "Minimal", "MySpace", "Presentation", "Theme", "Windows2000"]

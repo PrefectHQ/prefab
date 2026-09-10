@@ -558,7 +558,13 @@ export function Playground() {
           >
             <Braces className="h-4 w-4" />
           </button>
-          <ThemePicker value={themeCss} onChange={setThemeCss} />
+          <ThemePicker
+            value={themeCss}
+            onChange={(css, themeMode) => {
+              setThemeCss(css);
+              if (themeMode) setDark(themeMode === "dark");
+            }}
+          />
           <button
             onClick={() => setDark((d) => !d)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
