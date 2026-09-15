@@ -38,7 +38,12 @@ export function Mermaid({ chart, className, cssClass }: MermaidProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current || !chart.trim()) return;
+    if (!chart.trim()) {
+      containerRef.current?.replaceChildren();
+      setError(null);
+      return;
+    }
+    if (!containerRef.current) return;
 
     const el = containerRef.current;
     let cancelled = false;
