@@ -8,6 +8,7 @@ const CHART_TYPES = new Set([
   "ScatterChart",
   "RadarChart",
   "RadialChart",
+  "WaterfallChart",
 ]);
 
 function containsBinding(value: unknown): boolean {

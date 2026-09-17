@@ -1970,6 +1970,31 @@
     "code": "from prefab_ui.components import Video\n\nVideo(\n    src=\"https://example.com/presentation.mp4\",\n    poster=\"https://example.com/thumbnail.jpg\",\n    width=\"640px\",\n)"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import WaterfallChart\n\ndata = [\n    {\"label\": \"Revenue\", \"value\": 42000},\n    {\"label\": \"COGS\", \"value\": -18000},\n    {\"label\": \"Marketing\", \"value\": -6500},\n    {\"label\": \"R&D\", \"value\": -8200},\n    {\"label\": \"Other Income\", \"value\": 3100},\n]\n\nWaterfallChart(\n    data=data,\n    data_key=\"value\",\n    name_key=\"label\",\n)"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import WaterfallChart\n\ndata = [\n    {\"label\": \"Starting Cash\", \"value\": 50000, \"total\": True},\n    {\"label\": \"Sales\", \"value\": 32000},\n    {\"label\": \"Payroll\", \"value\": -21000},\n    {\"label\": \"Marketing\", \"value\": -6500},\n    {\"label\": \"Ending Cash\", \"value\": 54500, \"total\": True},\n]\n\nWaterfallChart(\n    data=data,\n    data_key=\"value\",\n    name_key=\"label\",\n    total_key=\"total\",\n)"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "WaterfallChart(\n    data=data,\n    data_key=\"value\",\n    name_key=\"label\",\n    total_key=\"total\",\n    show_connectors=False,\n)"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "WaterfallChart(\n    data=data,\n    data_key=\"value\",\n    name_key=\"label\",\n    total_key=\"total\",\n    increase_color=\"#0ea5e9\",\n    decrease_color=\"#f97316\",\n    total_color=\"#64748b\",\n)"
+  },
+  {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import WaterfallChart\n\ndata = [\n    {\"label\": \"Starting Cash\", \"value\": 50000, \"total\": True},\n    {\"label\": \"Sales\", \"value\": 32000},\n    {\"label\": \"Payroll\", \"value\": -21000},\n    {\"label\": \"Marketing\", \"value\": -6500},\n    {\"label\": \"Ending Cash\", \"value\": 54500, \"total\": True},\n]\n\nWaterfallChart(\n    data=data,\n    data_key=\"value\",\n    name_key=\"label\",\n    total_key=\"total\",\n    value_format=\"currency:0\",\n)"
+  },
+  {
     "title": "from prefab_ui.actions import SetState",
     "category": "Concepts",
     "code": "from prefab_ui.actions.mcp import CallTool\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(on_change=CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}))"

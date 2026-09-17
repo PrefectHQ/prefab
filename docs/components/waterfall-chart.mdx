@@ -1,0 +1,357 @@
+---
+title: WaterfallChart
+description: Visualize how sequential increases and decreases build to a total.
+icon: chart-waterfall
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+WaterfallChart renders a sequence of values as floating bars, each one starting where the previous bar ended. It's the standard shape for showing how a series of gains and losses roll up into a running total — a profit bridge, a cash flow breakdown, a headcount change over a quarter. Bars are colored automatically: increases, decreases, and totals each get their own color, and dashed "bridge" lines connect one bar to the next.
+
+Like PieChart and RadialChart, WaterfallChart doesn't use `ChartSeries` — instead `data_key` names the value field and `name_key` names the label field, since there's only ever one series of floating bars.
+
+## Basic Usage
+
+<ComponentPreview json={{"view":{"type":"WaterfallChart","data":[{"label":"Revenue","value":42000},{"label":"COGS","value":-18000},{"label":"Marketing","value":-6500},{"label":"R&D","value":-8200},{"label":"Other Income","value":3100}],"dataKey":"value","nameKey":"label","height":300,"barRadius":4,"showConnectors":true,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"auto"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFdhdGVyZmFsbENoYXJ0CgpkYXRhID0gWwogICAgeyJsYWJlbCI6ICJSZXZlbnVlIiwgInZhbHVlIjogNDIwMDB9LAogICAgeyJsYWJlbCI6ICJDT0dTIiwgInZhbHVlIjogLTE4MDAwfSwKICAgIHsibGFiZWwiOiAiTWFya2V0aW5nIiwgInZhbHVlIjogLTY1MDB9LAogICAgeyJsYWJlbCI6ICJSJkQiLCAidmFsdWUiOiAtODIwMH0sCiAgICB7ImxhYmVsIjogIk90aGVyIEluY29tZSIsICJ2YWx1ZSI6IDMxMDB9LApdCgpXYXRlcmZhbGxDaGFydCgKICAgIGRhdGE9ZGF0YSwKICAgIGRhdGFfa2V5PSJ2YWx1ZSIsCiAgICBuYW1lX2tleT0ibGFiZWwiLAopCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components.charts import WaterfallChart
+
+data = [
+    {"label": "Revenue", "value": 42000},
+    {"label": "COGS", "value": -18000},
+    {"label": "Marketing", "value": -6500},
+    {"label": "R&D", "value": -8200},
+    {"label": "Other Income", "value": 3100},
+]
+
+WaterfallChart(
+    data=data,
+    data_key="value",
+    name_key="label",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "WaterfallChart",
+    "data": [
+      {"label": "Revenue", "value": 42000},
+      {"label": "COGS", "value": -18000},
+      {"label": "Marketing", "value": -6500},
+      {"label": "R&D", "value": -8200},
+      {"label": "Other Income", "value": 3100}
+    ],
+    "dataKey": "value",
+    "nameKey": "label",
+    "height": 300,
+    "barRadius": 4,
+    "showConnectors": true,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Totals
+
+Mark a row as a total with `total_key` — a boolean field on each row. Total bars draw from zero instead of stacking on the running total, and they reset the running total for the rows that follow. This is how a waterfall shows a starting balance, a series of changes, and an ending balance in one chart.
+
+<ComponentPreview json={{"view":{"type":"WaterfallChart","data":[{"label":"Starting Cash","value":50000,"total":true},{"label":"Sales","value":32000},{"label":"Payroll","value":-21000},{"label":"Marketing","value":-6500},{"label":"Ending Cash","value":54500,"total":true}],"dataKey":"value","nameKey":"label","totalKey":"total","height":300,"barRadius":4,"showConnectors":true,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"auto"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFdhdGVyZmFsbENoYXJ0CgpkYXRhID0gWwogICAgeyJsYWJlbCI6ICJTdGFydGluZyBDYXNoIiwgInZhbHVlIjogNTAwMDAsICJ0b3RhbCI6IFRydWV9LAogICAgeyJsYWJlbCI6ICJTYWxlcyIsICJ2YWx1ZSI6IDMyMDAwfSwKICAgIHsibGFiZWwiOiAiUGF5cm9sbCIsICJ2YWx1ZSI6IC0yMTAwMH0sCiAgICB7ImxhYmVsIjogIk1hcmtldGluZyIsICJ2YWx1ZSI6IC02NTAwfSwKICAgIHsibGFiZWwiOiAiRW5kaW5nIENhc2giLCAidmFsdWUiOiA1NDUwMCwgInRvdGFsIjogVHJ1ZX0sCl0KCldhdGVyZmFsbENoYXJ0KAogICAgZGF0YT1kYXRhLAogICAgZGF0YV9rZXk9InZhbHVlIiwKICAgIG5hbWVfa2V5PSJsYWJlbCIsCiAgICB0b3RhbF9rZXk9InRvdGFsIiwKKQo">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components.charts import WaterfallChart
+
+data = [
+    {"label": "Starting Cash", "value": 50000, "total": True},
+    {"label": "Sales", "value": 32000},
+    {"label": "Payroll", "value": -21000},
+    {"label": "Marketing", "value": -6500},
+    {"label": "Ending Cash", "value": 54500, "total": True},
+]
+
+WaterfallChart(
+    data=data,
+    data_key="value",
+    name_key="label",
+    total_key="total",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "WaterfallChart",
+    "data": [
+      {"label": "Starting Cash", "value": 50000, "total": true},
+      {"label": "Sales", "value": 32000},
+      {"label": "Payroll", "value": -21000},
+      {"label": "Marketing", "value": -6500},
+      {"label": "Ending Cash", "value": 54500, "total": true}
+    ],
+    "dataKey": "value",
+    "nameKey": "label",
+    "totalKey": "total",
+    "height": 300,
+    "barRadius": 4,
+    "showConnectors": true,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Hiding Bridges
+
+Bridge lines connecting each bar's ending height to the next bar are on by default. Set `show_connectors=False` to drop them for a cleaner, more compact read.
+
+<ComponentPreview json={{"view":{"type":"WaterfallChart","data":[{"label":"Starting Cash","value":50000,"total":true},{"label":"Sales","value":32000},{"label":"Payroll","value":-21000},{"label":"Marketing","value":-6500},{"label":"Ending Cash","value":54500,"total":true}],"dataKey":"value","nameKey":"label","totalKey":"total","height":300,"barRadius":4,"showConnectors":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"auto"}}} playground="V2F0ZXJmYWxsQ2hhcnQoCiAgICBkYXRhPWRhdGEsCiAgICBkYXRhX2tleT0idmFsdWUiLAogICAgbmFtZV9rZXk9ImxhYmVsIiwKICAgIHRvdGFsX2tleT0idG90YWwiLAogICAgc2hvd19jb25uZWN0b3JzPUZhbHNlLAopCg">
+<CodeGroup>
+```python icon="python"
+WaterfallChart(
+    data=data,
+    data_key="value",
+    name_key="label",
+    total_key="total",
+    show_connectors=False,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "WaterfallChart",
+    "data": [
+      {"label": "Starting Cash", "value": 50000, "total": true},
+      {"label": "Sales", "value": 32000},
+      {"label": "Payroll", "value": -21000},
+      {"label": "Marketing", "value": -6500},
+      {"label": "Ending Cash", "value": 54500, "total": true}
+    ],
+    "dataKey": "value",
+    "nameKey": "label",
+    "totalKey": "total",
+    "height": 300,
+    "barRadius": 4,
+    "showConnectors": false,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Custom Colors
+
+Override the automatic increase/decrease/total colors with `increase_color`, `decrease_color`, and `total_color`. Each accepts any CSS color or theme variable.
+
+<ComponentPreview json={{"view":{"type":"WaterfallChart","data":[{"label":"Starting Cash","value":50000,"total":true},{"label":"Sales","value":32000},{"label":"Payroll","value":-21000},{"label":"Marketing","value":-6500},{"label":"Ending Cash","value":54500,"total":true}],"dataKey":"value","nameKey":"label","totalKey":"total","height":300,"increaseColor":"#0ea5e9","decreaseColor":"#f97316","totalColor":"#64748b","barRadius":4,"showConnectors":true,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"auto"}}} playground="V2F0ZXJmYWxsQ2hhcnQoCiAgICBkYXRhPWRhdGEsCiAgICBkYXRhX2tleT0idmFsdWUiLAogICAgbmFtZV9rZXk9ImxhYmVsIiwKICAgIHRvdGFsX2tleT0idG90YWwiLAogICAgaW5jcmVhc2VfY29sb3I9IiMwZWE1ZTkiLAogICAgZGVjcmVhc2VfY29sb3I9IiNmOTczMTYiLAogICAgdG90YWxfY29sb3I9IiM2NDc0OGIiLAopCg">
+<CodeGroup>
+```python icon="python"
+WaterfallChart(
+    data=data,
+    data_key="value",
+    name_key="label",
+    total_key="total",
+    increase_color="#0ea5e9",
+    decrease_color="#f97316",
+    total_color="#64748b",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "WaterfallChart",
+    "data": [
+      {"label": "Starting Cash", "value": 50000, "total": true},
+      {"label": "Sales", "value": 32000},
+      {"label": "Payroll", "value": -21000},
+      {"label": "Marketing", "value": -6500},
+      {"label": "Ending Cash", "value": 54500, "total": true}
+    ],
+    "dataKey": "value",
+    "nameKey": "label",
+    "totalKey": "total",
+    "height": 300,
+    "increaseColor": "#0ea5e9",
+    "decreaseColor": "#f97316",
+    "totalColor": "#64748b",
+    "barRadius": 4,
+    "showConnectors": true,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## Value Formatting
+
+Use `value_format` to format numeric values on the value axis and in tooltips, same as every other chart. See [Charts](/components/charts#formatting-values) for the full set of pipe strings.
+
+<ComponentPreview json={{"view":{"type":"WaterfallChart","data":[{"label":"Starting Cash","value":50000,"total":true},{"label":"Sales","value":32000},{"label":"Payroll","value":-21000},{"label":"Marketing","value":-6500},{"label":"Ending Cash","value":54500,"total":true}],"dataKey":"value","nameKey":"label","totalKey":"total","height":300,"barRadius":4,"showConnectors":true,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"currency:0"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFdhdGVyZmFsbENoYXJ0CgpkYXRhID0gWwogICAgeyJsYWJlbCI6ICJTdGFydGluZyBDYXNoIiwgInZhbHVlIjogNTAwMDAsICJ0b3RhbCI6IFRydWV9LAogICAgeyJsYWJlbCI6ICJTYWxlcyIsICJ2YWx1ZSI6IDMyMDAwfSwKICAgIHsibGFiZWwiOiAiUGF5cm9sbCIsICJ2YWx1ZSI6IC0yMTAwMH0sCiAgICB7ImxhYmVsIjogIk1hcmtldGluZyIsICJ2YWx1ZSI6IC02NTAwfSwKICAgIHsibGFiZWwiOiAiRW5kaW5nIENhc2giLCAidmFsdWUiOiA1NDUwMCwgInRvdGFsIjogVHJ1ZX0sCl0KCldhdGVyZmFsbENoYXJ0KAogICAgZGF0YT1kYXRhLAogICAgZGF0YV9rZXk9InZhbHVlIiwKICAgIG5hbWVfa2V5PSJsYWJlbCIsCiAgICB0b3RhbF9rZXk9InRvdGFsIiwKICAgIHZhbHVlX2Zvcm1hdD0iY3VycmVuY3k6MCIsCikK">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.components.charts import WaterfallChart
+
+data = [
+    {"label": "Starting Cash", "value": 50000, "total": True},
+    {"label": "Sales", "value": 32000},
+    {"label": "Payroll", "value": -21000},
+    {"label": "Marketing", "value": -6500},
+    {"label": "Ending Cash", "value": 54500, "total": True},
+]
+
+WaterfallChart(
+    data=data,
+    data_key="value",
+    name_key="label",
+    total_key="total",
+    value_format="currency:0",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "WaterfallChart",
+    "data": [
+      {"label": "Starting Cash", "value": 50000, "total": true},
+      {"label": "Sales", "value": 32000},
+      {"label": "Payroll", "value": -21000},
+      {"label": "Marketing", "value": -6500},
+      {"label": "Ending Cash", "value": 54500, "total": true}
+    ],
+    "dataKey": "value",
+    "nameKey": "label",
+    "totalKey": "total",
+    "height": 300,
+    "barRadius": 4,
+    "showConnectors": true,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "currency:0"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+## API Reference
+
+<Card icon="code" title="WaterfallChart Parameters">
+<ParamField body="data" type="list[dict] | str" required>
+  Data as a list of dicts, or a `{{ field }}` interpolation reference.
+</ParamField>
+
+<ParamField body="data_key" type="str" required>
+  Data key for each row's value. Positive values increase the running total, negative values decrease it.
+</ParamField>
+
+<ParamField body="name_key" type="str" required>
+  Data key for bar labels.
+</ParamField>
+
+<ParamField body="total_key" type="str | None" default="None">
+  Data key marking a row as a total (bool). Total bars are drawn from zero instead of stacking on the running total, and reset it for subsequent rows.
+</ParamField>
+
+<ParamField body="height" type="int" default="300">
+  Chart height in pixels.
+</ParamField>
+
+<ParamField body="increase_color" type="str | None" default="None">
+  CSS color for increase bars. Defaults to the theme's success color.
+</ParamField>
+
+<ParamField body="decrease_color" type="str | None" default="None">
+  CSS color for decrease bars. Defaults to the theme's destructive color.
+</ParamField>
+
+<ParamField body="total_color" type="str | None" default="None">
+  CSS color for total bars. Defaults to the theme's info color.
+</ParamField>
+
+<ParamField body="bar_radius" type="int" default="4">
+  Corner radius of each bar in pixels.
+</ParamField>
+
+<ParamField body="show_connectors" type="bool" default="True">
+  Show dashed bridge lines connecting each bar's ending height to the next bar.
+</ParamField>
+
+<ParamField body="show_legend" type="bool" default="True">
+  Show a legend of the increase/decrease/total categories present in the data.
+</ParamField>
+
+<ParamField body="show_tooltip" type="bool" default="True">
+  Show tooltips on hover.
+</ParamField>
+
+<ParamField body="show_grid" type="bool" default="True">
+  Show horizontal grid lines.
+</ParamField>
+
+<ParamField body="show_y_axis" type="bool" default="True">
+  Show the y-axis with its tick labels.
+</ParamField>
+
+<ParamField body="value_format" type="str" default='"auto"'>
+  Format value-axis ticks and tooltip values with an expression pipe such as `currency`, `currency:EUR`, `percent:1`, or `compact:0`.
+</ParamField>
+
+<ParamField body="css_class" type="str | None" default="None">
+  Additional Tailwind CSS classes.
+</ParamField>
+</Card>
+
+## Protocol Reference
+
+```json WaterfallChart
+{
+  "type": "WaterfallChart",
+  "id?": "string",
+  "onMount?": "any",
+  "data": "object[] | string (required)",
+  "dataKey": "string (required)",
+  "nameKey": "string (required)",
+  "totalKey?": "string",
+  "height?": "300",
+  "increaseColor?": "string",
+  "decreaseColor?": "string",
+  "totalColor?": "string",
+  "barRadius?": 4,
+  "showConnectors?": true,
+  "showLegend?": true,
+  "showTooltip?": true,
+  "animate?": true,
+  "showGrid?": true,
+  "showYAxis?": true,
+  "valueFormat?": "string",
+  "cssClass?": "string"
+}
+```
+
+For the complete protocol schema, see [WaterfallChart](/protocol/waterfall-chart).

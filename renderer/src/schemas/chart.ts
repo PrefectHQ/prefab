@@ -110,6 +110,28 @@ export const scatterChartSchema = componentBase.extend({
   showGrid: z.boolean().optional(),
 });
 
+export const waterfallChartSchema = componentBase.extend({
+  type: z.literal("WaterfallChart"),
+  data: z
+    .union([z.array(z.record(z.string(), z.unknown())), z.string()])
+    .optional(),
+  dataKey: z.string(),
+  nameKey: z.string(),
+  totalKey: z.string().optional(),
+  height: z.number().int().optional(),
+  increaseColor: z.string().optional(),
+  decreaseColor: z.string().optional(),
+  totalColor: z.string().optional(),
+  barRadius: z.number().int().optional(),
+  showConnectors: z.boolean().optional(),
+  showLegend: z.boolean().optional(),
+  showTooltip: z.boolean().optional(),
+  animate: z.boolean().optional(),
+  showGrid: z.boolean().optional(),
+  showYAxis: z.boolean().optional(),
+  valueFormat: valueFormatSchema.optional(),
+});
+
 export const sparklineSchema = componentBase.extend({
   type: z.literal("Sparkline"),
   data: z.union([z.array(z.number()), z.string()]).optional(),
@@ -132,4 +154,5 @@ export type PieChartWire = z.infer<typeof pieChartSchema>;
 export type RadarChartWire = z.infer<typeof radarChartSchema>;
 export type RadialChartWire = z.infer<typeof radialChartSchema>;
 export type ScatterChartWire = z.infer<typeof scatterChartSchema>;
+export type WaterfallChartWire = z.infer<typeof waterfallChartSchema>;
 export type SparklineWire = z.infer<typeof sparklineSchema>;

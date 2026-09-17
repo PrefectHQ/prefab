@@ -114,6 +114,28 @@ RadialChart(
 )
 ```
 
+**WaterfallChart** — floating bars showing sequential increases/decreases
+building to a total (no ChartSeries — uses `data_key`/`name_key` like
+PieChart/RadialChart):
+```python
+from prefab_ui.components.charts import WaterfallChart
+
+WaterfallChart(
+    data=[
+        {"label": "Starting Cash", "value": 50000, "total": True},
+        {"label": "Sales", "value": 32000},
+        {"label": "Payroll", "value": -21000},
+        {"label": "Ending Cash", "value": 61000, "total": True},
+    ],
+    data_key="value",
+    name_key="label",
+    total_key="total",  # marks a row as a total: drawn from zero, resets the running sum
+)
+```
+Bars are colored automatically (increase/decrease/total) and connected by
+dashed "bridge" lines by default — set `show_connectors=False` to hide them.
+Override colors with `increase_color`, `decrease_color`, `total_color`.
+
 ## Sparkline
 
 Compact inline chart for trends. Takes a flat list of numbers:

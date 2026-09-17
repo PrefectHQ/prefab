@@ -1,0 +1,145 @@
+---
+title: WaterfallChart
+description: JSON Schema for the WaterfallChart component.
+---
+
+Waterfall chart showing how sequential increases and decreases build to a total.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "WaterfallChart",
+      "default": "WaterfallChart",
+      "type": "string"
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "cssClass": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "onMount": {
+      "default": null,
+      "description": "Action(s) to execute when this component mounts."
+    },
+    "data": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Row data or `{{ interpolation }}` reference"
+    },
+    "dataKey": {
+      "description": "Data key for each row's value (positive increases, negative decreases the running total)",
+      "type": "string"
+    },
+    "nameKey": {
+      "description": "Data key for bar labels",
+      "type": "string"
+    },
+    "totalKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Data key marking a row as a total, drawn from zero instead of stacking on the running total"
+    },
+    "height": {
+      "default": 300,
+      "description": "Chart height in pixels",
+      "type": "integer"
+    },
+    "increaseColor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS color for increase bars"
+    },
+    "decreaseColor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS color for decrease bars"
+    },
+    "totalColor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "CSS color for total bars"
+    },
+    "barRadius": {
+      "default": 4,
+      "description": "Corner radius on bars",
+      "type": "integer"
+    },
+    "showConnectors": {
+      "default": true,
+      "description": "Show dashed bridge lines connecting each bar's ending height to the next bar",
+      "type": "boolean"
+    },
+    "showLegend": {
+      "default": true,
+      "description": "Show legend",
+      "type": "boolean"
+    },
+    "showTooltip": {
+      "default": true,
+      "description": "Show tooltip on hover",
+      "type": "boolean"
+    },
+    "animate": {
+      "default": true,
+      "description": "Animate transitions when data changes",
+      "type": "boolean"
+    },
+    "showGrid": {
+      "default": true,
+      "description": "Show cartesian grid",
+      "type": "boolean"
+    },
+    "showYAxis": {
+      "default": true,
+      "description": "Show y-axis with tick labels",
+      "type": "boolean"
+    },
+    "valueFormat": {
+      "default": "auto",
+      "description": "Value-axis tick and tooltip value format pipe, such as 'compact', 'currency', or 'percent:1'",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "data",
+    "dataKey",
+    "nameKey"
+  ]
+}
+```
