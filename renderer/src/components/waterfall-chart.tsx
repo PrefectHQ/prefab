@@ -6,7 +6,7 @@
 import {
   Bar,
   ComposedChart,
-  Line,
+  Customized,
   Cell,
   XAxis,
   YAxis,
@@ -70,6 +70,58 @@ function buildWaterfallRows(
       __category: isTotal ? "total" : raw >= 0 ? "increase" : "decrease",
     };
   });
+}
+
+interface FormattedBarItem {
+  item: { props?: { dataKey?: string } };
+  props: {
+    data?: { x: number; width: number }[];
+  };
+}
+
+interface WaterfallConnectorsProps {
+  rows: WaterfallRow[];
+  yAxisMap?: Record<string | number, { scale: (value: number) => number }>;
+  formattedGraphicalItems?: FormattedBarItem[];
+}
+
+// Draws dashed bridge lines only across the gap between one bar's edge and
+// the next. Reads Recharts' own computed bar rects (formattedGraphicalItems)
+// rather than the raw band scale, since Recharts renders bars narrower than
+// their category slot (via barCategoryGap) and centers them within it.
+function WaterfallConnectors({
+  rows,
+  yAxisMap,
+  formattedGraphicalItems,
+}: WaterfallConnectorsProps) {
+  const yScale = yAxisMap ? Object.values(yAxisMap)[0]?.scale : undefined;
+  const bars = formattedGraphicalItems?.find(
+    (entry) => entry.item.props?.dataKey === "__value",
+  )?.props.data;
+  if (!yScale || !bars) return null;
+
+  return (
+    <g className="pf-waterfall-connectors">
+      {rows.slice(0, -1).map((row, i) => {
+        const bar = bars[i];
+        const nextBar = bars[i + 1];
+        if (!bar || !nextBar) return null;
+        const y = yScale(row.__end);
+        return (
+          <line
+            key={i}
+            x1={bar.x + bar.width}
+            y1={y}
+            x2={nextBar.x}
+            y2={y}
+            stroke="var(--color-muted-foreground)"
+            strokeWidth={1.5}
+            strokeDasharray="4 4"
+          />
+        );
+      })}
+    </g>
+  );
 }
 
 export function PrefabWaterfallChart({
@@ -169,17 +221,7 @@ export function PrefabWaterfallChart({
             />
           )}
           {showConnectors && (
-            <Line
-              dataKey="__end"
-              type="stepAfter"
-              stroke="var(--color-muted-foreground)"
-              strokeWidth={1.5}
-              strokeDasharray="4 4"
-              dot={false}
-              isAnimationActive={animate}
-              legendType="none"
-              tooltipType="none"
-            />
+            <Customized component={<WaterfallConnectors rows={rows} />} />
           )}
           <Bar
             dataKey="__base"
