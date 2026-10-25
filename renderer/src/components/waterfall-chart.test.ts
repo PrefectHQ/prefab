@@ -177,8 +177,9 @@ describe("WaterfallChart", () => {
 
   it("shows meaningful category names in the legend", async () => {
     await withChart({}, (container) => {
-      const legend = container.querySelector(".recharts-legend-wrapper")
-        ?.textContent;
+      const legend = container.querySelector(
+        ".recharts-legend-wrapper",
+      )?.textContent;
       expect(legend).toContain("Increase");
       expect(legend).toContain("Decrease");
       expect(legend).toContain("Total");

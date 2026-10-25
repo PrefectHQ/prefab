@@ -83,13 +83,11 @@ export function collectComponentState(
       if (val === undefined && n.children) {
         if (n.type === "Select") {
           const selected = n.children.find((c) => (c as typeof n).selected) as
-            | typeof n
-            | undefined;
+            typeof n | undefined;
           if (selected) val = selected.value;
         } else if (n.type === "RadioGroup") {
           const checked = n.children.find((c) => (c as typeof n).value) as
-            | typeof n
-            | undefined;
+            typeof n | undefined;
           if (checked) val = (checked as Record<string, unknown>).option;
         }
       }

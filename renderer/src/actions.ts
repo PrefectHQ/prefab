@@ -76,8 +76,7 @@ export function setAppName(name: string | undefined): void {
  */
 function extractErrorText(result: Record<string, unknown>): string {
   const content = result.content as
-    | Array<{ type: string; text: string }>
-    | undefined;
+    Array<{ type: string; text: string }> | undefined;
   if (content?.length) {
     return (
       content
@@ -97,8 +96,7 @@ function extractErrorText(result: Record<string, unknown>): string {
  */
 function extractToolResultData(result: Record<string, unknown>): unknown {
   const content = result.content as
-    | Array<{ type: string; text?: string }>
-    | undefined;
+    Array<{ type: string; text?: string }> | undefined;
   if (!content?.length) return undefined;
   const text = content
     .filter((c) => c.type === "text" && c.text)
@@ -189,8 +187,7 @@ export async function executeAction(
         if (toolResult?.structuredContent != null) {
           const sc = toolResult.structuredContent as Record<string, unknown>;
           const meta = (toolResult as Record<string, unknown>)._meta as
-            | Record<string, unknown>
-            | undefined;
+            Record<string, unknown> | undefined;
           const fmMeta = meta?.fastmcp as Record<string, unknown> | undefined;
           const shouldUnwrap = resolved.unwrapResult || fmMeta?.wrap_result;
           resultData = shouldUnwrap && "result" in sc ? sc.result : sc;
@@ -220,8 +217,7 @@ export async function executeAction(
               ? [{ type: "text", text: resolved.content as string }]
               : undefined,
             structuredContent: resolved.structuredContent as
-              | Record<string, unknown>
-              | undefined,
+              Record<string, unknown> | undefined,
           });
         } catch (e) {
           success = false;
@@ -433,9 +429,7 @@ export async function executeAction(
         // at execution time inside executeActions.
         const onTick = action.onTick as ActionSpec | ActionSpec[] | undefined;
         const onComplete = action.onComplete as
-          | ActionSpec
-          | ActionSpec[]
-          | undefined;
+          ActionSpec | ActionSpec[] | undefined;
 
         let tickCount = 0;
         let currentDuration = resolveDuration();

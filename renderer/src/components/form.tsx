@@ -137,10 +137,7 @@ interface SelectLabelEntry {
 }
 
 type SelectChildEntry =
-  | SelectGroupData
-  | SelectItemEntry
-  | SelectSeparatorEntry
-  | SelectLabelEntry;
+  SelectGroupData | SelectItemEntry | SelectSeparatorEntry | SelectLabelEntry;
 
 interface PrefabSelectProps {
   placeholder?: string;
