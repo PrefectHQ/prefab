@@ -46,6 +46,7 @@ import type {
 } from "@/schemas/chart";
 
 export { PrefabSparkline } from "./sparkline";
+export { PrefabWaterfallChart } from "./waterfall-chart";
 
 const CHART_LEGEND_PROPS = {
   verticalAlign: "bottom" as const,

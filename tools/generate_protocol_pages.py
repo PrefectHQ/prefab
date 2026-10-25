@@ -26,6 +26,7 @@ from prefab_ui.components.charts import (
     PieChart,
     RadarChart,
     RadialChart,
+    WaterfallChart,
 )
 from prefab_ui.components.control_flow import ForEach
 
@@ -59,7 +60,16 @@ for name in components_mod.__all__:
     COMPONENT_CLASSES[wire_name] = cls
 
 # Submodule components (not in __all__)
-for cls in [AreaChart, BarChart, LineChart, PieChart, RadarChart, RadialChart, ForEach]:
+for cls in [
+    AreaChart,
+    BarChart,
+    LineChart,
+    PieChart,
+    RadarChart,
+    RadialChart,
+    WaterfallChart,
+    ForEach,
+]:
     wire_name = cls.model_fields["type"].default
     COMPONENT_CLASSES[wire_name] = cls
 
