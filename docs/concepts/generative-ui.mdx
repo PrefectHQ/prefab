@@ -13,7 +13,7 @@ Generative UI flips the usual pattern: instead of you writing the UI code, an LL
 User prompt → LLM generates Prefab code → Sandbox executes → PrefabApp renders
 ```
 
-The LLM writes standard Prefab Python — context managers, `.rx`, charts, everything. The code runs in a Pyodide WASM sandbox so untrusted LLM output can't access the host system. The sandbox returns wire protocol JSON, which renders like any other Prefab app.
+The LLM writes standard Prefab Python — context managers, `.rx`, charts, everything. The code runs in a persistent Pyodide interpreter, with Deno filesystem and network permissions revoked after startup. The sandbox returns wire protocol JSON, which renders like any other Prefab app.
 
 ```python
 from prefab_ui.sandbox import Sandbox
@@ -65,9 +65,9 @@ If the Deno process crashes, the sandbox automatically restarts on the next call
 
 ### Security
 
-Code runs inside Pyodide's WASM sandbox. The Deno process has read-only filesystem access (to load Prefab source) and network access (for the Pyodide CDN on first run). It has no write, environment variable, or FFI access.
+During startup, Deno reads the Prefab source and Pyodide runtime, downloads packages from `cdn.jsdelivr.net`, and writes downloaded wheels to its cache. Before accepting code, the runner revokes its filesystem read, filesystem write, and network permissions. Permission prompts are disabled. Generated code uses the mounted virtual filesystem and preloaded Prefab and Pydantic packages; installing additional packages during a call is unsupported.
 
-Each `run()` call executes in a fresh namespace — variables from one call don't leak into the next.
+Each `run()` call receives a fresh namespace for its variables. The interpreter and imported modules remain shared between calls, so this is not per-request Python isolation. WASM execution alone does not establish a host security boundary.
 
 ## MCP server pattern
 

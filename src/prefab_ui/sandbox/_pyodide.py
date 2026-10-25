@@ -1,9 +1,10 @@
 """Pyodide sandbox for executing LLM-generated Prefab code.
 
 Manages a persistent Deno subprocess running Pyodide with the full
-Prefab library pre-loaded. Code runs inside WASM isolation — context
-managers, `.rx`, Pydantic validation all work identically to native
-Python.
+Prefab library pre-loaded. Context managers, `.rx`, and Pydantic
+validation work identically to native Python. The runner revokes Deno
+filesystem and network permissions after loading its runtime and sources.
+The Python interpreter and imported modules remain shared between calls.
 """
 
 from __future__ import annotations
@@ -73,9 +74,10 @@ class PyodideSandbox:
                     deno,
                     "run",
                     "--unstable-detect-cjs",
+                    "--no-prompt",
                     "--allow-read",
                     "--allow-write",
-                    "--allow-net",
+                    "--allow-net=cdn.jsdelivr.net:443",
                     str(RUNNER_JS),
                     str(PREFAB_SRC),
                 ],

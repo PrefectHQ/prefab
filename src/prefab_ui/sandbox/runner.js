@@ -8,9 +8,11 @@
  * The process stays warm between requests. Prefab is pre-loaded
  * from source files mounted into Pyodide's virtual filesystem.
  *
- * Security: Code runs inside Pyodide's WASM sandbox. The Deno process
- * has --allow-read (to load source) and --allow-net (for Pyodide CDN
- * on first run). No write, env, or FFI access.
+ * Bootstrap needs filesystem reads for source/runtime files, writes for
+ * Pyodide's downloaded wheel cache, and network access to its CDN. These
+ * permissions are revoked before accepting generated code. --no-prompt
+ * prevents permission requests from granting them again. The warm Python
+ * interpreter and its imported modules remain shared across requests.
  */
 
 import { loadPyodide } from "npm:pyodide@0.27.4";
@@ -55,8 +57,6 @@ for await (const entry of walk(prefabSrc, { exts: [".py"] })) {
 // Verify Prefab loads
 await pyodide.runPythonAsync("import prefab_ui");
 
-console.error("pyodide:ready");
-
 // ── Harness ─────────────────────────────────────────────────────────
 
 const HARNESS = `
@@ -96,6 +96,15 @@ def _execute_prefab(_code, _data):
 `;
 
 await pyodide.runPythonAsync(HARNESS);
+
+// Bootstrap is complete: ordinary Prefab code uses the mounted virtual
+// filesystem and preloaded packages. Do not retain bootstrap I/O permissions
+// while executing generated code.
+for (const name of ["read", "write", "net"]) {
+  await Deno.permissions.revoke({ name });
+}
+
+console.error("pyodide:ready");
 
 // ── Request loop ────────────────────────────────────────────────────
 
