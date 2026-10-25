@@ -145,3 +145,10 @@ tool-result path, and its UI resource serves the updated bundled renderer.
 Callable metadata inference with FastMCP still requires the companion resolver
 changes. Live-model verification requires a supporting host and is separate
 from these SDK and serialization tests.
+
+The standalone playground preserves `tools` through the Pyodide execution
+envelope and installs a local dispatcher for browser-only interactions. Reruns
+replace definitions; errors and unmount clear them. JSON inspection includes
+the view, current state, and tools when an app defines tools, so switching modes
+does not lose its interaction definitions. Callable-backed server operations
+still require an MCP host connection.

@@ -63,7 +63,7 @@ class Input(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "input"
+    _auto_name: ClassVar[str | None] = "input"
     type: Literal["Input"] = "Input"
     input_type: InputType = Field(
         default="text",

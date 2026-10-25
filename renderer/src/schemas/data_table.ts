@@ -21,6 +21,7 @@ export const dataTableSchema = componentBase.extend({
     .union([z.array(z.record(z.string(), z.unknown())), z.string()])
     .optional(),
   search: z.boolean().optional(),
+  searchPlaceholder: z.string().nullable().optional(),
   paginated: z.boolean().optional(),
   pageSize: z.number().int().optional(),
   onRowClick: actionOrList.optional(),

@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import { viteSingleFile } from "vite-plugin-singlefile";
-import { tailwindShadowDom } from "./vite-plugins";
+import { rendererBuildTarget, tailwindShadowDom } from "./vite-plugins";
 
 /**
  * Build the playground as a single self-contained HTML file.
@@ -26,6 +26,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: rendererBuildTarget,
     outDir: "dist",
     emptyOutDir: false,
     rollupOptions: {

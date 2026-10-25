@@ -1,8 +1,8 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { App } from "@modelcontextprotocol/ext-apps";
 import { AppBridge } from "@modelcontextprotocol/ext-apps/app-bridge";
-import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { InMemoryTransport } from "@modelcontextprotocol/client";
+import type { CallToolResult } from "@modelcontextprotocol/client";
 import { AppTools } from "./app-tools";
 import { clearAllIntervals, executeAction, type ActionSpec } from "./actions";
 import { createStateStore } from "./testing/state-store";

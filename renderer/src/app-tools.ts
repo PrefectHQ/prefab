@@ -1,6 +1,6 @@
 /** App-provided tools and local .invoke() actions share one instance dispatcher. */
 import type { App } from "@modelcontextprotocol/ext-apps";
-import type { CallToolResult, Tool } from "@modelcontextprotocol/sdk/types.js";
+import type { CallToolResult, Tool } from "@modelcontextprotocol/client";
 import { Validator } from "@cfworker/json-schema";
 import { z } from "zod";
 import { executeActions, type ActionSpec } from "./actions";
@@ -49,7 +49,7 @@ export class AppTools {
       tools: [...this.entries.values()].map((entry) => entry.definition),
     });
     app.oncalltool = ({ name, arguments: args }, extra) =>
-      this.call(name, args ?? {}, { signal: extra.signal });
+      this.call(name, args ?? {}, { signal: extra.mcpReq.signal });
   }
 
   /** Human and model invocations join the same queue for this app instance. */

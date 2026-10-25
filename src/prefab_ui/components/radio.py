@@ -46,7 +46,7 @@ class RadioGroup(StatefulMixin, ContainerComponent):
     ```
     """
 
-    _auto_name: ClassVar[str] = "radiogroup"
+    _auto_name: ClassVar[str | None] = "radiogroup"
     type: Literal["RadioGroup"] = "RadioGroup"
     value: RxStr | None = Field(
         default=None,
@@ -83,7 +83,7 @@ class Radio(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "radio"
+    _auto_name: ClassVar[str | None] = "radio"
     type: Literal["Radio"] = "Radio"
     option: RxStr = Field(description="Option identifier within the group")
     label: RxStr | None = Field(default=None, description="Label text")

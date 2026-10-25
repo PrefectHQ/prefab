@@ -205,6 +205,7 @@ export function PrefabLineChart({
   className,
 }: LineChartWire & { className?: string }) {
   if (typeof data === "string") return null;
+  if (typeof series === "string" || !Array.isArray(series)) return null;
   const config = buildConfig(series);
   const valueFormatter = getValueFormatter(valueFormat);
 

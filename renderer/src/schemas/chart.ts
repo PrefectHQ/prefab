@@ -33,6 +33,7 @@ export const barChartSchema = cartesianBase.extend({
 
 export const lineChartSchema = cartesianBase.extend({
   type: z.literal("LineChart"),
+  series: z.union([z.array(chartSeriesSchema), z.string()]),
   curve: z.enum(["linear", "smooth", "step"]).optional(),
   showDots: z.boolean().optional(),
 });

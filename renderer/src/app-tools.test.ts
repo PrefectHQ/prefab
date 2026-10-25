@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "@modelcontextprotocol/ext-apps";
 import { AppBridge } from "@modelcontextprotocol/ext-apps/app-bridge";
-import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { ToolListChangedNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
+import { InMemoryTransport } from "@modelcontextprotocol/client";
+import { ToolListChangedNotificationSchema } from "@modelcontextprotocol/core";
 import { AppTools } from "./app-tools";
 import { createStateStore } from "./testing/state-store";
 import counter from "./testing/counter-app.json";
@@ -182,6 +182,92 @@ describe("app-provided tools over the actual AppBridge", () => {
       expect((await host.listTools({})).tools).toEqual([]);
     },
   );
+
+  it("aborts an in-flight Fetch so replacement tools do not wait for the network", async () => {
+    const { host, tools, state } = await connect();
+    let release!: (response: Response) => void;
+    const fetching = vi.spyOn(globalThis, "fetch").mockImplementation(
+      (_input, init) =>
+        new Promise<Response>((resolve, reject) => {
+          release = resolve;
+          init?.signal?.addEventListener(
+            "abort",
+            () => reject(new DOMException("Cancelled", "AbortError")),
+            { once: true },
+          );
+        }),
+    );
+    tools.replace(
+      [
+        {
+          name: "slow",
+          inputSchema: { type: "object" },
+          result: {},
+          actions: { action: "fetch", url: "https://example.com/slow" },
+        },
+      ],
+      state,
+    );
+    const call = host.callTool({ name: "slow" });
+    try {
+      await vi.waitFor(() => expect(fetching).toHaveBeenCalled());
+      tools.replace(counter.tools, state);
+      expect(fetching.mock.calls[0][1]?.signal?.aborted).toBe(true);
+      expect((await call).isError).toBe(true);
+      expect(
+        (await host.callTool({ name: "get_count" })).structuredContent,
+      ).toEqual({ count: 0 });
+    } finally {
+      release(
+        new Response("{}", { headers: { "Content-Type": "application/json" } }),
+      );
+      await call;
+    }
+  });
+
+  it("propagates host cancellation through the SDK request context to Fetch", async () => {
+    const { host, tools, state } = await connect();
+    let release!: (response: Response) => void;
+    let signal: AbortSignal | undefined;
+    const fetching = vi.spyOn(globalThis, "fetch").mockImplementation(
+      (_input, init) =>
+        new Promise<Response>((resolve, reject) => {
+          release = resolve;
+          signal = init?.signal ?? undefined;
+          signal?.addEventListener(
+            "abort",
+            () => reject(new DOMException("Cancelled", "AbortError")),
+            { once: true },
+          );
+        }),
+    );
+    tools.replace(
+      [
+        {
+          name: "slow",
+          inputSchema: { type: "object" },
+          result: {},
+          actions: { action: "fetch", url: "https://example.com/slow" },
+        },
+      ],
+      state,
+    );
+    const controller = new AbortController();
+    const call = host.callTool({ name: "slow" }, { signal: controller.signal });
+    const rejected = expect(call).rejects.toThrow();
+    try {
+      await vi.waitFor(() => expect(fetching).toHaveBeenCalled());
+      controller.abort();
+      await rejected;
+      await vi.waitFor(() => expect(signal?.aborted).toBe(true), {
+        timeout: 200,
+      });
+    } finally {
+      release(
+        new Response("{}", { headers: { "Content-Type": "application/json" } }),
+      );
+    }
+  });
 
   it("prevents an old asynchronous invocation from changing the replacement app", async () => {
     const { host, tools, state } = await connect();

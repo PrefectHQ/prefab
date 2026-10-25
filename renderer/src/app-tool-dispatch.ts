@@ -1,5 +1,5 @@
 /** Local app-tool routing, scoped to the stable methods of one StateStore. */
-import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import type { CallToolResult } from "@modelcontextprotocol/client";
 import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 

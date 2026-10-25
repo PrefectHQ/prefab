@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import { tailwindShadowDom } from "./vite-plugins";
+import { rendererBuildTarget, tailwindShadowDom } from "./vite-plugins";
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), tailwindShadowDom()],
@@ -30,6 +30,7 @@ export default defineConfig({
     cors: true,
   },
   build: {
+    target: rendererBuildTarget,
     outDir: "dist",
     rollupOptions: {
       input: {

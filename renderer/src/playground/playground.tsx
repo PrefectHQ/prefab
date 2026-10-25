@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { RenderTree, type ComponentNode } from "../renderer";
 import { useStateStore } from "../state";
+import { AppTools } from "../app-tools";
 import { Button } from "@/ui/button";
 import { Badge } from "@/ui/badge";
 import { Alert, AlertDescription } from "@/ui/alert";
@@ -36,7 +37,7 @@ import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
 import { syncStylesheets } from "../style-assets";
-import pako from "pako";
+import { gzip, ungzip } from "pako";
 
 /**
  * Tailwind v4's `@theme inline` declares `--color-*: var(--*)` aliases at
@@ -90,7 +91,7 @@ function scopeThemeCss(css: string): string {
 }
 
 function gzipEncode(str: string): string {
-  const compressed = pako.gzip(new TextEncoder().encode(str));
+  const compressed = gzip(new TextEncoder().encode(str));
   let binary = "";
   for (const byte of compressed) binary += String.fromCharCode(byte);
   return btoa(binary)
@@ -105,7 +106,7 @@ function gzipDecode(encoded: string): string | null {
     const binary = atob(padded);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return new TextDecoder().decode(pako.ungzip(bytes));
+    return new TextDecoder().decode(ungzip(bytes));
   } catch {
     return null;
   }
@@ -197,6 +198,8 @@ export function Playground() {
   const splitRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const state = useStateStore({});
+  const appTools = useMemo(() => new AppTools(null), []);
+  const toolDefinitionsRef = useRef<unknown>(undefined);
   const stateRef = useRef(state);
   stateRef.current = state;
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -208,6 +211,8 @@ export function Playground() {
   // before the parent has a chance to send pg-init-code.
   const skipFirstCodeMsg = useRef(true);
   const skipFirstThemeMsg = useRef(true);
+
+  useEffect(() => () => appTools.clear(), [appTools]);
 
   // Sync dark class on <html>
   useEffect(() => {
@@ -370,29 +375,39 @@ export function Playground() {
 
   // --- Python execution ---
 
-  const executeCode = useCallback(async (source: string) => {
-    if (pyStatusRef.current !== "ready") return;
-    setRunning(true);
-    const result = await executePython(source);
-    setRunning(false);
+  const executeCode = useCallback(
+    async (source: string) => {
+      if (pyStatusRef.current !== "ready") return;
+      setRunning(true);
+      const result = await executePython(source);
+      setRunning(false);
 
-    if (codeRef.current !== source) return;
+      if (codeRef.current !== source) return;
 
-    if (result.error) {
-      setError(result.error);
-      setErrorDetail(result.errorDetail ?? null);
-    } else if (result.tree) {
-      setTree(result.tree);
-      stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
-      setCodeThemeCss(result.css?.join("\n") ?? "");
-      syncStylesheets(result.stylesheets);
-      if (result.mode) {
-        setDark(result.mode === "dark");
+      if (result.error) {
+        appTools.clear();
+        toolDefinitionsRef.current = undefined;
+        setError(result.error);
+        setErrorDetail(result.errorDetail ?? null);
+      } else if (result.tree) {
+        setTree(result.tree);
+        stateRef.current.reset({
+          ...result.state,
+          ...stateRef.current.getAll(),
+        });
+        toolDefinitionsRef.current = result.tools;
+        appTools.replace(result.tools, stateRef.current);
+        setCodeThemeCss(result.css?.join("\n") ?? "");
+        syncStylesheets(result.stylesheets);
+        if (result.mode) {
+          setDark(result.mode === "dark");
+        }
+        setError(null);
+        setErrorDetail(null);
       }
-      setError(null);
-      setErrorDetail(null);
-    }
-  }, []);
+    },
+    [appTools],
+  );
 
   useEffect(() => {
     if (pyStatus === "ready") {
@@ -428,15 +443,19 @@ export function Playground() {
       try {
         const parsed = JSON.parse(jsonCode);
         if (parsed.view) {
-          const reserved = new Set(["view", "state"]);
+          const reserved = new Set(["view", "state", "tools"]);
           const data: Record<string, unknown> = {};
           for (const [k, v] of Object.entries(parsed)) {
             if (!reserved.has(k)) data[k] = v;
           }
           setTree(parsed.view as ComponentNode);
           stateRef.current.reset({ ...data, ...(parsed.state ?? {}) });
+          toolDefinitionsRef.current = parsed.tools;
+          appTools.replace(parsed.tools, stateRef.current);
         } else {
           setTree(parsed as ComponentNode);
+          toolDefinitionsRef.current = undefined;
+          appTools.clear();
         }
         setError(null);
       } catch (e: unknown) {
@@ -446,12 +465,17 @@ export function Playground() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [jsonCode, mode]);
+  }, [jsonCode, mode, appTools]);
 
   // --- Mode switching ---
 
   const enterJsonMode = useCallback(() => {
-    const json = tree ? JSON.stringify(tree, null, 2) : "{}";
+    const tools = toolDefinitionsRef.current;
+    const value =
+      tree && Array.isArray(tools) && tools.length
+        ? { view: tree, state: stateRef.current.getAll(), tools }
+        : tree;
+    const json = value ? JSON.stringify(value, null, 2) : "{}";
     setJsonCode(json);
     setJsonDirty(false);
     setMode("json");

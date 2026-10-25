@@ -28,14 +28,31 @@ Sparkline(data=[10, 15, 8, 22], variant="success", fill=True)
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
 from prefab_ui.components.base import Component
-from prefab_ui.rx import RxStr
+from prefab_ui.rx import Rx, RxStr
 
 ChartValueFormat = str
+
+
+def _contains_reactive_value(value: object) -> bool:
+    if isinstance(value, Rx):
+        return True
+    if isinstance(value, str):
+        return "{{" in value and "}}" in value
+    if isinstance(value, Mapping):
+        return any(_contains_reactive_value(item) for item in value.values())
+    if isinstance(value, Sequence):
+        return any(_contains_reactive_value(item) for item in value)
+    return False
+
+
+def _is_reactive_chart_data(data: object) -> bool:
+    return isinstance(data, (str, Rx)) or _contains_reactive_value(data)
 
 
 class ChartSeries(BaseModel):
@@ -73,6 +90,7 @@ class BarChart(Component):
         bar_radius: Corner radius on bars.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -132,6 +150,13 @@ class BarChart(Component):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class LineChart(Component):
     """Line chart with one or more series.
@@ -141,13 +166,15 @@ class LineChart(Component):
 
     Args:
         data: Row data or reactive interpolation reference.
-        series: Series to render as lines.
+        series: Series to render as lines, or a sole `{{ ... }}` template
+            (e.g. a visibility-filtered list from state).
         x_axis: Data key for x-axis labels.
         height: Chart height in pixels.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -170,7 +197,9 @@ class LineChart(Component):
     data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or `{{ interpolation }}` reference"
     )
-    series: list[ChartSeries] = Field(description="Series to render as lines")
+    series: list[ChartSeries] | RxStr = Field(
+        description="Series to render as lines, or `{{ interpolation }}` for a filtered list"
+    )
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
     )
@@ -205,6 +234,13 @@ class LineChart(Component):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class AreaChart(Component):
     """Area chart with one or more series.
@@ -222,6 +258,7 @@ class AreaChart(Component):
         show_dots: Show dots at data points.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         show_grid: Show cartesian grid.
         show_y_axis: Show y-axis with tick labels.
         value_format: Pipe format for value-axis ticks and tooltip values.
@@ -281,6 +318,13 @@ class AreaChart(Component):
         ),
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class PieChart(Component):
     """Pie or donut chart.
@@ -295,6 +339,7 @@ class PieChart(Component):
         padding_angle: Gap between slices in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         value_format: Pipe format for tooltip values.
 
     **Example:**
@@ -344,6 +389,13 @@ class PieChart(Component):
         description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class ScatterChart(Component):
     """Scatter (or bubble) chart plotting points from shared data.
@@ -360,6 +412,7 @@ class ScatterChart(Component):
         height: Chart height in pixels.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         show_grid: Show cartesian grid.
 
     **Example:**
@@ -404,6 +457,13 @@ class ScatterChart(Component):
         default=True, alias="showGrid", description="Show cartesian grid"
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class RadarChart(Component):
     """Radar (spider) chart with one or more series plotted on radial axes.
@@ -417,6 +477,7 @@ class RadarChart(Component):
         show_dots: Show dots at vertices.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         show_grid: Show polar grid.
 
     **Example:**
@@ -461,6 +522,13 @@ class RadarChart(Component):
         default=True, alias="showGrid", description="Show polar grid"
     )
 
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
+
 
 class RadialChart(Component):
     """Radial bar chart — categorical data as concentric rings.
@@ -475,6 +543,7 @@ class RadialChart(Component):
         end_angle: Arc end angle in degrees.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
+        animate: Animate transitions. Defaults to `False` for reactive data.
         value_format: Pipe format for tooltip values.
 
     **Example:**
@@ -522,6 +591,13 @@ class RadialChart(Component):
         alias="valueFormat",
         description="Tooltip value format pipe, such as 'currency' or 'percent:1'",
     )
+
+    def model_post_init(self, __context: Any) -> None:
+        if "animate" not in self.model_fields_set and _is_reactive_chart_data(
+            self.data
+        ):
+            self.animate = False
+        super().model_post_init(__context)
 
 
 SparklineVariant = (

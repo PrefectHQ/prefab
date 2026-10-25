@@ -3,7 +3,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import { act, createElement, StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { AppBridge } from "@modelcontextprotocol/ext-apps/app-bridge";
-import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { InMemoryTransport } from "@modelcontextprotocol/client";
 import type { App as SdkApp } from "@modelcontextprotocol/ext-apps";
 import counter from "./testing/backend-counter-app.json";
 

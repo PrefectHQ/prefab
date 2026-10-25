@@ -18,7 +18,7 @@ docs_dir = root / "docs"
 output = root / "renderer" / "src" / "playground" / "examples.json"
 
 # Match ```python Optional Title\n...code...\n```
-CODE_BLOCK_RE = re.compile(r"```python\s*([^\n]*)\n(.*?)```", re.DOTALL)
+CODE_BLOCK_RE = re.compile(r"```python[ \t]*([^\n]*)\n(.*?)```", re.DOTALL)
 
 examples: list[dict[str, str]] = []
 seen_codes: set[str] = set()

@@ -365,6 +365,7 @@ export async function executeAction(
         const rawBody = resolved.body;
 
         const fetchInit: RequestInit = { method, headers: { ...headers } };
+        if (execution?.signal) fetchInit.signal = execution.signal;
         if (rawBody != null && method !== "GET" && method !== "HEAD") {
           if (typeof rawBody === "object") {
             fetchInit.body = JSON.stringify(rawBody);

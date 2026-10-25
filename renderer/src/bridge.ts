@@ -16,7 +16,7 @@
 
 import { App } from "@modelcontextprotocol/ext-apps";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
+import type { Transport } from "@modelcontextprotocol/client";
 import type { ExecuteResult } from "./pyodide/executor";
 import { AppTools } from "./app-tools";
 import {

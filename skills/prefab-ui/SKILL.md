@@ -186,9 +186,12 @@ DataTable(
     ],
     rows=users,  # list of dicts, or "{{ state_key }}"
     search=True,
+    search_placeholder="Search contacts...",
     paginated=True,
 )
 ```
+
+Use `search_placeholder=` to customize the search input text.
 
 `on_row_click=` actions fire when the row is clicked and receive the clicked row
 as `$event`. Access row fields through `$event`, for example

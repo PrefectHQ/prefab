@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 export interface StateStore {
   get(key: string): unknown;
@@ -176,5 +176,8 @@ export function useStateStore(initial?: Record<string, unknown>): StateStore {
     setState(next);
   }, []);
 
-  return { get, getAll, set, merge, reset };
+  return useMemo(
+    () => ({ get, getAll, set, merge, reset }),
+    [get, getAll, set, merge, reset],
+  );
 }
