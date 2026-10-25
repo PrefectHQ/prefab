@@ -154,7 +154,7 @@ class Combobox(StatefulMixin, ContainerComponent):
     ```
     """
 
-    _auto_name: ClassVar[str] = "combobox"
+    _auto_name: ClassVar[str | None] = "combobox"
     type: Literal["Combobox"] = "Combobox"
     placeholder: RxStr | None = Field(
         default=None,

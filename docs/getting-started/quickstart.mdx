@@ -137,7 +137,7 @@ Try editing `app.py` while the server is running. Change the heading text, swap 
 
 Prefab components nest using Python's `with` statement — `Card`, `Column`, `Input` compose into a tree that compiles to JSON, which a bundled React renderer turns into a live interface. The [Composition](/concepts/components) page walks through this in detail.
 
-`Rx("name")` creates a reactive reference to a client-side state key. When used in an f-string like `f"Hello, {name}!"`, it compiles to `{{ name }}` in the protocol. Any component containing that reference re-renders whenever the value changes. The `Input(name="name")` automatically syncs its value to the same key, so typing in the input updates the heading and badge instantly — no server round-trip needed. Read more about [reactive expressions](/expressions/overview).
+`Rx("name")` creates a reactive reference to a client-side state key. When used in an f-string like `f"Hello, {name}!"`, it compiles to `{{ name }}` in the protocol. Any component containing that reference re-renders whenever the value changes. The `Input(name="name")` automatically syncs its value to the same key, so typing in the input updates the heading and badge instantly — no server round-trip needed. Read more about [reactive expressions](/concepts/expressions).
 
 Prefab has a full set of client-side [actions](/concepts/actions) (`SetState`, `ShowToast`, `ToggleState`, `OpenLink`), plus server actions like `CallTool` for when you need a backend.
 
@@ -145,5 +145,5 @@ Prefab has a full set of client-side [actions](/concepts/actions) (`SetState`, `
 
 - [**Composition**](/concepts/components) — learn how to build any interface by nesting components
 - [**Playground**](/playground) — browse all 100+ components interactively
-- [**Reactive Expressions**](/expressions/overview) — operators, conditionals, and pipes for client-side logic
+- [**Reactive Expressions**](/concepts/expressions) — operators, conditionals, and pipes for client-side logic
 - [**API Server**](/running/api) and [**FastMCP**](/running/fastmcp) — wire up a backend when you need server logic

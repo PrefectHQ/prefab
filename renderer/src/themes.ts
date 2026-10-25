@@ -63,6 +63,20 @@ export function resolveTheme(theme: unknown): ThemeDefinition | null {
 }
 
 /**
+ * Transform standard CSS selectors to shadow-DOM equivalents.
+ *
+ * Converts `:root` → `:host` and `.dark` → `:host(.dark)` so CSS compiled
+ * in Python (with standard selectors) works inside a shadow DOM context.
+ */
+export function toShadowDomCss(css: string): string {
+  return css
+    .replace(/:root\s*\{/g, ":host {")
+    .replace(/\.dark\s*\{/g, ":host(.dark) {")
+    .replace(/\.dark\s+\./g, ":host(.dark) .")
+    .replace(/\.dark\s+:/g, ":host(.dark) :");
+}
+
+/**
  * Build a `<style>` block from a resolved theme.
  *
  * @param theme - Resolved theme definition

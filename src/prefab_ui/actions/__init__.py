@@ -33,6 +33,12 @@ from prefab_ui.actions.base import Action
 from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import FileUpload, OpenFilePicker
+from prefab_ui.actions.mcp import (
+    CallTool,
+    RequestDisplayMode,
+    SendMessage,
+    UpdateContext,
+)
 from prefab_ui.actions.navigation import OpenLink
 from prefab_ui.actions.state import AppendState, PopState, SetState, ToggleState
 from prefab_ui.actions.timing import SetInterval
@@ -42,14 +48,18 @@ __all__ = [
     "Action",
     "AppendState",
     "CallHandler",
+    "CallTool",
     "CloseOverlay",
     "Fetch",
     "FileUpload",
     "OpenFilePicker",
     "OpenLink",
     "PopState",
+    "RequestDisplayMode",
+    "SendMessage",
     "SetInterval",
     "SetState",
     "ShowToast",
     "ToggleState",
+    "UpdateContext",
 ]

@@ -133,13 +133,14 @@ const ChartTooltip = RechartsPrimitive.Tooltip
 
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
+  Partial<RechartsPrimitive.TooltipContentProps> &
     React.ComponentProps<"div"> & {
       hideLabel?: boolean
       hideIndicator?: boolean
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
       labelKey?: string
+      valueFormatter?: (value: unknown) => React.ReactNode
     }
 >(
   (
@@ -157,6 +158,7 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
+      valueFormatter,
     },
     ref
   ) => {
@@ -223,7 +225,7 @@ const ChartTooltipContent = React.forwardRef<
 
               return (
                 <div
-                  key={item.dataKey}
+                  key={`${item.dataKey ?? item.name ?? index}`}
                   className={cn(
                     "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                     indicator === "dot" && "items-center"
@@ -259,7 +261,7 @@ const ChartTooltipContent = React.forwardRef<
                       )}
                       <div
                         className={cn(
-                          "flex flex-1 justify-between leading-none",
+                          "flex flex-1 justify-between gap-3 leading-none",
                           nestLabel ? "items-end" : "items-center"
                         )}
                       >
@@ -269,9 +271,11 @@ const ChartTooltipContent = React.forwardRef<
                             {itemConfig?.label || item.name}
                           </span>
                         </div>
-                        {item.value && (
+                        {item.value != null && (
                           <span className="font-mono font-medium tabular-nums text-foreground">
-                            {item.value.toLocaleString()}
+                            {valueFormatter
+                              ? valueFormatter(item.value)
+                              : item.value.toLocaleString()}
                           </span>
                         )}
                       </div>
@@ -292,7 +296,8 @@ const ChartLegend = RechartsPrimitive.Legend
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+    Pick<RechartsPrimitive.LegendProps, "verticalAlign"> & {
+      payload?: readonly RechartsPrimitive.LegendPayload[]
       hideIcon?: boolean
       nameKey?: string
     }

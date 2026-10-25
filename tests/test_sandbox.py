@@ -159,7 +159,7 @@ with Column() as view:
 app = PrefabApp(view=view)
 """)
         assert "$prefab" in result
-        assert result["$prefab"]["version"] == "0.2"
+        assert result["$prefab"]["version"] == "0.3"
 
     async def test_bare_component_gets_envelope(self, sandbox: Sandbox):
         """A root Component (no PrefabApp) still gets the $prefab envelope."""

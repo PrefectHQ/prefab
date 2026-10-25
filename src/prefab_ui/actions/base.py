@@ -43,6 +43,12 @@ class Action(BaseModel):
         """Resolve any Rx values to `{{ }}` strings at serialization time."""
         return _coerce_rx(handler(self))  # type: ignore[return-value]  # ty:ignore[invalid-return-type]
 
+    def __or__(self, other: Action) -> _ActionChain:
+        """Chain this action with another action."""
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([self, other])
+
     on_success: SerializeAsAny[Action] | list[SerializeAsAny[Action]] | None = Field(
         default=None,
         alias="onSuccess",
@@ -53,3 +59,12 @@ class Action(BaseModel):
         alias="onError",
         description="Action(s) to run when this action fails",
     )
+
+
+class _ActionChain(list[Action]):
+    """List-like action chain supporting repeated ``|`` composition."""
+
+    def __or__(self, other: Action) -> _ActionChain:
+        if not isinstance(other, Action):
+            raise TypeError("Actions can only be chained with other actions")
+        return _ActionChain([*self, other])

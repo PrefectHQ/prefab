@@ -30,6 +30,41 @@ export function nextSortAction(
   return "clear";
 }
 
+const SORTABLE_HEADER_ALIGN_CLASSES = {
+  "text-left": ["w-full", "justify-start", "flex-row"],
+  "text-center": ["w-full", "justify-center", "flex-row"],
+  "text-right": ["w-full", "justify-start", "flex-row-reverse"],
+};
+
+/**
+ * Convert text alignment classes from the header cell into flex layout classes
+ * for the sortable header button.
+ */
+export function sortableHeaderButtonClass(headerClass?: string): string {
+  if (!headerClass) return "";
+
+  const classes: string[] = [];
+  for (const token of headerClass.split(/\s+/)) {
+    if (!token) continue;
+
+    const separatorIndex = token.lastIndexOf(":");
+    const prefix =
+      separatorIndex === -1 ? "" : `${token.slice(0, separatorIndex)}:`;
+    const base =
+      separatorIndex === -1 ? token : token.slice(separatorIndex + 1);
+    const alignClasses =
+      SORTABLE_HEADER_ALIGN_CLASSES[
+        base as keyof typeof SORTABLE_HEADER_ALIGN_CLASSES
+      ];
+
+    if (alignClasses) {
+      classes.push(...alignClasses.map((className) => `${prefix}${className}`));
+    }
+  }
+
+  return Array.from(new Set(classes)).join(" ");
+}
+
 /**
  * Compute next row selection state on click.
  * Returns the new selected row ID (null to deselect).

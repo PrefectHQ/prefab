@@ -170,3 +170,13 @@ with PrefabApp(state={"count": 0, "saved": False}, css_class="max-w-none p-0"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+The app holds two [state](/concepts/state) keys, seeded by `PrefabApp(state={"count": 0, "saved": False})`. `count = Rx("count")` and `saved = Rx("saved")` are reactive references to them, used both to read values into the UI and to write new ones from buttons.
+
+Buttons carry behavior through their `on_click`. The simplest case, `SetState("count", count + 1)`, sets `count` to a [reactive expression](/concepts/expressions) — `count + 1` doesn't compute a number in Python, it compiles to `{{ count + 1 }}`, which the renderer evaluates against the current value at click time. That distinction matters: the action always increments whatever `count` happens to be, not the value captured when the page was built.
+
+A single click can run several [actions](/concepts/actions) in order by passing a list. "Count + 10" runs `SetState("count", count + 10)` and then `ShowToast("Jumped ahead by 10!")`, and "Reset" chains two `SetState` calls to zero out both keys at once. The actions execute in sequence against the same state update.
+
+The display reacts to those writes without any wiring. The `Progress` bar reads `count` directly and computes its color inline with `(count >= 100).then("success", "default")`, turning green once the count reaches 100. The bottom row toggles on `saved`: `with If(saved):` shows a "Saved" badge, while `with Else():` shows a Save button whose `on_click` runs `ToggleState("saved")` followed by a toast. `ToggleState` flips the boolean, so the badge and button swap places — and because `ShowToast` interpolates `f"Saved at {count}!"`, the toast reports the live count at the moment it fires.

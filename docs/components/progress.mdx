@@ -525,6 +525,10 @@ with Column(gap=3):
   Layout direction: `"horizontal"` or `"vertical"`.
 </ParamField>
 
+<ParamField body="gradient" type="bool | None" default="None">
+  Gradient fill. `None` inherits the theme default, `True` forces a gradient on, `False` forces a solid fill.
+</ParamField>
+
 <ParamField body="css_class" type="str | None" default="None">
   Tailwind classes for the track (outer container).
 </ParamField>
@@ -535,15 +539,18 @@ with Column(gap=3):
 ```json Progress
 {
   "type": "Progress",
+  "id?": "string",
+  "onMount?": "any",
   "value?": "number | string",
-  "min?": 0,
-  "max?": 100,
-  "variant?": "default | success | warning | destructive | info | muted",
+  "min?": "number",
+  "max?": "number",
+  "variant?": "default | success | warning | destructive | info | muted | string",
   "size?": "sm | default | lg",
   "target?": "number | string",
   "indicatorClass?": "string",
   "targetClass?": "string",
   "orientation?": "horizontal | vertical",
+  "gradient?": "boolean",
   "cssClass?": "string"
 }
 ```

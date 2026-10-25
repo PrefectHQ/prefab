@@ -47,7 +47,7 @@ class Checkbox(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "checkbox"
+    _auto_name: ClassVar[str | None] = "checkbox"
     type: Literal["Checkbox"] = "Checkbox"
     label: RxStr | None = Field(default=None, description="Label text")
     value: bool | RxStr = Field(

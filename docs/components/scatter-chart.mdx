@@ -6,7 +6,7 @@ icon: chart-scatter
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-ScatterChart plots data as individual points on a cartesian plane, positioned by their `x_axis` and `y_axis` values. Where bar charts compare categories and line charts show change over time, scatter charts reveal relationships between two continuous variables -- whether they're correlated, clustered, or independent.
+ScatterChart plots data as individual points on a cartesian plane, positioned by their `x_axis` and `y_axis` values. Where bar charts compare categories and line charts show change over time, scatter charts reveal relationships between two continuous variables -- whether they're correlated, clustered, or independent. See [Charts](/components/charts) for the shared data, series, and formatting model.
 
 ## Basic Usage
 
@@ -255,14 +255,17 @@ ScatterChart(
 ```json ScatterChart
 {
   "type": "ScatterChart",
-  "data": "dict[] | string (required)",
+  "id?": "string",
+  "onMount?": "any",
+  "data": "object[] | string (required)",
   "series": "[ChartSeries] (required)",
   "xAxis": "string (required)",
   "yAxis": "string (required)",
   "zAxis?": "string",
   "height?": "300",
-  "showLegend?": false,
+  "showLegend?": true,
   "showTooltip?": true,
+  "animate?": true,
   "showGrid?": true,
   "cssClass?": "string"
 }

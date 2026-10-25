@@ -75,7 +75,7 @@ def slide(css_class: str = ""):
                         show_legend=True,
                         show_tooltip=True,
                         show_grid=True,
-                        y_axis_format="compact",
+                        value_format="compact",
                     )
     return card
 

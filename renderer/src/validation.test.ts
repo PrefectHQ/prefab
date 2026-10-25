@@ -74,6 +74,35 @@ describe("validateNode", () => {
     validateNode({ type: "Text", content: "hello" });
     expect(console.warn).not.toHaveBeenCalled();
   });
+
+  test("chart schemas accept value formats", () => {
+    expect(
+      validateNode({
+        type: "BarChart",
+        data: [{ month: "Jan", revenue: 240 }],
+        series: [{ dataKey: "revenue" }],
+        valueFormat: "currency",
+      }),
+    ).toBeNull();
+    expect(
+      validateNode({
+        type: "PieChart",
+        data: [{ category: "Materials", share: 0.008 }],
+        dataKey: "share",
+        nameKey: "category",
+        valueFormat: "percent:1",
+      }),
+    ).toBeNull();
+    expect(
+      validateNode({
+        type: "RadialChart",
+        data: [{ category: "Materials", share: 0.008 }],
+        dataKey: "share",
+        nameKey: "category",
+        valueFormat: "percent:1",
+      }),
+    ).toBeNull();
+  });
 });
 
 describe("validateAction", () => {

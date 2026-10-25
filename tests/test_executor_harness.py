@@ -43,7 +43,7 @@ def run_harness(code: str) -> dict:
         real_comp_init(self, **kwargs)  # type: ignore[misc]
         all_instances.append(self)
 
-    Component.__init__ = tracking_comp_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
+    Component.__init__ = tracking_comp_init  # type: ignore[assignment]
 
     try:
         # Heal partial code: strip trailing lines until it compiles.
@@ -95,8 +95,8 @@ def run_harness(code: str) -> dict:
 
         json_str = json.dumps(result)
     finally:
-        PrefabApp.__init__ = real_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
-        Component.__init__ = real_comp_init  # type: ignore[assignment]  # ty: ignore[invalid-assignment]
+        PrefabApp.__init__ = real_init  # type: ignore[assignment]
+        Component.__init__ = real_comp_init  # type: ignore[assignment]
 
     return json.loads(json_str)
 

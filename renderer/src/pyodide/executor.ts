@@ -15,7 +15,9 @@ declare const __LOCAL_BUNDLE__: boolean;
 
 declare global {
   interface Window {
-    loadPyodide: () => Promise<PyodideInterface>;
+    loadPyodide: (options: {
+      enableRunUntilComplete: boolean;
+    }) => Promise<PyodideInterface>;
   }
 }
 
@@ -30,6 +32,23 @@ export interface PyodideInterface {
 
 export type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
+export function normalizeExecuteData(data: unknown): Record<string, unknown> {
+  if (typeof data === "string") {
+    if (!data.trim()) return {};
+    try {
+      data = JSON.parse(data);
+    } catch {
+      return {};
+    }
+  }
+
+  if (data !== null && typeof data === "object" && !Array.isArray(data)) {
+    return data as Record<string, unknown>;
+  }
+
+  return {};
+}
+
 /** Debug callback — set by the bridge to route messages to the UI. */
 let debugFn: ((msg: string) => void) | null = null;
 export function setExecutorDebug(fn: (msg: string) => void) {
@@ -43,7 +62,7 @@ function log(msg: string) {
 let pyodide: PyodideInterface | null = null;
 let loadPromise: Promise<PyodideInterface> | null = null;
 
-const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.27.4/full/pyodide.js";
+const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.27.8/full/pyodide.js";
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -75,7 +94,8 @@ export function loadPyodideRuntime(
     log("Loading script from CDN...");
     await loadScript(PYODIDE_CDN);
     log("Script loaded, initializing...");
-    const py = await window.loadPyodide();
+    // Preserve the pre-0.27.7 event-loop behavior without stack switching.
+    const py = await window.loadPyodide({ enableRunUntilComplete: false });
     log("Initialized, loading pydantic...");
 
     // Pydantic must come from Pyodide's built-in packages (WASM build)
@@ -127,11 +147,88 @@ await micropip.install("prefab-ui", deps=False)
 export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
-  theme?: { light: string; dark: string; css: string; mode?: string };
+  css?: string[];
+  stylesheets?: string[];
+  mode?: string;
   /** Short summary (last line + line number). */
   error?: string;
   /** Full Python traceback for expandable details. */
   errorDetail?: string;
+}
+
+interface RawExecuteResult {
+  tree?: ComponentNode;
+  state?: Record<string, unknown>;
+  css?: unknown;
+  stylesheets?: unknown;
+  mode?: unknown;
+  theme?: unknown;
+}
+
+function stringProp(
+  obj: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const value = obj[key];
+  return typeof value === "string" ? value : undefined;
+}
+
+function stringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter(
+    (entry): entry is string => typeof entry === "string",
+  );
+  return strings.length > 0 ? strings : undefined;
+}
+
+function normalizeMode(value: unknown): string | undefined {
+  return value === "light" || value === "dark" ? value : undefined;
+}
+
+export function legacyThemeToCss(theme: unknown): {
+  css?: string[];
+  mode?: string;
+} {
+  if (!theme || typeof theme !== "object" || Array.isArray(theme)) return {};
+
+  const themeObj = theme as Record<string, unknown>;
+  const light =
+    stringProp(themeObj, "light") ?? stringProp(themeObj, "light_css");
+  const dark =
+    stringProp(themeObj, "dark") ?? stringProp(themeObj, "dark_css") ?? light;
+  const freeform = stringProp(themeObj, "css") ?? "";
+  const imports: string[] = [];
+  const rest: string[] = [];
+
+  for (const line of freeform.split("\n")) {
+    (line.trim().startsWith("@import") ? imports : rest).push(line);
+  }
+
+  let css = imports.length > 0 ? `${imports.join("\n")}\n` : "";
+  if (light) css += `:root {\n  ${light}\n}\n`;
+  if (dark) css += `.dark {\n  ${dark}\n}\n`;
+
+  const freeformRest = rest.join("\n").trim();
+  if (freeformRest) css += `${freeformRest}\n`;
+
+  return {
+    css: css.trim() ? [css] : undefined,
+    mode: normalizeMode(themeObj.mode),
+  };
+}
+
+export function normalizeExecuteResult(
+  result: RawExecuteResult,
+): ExecuteResult {
+  const legacyTheme = legacyThemeToCss(result.theme);
+
+  return {
+    tree: result.tree,
+    state: result.state ?? {},
+    css: stringArray(result.css) ?? legacyTheme.css,
+    stylesheets: stringArray(result.stylesheets),
+    mode: normalizeMode(result.mode) ?? legacyTheme.mode,
+  };
 }
 
 /**
@@ -143,10 +240,15 @@ export interface ExecuteResult {
  * 3. Finds the root component or PrefabApp
  * 4. Calls to_json() to extract the wire format
  */
-export async function executePrefabCode(code: string): Promise<ExecuteResult> {
+export async function executePrefabCode(
+  code: string,
+  data?: unknown,
+): Promise<ExecuteResult> {
   if (!pyodide) {
     return { error: "Pyodide not loaded" };
   }
+
+  const executeData = normalizeExecuteData(data);
 
   const harness = `
 import json as _json
@@ -222,8 +324,8 @@ try:
 
     _pg_prev_lines = _pg_lines
 
-    # Execute in a fresh namespace
-    _pg_ns = {}
+    # Execute with data keys available as globals
+    _pg_ns = _json.loads(${JSON.stringify(JSON.stringify(executeData))})
     exec(_pg_healed, _pg_ns)
 
     # Find result: prefer PrefabApp, then root components
@@ -249,10 +351,9 @@ try:
 
     _pg_wire = _pg_target.to_json()
     _pg_result = {"tree": _pg_wire.get("view")}
-    if _pg_wire.get("state"):
-        _pg_result["state"] = _pg_wire["state"]
-    if _pg_wire.get("theme"):
-        _pg_result["theme"] = _pg_wire["theme"]
+    for _pg_key in ("state", "theme", "css", "stylesheets", "mode"):
+        if _pg_wire.get(_pg_key):
+            _pg_result[_pg_key] = _pg_wire[_pg_key]
 
     _pg_json_result = _json.dumps(_pg_result)
 finally:
@@ -265,11 +366,7 @@ _pg_json_result
   try {
     const resultStr = (await pyodide.runPythonAsync(harness)) as string;
     const result = JSON.parse(resultStr);
-    return {
-      tree: result.tree as ComponentNode,
-      state: result.state ?? {},
-      theme: result.theme,
-    };
+    return normalizeExecuteResult(result);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     const allLines = message.split("\n");

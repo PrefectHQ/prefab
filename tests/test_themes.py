@@ -265,30 +265,33 @@ class TestPrefabAppTheme:
             theme=Theme(light_css="--primary: #3b82f6;"),
         )
         result = app.to_json()
-        assert result["theme"]["light"] == "--primary: #3b82f6;"
-        assert result["theme"]["dark"] == "--primary: #3b82f6;"
-        assert result["theme"]["css"] == ""
+        css = "\n".join(result["css"])
+        assert "--primary: #3b82f6;" in css
+        assert ":root" in css
 
     def test_builtin_theme_in_wire_format(self):
         app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=260))
         result = app.to_json()
-        assert "--primary:" in result["theme"]["light"]
-        assert "--primary:" in result["theme"]["dark"]
+        css = "\n".join(result["css"])
+        assert "--primary:" in css
+        assert ":root" in css
+        assert ".dark" in css
 
     def test_no_theme_omitted_from_wire_format(self):
         app = PrefabApp(view=Text(content="hi"))
         result = app.to_json()
-        assert "theme" not in result
+        assert "css" not in result
 
     def test_theme_in_html_output(self):
         app = PrefabApp(view=Text(content="hi"), theme=Basic(accent=260))
         html = app.html()
-        assert '"theme":{' in html
+        assert "<style>" in html
+        assert "--primary:" in html
 
     def test_empty_theme_in_wire_format(self):
         app = PrefabApp(view=Text(content="hi"), theme=Theme())
         result = app.to_json()
-        assert result["theme"] == {"light": "", "dark": "", "css": ""}
+        assert "css" not in result
 
     def test_theme_with_css_in_wire_format(self):
         theme = Theme(
@@ -297,7 +300,8 @@ class TestPrefabAppTheme:
         )
         app = PrefabApp(view=Text(content="hi"), theme=theme)
         result = app.to_json()
-        assert result["theme"]["css"] == ".pf-progress { height: 0.625rem; }"
+        css = "\n".join(result["css"])
+        assert ".pf-progress" in css
 
     def test_dict_compat_in_wire_format(self):
         app = PrefabApp(
@@ -305,15 +309,57 @@ class TestPrefabAppTheme:
             theme=Theme(light_css={"primary": "#3b82f6"}),
         )
         result = app.to_json()
-        assert "--primary: #3b82f6;" in result["theme"]["light"]
+        css = "\n".join(result["css"])
+        assert "--primary: #3b82f6;" in css
 
+    def test_precompiled_theme_dict_in_wire_format(self):
+        app = PrefabApp.model_construct(
+            view=Text(content="hi"),
+            theme={
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "css": ".pf-progress { height: 0.625rem; }",
+                "mode": "dark",
+            },
+        )
 
-class TestInlineStylesheets:
-    def test_inline_css_rendered_as_style_tag(self):
-        css = ":root { --primary: oklch(0.72 0.19 149); }"
-        app = PrefabApp(view=Text(content="hi"), stylesheets=[css])
+        result = app.to_json()
+        css = "\n".join(result["css"])
+
+        assert ":root" in css
+        assert "--primary: red;" in css
+        assert ".dark" in css
+        assert "--primary: blue;" in css
+        assert ".pf-progress" in css
+        assert result["mode"] == "dark"
+
+    def test_precompiled_theme_dict_in_html_output(self):
+        app = PrefabApp.model_construct(
+            view=Text(content="hi"),
+            theme={
+                "light": "--primary: red;",
+                "dark": "--primary: blue;",
+                "css": ".pf-progress { height: 0.625rem; }",
+                "mode": "dark",
+            },
+        )
+
         html = app.html()
-        assert f"<style>{css}</style>" in html
+
+        assert ":root" in html
+        assert "--primary: red;" in html
+        assert ".dark" in html
+        assert "--primary: blue;" in html
+        assert ".pf-progress" in html
+        assert 'classList.toggle("dark",true)' in html
+
+
+class TestCssAndStylesheets:
+    def test_css_rendered_as_style_tag(self):
+        inline = ":root { --primary: oklch(0.72 0.19 149); }"
+        app = PrefabApp(view=Text(content="hi"), css=[inline])
+        html = app.html()
+        assert f"<style>{inline}</style>" in html
 
     def test_url_rendered_as_link_tag(self):
         url = "https://fonts.googleapis.com/css2?family=Inter"
@@ -321,19 +367,45 @@ class TestInlineStylesheets:
         html = app.html()
         assert f'<link rel="stylesheet" href="{url}">' in html
 
-    def test_mixed_inline_and_url(self):
-        css = ":root { --primary: red; }"
+    def test_mixed_css_and_url(self):
+        inline = ":root { --primary: red; }"
         url = "https://example.com/style.css"
-        app = PrefabApp(view=Text(content="hi"), stylesheets=[css, url])
+        app = PrefabApp(view=Text(content="hi"), css=[inline], stylesheets=[url])
         html = app.html()
         assert "<style>" in html
         assert '<link rel="stylesheet"' in html
 
     def test_inline_css_excluded_from_csp(self):
-        css = ":root { --primary: red; }"
-        app = PrefabApp(view=Text(content="hi"), stylesheets=[css])
+        inline = ":root { --primary: red; }"
+        app = PrefabApp(view=Text(content="hi"), css=[inline])
         csp = app.csp()
         assert "style_domains" not in csp
+
+    def test_css_in_wire_format(self):
+        inline = ":root { --primary: red; }"
+        app = PrefabApp(view=Text(content="hi"), css=[inline])
+        result = app.to_json()
+        assert inline in result["css"]
+
+    def test_stylesheets_in_wire_format(self):
+        url = "https://fonts.googleapis.com/css2?family=Inter"
+        app = PrefabApp(view=Text(content="hi"), stylesheets=[url])
+        result = app.to_json()
+        assert url in result["stylesheets"]
+
+    def test_css_not_double_injected_in_html(self):
+        """css/stylesheets are in <head>, not embedded in the JSON data tag."""
+        inline = ":root { --primary: red; }"
+        url = "https://example.com/style.css"
+        app = PrefabApp(view=Text(content="hi"), css=[inline], stylesheets=[url])
+        html = app.html()
+        start = html.index('type="application/json">') + len('type="application/json">')
+        end = html.index("</script>", start)
+        import json
+
+        baked = json.loads(html[start:end])
+        assert "css" not in baked
+        assert "stylesheets" not in baked
 
 
 class TestThemeImport:

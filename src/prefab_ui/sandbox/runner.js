@@ -2,18 +2,20 @@
  * Pyodide sandbox runner — executes untrusted Prefab code in WASM.
  *
  * Protocol (JSON lines over stdin/stdout):
- *   Request:  {"code": "...", "data": {"key": "value"}}
- *   Response: {"result": <PrefabApp JSON>} or {"error": "..."}
+ *   Request:  {"id": "...", "code": "...", "data": {"key": "value"}}
+ *   Response: {"id": "...", "result": <PrefabApp JSON>} or {"id": "...", "error": "..."}
  *
  * The process stays warm between requests. Prefab is pre-loaded
  * from source files mounted into Pyodide's virtual filesystem.
  *
- * Security: Code runs inside Pyodide's WASM sandbox. The Deno process
- * has --allow-read (to load source) and --allow-net (for Pyodide CDN
- * on first run). No write, env, or FFI access.
+ * Bootstrap needs filesystem reads for source/runtime files, writes for
+ * Pyodide's downloaded wheel cache, and network access to its CDN. These
+ * permissions are revoked before accepting generated code. --no-prompt
+ * prevents permission requests from granting them again. The warm Python
+ * interpreter and its imported modules remain shared across requests.
  */
 
-import { loadPyodide } from "npm:pyodide@0.27.4";
+import { loadPyodide } from "npm:pyodide@0.27.8";
 import { readLines } from "https://deno.land/std@0.224.0/io/read_lines.ts";
 import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 
@@ -21,7 +23,15 @@ import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 const realLog = console.log;
 console.log = (...args) => console.error("[pyodide]", ...args);
 
-const pyodide = await loadPyodide();
+// Generated Python output must never enter the JSON-lines response channel.
+// Suppress stderr too: its pipe is only drained during startup, so forwarding
+// arbitrary user output there could block the subprocess once the pipe fills.
+const pyodide = await loadPyodide({
+  stdout: () => {},
+  stderr: () => {},
+  // Keep the pre-0.27.7 event-loop behavior without requiring stack switching.
+  enableRunUntilComplete: false,
+});
 await pyodide.loadPackage(["pydantic"]);
 
 console.log = realLog;
@@ -51,8 +61,6 @@ for await (const entry of walk(prefabSrc, { exts: [".py"] })) {
 
 // Verify Prefab loads
 await pyodide.runPythonAsync("import prefab_ui");
-
-console.error("pyodide:ready");
 
 // ── Harness ─────────────────────────────────────────────────────────
 
@@ -94,23 +102,36 @@ def _execute_prefab(_code, _data):
 
 await pyodide.runPythonAsync(HARNESS);
 
+// Bootstrap is complete: ordinary Prefab code uses the mounted virtual
+// filesystem and preloaded packages. Do not retain bootstrap I/O permissions
+// while executing generated code.
+for (const name of ["read", "write", "net"]) {
+  await Deno.permissions.revoke({ name });
+}
+
+console.error("pyodide:ready");
+
 // ── Request loop ────────────────────────────────────────────────────
 
 for await (const line of readLines(Deno.stdin)) {
   if (!line.trim()) continue;
 
+  // Keep correlation metadata in JavaScript; generated Python receives only
+  // its code and data. The parent rejects output from any other request.
+  let requestId;
   try {
-    const { code, data } = JSON.parse(line);
+    const { id, code, data } = JSON.parse(line);
+    requestId = id;
     const resultStr = await pyodide.runPythonAsync(
       `_json.dumps({"result": _execute_prefab(${JSON.stringify(
         code,
       )}, _json.loads(${JSON.stringify(JSON.stringify(data || {}))}))})`,
     );
-    realLog(resultStr);
+    realLog(JSON.stringify({ ...JSON.parse(resultStr), id: requestId }));
   } catch (err) {
     const msg = String(err.message || err);
     const lines = msg.split("\n").filter((l) => l.trim());
     const short = lines[lines.length - 1] || msg;
-    realLog(JSON.stringify({ error: short }));
+    realLog(JSON.stringify({ id: requestId, error: short }));
   }
 }

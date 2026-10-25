@@ -49,7 +49,7 @@ class Switch(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "switch"
+    _auto_name: ClassVar[str | None] = "switch"
     type: Literal["Switch"] = "Switch"
     label: RxStr | None = Field(default=None, description="Label text")
     value: bool | RxStr = Field(default=False, description="Whether switch is on")

@@ -21,8 +21,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from compact_json import compact_json
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 # ---------------------------------------------------------------------------
@@ -178,8 +176,10 @@ def _execute_and_serialize(
     envelope: dict[str, Any] = {"view": tree}
     if state:
         envelope["state"] = _serialize_state(state)
-    if app is not None and "theme" in wire:
-        envelope["theme"] = wire["theme"]
+    if app is not None:
+        for key in ("css", "stylesheets", "mode"):
+            if key in wire:
+                envelope[key] = wire[key]
 
     return envelope
 
@@ -187,6 +187,12 @@ def _execute_and_serialize(
 # ---------------------------------------------------------------------------
 # Attribute helpers
 # ---------------------------------------------------------------------------
+
+
+def _compact_json(data: dict[str, Any]) -> str:
+    from compact_json import compact_json
+
+    return compact_json(data)
 
 
 def _extract_attrs(tag_text: str) -> dict[str, Any]:
@@ -319,7 +325,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
             python_fence_open = python_fence_open.rstrip("\n") + ' icon="python"\n'
 
         # Build interior: CodeGroup with Python + Protocol tabs
-        pretty_json = compact_json(envelope)
+        pretty_json = _compact_json(envelope)
         python_block = f"{python_fence_open}{python_source}{python_fence_close}"
         if attrs["hide_json"]:
             new_interior = f"\n{python_block}\n"
@@ -335,7 +341,7 @@ def process_file(path: Path, *, docs_dir: Path) -> bool:
         block_id = attrs["block_id"]
         if block_id:
             python_block = python_fence_open + python_source + python_fence_close
-            pretty_json = compact_json(envelope)
+            pretty_json = _compact_json(envelope)
             code_registry[block_id] = (python_block, pretty_json)
 
     # ------------------------------------------------------------------

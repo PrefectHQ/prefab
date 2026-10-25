@@ -49,6 +49,7 @@ import {
   mapProps,
   filterInternalProps,
 } from "./prop-transforms";
+import { applyRawPropDefaults } from "./raw-prop-defaults";
 
 /** Shape of a node in the JSON component tree. */
 export interface ComponentNode {
@@ -147,7 +148,10 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   }
 
   // Interpolate {{ ... }} templates in non-action props only
-  const interpolated = interpolateProps(propsToInterpolate, ctx);
+  const interpolated = interpolateProps(
+    applyRawPropDefaults(type, propsToInterpolate),
+    ctx,
+  );
 
   // Re-attach raw action specs, then bind them to event handlers.
   // bindActions captures the current scope so action execution can
@@ -459,9 +463,15 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Uses display:contents by default so children participate in the
   // parent's layout (e.g., Row gap applies between iterated items).
   if (type === "ForEach" && children) {
-    let key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
-    if (key) key = interpolateString(key, ctx) as string;
-    const items = key ? (resolve(key, ctx) as unknown[]) : [];
+    const key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
+    const source = key ? interpolateString(key, ctx) : [];
+    // A sole template already resolves to an array. Plain and dynamically
+    // interpolated paths retain their lookup semantics; other strings can be
+    // expressions, such as the unwrapped key produced by a filtered Rx.
+    const items =
+      typeof source === "string"
+        ? resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx)
+        : source;
     if (!Array.isArray(items)) return null;
 
     const cssClass = rawProps.cssClass as string | undefined;

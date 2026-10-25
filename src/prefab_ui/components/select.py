@@ -55,7 +55,7 @@ class Select(StatefulMixin, ContainerComponent):
     ```
     """
 
-    _auto_name: ClassVar[str] = "select"
+    _auto_name: ClassVar[str | None] = "select"
     type: Literal["Select"] = "Select"
     placeholder: RxStr | None = Field(
         default=None,

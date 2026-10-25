@@ -145,3 +145,11 @@ with Card(css_class="w-full"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+Two boolean [state](/concepts/state) keys drive everything: `dark_mode` (starting `False`) and `notifications` (starting `True`). Each `Switch` binds to one of them through its `name`, so flipping a switch writes `True` or `False` back to state and re-renders anything that reads it.
+
+`dark_mode = Rx("dark_mode")` and `notifications = Rx("notifications")` create reactive references to those keys. Passing one to [`If`](/components/conditional) registers a condition that the renderer re-evaluates whenever state changes. `with If(dark_mode):` renders its children only while `dark_mode` is truthy; the paired `with Else():` renders the alternative the rest of the time. The two branches are mutually exclusive — exactly one alert is mounted at any moment, swapping the moment the switch moves.
+
+The pattern composes. The second `If`/`Else` pair reads `notifications` independently and toggles between two status lines, so the card holds two unrelated conditional regions side by side. Each `If`/`Else` only needs the reactive reference for its condition — there is no manual subscription or re-render logic, because [conditional rendering](/concepts/expressions) reacts to the same client-side state the switches write to. Flipping either switch updates only the branch that depends on it.

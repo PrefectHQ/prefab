@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from prefab_ui.components.charts import (
     AreaChart,
     BarChart,
@@ -12,6 +14,7 @@ from prefab_ui.components.charts import (
     RadialChart,
     ScatterChart,
 )
+from prefab_ui.rx import Rx
 
 SAMPLE_DATA = [
     {"month": "Jan", "desktop": 186, "mobile": 80},
@@ -22,6 +25,50 @@ SERIES = [
     ChartSeries(data_key="desktop", label="Desktop"),
     ChartSeries(data_key="mobile", label="Mobile"),
 ]
+
+CHART_CASES = [
+    (BarChart, {"series": SERIES}),
+    (LineChart, {"series": SERIES}),
+    (AreaChart, {"series": SERIES}),
+    (PieChart, {"data_key": "desktop", "name_key": "month"}),
+    (ScatterChart, {"series": SERIES, "x_axis": "month", "y_axis": "desktop"}),
+    (RadarChart, {"series": SERIES}),
+    (RadialChart, {"data_key": "desktop", "name_key": "month"}),
+]
+
+
+@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
+def test_literal_chart_data_animates_by_default(chart_type, kwargs):
+    chart = chart_type(data=SAMPLE_DATA, **kwargs)
+
+    assert chart.to_json()["animate"] is True
+
+
+@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
+@pytest.mark.parametrize("reactive_data", [Rx("chart_data"), "{{ chart_data }}"])
+def test_reactive_chart_data_does_not_animate_by_default(
+    chart_type, kwargs, reactive_data
+):
+    chart = chart_type(data=reactive_data, **kwargs)
+
+    assert chart.to_json()["animate"] is False
+
+
+@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
+def test_reactive_chart_data_can_explicitly_animate(chart_type, kwargs):
+    chart = chart_type(data=Rx("chart_data"), animate=True, **kwargs)
+
+    assert chart.to_json()["animate"] is True
+
+
+@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
+@pytest.mark.parametrize("reactive_value", [Rx("value"), "{{ value }}"])
+def test_nested_reactive_chart_data_does_not_animate_by_default(
+    chart_type, kwargs, reactive_value
+):
+    chart = chart_type(data=[{"month": "Jan", "desktop": reactive_value}], **kwargs)
+
+    assert chart.to_json()["animate"] is False
 
 
 class TestBarChart:
@@ -46,6 +93,11 @@ class TestBarChart:
         assert j["stacked"] is True
         assert j["horizontal"] is True
 
+    def test_value_format(self):
+        j = BarChart(data=SAMPLE_DATA, series=SERIES, value_format="currency").to_json()
+        assert j["valueFormat"] == "currency"
+        assert "yAxisFormat" not in j
+
 
 class TestLineChart:
     def test_serializes_basic(self):
@@ -53,12 +105,37 @@ class TestLineChart:
         assert j["type"] == "LineChart"
         assert j["xAxis"] == "month"
 
+    @pytest.mark.parametrize(
+        ("series", "expected"),
+        [
+            (
+                "{{ chart_series | selectattr:'visible' }}",
+                "{{ chart_series | selectattr:'visible' }}",
+            ),
+            (
+                Rx("chart_series").selectattr("visible"),
+                "{{ chart_series | selectattr:visible }}",
+            ),
+        ],
+    )
+    def test_serializes_reactive_series(self, series, expected):
+        chart = LineChart(data=SAMPLE_DATA, series=series, x_axis="month")
+
+        assert chart.to_json()["series"] == expected
+
     def test_curve(self):
         j = LineChart(
             data=SAMPLE_DATA, series=SERIES, curve="smooth", show_dots=True
         ).to_json()
         assert j["curve"] == "smooth"
         assert j["showDots"] is True
+
+    def test_percent_format(self):
+        j = LineChart(
+            data=SAMPLE_DATA, series=SERIES, value_format="percent:1"
+        ).to_json()
+        assert j["valueFormat"] == "percent:1"
+        assert "yAxisFormat" not in j
 
 
 class TestAreaChart:
@@ -69,6 +146,11 @@ class TestAreaChart:
     def test_stacked(self):
         j = AreaChart(data=SAMPLE_DATA, series=SERIES, stacked=True).to_json()
         assert j["stacked"] is True
+
+    def test_compact_format(self):
+        j = AreaChart(data=SAMPLE_DATA, series=SERIES, value_format="compact").to_json()
+        assert j["valueFormat"] == "compact"
+        assert "yAxisFormat" not in j
 
 
 class TestPieChart:
@@ -88,6 +170,16 @@ class TestPieChart:
             data=data, data_key="val", name_key="name", inner_radius=60
         ).to_json()
         assert j["innerRadius"] == 60
+
+    def test_value_format(self):
+        data = [{"name": "A", "share": 0.4}]
+        j = PieChart(
+            data=data,
+            data_key="share",
+            name_key="name",
+            value_format="percent:1",
+        ).to_json()
+        assert j["valueFormat"] == "percent:1"
 
 
 class TestRadarChart:
@@ -112,6 +204,16 @@ class TestRadialChart:
         assert j["type"] == "RadialChart"
         assert j["dataKey"] == "visitors"
         assert j["nameKey"] == "browser"
+
+    def test_value_format(self):
+        data = [{"browser": "Chrome", "revenue": 275}]
+        j = RadialChart(
+            data=data,
+            data_key="revenue",
+            name_key="browser",
+            value_format="currency",
+        ).to_json()
+        assert j["valueFormat"] == "currency"
 
 
 class TestScatterChart:

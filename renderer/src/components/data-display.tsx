@@ -11,6 +11,7 @@ import { interpolateString } from "../interpolation";
 import {
   globalFilter as dataTableGlobalFilter,
   nextSortAction,
+  sortableHeaderButtonClass,
   toggleRowSelection,
 } from "./data-table-logic";
 import {
@@ -58,6 +59,7 @@ interface DataTableProps {
   columns: DataTableColumnSpec[];
   rows: Record<string, unknown>[];
   search?: boolean;
+  searchPlaceholder?: string | null;
   paginated?: boolean;
   pageSize?: number;
   onRowClick?: (rowData: Record<string, unknown>) => void;
@@ -68,6 +70,7 @@ export function PrefabDataTable({
   columns: columnSpecs,
   rows,
   search = false,
+  searchPlaceholder,
   paginated = false,
   pageSize = 10,
   onRowClick,
@@ -131,7 +134,10 @@ export function PrefabDataTable({
           if (spec.sortable) {
             return (
               <button
-                className="flex items-center gap-1 hover:text-foreground"
+                className={cn(
+                  "flex items-center gap-1 hover:text-foreground",
+                  sortableHeaderButtonClass(spec.headerClass),
+                )}
                 onClick={() => {
                   const action = nextSortAction(column.getIsSorted());
                   if (action === "clear") {
@@ -201,7 +207,7 @@ export function PrefabDataTable({
       {search && (
         <div className="mb-4">
           <Input
-            placeholder="Filter..."
+            placeholder={searchPlaceholder ?? "Filter..."}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="max-w-sm"

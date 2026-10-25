@@ -201,12 +201,39 @@ def _normalize_refs(info: dict[str, Any]) -> None:
         _normalize_refs(info["items"])
 
 
+def _wire_field_name(cls: type, field_name: str) -> str:
+    """Return the field name used in serialized protocol JSON."""
+    field = getattr(cls, "model_fields", {}).get(field_name)
+    if field is None:
+        return field_name
+    return field.serialization_alias or field.alias or field_name
+
+
+def _wire_properties(cls: type, props: dict[str, Any]) -> dict[str, Any]:
+    """Rename schema properties to the serialized wire names."""
+    model_fields = getattr(cls, "model_fields", {})
+    renamed: dict[str, Any] = {}
+    consumed: set[str] = set()
+
+    for field_name, field in model_fields.items():
+        source_name = field.alias or field_name
+        if source_name in props:
+            renamed[_wire_field_name(cls, field_name)] = props[source_name]
+            consumed.add(source_name)
+
+    for prop_name, prop in props.items():
+        if prop_name not in consumed:
+            renamed.setdefault(prop_name, prop)
+
+    return renamed
+
+
 def clean_schema(cls: type) -> dict[str, Any]:
     """Generate a cleaned JSON Schema for a component or action class."""
     raw = cls.model_json_schema()
 
-    props = raw.get("properties", {})
-    required = raw.get("required", [])
+    props = _wire_properties(cls, raw.get("properties", {}))
+    required = [_wire_field_name(cls, name) for name in raw.get("required", [])]
 
     cleaned_props: dict[str, Any] = {}
 

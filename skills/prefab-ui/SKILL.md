@@ -186,9 +186,16 @@ DataTable(
     ],
     rows=users,  # list of dicts, or "{{ state_key }}"
     search=True,
+    search_placeholder="Search contacts...",
     paginated=True,
 )
 ```
+
+Use `search_placeholder=` to customize the search input text.
+
+`on_row_click=` actions fire when the row is clicked and receive the clicked row
+as `$event`. Access row fields through `$event`, for example
+`{{ $event.email }}` or `EVENT.email`.
 
 ### Layout Props
 
@@ -201,6 +208,10 @@ Grid(columns=3, gap=4)               # grid-cols-3 gap-4
 ```
 
 Use `css_class` for anything beyond these: `Column(css_class="max-w-2xl mx-auto")`.
+
+For app-level styling, use `PrefabApp(css=[...])` for inline CSS strings and
+`PrefabApp(stylesheets=[...])` only for external CSS URLs. Stylesheet URLs are
+loaded as `<link>` tags and may affect CSP; inline CSS is loaded as `<style>`.
 
 ### Carousel
 
@@ -260,12 +271,16 @@ CallTool("search", arguments={"q": "{{ query }}"}, result_key="results")
 SendMessage("Summarize {{ item }}")
 UpdateContext(content="User selected {{ item }}")
 
-# Chaining — list runs sequentially
-Button("Save", on_click=[
-    SetState("loading", True),
-    CallTool("save", result_key="saved"),
-    SetState("loading", False),
-])
+# Chaining — | composes actions into a sequential list
+Button(
+    "Save",
+    on_click=SetState("loading", True)
+    | CallTool("save", result_key="saved")
+    | SetState("loading", False),
+)
+
+# Explicit lists remain supported
+Button("Reset", on_click=[SetState("count", 0), ShowToast("Reset")])
 ```
 
 ### on_mount

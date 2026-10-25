@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import { tailwindShadowDom } from "./vite-plugins";
+import { rendererBuildTarget, tailwindShadowDom } from "./vite-plugins";
 
 /**
  * CDN build for the main renderer.
@@ -35,6 +35,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: rendererBuildTarget,
     outDir: "dist/app",
     emptyOutDir: true,
     rollupOptions: {

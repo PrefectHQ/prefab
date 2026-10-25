@@ -3,6 +3,11 @@
 All charts live in `prefab_ui.components.charts`. Every cartesian chart
 (Bar, Line, Area, Scatter) uses `ChartSeries` to define what to plot.
 
+Charts animate literal data by default. When `data` is an `Rx` binding or
+interpolation string, animation defaults to off because replacing reactive data
+mid-animation can make Recharts v2 enter a render loop. Pass `animate=True`
+explicitly to override this safety default.
+
 ## ChartSeries
 
 ```python
@@ -37,6 +42,26 @@ All accept `data`, `series`, `x_axis`, `height` (default 300),
 **LineChart** — connected data points.
 - `curve`: "linear", "smooth", or "step"
 - `show_dots`: show points at data values
+- `series`: a static `list[ChartSeries]`, or an `Rx` / sole interpolation
+  template resolving to a list of series dictionaries. Use wire keys such
+  as `dataKey` in dictionaries stored in state.
+
+```python
+from prefab_ui.rx import Rx
+
+LineChart(
+    data=monthly_data,
+    series=Rx("chart_series").selectattr("visible"),
+    x_axis="month",
+)
+```
+
+For example, `chart_series` in app state can contain
+`{"dataKey": "revenue", "label": "Revenue", "color": "var(--chart-1)", "visible": True}`.
+Changing `visible` updates the plotted series. Automatic palette colors follow
+the resolved list's order; set `color` on each stored series when its color must
+stay the same across filtering or reordering. Other chart types still take
+static `ChartSeries` lists.
 
 **AreaChart** — filled area under lines.
 - `curve`, `show_dots` (same as LineChart)
@@ -126,6 +151,9 @@ destructive/info/default), `fill` (shade area), `curve` ("linear"/"smooth").
 
 All cartesian charts share:
 - `show_y_axis`: show Y-axis labels
-- `y_axis_format`: "auto" or "compact" (60K instead of 60000)
+- `value_format`: expression pipe format for value-axis ticks and tooltip values, such as "compact", "compact:0", "currency", "currency:EUR", "percent", or "percent:1". Percent values use fractional input, so `0.8` renders as `80%`.
 - `show_grid`: cartesian grid lines
 - `height`: chart height in pixels
+
+Pie and radial charts use the same `value_format` pipe strings for tooltip
+values.

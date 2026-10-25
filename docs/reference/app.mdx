@@ -61,7 +61,9 @@ app = PrefabApp.from_json(wire, state={"extra": "value"})
 | `theme` | `Theme` | Theme to apply — see [Themes](/styling/themes) |
 | `css_class` | `str` | Additional CSS/Tailwind classes for the root container. Stacks on top of `pf-app-root`. |
 | `defs` | `list[Define]` | Reusable component definitions |
-| `stylesheets` | `list[str]` | CSS URLs or inline CSS to load in `<head>` |
+| `stylesheets` | `list[str]` | External CSS URLs to load as `<link>` tags |
+| `css` | `list[str]` | Inline CSS strings to load as `<style>` tags |
+| `mode` | `"light" \| "dark"` | Force light or dark mode |
 | `scripts` | `list[str]` | External JS URLs to load in `<head>` |
 | `connect_domains` | `list[str]` | Domains to allow in CSP `connect-src` (for Fetch actions) |
 | `on_mount` | `Action \| list[Action]` | Action(s) to run when the app loads |
@@ -72,7 +74,7 @@ app = PrefabApp.from_json(wire, state={"extra": "value"})
 
 **`app.html()`** returns a complete, self-contained HTML page with the Prefab renderer and all data baked in.
 
-**`app.to_json()`** returns the wire-format envelope — a dict with `$prefab`, `view`, `state`, `defs`, and `theme`.
+**`app.to_json()`** returns the wire-format envelope — a dict with `$prefab`, `view`, `state`, `defs`, `css`, `stylesheets`, and `mode` as needed.
 
 **`app.csp()`** computes Content Security Policy domains from the app's asset configuration.
 
@@ -177,4 +179,6 @@ The helper uses the state-controlled [Dialog](/components/dialog#state-controlle
 
 ## Stylesheets
 
-The `stylesheets` field accepts both URLs and inline CSS. URLs become `<link>` tags; inline CSS (detected by `{`) becomes a `<style>` tag. For theming, prefer `theme=` over inline stylesheets.
+Use `stylesheets` for external CSS URLs. They render as `<link>` tags and contribute style origins to `app.csp()`.
+
+Use `css` for inline CSS strings. They render as `<style>` tags and are included in the wire format so JSON-based renderers can apply them.

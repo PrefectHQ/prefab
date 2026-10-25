@@ -10,7 +10,7 @@ import {
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
 
 /** Protocol versions this renderer understands. */
-export const SUPPORTED_VERSIONS = new Set(["0.2"]);
+export const SUPPORTED_VERSIONS = new Set(["0.3"]);
 
 /** Apply host theme context (dark mode, CSS variables, fonts). */
 export function applyTheme(ctx: McpUiHostContext) {

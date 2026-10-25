@@ -104,9 +104,9 @@ DataTable(
 
 ## Search
 
-Set `search=True` to show a text input above the table that narrows visible rows across all columns. Search works alongside sorting and pagination — the search applies first, then sort order, then page boundaries.
+Set `search=True` to show a text input above the table that narrows visible rows across all columns. Use `search_placeholder=` to customize the input's placeholder. Search works alongside sorting and pagination — the search applies first, then sort order, then page boundaries.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"species","header":"Species","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"name":"Arthur Dent","species":"Human","status":"Confused"},{"name":"Ford Prefect","species":"Betelgeusian","status":"Drinking"},{"name":"Zaphod","species":"Betelgeusian","status":"Presidential"},{"name":"Trillian","species":"Human","status":"Navigating"},{"name":"Marvin","species":"Android","status":"Depressed"}],"search":true,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzcGVjaWVzIiwgaGVhZGVyPSJTcGVjaWVzIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAic3BlY2llcyI6ICJIdW1hbiIsICJzdGF0dXMiOiAiQ29uZnVzZWQifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgInNwZWNpZXMiOiAiQmV0ZWxnZXVzaWFuIiwgInN0YXR1cyI6ICJEcmlua2luZyJ9LAogICAgICAgIHsibmFtZSI6ICJaYXBob2QiLCAic3BlY2llcyI6ICJCZXRlbGdldXNpYW4iLCAic3RhdHVzIjogIlByZXNpZGVudGlhbCJ9LAogICAgICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJzcGVjaWVzIjogIkh1bWFuIiwgInN0YXR1cyI6ICJOYXZpZ2F0aW5nIn0sCiAgICAgICAgeyJuYW1lIjogIk1hcnZpbiIsICJzcGVjaWVzIjogIkFuZHJvaWQiLCAic3RhdHVzIjogIkRlcHJlc3NlZCJ9LAogICAgXSwKICAgIHNlYXJjaD1UcnVlLAopCg">
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"species","header":"Species","sortable":false},{"key":"status","header":"Status","sortable":false}],"rows":[{"name":"Arthur Dent","species":"Human","status":"Confused"},{"name":"Ford Prefect","species":"Betelgeusian","status":"Drinking"},{"name":"Zaphod","species":"Betelgeusian","status":"Presidential"},{"name":"Trillian","species":"Human","status":"Navigating"},{"name":"Marvin","species":"Android","status":"Depressed"}],"search":true,"searchPlaceholder":"Search the crew...","paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9Im5hbWUiLCBoZWFkZXI9Ik5hbWUiLCBzb3J0YWJsZT1UcnVlKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oa2V5PSJzcGVjaWVzIiwgaGVhZGVyPSJTcGVjaWVzIiksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ic3RhdHVzIiwgaGVhZGVyPSJTdGF0dXMiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAic3BlY2llcyI6ICJIdW1hbiIsICJzdGF0dXMiOiAiQ29uZnVzZWQifSwKICAgICAgICB7Im5hbWUiOiAiRm9yZCBQcmVmZWN0IiwgInNwZWNpZXMiOiAiQmV0ZWxnZXVzaWFuIiwgInN0YXR1cyI6ICJEcmlua2luZyJ9LAogICAgICAgIHsibmFtZSI6ICJaYXBob2QiLCAic3BlY2llcyI6ICJCZXRlbGdldXNpYW4iLCAic3RhdHVzIjogIlByZXNpZGVudGlhbCJ9LAogICAgICAgIHsibmFtZSI6ICJUcmlsbGlhbiIsICJzcGVjaWVzIjogIkh1bWFuIiwgInN0YXR1cyI6ICJOYXZpZ2F0aW5nIn0sCiAgICAgICAgeyJuYW1lIjogIk1hcnZpbiIsICJzcGVjaWVzIjogIkFuZHJvaWQiLCAic3RhdHVzIjogIkRlcHJlc3NlZCJ9LAogICAgXSwKICAgIHNlYXJjaD1UcnVlLAogICAgc2VhcmNoX3BsYWNlaG9sZGVyPSJTZWFyY2ggdGhlIGNyZXcuLi4iLAopCg">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import DataTable, DataTableColumn
@@ -125,6 +125,7 @@ DataTable(
         {"name": "Marvin", "species": "Android", "status": "Depressed"},
     ],
     search=True,
+    search_placeholder="Search the crew...",
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -144,6 +145,7 @@ DataTable(
       {"name": "Marvin", "species": "Android", "status": "Depressed"}
     ],
     "search": true,
+    "searchPlaceholder": "Search the crew...",
     "paginated": false,
     "pageSize": 10
   }
@@ -380,7 +382,7 @@ DataTable(
 
 ### Click
 
-Make rows clickable with `on_row_click`. The clicked row highlights and the action fires with the row's data as `$event`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
+Make rows clickable with `on_row_click`. Clicking anywhere in the row highlights it and fires the action with the row's data as `$event`. Access row fields through `$event`, for example `{{ $event.email }}`. Use `EVENT` from `prefab_ui.rx` for a cleaner syntax than raw template strings.
 
 <ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"name","header":"Name","sortable":true},{"key":"email","header":"Email","sortable":false},{"key":"role","header":"Role","sortable":false}],"rows":[{"name":"Arthur Dent","email":"arthur@earth.com","role":"Admin"},{"name":"Ford Prefect","email":"ford@betelgeuse.com","role":"Editor"},{"name":"Trillian","email":"trillian@hog.com","role":"Viewer"}],"search":false,"paginated":false,"pageSize":10,"onRowClick":{"action":"showToast","message":"{{ $event.name }} ({{ $event.email }})"}}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4sIEVWRU5UCmZyb20gcHJlZmFiX3VpLmFjdGlvbnMudWkgaW1wb3J0IFNob3dUb2FzdAoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0ibmFtZSIsIGhlYWRlcj0iTmFtZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9ImVtYWlsIiwgaGVhZGVyPSJFbWFpbCIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InJvbGUiLCBoZWFkZXI9IlJvbGUiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICB7Im5hbWUiOiAiQXJ0aHVyIERlbnQiLCAiZW1haWwiOiAiYXJ0aHVyQGVhcnRoLmNvbSIsICJyb2xlIjogIkFkbWluIn0sCiAgICAgICAgeyJuYW1lIjogIkZvcmQgUHJlZmVjdCIsICJlbWFpbCI6ICJmb3JkQGJldGVsZ2V1c2UuY29tIiwgInJvbGUiOiAiRWRpdG9yIn0sCiAgICAgICAgeyJuYW1lIjogIlRyaWxsaWFuIiwgImVtYWlsIjogInRyaWxsaWFuQGhvZy5jb20iLCAicm9sZSI6ICJWaWV3ZXIifSwKICAgIF0sCiAgICBvbl9yb3dfY2xpY2s9U2hvd1RvYXN0KGYie0VWRU5ULm5hbWV9ICh7RVZFTlQuZW1haWx9KSIpLAopCg">
 <CodeGroup>
@@ -520,7 +522,7 @@ Expandable rows work alongside all other DataTable features — sorting, search,
 
 ### Formatting
 
-The `format` field applies an [expression pipe](/expressions/pipes) to every value in a column. Any pipe that works in `{{ value | pipe }}` expressions works here — `currency`, `percent:1`, `number:2`, `date:long`, and any future pipes you add.
+The `format` field applies an [expression pipe](/concepts/expressions#formatting-with-pipes) to every value in a column. Any pipe that works in `{{ value | pipe }}` expressions works here — `currency`, `percent:1`, `number:2`, `date:long`, and any future pipes you add.
 
 <ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"product","header":"Product","sortable":false},{"key":"revenue","header":"Revenue","sortable":true,"format":"currency"},{"key":"growth","header":"Growth","sortable":true,"format":"percent:1"},{"key":"units","header":"Units","sortable":true,"format":"number"}],"rows":[{"product":"Widget Pro","revenue":128450,"growth":0.142,"units":3210},{"product":"Gadget Plus","revenue":84200,"growth":0.087,"units":1980},{"product":"Doohickey","revenue":52100,"growth":-0.031,"units":870}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgRGF0YVRhYmxlLCBEYXRhVGFibGVDb2x1bW4KCkRhdGFUYWJsZSgKICAgIGNvbHVtbnM9WwogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InByb2R1Y3QiLCBoZWFkZXI9IlByb2R1Y3QiKSwKICAgICAgICBEYXRhVGFibGVDb2x1bW4oCiAgICAgICAgICAgIGtleT0icmV2ZW51ZSIsIGhlYWRlcj0iUmV2ZW51ZSIsCiAgICAgICAgICAgIHNvcnRhYmxlPVRydWUsIGZvcm1hdD0iY3VycmVuY3kiLAogICAgICAgICksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9Imdyb3d0aCIsIGhlYWRlcj0iR3Jvd3RoIiwKICAgICAgICAgICAgc29ydGFibGU9VHJ1ZSwgZm9ybWF0PSJwZXJjZW50OjEiLAogICAgICAgICksCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKAogICAgICAgICAgICBrZXk9InVuaXRzIiwgaGVhZGVyPSJVbml0cyIsCiAgICAgICAgICAgIHNvcnRhYmxlPVRydWUsIGZvcm1hdD0ibnVtYmVyIiwKICAgICAgICApLAogICAgXSwKICAgIHJvd3M9WwogICAgICAgIHsicHJvZHVjdCI6ICJXaWRnZXQgUHJvIiwgInJldmVudWUiOiAxMjg0NTAsICJncm93dGgiOiAwLjE0MiwgInVuaXRzIjogMzIxMH0sCiAgICAgICAgeyJwcm9kdWN0IjogIkdhZGdldCBQbHVzIiwgInJldmVudWUiOiA4NDIwMCwgImdyb3d0aCI6IDAuMDg3LCAidW5pdHMiOiAxOTgwfSwKICAgICAgICB7InByb2R1Y3QiOiAiRG9vaGlja2V5IiwgInJldmVudWUiOiA1MjEwMCwgImdyb3d0aCI6IC0wLjAzMSwgInVuaXRzIjogODcwfSwKICAgIF0sCikK">
 <CodeGroup>
@@ -574,7 +576,7 @@ DataTable(
 </CodeGroup>
 </ComponentPreview>
 
-See [Pipes](/expressions/pipes) for the full list of available format pipes.
+See [Pipes](/concepts/expressions#formatting-with-pipes) for the full list of available format pipes.
 
 ### Components
 
@@ -725,6 +727,10 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
   Show a search input above the table for narrowing visible rows.
 </ParamField>
 
+<ParamField body="search_placeholder" type="str | None" default="None">
+  Placeholder text in the search input. When omitted or `None`, the renderer uses `"Filter..."`.
+</ParamField>
+
 <ParamField body="paginated" type="bool" default="False">
   Show pagination controls below the table.
 </ParamField>
@@ -734,7 +740,7 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
 </ParamField>
 
 <ParamField body="on_row_click" type="Action | list[Action] | None" default="None">
-  Action(s) to fire when a row is clicked. `$event` is the row's data dict. The clicked row highlights visually.
+  Action(s) to fire when a row is clicked. `$event` is the row's data dict; access row fields with `$event.<field>`. Clicking anywhere in the row highlights it and fires the action.
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">
@@ -799,9 +805,12 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
 ```json DataTable
 {
   "type": "DataTable",
+  "id?": "string",
+  "onMount?": "any",
   "columns": "[DataTableColumn] (required)",
-  "rows?": "dict[] | string",
+  "rows?": "object[] | string",
   "search?": false,
+  "searchPlaceholder?": "string | null (defaults to Filter...)",
   "paginated?": false,
   "pageSize?": 10,
   "onRowClick?": "Action | Action[]",
@@ -818,6 +827,7 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
   "width?": "string",
   "minWidth?": "string",
   "maxWidth?": "string",
+  "align?": "left | center | right",
   "headerClass?": "string",
   "cellClass?": "string"
 }

@@ -90,7 +90,7 @@ class Tabs(StatefulMixin, ContainerComponent):
     ```
     """
 
-    _auto_name: ClassVar[str] = "tabs"
+    _auto_name: ClassVar[str | None] = "tabs"
     type: Literal["Tabs"] = "Tabs"
     variant: TabsVariant = Field(
         default="default",

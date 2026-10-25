@@ -215,7 +215,7 @@ class StatefulMixin:
     `str | None` for Tabs).
     """
 
-    _auto_name: ClassVar[str]
+    _auto_name: ClassVar[str | None]
     name: str | None
     value: Any
 
@@ -279,13 +279,13 @@ class Component(BaseModel):
 
     css_class: Annotated[str | None, BeforeValidator(_coerce_css_class)] = Field(
         default=None,
-        alias="cssClass",
+        serialization_alias="cssClass",
         description="CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes.",
     )
 
     on_mount: Any | None = Field(
         default=None,
-        alias="onMount",
+        serialization_alias="onMount",
         description="Action(s) to execute when this component mounts.",
     )
 
@@ -333,7 +333,9 @@ class Component(BaseModel):
         # Auto-generate name and validate for stateful components
         if isinstance(self, StatefulMixin):
             if self.name is None:
-                object.__setattr__(self, "name", _generate_key(self._auto_name))
+                object.__setattr__(
+                    self, "name", _generate_key(cast(str, self._auto_name))
+                )
             self._validate_state_key_name()
 
         # Skip auto-attach when defer=True was passed

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   check_generated:
@@ -15,8 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Setup uv
         uses: ./.github/actions/setup-uv
@@ -25,7 +24,14 @@ jobs:
           resolution: locked
 
       - name: Install renderer dependencies
-        run: cd renderer && npm ci
+        run: |
+          git fetch origin "${{ github.base_ref || github.ref_name }}" --depth=1
+          git show "origin/${{ github.base_ref || github.ref_name }}:renderer/package-lock.json" > /tmp/base-package-lock.json
+          node .github/scripts/check-npm-package-age.mjs --lockfile renderer/package-lock.json --base-lockfile /tmp/base-package-lock.json --days 7
+          git show "origin/${{ github.base_ref || github.ref_name }}:tools/package-lock.json" > /tmp/base-tools-package-lock.json
+          node .github/scripts/check-npm-package-age.mjs --lockfile tools/package-lock.json --base-lockfile /tmp/base-tools-package-lock.json --days 7
+          npm ci --prefix renderer
+          npm ci --prefix tools
 
       - name: Build docs
         run: uv run prefab dev build-docs
@@ -33,17 +39,14 @@ jobs:
       - name: Build bundled renderer
         run: uv run prefab dev build-renderers
 
-      - name: Commit regenerated files if stale
+      - name: Check regenerated files
         run: |
           STALE_FILES=$(git diff --name-only)
           if [ -n "$STALE_FILES" ]; then
             echo "Stale files detected:"
             echo "$STALE_FILES"
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add -u
-            git commit -m "Regenerate build artifacts"
-            git push
+            echo "::error::Generated files are stale. Run 'prefab dev build-docs' and 'prefab dev build-renderers' locally, then commit the results."
+            exit 1
           else
             echo "All generated files are up to date."
           fi

@@ -34,7 +34,11 @@ jobs:
           resolution: locked
 
       - name: Install renderer dependencies
-        run: cd renderer && npm ci
+        run: |
+          git fetch origin "${{ github.base_ref || github.ref_name }}" --depth=1
+          git show "origin/${{ github.base_ref || github.ref_name }}:renderer/package-lock.json" > /tmp/base-package-lock.json
+          node .github/scripts/check-npm-package-age.mjs --lockfile renderer/package-lock.json --base-lockfile /tmp/base-package-lock.json --days 7
+          cd renderer && npm ci
 
       - name: Run prek
         uses: j178/prek-action@v1

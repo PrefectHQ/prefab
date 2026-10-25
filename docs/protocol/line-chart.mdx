@@ -50,11 +50,18 @@ Line chart with one or more series.
       "description": "Row data or `{{ interpolation }}` reference"
     },
     "series": {
-      "description": "Series to render as lines",
-      "items": {
-        "$ref": "ChartSeries"
-      },
-      "type": "array"
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "ChartSeries"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Series to render as lines, or `{{ interpolation }}` for a filtered list"
     },
     "xAxis": {
       "type": [
@@ -109,13 +116,9 @@ Line chart with one or more series.
       "description": "Show y-axis with tick labels",
       "type": "boolean"
     },
-    "yAxisFormat": {
+    "valueFormat": {
       "default": "auto",
-      "description": "Y-axis tick format: 'compact' shows 60K instead of 60000",
-      "enum": [
-        "auto",
-        "compact"
-      ],
+      "description": "Value-axis tick and tooltip value format pipe, such as 'compact', 'currency', or 'percent:1'",
       "type": "string"
     }
   },

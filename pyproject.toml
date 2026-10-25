@@ -44,7 +44,7 @@ dev = [
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.6.1",
     "ruff>=0.12.8",
-    "ty>=0.0.25",
+    "ty>=0.0.89",
     "prek>=0.1.0",
     "loq>=0.1.0a3",
     "jsonschema>=4.26.0",
@@ -68,7 +68,7 @@ source = "uv-dynamic-versioning"
 packages = ["src/prefab_ui"]
 
 [tool.hatch.build.targets.sdist.force-include]
-"skills" = "src/prefab_ui/skills"
+"skills" = "skills"
 
 [tool.hatch.build.targets.wheel.force-include]
 "skills" = "src/prefab_ui/skills"
@@ -78,6 +78,9 @@ vcs = "git"
 style = "pep440"
 bump = true
 fallback-version = "0.0.0"
+
+[tool.uv]
+exclude-newer = "1 week"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -112,6 +115,8 @@ missing-argument = "ignore"
 invalid-argument-type = "ignore"
 
 [tool.ruff.lint]
+# Keep our lint policy stable when Ruff adds new default rule families.
+select = ["E4", "E7", "E9", "F"]
 fixable = ["ALL"]
 ignore = ["COM812", "PLR0913", "SIM102"]
 extend-select = ["B", "C4", "I", "PIE", "RUF", "SIM", "UP"]

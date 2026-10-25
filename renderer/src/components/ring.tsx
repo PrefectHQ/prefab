@@ -203,7 +203,7 @@ export function Ring({
         label && (
           <span
             className={cn(
-              "pf-ring-label-overlay absolute",
+              "pf-ring-label-overlay absolute inset-0 flex items-center justify-center",
               LABEL_CLASS[size] ?? LABEL_CLASS.default,
             )}
           >

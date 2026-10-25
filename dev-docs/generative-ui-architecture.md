@@ -27,7 +27,7 @@ wire = await sandbox.run('''
     app = PrefabApp(view=view, state={"conf": 75})
 ''', data={"revenue": 1_200_000})
 
-# wire is a dict: {"$prefab": {"version": "0.2"}, "view": {...}, "state": {...}}
+# wire is a dict: {"$prefab": {"version": "0.3"}, "view": {...}, "state": {...}}
 ```
 
 The sandbox handles:

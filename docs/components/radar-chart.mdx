@@ -6,7 +6,7 @@ icon: chart-radar
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-RadarChart plots data across multiple axes radiating from a center point, forming a spider-web shape. Each `ChartSeries` becomes a filled polygon, making it easy to compare profiles across categories.
+RadarChart plots data across multiple axes radiating from a center point, forming a spider-web shape. Each `ChartSeries` becomes a filled polygon, making it easy to compare profiles across categories. See [Charts](/components/charts) for the shared data, series, and formatting model.
 
 ## Basic Usage
 
@@ -61,14 +61,14 @@ RadarChart(
 
 ## Minimal
 
-Hide the polar grid for a cleaner look.
+Set `show_grid=False` to hide the polar grid. The filled shape then stands on its own — useful when you want readers to compare overall silhouettes rather than read values off each spoke.
 
-<ComponentPreview json={{"view":{"type":"RadarChart","data":[{"subject":"Math","alice":120,"bob":98},{"subject":"English","alice":98,"bob":130},{"subject":"Science","alice":86,"bob":110},{"subject":"History","alice":99,"bob":95},{"subject":"Art","alice":85,"bob":90}],"series":[{"dataKey":"score","label":"Score"}],"axisKey":"subject","height":300,"filled":true,"showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false}}} playground="UmFkYXJDaGFydCgKICAgIGRhdGE9ZGF0YSwKICAgIHNlcmllcz1bQ2hhcnRTZXJpZXMoZGF0YV9rZXk9InNjb3JlIiwgbGFiZWw9IlNjb3JlIildLAogICAgYXhpc19rZXk9InN1YmplY3QiLAogICAgc2hvd19ncmlkPUZhbHNlLAopCg">
+<ComponentPreview json={{"view":{"type":"RadarChart","data":[{"subject":"Math","alice":120,"bob":98},{"subject":"English","alice":98,"bob":130},{"subject":"Science","alice":86,"bob":110},{"subject":"History","alice":99,"bob":95},{"subject":"Art","alice":85,"bob":90}],"series":[{"dataKey":"alice","label":"Alice"}],"axisKey":"subject","height":300,"filled":true,"showDots":false,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":false}}} playground="UmFkYXJDaGFydCgKICAgIGRhdGE9ZGF0YSwKICAgIHNlcmllcz1bQ2hhcnRTZXJpZXMoZGF0YV9rZXk9ImFsaWNlIiwgbGFiZWw9IkFsaWNlIildLAogICAgYXhpc19rZXk9InN1YmplY3QiLAogICAgc2hvd19ncmlkPUZhbHNlLAopCg">
 <CodeGroup>
 ```python Python {5} icon="python"
 RadarChart(
     data=data,
-    series=[ChartSeries(data_key="score", label="Score")],
+    series=[ChartSeries(data_key="alice", label="Alice")],
     axis_key="subject",
     show_grid=False,
 )
@@ -84,7 +84,7 @@ RadarChart(
       {"subject": "History", "alice": 99, "bob": 95},
       {"subject": "Art", "alice": 85, "bob": 90}
     ],
-    "series": [{"dataKey": "score", "label": "Score"}],
+    "series": [{"dataKey": "alice", "label": "Alice"}],
     "axisKey": "subject",
     "height": 300,
     "filled": true,
@@ -206,14 +206,17 @@ RadarChart(
 ```json RadarChart
 {
   "type": "RadarChart",
-  "data": "Action[] | string (required)",
+  "id?": "string",
+  "onMount?": "any",
+  "data": "object[] | string (required)",
   "series": "[ChartSeries] (required)",
   "axisKey?": "string",
   "height?": "300",
   "filled?": true,
   "showDots?": false,
-  "showLegend?": false,
+  "showLegend?": true,
   "showTooltip?": true,
+  "animate?": true,
   "showGrid?": true,
   "cssClass?": "string"
 }

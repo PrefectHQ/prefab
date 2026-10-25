@@ -66,7 +66,7 @@ class Form(ContainerComponent):
     gap: int = Field(default=4, exclude=True)
     on_submit: Action | list[Action] | None = Field(
         default=None,
-        alias="onSubmit",
+        serialization_alias="onSubmit",
         description="Action(s) to execute when the form is submitted",
     )
 
@@ -327,7 +327,7 @@ def _get_ui_hints(field_info: FieldInfo) -> dict[str, Any]:
     """Extract UI hints from json_schema_extra."""
     extra = field_info.json_schema_extra
     if isinstance(extra, dict):
-        ui = extra.get("ui")  # type: ignore[union-attr]  # ty:ignore[invalid-argument-type]
+        ui = extra.get("ui")  # type: ignore[union-attr]
         if isinstance(ui, dict):
             return ui
     return {}

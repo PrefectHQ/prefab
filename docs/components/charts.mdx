@@ -1,0 +1,101 @@
+---
+title: Charts
+sidebarTitle: Overview
+description: The shared data, series, and formatting model behind every Prefab chart.
+icon: chart-line
+---
+
+import { ComponentPreview } from '/snippets/component-preview.mdx'
+
+Every Prefab chart — bar, line, area, scatter, radar, and the rest — is built from the same three pieces: a list of **data** rows, one or more **series** that each pick a field to plot, and an **axis** field that labels the categories. Learn this model once and every chart page reads as the same idea with a different shape.
+
+## Data and series
+
+`data` is a list of dictionaries, one per row. Each row holds a category label plus one value per series. A `ChartSeries` maps a single `data_key` to a drawn series, so plotting two metrics side by side means two `ChartSeries` reading two keys from the same rows.
+
+<ComponentPreview json={{"view":{"type":"BarChart","data":[{"month":"Jan","desktop":186,"mobile":80},{"month":"Feb","desktop":305,"mobile":200},{"month":"Mar","desktop":237,"mobile":120}],"series":[{"dataKey":"desktop","label":"Desktop"},{"dataKey":"mobile","label":"Mobile"}],"xAxis":"month","height":300,"stacked":false,"horizontal":false,"barRadius":4,"showLegend":true,"showTooltip":true,"animate":true,"showGrid":true,"showYAxis":true,"valueFormat":"auto"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IEJhckNoYXJ0LCBDaGFydFNlcmllcwoKZGF0YSA9IFsKICAgIHsibW9udGgiOiAiSmFuIiwgImRlc2t0b3AiOiAxODYsICJtb2JpbGUiOiA4MH0sCiAgICB7Im1vbnRoIjogIkZlYiIsICJkZXNrdG9wIjogMzA1LCAibW9iaWxlIjogMjAwfSwKICAgIHsibW9udGgiOiAiTWFyIiwgImRlc2t0b3AiOiAyMzcsICJtb2JpbGUiOiAxMjB9LApdCgpCYXJDaGFydCgKICAgIGRhdGE9ZGF0YSwKICAgIHNlcmllcz1bCiAgICAgICAgQ2hhcnRTZXJpZXMoZGF0YV9rZXk9ImRlc2t0b3AiLCBsYWJlbD0iRGVza3RvcCIpLAogICAgICAgIENoYXJ0U2VyaWVzKGRhdGFfa2V5PSJtb2JpbGUiLCBsYWJlbD0iTW9iaWxlIiksCiAgICBdLAogICAgeF9heGlzPSJtb250aCIsCikK">
+<CodeGroup>
+```python Python icon="python"
+from prefab_ui.components.charts import BarChart, ChartSeries
+
+data = [
+    {"month": "Jan", "desktop": 186, "mobile": 80},
+    {"month": "Feb", "desktop": 305, "mobile": 200},
+    {"month": "Mar", "desktop": 237, "mobile": 120},
+]
+
+BarChart(
+    data=data,
+    series=[
+        ChartSeries(data_key="desktop", label="Desktop"),
+        ChartSeries(data_key="mobile", label="Mobile"),
+    ],
+    x_axis="month",
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "BarChart",
+    "data": [
+      {"month": "Jan", "desktop": 186, "mobile": 80},
+      {"month": "Feb", "desktop": 305, "mobile": 200},
+      {"month": "Mar", "desktop": 237, "mobile": 120}
+    ],
+    "series": [
+      {"dataKey": "desktop", "label": "Desktop"},
+      {"dataKey": "mobile", "label": "Mobile"}
+    ],
+    "xAxis": "month",
+    "height": 300,
+    "stacked": false,
+    "horizontal": false,
+    "barRadius": 4,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "showGrid": true,
+    "showYAxis": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+The field that names each category is the **axis**. Cartesian charts (bar, line, area, scatter) call it `x_axis`; radar charts call it `axis_key`. It points at the row field that labels each point — `"month"` above — while every `ChartSeries` reads a value field. Pie, radial, and sparkline charts take a single series and skip the explicit axis.
+
+`data` can also be a live state key instead of a literal list. Pass an `Rx` or a `{{ key }}` string to bind the chart to data that a server action loads at runtime, and the chart re-renders whenever that key changes.
+
+## ChartSeries
+
+A `ChartSeries` describes one drawn series. `data_key` is the only required field — it names the row field to plot. `label` sets the legend and tooltip text, and `color` overrides the automatic palette with any CSS color or theme variable.
+
+```python
+from prefab_ui.components.charts import ChartSeries
+
+ChartSeries(data_key="revenue", label="Revenue", color="var(--chart-1)")
+```
+
+Series colors default to the theme's chart palette in order, so most charts need only `data_key` and `label`. Reach for `color` when a specific series carries meaning — a "danger" red, a brand color, a muted gray for a baseline.
+
+## Formatting values
+
+`value_format` formats the numbers a chart renders on its value axis and in tooltips. It accepts the same pipe strings as [expression pipes](/concepts/expressions#formatting-with-pipes) and data table columns: `currency`, `currency:EUR`, `percent:1`, `compact:0`, and the rest. The raw data stays untouched; only the display is formatted.
+
+```python
+BarChart(data=data, series=series, x_axis="month", value_format="currency")
+```
+
+This keeps formatting logic out of your data: feed the chart raw numbers like `42000000` and let `value_format="compact"` render `42M` at display time.
+
+## Display toggles
+
+A common set of booleans controls chart chrome across the cartesian charts. Each defaults to a sensible value, so you configure them only to move away from the default:
+
+- `show_legend` — the series legend, off by default until you have more than one series worth naming.
+- `show_tooltip` — the hover tooltip, on by default.
+- `show_grid` — background gridlines, on by default. Turn them off for a compact, glanceable read where the shape matters more than exact values.
+- `show_y_axis` — the value axis and its tick labels, on by default. Hide it for sparkline-like contexts.
+
+Each individual chart page documents the props specific to its shape — `stacked` and `curve` for area, `horizontal` for bar, `inner_radius` for radial — on top of this shared foundation.

@@ -70,6 +70,11 @@ _WIRE_ONLY_FIXTURES: dict[str, dict[str, Any]] = {
 }
 
 
+def _dump_json(value: Any) -> str:
+    """Serialize generated fixtures in a stable, review-friendly order."""
+    return json.dumps(value, indent=2, sort_keys=True) + "\n"
+
+
 def _minimal_value(field_info: FieldInfo, field_name: str) -> Any:
     """Produce a minimal valid value for a required Pydantic field."""
     annotation = field_info.annotation
@@ -256,26 +261,20 @@ def generate_all() -> dict[str, Any]:
 
     for name, cls in components.items():
         fixture = generate_component_fixture(cls)
-        (COMPONENTS_DIR / f"{name}.json").write_text(
-            json.dumps(fixture, indent=2) + "\n"
-        )
+        (COMPONENTS_DIR / f"{name}.json").write_text(_dump_json(fixture))
 
     for name, fixture in _WIRE_ONLY_FIXTURES.items():
-        (COMPONENTS_DIR / f"{name}.json").write_text(
-            json.dumps(fixture, indent=2) + "\n"
-        )
+        (COMPONENTS_DIR / f"{name}.json").write_text(_dump_json(fixture))
 
     for discriminator, cls in actions.items():
         fixture = generate_action_fixture(cls)
-        (ACTIONS_DIR / f"{discriminator}.json").write_text(
-            json.dumps(fixture, indent=2) + "\n"
-        )
+        (ACTIONS_DIR / f"{discriminator}.json").write_text(_dump_json(fixture))
 
     manifest = {
         "components": component_names_list,
         "actions": action_names_list,
     }
-    (SCHEMAS_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    (SCHEMAS_DIR / "manifest.json").write_text(_dump_json(manifest))
 
     return manifest
 

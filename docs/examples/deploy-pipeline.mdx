@@ -224,3 +224,13 @@ with Card(css_class="w-full"):
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## How It Works
+
+This page is one [DataTable](/components/data-table) whose cells are themselves components. The `services` list holds tuples of `(name, stage, pct, variant)`, and the build loop turns each into a row dict where every value is a fully constructed component rather than a string: a [Span](/components/div-span) for the bolded service name, a [Badge](/components/badge) for the stage, a [Progress](/components/progress) bar for rollout, and another Badge for the percentage. Because a DataTable cell renders any component, the table doubles as a layout grid for rich inline widgets — progress bars and status pills sit in aligned columns without any extra markup.
+
+The `variant` from each tuple is the through-line that keeps a row visually coherent. A single value (`success`, `warning`, `default`, or `destructive`) is threaded into the stage badge, the progress bar, and the status badge at once, so a blocked service reads red across all three columns and a healthy one reads green. Computing that classification once per service in Python guarantees the three components can't fall out of sync.
+
+The column definitions control structure rather than content. `DataTableColumn(key="progress", header="Rollout", width="200px")` reserves a fixed width so the bars line up, `align="center"` centers the stage badges, and `align="right"` with an empty `header=""` tucks the status badge against the row's edge. Only `Service` is marked `sortable=True`; combined with `search=True`, that gives you alphabetical sorting and a filter box over a table whose cells are components.
+
+The data here is static and embedded in the script, so the page is entirely client-side — the renderer handles sorting and search on its own with no server round-trip. To make it live, you would replace the hardcoded `services` list with data fetched from your backend. That is the client/server boundary in Prefab: a [Fetch](/actions/fetch) or [CallTool](/actions/call-tool) action runs on the client, calls your server, and writes the response into [state](/concepts/state) — typically via `on_success` reading `$result` — after which the same table rebuilds reactively from the new rows.

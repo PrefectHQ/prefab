@@ -44,7 +44,38 @@ def _get_class(name: str) -> type | None:
     except ImportError:
         pass
 
+    try:
+        import prefab_ui.components.charts as charts
+
+        cls = getattr(charts, name, None)
+        if cls is not None:
+            return cls
+    except ImportError:
+        pass
+
     return None
+
+
+def _item_label(items: dict[str, Any]) -> str:
+    """Label a single array item type (e.g. ``Action``, ``number``, ``object``)."""
+    if "$ref" in items:
+        return items["$ref"].rsplit("/", 1)[-1]
+    if "anyOf" in items:
+        for opt in items["anyOf"]:
+            if opt.get("type") == "null":
+                continue
+            t = opt.get("type", "any")
+            return "number" if t == "integer" else t
+        return "any"
+    t = items.get("type", "any") if items else "any"
+    return "number" if t == "integer" else t
+
+
+def _array_label(arr: dict[str, Any]) -> str:
+    """Label an array branch by its item type (e.g. ``Action[]``, ``number[]``, ``[number, number]``)."""
+    if "prefixItems" in arr:
+        return "[" + ", ".join(_item_label(it) for it in arr["prefixItems"]) + "]"
+    return _item_label(arr.get("items", {})) + "[]"
 
 
 def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
@@ -68,10 +99,13 @@ def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
             elif opt.get("type") == "null":
                 continue  # skip null in display, the ? suffix handles optionality
             elif opt.get("type") == "array":
-                if "Action[]" not in parts:
-                    parts.append("Action[]")
+                label = _array_label(opt)
+                if label not in parts:
+                    parts.append(label)
             else:
-                parts.append(_format_value(opt, defs))
+                label = _format_value(opt, defs)
+                if label not in parts:
+                    parts.append(label)
         return " | ".join(parts) if parts else "any"
 
     # Array of components (children)
@@ -104,6 +138,33 @@ def _format_value(info: dict[str, Any], defs: dict[str, Any]) -> str:
     return t
 
 
+def _wire_field_name(cls: type, field_name: str) -> str:
+    """Return the field name used in serialized protocol JSON."""
+    field = getattr(cls, "model_fields", {}).get(field_name)
+    if field is None:
+        return field_name
+    return field.serialization_alias or field.alias or field_name
+
+
+def _wire_properties(cls: type, props: dict[str, Any]) -> dict[str, Any]:
+    """Rename schema properties to the serialized wire names."""
+    model_fields = getattr(cls, "model_fields", {})
+    renamed: dict[str, Any] = {}
+    consumed: set[str] = set()
+
+    for field_name, field in model_fields.items():
+        source_name = field.alias or field_name
+        if source_name in props:
+            renamed[_wire_field_name(cls, field_name)] = props[source_name]
+            consumed.add(source_name)
+
+    for prop_name, prop in props.items():
+        if prop_name not in consumed:
+            renamed.setdefault(prop_name, prop)
+
+    return renamed
+
+
 def _generate_pseudocode(
     title: str,
     class_name: str,
@@ -112,10 +173,12 @@ def _generate_pseudocode(
     cls = _get_class(class_name)
     if cls is None:
         return None
+    if not hasattr(cls, "model_json_schema"):
+        return None
 
     schema = cls.model_json_schema()
-    props = schema.get("properties", {})
-    required = set(schema.get("required", []))
+    props = _wire_properties(cls, schema.get("properties", {}))
+    required = {_wire_field_name(cls, name) for name in schema.get("required", [])}
     defs = schema.get("$defs", {})
 
     # Values that should not be quoted (booleans, numbers)
@@ -175,7 +238,6 @@ def _name_to_class(card_name: str) -> tuple[str, bool]:
         "SetState": ("SetState", True),
         "ToggleState": ("ToggleState", True),
         "ShowToast": ("ShowToast", True),
-        "Radio": ("RadioGroup", False),
         "TableHead / TableCell": ("TableCell", False),
     }
     if card_name in special:

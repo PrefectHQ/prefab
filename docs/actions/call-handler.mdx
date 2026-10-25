@@ -46,8 +46,7 @@ The handler receives these via `ctx.arguments`:
 The handler's return value is available as `$result` in `on_success` callbacks, just like `CallTool`:
 
 ```python
-from prefab_ui.actions import CallHandler, SetState, ShowToast
-from prefab_ui.rx import RESULT
+from prefab_ui.actions import CallHandler, ShowToast
 
 Button("Validate", on_click=CallHandler(
     "validate",
@@ -80,6 +79,14 @@ Slider(name="infra", on_change=[
 
 <ParamField body="arguments" type="dict[str, Any] | None" default="None">
   Extra arguments passed to the handler via `ctx.arguments`. Values support `{{ key }}` interpolation.
+</ParamField>
+
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the handler returns. The return value is available as `$result`.
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Action(s) to run when the handler throws. The error message is available as `$error`.
 </ParamField>
 </Card>
 
