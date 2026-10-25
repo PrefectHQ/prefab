@@ -26,6 +26,8 @@ from prefab_ui.components.charts import (
     PieChart,
     RadarChart,
     RadialChart,
+    ScatterChart,
+    Sparkline,
     WaterfallChart,
 )
 from prefab_ui.components.control_flow import ForEach
@@ -67,6 +69,8 @@ for cls in [
     PieChart,
     RadarChart,
     RadialChart,
+    ScatterChart,
+    Sparkline,
     WaterfallChart,
     ForEach,
 ]:

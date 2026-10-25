@@ -3,7 +3,7 @@ title: Sparkline
 description: JSON Schema for the Sparkline component.
 ---
 
-A compact inline chart for showing trends at a glance — no axes, labels, or tooltips.
+Compact inline chart for showing trends at a glance.
 
 ```json
 {
@@ -22,27 +22,54 @@ A compact inline chart for showing trends at a glance — no axes, labels, or to
       "default": null,
       "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
     },
+    "ariaLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Accessible name, independent of visible text."
+    },
+    "ariaLabelledBy": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Space-separated IDs of elements providing the accessible name."
+    },
     "cssClass": {
       "type": [
         "string",
         "null"
       ],
       "default": null,
-      "description": "CSS/Tailwind classes for styling. Use w-* classes to control width."
+      "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "onMount": {
+      "default": null,
+      "description": "Action(s) to execute when this component mounts."
     },
     "data": {
-      "oneOf": [
+      "anyOf": [
         {
-          "type": "array",
           "items": {
-            "type": "number"
-          }
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "type": "array"
         },
         {
           "type": "string"
         }
       ],
-      "description": "Flat list of numeric values, or a {{ field }} interpolation reference."
+      "description": "Flat list of numeric values or `{{ interpolation }}` reference"
     },
     "height": {
       "type": [
@@ -50,20 +77,27 @@ A compact inline chart for showing trends at a glance — no axes, labels, or to
         "null"
       ],
       "default": null,
-      "description": "Chart height in pixels. Defaults to 24px via CSS."
+      "description": "Chart height in pixels (default 24px via CSS)"
     },
     "variant": {
-      "default": "default",
-      "description": "Visual variant: default, success, warning, destructive, info, muted",
-      "enum": [
-        "default",
-        "success",
-        "warning",
-        "destructive",
-        "info",
-        "muted"
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "success",
+            "warning",
+            "destructive",
+            "info",
+            "muted"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
       ],
-      "type": "string"
+      "default": "default",
+      "description": "Visual variant: default, success, warning, destructive, info, muted"
     },
     "indicatorClass": {
       "type": [
@@ -71,16 +105,16 @@ A compact inline chart for showing trends at a glance — no axes, labels, or to
         "null"
       ],
       "default": null,
-      "description": "Tailwind classes for the line or fill color. Use stroke-* classes for color overrides."
+      "description": "Tailwind classes for the line/fill (e.g. 'stroke-blue-500')"
     },
     "fill": {
-      "type": "boolean",
       "default": false,
-      "description": "Show a gradient area fill under the line."
+      "description": "Show area fill under the line",
+      "type": "boolean"
     },
     "curve": {
       "default": "linear",
-      "description": "Line interpolation style between data points.",
+      "description": "Line interpolation: linear, smooth, or step",
       "enum": [
         "linear",
         "smooth",
@@ -89,13 +123,13 @@ A compact inline chart for showing trends at a glance — no axes, labels, or to
       "type": "string"
     },
     "strokeWidth": {
-      "type": "number",
       "default": 1.5,
-      "description": "Line thickness in pixels."
+      "description": "Line thickness in pixels",
+      "type": "number"
     },
     "mode": {
       "default": "line",
-      "description": "Chart mode: line draws a polyline, bar draws vertical bars.",
+      "description": "Chart mode: line or bar",
       "enum": [
         "line",
         "bar"

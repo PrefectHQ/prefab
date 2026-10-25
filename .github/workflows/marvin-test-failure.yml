@@ -23,13 +23,13 @@ jobs:
       actions: read # Required for Claude to read CI results
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 1
 
       - name: Generate Marvin App token
         id: marvin-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ secrets.MARVIN_APP_ID }}
           private-key: ${{ secrets.MARVIN_APP_PRIVATE_KEY }}
@@ -159,7 +159,7 @@ jobs:
                 "type": "stdio",
                 "command": "uvx",
                 "args": [
-                  "github-research-mcp"
+                  "github-research-mcp==0.2.0"
                 ],
                 "env": {
                   "DISABLE_SUMMARIES": "true",
@@ -175,7 +175,7 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@v1.0.252
         with:
           github_token: ${{ steps.marvin-token.outputs.token }}
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY_FOR_CI }}

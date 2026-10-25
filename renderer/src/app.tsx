@@ -190,8 +190,7 @@ export function App() {
       const stateData = (structured.state ?? {}) as Record<string, unknown>;
 
       const meta = structured._meta as
-        | { fastmcp?: { app?: string } }
-        | undefined;
+        { fastmcp?: { app?: string } } | undefined;
       setAppName(meta?.fastmcp?.app);
 
       // Update key bindings from tool result (clear if absent)

@@ -370,13 +370,12 @@ it.each(["Dialog", "Popover"])(
     expect(state.get("clicked")).toBe(true);
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     expect(button.getAttribute("aria-expanded")).toBe("true");
-    await act(
-      async () =>
-        document
-          .querySelector('[role="dialog"]')
-          ?.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
-          ),
+    await act(async () =>
+      document
+        .querySelector('[role="dialog"]')
+        ?.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        ),
     );
     expect(button.getAttribute("aria-expanded")).toBe("false");
   },
@@ -465,9 +464,8 @@ it("keeps an option's explicit name when Select consumes its child metadata", as
     },
     { record: 1042 },
   );
-  await act(
-    async () =>
-      container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
+  await act(async () =>
+    container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
   );
   const option = document.querySelector('[role="option"]');
   expect(option?.getAttribute("aria-label")).toBe("Record 1042");
@@ -494,9 +492,8 @@ it("preserves Select group, label and separator naming metadata", async () => {
       { type: "SelectOption", value: "b", label: "Pro" },
     ],
   });
-  await act(
-    async () =>
-      container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
+  await act(async () =>
+    container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
   );
   for (const name of ["Plans", "Plan heading", "Plan divider"]) {
     expect(document.querySelector(`[aria-label="${name}"]`)).not.toBeNull();
@@ -521,8 +518,8 @@ it("preserves Combobox group and label naming metadata", async () => {
       },
     ],
   });
-  await act(
-    async () => container.querySelector<HTMLButtonElement>("button")?.click(),
+  await act(async () =>
+    container.querySelector<HTMLButtonElement>("button")?.click(),
   );
   expect(document.querySelector('[aria-label="Plans"]')).not.toBeNull();
   expect(document.querySelector('[aria-label="Plan heading"]')).not.toBeNull();

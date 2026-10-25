@@ -119,16 +119,12 @@ it("retains selected values and disabled option behavior through label clicks", 
   });
   const radios = container.querySelectorAll('[role="radio"]');
   expect(radios[0].getAttribute("aria-checked")).toBe("true");
-  await act(
-    async () =>
-      container.querySelector<HTMLLabelElement>('label[for="pro"]')?.click(),
+  await act(async () =>
+    container.querySelector<HTMLLabelElement>('label[for="pro"]')?.click(),
   );
   expect(state.get("plan")).toBe("pro");
-  await act(
-    async () =>
-      container
-        .querySelector<HTMLLabelElement>('label[for="disabled"]')
-        ?.click(),
+  await act(async () =>
+    container.querySelector<HTMLLabelElement>('label[for="disabled"]')?.click(),
   );
   expect(state.get("plan")).toBe("pro");
   expect(radios[2].getAttribute("aria-disabled")).toBe("true");
