@@ -46,50 +46,56 @@ it("runs isolated local app tools in shadow-root documentation previews", async 
   expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("3");
 });
 
-it("unmounting one preview preserves another preview's owned interval", async () => {
-  vi.useFakeTimers();
-  const payload = {
-    view: {
-      type: "Column",
-      children: [
-        { type: "Text", content: "{{ count }}" },
+it.each([false, true])(
+  "unmounting one preview preserves another interval (app tool: %s)",
+  async (appTool) => {
+    vi.useFakeTimers();
+    const interval = {
+      action: "setInterval",
+      duration: 100,
+      onTick: { action: "setState", key: "count", value: "{{ count + 1 }}" },
+    };
+    const payload = {
+      view: {
+        type: "Column",
+        children: [
+          { type: "Text", content: "{{ count }}" },
+          {
+            type: "Button",
+            label: "Start",
+            onClick: appTool
+              ? { action: "invokeAppTool", tool: "start" }
+              : interval,
+          },
+        ],
+      },
+      state: { count: 0 },
+      tools: [
         {
-          type: "Button",
-          label: "Start",
-          onClick: { action: "invokeAppTool", tool: "start" },
+          name: "start",
+          inputSchema: { type: "object" },
+          result: {},
+          actions: interval,
         },
       ],
-    },
-    state: { count: 0 },
-    tools: [
-      {
-        name: "start",
-        inputSchema: { type: "object" },
-        result: {},
-        actions: {
-          action: "setInterval",
-          duration: 100,
-          onTick: {
-            action: "setState",
-            key: "count",
-            value: "{{ count + 1 }}",
-          },
-        },
-      },
-    ],
-  };
-  const hosts = [document.createElement("div"), document.createElement("div")];
-  document.body.append(...hosts);
-  await act(async () => {
-    for (const host of hosts)
-      mounted.push(mountPreview(host, JSON.stringify(payload)));
-  });
-  await act(async () => {
-    for (const host of hosts) host.shadowRoot!.querySelector("button")!.click();
-  });
-  await act(async () => vi.advanceTimersByTimeAsync(100));
-  expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("1");
-  await act(async () => mounted.shift()!.unmount());
-  await act(async () => vi.advanceTimersByTimeAsync(100));
-  expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("2");
-});
+    };
+    const hosts = [
+      document.createElement("div"),
+      document.createElement("div"),
+    ];
+    document.body.append(...hosts);
+    await act(async () => {
+      for (const host of hosts)
+        mounted.push(mountPreview(host, JSON.stringify(payload)));
+    });
+    await act(async () => {
+      for (const host of hosts)
+        host.shadowRoot!.querySelector("button")!.click();
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("1");
+    await act(async () => mounted.shift()!.unmount());
+    await act(async () => vi.advanceTimersByTimeAsync(100));
+    expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("2");
+  },
+);

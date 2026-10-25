@@ -1,4 +1,5 @@
 /** App-provided tools and local .invoke() actions share one instance dispatcher. */
+import { abortable } from "./abortable";
 import type { App } from "@modelcontextprotocol/ext-apps";
 import type { CallToolResult, Tool } from "@modelcontextprotocol/client";
 import { Validator } from "@cfworker/json-schema";
@@ -201,34 +202,37 @@ export class AppTools {
                   : Promise.resolve(toolError(`Unknown app tool: ${name}`));
               });
               let failure: string | undefined;
-              const ok = await executeActions(
-                spec.actions as ActionSpec | ActionSpec[],
-                this.app,
-                liveState,
-                args,
-                options.depth ?? 0,
-                undefined,
-                undefined,
-                options.overlayClose,
-                undefined,
-                {
-                  signal: controller.signal,
-                  intervalOwner: state,
-                  registerCleanup: (cleanup) => {
-                    if (controller.signal.aborted) {
-                      cleanup();
-                      return () => {};
-                    }
-                    resources.add(cleanup);
-                    return (cancel = true) => {
-                      resources.delete(cleanup);
-                      release(cancel);
-                    };
+              const ok = await abortable(
+                executeActions(
+                  spec.actions as ActionSpec | ActionSpec[],
+                  this.app,
+                  liveState,
+                  args,
+                  options.depth ?? 0,
+                  undefined,
+                  undefined,
+                  options.overlayClose,
+                  undefined,
+                  {
+                    signal: controller.signal,
+                    intervalOwner: state,
+                    registerCleanup: (cleanup) => {
+                      if (controller.signal.aborted) {
+                        cleanup();
+                        return () => {};
+                      }
+                      resources.add(cleanup);
+                      return (cancel = true) => {
+                        resources.delete(cleanup);
+                        release(cancel);
+                      };
+                    },
+                    reportError: (message) => {
+                      failure ??= message;
+                    },
                   },
-                  reportError: (message) => {
-                    failure ??= message;
-                  },
-                },
+                ),
+                controller.signal,
               );
               checkActive();
               if (!ok)

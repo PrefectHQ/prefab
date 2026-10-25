@@ -28,7 +28,7 @@ import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 import { interpolateProps, interpolateString } from "./interpolation";
 import { validateAction } from "./validation";
-import { readFiles, filterByAccept } from "./file-utils";
+import { openFilePicker } from "./file-picker";
 import { evaluateCondition } from "./conditions";
 import { getCustomActionHandler } from "./custom-handlers";
 import { dispatchAppTool, InactiveAppToolError } from "./app-tool-dispatch";
@@ -411,42 +411,11 @@ export async function executeAction(
         const multiple = (resolved.multiple as boolean) ?? false;
         const maxSize = resolved.maxSize as number | undefined;
 
-        const fileData = await new Promise<unknown>((resolve, reject) => {
-          const input = document.createElement("input");
-          input.type = "file";
-          if (accept) input.accept = accept;
-          if (multiple) input.multiple = true;
-          input.style.display = "none";
-          document.body.appendChild(input);
-
-          input.addEventListener("change", async () => {
-            try {
-              let files = Array.from(input.files ?? []);
-              files = filterByAccept(files, accept);
-              const result = await readFiles(files, { maxSize });
-              resolve(result);
-            } catch (err) {
-              reject(err);
-            } finally {
-              document.body.removeChild(input);
-            }
-          });
-
-          // Handle cancel — the input fires no change event on cancel,
-          // but we can detect it when the window regains focus.
-          const onFocus = () => {
-            // Small delay to let the change event fire first if files were selected
-            setTimeout(() => {
-              if (document.body.contains(input)) {
-                document.body.removeChild(input);
-                resolve([]);
-              }
-              window.removeEventListener("focus", onFocus);
-            }, 300);
-          };
-          window.addEventListener("focus", onFocus);
-
-          input.click();
+        const fileData = await openFilePicker({
+          accept,
+          multiple,
+          maxSize,
+          signal: execution?.signal,
         });
 
         if (!Array.isArray(fileData) || fileData.length === 0) {
@@ -627,6 +596,13 @@ export async function executeAction(
     if (e instanceof InactiveAppToolError) {
       execution?.reportError?.(e.message);
       return false;
+    }
+    if (
+      execution?.signal?.aborted &&
+      e !== execution.signal.reason &&
+      !(e instanceof Error && e.name === "AbortError")
+    ) {
+      console.warn("[Prefab] Action failed after cancellation", e);
     }
     success = false;
     errorMessage = e instanceof Error ? e.message : String(e);
