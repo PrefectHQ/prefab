@@ -13,13 +13,16 @@ Radio buttons let users select exactly one option from a set. Each `Radio` repre
 `Radio(label="Basic")` labels that individual option. Name the group separately
 with `aria_labelledby` and the DOM ID of an existing label:
 
-```python
-from prefab_ui.components import Label, Radio, RadioGroup
+```python Accessible radio labels
+from prefab_ui import PrefabApp
+from prefab_ui.components import Column, Label, Radio, RadioGroup
 
-Label("Plan", id="plan-label")
-with RadioGroup(name="plan", aria_labelledby="plan-label"):
-    Radio(label="Basic", id="basic-plan")
-    Radio(label="Pro", id="pro-plan")
+with PrefabApp() as app:
+    with Column():
+        Label("Plan", id="plan-label")
+        with RadioGroup(name="plan", aria_labelledby="plan-label"):
+            Radio(label="Basic", id="basic-plan")
+            Radio(label="Pro", id="pro-plan")
 ```
 
 `Label(for_id="plan")` alone cannot label a generic radiogroup container.

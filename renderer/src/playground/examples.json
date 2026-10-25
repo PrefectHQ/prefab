@@ -1520,9 +1520,9 @@
     "code": "from prefab_ui.components.charts import RadialChart\n\ndata = [\n    {\"service\": \"Compute\", \"cost\": 186_000},\n    {\"service\": \"Storage\", \"cost\": 92_000},\n    {\"service\": \"Network\", \"cost\": 48_000},\n    {\"service\": \"Support\", \"cost\": 24_000},\n]\n\nRadialChart(\n    data=data,\n    data_key=\"cost\",\n    name_key=\"service\",\n    value_format=\"compact:0\",\n    show_legend=True,\n)"
   },
   {
-    "title": "from prefab_ui.components import Label, Radio, RadioGroup",
+    "title": "Accessible radio labels",
     "category": "Components",
-    "code": "Label(\"Plan\", id=\"plan-label\")\nwith RadioGroup(name=\"plan\", aria_labelledby=\"plan-label\"):\n    Radio(label=\"Basic\", id=\"basic-plan\")\n    Radio(label=\"Pro\", id=\"pro-plan\")"
+    "code": "from prefab_ui import PrefabApp\nfrom prefab_ui.components import Column, Label, Radio, RadioGroup\n\nwith PrefabApp() as app:\n    with Column():\n        Label(\"Plan\", id=\"plan-label\")\n        with RadioGroup(name=\"plan\", aria_labelledby=\"plan-label\"):\n            Radio(label=\"Basic\", id=\"basic-plan\")\n            Radio(label=\"Pro\", id=\"pro-plan\")"
   },
   {
     "title": "Python icon=\"python\"",

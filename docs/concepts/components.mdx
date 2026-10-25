@@ -52,6 +52,9 @@ For Select, Combobox, and DatePicker, naming kwargs target the primary control.
 For Dialog, Popover, HoverCard, and Tooltip, they target the popup content;
 an explicit trigger Button accepts its own naming kwargs. Tabs names its tablist,
 while a Tab names its trigger. AccordionItem names its generated trigger.
+`Use("template", aria_label="Instance name")` applies that name to the template's
+root, overriding its corresponding default. Both naming kwargs support reactive
+expressions and scoped bindings on reusable instances.
 
 When both kwargs are supplied, `aria_labelledby` takes precedence according to
 ARIA naming rules. An explicit `aria_label` replaces an automatically generated
