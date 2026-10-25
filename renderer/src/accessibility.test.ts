@@ -473,3 +473,57 @@ it("keeps an option's explicit name when Select consumes its child metadata", as
   expect(option?.getAttribute("aria-label")).toBe("Record 1042");
   expect(option?.textContent).toBe("Visible option");
 });
+
+it("preserves Select group, label and separator naming metadata", async () => {
+  await render({
+    type: "Select",
+    children: [
+      {
+        type: "SelectGroup",
+        ariaLabel: "Plans",
+        children: [
+          {
+            type: "SelectLabel",
+            label: "Available plans",
+            ariaLabel: "Plan heading",
+          },
+          { type: "SelectOption", value: "a", label: "Basic" },
+        ],
+      },
+      { type: "SelectSeparator", ariaLabel: "Plan divider" },
+      { type: "SelectOption", value: "b", label: "Pro" },
+    ],
+  });
+  await act(
+    async () =>
+      container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
+  );
+  for (const name of ["Plans", "Plan heading", "Plan divider"]) {
+    expect(document.querySelector(`[aria-label="${name}"]`)).not.toBeNull();
+  }
+});
+
+it("preserves Combobox group and label naming metadata", async () => {
+  await render({
+    type: "Combobox",
+    children: [
+      {
+        type: "ComboboxGroup",
+        ariaLabel: "Plans",
+        children: [
+          {
+            type: "ComboboxLabel",
+            label: "Available plans",
+            ariaLabel: "Plan heading",
+          },
+          { type: "ComboboxOption", value: "a", label: "Basic" },
+        ],
+      },
+    ],
+  });
+  await act(
+    async () => container.querySelector<HTMLButtonElement>("button")?.click(),
+  );
+  expect(document.querySelector('[aria-label="Plans"]')).not.toBeNull();
+  expect(document.querySelector('[aria-label="Plan heading"]')).not.toBeNull();
+});

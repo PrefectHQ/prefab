@@ -358,3 +358,10 @@ control, Calendar's grid, charts' SVG, and DataTable's table. Dialog/Popover/
 HoverCard/Tooltip name their popup content; name their explicit trigger Button
 separately. Tabs names the tablist, Tab names its trigger, and AccordionItem
 names its generated trigger. Use visible labels where practical.
+
+Names on Text, Metric, Code, Markdown, and Svg are forwarded to existing roots
+without adding semantic roles or renaming embedded HTML. Loader names its status
+SVG. Explicitly named Icons are exposed to assistive technology; unnamed Icons
+remain decorative. Transparent ForEach/Condition/Slot have no DOM root; name the
+actual components they render. Select/Combobox child marker names target their
+corresponding rendered option/group/label/separator elements.

@@ -218,14 +218,20 @@ export function RenderNode({
 
     if (hasGroups) {
       // Build structured groups data
-      const groups: { label?: string; items: Record<string, unknown>[] }[] = [];
+      const groups: (AccessibleNameProps & {
+        label?: string;
+        labelNames?: AccessibleNameProps;
+        items: Record<string, unknown>[];
+      })[] = [];
       for (const child of children) {
         if (child.type === "ComboboxGroup" && child.children) {
-          const group: { label?: string; items: Record<string, unknown>[] } = {
+          const group: (typeof groups)[number] = {
+            ...childAccessibleNameProps(child, ctx),
             items: [],
           };
           for (const gc of child.children) {
             if (gc.type === "ComboboxLabel" && "label" in gc) {
+              group.labelNames = childAccessibleNameProps(gc, ctx);
               const val = gc.label;
               group.label = (
                 typeof val === "string" ? interpolateString(val, ctx) : val
@@ -252,9 +258,11 @@ export function RenderNode({
       // Flat items with optional separators
       const items: Record<string, unknown>[] = [];
       const separatorIndices: number[] = [];
+      const separatorNames: Record<number, AccessibleNameProps> = {};
       for (const child of children) {
         if (child.type === "ComboboxSeparator") {
           separatorIndices.push(items.length);
+          separatorNames[items.length] = childAccessibleNameProps(child, ctx);
         } else if (child.type === "ComboboxOption") {
           const item: Record<string, unknown> = {
             ...childAccessibleNameProps(child, ctx),
@@ -272,6 +280,7 @@ export function RenderNode({
       finalProps._items = items;
       if (separatorIndices.length > 0) {
         finalProps._separatorIndices = separatorIndices;
+        finalProps._separatorNames = separatorNames;
       }
     }
 
@@ -326,8 +335,10 @@ export function RenderNode({
         if (child.type === "SelectGroup") {
           const groupItems: Record<string, unknown>[] = [];
           let groupLabel: string | undefined;
+          let labelNames: AccessibleNameProps | undefined;
           for (const gc of child.children ?? []) {
             if (gc.type === "SelectLabel") {
+              labelNames = childAccessibleNameProps(gc, ctx);
               const rawLabel = gc.label;
               groupLabel =
                 typeof rawLabel === "string"
@@ -338,19 +349,28 @@ export function RenderNode({
             }
           }
           selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
             _type: "group",
+            labelNames,
             label: groupLabel,
             items: groupItems,
           });
         } else if (child.type === "SelectSeparator") {
-          selectChildren.push({ _type: "separator" });
+          selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
+            _type: "separator",
+          });
         } else if (child.type === "SelectLabel") {
           const rawLabel = child.label;
           const label =
             typeof rawLabel === "string"
               ? (interpolateString(rawLabel, ctx) as string)
               : undefined;
-          selectChildren.push({ _type: "label", label });
+          selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
+            _type: "label",
+            label,
+          });
         } else if (child.type === "SelectOption") {
           selectChildren.push({ _type: "item", ...extractItem(child) });
         }

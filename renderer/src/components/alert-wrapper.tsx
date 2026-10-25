@@ -6,11 +6,15 @@
  * the grid layout automatically via `has-[>svg]:grid-cols-[auto_1fr]`.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import type { ReactNode } from "react";
 import { Alert, type AlertVariant } from "@/ui/alert";
 import { useIcon } from "@/lib/icons";
 
-interface PrefabAlertProps {
+interface PrefabAlertProps extends AccessibleNameProps {
   icon?: string;
   variant?: AlertVariant;
   className?: string;
@@ -22,11 +26,16 @@ export function PrefabAlert({
   variant,
   className,
   children,
+  ...accessibleName
 }: PrefabAlertProps) {
   const IconComponent = useIcon(icon);
 
   return (
-    <Alert variant={variant} className={className}>
+    <Alert
+      {...getAccessibleNameProps(accessibleName)}
+      variant={variant}
+      className={className}
+    >
       {IconComponent && <IconComponent />}
       {children}
     </Alert>

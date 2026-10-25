@@ -74,3 +74,31 @@ describe("Mermaid updates", () => {
     expect(container.textContent).toBe("");
   });
 });
+
+it("keeps names on the existing diagram root and error fallback", async () => {
+  await act(async () =>
+    root.render(
+      createElement(Mermaid, {
+        chart: "graph TD; A-->B",
+        "aria-label": "Order flow",
+      }),
+    ),
+  );
+  expect(
+    container.querySelector('div[aria-label="Order flow"] svg'),
+  ).not.toBeNull();
+  expect(
+    container
+      .querySelector('div[aria-label="Order flow"]')
+      ?.getAttribute("role"),
+  ).toBeNull();
+  mocks.render.mockRejectedValueOnce(new Error("invalid diagram"));
+  await act(async () =>
+    root.render(
+      createElement(Mermaid, { chart: "invalid", "aria-label": "Order flow" }),
+    ),
+  );
+  expect(container.querySelector("pre")?.getAttribute("aria-label")).toBe(
+    "Order flow",
+  );
+});
