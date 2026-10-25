@@ -14,6 +14,30 @@ Scatter (or bubble) chart plotting points from shared data.
       "default": "ScatterChart",
       "type": "string"
     },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "HTML id attribute for CSS targeting. Applied to the outermost element."
+    },
+    "ariaLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Accessible name, independent of visible text."
+    },
+    "ariaLabelledBy": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Space-separated IDs of elements providing the accessible name."
+    },
     "cssClass": {
       "type": [
         "string",
@@ -21,6 +45,10 @@ Scatter (or bubble) chart plotting points from shared data.
       ],
       "default": null,
       "description": "CSS/Tailwind classes for styling. Accepts a Responsive() for breakpoint-aware classes."
+    },
+    "onMount": {
+      "default": null,
+      "description": "Action(s) to execute when this component mounts."
     },
     "data": {
       "anyOf": [
@@ -35,7 +63,7 @@ Scatter (or bubble) chart plotting points from shared data.
           "type": "string"
         }
       ],
-      "description": "Row data or {{ interpolation }} reference"
+      "description": "Row data or `{{ interpolation }}` reference"
     },
     "series": {
       "description": "Series to render as scatter groups",
@@ -66,13 +94,18 @@ Scatter (or bubble) chart plotting points from shared data.
       "type": "integer"
     },
     "showLegend": {
-      "default": false,
+      "default": true,
       "description": "Show legend",
       "type": "boolean"
     },
     "showTooltip": {
       "default": true,
       "description": "Show tooltip on hover",
+      "type": "boolean"
+    },
+    "animate": {
+      "default": true,
+      "description": "Animate transitions when data changes",
       "type": "boolean"
     },
     "showGrid": {
