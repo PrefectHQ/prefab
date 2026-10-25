@@ -9,6 +9,7 @@ const chartTypes = [
   "ScatterChart",
   "RadarChart",
   "RadialChart",
+  "WaterfallChart",
 ];
 
 describe("applyRawPropDefaults", () => {

@@ -44,6 +44,7 @@ from prefab_ui.components.charts import (
     RadialChart,
     ScatterChart,
     Sparkline,
+    WaterfallChart,
 )
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "renderer" / "schemas"
@@ -190,6 +191,7 @@ def _all_concrete_components() -> list[type[Component]]:
             RadialChart,
             ScatterChart,
             Sparkline,
+            WaterfallChart,
         ]
     )
     return result
