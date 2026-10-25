@@ -135,3 +135,10 @@ with PrefabApp(state={"users": [...]}, defs=[defn]) as app:
         with ForEach("users"):
             Use("user-card")
 ```
+
+
+Accessible names on `Use` apply to the referenced template's root:
+`Use("record-button", record_id=1042, aria_label="Open {{ record_id }}")`.
+The instance overrides the corresponding template name; omitted naming kwargs
+keep template defaults. `aria_label` and `aria_labelledby` remain component fields,
+not `let` bindings. Both accept reactive strings.

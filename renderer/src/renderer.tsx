@@ -127,8 +127,18 @@ export function RenderNode({
       newScope = { ...newScope, ...evaluated };
     }
     const refCssClass = node["cssClass"] as string | undefined;
+    const template = { ...defNode };
+    for (const key of ["ariaLabel", "ariaLabelledBy"]) {
+      if (node[key] !== undefined) template[key] = node[key];
+    }
     const resolved = (
-      <RenderNode node={defNode} scope={newScope} state={state} app={app} />
+      <RenderNode
+        node={template}
+        scope={newScope}
+        state={state}
+        app={app}
+        renderElement={renderElement}
+      />
     );
     if (refCssClass) {
       return <div className={refCssClass}>{resolved}</div>;
