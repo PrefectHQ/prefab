@@ -15,7 +15,9 @@ declare const __LOCAL_BUNDLE__: boolean;
 
 declare global {
   interface Window {
-    loadPyodide: () => Promise<PyodideInterface>;
+    loadPyodide: (options: {
+      enableRunUntilComplete: boolean;
+    }) => Promise<PyodideInterface>;
   }
 }
 
@@ -60,7 +62,7 @@ function log(msg: string) {
 let pyodide: PyodideInterface | null = null;
 let loadPromise: Promise<PyodideInterface> | null = null;
 
-const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.27.4/full/pyodide.js";
+const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.27.8/full/pyodide.js";
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -92,7 +94,8 @@ export function loadPyodideRuntime(
     log("Loading script from CDN...");
     await loadScript(PYODIDE_CDN);
     log("Script loaded, initializing...");
-    const py = await window.loadPyodide();
+    // Preserve the pre-0.27.7 event-loop behavior without stack switching.
+    const py = await window.loadPyodide({ enableRunUntilComplete: false });
     log("Initialized, loading pydantic...");
 
     // Pydantic must come from Pyodide's built-in packages (WASM build)

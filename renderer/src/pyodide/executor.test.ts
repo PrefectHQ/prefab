@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+// @vitest-environment jsdom
+import { describe, expect, it, vi } from "vitest";
 import {
   legacyThemeToCss,
   normalizeExecuteData,
@@ -55,5 +56,49 @@ describe("Pyodide executor data normalization", () => {
 
   it("ignores incomplete JSON string data during streaming", () => {
     expect(normalizeExecuteData('{"devices":[')).toEqual({});
+  });
+});
+
+describe("Pyodide bootstrap compatibility", () => {
+  it("loads the pinned patch runtime with the previous event-loop behavior", async () => {
+    const py = {
+      loadPackage: vi.fn(async () => {}),
+      FS: { mkdirTree: vi.fn(), writeFile: vi.fn() },
+      runPythonAsync: vi.fn(async () => undefined),
+    };
+    const loader = vi.fn(async () => py);
+    window.loadPyodide = loader;
+    vi.stubGlobal("__LOCAL_BUNDLE__", true);
+    const append = document.head.appendChild.bind(document.head);
+    const scripts: HTMLScriptElement[] = [];
+    const spy = vi
+      .spyOn(document.head, "appendChild")
+      .mockImplementation((node) => {
+        const result = append(node);
+        if (node instanceof HTMLScriptElement) {
+          scripts.push(node);
+          queueMicrotask(() => node.dispatchEvent(new Event("load")));
+        }
+        return result;
+      });
+    try {
+      const { loadPyodideRuntime } = await import("./executor");
+      const status = vi.fn();
+      await expect(loadPyodideRuntime(status)).resolves.toBe(py);
+      expect(scripts[0].src).toBe(
+        "https://cdn.jsdelivr.net/pyodide/v0.27.8/full/pyodide.js",
+      );
+      expect(loader).toHaveBeenCalledWith({ enableRunUntilComplete: false });
+      expect(py.loadPackage).toHaveBeenCalledWith(["pydantic"]);
+      expect(py.FS.writeFile).toHaveBeenCalledWith(
+        expect.stringMatching(/^\/lib\/python3\.12\/site-packages\//),
+        expect.any(String),
+      );
+      expect(status).toHaveBeenLastCalledWith("ready");
+    } finally {
+      spy.mockRestore();
+      scripts.forEach((script) => script.remove());
+      vi.unstubAllGlobals();
+    }
   });
 });

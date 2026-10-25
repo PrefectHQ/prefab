@@ -81,7 +81,7 @@ class Slider(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "slider"
+    _auto_name: ClassVar[str | None] = "slider"
     type: Literal["Slider"] = "Slider"
     min: float = Field(default=0, description="Minimum value")
     max: float = Field(default=100, description="Maximum value")

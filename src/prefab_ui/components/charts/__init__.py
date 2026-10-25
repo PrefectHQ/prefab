@@ -36,7 +36,12 @@ from prefab_ui.components.charts.cartesian import (
     ScatterChart,
 )
 from prefab_ui.components.charts.radial import PieChart, RadarChart, RadialChart
-from prefab_ui.components.charts.sparkline import Sparkline
+from prefab_ui.components.charts.sparkline import (
+    Sparkline,
+    SparklineCurve,
+    SparklineMode,
+    SparklineVariant,
+)
 from prefab_ui.components.charts.waterfall import WaterfallChart
 
 __all__ = [
@@ -50,5 +55,8 @@ __all__ = [
     "RadialChart",
     "ScatterChart",
     "Sparkline",
+    "SparklineCurve",
+    "SparklineMode",
+    "SparklineVariant",
     "WaterfallChart",
 ]

@@ -50,11 +50,18 @@ Line chart with one or more series.
       "description": "Row data or `{{ interpolation }}` reference"
     },
     "series": {
-      "description": "Series to render as lines",
-      "items": {
-        "$ref": "ChartSeries"
-      },
-      "type": "array"
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "ChartSeries"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Series to render as lines, or `{{ interpolation }}` for a filtered list"
     },
     "xAxis": {
       "type": [
@@ -63,6 +70,22 @@ Line chart with one or more series.
       ],
       "default": null,
       "description": "Data key for x-axis labels"
+    },
+    "xAxisLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Human-readable title for the category axis"
+    },
+    "yAxisLabel": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Human-readable title for the value axis"
     },
     "height": {
       "default": 300,

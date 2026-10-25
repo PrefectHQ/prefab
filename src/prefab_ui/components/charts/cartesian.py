@@ -26,6 +26,8 @@ class BarChart(Component):
         data: Row data or reactive interpolation reference.
         series: Series to render as bars.
         x_axis: Data key for x-axis labels.
+        x_axis_label: Human-readable title for the category axis.
+        y_axis_label: Human-readable value-axis title, hidden when `show_y_axis=False`.
         height: Chart height in pixels.
         stacked: Stack bars instead of grouping side-by-side.
         horizontal: Render as horizontal bar chart.
@@ -59,6 +61,16 @@ class BarChart(Component):
     series: list[ChartSeries] = Field(description="Series to render as bars")
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
+    )
+    x_axis_label: RxStr | None = Field(
+        default=None,
+        alias="xAxisLabel",
+        description="Human-readable title for the category axis",
+    )
+    y_axis_label: RxStr | None = Field(
+        default=None,
+        alias="yAxisLabel",
+        description="Human-readable title for the value axis",
     )
     height: int = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack bars")
@@ -108,8 +120,11 @@ class LineChart(Component):
 
     Args:
         data: Row data or reactive interpolation reference.
-        series: Series to render as lines.
+        series: Series to render as lines, or a sole `{{ ... }}` template
+            (e.g. a visibility-filtered list from state).
         x_axis: Data key for x-axis labels.
+        x_axis_label: Human-readable title for the category axis.
+        y_axis_label: Human-readable value-axis title, hidden when `show_y_axis=False`.
         height: Chart height in pixels.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
@@ -138,9 +153,21 @@ class LineChart(Component):
     data: list[dict[str, Any]] | RxStr = Field(
         description="Row data or `{{ interpolation }}` reference"
     )
-    series: list[ChartSeries] = Field(description="Series to render as lines")
+    series: list[ChartSeries] | RxStr = Field(
+        description="Series to render as lines, or `{{ interpolation }}` for a filtered list"
+    )
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
+    )
+    x_axis_label: RxStr | None = Field(
+        default=None,
+        alias="xAxisLabel",
+        description="Human-readable title for the category axis",
+    )
+    y_axis_label: RxStr | None = Field(
+        default=None,
+        alias="yAxisLabel",
+        description="Human-readable title for the value axis",
     )
     height: int = Field(default=300, description="Chart height in pixels")
     curve: Literal["linear", "smooth", "step"] = Field(

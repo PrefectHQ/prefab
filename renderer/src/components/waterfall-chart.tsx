@@ -6,7 +6,9 @@
 import {
   Bar,
   ComposedChart,
-  Customized,
+  Rectangle,
+  usePlotArea,
+  type BarShapeProps,
   Cell,
   XAxis,
   YAxis,
@@ -72,54 +74,44 @@ function buildWaterfallRows(
   });
 }
 
-interface FormattedBarItem {
-  item: { props?: { dataKey?: string } };
-  props: {
-    data?: { x: number; width: number }[];
-  };
-}
-
-interface WaterfallConnectorsProps {
-  rows: WaterfallRow[];
-  yAxisMap?: Record<string | number, { scale: (value: number) => number }>;
-  formattedGraphicalItems?: FormattedBarItem[];
-}
-
-// Draws dashed bridge lines only across the gap between one bar's edge and
-// the next. Reads Recharts' own computed bar rects (formattedGraphicalItems)
-// rather than the raw band scale, since Recharts renders bars narrower than
-// their category slot (via barCategoryGap) and centers them within it.
-function WaterfallConnectors({
+// Use the bar's public shape geometry so connector edges match the rendered
+// rectangles. Category slots are uniformly spaced across the plot area.
+function WaterfallBar({
   rows,
-  yAxisMap,
-  formattedGraphicalItems,
-}: WaterfallConnectorsProps) {
-  const yScale = yAxisMap ? Object.values(yAxisMap)[0]?.scale : undefined;
-  const bars = formattedGraphicalItems?.find(
-    (entry) => entry.item.props?.dataKey === "__value",
-  )?.props.data;
-  if (!yScale || !bars) return null;
-
+  showConnectors,
+  ...bar
+}: Partial<BarShapeProps> & { rows: WaterfallRow[]; showConnectors: boolean }) {
+  const plot = usePlotArea();
+  if (
+    bar.x == null ||
+    bar.y == null ||
+    bar.width == null ||
+    bar.height == null ||
+    bar.index == null
+  )
+    return null;
+  const row = rows[bar.index];
+  if (!row) return null;
+  const endsAtBottom =
+    row.__category === "decrease" ||
+    (row.__category === "total" && row.__end < 0);
+  const endY = bar.y + (endsAtBottom ? bar.height : 0);
   return (
-    <g className="pf-waterfall-connectors">
-      {rows.slice(0, -1).map((row, i) => {
-        const bar = bars[i];
-        const nextBar = bars[i + 1];
-        if (!bar || !nextBar) return null;
-        const y = yScale(row.__end);
-        return (
+    <g>
+      <Rectangle {...bar} />
+      {showConnectors && plot && bar.index < rows.length - 1 && (
+        <g className="pf-waterfall-connectors">
           <line
-            key={i}
             x1={bar.x + bar.width}
-            y1={y}
-            x2={nextBar.x}
-            y2={y}
+            y1={endY}
+            x2={bar.x + plot.width / rows.length}
+            y2={endY}
             stroke="var(--color-muted-foreground)"
             strokeWidth={1.5}
             strokeDasharray="4 4"
           />
-        );
-      })}
+        </g>
+      )}
     </g>
   );
 }
@@ -211,17 +203,17 @@ export function PrefabWaterfallChart({
           )}
           {showLegend && (
             <ChartLegend
-              content={<ChartLegendContent />}
-              payload={categoriesPresent.map((cat) => ({
-                value: cat,
-                dataKey: cat,
-                color: colors[cat],
-                type: "square",
-              }))}
+              content={() => (
+                <ChartLegendContent
+                  payload={categoriesPresent.map((cat) => ({
+                    value: cat,
+                    dataKey: cat,
+                    color: colors[cat],
+                    type: "square" as const,
+                  }))}
+                />
+              )}
             />
-          )}
-          {showConnectors && (
-            <Customized component={<WaterfallConnectors rows={rows} />} />
           )}
           <Bar
             dataKey="__base"
@@ -235,6 +227,7 @@ export function PrefabWaterfallChart({
             dataKey="__value"
             stackId="wf"
             radius={barRadius}
+            shape={<WaterfallBar rows={rows} showConnectors={showConnectors} />}
             isAnimationActive={animate}
           >
             {rows.map((row, i) => (
