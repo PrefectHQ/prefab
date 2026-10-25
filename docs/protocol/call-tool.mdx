@@ -19,9 +19,16 @@ Call an MCP server tool via `app.callServerTool()`.
       "type": "string"
     },
     "arguments": {
-      "additionalProperties": true,
-      "description": "Arguments to pass. Supports `{{ key }}` interpolation.",
-      "type": "object"
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "Argument mapping or an expression resolving to an object."
     }
   },
   "required": [

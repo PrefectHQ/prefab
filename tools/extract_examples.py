@@ -18,7 +18,7 @@ docs_dir = root / "docs"
 output = root / "renderer" / "src" / "playground" / "examples.json"
 
 # Match ```python Optional Title\n...code...\n```
-CODE_BLOCK_RE = re.compile(r"```python\s*([^\n]*)\n(.*?)```", re.DOTALL)
+CODE_BLOCK_RE = re.compile(r"```python[ \t]*([^\n]*)\n(.*?)```", re.DOTALL)
 
 examples: list[dict[str, str]] = []
 seen_codes: set[str] = set()
@@ -42,7 +42,7 @@ for mdx_file in sorted(docs_dir.rglob("*.mdx")):
     cat = category_from_path(mdx_file)
     fallback_title = title_from_path(mdx_file)
 
-    for match in CODE_BLOCK_RE.finditer(mdx_file.read_text()):
+    for match in CODE_BLOCK_RE.finditer(mdx_file.read_text(encoding="utf-8")):
         info_title = match.group(1).strip()
         code = match.group(2).strip()
 
@@ -54,5 +54,5 @@ for mdx_file in sorted(docs_dir.rglob("*.mdx")):
         examples.append({"title": title, "category": cat, "code": code})
 
 output.parent.mkdir(parents=True, exist_ok=True)
-output.write_text(json.dumps(examples, ensure_ascii=False, indent=2))
+output.write_text(json.dumps(examples, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"Extracted {len(examples)} examples to {output.relative_to(root)}")

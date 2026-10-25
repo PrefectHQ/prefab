@@ -147,6 +147,7 @@ await micropip.install("prefab-ui", deps=False)
 export interface ExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
+  tools?: unknown;
   css?: string[];
   stylesheets?: string[];
   mode?: string;
@@ -159,6 +160,7 @@ export interface ExecuteResult {
 interface RawExecuteResult {
   tree?: ComponentNode;
   state?: Record<string, unknown>;
+  tools?: unknown;
   css?: unknown;
   stylesheets?: unknown;
   mode?: unknown;
@@ -225,6 +227,7 @@ export function normalizeExecuteResult(
   return {
     tree: result.tree,
     state: result.state ?? {},
+    tools: result.tools,
     css: stringArray(result.css) ?? legacyTheme.css,
     stylesheets: stringArray(result.stylesheets),
     mode: normalizeMode(result.mode) ?? legacyTheme.mode,
@@ -351,7 +354,7 @@ try:
 
     _pg_wire = _pg_target.to_json()
     _pg_result = {"tree": _pg_wire.get("view")}
-    for _pg_key in ("state", "theme", "css", "stylesheets", "mode"):
+    for _pg_key in ("state", "tools", "theme", "css", "stylesheets", "mode"):
         if _pg_wire.get(_pg_key):
             _pg_result[_pg_key] = _pg_wire[_pg_key]
 

@@ -93,7 +93,7 @@ Actions are what happen when users interact. Click a button, change a slider, su
 
 Most real interactions use both. A "Save" button sets a loading flag (instant), calls the server (async), then shows success or failure (instant, based on the outcome). Actions can be sequenced as lists and chained through callbacks.
 
-The [Actions](/concepts/actions) guide covers both families, chaining, the `$event` variable, and common patterns like loading state and optimistic updates.
+The [Actions](/concepts/actions) guide covers action targets, chaining, the `$event` variable, and common patterns like loading state and optimistic updates.
 
 ## How it runs
 
@@ -115,4 +115,4 @@ Steps 2 through 4 happen without your server involved. Step 5 only occurs when a
 
 ## MCP Apps
 
-This architecture is what makes Prefab a natural foundation for MCP Apps. Your MCP tools return component trees, and those trees become live interfaces inside Claude Desktop, ChatGPT, and any host that supports the MCP App protocol. The renderer runs inside the host; your Python server handles the tool calls. The programming model is identical to a standalone app: the same components, the same state system, the same actions. See [FastMCP](/running/fastmcp) for the specifics.
+Your MCP tools can return component trees that become live interfaces inside a supporting host. The renderer runs inside the host; your Python server handles backend tool calls. The same components, state, and actions drive the UI. The [MCP Apps](/mcp/overview) guide explains how to connect it to the agent and conversation; [FastMCP](/running/fastmcp) covers registering and serving it.
