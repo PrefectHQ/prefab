@@ -2,14 +2,16 @@ fail_fast: false
 
 repos:
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.24.1
+    rev: "0.26"
     hooks:
       - id: validate-pyproject
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+  - repo: local
     hooks:
       - id: prettier
+        name: prettier
+        entry: node tools/node_modules/prettier/bin/prettier.cjs --write
+        language: system
         types_or: [yaml, json5, javascript, tsx, ts, css]
         exclude: ^(renderer/src/ui/|docs/(embed|renderer)\.js|docs/_renderer/)
 
@@ -62,7 +64,7 @@ repos:
         args: [--branch, main]
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
       - id: codespell
         exclude: ^(docs/(embed|renderer|playground)\.js|docs/_renderer/.*|src/prefab_ui/renderer/(app|generative)\.html)$
