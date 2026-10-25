@@ -15,6 +15,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Toaster } from "sonner";
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps";
+import { McpOverlayPortal } from "./overlay-portal";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { bridge } from "./bridge";
@@ -324,9 +325,9 @@ export function App() {
 
   // Render component tree
   return (
-    <>
+    <McpOverlayPortal>
       <RenderTree tree={tree} defs={defs} state={state} app={appRef.current} />
       <Toaster />
-    </>
+    </McpOverlayPortal>
   );
 }
