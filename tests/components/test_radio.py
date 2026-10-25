@@ -38,3 +38,19 @@ def test_radio_group_value():
     g = RadioGroup(name="size", value="lg")
     j = g.to_json()
     assert j["value"] == "lg"
+
+
+def test_explicit_radio_ids_and_group_label_reference():
+    with RadioGroup(name="plan", aria_labelledby="plan-label", id="plans") as group:
+        Radio(label="Basic", id="basic-plan")
+        Radio(label="Pro", id="pro-plan")
+    wire = group.to_json()
+    assert wire["id"] == "plans"
+    assert wire["name"] == "plan"
+    assert wire["ariaLabelledBy"] == "plan-label"
+    assert [
+        (item["id"], item["option"], item["label"]) for item in wire["children"]
+    ] == [
+        ("basic-plan", "Basic", "Basic"),
+        ("pro-plan", "Pro", "Pro"),
+    ]

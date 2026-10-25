@@ -58,6 +58,7 @@ export function PrefabLabel({
 /* ------------------------------------------------------------------ */
 
 interface PrefabRadioProps extends AccessibleNameProps {
+  id?: string;
   option: string;
   label?: string;
   value?: boolean;
@@ -67,6 +68,7 @@ interface PrefabRadioProps extends AccessibleNameProps {
 }
 
 export function PrefabRadio({
+  id: explicitId,
   option,
   label,
   value,
@@ -75,7 +77,8 @@ export function PrefabRadio({
   className,
   ...accessibleName
 }: PrefabRadioProps) {
-  const id = `radio-${name ?? "standalone"}-${option}`;
+  const generatedId = React.useId();
+  const id = explicitId ?? generatedId;
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <input
@@ -109,6 +112,7 @@ interface SelectItemData extends AccessibleNameProps {
 }
 
 interface RadioItemData extends AccessibleNameProps {
+  id?: string;
   option: string;
   label?: string;
   value?: boolean;
@@ -272,6 +276,7 @@ export function PrefabSelect({
 /* ------------------------------------------------------------------ */
 
 interface PrefabRadioGroupProps extends AccessibleNameProps {
+  id?: string;
   name?: string;
   className?: string;
   value?: string;
@@ -281,6 +286,7 @@ interface PrefabRadioGroupProps extends AccessibleNameProps {
 }
 
 export function PrefabRadioGroup({
+  id,
   name,
   className,
   value,
@@ -297,30 +303,37 @@ export function PrefabRadioGroup({
 
   return (
     <ShadcnRadioGroup
+      id={id}
       {...getAccessibleNameProps(accessibleName)}
       {...controlProps}
       className={className}
       name={name}
     >
-      {_items.map((item) => {
-        const id = `radio-${name ?? ""}-${item.option}`;
-        return (
-          <div key={item.option} className="flex items-center space-x-2">
-            <RadioGroupItem
-              {...getAccessibleNameProps(item)}
-              value={item.option}
-              disabled={item.disabled}
-              id={id}
-            />
-            {item.label && (
-              <Label htmlFor={id} className="cursor-pointer">
-                {item.label}
-              </Label>
-            )}
-          </div>
-        );
-      })}
+      {_items.map((item) => (
+        <RadioOption key={item.option} item={item} />
+      ))}
     </ShadcnRadioGroup>
+  );
+}
+
+/** Keep DOM identity independent of state names and option values. */
+function RadioOption({ item }: { item: RadioItemData }) {
+  const generatedId = React.useId();
+  const id = item.id ?? generatedId;
+  return (
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem
+        {...getAccessibleNameProps(item)}
+        value={item.option}
+        disabled={item.disabled}
+        id={id}
+      />
+      {item.label && (
+        <Label htmlFor={id} className="cursor-pointer">
+          {item.label}
+        </Label>
+      )}
+    </div>
   );
 }
 
