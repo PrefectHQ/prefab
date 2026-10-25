@@ -144,10 +144,7 @@ interface SelectLabelEntry extends AccessibleNameProps {
 }
 
 type SelectChildEntry =
-  | SelectGroupData
-  | SelectItemEntry
-  | SelectSeparatorEntry
-  | SelectLabelEntry;
+  SelectGroupData | SelectItemEntry | SelectSeparatorEntry | SelectLabelEntry;
 
 interface PrefabSelectProps extends AccessibleNameProps {
   placeholder?: string;

@@ -23,15 +23,16 @@ jobs:
 
     steps:
       - name: Checkout PR head branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           # do not set to pull_request.head.ref, claude will pull the branch if needed
           fetch-depth: 0
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
+          prune-cache: true
           cache-dependency-glob: "uv.lock"
 
       - name: Install dependencies
@@ -39,7 +40,7 @@ jobs:
 
       - name: Generate Marvin App token
         id: marvin-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ secrets.MARVIN_APP_ID }}
           private-key: ${{ secrets.MARVIN_APP_PRIVATE_KEY }}

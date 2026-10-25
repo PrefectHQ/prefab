@@ -124,8 +124,8 @@ export function PrefabCarousel({
     effectiveVisible != null && effectiveVisible > 0 ? effectiveVisible : null;
   const effectiveGap = resolveGap(gap, effect, visibleCount);
   const verticalViewportHeight = isVertical
-    ? height ??
-      resolveVerticalViewportHeight(measuredHeight, visibleCount, effectiveGap)
+    ? (height ??
+      resolveVerticalViewportHeight(measuredHeight, visibleCount, effectiveGap))
     : undefined;
   const halfGap = effectiveGap > 0 ? effectiveGap / 2 : 0;
   // For horizontal: basis as % of viewport width.

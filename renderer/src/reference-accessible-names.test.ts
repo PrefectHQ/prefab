@@ -92,13 +92,12 @@ it.each(["Dialog", "Popover"])(
     await act(async () => buttons[0].click());
     expect(state.get("clicked")).toBe(true);
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
-    await act(
-      async () =>
-        document
-          .querySelector('[role="dialog"]')
-          ?.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
-          ),
+    await act(async () =>
+      document
+        .querySelector('[role="dialog"]')
+        ?.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        ),
     );
     expect(buttons[0].getAttribute("aria-expanded")).toBe("false");
   },

@@ -452,8 +452,7 @@ export function RenderNode({
       // Always sync slider's own state so the controlled value updates.
       // If the user also provided onValueChange (via on_change), wrap it.
       const userHandler = finalProps.onValueChange as
-        | ((val: number | readonly number[]) => void)
-        | undefined;
+        ((val: number | readonly number[]) => void) | undefined;
       finalProps.onValueChange = (val: number | readonly number[]) => {
         if (isRange) {
           state.set(name, Array.isArray(val) ? val : [val]);
@@ -539,7 +538,7 @@ export function RenderNode({
     // expressions, such as the unwrapped key produced by a filtered Rx.
     const items =
       typeof source === "string"
-        ? resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx)
+        ? (resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx))
         : source;
     if (!Array.isArray(items)) return null;
 
@@ -551,8 +550,7 @@ export function RenderNode({
           let itemScope = { ...scope, $index: idx, $item: item };
           // Evaluate let bindings per iteration (can reference $index/$item)
           const forEachLet = rawProps.let as
-            | Record<string, unknown>
-            | undefined;
+            Record<string, unknown> | undefined;
           if (forEachLet) {
             const letCtx = { ...state.getAll(), ...itemScope };
             const evaluated = interpolateProps(forEachLet, letCtx) as Record<
@@ -579,8 +577,7 @@ export function RenderNode({
   // Falls back to else branch if no case matches.
   if (type === "Condition") {
     const cases = rawProps.cases as
-      | { when: string; children?: ComponentNode[] }[]
-      | undefined;
+      { when: string; children?: ComponentNode[] }[] | undefined;
     const elseChildren = rawProps.else as ComponentNode[] | undefined;
     const ctx2 = { ...state.getAll(), ...scope };
     if (cases) {
