@@ -19,7 +19,7 @@ from pydantic import (
 from typing_extensions import Self
 
 from prefab_ui.css import Responsive
-from prefab_ui.rx import Rx, _coerce_rx, _generate_key, _sanitize_floats
+from prefab_ui.rx import Rx, RxStr, _coerce_rx, _generate_key, _sanitize_floats
 
 _component_stack: ContextVar[list[ContainerComponent] | None] = ContextVar(
     "_component_stack", default=None
@@ -255,8 +255,14 @@ class Component(BaseModel):
     When created inside a `ContainerComponent` context manager, they
     automatically append themselves to the parent's children list.
 
+    Args:
+        aria_label: Accessible name, independent of visible text. Accepts an Rx string.
+        aria_labelledby: ID(s) of elements providing the accessible name. Accepts an Rx string.
+
     Alternatively, pass `parent=<container>` to attach to a specific
     container without using a context manager:
+
+    **Example:**
 
     ```python
     root = Column(gap=4)
@@ -275,6 +281,17 @@ class Component(BaseModel):
     id: str | None = Field(
         default=None,
         description="HTML id attribute for CSS targeting. Applied to the outermost element.",
+    )
+
+    aria_label: RxStr | None = Field(
+        default=None,
+        alias="ariaLabel",
+        description="Accessible name, independent of visible text.",
+    )
+    aria_labelledby: RxStr | None = Field(
+        default=None,
+        alias="ariaLabelledBy",
+        description="Space-separated IDs of elements providing the accessible name.",
     )
 
     css_class: Annotated[str | None, BeforeValidator(_coerce_css_class)] = Field(

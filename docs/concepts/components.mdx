@@ -22,6 +22,33 @@ with Card():
 
 Every component also accepts a `css_class` prop for styling via [Tailwind utility classes](/styling/css), so you can adjust spacing, colors, and layout without leaving Python.
 
+## Accessible names
+
+Use `aria_label` to give a control a name independent of its visible text, or
+`aria_labelledby` to reference the space-separated DOM IDs of existing labels.
+Both accept reactive expressions. They serialize as `ariaLabel` and
+`ariaLabelledBy` in the protocol.
+
+```python
+Button("Open", aria_label="Open record 1042")
+Label("Search records", id="search-label")
+Input(aria_labelledby="search-label")
+```
+
+Names apply to the existing semantic element: a button, input, calendar grid,
+chart SVG, or table. They do not assign a role to a generic layout container.
+State `name` keys and DOM `id` values remain separate from accessible names.
+
+For Select, Combobox, and DatePicker, naming kwargs target the primary control.
+For Dialog, Popover, HoverCard, and Tooltip, they target the popup content;
+an explicit trigger Button accepts its own naming kwargs. Tabs names its tablist,
+while a Tab names its trigger. AccordionItem names its generated trigger.
+
+When both kwargs are supplied, `aria_labelledby` takes precedence according to
+ARIA naming rules. An explicit `aria_label` replaces an automatically generated
+internal title reference, while omitting both preserves the component's defaults.
+
+
 ## Rows and Columns
 
 Every interface needs a way to arrange things on screen. Prefab provides two fundamental layout containers: `Row` arranges children horizontally, and `Column` stacks them vertically. Both accept a `gap` parameter that controls the spacing between children; the number maps to [Tailwind's spacing scale](/styling/css), so `gap=4` means `1rem`.

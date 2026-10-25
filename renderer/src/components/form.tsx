@@ -11,6 +11,10 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
+import {
   Select as ShadcnSelect,
   SelectContent,
   SelectGroup,
@@ -53,7 +57,7 @@ export function PrefabLabel({
 /*  Standalone Radio (outside a RadioGroup)                           */
 /* ------------------------------------------------------------------ */
 
-interface PrefabRadioProps {
+interface PrefabRadioProps extends AccessibleNameProps {
   option: string;
   label?: string;
   value?: boolean;
@@ -69,11 +73,13 @@ export function PrefabRadio({
   name,
   disabled,
   className,
+  ...accessibleName
 }: PrefabRadioProps) {
   const id = `radio-${name ?? "standalone"}-${option}`;
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <input
+        {...getAccessibleNameProps(accessibleName)}
         type="radio"
         id={id}
         name={name}
@@ -95,14 +101,14 @@ export function PrefabRadio({
 /*  Pre-interpolated child item types (built by renderer.tsx)         */
 /* ------------------------------------------------------------------ */
 
-interface SelectItemData {
+interface SelectItemData extends AccessibleNameProps {
   value: string;
   label: string;
   selected?: boolean;
   disabled?: boolean;
 }
 
-interface RadioItemData {
+interface RadioItemData extends AccessibleNameProps {
   option: string;
   label?: string;
   value?: boolean;
@@ -142,7 +148,7 @@ type SelectChildEntry =
   | SelectSeparatorEntry
   | SelectLabelEntry;
 
-interface PrefabSelectProps {
+interface PrefabSelectProps extends AccessibleNameProps {
   placeholder?: string;
   name?: string;
   size?: "sm" | "default";
@@ -171,6 +177,7 @@ export function PrefabSelect({
   onValueChange,
   _items = [],
   _selectChildren,
+  ...accessibleName
 }: PrefabSelectProps) {
   // Build a flat list of all items for label lookup
   const allItems = React.useMemo(() => {
@@ -209,7 +216,12 @@ export function PrefabSelect({
       : { defaultValue, onValueChange: handleChange };
 
   const renderItem = (item: SelectItemData) => (
-    <SelectItem key={item.value} value={item.value} disabled={item.disabled}>
+    <SelectItem
+      {...getAccessibleNameProps(item)}
+      key={item.value}
+      value={item.value}
+      disabled={item.disabled}
+    >
       {item.label}
     </SelectItem>
   );
@@ -217,6 +229,7 @@ export function PrefabSelect({
   return (
     <ShadcnSelect {...controlProps} disabled={disabled} name={name}>
       <SelectTrigger
+        {...getAccessibleNameProps(accessibleName)}
         className={className}
         size={size}
         aria-invalid={invalid || undefined}
@@ -258,7 +271,7 @@ export function PrefabSelect({
 /*  RadioGroup                                                        */
 /* ------------------------------------------------------------------ */
 
-interface PrefabRadioGroupProps {
+interface PrefabRadioGroupProps extends AccessibleNameProps {
   name?: string;
   className?: string;
   value?: string;
@@ -273,6 +286,7 @@ export function PrefabRadioGroup({
   value,
   onValueChange,
   _items = [],
+  ...accessibleName
 }: PrefabRadioGroupProps) {
   const defaultValue = _items.find((i) => i.value)?.option;
 
@@ -282,12 +296,18 @@ export function PrefabRadioGroup({
       : { defaultValue, onValueChange };
 
   return (
-    <ShadcnRadioGroup {...controlProps} className={className} name={name}>
+    <ShadcnRadioGroup
+      {...getAccessibleNameProps(accessibleName)}
+      {...controlProps}
+      className={className}
+      name={name}
+    >
       {_items.map((item) => {
         const id = `radio-${name ?? ""}-${item.option}`;
         return (
           <div key={item.option} className="flex items-center space-x-2">
             <RadioGroupItem
+              {...getAccessibleNameProps(item)}
               value={item.option}
               disabled={item.disabled}
               id={id}
@@ -308,7 +328,7 @@ export function PrefabRadioGroup({
 /*  Checkbox                                                          */
 /* ------------------------------------------------------------------ */
 
-interface PrefabCheckboxProps {
+interface PrefabCheckboxProps extends AccessibleNameProps {
   label?: string;
   value?: boolean;
   name?: string;
@@ -325,6 +345,7 @@ export function PrefabCheckbox({
   disabled,
   className,
   onCheckedChange,
+  ...accessibleName
 }: PrefabCheckboxProps) {
   const id = name ? `checkbox-${name}` : undefined;
 
@@ -343,6 +364,7 @@ export function PrefabCheckbox({
 
   const checkbox = (
     <ShadcnCheckbox
+      {...getAccessibleNameProps(accessibleName)}
       id={id}
       checked={internal}
       onCheckedChange={handleChange}
@@ -370,7 +392,7 @@ export function PrefabCheckbox({
 /*  Switch                                                            */
 /* ------------------------------------------------------------------ */
 
-interface PrefabSwitchProps {
+interface PrefabSwitchProps extends AccessibleNameProps {
   label?: string;
   value?: boolean;
   size?: "sm" | "default";
@@ -389,6 +411,7 @@ export function PrefabSwitch({
   disabled,
   className,
   onCheckedChange,
+  ...accessibleName
 }: PrefabSwitchProps) {
   const id = name ? `switch-${name}` : undefined;
 
@@ -407,6 +430,7 @@ export function PrefabSwitch({
 
   const switchEl = (
     <ShadcnSwitch
+      {...getAccessibleNameProps(accessibleName)}
       id={id}
       checked={internal}
       onCheckedChange={handleChange}
@@ -434,7 +458,7 @@ export function PrefabSwitch({
 /*  ButtonGroup                                                       */
 /* ------------------------------------------------------------------ */
 
-interface PrefabButtonGroupProps {
+interface PrefabButtonGroupProps extends AccessibleNameProps {
   orientation?: "horizontal" | "vertical";
   className?: string;
   children?: React.ReactNode;
@@ -444,9 +468,11 @@ export function PrefabButtonGroup({
   orientation = "horizontal",
   className,
   children,
+  ...accessibleName
 }: PrefabButtonGroupProps) {
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       role="group"
       data-slot="button-group"
       data-orientation={orientation}

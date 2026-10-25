@@ -15,9 +15,13 @@ import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Separator } from "@base-ui/react/separator";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { usePortalContainer } from "../portal-container";
 
-interface ComboboxItemData {
+interface ComboboxItemData extends AccessibleNameProps {
   value: string;
   label: string;
   disabled?: boolean;
@@ -28,7 +32,7 @@ interface ComboboxGroupData {
   items: ComboboxItemData[];
 }
 
-interface PrefabComboboxProps {
+interface PrefabComboboxProps extends AccessibleNameProps {
   placeholder?: string;
   searchPlaceholder?: string;
   name?: string;
@@ -47,6 +51,7 @@ interface PrefabComboboxProps {
 function ComboboxItemRow({ item }: { item: ComboboxItemData }) {
   return (
     <ComboboxPrimitive.Item
+      {...getAccessibleNameProps(item)}
       value={item.value}
       disabled={item.disabled}
       className={cn(
@@ -78,6 +83,7 @@ export function PrefabCombobox({
   _items = [],
   _groups = [],
   _separatorIndices = [],
+  ...accessibleName
 }: PrefabComboboxProps) {
   const container = usePortalContainer();
   const hasGroups = _groups.length > 0;
@@ -155,6 +161,7 @@ export function PrefabCombobox({
       disabled={disabled}
     >
       <ComboboxPrimitive.Trigger
+        {...getAccessibleNameProps(accessibleName)}
         aria-invalid={invalid || undefined}
         disabled={disabled}
         className={cn(

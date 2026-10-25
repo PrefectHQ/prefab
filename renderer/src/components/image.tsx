@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 
-interface ImageProps {
+interface ImageProps extends AccessibleNameProps {
   src: string;
   alt?: string;
   width?: string;
@@ -16,6 +20,7 @@ export function Image({
   height,
   className,
   cssClass,
+  ...accessibleName
 }: ImageProps) {
   const style: React.CSSProperties = {};
   if (width) style.width = width;
@@ -23,6 +28,7 @@ export function Image({
 
   return (
     <img
+      {...getAccessibleNameProps(accessibleName)}
       src={src}
       alt={alt}
       style={Object.keys(style).length > 0 ? style : undefined}

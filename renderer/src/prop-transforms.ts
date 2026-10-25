@@ -123,6 +123,18 @@ export function mapProps(
 ): Record<string, unknown> {
   const mapped = { ...props };
 
+  // These are the only supported common ARIA attributes, not arbitrary DOM props.
+  if ("ariaLabel" in mapped) {
+    mapped["aria-label"] =
+      mapped.ariaLabel == null ? undefined : String(mapped.ariaLabel);
+    delete mapped.ariaLabel;
+  }
+  if ("ariaLabelledBy" in mapped) {
+    mapped["aria-labelledby"] =
+      mapped.ariaLabelledBy == null ? undefined : String(mapped.ariaLabelledBy);
+    delete mapped.ariaLabelledBy;
+  }
+
   // Button/Badge: "label" → children text
   if (type === "Button" || type === "Badge") {
     if ("label" in mapped) {

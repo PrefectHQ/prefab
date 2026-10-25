@@ -7,10 +7,14 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { useIcon } from "@/lib/icons";
 import { readFiles, filterByAccept } from "../file-utils";
 
-interface PrefabDropZoneProps {
+interface PrefabDropZoneProps extends AccessibleNameProps {
   icon?: string;
   label?: string;
   description?: string;
@@ -33,6 +37,7 @@ export function PrefabDropZone({
   disabled = false,
   className,
   onChange,
+  ...accessibleName
 }: PrefabDropZoneProps) {
   const [isDragOver, setIsDragOver] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -103,6 +108,7 @@ export function PrefabDropZone({
 
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       role="button"
       tabIndex={disabled ? -1 : 0}
       onClick={handleClick}

@@ -35,6 +35,10 @@ import {
   type ChartConfig,
 } from "@/ui/chart";
 import { interpolateString } from "../interpolation";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import type {
   BarChartWire,
   LineChartWire,
@@ -162,7 +166,8 @@ export function PrefabBarChart({
   showYAxis = true,
   valueFormat = "auto",
   className,
-}: BarChartWire & { className?: string }) {
+  ...accessibleName
+}: BarChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
   const valueFormatter = getValueFormatter(valueFormat);
@@ -179,6 +184,7 @@ export function PrefabBarChart({
       style={{ height, aspectRatio: "auto" }}
     >
       <BarChart
+        {...getAccessibleNameProps(accessibleName)}
         data={data}
         layout={horizontal ? "vertical" : "horizontal"}
         margin={margin}
@@ -276,7 +282,8 @@ export function PrefabLineChart({
   showYAxis = true,
   valueFormat = "auto",
   className,
-}: LineChartWire & { className?: string }) {
+  ...accessibleName
+}: LineChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   if (typeof series === "string" || !Array.isArray(series)) return null;
   const config = buildConfig(series);
@@ -291,7 +298,11 @@ export function PrefabLineChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <LineChart data={data} margin={margin}>
+      <LineChart
+        {...getAccessibleNameProps(accessibleName)}
+        data={data}
+        margin={margin}
+      >
         {showGrid && <CartesianGrid vertical={false} />}
         {xAxis && (
           <XAxis
@@ -355,7 +366,8 @@ export function PrefabAreaChart({
   showYAxis = true,
   valueFormat = "auto",
   className,
-}: AreaChartWire & { className?: string }) {
+  ...accessibleName
+}: AreaChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
   const valueFormatter = getValueFormatter(valueFormat);
@@ -366,7 +378,7 @@ export function PrefabAreaChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <AreaChart data={data}>
+      <AreaChart {...getAccessibleNameProps(accessibleName)} data={data}>
         {showGrid && <CartesianGrid vertical={false} />}
         {xAxis && (
           <XAxis
@@ -423,7 +435,8 @@ export function PrefabPieChart({
   animate = true,
   valueFormat = "auto",
   className,
-}: PieChartWire & { className?: string }) {
+  ...accessibleName
+}: PieChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildPieConfig(data, nameKey);
   const valueFormatter = getValueFormatter(valueFormat);
@@ -453,7 +466,7 @@ export function PrefabPieChart({
         config={config}
         style={{ height: chartHeight, aspectRatio: "auto" }}
       >
-        <PieChart>
+        <PieChart {...getAccessibleNameProps(accessibleName)}>
           {showTooltip && (
             <ChartTooltip
               content={
@@ -524,7 +537,8 @@ export function PrefabRadarChart({
   animate = true,
   showGrid = true,
   className,
-}: RadarChartWire & { className?: string }) {
+  ...accessibleName
+}: RadarChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildConfig(series);
 
@@ -534,7 +548,7 @@ export function PrefabRadarChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <RadarChart data={data}>
+      <RadarChart {...getAccessibleNameProps(accessibleName)} data={data}>
         {showGrid && <PolarGrid />}
         {axisKey && <PolarAngleAxis dataKey={axisKey} />}
         {showTooltip && <ChartTooltip content={<ChartTooltipContent />} />}
@@ -571,7 +585,8 @@ export function PrefabRadialChart({
   animate = true,
   valueFormat = "auto",
   className,
-}: RadialChartWire & { className?: string }) {
+  ...accessibleName
+}: RadialChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
   const config = buildPieConfig(data, nameKey);
   const valueFormatter = getValueFormatter(valueFormat);
@@ -588,6 +603,7 @@ export function PrefabRadialChart({
       style={{ height, aspectRatio: "auto" }}
     >
       <RadialBarChart
+        {...getAccessibleNameProps(accessibleName)}
         data={coloredData}
         innerRadius={innerRadius}
         startAngle={startAngle}
@@ -626,7 +642,8 @@ export function PrefabScatterChart({
   animate = true,
   showGrid = true,
   className,
-}: ScatterChartWire & { className?: string }) {
+  ...accessibleName
+}: ScatterChartWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string") return null;
 
   // Stabilize data reference: interpolateProps creates new arrays/objects
@@ -645,7 +662,10 @@ export function PrefabScatterChart({
       className={className}
       style={{ height, aspectRatio: "auto" }}
     >
-      <ScatterChart data={stableData}>
+      <ScatterChart
+        {...getAccessibleNameProps(accessibleName)}
+        data={stableData}
+      >
         {showGrid && <CartesianGrid />}
         <XAxis
           dataKey={xAxis}

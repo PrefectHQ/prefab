@@ -10,6 +10,8 @@ import { z } from "zod";
 /** Fields present on every component. */
 export const componentBase = z.object({
   cssClass: z.string().optional(),
+  ariaLabel: z.string().optional(),
+  ariaLabelledBy: z.string().optional(),
   onMount: z.unknown().optional(),
 });
 

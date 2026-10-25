@@ -10,6 +10,10 @@
  *   - $event is injected by action handlers only (see actions.ts)
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "./accessibility";
 import type { App } from "@modelcontextprotocol/ext-apps";
 import React, { useEffect, useRef, type ReactNode } from "react";
 
@@ -67,9 +71,21 @@ interface RenderNodeProps {
   app: App | null;
 }
 
-/**
- * Render a single node from the JSON component tree.
- */
+/** Resolve naming metadata for children consumed by compound components. */
+function childAccessibleNameProps(
+  child: ComponentNode,
+  ctx: Record<string, unknown>,
+): AccessibleNameProps {
+  const names = interpolateProps(
+    { ariaLabel: child.ariaLabel, ariaLabelledBy: child.ariaLabelledBy },
+    ctx,
+  );
+  return getAccessibleNameProps(
+    mapProps(child.type, names) as AccessibleNameProps,
+  );
+}
+
+/** Render a single node from the JSON component tree. */
 export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const overlayClose = useOverlayClose();
 
@@ -201,7 +217,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
                 typeof val === "string" ? interpolateString(val, ctx) : val
               ) as string;
             } else if (gc.type === "ComboboxOption") {
-              const item: Record<string, unknown> = {};
+              const item: Record<string, unknown> = {
+                ...childAccessibleNameProps(gc, ctx),
+              };
               for (const field of ["value", "label", "disabled"]) {
                 if (field in gc) {
                   const val = gc[field];
@@ -224,7 +242,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         if (child.type === "ComboboxSeparator") {
           separatorIndices.push(items.length);
         } else if (child.type === "ComboboxOption") {
-          const item: Record<string, unknown> = {};
+          const item: Record<string, unknown> = {
+            ...childAccessibleNameProps(child, ctx),
+          };
           for (const field of ["value", "label", "disabled"]) {
             if (field in child) {
               const val = child[field];
@@ -273,7 +293,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
 
     if (hasStructured) {
       const extractItem = (child: ComponentNode) => {
-        const item: Record<string, unknown> = {};
+        const item: Record<string, unknown> = {
+          ...childAccessibleNameProps(child, ctx),
+        };
         for (const field of SELECT_GROUP_FIELDS) {
           if (field in child) {
             const val = child[field];
@@ -323,7 +345,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     } else {
       const fields = ITEM_CHILD_TYPES[type];
       const items = children.map((child) => {
-        const item: Record<string, unknown> = {};
+        const item: Record<string, unknown> = {
+          ...childAccessibleNameProps(child, ctx),
+        };
         for (const field of fields) {
           if (field in child) {
             const val = child[field];
@@ -425,6 +449,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const COMPOUND_TYPES = new Set(["Tabs", "Accordion", "Pages"]);
   if (COMPOUND_TYPES.has(type) && children) {
     const panels = children.map((child, i) => ({
+      ...childAccessibleNameProps(child, ctx),
       title: (child.title as string) ?? `Item ${i + 1}`,
       value: (child.value as string) ?? (child.title as string) ?? `item-${i}`,
       disabled: (child.disabled as boolean) ?? false,
