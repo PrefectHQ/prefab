@@ -28,9 +28,10 @@ import type { StateStore } from "./state";
 import type { OverlayCloseFn } from "./overlay-context";
 import { interpolateProps, interpolateString } from "./interpolation";
 import { validateAction } from "./validation";
-import { readFiles, filterByAccept } from "./file-utils";
+import { openFilePicker } from "./file-picker";
 import { evaluateCondition } from "./conditions";
 import { getCustomActionHandler } from "./custom-handlers";
+import { dispatchAppTool, InactiveAppToolError } from "./app-tool-dispatch";
 
 /** Action spec as received from the JSON component tree. */
 export interface ActionSpec {
@@ -40,18 +41,30 @@ export interface ActionSpec {
   [key: string]: unknown;
 }
 
+/** Invocation-scoped cancellation and failure reporting for app tools. */
+export interface ActionExecution {
+  signal?: AbortSignal;
+  /** Original app store, including when actions use a guarded invocation store. */
+  intervalOwner?: StateStore;
+  reportError?: (message: string) => void;
+  /** Register deferred work; the returned function releases its ownership. */
+  registerCleanup?: (cleanup: () => void) => (cancel?: boolean) => void;
+}
+
 /** Maximum callback nesting depth to prevent runaway recursion. */
 const MAX_DEPTH = 10;
 
 /** Active interval IDs for cleanup on unmount / tree replacement. */
-const activeIntervals = new Set<ReturnType<typeof setInterval>>();
+const activeIntervals = new Map<
+  ReturnType<typeof setInterval>,
+  { owner: StateStore; cleanup: () => void }
+>();
 
-/** Clear all active intervals. Call when the component tree is replaced. */
-export function clearAllIntervals(): void {
-  for (const id of activeIntervals) {
-    globalThis.clearInterval(id);
+/** Clear active intervals, optionally limited to one app's state store. */
+export function clearAllIntervals(owner?: StateStore): void {
+  for (const interval of [...activeIntervals.values()]) {
+    if (owner === undefined || interval.owner === owner) interval.cleanup();
   }
-  activeIntervals.clear();
 }
 
 /**
@@ -127,9 +140,12 @@ export async function executeAction(
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
   result?: unknown,
+  execution?: ActionExecution,
 ): Promise<boolean> {
+  execution?.signal?.throwIfAborted();
   if (depth > MAX_DEPTH) {
     console.warn("[Prefab] Action callback depth limit exceeded");
+    execution?.reportError?.("Action callback depth limit exceeded");
     return false;
   }
 
@@ -155,6 +171,9 @@ export async function executeAction(
   // Validate resolved action against its Zod schema
   const validationError = validateAction(resolved);
   if (validationError) {
+    execution?.reportError?.(
+      `${validationError.message}: ${validationError.issues.join("; ")}`,
+    );
     return false;
   }
 
@@ -166,13 +185,23 @@ export async function executeAction(
     switch (resolved.action) {
       // ── Server actions ──────────────────────────────────────────
       case "toolCall": {
+        if (!app)
+          throw new Error(
+            "Calling a server tool requires an MCP host connection",
+          );
         const name = resolved.tool as string;
-        const args = (resolved.arguments ?? {}) as Record<string, string>;
-        const toolResult = await app?.callServerTool({
+        const args = resolved.arguments ?? {};
+        if (typeof args !== "object" || args === null || Array.isArray(args)) {
+          throw new Error("Tool arguments must resolve to an object");
+        }
+        const request = {
           name,
-          arguments: args,
+          arguments: args as Record<string, unknown>,
           _meta: appName ? { fastmcp: { app: appName } } : undefined,
-        });
+        };
+        const toolResult = execution?.signal
+          ? await app.callServerTool(request, { signal: execution.signal })
+          : await app.callServerTool(request);
         if (toolResult?.isError) {
           success = false;
           errorMessage = extractErrorText(toolResult);
@@ -195,6 +224,21 @@ export async function executeAction(
           resultData = toolResult
             ? extractToolResultData(toolResult)
             : undefined;
+        }
+        break;
+      }
+      case "invokeAppTool": {
+        const toolResult = await dispatchAppTool(
+          state,
+          resolved.tool as string,
+          resolved.arguments ?? {},
+          { signal: execution?.signal, depth: depth + 1, overlayClose },
+        );
+        if (toolResult.isError) {
+          success = false;
+          errorMessage = extractErrorText(toolResult);
+        } else {
+          resultData = toolResult.structuredContent;
         }
         break;
       }
@@ -323,6 +367,7 @@ export async function executeAction(
         const rawBody = resolved.body;
 
         const fetchInit: RequestInit = { method, headers: { ...headers } };
+        if (execution?.signal) fetchInit.signal = execution.signal;
         if (rawBody != null && method !== "GET" && method !== "HEAD") {
           if (typeof rawBody === "object") {
             fetchInit.body = JSON.stringify(rawBody);
@@ -362,42 +407,11 @@ export async function executeAction(
         const multiple = (resolved.multiple as boolean) ?? false;
         const maxSize = resolved.maxSize as number | undefined;
 
-        const fileData = await new Promise<unknown>((resolve, reject) => {
-          const input = document.createElement("input");
-          input.type = "file";
-          if (accept) input.accept = accept;
-          if (multiple) input.multiple = true;
-          input.style.display = "none";
-          document.body.appendChild(input);
-
-          input.addEventListener("change", async () => {
-            try {
-              let files = Array.from(input.files ?? []);
-              files = filterByAccept(files, accept);
-              const result = await readFiles(files, { maxSize });
-              resolve(result);
-            } catch (err) {
-              reject(err);
-            } finally {
-              document.body.removeChild(input);
-            }
-          });
-
-          // Handle cancel — the input fires no change event on cancel,
-          // but we can detect it when the window regains focus.
-          const onFocus = () => {
-            // Small delay to let the change event fire first if files were selected
-            setTimeout(() => {
-              if (document.body.contains(input)) {
-                document.body.removeChild(input);
-                resolve([]);
-              }
-              window.removeEventListener("focus", onFocus);
-            }, 300);
-          };
-          window.addEventListener("focus", onFocus);
-
-          input.click();
+        const fileData = await openFilePicker({
+          accept,
+          multiple,
+          maxSize,
+          signal: execution?.signal,
         });
 
         if (!Array.isArray(fileData) || fileData.length === 0) {
@@ -457,6 +471,8 @@ export async function executeAction(
               undefined,
               scope,
               overlayClose,
+              undefined,
+              execution,
             );
           }
         };
@@ -467,48 +483,81 @@ export async function executeAction(
           break;
         }
 
-        // Start the interval, restarting if duration changes reactively.
-        const startInterval = (): ReturnType<typeof setInterval> => {
+        let intervalId: ReturnType<typeof setInterval> | undefined;
+        let disposed = false;
+        let unregister: ((cancel?: boolean) => void) | undefined;
+        let pendingTicks = 0;
+        let completing = false;
+        const stopTimer = () => {
+          if (intervalId === undefined) return;
+          globalThis.clearInterval(intervalId);
+          activeIntervals.delete(intervalId);
+          intervalId = undefined;
+        };
+        const dispose = (cancel = true) => {
+          if (disposed) return;
+          disposed = true;
+          stopTimer();
+          unregister?.(cancel);
+        };
+        unregister = execution?.registerCleanup?.(dispose);
+        if (disposed) break;
+
+        // Restart the timer without dropping ownership of the deferred work.
+        const startInterval = () => {
           const id = globalThis.setInterval(async () => {
-            tickCount++;
-
-            if (onTick) {
-              await executeActions(
-                onTick,
-                app,
-                state,
-                tickCount,
-                depth + 1,
-                undefined,
-                scope,
-                overlayClose,
-              );
-            }
-
-            if (!shouldContinue()) {
-              globalThis.clearInterval(id);
-              activeIntervals.delete(id);
-              await fireComplete();
-              return;
-            }
-
-            // Check if duration changed (reactive {{ template }})
-            if (typeof rawDuration !== "number") {
-              const newDuration = resolveDuration();
-              if (newDuration !== currentDuration) {
-                currentDuration = newDuration;
-                globalThis.clearInterval(id);
-                activeIntervals.delete(id);
-                const newId = startInterval();
-                activeIntervals.add(newId);
+            if (disposed || completing) return;
+            pendingTicks++;
+            try {
+              tickCount++;
+              if (onTick) {
+                await executeActions(
+                  onTick,
+                  app,
+                  state,
+                  tickCount,
+                  depth + 1,
+                  undefined,
+                  scope,
+                  overlayClose,
+                  undefined,
+                  execution,
+                );
               }
+              if (disposed || completing || intervalId !== id) return;
+              if (!shouldContinue()) {
+                completing = true;
+                // Keep ownership until every already-running tick has settled.
+                globalThis.clearInterval(id);
+                await fireComplete();
+                return;
+              }
+              if (typeof rawDuration !== "number") {
+                const newDuration = resolveDuration();
+                if (newDuration !== currentDuration) {
+                  currentDuration = newDuration;
+                  stopTimer();
+                  startInterval();
+                }
+              }
+            } catch (error) {
+              // Disposal can abort the retained controller, so inspect the
+              // cancellation state before cleanup to preserve real failures.
+              const cancelled = execution?.signal?.aborted;
+              dispose();
+              if (!cancelled) throw error;
+            } finally {
+              pendingTicks--;
+              if (completing && pendingTicks === 0) dispose(false);
             }
           }, currentDuration);
-          return id;
+          intervalId = id;
+          activeIntervals.set(id, {
+            owner: execution?.intervalOwner ?? state,
+            cleanup: dispose,
+          });
         };
-
-        const intervalId = startInterval();
-        activeIntervals.add(intervalId);
+        startInterval();
 
         // Fire-and-forget: return immediately
         break;
@@ -536,13 +585,29 @@ export async function executeAction(
       }
     }
   } catch (e: unknown) {
+    // An old button invocation must not run even its error callbacks against
+    // the state of a replacement application.
+    if (e instanceof InactiveAppToolError) {
+      execution?.reportError?.(e.message);
+      return false;
+    }
+    if (
+      execution?.signal?.aborted &&
+      e !== execution.signal.reason &&
+      !(e instanceof Error && e.name === "AbortError")
+    ) {
+      console.warn("[Prefab] Action failed after cancellation", e);
+    }
     success = false;
     errorMessage = e instanceof Error ? e.message : String(e);
   }
 
   // Dispatch lifecycle callbacks: $result to onSuccess, $error to onError
+  execution?.signal?.throwIfAborted();
+  if (!success)
+    execution?.reportError?.(errorMessage ?? "Action execution failed");
   if (success && resolved.onSuccess) {
-    await executeActions(
+    success = await executeActions(
       resolved.onSuccess,
       app,
       state,
@@ -552,6 +617,7 @@ export async function executeAction(
       scope,
       overlayClose,
       resultData,
+      execution,
     );
   } else if (!success && resolved.onError) {
     await executeActions(
@@ -563,6 +629,8 @@ export async function executeAction(
       errorMessage,
       scope,
       overlayClose,
+      undefined,
+      execution,
     );
   }
 
@@ -574,7 +642,8 @@ export async function executeAction(
  *
  * Accepts a single ActionSpec or an array (for composed action chains).
  * The first action that fails stops the chain — its onError callback runs,
- * then no further actions execute.
+ * then no further actions execute. Returns whether the entire chain succeeded,
+ * including success callbacks, so app-provided tools can report failures.
  */
 export async function executeActions(
   actions: ActionSpec | ActionSpec[],
@@ -586,7 +655,8 @@ export async function executeActions(
   scope?: Record<string, unknown>,
   overlayClose?: OverlayCloseFn,
   result?: unknown,
-): Promise<void> {
+  execution?: ActionExecution,
+): Promise<boolean> {
   const list = Array.isArray(actions) ? actions : [actions];
   for (const action of list) {
     const ok = await executeAction(
@@ -599,7 +669,9 @@ export async function executeActions(
       scope,
       overlayClose,
       result,
+      execution,
     );
-    if (!ok) break;
+    if (!ok) return false;
   }
+  return true;
 }

@@ -19,17 +19,37 @@ export interface FileData {
 /**
  * Read a File to raw base64 (no data-URL prefix).
  */
-function readFileAsBase64(file: File): Promise<string> {
+function readFileAsBase64(file: File, signal?: AbortSignal): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    const cleanup = () => signal?.removeEventListener("abort", onAbort);
+    const onAbort = () => {
+      reader.abort();
+      cleanup();
+      reject(new DOMException("Cancelled", "AbortError"));
+    };
+    if (signal?.aborted) {
+      onAbort();
+      return;
+    }
+    signal?.addEventListener("abort", onAbort, { once: true });
     reader.onload = () => {
+      cleanup();
       // result is "data:<type>;base64,<data>" — strip the prefix
       const dataUrl = reader.result as string;
       const base64 = dataUrl.split(",", 2)[1] ?? "";
       resolve(base64);
     };
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
+    reader.onerror = () => {
+      cleanup();
+      reject(reader.error);
+    };
+    try {
+      reader.readAsDataURL(file);
+    } catch (error) {
+      cleanup();
+      reject(error);
+    }
   });
 }
 
@@ -42,7 +62,7 @@ function readFileAsBase64(file: File): Promise<string> {
  */
 export async function readFiles(
   files: FileList | File[],
-  options: { maxSize?: number } = {},
+  options: { maxSize?: number; signal?: AbortSignal } = {},
 ): Promise<FileData[]> {
   const fileArray = Array.from(files);
   const results: FileData[] = [];
@@ -54,7 +74,7 @@ export async function readFiles(
       continue;
     }
 
-    const data = await readFileAsBase64(file);
+    const data = await readFileAsBase64(file, options.signal);
     results.push({
       name: file.name,
       size: file.size,
