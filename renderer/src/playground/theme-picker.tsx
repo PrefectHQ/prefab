@@ -28,6 +28,11 @@ interface Preset {
 // TypeScript widens the JSON's string literals, so `mode` arrives as `string`.
 const PRESETS: Preset[] = presets as Preset[];
 
+/** Recover a preset's mode when restoring shared playground CSS. */
+export function getPresetMode(css: string): Preset["mode"] {
+  return PRESETS.find((preset) => preset.css === css)?.mode ?? null;
+}
+
 interface ThemePickerProps {
   value: string;
   /**

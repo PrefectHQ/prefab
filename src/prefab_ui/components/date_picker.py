@@ -42,7 +42,7 @@ class DatePicker(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "datepicker"
+    _auto_name: ClassVar[str | None] = "datepicker"
     type: Literal["DatePicker"] = "DatePicker"
     placeholder: RxStr = Field(
         default="Pick a date",

@@ -73,6 +73,11 @@ The same `mode` kwarg is on `get_renderer_head()`, `get_renderer_csp()`, `get_ge
 
 All configs share `index.html` as the HTML entry point except the embed (library mode, no HTML) and playground (its own HTML).
 
+All builds explicitly retain the Vite 6 JavaScript targets (ES2020, Chrome 87,
+Edge 88, Firefox 78, Safari 14) through `rendererBuildTarget` in
+`vite-plugins.ts`. A build-tool upgrade must not silently change the emitted
+syntax requirements. This does not polyfill browser APIs used by dependencies.
+
 ## When Things Get Built
 
 ### On every commit (CI)
@@ -111,12 +116,12 @@ prefab dev build-renderers
 
 Runs a multi-step pipeline:
 
-1. Install renderer node deps (if needed)
+1. Install renderer and documentation build node deps from lockfiles (if needed)
 2. Build renderer library — `npm run build:renderer` (if source changed)
 3. Render component previews — `tools/render_previews.py`
 4. Extract preview classes — `tools/extract_preview_classes.py`
 5. Generate Tailwind content — `tools/generate_content.py`
-6. Build Tailwind CSS — `@tailwindcss/cli`
+6. Build Tailwind CSS — local `@tailwindcss/cli` from `tools/package-lock.json`
 7. Scope CSS — `tools/scope_css.py`
 8. Bundle playground source — `tools/generate_playground_bundle.py`
 9. Extract playground examples — `tools/extract_examples.py`

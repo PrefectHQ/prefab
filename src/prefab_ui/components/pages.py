@@ -86,7 +86,7 @@ class Pages(StatefulMixin, ContainerComponent):
     ```
     """
 
-    _auto_name: ClassVar[str] = "pages"
+    _auto_name: ClassVar[str | None] = "pages"
     type: Literal["Pages"] = "Pages"
     value: RxStr | None = Field(
         default=None,

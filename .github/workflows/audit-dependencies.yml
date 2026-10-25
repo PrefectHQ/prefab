@@ -1,0 +1,54 @@
+name: Dependency security audit
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - "renderer/package*.json"
+      - "tools/package*.json"
+      - ".github/workflows/audit-dependencies.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - "renderer/package*.json"
+      - "tools/package*.json"
+      - ".github/workflows/audit-dependencies.yml"
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: "Python ${{ matrix.python-version }} locked dependency audit"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Export locked dependencies
+        run: uv export --frozen --all-groups --no-emit-project --no-hashes --output-file requirements-audit.txt
+      - name: Audit without installing project dependencies
+        run: uvx --python "${{ matrix.python-version }}" --exclude-newer "1 week" --from pip-audit==2.10.0 pip-audit --disable-pip --no-deps --requirement requirements-audit.txt
+
+  npm:
+    name: "Renderer and docs locked dependency audit"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - run: npm audit --prefix renderer --package-lock-only
+      - run: npm audit --prefix tools --package-lock-only

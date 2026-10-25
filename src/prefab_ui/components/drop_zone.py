@@ -54,7 +54,7 @@ class DropZone(StatefulMixin, Component):
         on_change: Action(s) to execute when files are selected.
     """
 
-    _auto_name: ClassVar[str] = "dropzone"
+    _auto_name: ClassVar[str | None] = "dropzone"
     type: Literal["DropZone"] = "DropZone"
     value: list[Any] | None = Field(
         default=None,

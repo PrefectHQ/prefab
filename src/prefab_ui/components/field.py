@@ -91,7 +91,8 @@ class ChoiceCard(Field):
     ```
     """
 
-    type: Literal["ChoiceCard"] = "ChoiceCard"
+    # Pydantic subclasses specialize the wire discriminator, not mutable state.
+    type: Literal["ChoiceCard"] = "ChoiceCard"  # ty: ignore[invalid-attribute-override]
 
 
 class FieldTitle(Component):

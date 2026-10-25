@@ -41,7 +41,7 @@ class ForEach(ContainerComponent):
     - `as (idx, item)` -- tuple unpacking (index first, matching enumerate)
 
     Args:
-        key: Data field containing the list to iterate over.
+        key: State path, reactive expression, or `{{ template }}` resolving to a list.
 
     **Example:**
 
@@ -49,11 +49,14 @@ class ForEach(ContainerComponent):
     with ForEach("groups") as (gi, group):
         with ForEach(f"groups.{gi}.todos") as (_, todo):
             Text(f"{todo.name} in {group.name}")
+
+    with ForEach(STATE.items.selectattr("active")) as item:
+        Text(item.name)
     ```
     """
 
     type: Literal["ForEach"] = "ForEach"
-    key: str = Field(description="Data field containing the list to iterate over")
+    key: str = Field(description="State path or expression resolving to a list")
 
     @overload
     def __init__(self, key: str | Rx, /, **kwargs: Any) -> None: ...

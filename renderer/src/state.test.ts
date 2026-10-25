@@ -1,6 +1,8 @@
+import React, { useState } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, it, expect, vi } from "vitest";
 import { createStateStore } from "./testing/state-store";
-import { getByPath, setByPath } from "./state";
+import { getByPath, setByPath, useStateStore, type StateStore } from "./state";
 
 describe("createStateStore", () => {
   it("starts empty by default", () => {
@@ -163,6 +165,24 @@ describe("createStateStore", () => {
     expect(store.get("items")).toEqual([1, 2, 3]);
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
+  });
+});
+
+describe("useStateStore", () => {
+  it("returns the same store across re-renders", () => {
+    // Effects and callbacks depend on the store, so a new object on
+    // every render re-runs them and can loop forever.
+    const stores: StateStore[] = [];
+    function Probe() {
+      const store = useStateStore();
+      const [rendered, setRendered] = useState(false);
+      stores.push(store);
+      if (!rendered) setRendered(true);
+      return null;
+    }
+    renderToStaticMarkup(React.createElement(Probe));
+    expect(stores).toHaveLength(2);
+    expect(stores[1]).toBe(stores[0]);
   });
 });
 

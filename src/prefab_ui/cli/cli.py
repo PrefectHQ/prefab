@@ -471,13 +471,6 @@ def build_docs() -> None:
     repo_root = _find_repo_root()
     build_dir = repo_root / "tools"
 
-    if not shutil.which("npx"):
-        console.print(
-            "[bold red]Error:[/bold red] [cyan]npx[/cyan] not found. "
-            "Install Node.js to use this command."
-        )
-        raise SystemExit(1)
-
     tailwind_env = {
         **os.environ,
         "NODE_PATH": str(repo_root / "renderer" / "node_modules"),
@@ -497,7 +490,16 @@ def build_docs() -> None:
         steps.append(
             (
                 "Installing renderer dependencies",
-                ["npm", "install", "--prefix", str(renderer_dir)],
+                ["npm", "ci", "--prefix", str(renderer_dir)],
+                None,
+            )
+        )
+
+    if should_install_node_deps(build_dir):
+        steps.append(
+            (
+                "Installing documentation build dependencies",
+                ["npm", "ci", "--prefix", str(build_dir)],
                 None,
             )
         )
@@ -534,9 +536,13 @@ def build_docs() -> None:
         (
             "Building Tailwind CSS",
             [
-                "npx",
-                "--yes",
-                "@tailwindcss/cli@4",
+                "npm",
+                "exec",
+                "--prefix",
+                str(build_dir),
+                "--no",
+                "--",
+                "tailwindcss",
                 "-i",
                 str(build_dir / "input.css"),
                 "-o",
@@ -653,9 +659,7 @@ def build_renderers() -> None:
 
     if should_install_node_deps(renderer_dir):
         console.print("  [dim]→[/dim] Installing renderer dependencies...")
-        r = subprocess.run(
-            ["npm", "install", "--prefix", str(renderer_dir)], cwd=repo_root
-        )
+        r = subprocess.run(["npm", "ci", "--prefix", str(renderer_dir)], cwd=repo_root)
         if r.returncode != 0:
             raise SystemExit(r.returncode)
 

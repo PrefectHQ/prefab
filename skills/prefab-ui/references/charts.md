@@ -38,10 +38,35 @@ All accept `data`, `series`, `x_axis`, `height` (default 300),
 - `stacked`: stack bars instead of grouping
 - `horizontal`: rotate 90°
 - `bar_radius`: corner radius on bars
+- `x_axis_label`, `y_axis_label`: category and value axis titles. Horizontal
+  bars put the category title on the left and the value title below.
+  `show_y_axis=False` also hides the value-axis title.
 
 **LineChart** — connected data points.
 - `curve`: "linear", "smooth", or "step"
 - `show_dots`: show points at data values
+- `x_axis_label`, `y_axis_label`: category and value axis titles.
+  `show_y_axis=False` also hides the value-axis title.
+- `series`: a static `list[ChartSeries]`, or an `Rx` / sole interpolation
+  template resolving to a list of series dictionaries. Use wire keys such
+  as `dataKey` in dictionaries stored in state.
+
+```python
+from prefab_ui.rx import Rx
+
+LineChart(
+    data=monthly_data,
+    series=Rx("chart_series").selectattr("visible"),
+    x_axis="month",
+)
+```
+
+For example, `chart_series` in app state can contain
+`{"dataKey": "revenue", "label": "Revenue", "color": "var(--chart-1)", "visible": True}`.
+Changing `visible` updates the plotted series. Automatic palette colors follow
+the resolved list's order; set `color` on each stored series when its color must
+stay the same across filtering or reordering. Other chart types still take
+static `ChartSeries` lists.
 
 **AreaChart** — filled area under lines.
 - `curve`, `show_dots` (same as LineChart)

@@ -34,9 +34,9 @@ import { Editor } from "./editor";
 import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
-import { ThemePicker } from "./theme-picker";
+import { getPresetMode, ThemePicker } from "./theme-picker";
 import { syncStylesheets } from "../style-assets";
-import pako from "pako";
+import { gzip, ungzip } from "pako";
 
 /**
  * Tailwind v4's `@theme inline` declares `--color-*: var(--*)` aliases at
@@ -90,7 +90,7 @@ function scopeThemeCss(css: string): string {
 }
 
 function gzipEncode(str: string): string {
-  const compressed = pako.gzip(new TextEncoder().encode(str));
+  const compressed = gzip(new TextEncoder().encode(str));
   let binary = "";
   for (const byte of compressed) binary += String.fromCharCode(byte);
   return btoa(binary)
@@ -105,7 +105,7 @@ function gzipDecode(encoded: string): string | null {
     const binary = atob(padded);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return new TextDecoder().decode(pako.ungzip(bytes));
+    return new TextDecoder().decode(ungzip(bytes));
   } catch {
     return null;
   }
@@ -208,6 +208,17 @@ export function Playground() {
   // before the parent has a chance to send pg-init-code.
   const skipFirstCodeMsg = useRef(true);
   const skipFirstThemeMsg = useRef(true);
+  const pickerModeRef = useRef<"light" | "dark" | null>(null);
+  const codeModeRef = useRef<"light" | "dark" | null>(null);
+  const handleThemeChange = useCallback(
+    (css: string, themeMode = getPresetMode(css)) => {
+      pickerModeRef.current = themeMode;
+      setThemeCss(css);
+      const nextMode = themeMode ?? (css ? null : codeModeRef.current);
+      if (nextMode) setDark(nextMode === "dark");
+    },
+    [],
+  );
 
   // Sync dark class on <html>
   useEffect(() => {
@@ -301,7 +312,7 @@ export function Playground() {
         const encodedTheme = params.get("theme");
         if (encodedTheme) {
           const decoded = decodePgParam(encodedTheme);
-          if (decoded) setThemeCss(decoded);
+          if (decoded) handleThemeChange(decoded);
         }
       }
       return;
@@ -314,14 +325,14 @@ export function Playground() {
         }
         if (typeof e.data.theme === "string" && e.data.theme) {
           const decoded = decodePgParam(e.data.theme);
-          if (decoded) setThemeCss(decoded);
+          if (decoded) handleThemeChange(decoded);
         }
       }
     }
     window.addEventListener("message", onMessage);
     window.parent.postMessage({ type: "pg-ready" }, "*");
     return () => window.removeEventListener("message", onMessage);
-  }, []);
+  }, [handleThemeChange]);
 
   // Build the full hash string from code + theme.
   const buildHash = useCallback((codeStr: string, themeStr: string) => {
@@ -386,9 +397,11 @@ export function Playground() {
       stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
       setCodeThemeCss(result.css?.join("\n") ?? "");
       syncStylesheets(result.stylesheets);
-      if (result.mode) {
-        setDark(result.mode === "dark");
-      }
+      codeModeRef.current =
+        result.mode === "light" || result.mode === "dark" ? result.mode : null;
+      // A picker preset (or its explicit toggle) takes precedence over code.
+      const nextMode = pickerModeRef.current ?? codeModeRef.current;
+      if (nextMode) setDark(nextMode === "dark");
       setError(null);
       setErrorDetail(null);
     }
@@ -558,15 +571,15 @@ export function Playground() {
           >
             <Braces className="h-4 w-4" />
           </button>
-          <ThemePicker
-            value={themeCss}
-            onChange={(css, themeMode) => {
-              setThemeCss(css);
-              if (themeMode) setDark(themeMode === "dark");
-            }}
-          />
+          <ThemePicker value={themeCss} onChange={handleThemeChange} />
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => {
+              if (pickerModeRef.current) {
+                pickerModeRef.current =
+                  pickerModeRef.current === "dark" ? "light" : "dark";
+              }
+              setDark((d) => !d);
+            }}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
             aria-label="Toggle dark mode"
           >
