@@ -1,0 +1,95 @@
+{
+  "$prefab": {
+    "version": "0.3"
+  },
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "content": "{{ count }}",
+        "type": "Text"
+      },
+      {
+        "type": "Button",
+        "label": "Increment",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "invokeAppTool",
+          "tool": "increment",
+          "arguments": {
+            "amount": 1
+          }
+        }
+      },
+      {
+        "content": "{{ error }}",
+        "type": "Text"
+      }
+    ]
+  },
+  "state": {
+    "counter_id": "counter-a",
+    "count": 0,
+    "error": ""
+  },
+  "tools": [
+    {
+      "name": "get_count",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "actions": [],
+      "result": {
+        "count": "{{ count }}"
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "default": 1
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "bind": {
+        "counter_id": "{{ counter_id }}"
+      },
+      "actions": {
+        "action": "toolCall",
+        "tool": "counters_increment_abc123",
+        "arguments": "{{ $event }}",
+        "onSuccess": [
+          {
+            "action": "setState",
+            "key": "count",
+            "value": "{{ $result.count }}"
+          },
+          {
+            "action": "setState",
+            "key": "error",
+            "value": ""
+          }
+        ],
+        "onError": {
+          "action": "setState",
+          "key": "error",
+          "value": "{{ $error }}"
+        }
+      },
+      "result": {
+        "count": "{{ count }}"
+      },
+      "name": "increment",
+      "description": "Increment this counter"
+    }
+  ]
+}

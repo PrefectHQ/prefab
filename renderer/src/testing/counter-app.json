@@ -1,0 +1,71 @@
+{
+  "$prefab": {
+    "version": "0.3"
+  },
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "content": "{{ count }}",
+        "type": "Text"
+      },
+      {
+        "type": "Button",
+        "label": "Increment",
+        "variant": "default",
+        "size": "default",
+        "disabled": false,
+        "onClick": {
+          "action": "invokeAppTool",
+          "tool": "increment",
+          "arguments": {
+            "amount": 1
+          }
+        }
+      }
+    ]
+  },
+  "state": {
+    "count": 0
+  },
+  "tools": [
+    {
+      "name": "get_count",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "actions": [],
+      "result": {
+        "count": "{{ count }}"
+      }
+    },
+    {
+      "name": "increment",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "amount"
+        ],
+        "title": "IncrementArgs",
+        "type": "object"
+      },
+      "actions": {
+        "action": "setState",
+        "key": "count",
+        "value": "{{ count + $event.amount }}"
+      },
+      "result": {
+        "count": "{{ count }}"
+      }
+    }
+  ]
+}
