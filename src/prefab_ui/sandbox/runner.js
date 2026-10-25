@@ -2,8 +2,8 @@
  * Pyodide sandbox runner — executes untrusted Prefab code in WASM.
  *
  * Protocol (JSON lines over stdin/stdout):
- *   Request:  {"code": "...", "data": {"key": "value"}}
- *   Response: {"result": <PrefabApp JSON>} or {"error": "..."}
+ *   Request:  {"id": "...", "code": "...", "data": {"key": "value"}}
+ *   Response: {"id": "...", "result": <PrefabApp JSON>} or {"id": "...", "error": "..."}
  *
  * The process stays warm between requests. Prefab is pre-loaded
  * from source files mounted into Pyodide's virtual filesystem.
@@ -111,18 +111,22 @@ console.error("pyodide:ready");
 for await (const line of readLines(Deno.stdin)) {
   if (!line.trim()) continue;
 
+  // Keep correlation metadata in JavaScript; generated Python receives only
+  // its code and data. The parent rejects output from any other request.
+  let requestId;
   try {
-    const { code, data } = JSON.parse(line);
+    const { id, code, data } = JSON.parse(line);
+    requestId = id;
     const resultStr = await pyodide.runPythonAsync(
       `_json.dumps({"result": _execute_prefab(${JSON.stringify(
         code,
       )}, _json.loads(${JSON.stringify(JSON.stringify(data || {}))}))})`,
     );
-    realLog(resultStr);
+    realLog(JSON.stringify({ ...JSON.parse(resultStr), id: requestId }));
   } catch (err) {
     const msg = String(err.message || err);
     const lines = msg.split("\n").filter((l) => l.trim());
     const short = lines[lines.length - 1] || msg;
-    realLog(JSON.stringify({ error: short }));
+    realLog(JSON.stringify({ id: requestId, error: short }));
   }
 }

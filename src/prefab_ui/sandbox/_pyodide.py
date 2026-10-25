@@ -16,6 +16,7 @@ import shutil
 import subprocess
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 RUNNER_JS = Path(__file__).parent / "runner.js"
 PREFAB_SRC = Path(__file__).parent.parent  # src/prefab_ui/
@@ -148,7 +149,10 @@ class PyodideSandbox:
             if proc is None or proc.stdin is None or proc.stdout is None:
                 raise RuntimeError("Sandbox failed to start")
 
-            request = json.dumps({"code": code, "data": data or {}}) + "\n"
+            request_id = uuid4().hex
+            request = (
+                json.dumps({"id": request_id, "code": code, "data": data or {}}) + "\n"
+            )
             loop = asyncio.get_event_loop()
             try:
                 proc.stdin.write(request.encode())
@@ -168,9 +172,13 @@ class PyodideSandbox:
                 self._stop()
                 raise RuntimeError("Invalid sandbox response") from exc
 
-            if not isinstance(response, dict) or not (
-                isinstance(response.get("result"), dict)
-                or isinstance(response.get("error"), str)
+            if (
+                not isinstance(response, dict)
+                or response.get("id") != request_id
+                or not (
+                    isinstance(response.get("result"), dict)
+                    or isinstance(response.get("error"), str)
+                )
             ):
                 self._stop()
                 raise RuntimeError("Invalid sandbox response")
