@@ -44,6 +44,8 @@ export interface ActionSpec {
 /** Invocation-scoped cancellation and failure reporting for app tools. */
 export interface ActionExecution {
   signal?: AbortSignal;
+  /** Original app store, including when actions use a guarded invocation store. */
+  intervalOwner?: StateStore;
   reportError?: (message: string) => void;
   /** Register deferred work; the returned function releases its ownership. */
   registerCleanup?: (cleanup: () => void) => (cancel?: boolean) => void;
@@ -53,12 +55,16 @@ export interface ActionExecution {
 const MAX_DEPTH = 10;
 
 /** Active interval IDs for cleanup on unmount / tree replacement. */
-const activeIntervals = new Map<ReturnType<typeof setInterval>, () => void>();
+const activeIntervals = new Map<
+  ReturnType<typeof setInterval>,
+  { owner: StateStore; cleanup: () => void }
+>();
 
-/** Clear all active intervals. Call when the component tree is replaced. */
-export function clearAllIntervals(): void {
-  for (const cleanup of [...activeIntervals.values()]) cleanup();
-  activeIntervals.clear();
+/** Clear active intervals, optionally limited to one app's state store. */
+export function clearAllIntervals(owner?: StateStore): void {
+  for (const interval of [...activeIntervals.values()]) {
+    if (owner === undefined || interval.owner === owner) interval.cleanup();
+  }
 }
 
 /**
@@ -583,7 +589,10 @@ export async function executeAction(
             }
           }, currentDuration);
           intervalId = id;
-          activeIntervals.set(id, dispose);
+          activeIntervals.set(id, {
+            owner: execution?.intervalOwner ?? state,
+            cleanup: dispose,
+          });
         };
         startInterval();
 

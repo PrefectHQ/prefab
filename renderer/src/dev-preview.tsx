@@ -7,7 +7,7 @@
  * Without custom JSON, renders a showcase of all component types.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Toaster } from "sonner";
 import { DEMO_DATA, DEMO_TREE } from "./demo-data";
 import { RenderTree, type ComponentNode } from "./renderer";
@@ -87,7 +87,7 @@ export function DevPreview({ injected }: { injected?: PreviewPayload }) {
   const [parseError] = useState<string | null>(hashError);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     appToolsRef.current.replace(injected?.tools ?? hashTools, state);
     return () => appToolsRef.current.clear();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

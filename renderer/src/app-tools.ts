@@ -213,6 +213,7 @@ export class AppTools {
                 undefined,
                 {
                   signal: controller.signal,
+                  intervalOwner: state,
                   registerCleanup: (cleanup) => {
                     if (controller.signal.aborted) {
                       cleanup();

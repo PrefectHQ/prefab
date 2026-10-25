@@ -121,6 +121,8 @@ The SDK capability is advertised before connection, and payload delivery can
 populate the registry after connection. Replacement or unmount clears the
 registry, aborts pending requests, and prevents old callbacks from modifying the
 new app. Cancellation does not undo backend operations already performed.
+Intervals started by app tools remain owned until their pending ticks settle;
+replacing one app disposes its work without cancelling another app's timers.
 
 Prefab's standard renderer receives these definitions in the normal
 `structuredContent` payload. Both the CDN and bundled renderer need to ship with
@@ -147,7 +149,8 @@ changes. Live-model verification requires a supporting host and is separate
 from these SDK and serialization tests.
 
 The standalone playground preserves `tools` through the Pyodide execution
-envelope and installs a local dispatcher for browser-only interactions. Reruns
+envelope and installs a local dispatcher for browser-only interactions. Shadow
+documentation previews likewise install their own instance dispatcher. Reruns
 replace definitions; errors and unmount clear them. JSON inspection includes
 the view, current state, and tools when an app defines tools, so switching modes
 does not lose its interaction definitions. Callable-backed server operations

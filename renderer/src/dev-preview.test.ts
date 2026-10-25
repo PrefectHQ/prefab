@@ -37,3 +37,30 @@ it("runs app-provided tools in development previews", async () => {
   await act(async () => container.querySelector("button")!.click());
   expect(container.querySelector("span")?.textContent).toBe("1");
 });
+
+it("installs app tools before a preview's onMount actions run", async () => {
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+  root = createRoot(container);
+  const tree = structuredClone(counter.view);
+  Object.assign(tree, {
+    onMount: {
+      action: "invokeAppTool",
+      tool: "increment",
+      arguments: { amount: 2 },
+    },
+  });
+  await act(async () =>
+    root.render(
+      createElement(DevPreview, {
+        injected: {
+          tree,
+          data: {},
+          state: counter.state,
+          tools: counter.tools,
+        },
+      }),
+    ),
+  );
+  expect(container.querySelector("span")?.textContent).toBe("2");
+});
