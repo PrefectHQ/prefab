@@ -146,6 +146,7 @@ const LazyPieChart = lazyNamed(chartsModule, "PrefabPieChart");
 const LazyRadarChart = lazyNamed(chartsModule, "PrefabRadarChart");
 const LazyRadialChart = lazyNamed(chartsModule, "PrefabRadialChart");
 const LazyScatterChart = lazyNamed(chartsModule, "PrefabScatterChart");
+const LazyWaterfallChart = lazyNamed(chartsModule, "PrefabWaterfallChart");
 const LazySparkline = lazyNamed(chartsModule, "PrefabSparkline");
 
 // Code + Markdown — highlight.js (~167 KB), react-markdown (~70 KB)
@@ -226,6 +227,7 @@ export const REGISTRY: Record<string, ComponentType<any>> = {
   RadarChart: LazyRadarChart,
   RadialChart: LazyRadialChart,
   ScatterChart: LazyScatterChart,
+  WaterfallChart: LazyWaterfallChart,
   Sparkline: LazySparkline,
 
   // Carousel (lazy — embla-carousel)

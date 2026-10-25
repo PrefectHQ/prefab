@@ -31,12 +31,13 @@ function PopoverContent({
         alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
+        positionMethod="fixed"
         className="isolate z-50"
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(
-            "pf-popover-content z-50 w-72 origin-(--transform-origin) outline-hidden",
+            "pf-popover-content pointer-events-auto z-50 w-72 max-h-[min(18rem,var(--available-height,18rem))] min-h-0 origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-hidden",
             className
           )}
           {...props}

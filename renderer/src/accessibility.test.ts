@@ -391,3 +391,85 @@ it("keeps noninteractive dialog trigger content wrapped in a native button", asy
   expect(container.querySelectorAll("button")).toHaveLength(1);
   expect(container.querySelector("button")?.textContent).toBe("Open details");
 });
+
+it("names the existing ring meter without changing its range", async () => {
+  await render({ type: "Ring", value: 42, ariaLabel: "Budget used" });
+  const meter = container.querySelector('[role="meter"]');
+  expect(meter?.getAttribute("aria-label")).toBe("Budget used");
+  expect(meter?.getAttribute("aria-valuenow")).toBe("42");
+});
+
+it("names the waterfall chart's semantic SVG", async () => {
+  await import("./components/waterfall-chart");
+  await render({
+    type: "WaterfallChart",
+    data: [{ month: "January", total: 12 }],
+    dataKey: "total",
+    nameKey: "month",
+    height: 200,
+    animate: false,
+    ariaLabel: "Profit changes",
+  });
+  expect(
+    container
+      .querySelector('svg[role="application"]')
+      ?.getAttribute("aria-label"),
+  ).toBe("Profit changes");
+});
+
+it.each(["line", "bar"])(
+  "names the %s sparkline's existing SVG",
+  async (mode) => {
+    await import("./components/sparkline");
+    await render({
+      type: "Sparkline",
+      data: [1, 2, 3],
+      mode,
+      ariaLabel: "Trend",
+    });
+    expect(container.querySelector("svg")?.getAttribute("aria-label")).toBe(
+      "Trend",
+    );
+  },
+);
+
+it("preserves a dialog's automatic title reference when no name is supplied", async () => {
+  await render({
+    type: "Dialog",
+    title: "Automatic title",
+    children: [{ type: "Button", label: "Open" }],
+  });
+  await act(async () => container.querySelector("button")?.click());
+  const popup = document.querySelector('[role="dialog"]');
+  expect(popup?.getAttribute("aria-label")).toBeNull();
+  const titleId = popup?.getAttribute("aria-labelledby");
+  expect(titleId).toBeTruthy();
+  expect(document.getElementById(titleId!)?.textContent).toBe(
+    "Automatic title",
+  );
+});
+
+it("keeps an option's explicit name when Select consumes its child metadata", async () => {
+  await render(
+    {
+      type: "Select",
+      ariaLabel: "Choose record",
+      children: [
+        {
+          type: "SelectOption",
+          value: "a",
+          label: "Visible option",
+          ariaLabel: "Record {{ record }}",
+        },
+      ],
+    },
+    { record: 1042 },
+  );
+  await act(
+    async () =>
+      container.querySelector<HTMLButtonElement>('[role="combobox"]')?.click(),
+  );
+  const option = document.querySelector('[role="option"]');
+  expect(option?.getAttribute("aria-label")).toBe("Record 1042");
+  expect(option?.textContent).toBe("Visible option");
+});

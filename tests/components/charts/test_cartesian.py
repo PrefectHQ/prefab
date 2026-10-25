@@ -1,4 +1,4 @@
-"""Tests for chart components."""
+"""Tests for cartesian chart components."""
 
 from __future__ import annotations
 
@@ -9,9 +9,6 @@ from prefab_ui.components.charts import (
     BarChart,
     ChartSeries,
     LineChart,
-    PieChart,
-    RadarChart,
-    RadialChart,
     ScatterChart,
 )
 from prefab_ui.rx import Rx
@@ -25,50 +22,6 @@ SERIES = [
     ChartSeries(data_key="desktop", label="Desktop"),
     ChartSeries(data_key="mobile", label="Mobile"),
 ]
-
-CHART_CASES = [
-    (BarChart, {"series": SERIES}),
-    (LineChart, {"series": SERIES}),
-    (AreaChart, {"series": SERIES}),
-    (PieChart, {"data_key": "desktop", "name_key": "month"}),
-    (ScatterChart, {"series": SERIES, "x_axis": "month", "y_axis": "desktop"}),
-    (RadarChart, {"series": SERIES}),
-    (RadialChart, {"data_key": "desktop", "name_key": "month"}),
-]
-
-
-@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
-def test_literal_chart_data_animates_by_default(chart_type, kwargs):
-    chart = chart_type(data=SAMPLE_DATA, **kwargs)
-
-    assert chart.to_json()["animate"] is True
-
-
-@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
-@pytest.mark.parametrize("reactive_data", [Rx("chart_data"), "{{ chart_data }}"])
-def test_reactive_chart_data_does_not_animate_by_default(
-    chart_type, kwargs, reactive_data
-):
-    chart = chart_type(data=reactive_data, **kwargs)
-
-    assert chart.to_json()["animate"] is False
-
-
-@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
-def test_reactive_chart_data_can_explicitly_animate(chart_type, kwargs):
-    chart = chart_type(data=Rx("chart_data"), animate=True, **kwargs)
-
-    assert chart.to_json()["animate"] is True
-
-
-@pytest.mark.parametrize(("chart_type", "kwargs"), CHART_CASES)
-@pytest.mark.parametrize("reactive_value", [Rx("value"), "{{ value }}"])
-def test_nested_reactive_chart_data_does_not_animate_by_default(
-    chart_type, kwargs, reactive_value
-):
-    chart = chart_type(data=[{"month": "Jan", "desktop": reactive_value}], **kwargs)
-
-    assert chart.to_json()["animate"] is False
 
 
 class TestBarChart:
@@ -175,69 +128,6 @@ class TestAreaChart:
         assert "yAxisFormat" not in j
 
 
-class TestPieChart:
-    def test_serializes_basic(self):
-        data = [
-            {"browser": "Chrome", "visitors": 275},
-            {"browser": "Safari", "visitors": 200},
-        ]
-        j = PieChart(data=data, data_key="visitors", name_key="browser").to_json()
-        assert j["type"] == "PieChart"
-        assert j["dataKey"] == "visitors"
-        assert j["nameKey"] == "browser"
-
-    def test_donut(self):
-        data = [{"name": "A", "val": 10}]
-        j = PieChart(
-            data=data, data_key="val", name_key="name", inner_radius=60
-        ).to_json()
-        assert j["innerRadius"] == 60
-
-    def test_value_format(self):
-        data = [{"name": "A", "share": 0.4}]
-        j = PieChart(
-            data=data,
-            data_key="share",
-            name_key="name",
-            value_format="percent:1",
-        ).to_json()
-        assert j["valueFormat"] == "percent:1"
-
-
-class TestRadarChart:
-    def test_serializes_basic(self):
-        data = [
-            {"subject": "Math", "alice": 120},
-            {"subject": "English", "alice": 98},
-        ]
-        series = [ChartSeries(data_key="alice")]
-        j = RadarChart(data=data, series=series, axis_key="subject").to_json()
-        assert j["type"] == "RadarChart"
-        assert j["axisKey"] == "subject"
-
-
-class TestRadialChart:
-    def test_serializes_basic(self):
-        data = [
-            {"browser": "Chrome", "visitors": 275},
-            {"browser": "Safari", "visitors": 200},
-        ]
-        j = RadialChart(data=data, data_key="visitors", name_key="browser").to_json()
-        assert j["type"] == "RadialChart"
-        assert j["dataKey"] == "visitors"
-        assert j["nameKey"] == "browser"
-
-    def test_value_format(self):
-        data = [{"browser": "Chrome", "revenue": 275}]
-        j = RadialChart(
-            data=data,
-            data_key="revenue",
-            name_key="browser",
-            value_format="currency",
-        ).to_json()
-        assert j["valueFormat"] == "currency"
-
-
 class TestScatterChart:
     def test_serializes_basic(self):
         data = [
@@ -311,19 +201,3 @@ class TestScatterChart:
             data="{{ myData }}", series=series, x_axis="x", y_axis="y"
         ).to_json()
         assert j["data"] == "{{ myData }}"
-
-
-class TestChartSeries:
-    def test_serializes_with_alias(self):
-        s = ChartSeries(data_key="revenue", label="Revenue", color="#ff0000")
-        d = s.model_dump(by_alias=True, exclude_none=True)
-        assert d["dataKey"] == "revenue"
-        assert d["label"] == "Revenue"
-        assert d["color"] == "#ff0000"
-
-    def test_defaults(self):
-        s = ChartSeries(data_key="val")
-        d = s.model_dump(by_alias=True, exclude_none=True)
-        assert d["dataKey"] == "val"
-        assert "label" not in d
-        assert "color" not in d

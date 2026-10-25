@@ -63,7 +63,7 @@ BarChart(
 </CodeGroup>
 </ComponentPreview>
 
-The field that names each category is the **axis**. Cartesian charts (bar, line, area, scatter) call it `x_axis`; radar charts call it `axis_key`. It points at the row field that labels each point — `"month"` above — while every `ChartSeries` reads a value field. Pie, radial, and sparkline charts take a single series and skip the explicit axis.
+The field that names each category is the **axis**. Cartesian charts (bar, line, area, scatter) call it `x_axis`; radar charts call it `axis_key`. It points at the row field that labels each point — `"month"` above — while every `ChartSeries` reads a value field. Pie, radial, sparkline, and waterfall charts take a single series and skip the explicit axis — waterfall uses `data_key`/`name_key` instead, like PieChart and RadialChart, since a waterfall only ever has one series of floating bars.
 
 `data` can also be a live state key instead of a literal list. Pass an `Rx` or a `{{ key }}` string to bind the chart to data that a server action loads at runtime, and the chart re-renders whenever that key changes.
 
