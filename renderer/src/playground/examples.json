@@ -360,6 +360,11 @@
     "code": "BarChart(\n    data=data,\n    series=[ChartSeries(data_key=\"desktop\", label=\"Desktop\")],\n    x_axis=\"month\",\n    show_grid=False,\n)"
   },
   {
+    "title": "Axis Labels",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import BarChart, ChartSeries\n\nBarChart(\n    data=[{\"month\": \"Jan\", \"users\": 10}, {\"month\": \"Feb\", \"users\": 20}],\n    series=[ChartSeries(data_key=\"users\")],\n    x_axis=\"month\",\n    x_axis_label=\"Month\",\n    y_axis_label=\"Users\",\n    horizontal=True,\n)"
+  },
+  {
     "title": "Python {8} icon=\"python\"",
     "category": "Components",
     "code": "BarChart(\n    data=data,\n    series=[\n        ChartSeries(data_key=\"desktop\", label=\"Desktop\"),\n        ChartSeries(data_key=\"mobile\", label=\"Mobile\"),\n    ],\n    x_axis=\"month\",\n    horizontal=True,\n    show_legend=True,\n)"
@@ -1243,6 +1248,11 @@
     "title": "Reactive Series",
     "category": "Components",
     "code": "from prefab_ui.app import PrefabApp\nfrom prefab_ui.components.charts import LineChart\nfrom prefab_ui.rx import Rx\n\ndata = [\n    {\"month\": \"Jan\", \"desktop\": 186, \"mobile\": 80},\n    {\"month\": \"Feb\", \"desktop\": 305, \"mobile\": 200},\n]\n\napp = PrefabApp(\n    state={\n        \"chart_series\": [\n            {\n                \"dataKey\": \"desktop\",\n                \"label\": \"Desktop\",\n                \"color\": \"var(--chart-1)\",\n                \"visible\": True,\n            },\n            {\n                \"dataKey\": \"mobile\",\n                \"label\": \"Mobile\",\n                \"color\": \"var(--chart-2)\",\n                \"visible\": False,\n            },\n        ]\n    },\n    view=LineChart(\n        data=data,\n        series=Rx(\"chart_series\").selectattr(\"visible\"),\n        x_axis=\"month\",\n    ),\n)"
+  },
+  {
+    "title": "Axis Labels",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import LineChart, ChartSeries\n\nLineChart(\n    data=[{\"month\": \"Jan\", \"users\": 10}, {\"month\": \"Feb\", \"users\": 20}],\n    series=[ChartSeries(data_key=\"users\")],\n    x_axis=\"month\",\n    x_axis_label=\"Month\",\n    y_axis_label=\"Users\",\n)"
   },
   {
     "title": "Python {5} icon=\"python\"",

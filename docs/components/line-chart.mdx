@@ -113,6 +113,23 @@ Automatic palette colors follow the order of the resolved series list. Set
 `color` on each series, as above, to keep its color when filtering or reordering
 that list.
 
+## Axis Labels
+
+Use `x_axis_label` for the category axis and `y_axis_label` for the value axis.
+`show_y_axis=False` hides the value-axis title along with that axis.
+
+```python Axis Labels
+from prefab_ui.components.charts import LineChart, ChartSeries
+
+LineChart(
+    data=[{"month": "Jan", "users": 10}, {"month": "Feb", "users": 20}],
+    series=[ChartSeries(data_key="users")],
+    x_axis="month",
+    x_axis_label="Month",
+    y_axis_label="Users",
+)
+```
+
 ## Minimal
 
 Set `show_grid=False` to remove the background gridlines. The line then reads as pure motion — useful in dense dashboards or inline trend callouts where direction matters more than precise values.
@@ -373,6 +390,14 @@ LineChart(
   Data key for x-axis labels.
 </ParamField>
 
+<ParamField body="x_axis_label" type="RxStr | None" default="None">
+  Human-readable category-axis title.
+</ParamField>
+
+<ParamField body="y_axis_label" type="RxStr | None" default="None">
+  Human-readable value-axis title. Hidden when `show_y_axis=False`.
+</ParamField>
+
 <ParamField body="height" type="int" default="300">
   Chart height in pixels.
 </ParamField>
@@ -434,6 +459,8 @@ LineChart(
   "data": "object[] | string (required)",
   "series": "[ChartSeries] | string (required)",
   "xAxis?": "string",
+  "xAxisLabel?": "string",
+  "yAxisLabel?": "string",
   "height?": "300",
   "curve?": "linear | smooth | step",
   "showDots?": false,

@@ -98,6 +98,17 @@ class TestBarChart:
         assert j["valueFormat"] == "currency"
         assert "yAxisFormat" not in j
 
+    def test_axis_labels(self):
+        j = BarChart(
+            data=SAMPLE_DATA,
+            series=SERIES,
+            x_axis="month",
+            x_axis_label="Month",
+            y_axis_label="Users",
+        ).to_json()
+        assert j["xAxisLabel"] == "Month"
+        assert j["yAxisLabel"] == "Users"
+
 
 class TestLineChart:
     def test_serializes_basic(self):
@@ -136,6 +147,17 @@ class TestLineChart:
         ).to_json()
         assert j["valueFormat"] == "percent:1"
         assert "yAxisFormat" not in j
+
+    def test_axis_labels(self):
+        j = LineChart(
+            data=SAMPLE_DATA,
+            series=SERIES,
+            x_axis="month",
+            x_axis_label="Month",
+            y_axis_label="Revenue",
+        ).to_json()
+        assert j["xAxisLabel"] == "Month"
+        assert j["yAxisLabel"] == "Revenue"
 
 
 class TestAreaChart:

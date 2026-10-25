@@ -43,7 +43,10 @@ from prefab_ui.components.base import Component, ContainerComponent, StatefulMix
 RESOURCE_URI = "ui://prefab/generative.html"
 MIME_TYPE = "text/html;profile=mcp-app"
 
-_SKILLS_DIR = Path(__file__).parent.parent.parent / "skills"
+_SKILLS_DIR = Path(__file__).parent / "skills"
+if not _SKILLS_DIR.is_dir():
+    _SKILLS_DIR = Path(__file__).parent.parent.parent / "skills"
+
 
 __all__ = [
     "MIME_TYPE",

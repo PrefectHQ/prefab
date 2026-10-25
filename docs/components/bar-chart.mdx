@@ -162,6 +162,25 @@ BarChart(
 </CodeGroup>
 </ComponentPreview>
 
+## Axis Labels
+
+Use `x_axis_label` for the category axis and `y_axis_label` for the value axis.
+With `horizontal=True`, the category title appears on the left and the value title below.
+`show_y_axis=False` hides the value-axis title along with that axis.
+
+```python Axis Labels
+from prefab_ui.components.charts import BarChart, ChartSeries
+
+BarChart(
+    data=[{"month": "Jan", "users": 10}, {"month": "Feb", "users": 20}],
+    series=[ChartSeries(data_key="users")],
+    x_axis="month",
+    x_axis_label="Month",
+    y_axis_label="Users",
+    horizontal=True,
+)
+```
+
 ## Horizontal
 
 Set `horizontal=True` to render bars horizontally. Categories appear along the y-axis and values extend to the right.
@@ -280,6 +299,14 @@ BarChart(
   Data key for x-axis category labels.
 </ParamField>
 
+<ParamField body="x_axis_label" type="RxStr | None" default="None">
+  Human-readable category-axis title. Horizontal bars place it on the left.
+</ParamField>
+
+<ParamField body="y_axis_label" type="RxStr | None" default="None">
+  Human-readable value-axis title. Hidden when `show_y_axis=False`.
+</ParamField>
+
 <ParamField body="height" type="int" default="300">
   Chart height in pixels.
 </ParamField>
@@ -345,6 +372,8 @@ BarChart(
   "data": "object[] | string (required)",
   "series": "[ChartSeries] (required)",
   "xAxis?": "string",
+  "xAxisLabel?": "string",
+  "yAxisLabel?": "string",
   "height?": "300",
   "stacked?": false,
   "horizontal?": false,
