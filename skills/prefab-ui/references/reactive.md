@@ -80,6 +80,21 @@ with Column(gap=2):
 
 Raw `$index` and `$item` are also available in template strings.
 
+The source can also be a filtered reactive expression or a sole template:
+
+```python
+from prefab_ui.rx import STATE
+
+with ForEach(STATE.users.selectattr("active")) as user:
+    Text(user.name)
+
+with ForEach("{{ users | rejectattr:active }}") as user:
+    Text(user.name)
+```
+
+The expression must resolve to a list. Plain paths and paths with interpolated
+indices, such as `groups.{{ selected }}.users`, also work.
+
 ## Conditional Rendering
 
 `If`, `Elif`, `Else` as context managers. Consecutive siblings form a chain:

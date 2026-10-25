@@ -463,9 +463,15 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Uses display:contents by default so children participate in the
   // parent's layout (e.g., Row gap applies between iterated items).
   if (type === "ForEach" && children) {
-    let key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
-    if (key) key = interpolateString(key, ctx) as string;
-    const items = key ? (resolve(key, ctx) as unknown[]) : [];
+    const key = (rawProps.key ?? rawProps.itemKey) as string | undefined;
+    const source = key ? interpolateString(key, ctx) : [];
+    // A sole template already resolves to an array. Plain and dynamically
+    // interpolated paths retain their lookup semantics; other strings can be
+    // expressions, such as the unwrapped key produced by a filtered Rx.
+    const items =
+      typeof source === "string"
+        ? resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx)
+        : source;
     if (!Array.isArray(items)) return null;
 
     const cssClass = rawProps.cssClass as string | undefined;

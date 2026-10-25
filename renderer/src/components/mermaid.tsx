@@ -69,24 +69,28 @@ export function Mermaid({ chart, className, cssClass }: MermaidProps) {
     };
   }, [chart]);
 
-  if (error) {
-    return (
-      <pre
-        className={cn(
-          "pf-text-sm pf-text-muted-foreground",
-          className,
-          cssClass,
-        )}
-      >
-        {chart}
-      </pre>
-    );
-  }
-
   return (
-    <div
-      ref={containerRef}
-      className={cn("pf-flex pf-justify-center", className, cssClass)}
-    />
+    <>
+      <div
+        ref={containerRef}
+        hidden={error !== null}
+        className={
+          error
+            ? undefined
+            : cn("pf-flex pf-justify-center", className, cssClass)
+        }
+      />
+      {error && (
+        <pre
+          className={cn(
+            "pf-text-sm pf-text-muted-foreground",
+            className,
+            cssClass,
+          )}
+        >
+          {chart}
+        </pre>
+      )}
+    </>
   );
 }
