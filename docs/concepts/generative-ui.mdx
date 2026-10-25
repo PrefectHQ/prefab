@@ -65,6 +65,8 @@ If the Deno process crashes, the sandbox automatically restarts on the next call
 
 ### Security
 
+The packaged `deno.lock` pins npm and URL module dependencies with integrity hashes. The runner uses that lockfile in frozen mode, independently of the current working directory.
+
 During startup, Deno reads the Prefab source and Pyodide runtime, downloads packages from `cdn.jsdelivr.net`, and writes downloaded wheels to its cache. Before accepting code, the runner revokes its filesystem read, filesystem write, and network permissions. Permission prompts are disabled. Generated code uses the mounted virtual filesystem and preloaded Prefab and Pydantic packages; installing additional packages during a call is unsupported.
 
 Each `run()` call receives a fresh namespace for its variables. The interpreter and imported modules remain shared between calls, so this is not per-request Python isolation. WASM execution alone does not establish a host security boundary.

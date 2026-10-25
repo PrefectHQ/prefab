@@ -5,6 +5,7 @@ import io
 import json
 import shutil
 import subprocess
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
@@ -193,3 +194,20 @@ async def test_correlated_error_keeps_process_available() -> None:
         await sandbox.run("first")
 
     assert sandbox._process is process
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.skipif(shutil.which("deno") is None, reason="Deno not installed")
+async def test_startup_uses_packaged_lock_from_another_directory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "deno.json").write_text('{"lock": "unrelated.lock"}')
+    monkeypatch.chdir(tmp_path)
+
+    async with PyodideSandbox() as sandbox:
+        result = await sandbox.run(
+            'from prefab_ui.components import Text\nview = Text("hello")'
+        )
+
+    assert result["view"]["content"] == "hello"
+    assert not (tmp_path / "unrelated.lock").exists()

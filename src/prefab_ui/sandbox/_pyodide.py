@@ -20,6 +20,7 @@ from uuid import uuid4
 
 RUNNER_JS = Path(__file__).parent / "runner.js"
 PREFAB_SRC = Path(__file__).parent.parent  # src/prefab_ui/
+DENO_LOCK = Path(__file__).parent / "deno.lock"
 
 
 class PyodideSandbox:
@@ -74,6 +75,9 @@ class PyodideSandbox:
                 [
                     deno,
                     "run",
+                    "--no-config",
+                    f"--lock={DENO_LOCK}",
+                    "--frozen",
                     "--unstable-detect-cjs",
                     "--no-prompt",
                     "--allow-read",
