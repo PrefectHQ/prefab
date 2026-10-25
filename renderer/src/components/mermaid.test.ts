@@ -30,13 +30,17 @@ async function show(chart: string) {
 }
 
 describe("Mermaid updates", () => {
-  it.each(["", "  \n "])("clears an existing diagram for %j", async (chart) => {
-    await show("graph TD; A-->B");
-    expect(container.querySelector("svg")).not.toBeNull();
-    await show(chart);
-    expect(container.querySelector("svg")).toBeNull();
-    expect(container.textContent).toBe("");
-  });
+  it.each(["", "  \n ", " \n\t "])(
+    "clears an existing diagram for %j",
+    async (chart) => {
+      await show("graph TD; A-->B");
+      expect(container.querySelector("svg")).not.toBeNull();
+      await show(chart);
+      expect(container.querySelector("svg")).toBeNull();
+      expect(container.textContent).toBe("");
+      expect(mocks.render).toHaveBeenCalledTimes(1);
+    },
+  );
 
   it("recovers from invalid source when a valid diagram arrives", async () => {
     mocks.render.mockRejectedValueOnce(new Error("invalid diagram"));
@@ -63,8 +67,10 @@ describe("Mermaid updates", () => {
       }),
     );
     await show("graph TD; A-->B");
+    expect(mocks.render).toHaveBeenCalledTimes(1);
     await show("");
     await act(async () => finish({ svg: "<svg></svg>" }));
     expect(container.querySelector("svg")).toBeNull();
+    expect(container.textContent).toBe("");
   });
 });
