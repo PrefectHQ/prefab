@@ -47,7 +47,7 @@ class Textarea(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "textarea"
+    _auto_name: ClassVar[str | None] = "textarea"
     type: Literal["Textarea"] = "Textarea"
     placeholder: RxStr | None = Field(
         default=None,

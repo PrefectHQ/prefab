@@ -215,7 +215,7 @@ class StatefulMixin:
     `str | None` for Tabs).
     """
 
-    _auto_name: ClassVar[str]
+    _auto_name: ClassVar[str | None]
     name: str | None
     value: Any
 
@@ -333,7 +333,9 @@ class Component(BaseModel):
         # Auto-generate name and validate for stateful components
         if isinstance(self, StatefulMixin):
             if self.name is None:
-                object.__setattr__(self, "name", _generate_key(self._auto_name))
+                object.__setattr__(
+                    self, "name", _generate_key(cast(str, self._auto_name))
+                )
             self._validate_state_key_name()
 
         # Skip auto-attach when defer=True was passed

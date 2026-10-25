@@ -66,10 +66,12 @@ class Span(_TextComponent):
     type: Literal["Span"] = "Span"
     # Override _TextComponent.code: Span sends it to the renderer (changes <span> to <code>),
     # while other text components just get font-mono via CSS.
-    code: bool = Field(
+    # Keep the Pydantic field non-nullable; inline elements expose it on the wire.
+    code: bool = Field(  # ty: ignore[invalid-mutable-override]
         default=False, description="Render as inline code with monospace font"
     )
-    align: None = Field(default=None, exclude=True)
+    # Inline elements deliberately reject block-only text alignment.
+    align: None = Field(default=None, exclude=True)  # ty: ignore[invalid-mutable-override]
     style: dict[str, str] | None = Field(
         default=None, description="Inline CSS styles as a dict of property/value pairs."
     )
@@ -113,10 +115,12 @@ class Link(_TextComponent):
         default="_blank",
         description="Link target: '_blank' (new tab), '_self' (same tab)",
     )
-    code: bool = Field(
+    # Keep the Pydantic field non-nullable; inline elements expose it on the wire.
+    code: bool = Field(  # ty: ignore[invalid-mutable-override]
         default=False, description="Render as inline code with monospace font"
     )
-    align: None = Field(default=None, exclude=True)
+    # Inline elements deliberately reject block-only text alignment.
+    align: None = Field(default=None, exclude=True)  # ty: ignore[invalid-mutable-override]
     style: dict[str, str] | None = Field(
         default=None, description="Inline CSS styles as a dict of property/value pairs."
     )

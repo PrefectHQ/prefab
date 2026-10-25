@@ -51,7 +51,7 @@ class Calendar(StatefulMixin, Component):
     ```
     """
 
-    _auto_name: ClassVar[str] = "calendar"
+    _auto_name: ClassVar[str | None] = "calendar"
     type: Literal["Calendar"] = "Calendar"
     mode: Literal["single", "multiple", "range"] = Field(
         default="single",
