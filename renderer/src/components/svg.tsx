@@ -1,8 +1,12 @@
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { useMemo } from "react";
 import DOMPurify from "dompurify";
 import { cn } from "@/lib/utils";
 
-interface SvgProps {
+interface SvgProps extends AccessibleNameProps {
   content: string;
   width?: string;
   height?: string;
@@ -10,7 +14,14 @@ interface SvgProps {
   cssClass?: string;
 }
 
-export function Svg({ content, width, height, className, cssClass }: SvgProps) {
+export function Svg({
+  content,
+  width,
+  height,
+  className,
+  cssClass,
+  ...accessibleName
+}: SvgProps) {
   const clean = useMemo(
     () =>
       DOMPurify.sanitize(content, {
@@ -25,6 +36,7 @@ export function Svg({ content, width, height, className, cssClass }: SvgProps) {
 
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       style={Object.keys(style).length > 0 ? style : undefined}
       className={cn(className, cssClass)}
       dangerouslySetInnerHTML={{ __html: clean }}

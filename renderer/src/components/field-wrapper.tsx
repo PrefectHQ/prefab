@@ -8,10 +8,14 @@
  * to-toggle behavior, with a bordered card appearance.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-interface PrefabFieldProps {
+interface PrefabFieldProps extends AccessibleNameProps {
   invalid?: boolean;
   disabled?: boolean;
   className?: string;
@@ -23,9 +27,11 @@ export function PrefabField({
   disabled,
   className,
   children,
+  ...accessibleName
 }: PrefabFieldProps) {
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       data-slot="field"
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
@@ -41,9 +47,13 @@ export function PrefabChoiceCard({
   disabled,
   className,
   children,
+  ...accessibleName
 }: PrefabFieldProps) {
   return (
-    <label className="pf-field-label">
+    <label
+      {...getAccessibleNameProps(accessibleName)}
+      className="pf-field-label"
+    >
       <div
         data-slot="field"
         data-invalid={invalid || undefined}
@@ -59,7 +69,7 @@ export function PrefabChoiceCard({
   );
 }
 
-interface PrefabFieldTextProps {
+interface PrefabFieldTextProps extends AccessibleNameProps {
   className?: string;
   children?: React.ReactNode;
 }
@@ -67,31 +77,59 @@ interface PrefabFieldTextProps {
 export function PrefabFieldTitle({
   className,
   children,
+  ...accessibleName
 }: PrefabFieldTextProps) {
-  return <span className={cn("pf-field-title", className)}>{children}</span>;
+  return (
+    <span
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("pf-field-title", className)}
+    >
+      {children}
+    </span>
+  );
 }
 
 export function PrefabFieldDescription({
   className,
   children,
+  ...accessibleName
 }: PrefabFieldTextProps) {
   return (
-    <span className={cn("pf-field-description", className)}>{children}</span>
+    <span
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("pf-field-description", className)}
+    >
+      {children}
+    </span>
   );
 }
 
 export function PrefabFieldContent({
   className,
   children,
+  ...accessibleName
 }: PrefabFieldTextProps) {
   return (
-    <div className={cn("pf-field-content grid", className)}>{children}</div>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("pf-field-content grid", className)}
+    >
+      {children}
+    </div>
   );
 }
 
 export function PrefabFieldError({
   className,
   children,
+  ...accessibleName
 }: PrefabFieldTextProps) {
-  return <p className={cn("pf-field-error", className)}>{children}</p>;
+  return (
+    <p
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("pf-field-error", className)}
+    >
+      {children}
+    </p>
+  );
 }

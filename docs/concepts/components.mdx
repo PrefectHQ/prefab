@@ -38,6 +38,15 @@ Input(aria_labelledby="search-label")
 Names apply to the existing semantic element: a button, input, calendar grid,
 chart SVG, or table. They do not assign a role to a generic layout container.
 State `name` keys and DOM `id` values remain separate from accessible names.
+Text, Metric, Code, Markdown, and Svg forward names to their existing roots;
+these generic roots keep their original HTML semantics. A name does not give a
+text span or wrapper div a new role, and it does not rename arbitrary embedded
+HTML inside Markdown or Svg. Loader names its existing status SVG. Naming an
+Icon exposes that SVG to assistive technology; unnamed icons remain decorative.
+
+Transparent control-flow nodes (ForEach, Condition, and Slot) create no DOM root:
+name the components they render instead. Option/group/label markers consumed by
+Select and Combobox apply names to their corresponding rendered elements.
 
 For Select, Combobox, and DatePicker, naming kwargs target the primary control.
 For Dialog, Popover, HoverCard, and Tooltip, they target the popup content;

@@ -1,3 +1,4 @@
+import { getAccessibleNameProps, type AccessibleNameProps } from "../accessibility";
 import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -10,7 +11,7 @@ const SIZE_CLASSES = {
 type LoaderSize = keyof typeof SIZE_CLASSES
 type LoaderVariant = "spin" | "dots" | "pulse" | "bars" | "ios"
 
-interface LoaderProps {
+interface LoaderProps extends AccessibleNameProps {
   variant?: LoaderVariant
   size?: LoaderSize
   className?: string
@@ -20,7 +21,7 @@ interface LoaderProps {
  * Bouncing dots — three circles with staggered SVG animations.
  * Uses native <animate> so it works without CSS keyframes.
  */
-function DotsBounce({ size = "default", className }: { size?: LoaderSize; className?: string }) {
+function DotsBounce({ size = "default", className, ...accessibleName }: { size?: LoaderSize; className?: string } & AccessibleNameProps) {
   const dotRadius = size === "sm" ? 2 : size === "lg" ? 4 : 3
   const viewHeight = 24
   const cy = viewHeight / 2
@@ -32,6 +33,7 @@ function DotsBounce({ size = "default", className }: { size?: LoaderSize; classN
       className={cn("text-muted-foreground", SIZE_CLASSES[size], className)}
       role="status"
       aria-label="Loading"
+      {...getAccessibleNameProps(accessibleName)}
     >
       {[4, 12, 20].map((cx, i) => (
         <circle key={cx} cx={cx} cy={cy} r={dotRadius} fill="currentColor">
@@ -54,7 +56,7 @@ function DotsBounce({ size = "default", className }: { size?: LoaderSize; classN
 /**
  * Pulsing dot — a single circle that scales and fades in/out.
  */
-function PulsingDot({ size = "default", className }: { size?: LoaderSize; className?: string }) {
+function PulsingDot({ size = "default", className, ...accessibleName }: { size?: LoaderSize; className?: string } & AccessibleNameProps) {
   const dotRadius = size === "sm" ? 3 : size === "lg" ? 6 : 4
 
   return (
@@ -63,6 +65,7 @@ function PulsingDot({ size = "default", className }: { size?: LoaderSize; classN
       className={cn("text-muted-foreground", SIZE_CLASSES[size], className)}
       role="status"
       aria-label="Loading"
+      {...getAccessibleNameProps(accessibleName)}
     >
       <circle cx="12" cy="12" r={dotRadius} fill="currentColor" opacity="0.3">
         <animate
@@ -90,7 +93,7 @@ function PulsingDot({ size = "default", className }: { size?: LoaderSize; classN
 /**
  * Oscillating bars — three vertical bars that animate height in sequence.
  */
-function OscillatingBars({ size = "default", className }: { size?: LoaderSize; className?: string }) {
+function OscillatingBars({ size = "default", className, ...accessibleName }: { size?: LoaderSize; className?: string } & AccessibleNameProps) {
   const barWidth = size === "sm" ? 2.5 : size === "lg" ? 4 : 3
   const gap = size === "sm" ? 2 : size === "lg" ? 3.5 : 2.5
   const totalWidth = barWidth * 3 + gap * 2
@@ -104,6 +107,7 @@ function OscillatingBars({ size = "default", className }: { size?: LoaderSize; c
       className={cn("text-muted-foreground", SIZE_CLASSES[size], className)}
       role="status"
       aria-label="Loading"
+      {...getAccessibleNameProps(accessibleName)}
     >
       {[0, 1, 2].map((i) => {
         const x = startX + i * (barWidth + gap)
@@ -143,7 +147,7 @@ function OscillatingBars({ size = "default", className }: { size?: LoaderSize; c
 /**
  * iOS-style spinner — segmented circle with chasing opacity.
  */
-function IosSpinner({ size = "default", className }: { size?: LoaderSize; className?: string }) {
+function IosSpinner({ size = "default", className, ...accessibleName }: { size?: LoaderSize; className?: string } & AccessibleNameProps) {
   const segments = 8
   const innerR = 5
   const outerR = 10
@@ -167,6 +171,7 @@ function IosSpinner({ size = "default", className }: { size?: LoaderSize; classN
       style={{ animation: `spin 0.8s steps(${segments}, end) infinite` }}
       role="status"
       aria-label="Loading"
+      {...getAccessibleNameProps(accessibleName)}
     >
       {lines.map((l, i) => (
         <line
@@ -185,21 +190,21 @@ function IosSpinner({ size = "default", className }: { size?: LoaderSize; classN
   )
 }
 
-function Loader({ variant = "spin", size = "default", className }: LoaderProps) {
+function Loader({ variant = "spin", size = "default", className, ...accessibleName }: LoaderProps) {
   if (variant === "dots") {
-    return <DotsBounce size={size} className={className} />
+    return <DotsBounce {...getAccessibleNameProps(accessibleName)} size={size} className={className} />
   }
 
   if (variant === "pulse") {
-    return <PulsingDot size={size} className={className} />
+    return <PulsingDot {...getAccessibleNameProps(accessibleName)} size={size} className={className} />
   }
 
   if (variant === "bars") {
-    return <OscillatingBars size={size} className={className} />
+    return <OscillatingBars {...getAccessibleNameProps(accessibleName)} size={size} className={className} />
   }
 
   if (variant === "ios") {
-    return <IosSpinner size={size} className={className} />
+    return <IosSpinner {...getAccessibleNameProps(accessibleName)} size={size} className={className} />
   }
 
   // Default: spinning arc (Lucide Loader2 + CSS animate-spin)
@@ -208,6 +213,7 @@ function Loader({ variant = "spin", size = "default", className }: LoaderProps) 
       className={cn("animate-spin text-muted-foreground", SIZE_CLASSES[size], className)}
       role="status"
       aria-label="Loading"
+      {...getAccessibleNameProps(accessibleName)}
     />
   )
 }

@@ -27,7 +27,8 @@ interface ComboboxItemData extends AccessibleNameProps {
   disabled?: boolean;
 }
 
-interface ComboboxGroupData {
+interface ComboboxGroupData extends AccessibleNameProps {
+  labelNames?: AccessibleNameProps;
   label?: string;
   items: ComboboxItemData[];
 }
@@ -46,6 +47,7 @@ interface PrefabComboboxProps extends AccessibleNameProps {
   _items?: ComboboxItemData[];
   _groups?: ComboboxGroupData[];
   _separatorIndices?: number[];
+  _separatorNames?: Record<number, AccessibleNameProps>;
 }
 
 function ComboboxItemRow({ item }: { item: ComboboxItemData }) {
@@ -83,6 +85,7 @@ export function PrefabCombobox({
   _items = [],
   _groups = [],
   _separatorIndices = [],
+  _separatorNames = {},
   ...accessibleName
 }: PrefabComboboxProps) {
   const container = usePortalContainer();
@@ -199,9 +202,14 @@ export function PrefabCombobox({
                       {gi > 0 && (
                         <Separator className="pf-combobox-separator" />
                       )}
-                      <div>
+                      <div {...getAccessibleNameProps(group)}>
                         {group.label && (
-                          <div className="pf-combobox-label">{group.label}</div>
+                          <div
+                            {...getAccessibleNameProps(group.labelNames ?? {})}
+                            className="pf-combobox-label"
+                          >
+                            {group.label}
+                          </div>
                         )}
                         {group.items.map((item) => (
                           <ComboboxItemRow key={item.value} item={item} />
@@ -215,7 +223,12 @@ export function PrefabCombobox({
                     return (
                       <React.Fragment key={item.value}>
                         {separatorSet.has(origIdx) && (
-                          <Separator className="pf-combobox-separator" />
+                          <Separator
+                            {...getAccessibleNameProps(
+                              _separatorNames[origIdx] ?? {},
+                            )}
+                            className="pf-combobox-separator"
+                          />
                         )}
                         <ComboboxItemRow item={item} />
                       </React.Fragment>

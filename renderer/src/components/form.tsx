@@ -119,7 +119,8 @@ interface RadioItemData extends AccessibleNameProps {
 /*  Select                                                            */
 /* ------------------------------------------------------------------ */
 
-interface SelectGroupData {
+interface SelectGroupData extends AccessibleNameProps {
+  labelNames?: AccessibleNameProps;
   _type: "group";
   label?: string;
   items: SelectItemData[];
@@ -133,11 +134,11 @@ interface SelectItemEntry {
   disabled?: boolean;
 }
 
-interface SelectSeparatorEntry {
+interface SelectSeparatorEntry extends AccessibleNameProps {
   _type: "separator";
 }
 
-interface SelectLabelEntry {
+interface SelectLabelEntry extends AccessibleNameProps {
   _type: "label";
   label?: string;
 }
@@ -243,20 +244,28 @@ export function PrefabSelect({
           ? _selectChildren.map((entry, i) => {
               if (entry._type === "group") {
                 return (
-                  <SelectGroup key={i}>
+                  <SelectGroup {...getAccessibleNameProps(entry)} key={i}>
                     {entry.label && (
-                      <SelectGroupLabel>{entry.label}</SelectGroupLabel>
+                      <SelectGroupLabel
+                        {...getAccessibleNameProps(entry.labelNames ?? {})}
+                      >
+                        {entry.label}
+                      </SelectGroupLabel>
                     )}
                     {entry.items.map(renderItem)}
                   </SelectGroup>
                 );
               }
               if (entry._type === "separator") {
-                return <SelectSeparator key={i} />;
+                return (
+                  <SelectSeparator {...getAccessibleNameProps(entry)} key={i} />
+                );
               }
               if (entry._type === "label") {
                 return (
-                  <SelectGroupLabel key={i}>{entry.label}</SelectGroupLabel>
+                  <SelectGroupLabel {...getAccessibleNameProps(entry)} key={i}>
+                    {entry.label}
+                  </SelectGroupLabel>
                 );
               }
               return renderItem(entry as SelectItemData);
