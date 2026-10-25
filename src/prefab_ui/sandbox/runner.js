@@ -21,7 +21,10 @@ import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 const realLog = console.log;
 console.log = (...args) => console.error("[pyodide]", ...args);
 
-const pyodide = await loadPyodide();
+// Generated Python output must never enter the JSON-lines response channel.
+// Suppress stderr too: its pipe is only drained during startup, so forwarding
+// arbitrary user output there could block the subprocess once the pipe fills.
+const pyodide = await loadPyodide({ stdout: () => {}, stderr: () => {} });
 await pyodide.loadPackage(["pydantic"]);
 
 console.log = realLog;

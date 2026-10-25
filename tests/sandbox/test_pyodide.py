@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import asyncio
+import shutil
 import subprocess
 from unittest.mock import MagicMock
+
+import pytest
 
 from prefab_ui.sandbox._pyodide import PyodideSandbox
 
@@ -42,3 +46,78 @@ def test_stop_kills_process_when_graceful_shutdown_times_out() -> None:
     process.stdin.close.assert_called_once_with()
     process.stdout.close.assert_called_once_with()
     process.stderr.close.assert_called_once_with()
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.skipif(shutil.which("deno") is None, reason="Deno not installed")
+@pytest.mark.parametrize(
+    "output",
+    [
+        'print("debug")',
+        "print({'result': {'view': {'content': 'printed'}}})",
+        'print("x" * 100_000)',
+        'import sys; print("x" * 100_000, file=sys.stderr)',
+    ],
+)
+async def test_print_does_not_desynchronize_results(output: str) -> None:
+    async with PyodideSandbox() as sandbox:
+        for name in ("A", "B", "C"):
+            code = (
+                "from prefab_ui.components import Text\n"
+                + (f"{output}\n" if name == "A" else "")
+                + f"view = Text({name!r})"
+            )
+            result = await sandbox.run(code)
+            assert result["view"]["content"] == name
+
+
+@pytest.mark.parametrize("response", [b"debug\n", b"[]\n", b"{}\n", b'{"result": 1}\n'])
+async def test_malformed_response_discards_process(response: bytes) -> None:
+    process = MagicMock(spec=subprocess.Popen)
+    process.stdin = MagicMock()
+    process.stdout = MagicMock()
+    process.stderr = MagicMock()
+    process.stdout.readline.return_value = response
+    process.poll.return_value = None
+    sandbox = PyodideSandbox()
+    sandbox._process = process
+
+    with pytest.raises(RuntimeError, match="Invalid sandbox response"):
+        await sandbox.run("irrelevant")
+
+    assert sandbox._process is None
+    process.terminate.assert_called_once_with()
+
+
+@pytest.mark.parametrize("error", [BrokenPipeError(), asyncio.CancelledError()])
+async def test_interrupted_response_discards_process(error: BaseException) -> None:
+    process = MagicMock(spec=subprocess.Popen)
+    process.stdin = MagicMock()
+    process.stdout = MagicMock()
+    process.stderr = MagicMock()
+    process.stdout.readline.side_effect = error
+    process.poll.return_value = None
+    sandbox = PyodideSandbox()
+    sandbox._process = process
+
+    with pytest.raises(type(error)):
+        await sandbox.run("irrelevant")
+
+    assert sandbox._process is None
+    process.terminate.assert_called_once_with()
+
+
+async def test_closed_response_channel_discards_process() -> None:
+    process = MagicMock(spec=subprocess.Popen)
+    process.stdin = MagicMock()
+    process.stdout = MagicMock()
+    process.stderr = MagicMock()
+    process.stdout.readline.return_value = b""
+    process.poll.return_value = None
+    sandbox = PyodideSandbox()
+    sandbox._process = process
+
+    with pytest.raises(RuntimeError, match="Sandbox process died unexpectedly"):
+        await sandbox.run("irrelevant")
+
+    assert sandbox._process is None

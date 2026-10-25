@@ -148,14 +148,30 @@ class PyodideSandbox:
 
             request = json.dumps({"code": code, "data": data or {}}) + "\n"
             loop = asyncio.get_event_loop()
-            proc.stdin.write(request.encode())
-            proc.stdin.flush()
-            line = await loop.run_in_executor(None, proc.stdout.readline)
+            try:
+                proc.stdin.write(request.encode())
+                proc.stdin.flush()
+                line = await loop.run_in_executor(None, proc.stdout.readline)
+            except (OSError, asyncio.CancelledError):
+                self._stop()
+                raise
 
             if not line:
+                self._stop()
                 raise RuntimeError("Sandbox process died unexpectedly")
 
-            response = json.loads(line)
+            try:
+                response = json.loads(line)
+            except (ValueError, UnicodeDecodeError) as exc:
+                self._stop()
+                raise RuntimeError("Invalid sandbox response") from exc
+
+            if not isinstance(response, dict) or not (
+                isinstance(response.get("result"), dict)
+                or isinstance(response.get("error"), str)
+            ):
+                self._stop()
+                raise RuntimeError("Invalid sandbox response")
             if "error" in response:
                 raise RuntimeError(response["error"])
             return response["result"]
