@@ -5605,7 +5605,10 @@ from prefab_ui.components.base import Component, ContainerComponent, StatefulMix
 RESOURCE_URI = "ui://prefab/generative.html"
 MIME_TYPE = "text/html;profile=mcp-app"
 
-_SKILLS_DIR = Path(__file__).parent.parent.parent / "skills"
+_SKILLS_DIR = Path(__file__).parent / "skills"
+if not _SKILLS_DIR.is_dir():
+    _SKILLS_DIR = Path(__file__).parent.parent.parent / "skills"
+
 
 __all__ = [
     "MIME_TYPE",
@@ -7861,7 +7864,12 @@ from prefab_ui.components.charts.cartesian import (
     ScatterChart,
 )
 from prefab_ui.components.charts.radial import PieChart, RadarChart, RadialChart
-from prefab_ui.components.charts.sparkline import Sparkline
+from prefab_ui.components.charts.sparkline import (
+    Sparkline,
+    SparklineCurve,
+    SparklineMode,
+    SparklineVariant,
+)
 from prefab_ui.components.charts.waterfall import WaterfallChart
 
 __all__ = [
@@ -7875,6 +7883,9 @@ __all__ = [
     "RadialChart",
     "ScatterChart",
     "Sparkline",
+    "SparklineCurve",
+    "SparklineMode",
+    "SparklineVariant",
     "WaterfallChart",
 ]
 `,"prefab_ui/components/charts/_shared.py":`"""Shared helpers and types used across chart components."""
@@ -8035,6 +8046,7 @@ class BarChart(Component):
             self.animate = False
         super().model_post_init(__context)
 
+
 class LineChart(Component):
     """Line chart with one or more series.
 
@@ -8130,6 +8142,7 @@ class LineChart(Component):
             self.animate = False
         super().model_post_init(__context)
 
+
 class AreaChart(Component):
     """Area chart with one or more series.
 
@@ -8212,6 +8225,7 @@ class AreaChart(Component):
         ):
             self.animate = False
         super().model_post_init(__context)
+
 
 class ScatterChart(Component):
     """Scatter (or bubble) chart plotting points from shared data.
