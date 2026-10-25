@@ -36,7 +36,7 @@ import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
 import { ThemePicker } from "./theme-picker";
 import { syncStylesheets } from "../style-assets";
-import pako from "pako";
+import { gzip, ungzip } from "pako";
 
 /**
  * Tailwind v4's `@theme inline` declares `--color-*: var(--*)` aliases at
@@ -90,7 +90,7 @@ function scopeThemeCss(css: string): string {
 }
 
 function gzipEncode(str: string): string {
-  const compressed = pako.gzip(new TextEncoder().encode(str));
+  const compressed = gzip(new TextEncoder().encode(str));
   let binary = "";
   for (const byte of compressed) binary += String.fromCharCode(byte);
   return btoa(binary)
@@ -105,7 +105,7 @@ function gzipDecode(encoded: string): string | null {
     const binary = atob(padded);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return new TextDecoder().decode(pako.ungzip(bytes));
+    return new TextDecoder().decode(ungzip(bytes));
   } catch {
     return null;
   }
