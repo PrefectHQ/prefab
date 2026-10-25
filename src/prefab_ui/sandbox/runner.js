@@ -15,7 +15,7 @@
  * interpreter and its imported modules remain shared across requests.
  */
 
-import { loadPyodide } from "npm:pyodide@0.27.4";
+import { loadPyodide } from "npm:pyodide@0.27.8";
 import { readLines } from "https://deno.land/std@0.224.0/io/read_lines.ts";
 import { walk } from "https://deno.land/std@0.224.0/fs/walk.ts";
 
@@ -26,7 +26,12 @@ console.log = (...args) => console.error("[pyodide]", ...args);
 // Generated Python output must never enter the JSON-lines response channel.
 // Suppress stderr too: its pipe is only drained during startup, so forwarding
 // arbitrary user output there could block the subprocess once the pipe fills.
-const pyodide = await loadPyodide({ stdout: () => {}, stderr: () => {} });
+const pyodide = await loadPyodide({
+  stdout: () => {},
+  stderr: () => {},
+  // Keep the pre-0.27.7 event-loop behavior without requiring stack switching.
+  enableRunUntilComplete: false,
+});
 await pyodide.loadPackage(["pydantic"]);
 
 console.log = realLog;
