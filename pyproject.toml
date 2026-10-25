@@ -109,6 +109,8 @@ missing-argument = "ignore"
 invalid-argument-type = "ignore"
 
 [tool.ruff.lint]
+# Keep our lint policy stable when Ruff adds new default rule families.
+select = ["E4", "E7", "E9", "F"]
 fixable = ["ALL"]
 ignore = ["COM812", "PLR0913", "SIM102"]
 extend-select = ["B", "C4", "I", "PIE", "RUF", "SIM", "UP"]
