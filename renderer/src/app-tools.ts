@@ -113,10 +113,24 @@ export class AppTools {
           run: async (rawArgs, options) => {
             const controller = new AbortController();
             const cancel = () => controller.abort();
+            let running = true;
+            const resources = new Set<() => void>();
+            const release = (abort = false) => {
+              if (running || resources.size) return;
+              options.signal?.removeEventListener("abort", cancel);
+              controller.signal.removeEventListener("abort", disposeResources);
+              this.controllers.delete(controller);
+              if (abort) controller.abort();
+            };
+            const disposeResources = () => {
+              for (const cleanup of [...resources]) cleanup();
+            };
+            controller.signal.addEventListener("abort", disposeResources, {
+              once: true,
+            });
             options.signal?.addEventListener("abort", cancel, { once: true });
             if (options.signal?.aborted) cancel();
             this.controllers.add(controller);
-            let running = true;
             try {
               const checkActive = () => {
                 if (
@@ -199,6 +213,17 @@ export class AppTools {
                 undefined,
                 {
                   signal: controller.signal,
+                  registerCleanup: (cleanup) => {
+                    if (controller.signal.aborted) {
+                      cleanup();
+                      return () => {};
+                    }
+                    resources.add(cleanup);
+                    return (cancel = true) => {
+                      resources.delete(cleanup);
+                      release(cancel);
+                    };
+                  },
                   reportError: (message) => {
                     failure ??= message;
                   },
@@ -227,8 +252,7 @@ export class AppTools {
               // The WeakMap entry can outlive execution if a deferred action
               // retains this guarded store; otherwise it is garbage collected.
               running = false;
-              options.signal?.removeEventListener("abort", cancel);
-              this.controllers.delete(controller);
+              release();
             }
           },
         });

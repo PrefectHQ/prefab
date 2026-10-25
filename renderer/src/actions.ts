@@ -45,19 +45,19 @@ export interface ActionSpec {
 export interface ActionExecution {
   signal?: AbortSignal;
   reportError?: (message: string) => void;
+  /** Register deferred work; the returned function releases its ownership. */
+  registerCleanup?: (cleanup: () => void) => (cancel?: boolean) => void;
 }
 
 /** Maximum callback nesting depth to prevent runaway recursion. */
 const MAX_DEPTH = 10;
 
 /** Active interval IDs for cleanup on unmount / tree replacement. */
-const activeIntervals = new Set<ReturnType<typeof setInterval>>();
+const activeIntervals = new Map<ReturnType<typeof setInterval>, () => void>();
 
 /** Clear all active intervals. Call when the component tree is replaced. */
 export function clearAllIntervals(): void {
-  for (const id of activeIntervals) {
-    globalThis.clearInterval(id);
-  }
+  for (const cleanup of [...activeIntervals.values()]) cleanup();
   activeIntervals.clear();
 }
 
@@ -514,50 +514,78 @@ export async function executeAction(
           break;
         }
 
-        // Start the interval, restarting if duration changes reactively.
-        const startInterval = (): ReturnType<typeof setInterval> => {
+        let intervalId: ReturnType<typeof setInterval> | undefined;
+        let disposed = false;
+        let unregister: ((cancel?: boolean) => void) | undefined;
+        let pendingTicks = 0;
+        let completing = false;
+        const stopTimer = () => {
+          if (intervalId === undefined) return;
+          globalThis.clearInterval(intervalId);
+          activeIntervals.delete(intervalId);
+          intervalId = undefined;
+        };
+        const dispose = (cancel = true) => {
+          if (disposed) return;
+          disposed = true;
+          stopTimer();
+          unregister?.(cancel);
+        };
+        unregister = execution?.registerCleanup?.(dispose);
+        if (disposed) break;
+
+        // Restart the timer without dropping ownership of the deferred work.
+        const startInterval = () => {
           const id = globalThis.setInterval(async () => {
-            tickCount++;
-
-            if (onTick) {
-              await executeActions(
-                onTick,
-                app,
-                state,
-                tickCount,
-                depth + 1,
-                undefined,
-                scope,
-                overlayClose,
-                undefined,
-                execution,
-              );
-            }
-
-            if (!shouldContinue()) {
-              globalThis.clearInterval(id);
-              activeIntervals.delete(id);
-              await fireComplete();
-              return;
-            }
-
-            // Check if duration changed (reactive {{ template }})
-            if (typeof rawDuration !== "number") {
-              const newDuration = resolveDuration();
-              if (newDuration !== currentDuration) {
-                currentDuration = newDuration;
-                globalThis.clearInterval(id);
-                activeIntervals.delete(id);
-                const newId = startInterval();
-                activeIntervals.add(newId);
+            if (disposed || completing) return;
+            pendingTicks++;
+            try {
+              tickCount++;
+              if (onTick) {
+                await executeActions(
+                  onTick,
+                  app,
+                  state,
+                  tickCount,
+                  depth + 1,
+                  undefined,
+                  scope,
+                  overlayClose,
+                  undefined,
+                  execution,
+                );
               }
+              if (disposed || completing || intervalId !== id) return;
+              if (!shouldContinue()) {
+                completing = true;
+                // Keep ownership until every already-running tick has settled.
+                globalThis.clearInterval(id);
+                await fireComplete();
+                return;
+              }
+              if (typeof rawDuration !== "number") {
+                const newDuration = resolveDuration();
+                if (newDuration !== currentDuration) {
+                  currentDuration = newDuration;
+                  stopTimer();
+                  startInterval();
+                }
+              }
+            } catch (error) {
+              // Disposal can abort the retained controller, so inspect the
+              // cancellation state before cleanup to preserve real failures.
+              const cancelled = execution?.signal?.aborted;
+              dispose();
+              if (!cancelled) throw error;
+            } finally {
+              pendingTicks--;
+              if (completing && pendingTicks === 0) dispose(false);
             }
           }, currentDuration);
-          return id;
+          intervalId = id;
+          activeIntervals.set(id, dispose);
         };
-
-        const intervalId = startInterval();
-        activeIntervals.add(intervalId);
+        startInterval();
 
         // Fire-and-forget: return immediately
         break;
