@@ -45,6 +45,7 @@ afterEach(async () => {
 
 async function render(node: ComponentNode, data: Record<string, unknown> = {}) {
   root ??= createRoot(container);
+  const state = createStateStore(data);
   await act(async () => {
     root!.render(
       createElement(
@@ -52,13 +53,14 @@ async function render(node: ComponentNode, data: Record<string, unknown> = {}) {
         { fallback: null },
         createElement(RenderNode, {
           node,
-          state: createStateStore(data),
+          state,
           scope: {},
           app: null,
         }),
       ),
     );
   });
+  return state;
 }
 
 describe("accessible names through the renderer", () => {
@@ -342,4 +344,50 @@ it("keeps an explicit external label reference ahead of a popup label", async ()
   const popup = document.querySelector('[role="dialog"]');
   expect(popup?.getAttribute("aria-label")).toBe("Fallback name");
   expect(popup?.getAttribute("aria-labelledby")).toBe("external-label");
+});
+
+it.each(["Dialog", "Popover"])(
+  "composes a single native %s trigger and preserves actions",
+  async (type) => {
+    const state = await render({
+      type,
+      title: "Details",
+      children: [
+        {
+          type: "Button",
+          label: "Open",
+          ariaLabel: "Open record",
+          onClick: { action: "setState", key: "clicked", value: true },
+        },
+        { type: "Text", content: "Details content" },
+      ],
+    });
+    expect(container.querySelectorAll("button")).toHaveLength(1);
+    const button = container.querySelector("button")!;
+    expect(button.getAttribute("aria-label")).toBe("Open record");
+    expect(button.getAttribute("aria-haspopup")).toBe("dialog");
+    await act(async () => button.click());
+    expect(state.get("clicked")).toBe(true);
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    await act(
+      async () =>
+        document
+          .querySelector('[role="dialog"]')
+          ?.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+          ),
+    );
+    expect(button.getAttribute("aria-expanded")).toBe("false");
+  },
+);
+
+it("keeps noninteractive dialog trigger content wrapped in a native button", async () => {
+  await render({
+    type: "Dialog",
+    title: "Details",
+    children: [{ type: "Text", content: "Open details" }],
+  });
+  expect(container.querySelectorAll("button")).toHaveLength(1);
+  expect(container.querySelector("button")?.textContent).toBe("Open details");
 });

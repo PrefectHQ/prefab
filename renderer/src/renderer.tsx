@@ -69,6 +69,8 @@ interface RenderNodeProps {
   scope: Record<string, unknown>;
   state: StateStore;
   app: App | null;
+  /** Internal composition hook for an explicit Button used as a trigger. */
+  renderElement?: (element: React.ReactElement) => ReactNode;
 }
 
 /** Resolve naming metadata for children consumed by compound components. */
@@ -86,7 +88,13 @@ function childAccessibleNameProps(
 }
 
 /** Render a single node from the JSON component tree. */
-export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
+export function RenderNode({
+  node,
+  scope,
+  state,
+  app,
+  renderElement,
+}: RenderNodeProps) {
   const overlayClose = useOverlayClose();
 
   // $ref resolution: inline a defined template before any other processing
@@ -185,8 +193,14 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Extract onMount — fired via MountEffect wrapper below
   const onMount = mapped.onMount as (() => void) | undefined;
   delete mapped.onMount;
-  const wrapMount = (el: React.ReactElement) =>
-    onMount ? <MountEffect onMount={onMount}>{el}</MountEffect> : el;
+  const wrapMount = (el: React.ReactElement) => {
+    const element = renderElement ? renderElement(el) : el;
+    return onMount ? (
+      <MountEffect onMount={onMount}>{element}</MountEffect>
+    ) : (
+      element
+    );
+  };
 
   // Filter internal props before passing to component
   const finalProps = filterInternalProps(mapped);

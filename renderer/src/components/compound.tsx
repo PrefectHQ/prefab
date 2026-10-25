@@ -11,6 +11,7 @@
  */
 
 import React, { type ReactNode, useState, useEffect, useCallback } from "react";
+import { renderButtonTrigger } from "./overlay-trigger";
 import { useStateContext } from "../state-context";
 import {
   Tabs as ShadcnTabs,
@@ -273,7 +274,13 @@ export function PrefabPopover({
 
   return (
     <ShadcnPopover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>{trigger}</PopoverTrigger>
+      {renderButtonTrigger(
+        trigger,
+        (button) => (
+          <PopoverTrigger render={button} />
+        ),
+        <PopoverTrigger>{trigger}</PopoverTrigger>,
+      )}
       <PopoverContent
         {...getAccessibleNameProps(accessibleName)}
         side={side}
@@ -360,7 +367,13 @@ export function PrefabDialog({
       onOpenChange={handleOpenChange}
       disablePointerDismissal={!dismissible}
     >
-      <DialogTrigger>{trigger}</DialogTrigger>
+      {renderButtonTrigger(
+        trigger,
+        (button) => (
+          <DialogTrigger render={button} />
+        ),
+        <DialogTrigger>{trigger}</DialogTrigger>,
+      )}
       <DialogContent
         {...getAccessibleNameProps(accessibleName)}
         hideClose={!dismissible}
