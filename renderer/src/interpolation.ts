@@ -101,21 +101,21 @@ export function interpolateProps(
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(props)) {
-    if (typeof value === "string") {
-      result[key] = interpolateString(value, data);
-    } else if (Array.isArray(value)) {
-      result[key] = value.map((item) =>
-        typeof item === "object" && item !== null
-          ? interpolateProps(item as Record<string, unknown>, data)
-          : typeof item === "string"
-            ? interpolateString(item, data)
-            : item,
-      );
-    } else if (typeof value === "object" && value !== null) {
-      result[key] = interpolateProps(value as Record<string, unknown>, data);
-    } else {
-      result[key] = value;
-    }
+    result[key] = interpolateValue(value, data);
   }
   return result;
+}
+
+function interpolateValue(
+  value: unknown,
+  data: Record<string, unknown>,
+): unknown {
+  if (typeof value === "string") return interpolateString(value, data);
+  if (Array.isArray(value)) {
+    return value.map((item) => interpolateValue(item, data));
+  }
+  if (typeof value === "object" && value !== null) {
+    return interpolateProps(value as Record<string, unknown>, data);
+  }
+  return value;
 }

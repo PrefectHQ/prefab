@@ -1,0 +1,153 @@
+---
+title: AppTool
+description: Define app-provided tools that an MCP host can expose on a running app.
+icon: wrench
+---
+
+`AppTool` defines an app-provided tool. Import it from `prefab_ui.app` and include each definition in
+`PrefabApp.app_tools`. An MCP host can discover those definitions and invoke them
+against the running app. For a complete example connecting a Python backend,
+an agent, and a button, see [App-provided tools](/mcp/overview#app-provided-tools).
+
+An app tool is an entry point into the open view. Its handler is made from
+Prefab actions; it does not execute a Python function in the browser. When you
+pass a registered backend function, Prefab generates a `CallTool` action that
+sends the request back through the host to your MCP server.
+
+<Warning>
+App-provided tools require explicit host support, which is currently limited.
+Without it, the app may render normally, but the agent cannot discover or invoke
+its tools.
+</Warning>
+
+## Parameters
+
+Pass a registered Python function to use a backend operation, or a string name
+to define an operation with Prefab actions. Both forms require an explicit
+`result` object. Backend functions must already be registered with an integration
+that supplies their tool metadata during serialization.
+
+<ParamField body="tool" type="Callable | str">
+  Registered backend function, or the name of an operation defined with
+  `actions`. Passing a function uses the same callable resolution as `CallTool`;
+  the integration supplies its registered name, description, and argument schema.
+  Python executes on the MCP server when the operation is invoked. A named tool
+  can alternatively supply its name through `name=`.
+</ParamField>
+
+<ParamField body="name" type="str | None" default="None">
+  Override the name exposed to the host for a callable tool. Names must be unique
+  within a `PrefabApp`, contain 1–128 characters, and use letters, digits,
+  underscores, periods, or hyphens. An override leaves the backend address unchanged.
+</ParamField>
+
+<ParamField body="description" type="str | None" default="None">
+  Description the host can show to the agent. Defaults to the registered backend
+  description for a callable tool.
+</ParamField>
+
+<ParamField body="input_schema" type="type[BaseModel] | dict">
+  Pydantic model class or JSON Schema describing an object of arguments.
+  Inferred from the registered function for a callable tool. For a named tool,
+  omitting this field declares an operation that accepts no arguments.
+</ParamField>
+
+<ParamField body="bind" type="dict[str, Any]" default="{}">
+  Arguments supplied by the app, usually from `STATE`. Bindings are evaluated
+  against live state when execution starts and merged into the arguments.
+  Callers cannot supply these keys. For callable tools, bound parameters are
+  removed from the exposed input schema.
+</ParamField>
+
+<ParamField body="actions" type="Action | list[Action]" default="[]">
+  Actions to execute for a named tool. Arguments and bindings are available as
+  `EVENT`. Omit actions for an operation that only reads state. A callable tool
+  generates its own backend call; configure its response with `on_success` and
+  `on_error`.
+</ParamField>
+
+<ParamField body="on_success" type="Action | list[Action] | None" default="None">
+  Actions to apply a successful backend response. The backend's return value is
+  available as `RESULT` within these actions. For named tools, put callbacks on
+  the individual actions instead.
+</ParamField>
+
+<ParamField body="on_error" type="Action | list[Action] | None" default="None">
+  Actions to handle a backend failure, with its message available as `ERROR`.
+  The invocation still returns a tool error after these actions finish. For named
+  tools, put callbacks on the individual actions instead.
+</ParamField>
+
+<ParamField body="result" type="dict[str, Any]" required>
+  Object returned after the interaction succeeds. Values may contain literals
+  or reactive expressions at any depth. Expressions read state after all actions
+  and success callbacks finish. Declare the fields the caller needs explicitly.
+</ParamField>
+
+## Local Calls
+
+`tool.invoke(**arguments)` returns an `InvokeAppTool` action for a button or another
+event handler. It invokes the definition in the running app. Include that same
+definition in `PrefabApp.app_tools` so both UI actions and the MCP host can find it.
+Arguments may contain reactive expressions evaluated when the event fires.
+
+```python
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.actions import SetState
+from prefab_ui.components import Button, Text
+from prefab_ui.rx import STATE
+
+reset = AppTool(
+    "reset",
+    actions=SetState("count", 0),
+    result={"count": STATE.count},
+)
+with PrefabApp(state={"count": 10}, app_tools=[reset]) as app:
+    Text(STATE.count)
+    Button("Reset", on_click=reset.invoke())
+```
+
+The returned action supports the usual `on_success` and `on_error` fields. Its
+success callback receives the app tool's declared result as `RESULT`.
+
+## Argument Validation
+
+Local and host invocations use the same input validation. The browser checks
+JSON Schema without coercing values or inserting defaults. A Pydantic model
+provides its schema; its Python validators execute only when the model is used
+in Python. The server validates backend arguments using its usual rules.
+
+Callable schemas preserve optional parameters, defaults, and nested schema
+references. Bound parameters are removed from the caller's interface. Automatic
+binding supports top-level parameter objects. If the backend schema has
+constraints between parameters, such as a top-level `allOf` or
+`dependentRequired`, use a named tool with an explicit input schema and
+`CallTool` action.
+
+## Return Values
+
+The `result` object is evaluated once actions and response callbacks finish.
+`STATE` reads the updated app state; `EVENT` reads the invocation's arguments
+and bindings. To return a backend response field, first copy it into state in
+`on_success`, where the backend response is available as `RESULT`.
+
+The host receives the declared object as MCP `structuredContent` and JSON text
+content. A local call receives the same result. The backend's output schema
+does not describe this result, since response actions may transform it.
+
+Invalid arguments and execution failures produce a tool error. Action lists
+stop at the first failure, including a failure in a success callback. Completed
+effects remain in place. Actions retain their usual completion behavior:
+`SetInterval`, for example, starts a timer and returns without waiting for ticks.
+
+## View Lifetime
+
+Each running view has its own tool definitions and invocation queue. Local calls
+and host calls execute in order, reading bindings from current state when their
+turn begins. Separate views can use the same tool names; the host routes calls
+to the appropriate view.
+
+Replacing the app replaces its tool definitions. Closing the view removes them.
+Pending calls are invalidated, and callbacks from the old app cannot update its
+replacement. Backend operations that have already started may still finish on
+the server.

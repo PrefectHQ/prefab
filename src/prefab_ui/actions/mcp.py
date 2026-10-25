@@ -16,7 +16,6 @@ from typing import Any, Literal
 from pydantic import Field, PrivateAttr, model_serializer
 
 from prefab_ui.actions.base import Action
-from prefab_ui.app import get_tool_resolver
 from prefab_ui.rx import RxStr, _coerce_rx
 
 
@@ -37,9 +36,9 @@ class CallTool(Action):
 
     action: Literal["toolCall"] = "toolCall"
     tool: RxStr = Field(description="Name of the server tool to call")
-    arguments: dict[str, Any] = Field(
+    arguments: dict[str, Any] | RxStr = Field(
         default_factory=dict,
-        description="Arguments to pass. Supports `{{ key }}` interpolation.",
+        description="Argument mapping or an expression resolving to an object.",
     )
     _tool_ref: Callable[..., Any] | None = PrivateAttr(default=None)
 
@@ -54,6 +53,8 @@ class CallTool(Action):
 
     @model_serializer(mode="wrap")
     def _serialize_with_resolver(self, handler: Any) -> dict[str, Any]:
+        from prefab_ui.app import get_tool_resolver
+
         data: dict[str, Any] = _coerce_rx(handler(self))  # type: ignore[assignment]  # ty:ignore[invalid-assignment]
         resolver = get_tool_resolver()
         if resolver is not None:

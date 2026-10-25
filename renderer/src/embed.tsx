@@ -6,13 +6,14 @@
  * on document.body so `position: fixed` overlays can use the full viewport.
  */
 
-import { Suspense } from "react";
+import { Suspense, useLayoutEffect, useMemo } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { Toaster } from "sonner";
 import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
+import { AppTools } from "./app-tools";
 import { toShadowDomCss } from "./themes";
 
 // Vite processes this through @tailwindcss/vite and the tailwindShadowDom
@@ -87,12 +88,22 @@ function EmbedPreview({
   tree,
   initialState,
   container,
+  tools,
 }: {
   tree: ComponentNode;
   initialState: Record<string, unknown>;
   container: HTMLElement;
+  tools?: unknown;
 }) {
   const state = useStateStore(initialState);
+  const appTools = useMemo(() => new AppTools(null), []);
+  useLayoutEffect(() => {
+    appTools.replace(tools, state);
+    return () => {
+      appTools.clear();
+      clearAllIntervals(state);
+    };
+  }, [appTools, state, tools]);
   return (
     <PortalContainerProvider container={container}>
       <Suspense fallback={null}>
@@ -209,7 +220,8 @@ export function mountPreview(
   }`;
   const portalContainer = getOrCreatePortalHost(portalId, isDark);
 
-  const { view, state, theme, css, stylesheets, mode, ...userData } = parsed;
+  const { view, state, tools, theme, css, stylesheets, mode, ...userData } =
+    parsed;
   void theme;
   void css;
   void stylesheets;
@@ -229,12 +241,12 @@ export function mountPreview(
       tree={tree}
       initialState={initialState}
       container={portalContainer}
+      tools={tools}
     />,
   );
 
   return {
     unmount() {
-      clearAllIntervals();
       root?.unmount();
       root = null;
       document.getElementById(portalId)?.remove();
