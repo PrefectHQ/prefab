@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 def should_install_node_deps(renderer_dir: Path) -> bool:
-    """Check whether `npm install` needs to run for the renderer."""
+    """Check whether `npm ci` needs to run for a Node dependency directory."""
     node_modules = renderer_dir / "node_modules"
     if not node_modules.exists():
         return True
