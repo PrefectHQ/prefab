@@ -6,9 +6,9 @@ from pathlib import Path
 
 def test_browser_only_app_tool_example_keeps_its_imports() -> None:
     examples = json.loads(
-        (
-            Path(__file__).parents[1] / "renderer/src/playground/examples.json"
-        ).read_text()
+        (Path(__file__).parents[1] / "renderer/src/playground/examples.json").read_text(
+            encoding="utf-8"
+        )
     )
     example = next(
         item

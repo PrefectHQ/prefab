@@ -226,8 +226,6 @@ export function App() {
   const handleCodeResult = useCallback(
     (result: ExecuteResult) => {
       if (result.tree) {
-        toolsRef.current = undefined;
-        bridge.tools?.clear();
         const mode = wireMode(result.mode);
         forcedModeRef.current = mode;
         syncInlineCss(result.css);
@@ -243,6 +241,8 @@ export function App() {
               : result.state,
           );
         }
+        toolsRef.current = result.tools;
+        bridge.tools?.replace(toolsRef.current, state);
       }
     },
     [state.get, state.reset],
