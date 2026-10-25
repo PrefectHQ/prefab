@@ -2,7 +2,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
-import { tailwindShadowDom, rewriteEntryLoader } from "./vite-plugins";
+import {
+  rendererBuildTarget,
+  tailwindShadowDom,
+  rewriteEntryLoader,
+} from "./vite-plugins";
 
 /**
  * ESM build for the renderer bundle.
@@ -28,6 +32,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: rendererBuildTarget,
     lib: {
       entry: path.resolve(__dirname, "src/embed.tsx"),
       formats: ["es"],

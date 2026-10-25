@@ -73,6 +73,11 @@ The same `mode` kwarg is on `get_renderer_head()`, `get_renderer_csp()`, `get_ge
 
 All configs share `index.html` as the HTML entry point except the embed (library mode, no HTML) and playground (its own HTML).
 
+All builds explicitly retain the Vite 6 JavaScript targets (ES2020, Chrome 87,
+Edge 88, Firefox 78, Safari 14) through `rendererBuildTarget` in
+`vite-plugins.ts`. A build-tool upgrade must not silently change the emitted
+syntax requirements. This does not polyfill browser APIs used by dependencies.
+
 ## When Things Get Built
 
 ### On every commit (CI)

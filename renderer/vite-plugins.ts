@@ -5,6 +5,16 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Preserve the Vite 6 output targets when upgrading the build tool. This
+// controls syntax transformation; dependencies must still support these APIs.
+export const rendererBuildTarget = [
+  "es2020",
+  "edge88",
+  "firefox78",
+  "chrome87",
+  "safari14",
+];
+
 /**
  * Rewrite the renderer entry to use dynamic import() instead of static import.
  *
