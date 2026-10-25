@@ -38,10 +38,15 @@ All accept `data`, `series`, `x_axis`, `height` (default 300),
 - `stacked`: stack bars instead of grouping
 - `horizontal`: rotate 90°
 - `bar_radius`: corner radius on bars
+- `x_axis_label`, `y_axis_label`: category and value axis titles. Horizontal
+  bars put the category title on the left and the value title below.
+  `show_y_axis=False` also hides the value-axis title.
 
 **LineChart** — connected data points.
 - `curve`: "linear", "smooth", or "step"
 - `show_dots`: show points at data values
+- `x_axis_label`, `y_axis_label`: category and value axis titles.
+  `show_y_axis=False` also hides the value-axis title.
 - `series`: a static `list[ChartSeries]`, or an `Rx` / sole interpolation
   template resolving to a list of series dictionaries. Use wire keys such
   as `dataKey` in dictionaries stored in state.
