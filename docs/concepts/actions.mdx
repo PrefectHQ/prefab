@@ -14,7 +14,7 @@ Actions can also run when a component mounts, on a timer, or through a keyboard 
 
 For the most common case, syncing an interactive component's value to state, the `name` prop handles it automatically. `Input(name="query")` writes to the `query` key on every keystroke without any explicit action. You reach for actions when you need side effects beyond syncing: showing a toast, calling your server, updating multiple keys at once, or running logic conditionally.
 
-Named inputs update their state before running `on_change`. Your actions can read the new value through either the state key or `$event`. An explicit `SetState` in the handler runs afterward and can override that automatic value.
+Named inputs update their state before running `on_change`. Your actions can read the updated state key, while `$event` contains the value emitted by the interaction. An explicit `SetState` in the handler runs afterward and can override that automatic value.
 
 ## Action Targets
 

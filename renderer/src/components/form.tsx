@@ -210,11 +210,12 @@ export function PrefabSelect({
     onValueChange?.(val);
   };
 
-  const selectedLabel = allItems.find((i) => i.value === internalValue)?.label;
+  const selectedValue = value ?? internalValue;
+  const selectedLabel = allItems.find((i) => i.value === selectedValue)?.label;
 
   const controlProps =
     value !== undefined
-      ? { value: internalValue, onValueChange: handleChange }
+      ? { value, onValueChange: handleChange }
       : { defaultValue, onValueChange: handleChange };
 
   const renderItem = (item: SelectItemData) => (
@@ -368,9 +369,8 @@ export function PrefabCheckbox({
 }: PrefabCheckboxProps) {
   const id = name ? `checkbox-${name}` : undefined;
 
-  // Internal state so the checkbox always toggles visually, even when
-  // onCheckedChange is provided (which would otherwise force controlled
-  // mode with a frozen value prop).
+  // Keep local state for standalone uncontrolled usage. When value is
+  // supplied, it remains authoritative even if a handler restores it.
   const [internal, setInternal] = React.useState(value ?? false);
   React.useEffect(() => {
     if (value !== undefined) setInternal(value);
@@ -385,7 +385,7 @@ export function PrefabCheckbox({
     <ShadcnCheckbox
       {...getAccessibleNameProps(accessibleName)}
       id={id}
-      checked={internal}
+      checked={value ?? internal}
       onCheckedChange={handleChange}
       disabled={disabled}
       name={name}
@@ -434,9 +434,8 @@ export function PrefabSwitch({
 }: PrefabSwitchProps) {
   const id = name ? `switch-${name}` : undefined;
 
-  // Internal state so the switch always toggles visually on click, while
-  // still reflecting external state changes (e.g. another action sets the
-  // bound state key via `name`).
+  // Keep local state for standalone uncontrolled usage. A supplied value
+  // remains authoritative when a change handler overrides the interaction.
   const [internal, setInternal] = React.useState(value ?? false);
   React.useEffect(() => {
     if (value !== undefined) setInternal(value);
@@ -451,7 +450,7 @@ export function PrefabSwitch({
     <ShadcnSwitch
       {...getAccessibleNameProps(accessibleName)}
       id={id}
-      checked={internal}
+      checked={value ?? internal}
       onCheckedChange={handleChange}
       disabled={disabled}
       name={name}

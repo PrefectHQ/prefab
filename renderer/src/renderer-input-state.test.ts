@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore, type StateStore } from "./state";
+import { PrefabCheckbox, PrefabSwitch, PrefabSelect } from "./components/form";
 
 let root: Root;
 let container: HTMLDivElement;
@@ -231,3 +232,93 @@ it.each([false, true])(
     expect(state.get("event")).toEqual([uploaded]);
   },
 );
+
+it.each(["Checkbox", "Switch"])(
+  "reflects an explicit %s override back to the previous value",
+  async (typeName) => {
+    await render(
+      {
+        type: typeName,
+        name: "field",
+        onChange: { action: "setState", key: "field", value: false },
+      },
+      { field: false },
+    );
+    const control = container.querySelector<HTMLElement>(
+      `[role="${typeName === "Checkbox" ? "checkbox" : "switch"}"]`,
+    )!;
+    await act(async () => control.click());
+    expect(state.get("field")).toBe(false);
+    expect(control.getAttribute("aria-checked")).toBe("false");
+  },
+);
+it("reflects an explicit Select override back to the previous selection", async () => {
+  await render(
+    {
+      type: "Select",
+      name: "field",
+      children: [
+        { type: "SelectOption", value: "a", label: "a" },
+        { type: "SelectOption", value: "b", label: "b" },
+      ],
+      onChange: { action: "setState", key: "field", value: "a" },
+    },
+    { field: "a" },
+  );
+  const trigger = container.querySelector("button")!;
+  await act(async () => trigger.click());
+  await act(async () =>
+    Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+      .find((option) => option.textContent === "b")!
+      .click(),
+  );
+  expect(state.get("field")).toBe("a");
+  expect(trigger.querySelector('[data-slot="select-value"]')?.textContent).toBe(
+    "a",
+  );
+});
+
+it.each(["Checkbox", "Switch"])(
+  "retains standalone uncontrolled %s interactions",
+  async (typeName) => {
+    const changed = vi.fn();
+    await act(async () =>
+      root.render(
+        h(typeName === "Checkbox" ? PrefabCheckbox : PrefabSwitch, {
+          onCheckedChange: changed,
+        }),
+      ),
+    );
+    const control = container.querySelector<HTMLElement>(
+      `[role="${typeName === "Checkbox" ? "checkbox" : "switch"}"]`,
+    )!;
+    await act(async () => control.click());
+    expect(control.getAttribute("aria-checked")).toBe("true");
+    expect(changed).toHaveBeenCalledWith(true);
+  },
+);
+it("retains standalone uncontrolled Select interactions", async () => {
+  const changed = vi.fn();
+  await act(async () =>
+    root.render(
+      h(PrefabSelect, {
+        _items: [
+          { value: "a", label: "a", selected: true },
+          { value: "b", label: "b" },
+        ],
+        onValueChange: changed,
+      }),
+    ),
+  );
+  const trigger = container.querySelector("button")!;
+  await act(async () => trigger.click());
+  await act(async () =>
+    Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'))
+      .find((option) => option.textContent === "b")!
+      .click(),
+  );
+  expect(trigger.querySelector('[data-slot="select-value"]')?.textContent).toBe(
+    "b",
+  );
+  expect(changed).toHaveBeenCalledWith("b");
+});
