@@ -185,3 +185,52 @@ it("uses the latest preset when an earlier code execution completes", async () =
   await act(async () => finish({ tree: { type: "Text" }, mode: "light" }));
   expect(isDark()).toBe(true);
 });
+
+it("keeps manual toggles for mode-neutral presets across code reruns", async () => {
+  executePython.mockResolvedValue({ tree: { type: "Text" }, mode: "dark" });
+  await render();
+  await choosePreset("Blue");
+  await act(async () =>
+    (
+      document.querySelector('[aria-label="Toggle dark mode"]') as HTMLElement
+    ).click(),
+  );
+  expect(isDark()).toBe(false);
+  await rerunCode();
+  expect(isDark()).toBe(false);
+});
+
+it("restores explicit shared mode when preset CSS no longer matches", async () => {
+  const oldCss = ":root { --background: #123456; } /* old preset */";
+  window.history.replaceState(
+    null,
+    "",
+    `/#theme=${encodeURIComponent(
+      Buffer.from(oldCss).toString("base64"),
+    )}&themeMode=dark`,
+  );
+  await render();
+  expect(isDark()).toBe(true);
+  await rerunCode();
+  expect(isDark()).toBe(true);
+});
+
+it("stores the effective preset mode in shared links including manual toggles", async () => {
+  await render();
+  await choosePreset("MySpace");
+  expect(
+    new URLSearchParams(window.location.hash.slice(1)).get("themeMode"),
+  ).toBe("dark");
+  await act(async () =>
+    (
+      document.querySelector('[aria-label="Toggle dark mode"]') as HTMLElement
+    ).click(),
+  );
+  expect(
+    new URLSearchParams(window.location.hash.slice(1)).get("themeMode"),
+  ).toBe("light");
+  await choosePreset("Code");
+  expect(
+    new URLSearchParams(window.location.hash.slice(1)).has("themeMode"),
+  ).toBe(false);
+});

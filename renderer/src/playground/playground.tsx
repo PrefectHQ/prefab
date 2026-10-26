@@ -181,6 +181,7 @@ export function Playground() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [themeCss, setThemeCss] = useState("");
+  const [themeMode, setThemeMode] = useState<"light" | "dark" | null>(null);
   const [codeThemeCss, setCodeThemeCss] = useState("");
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -213,6 +214,7 @@ export function Playground() {
   const handleThemeChange = useCallback(
     (css: string, themeMode = getPresetMode(css)) => {
       pickerModeRef.current = themeMode;
+      setThemeMode(themeMode);
       setThemeCss(css);
       const nextMode = themeMode ?? (css ? null : codeModeRef.current);
       if (nextMode) setDark(nextMode === "dark");
@@ -312,7 +314,15 @@ export function Playground() {
         const encodedTheme = params.get("theme");
         if (encodedTheme) {
           const decoded = decodePgParam(encodedTheme);
-          if (decoded) handleThemeChange(decoded);
+          if (decoded) {
+            const savedMode = params.get("themeMode");
+            handleThemeChange(
+              decoded,
+              savedMode === "light" || savedMode === "dark"
+                ? savedMode
+                : getPresetMode(decoded),
+            );
+          }
         }
       }
       return;
@@ -325,7 +335,15 @@ export function Playground() {
         }
         if (typeof e.data.theme === "string" && e.data.theme) {
           const decoded = decodePgParam(e.data.theme);
-          if (decoded) handleThemeChange(decoded);
+          if (decoded) {
+            const savedMode = e.data.themeMode;
+            handleThemeChange(
+              decoded,
+              savedMode === "light" || savedMode === "dark"
+                ? savedMode
+                : getPresetMode(decoded),
+            );
+          }
         }
       }
     }
@@ -335,14 +353,18 @@ export function Playground() {
   }, [handleThemeChange]);
 
   // Build the full hash string from code + theme.
-  const buildHash = useCallback((codeStr: string, themeStr: string) => {
-    const parts: string[] = [];
-    parts.push(`code=${gzipEncode(codeStr)}`);
-    if (themeStr) {
-      parts.push(`theme=${gzipEncode(themeStr)}`);
-    }
-    return parts.join("&");
-  }, []);
+  const buildHash = useCallback(
+    (codeStr: string, themeStr: string) => {
+      const parts: string[] = [];
+      parts.push(`code=${gzipEncode(codeStr)}`);
+      if (themeStr) {
+        parts.push(`theme=${gzipEncode(themeStr)}`);
+        if (themeMode) parts.push(`themeMode=${themeMode}`);
+      }
+      return parts.join("&");
+    },
+    [themeMode],
+  );
 
   // Post code changes to parent so it can update the page URL hash.
   // When standalone, update the hash directly.
@@ -574,9 +596,10 @@ export function Playground() {
           <ThemePicker value={themeCss} onChange={handleThemeChange} />
           <button
             onClick={() => {
-              if (pickerModeRef.current) {
-                pickerModeRef.current =
-                  pickerModeRef.current === "dark" ? "light" : "dark";
+              if (themeCss) {
+                const nextMode = dark ? "light" : "dark";
+                pickerModeRef.current = nextMode;
+                setThemeMode(nextMode);
               }
               setDark((d) => !d);
             }}

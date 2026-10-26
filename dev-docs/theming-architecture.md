@@ -102,6 +102,11 @@ Tailwind v4's `@theme inline` declares `--color-background: var(--background)` a
 each theme, which drifted whenever the Python side changed. Do not reintroduce
 ports — register the theme in `PRESETS` in the generator instead.
 
+Shared playground links include `themeMode=light|dark` when the picker forces a
+mode or the user toggles an active picker theme. Restoration honors that value
+independently of preset CSS revisions; older links still infer a matching
+preset's mode. Choosing Code releases the picker override.
+
 ### Theme picker interaction
 
 - `#pg-code-theme`: CSS from PrefabApp in code (suppressed when picker is active)
