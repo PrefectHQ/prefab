@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import pytest
+
 from prefab_ui.components.charts import ChartSeries, PieChart, RadarChart, RadialChart
+from prefab_ui.rx import Rx
 
 
 class TestPieChart:
@@ -167,3 +170,36 @@ class TestPieAggregation:
             ).animate
             is True
         )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_piechart_serializes_reactive_height(height):
+    chart = PieChart(data=[], data_key="value", name_key="name", height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_radarchart_serializes_reactive_height(height):
+    chart = RadarChart(data=[], series=[], height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_radialchart_serializes_reactive_height(height):
+    chart = RadialChart(data=[], data_key="value", name_key="name", height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )

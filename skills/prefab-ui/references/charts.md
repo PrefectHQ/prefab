@@ -9,6 +9,11 @@ mid-animation can make Recharts v2 enter a render loop. Pass `animate=True`
 explicitly to override this safety default. PieChart also defaults animation off
 when `aggregate_except` is a reactive binding.
 
+Chart `height` accepts an integer pixel count or an `Rx` / interpolation
+expression resolving to a pixel count. For example, inside `ForEach` use
+`height=ITEM.length() * 30 + 60` to size a horizontal BarChart to its rows
+(`from prefab_ui.rx import ITEM`). Heights update when the bound data changes.
+
 ## ChartSeries
 
 ```python

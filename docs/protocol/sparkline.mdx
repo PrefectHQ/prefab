@@ -72,9 +72,16 @@ Compact inline chart for showing trends at a glance.
       "description": "Flat list of numeric values or `{{ interpolation }}` reference"
     },
     "height": {
-      "type": [
-        "integer",
-        "null"
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
       ],
       "default": null,
       "description": "Chart height in pixels (default 24px via CSS)"

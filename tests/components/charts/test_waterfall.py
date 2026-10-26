@@ -114,3 +114,14 @@ class TestWaterfallChart:
             data="{{ myData }}", data_key="value", name_key="label"
         ).to_json()
         assert j["data"] == "{{ myData }}"
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_waterfallchart_serializes_reactive_height(height):
+    chart = WaterfallChart(data=[], data_key="value", name_key="name", height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
