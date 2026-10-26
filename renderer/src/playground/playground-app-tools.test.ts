@@ -16,6 +16,7 @@ vi.mock("./editor", () => ({
 }));
 vi.mock("./example-picker", () => ({ ExamplePicker: () => null }));
 vi.mock("./theme-picker", () => ({
+  getPresetMode: () => null,
   ThemePicker: ({ onChange }: { onChange: (css: string) => void }) =>
     createElement(
       "button",

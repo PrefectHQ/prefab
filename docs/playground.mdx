@@ -40,6 +40,7 @@ export const PlaygroundFrame = () => {
             type: "pg-init-code",
             encoded: encoded || "",
             theme: theme || "",
+            themeMode: params.get("themeMode"),
           }, "*");
         }
       } else if (e.data.type === "pg-code-changed" || e.data.type === "pg-theme-changed") {
@@ -80,6 +81,10 @@ def main():
 ## Themes
 
 Themes from `PrefabApp` apply in the playground the same as in production. The toolbar's theme picker overrides the code-defined theme when active; selecting "Code" restores it.
+
+Presets that specify a light or dark mode apply that mode when selected. While a picker theme is active, the light/dark toggle overrides its mode and keeps your choice through code edits. Selecting another theme releases the manual override; choosing "Code" returns control to your app.
+
+Shared playground links preserve the picker CSS and any forced or manually selected mode. Opening the link restores that mode even if the preset's CSS has changed since the link was created.
 
 Theme styles belong to the preview, including popovers, dialogs, and tooltips opened from it. The editor and toolbar keep their own appearance. Changing the theme preserves your current form values and other interactive state.
 

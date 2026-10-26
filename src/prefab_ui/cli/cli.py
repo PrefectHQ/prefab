@@ -50,6 +50,22 @@ def _find_repo_root() -> Path:
     return Path(__file__).parent.parent.parent.parent
 
 
+def _run_build_steps(
+    steps: list[tuple[str, list[str], dict[str, str] | None]],
+    repo_root: Path,
+) -> None:
+    """Run build steps in order, aborting on the first failure."""
+    for description, cmd, env in steps:
+        console.print(f"  [dim]→[/dim] {description}...")
+        result = subprocess.run(cmd, cwd=repo_root, env=env)
+        if result.returncode != 0:
+            console.print(
+                f"[bold red]Error:[/bold red] {description} failed "
+                f"(exit {result.returncode})"
+            )
+            raise SystemExit(result.returncode)
+
+
 def _find_dist_dir() -> Path:
     """Locate the renderer dist directory relative to the repo root."""
     return _find_repo_root() / "renderer" / "dist"
@@ -501,8 +517,6 @@ def build_docs() -> None:
         console.print("  [dim]→[/dim] Renderer up to date, skipping")
         copy_renderer = False
 
-    rebuild_playground = should_rebuild_playground(repo_root)
-
     steps += [
         (
             "Rendering component previews",
@@ -547,7 +561,22 @@ def build_docs() -> None:
             ["uv", "run", str(build_dir / "extract_examples.py")],
             None,
         ),
+        (
+            "Compiling theme presets",
+            ["uv", "run", str(build_dir / "generate_theme_presets.py")],
+            None,
+        ),
     ]
+
+    # The steps above write bundle.json, examples.json, and themes.json into
+    # renderer/src, which is exactly what should_rebuild_playground() hashes.
+    # Deciding before they run compares against stale content — a change that
+    # only touched a Python theme would regenerate themes.json but skip the
+    # playground build, leaving docs/playground.html behind.
+    _run_build_steps(steps, repo_root)
+
+    rebuild_playground = should_rebuild_playground(repo_root)
+    steps = []
 
     if rebuild_playground:
         steps.append(
@@ -568,14 +597,7 @@ def build_docs() -> None:
         ),
     )
 
-    for description, cmd, env in steps:
-        console.print(f"  [dim]→[/dim] {description}...")
-        result = subprocess.run(cmd, cwd=repo_root, env=env)
-        if result.returncode != 0:
-            console.print(
-                f"[bold red]Error:[/bold red] {description} failed (exit {result.returncode})"
-            )
-            raise SystemExit(result.returncode)
+    _run_build_steps(steps, repo_root)
 
     # Always ensure docs/ has the renderer files, even when the source
     # hasn't changed.  The chunks are gitignored, so a fresh clone or
@@ -678,6 +700,11 @@ def build_playground() -> None:
         (
             "Extracting playground examples",
             ["uv", "run", str(build_dir / "extract_examples.py")],
+            None,
+        ),
+        (
+            "Compiling theme presets",
+            ["uv", "run", str(build_dir / "generate_theme_presets.py")],
             None,
         ),
         (

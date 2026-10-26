@@ -34,7 +34,7 @@ import { Editor } from "./editor";
 import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
-import { ThemePicker } from "./theme-picker";
+import { getPresetMode, ThemePicker } from "./theme-picker";
 import { ShadowPreview } from "../shadow-preview";
 import { clearAllIntervals } from "../actions";
 import { gzip, ungzip } from "pako";
@@ -131,6 +131,7 @@ export function Playground() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [themeCss, setThemeCss] = useState("");
+  const [themeMode, setThemeMode] = useState<"light" | "dark" | null>(null);
   const [codeThemeCss, setCodeThemeCss] = useState<string[]>([]);
   const [codeStylesheets, setCodeStylesheets] = useState<string[]>([]);
   const previewCss = useMemo(
@@ -165,6 +166,18 @@ export function Playground() {
   // before the parent has a chance to send pg-init-code.
   const skipFirstCodeMsg = useRef(true);
   const skipFirstThemeMsg = useRef(true);
+  const pickerModeRef = useRef<"light" | "dark" | null>(null);
+  const codeModeRef = useRef<"light" | "dark" | null>(null);
+  const handleThemeChange = useCallback(
+    (css: string, themeMode = getPresetMode(css)) => {
+      pickerModeRef.current = themeMode;
+      setThemeMode(themeMode);
+      setThemeCss(css);
+      const nextMode = themeMode ?? (css ? null : codeModeRef.current);
+      if (nextMode) setDark(nextMode === "dark");
+    },
+    [],
+  );
 
   useEffect(
     () => () => {
@@ -242,7 +255,15 @@ export function Playground() {
         const encodedTheme = params.get("theme");
         if (encodedTheme) {
           const decoded = decodePgParam(encodedTheme);
-          if (decoded) setThemeCss(decoded);
+          if (decoded) {
+            const savedMode = params.get("themeMode");
+            handleThemeChange(
+              decoded,
+              savedMode === "light" || savedMode === "dark"
+                ? savedMode
+                : getPresetMode(decoded),
+            );
+          }
         }
       }
       return;
@@ -255,24 +276,36 @@ export function Playground() {
         }
         if (typeof e.data.theme === "string" && e.data.theme) {
           const decoded = decodePgParam(e.data.theme);
-          if (decoded) setThemeCss(decoded);
+          if (decoded) {
+            const savedMode = e.data.themeMode;
+            handleThemeChange(
+              decoded,
+              savedMode === "light" || savedMode === "dark"
+                ? savedMode
+                : getPresetMode(decoded),
+            );
+          }
         }
       }
     }
     window.addEventListener("message", onMessage);
     window.parent.postMessage({ type: "pg-ready" }, "*");
     return () => window.removeEventListener("message", onMessage);
-  }, []);
+  }, [handleThemeChange]);
 
   // Build the full hash string from code + theme.
-  const buildHash = useCallback((codeStr: string, themeStr: string) => {
-    const parts: string[] = [];
-    parts.push(`code=${gzipEncode(codeStr)}`);
-    if (themeStr) {
-      parts.push(`theme=${gzipEncode(themeStr)}`);
-    }
-    return parts.join("&");
-  }, []);
+  const buildHash = useCallback(
+    (codeStr: string, themeStr: string) => {
+      const parts: string[] = [];
+      parts.push(`code=${gzipEncode(codeStr)}`);
+      if (themeStr) {
+        parts.push(`theme=${gzipEncode(themeStr)}`);
+        if (themeMode) parts.push(`themeMode=${themeMode}`);
+      }
+      return parts.join("&");
+    },
+    [themeMode],
+  );
 
   // Post code changes to parent so it can update the page URL hash.
   // When standalone, update the hash directly.
@@ -335,9 +368,12 @@ export function Playground() {
         appTools.replace(result.tools, stateRef.current);
         setCodeThemeCss(result.css ?? []);
         setCodeStylesheets(result.stylesheets ?? []);
-        if (result.mode) {
-          setDark(result.mode === "dark");
-        }
+        codeModeRef.current =
+          result.mode === "light" || result.mode === "dark"
+            ? result.mode
+            : null;
+        const nextMode = pickerModeRef.current ?? codeModeRef.current;
+        if (nextMode) setDark(nextMode === "dark");
         setError(null);
         setErrorDetail(null);
       }
@@ -518,9 +554,16 @@ export function Playground() {
           >
             <Braces className="h-4 w-4" />
           </button>
-          <ThemePicker value={themeCss} onChange={setThemeCss} />
+          <ThemePicker value={themeCss} onChange={handleThemeChange} />
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => {
+              if (themeCss) {
+                const nextMode = dark ? "light" : "dark";
+                pickerModeRef.current = nextMode;
+                setThemeMode(nextMode);
+              }
+              setDark((d) => !d);
+            }}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
             aria-label="Toggle dark mode"
           >

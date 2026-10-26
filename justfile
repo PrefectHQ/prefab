@@ -30,10 +30,11 @@ renderer:
 docs renderer-port="3333" docs-port="3000":
     uv run prefab dev docs --renderer-port {{renderer-port}} --docs-port {{docs-port}}
 
-# Regenerate playground bundle.json and examples.json
+# Regenerate playground bundle.json, examples.json, and themes.json
 playground:
     uv run tools/generate_playground_bundle.py
     uv run tools/extract_examples.py
+    uv run tools/generate_theme_presets.py
 
 # Generate per-component protocol reference pages from Pydantic models
 generate-protocol-ref:

@@ -2,9 +2,18 @@
 
 from __future__ import annotations
 
+import pytest
+
 from prefab_ui.app import PrefabApp
 from prefab_ui.components import Text
-from prefab_ui.themes import Basic, Presentation, Theme
+from prefab_ui.themes import (
+    Basic,
+    Minimal,
+    MySpace,
+    Presentation,
+    Theme,
+    Windows2000,
+)
 
 
 class TestThemeModel:
@@ -256,6 +265,173 @@ class TestPresentationTheme:
     def test_presentation_with_accent(self):
         result = Presentation(accent="cyan").to_json()
         assert "--primary: #06b6d4;" in result["light"]
+
+
+class TestWindows2000Theme:
+    def test_forces_light_mode(self):
+        assert Windows2000().to_json()["mode"] == "light"
+
+    def test_squares_every_corner(self):
+        result = Windows2000().to_json()
+        assert "--radius: 0;" in result["light"]
+        assert "border-radius: 0;" in result["css"]
+
+    def test_uses_vga_chart_palette(self):
+        result = Windows2000().to_json()
+        for color in ("#000080", "#008080", "#800000", "#808000", "#800080"):
+            assert color in result["light"]
+
+    def test_restyles_core_components(self):
+        css = Windows2000().css
+        for selector in (".pf-button", ".pf-input", ".pf-table-head", ".pf-badge"):
+            assert selector in css
+
+    def test_ships_window_chrome_classes(self):
+        css = Windows2000().css
+        for cls in (
+            ".pf-window",
+            ".pf-title-bar",
+            ".pf-title-bar-button",
+            ".pf-menu-bar",
+            ".pf-status-bar",
+            ".pf-status-segment",
+            ".pf-inset",
+        ):
+            assert cls in css
+
+    def test_progress_fill_outranks_flat_gradient_reset(self):
+        """`gradient=False` emits `background-image: none` on the same element,
+        so the segmented fill has to double up the class to win."""
+        css = Windows2000().to_json()["css"]
+        assert ".pf-progress-indicator.pf-progress-variant-default" in css
+        assert "repeating-linear-gradient" in css
+
+    def test_tab_active_state_uses_data_active(self):
+        assert ".pf-tabs-trigger[data-active]" in Windows2000().css
+
+    def test_font_is_not_fetched_from_google(self):
+        """Tahoma is a system font — importing it would 404."""
+        result = Windows2000().to_json()
+        assert "@import" not in result["css"]
+        assert "Tahoma" in result["light"]
+
+    def test_dark_matches_light(self):
+        result = Windows2000().to_json()
+        assert result["light"] == result["dark"]
+
+
+class TestMySpaceTheme:
+    def test_forces_dark_mode(self):
+        assert MySpace().to_json()["mode"] == "dark"
+
+    def test_uses_neon_chart_palette(self):
+        result = MySpace().to_json()
+        for color in ("#ff69b4", "#00ffff", "#39ff14", "#ffff00", "#ff1493"):
+            assert color in result["light"]
+
+    def test_loads_comic_neue(self):
+        result = MySpace().to_json()
+        assert "@import" in result["css"]
+        assert "Comic+Neue" in result["css"]
+        assert "--font-sans: 'Comic Neue'" in result["light"]
+
+    def test_restyles_core_components(self):
+        css = MySpace().css
+        for selector in (".pf-card", ".pf-button", ".pf-table-head", ".pf-badge"):
+            assert selector in css
+
+    def test_ships_profile_decor_classes(self):
+        css = MySpace().css
+        for cls in (
+            ".pf-neon-pink",
+            ".pf-neon-cyan",
+            ".pf-neon-lime",
+            ".pf-neon-yellow",
+            ".pf-visitor-counter",
+            ".pf-construction",
+        ):
+            assert cls in css
+
+    def test_star_field_covers_the_app_root(self):
+        """The tile rides on .pf-app-root rather than a global `body` rule —
+        see TestThemeContainment."""
+        assert ".pf-app-root {" in MySpace().css
+
+    def test_star_field_is_inlined_not_fetched(self):
+        """The tile is a data URI, so it works offline and in shadow DOM.
+        (The `http://www.w3.org/2000/svg` inside it is the XML namespace,
+        which is an identifier rather than something the browser fetches.)"""
+        css = MySpace().css
+        assert "data:image/svg+xml" in css
+        assert "url(http" not in css.replace(" ", "")
+
+    def test_animations_are_behind_a_reduced_motion_guard(self):
+        css = MySpace().css
+        guard = "@media (prefers-reduced-motion: no-preference)"
+        assert guard in css
+        for cls in (".pf-blink", ".pf-rainbow", ".pf-sparkle"):
+            assert css.index(guard) < css.index(f"{cls} {{")
+
+    def test_tab_active_state_uses_data_active(self):
+        assert ".pf-tabs-trigger[data-active]" in MySpace().css
+
+    def test_dark_matches_light(self):
+        result = MySpace().to_json()
+        assert result["light"] == result["dark"]
+
+
+class TestThemeContainment:
+    """A theme styles the app it is applied to, and nothing around it.
+
+    The playground injects theme CSS into the host document and only rewrites
+    `:root` and `.dark` (see `scopeThemeCss`), so a rule targeting `body` or
+    `html` escapes the preview and restyles the editor and toolbar.
+    """
+
+    @pytest.mark.parametrize(
+        "theme",
+        [Basic(accent=260), Minimal(), Presentation(), Windows2000(), MySpace()],
+        ids=lambda t: type(t).__name__,
+    )
+    def test_no_document_level_selectors(self, theme: Theme):
+        rules = [
+            line.split("{")[0].strip()
+            for line in theme.to_json()["css"].splitlines()
+            if "{" in line
+        ]
+        offenders = [r for r in rules if r in ("body", "html", "html, body", "*")]
+        assert offenders == []
+
+
+class TestRetroThemesInApp:
+    def test_windows_2000_compiles_into_app_css(self):
+        app = PrefabApp(view=Text(content="hi"), theme=Windows2000())
+        css = "\n".join(app.to_json()["css"])
+        assert ".pf-title-bar" in css
+        assert ":root" in css
+
+    def test_myspace_compiles_into_app_css(self):
+        app = PrefabApp(view=Text(content="hi"), theme=MySpace())
+        css = "\n".join(app.to_json()["css"])
+        assert ".pf-visitor-counter" in css
+        assert ":root" in css
+
+    def test_font_import_is_hoisted_above_selectors(self):
+        """`to_css` lifts @import lines to the top, where CSS requires them."""
+        css = MySpace().to_css()
+        assert css.startswith("@import")
+
+
+class TestRetroThemeImports:
+    def test_windows_2000_importable_from_themes(self):
+        from prefab_ui.themes import Windows2000 as T
+
+        assert T is Windows2000
+
+    def test_myspace_importable_from_themes(self):
+        from prefab_ui.themes import MySpace as T
+
+        assert T is MySpace
 
 
 class TestPrefabAppTheme:
