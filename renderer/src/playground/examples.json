@@ -2287,6 +2287,11 @@
   {
     "title": "Generative Ui",
     "category": "Concepts",
+    "code": "import asyncio\n\nfrom prefab_ui.sandbox import Sandbox\n\nasync with Sandbox() as sandbox:\n    result = await asyncio.wait_for(\n        sandbox.run('from prefab_ui.components import Text\\nview = Text(\"Hello\")'),\n        timeout=10,\n    )"
+  },
+  {
+    "title": "Generative Ui",
+    "category": "Concepts",
     "code": "@mcp.tool(app=True)\nasync def execute_ui(code: str, data: dict | None = None) -> PrefabApp:\n    wire = await sandbox.run(code, data=data)\n    return PrefabApp.from_json(wire)"
   },
   {
