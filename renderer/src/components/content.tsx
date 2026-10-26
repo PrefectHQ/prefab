@@ -2,6 +2,10 @@
  * Content components: Code, Image, Markdown.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { useMemo } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
@@ -44,7 +48,7 @@ function highlightCode(source: string, language?: string): string {
   return hljs.highlightAuto(source).value;
 }
 
-interface CodeProps {
+interface CodeProps extends AccessibleNameProps {
   code?: string;
   content?: string;
   language?: string;
@@ -59,6 +63,7 @@ export function Code({
   language,
   className,
   cssClass,
+  ...accessibleName
 }: CodeProps) {
   const source = code ?? content ?? "";
   const highlighted = useMemo(
@@ -68,6 +73,7 @@ export function Code({
 
   return (
     <pre
+      {...getAccessibleNameProps(accessibleName)}
       className={cn(
         "rounded-md bg-muted p-4 text-sm overflow-x-auto font-mono",
         className,
@@ -82,7 +88,7 @@ export function Code({
   );
 }
 
-interface MarkdownProps {
+interface MarkdownProps extends AccessibleNameProps {
   content?: string;
   text?: string;
   className?: string;
@@ -95,10 +101,14 @@ export function Markdown({
   text,
   className,
   cssClass,
+  ...accessibleName
 }: MarkdownProps) {
   const src = content ?? text ?? "";
   return (
-    <div className={cn("max-w-none", className, cssClass)}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("max-w-none", className, cssClass)}
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

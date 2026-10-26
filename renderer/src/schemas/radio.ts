@@ -4,6 +4,7 @@ import { actionOrList } from "./actions.ts";
 
 export const radioGroupSchema = containerBase.extend({
   type: z.literal("RadioGroup"),
+  id: z.string().optional(),
   value: z.string().optional(),
   name: z.string().optional(),
   onChange: actionOrList.optional(),
@@ -11,6 +12,7 @@ export const radioGroupSchema = containerBase.extend({
 
 export const radioSchema = componentBase.extend({
   type: z.literal("Radio"),
+  id: z.string().optional(),
   option: z.string(),
   label: z.string().optional(),
   value: z.boolean().optional(),

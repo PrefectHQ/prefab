@@ -7,6 +7,10 @@
 
 import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { interpolateString } from "../interpolation";
 import {
   globalFilter as dataTableGlobalFilter,
@@ -55,7 +59,7 @@ function formatCellValue(value: unknown, format: string): unknown {
   return interpolateString(`{{ _v | ${format} }}`, { _v: value });
 }
 
-interface DataTableProps {
+interface DataTableProps extends AccessibleNameProps {
   columns: DataTableColumnSpec[];
   rows: Record<string, unknown>[];
   search?: boolean;
@@ -75,6 +79,7 @@ export function PrefabDataTable({
   pageSize = 10,
   onRowClick,
   className,
+  ...accessibleName
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -215,7 +220,7 @@ export function PrefabDataTable({
         </div>
       )}
 
-      <Table>
+      <Table {...getAccessibleNameProps(accessibleName)}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

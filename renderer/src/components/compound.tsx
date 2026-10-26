@@ -11,6 +11,7 @@
  */
 
 import React, { type ReactNode, useState, useEffect, useCallback } from "react";
+import { renderButtonTrigger } from "./overlay-trigger";
 import { useStateContext } from "../state-context";
 import {
   Tabs as ShadcnTabs,
@@ -44,9 +45,13 @@ import {
   DialogDescription,
 } from "@/ui/dialog";
 import { OverlayProvider } from "../overlay-context";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 
 /** Metadata extracted from Tab/AccordionItem/Page child nodes. */
-interface ChildPanel {
+interface ChildPanel extends AccessibleNameProps {
   title: string;
   value: string;
   disabled?: boolean;
@@ -55,7 +60,7 @@ interface ChildPanel {
 
 // ── Tabs ───────────────────────────────────────────────────────────────
 
-interface PrefabTabsProps {
+interface PrefabTabsProps extends AccessibleNameProps {
   value?: string;
   variant?: "default" | "line";
   orientation?: "horizontal" | "vertical";
@@ -71,6 +76,7 @@ export function PrefabTabs({
   onValueChange,
   className,
   _panels,
+  ...accessibleName
 }: PrefabTabsProps) {
   // Use first tab as default if none specified
   const resolvedDefault = value ?? _panels[0]?.value;
@@ -83,9 +89,13 @@ export function PrefabTabs({
       onValueChange={onValueChange}
       className={className}
     >
-      <TabsList data-variant={variant}>
+      <TabsList
+        {...getAccessibleNameProps(accessibleName)}
+        data-variant={variant}
+      >
         {_panels.map((panel) => (
           <TabsTrigger
+            {...getAccessibleNameProps(panel)}
             key={panel.value}
             value={panel.value}
             disabled={panel.disabled}
@@ -105,7 +115,7 @@ export function PrefabTabs({
 
 // ── Accordion ──────────────────────────────────────────────────────────
 
-interface PrefabAccordionProps {
+interface PrefabAccordionProps extends AccessibleNameProps {
   multiple?: boolean;
   collapsible?: boolean;
   defaultValues?: string[];
@@ -118,16 +128,20 @@ export function PrefabAccordion({
   defaultValues,
   className,
   _panels,
+  ...accessibleName
 }: PrefabAccordionProps) {
   return (
     <ShadcnAccordion
+      {...getAccessibleNameProps(accessibleName)}
       multiple={multiple}
       defaultValue={defaultValues ?? []}
       className={className}
     >
       {_panels.map((panel) => (
         <ShadcnAccordionItem key={panel.value} value={panel.value}>
-          <AccordionTrigger>{panel.title}</AccordionTrigger>
+          <AccordionTrigger {...getAccessibleNameProps(panel)}>
+            {panel.title}
+          </AccordionTrigger>
           <AccordionContent>{panel.content}</AccordionContent>
         </ShadcnAccordionItem>
       ))}
@@ -137,14 +151,19 @@ export function PrefabAccordion({
 
 // ── Pages ──────────────────────────────────────────────────────────────
 
-interface PrefabPagesProps {
+interface PrefabPagesProps extends AccessibleNameProps {
   name?: string;
   value?: string;
   className?: string;
   _panels: ChildPanel[];
 }
 
-export function PrefabPages({ value, className, _panels }: PrefabPagesProps) {
+export function PrefabPages({
+  value,
+  className,
+  _panels,
+  ...accessibleName
+}: PrefabPagesProps) {
   const [active, setActive] = useState(value ?? _panels[0]?.value);
 
   // Sync with external value changes (from state store)
@@ -155,10 +174,11 @@ export function PrefabPages({ value, className, _panels }: PrefabPagesProps) {
   }, [value]);
 
   return (
-    <div className={className}>
+    <div {...getAccessibleNameProps(accessibleName)} className={className}>
       {_panels.map((panel) => (
         <div
           key={panel.value}
+          {...getAccessibleNameProps(panel)}
           style={panel.value !== active ? { display: "none" } : undefined}
         >
           {panel.content}
@@ -170,7 +190,7 @@ export function PrefabPages({ value, className, _panels }: PrefabPagesProps) {
 
 // ── Tooltip ────────────────────────────────────────────────────────────
 
-interface PrefabTooltipProps {
+interface PrefabTooltipProps extends AccessibleNameProps {
   content: string;
   side?: "top" | "right" | "bottom" | "left";
   delay?: number;
@@ -183,9 +203,15 @@ export function PrefabTooltip({
   side = "top",
   delay = 300,
   children,
+  ...accessibleName
 }: PrefabTooltipProps) {
   return (
-    <SimpleTooltip content={content} side={side} delay={delay}>
+    <SimpleTooltip
+      {...getAccessibleNameProps(accessibleName)}
+      content={content}
+      side={side}
+      delay={delay}
+    >
       {children}
     </SimpleTooltip>
   );
@@ -193,7 +219,7 @@ export function PrefabTooltip({
 
 // ── HoverCard ─────────────────────────────────────────────────────────
 
-interface PrefabHoverCardProps {
+interface PrefabHoverCardProps extends AccessibleNameProps {
   side?: "top" | "right" | "bottom" | "left";
   openDelay?: number;
   closeDelay?: number;
@@ -206,6 +232,7 @@ export function PrefabHoverCard({
   openDelay,
   closeDelay,
   children,
+  ...accessibleName
 }: PrefabHoverCardProps) {
   const childArray = React.Children.toArray(children);
   const trigger = childArray[0];
@@ -216,14 +243,16 @@ export function PrefabHoverCard({
       <HoverCardTrigger delay={openDelay} closeDelay={closeDelay}>
         {trigger}
       </HoverCardTrigger>
-      <HoverCardContent side={side}>{content}</HoverCardContent>
+      <HoverCardContent {...getAccessibleNameProps(accessibleName)} side={side}>
+        {content}
+      </HoverCardContent>
     </ShadcnHoverCard>
   );
 }
 
 // ── Popover ────────────────────────────────────────────────────────────
 
-interface PrefabPopoverProps {
+interface PrefabPopoverProps extends AccessibleNameProps {
   title?: string;
   description?: string;
   side?: "top" | "right" | "bottom" | "left";
@@ -236,6 +265,7 @@ export function PrefabPopover({
   description,
   side,
   children,
+  ...accessibleName
 }: PrefabPopoverProps) {
   const [open, setOpen] = useState(false);
   const childArray = React.Children.toArray(children);
@@ -244,8 +274,18 @@ export function PrefabPopover({
 
   return (
     <ShadcnPopover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>{trigger}</PopoverTrigger>
-      <PopoverContent side={side} className="w-80">
+      {renderButtonTrigger(
+        trigger,
+        (button) => (
+          <PopoverTrigger render={button} />
+        ),
+        <PopoverTrigger>{trigger}</PopoverTrigger>,
+      )}
+      <PopoverContent
+        {...getAccessibleNameProps(accessibleName)}
+        side={side}
+        className="w-80"
+      >
         <OverlayProvider close={() => setOpen(false)}>
           <div className="flex min-h-0 flex-col gap-2.5">
             {title && (
@@ -266,7 +306,7 @@ export function PrefabPopover({
 
 // ── Dialog ─────────────────────────────────────────────────────────────
 
-interface PrefabDialogProps {
+interface PrefabDialogProps extends AccessibleNameProps {
   title?: string;
   description?: string;
   name?: string;
@@ -281,6 +321,7 @@ export function PrefabDialog({
   name,
   dismissible = true,
   children,
+  ...accessibleName
 }: PrefabDialogProps) {
   const [localOpen, setLocalOpen] = useState(false);
   const state = useStateContext();
@@ -328,8 +369,17 @@ export function PrefabDialog({
       onOpenChange={handleOpenChange}
       disablePointerDismissal={!dismissible}
     >
-      <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent hideClose={!dismissible}>
+      {renderButtonTrigger(
+        trigger,
+        (button) => (
+          <DialogTrigger render={button} />
+        ),
+        <DialogTrigger>{trigger}</DialogTrigger>,
+      )}
+      <DialogContent
+        {...getAccessibleNameProps(accessibleName)}
+        hideClose={!dismissible}
+      >
         <OverlayProvider close={() => setOpen(false)}>
           {(title || description) && (
             <DialogHeader>

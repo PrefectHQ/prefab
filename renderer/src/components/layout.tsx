@@ -8,22 +8,44 @@
 
 import { cn } from "@/lib/utils";
 import type { FormEvent, ReactNode } from "react";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 
-interface LayoutProps {
+interface LayoutProps extends AccessibleNameProps {
   className?: string;
   cssClass?: string;
   children?: ReactNode;
 }
 
-export function Row({ className, cssClass, children }: LayoutProps) {
+export function Row({
+  className,
+  cssClass,
+  children,
+  ...accessibleName
+}: LayoutProps) {
   return (
-    <div className={cn("flex flex-row", className, cssClass)}>{children}</div>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("flex flex-row", className, cssClass)}
+    >
+      {children}
+    </div>
   );
 }
 
-export function Column({ className, cssClass, children }: LayoutProps) {
+export function Column({
+  className,
+  cssClass,
+  children,
+  ...accessibleName
+}: LayoutProps) {
   return (
-    <div className={cn("flex w-full min-w-0 flex-col", className, cssClass)}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("flex w-full min-w-0 flex-col", className, cssClass)}
+    >
       {children}
     </div>
   );
@@ -40,6 +62,7 @@ export function Grid({
   children,
   minColumnWidth,
   columnTemplate,
+  ...accessibleName
 }: GridProps) {
   const style = columnTemplate
     ? { gridTemplateColumns: columnTemplate }
@@ -49,7 +72,11 @@ export function Grid({
         }
       : undefined;
   return (
-    <div className={cn("grid w-full", className, cssClass)} style={style}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("grid w-full", className, cssClass)}
+      style={style}
+    >
       {children}
     </div>
   );
@@ -66,6 +93,7 @@ export function GridItem({
   children,
   colSpan = 1,
   rowSpan = 1,
+  ...accessibleName
 }: GridItemProps) {
   const style: React.CSSProperties = {
     ...(colSpan !== 1 ? { gridColumnEnd: `span ${colSpan}` } : {}),
@@ -73,6 +101,7 @@ export function GridItem({
   };
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       className={cn("min-w-0 min-h-0", className, cssClass)}
       style={Object.keys(style).length > 0 ? style : undefined}
     >
@@ -90,9 +119,11 @@ export function PrefabForm({
   cssClass,
   children,
   onSubmit,
+  ...accessibleName
 }: FormProps) {
   return (
     <form
+      {...getAccessibleNameProps(accessibleName)}
       className={cn("flex w-full flex-col", className, cssClass)}
       onSubmit={(e) => {
         e.preventDefault();
@@ -104,9 +135,15 @@ export function PrefabForm({
   );
 }
 
-export function Container({ className, cssClass, children }: LayoutProps) {
+export function Container({
+  className,
+  cssClass,
+  children,
+  ...accessibleName
+}: LayoutProps) {
   return (
     <div
+      {...getAccessibleNameProps(accessibleName)}
       className={cn(
         "container mx-auto px-4 sm:px-6 lg:px-8",
         className,
@@ -118,16 +155,26 @@ export function Container({ className, cssClass, children }: LayoutProps) {
   );
 }
 
-interface DivProps {
+interface DivProps extends AccessibleNameProps {
   className?: string;
   cssClass?: string;
   style?: React.CSSProperties;
   children?: ReactNode;
 }
 
-export function Div({ className, cssClass, style, children }: DivProps) {
+export function Div({
+  className,
+  cssClass,
+  style,
+  children,
+  ...accessibleName
+}: DivProps) {
   return (
-    <div className={cn(className, cssClass)} style={style}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn(className, cssClass)}
+      style={style}
+    >
       {children}
     </div>
   );
@@ -159,6 +206,7 @@ export function Dashboard({
   columns = 12,
   rowHeight = 120,
   rows,
+  ...accessibleName
 }: DashboardProps) {
   const style: React.CSSProperties = {
     gridTemplateColumns: `repeat(${columns}, 1fr)`,
@@ -170,7 +218,11 @@ export function Dashboard({
         }),
   };
   return (
-    <div className={cn("grid w-full", className, cssClass)} style={style}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("grid w-full", className, cssClass)}
+      style={style}
+    >
       {children}
     </div>
   );
@@ -193,6 +245,7 @@ export function DashboardItem({
   colSpan = 1,
   rowSpan = 1,
   zIndex,
+  ...accessibleName
 }: DashboardItemProps) {
   const style: React.CSSProperties = {
     gridColumn: `${col} / span ${colSpan}`,
@@ -200,7 +253,11 @@ export function DashboardItem({
     ...(zIndex != null ? { zIndex } : {}),
   };
   return (
-    <div className={cn("min-w-0 min-h-0", className, cssClass)} style={style}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("min-w-0 min-h-0", className, cssClass)}
+      style={style}
+    >
       {children}
     </div>
   );
@@ -216,10 +273,12 @@ export function Span({
   code,
   bold,
   italic,
+  ...accessibleName
 }: SpanProps) {
   const Tag = code ? "code" : "span";
   return (
     <Tag
+      {...getAccessibleNameProps(accessibleName)}
       className={cn(
         code &&
           "pf-code relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-medium",
@@ -247,10 +306,12 @@ export function Link({
   code,
   bold,
   italic,
+  ...accessibleName
 }: LinkProps) {
   const rel = target === "_blank" ? "noopener noreferrer" : undefined;
   return (
     <a
+      {...getAccessibleNameProps(accessibleName)}
       href={href}
       target={target ?? undefined}
       rel={rel}

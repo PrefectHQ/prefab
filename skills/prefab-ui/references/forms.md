@@ -116,3 +116,13 @@ Components with `name=` auto-sync their value to client state at that key.
 
 `list`, `dict`, `set`, `tuple`, and nested `BaseModel` fields are
 silently skipped — they have no obvious single-input representation.
+
+
+### Radio labels
+
+Each `Radio(label="Basic")` names its own option. Name a `RadioGroup` with
+`Label("Plan", id="plan-label")` and
+`RadioGroup(name="plan", aria_labelledby="plan-label")`. A label's `for_id`
+does not name a generic group. Use explicit option `id` only for DOM references;
+it does not change the selected option value or state key. Generated option IDs
+are unique and stable across rerenders. Standalone Radio remains a native input.

@@ -1545,6 +1545,11 @@
     "code": "from prefab_ui.components.charts import RadialChart\n\ndata = [\n    {\"service\": \"Compute\", \"cost\": 186_000},\n    {\"service\": \"Storage\", \"cost\": 92_000},\n    {\"service\": \"Network\", \"cost\": 48_000},\n    {\"service\": \"Support\", \"cost\": 24_000},\n]\n\nRadialChart(\n    data=data,\n    data_key=\"cost\",\n    name_key=\"service\",\n    value_format=\"compact:0\",\n    show_legend=True,\n)"
   },
   {
+    "title": "Accessible radio labels",
+    "category": "Components",
+    "code": "from prefab_ui import PrefabApp\nfrom prefab_ui.components import Column, Label, Radio, RadioGroup\n\nwith PrefabApp() as app:\n    with Column():\n        Label(\"Plan\", id=\"plan-label\")\n        with RadioGroup(name=\"plan\", aria_labelledby=\"plan-label\"):\n            Radio(label=\"Basic\", id=\"basic-plan\")\n            Radio(label=\"Pro\", id=\"pro-plan\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Radio, RadioGroup\n\nwith RadioGroup(css_class=\"w-fit mx-auto\"):\n    Radio(option=\"sm\", label=\"Small\")\n    Radio(option=\"md\", label=\"Medium\")\n    Radio(option=\"lg\", label=\"Large\")"
@@ -2078,6 +2083,11 @@
     "title": "Components",
     "category": "Concepts",
     "code": "from prefab_ui.components import Card, CardContent, Text, Badge, Row\n\nwith Card():\n    with CardContent():\n        with Row(gap=2, align=\"center\"):\n            Text(\"Status\")\n            Badge(\"Active\", variant=\"success\")"
+  },
+  {
+    "title": "Components",
+    "category": "Concepts",
+    "code": "Button(\"Open\", aria_label=\"Open record 1042\")\nLabel(\"Search records\", id=\"search-label\")\nInput(aria_labelledby=\"search-label\")"
   },
   {
     "title": "Python icon=\"python\"",

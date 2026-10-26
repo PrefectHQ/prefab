@@ -2,7 +2,7 @@
 
 A `Use` node references a `Define` template by
 name. On the wire it desugars to `{"$ref": "name"}`, with optional `let`
-bindings for scoped overrides and `cssClass` for styling.
+bindings for scoped overrides, `cssClass` for styling, and accessible names.
 
 **Example:**
 
@@ -31,18 +31,27 @@ from pydantic import Field
 from prefab_ui.components.base import Component
 
 # Component base fields that should NOT be treated as state overrides.
-_BASE_FIELDS = frozenset(Component.model_fields)
+_BASE_FIELDS = frozenset(Component.model_fields) | {"ariaLabel", "ariaLabelledBy"}
 
 
 class Use(Component):
     """Reference a defined component template by name.
 
-    Kwargs that aren't base component fields (`css_class`)
+    Kwargs that aren't base component fields (`css_class`, `aria_label`,
+    `aria_labelledby`)
     become scoped `let` bindings on the `$ref` node.
 
     Args:
         name: The template name (must match a `Define` name).
+        aria_label: Accessible name for this template instance's root; accepts Rx strings.
+        aria_labelledby: DOM label IDs for this instance's root; accepts Rx strings.
         **kwargs: Scoped bindings and/or base component fields.
+
+    **Example:**
+
+    ```python
+    Use("record-button", record_id=1042, aria_label="Open record 1042")
+    ```
     """
 
     # Use has a type field for Pydantic, but to_json() never emits it.
@@ -63,8 +72,13 @@ class Use(Component):
         super().__init__(**init_kwargs)
 
     def to_json(self) -> dict[str, Any]:
-        """Desugar to `$ref` with optional `let` and `cssClass`."""
+        """Desugar to `$ref` with scoped bindings, styling, and accessible names."""
         ref: dict[str, Any] = {"$ref": self.name}
+
+        base = super().to_json()
+        for key in ("ariaLabel", "ariaLabelledBy"):
+            if key in base:
+                ref[key] = base[key]
 
         if self.overrides:
             ref["let"] = self.overrides

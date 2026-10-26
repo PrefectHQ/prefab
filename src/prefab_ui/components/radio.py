@@ -34,13 +34,16 @@ class RadioGroup(StatefulMixin, ContainerComponent):
 
     Args:
         value: Initially selected radio option string
-        name: Form field name (shared by all radios in group)
+        name: State key and form field name shared by radios in the group
+        aria_label: Accessible group name independent of visible text
+        aria_labelledby: DOM label IDs that name the group; not a state key
         css_class: Additional CSS classes
 
     **Example:**
 
     ```python
-    with RadioGroup(name="theme", value="light"):
+    Label("Theme", id="theme-label")
+    with RadioGroup(name="theme", value="light", aria_labelledby="theme-label"):
         Radio(option="light", label="Light")
         Radio(option="dark", label="Dark")
     ```
@@ -68,7 +71,9 @@ class Radio(StatefulMixin, Component):
 
     Args:
         option: Option identifier for this radio within its group
-        label: Label text to display
+        label: Visible text associated with this radio control
+        aria_label: Accessible option name independent of visible text
+        aria_labelledby: DOM label IDs that name this option
         value: Whether radio is initially selected
         name: Form field name (usually set by RadioGroup)
         disabled: Whether radio is disabled
