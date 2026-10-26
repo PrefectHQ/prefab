@@ -28,7 +28,7 @@ export const ACTION_PROPS = new Set([
  */
 export const ITEM_CHILD_TYPES: Record<string, string[]> = {
   Select: ["value", "label", "selected", "disabled"],
-  RadioGroup: ["option", "label", "value", "disabled"],
+  RadioGroup: ["id", "option", "label", "value", "disabled"],
 };
 
 /** Child types used for Select option groups. */
