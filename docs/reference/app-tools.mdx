@@ -25,30 +25,35 @@ its tools.
 Pass a registered Python function to use a backend operation, or a string name
 to define an operation with Prefab actions. Both forms require an explicit
 `result` object. Backend functions must already be registered with an integration
-that supplies their tool metadata during serialization.
+that resolves their backend address during serialization. With published FastMCP
+versions, supply `name` and `input_schema` explicitly, as shown in the
+[backend example](/mcp/overview#app-provided-tools). An integration that supplies
+registered metadata can infer these fields instead.
 
 <ParamField body="tool" type="Callable | str">
   Registered backend function, or the name of an operation defined with
   `actions`. Passing a function uses the same callable resolution as `CallTool`;
-  the integration supplies its registered name, description, and argument schema.
+  the integration supplies its backend address.
   Python executes on the MCP server when the operation is invoked. A named tool
   can alternatively supply its name through `name=`.
 </ParamField>
 
 <ParamField body="name" type="str | None" default="None">
-  Override the name exposed to the host for a callable tool. Names must be unique
+  Name exposed to the host for a callable tool. Required unless the integration
+  supplies the registered local name. Names must be unique
   within a `PrefabApp`, contain 1–128 characters, and use letters, digits,
   underscores, periods, or hyphens. An override leaves the backend address unchanged.
 </ParamField>
 
 <ParamField body="description" type="str | None" default="None">
   Description the host can show to the agent. Defaults to the registered backend
-  description for a callable tool.
+  description when the integration supplies it.
 </ParamField>
 
 <ParamField body="input_schema" type="type[BaseModel] | dict">
   Pydantic model class or JSON Schema describing an object of arguments.
-  Inferred from the registered function for a callable tool. For a named tool,
+  Required for a callable tool unless the integration supplies its registered
+  argument schema. For a named tool,
   omitting this field declares an operation that accepts no arguments.
 </ParamField>
 

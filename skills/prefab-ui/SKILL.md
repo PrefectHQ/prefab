@@ -310,6 +310,17 @@ from prefab_ui.rx import RESULT, STATE
 # increment(counter_id, amount=1) is already registered with FastMCP.
 interaction = AppTool(
     increment,
+    name="increment",
+    description="Increment this counter",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "counter_id": {"type": "string"},
+            "amount": {"type": "integer", "default": 1},
+        },
+        "required": ["counter_id"],
+        "additionalProperties": False,
+    },
     bind={"counter_id": STATE.counter_id},
     on_success=SetState("count", RESULT.count),
     result={"count": STATE.count},
@@ -321,8 +332,10 @@ app = PrefabApp(
 )
 ```
 
-FastMCP's enriched resolver must supply the registered local name, description,
-and input schema. Bound parameters are hidden from callers and cannot be
+Published FastMCP resolvers supply the backend address. Give callable app tools
+an explicit `name` and `input_schema`, as above. A resolver that supplies
+`local_name` and `input_schema` can infer them instead. Bound parameters are
+hidden from callers and cannot be
 overridden. Omitted optional arguments stay absent so backend defaults apply.
 `name=` and `description=` override exposed metadata, not the backend address.
 
