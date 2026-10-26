@@ -8253,7 +8253,7 @@ class BarChart(Component):
         x_axis: Data key for x-axis labels.
         x_axis_label: Human-readable title for the category axis.
         y_axis_label: Human-readable value-axis title, hidden when \`show_y_axis=False\`.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         stacked: Stack bars instead of grouping side-by-side.
         horizontal: Render as horizontal bar chart.
         bar_radius: Corner radius on bars.
@@ -8297,7 +8297,7 @@ class BarChart(Component):
         alias="yAxisLabel",
         description="Human-readable title for the value axis",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack bars")
     horizontal: bool = Field(
         default=False, description="Render as horizontal bar chart"
@@ -8350,7 +8350,7 @@ class LineChart(Component):
         x_axis: Data key for x-axis labels.
         x_axis_label: Human-readable title for the category axis.
         y_axis_label: Human-readable value-axis title, hidden when \`show_y_axis=False\`.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
         show_legend: Show legend.
@@ -8394,7 +8394,7 @@ class LineChart(Component):
         alias="yAxisLabel",
         description="Human-readable title for the value axis",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     curve: Literal["linear", "smooth", "step"] = Field(
         default="linear", description="Line interpolation style"
     )
@@ -8443,7 +8443,7 @@ class AreaChart(Component):
         data: Row data or reactive interpolation reference.
         series: Series to render as areas.
         x_axis: Data key for x-axis labels.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         stacked: Stack areas instead of overlaying.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
@@ -8477,7 +8477,7 @@ class AreaChart(Component):
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack areas")
     curve: Literal["linear", "smooth", "step"] = Field(
         default="linear", description="Line interpolation style"
@@ -8529,7 +8529,7 @@ class ScatterChart(Component):
         x_axis: Data key for x-axis values.
         y_axis: Data key for y-axis values.
         z_axis: Data key for bubble size (optional).
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
         animate: Animate transitions. Defaults to \`False\` for reactive data.
@@ -8563,7 +8563,7 @@ class ScatterChart(Component):
         alias="zAxis",
         description="Data key for bubble size (optional)",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     show_legend: bool = Field(
         default=True, alias="showLegend", description="Show legend"
     )
@@ -8611,7 +8611,7 @@ class PieChart(Component):
         name_key: Label field.
         aggregate_below: Group slices below this fraction of the original total into Other.
         aggregate_except: Keep these labels individually; group all others into Other. Accepts a reactive list reference.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         inner_radius: Inner radius in pixels (> 0 for donut).
         show_label: Show labels on slices.
         padding_angle: Gap between slices in degrees.
@@ -8663,7 +8663,7 @@ class PieChart(Component):
         description="Keep these labels individually and group other rows into Other",
     )
 
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     inner_radius: int = Field(
         default=0, alias="innerRadius", description="Inner radius (>0 for donut)"
     )
@@ -8741,7 +8741,7 @@ class RadarChart(Component):
         data: Row data or reactive interpolation reference.
         series: Series to render as radar areas.
         axis_key: Data key for angular axis labels.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         filled: Fill radar polygons (False for lines only).
         show_dots: Show dots at vertices.
         show_legend: Show legend.
@@ -8771,7 +8771,7 @@ class RadarChart(Component):
     axis_key: str | None = Field(
         default=None, alias="axisKey", description="Data key for angular axis labels"
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     filled: bool = Field(
         default=True, description="Fill radar polygons (False for lines only)"
     )
@@ -8806,7 +8806,7 @@ class RadialChart(Component):
         data: Row data or reactive interpolation reference.
         data_key: Numeric value field.
         name_key: Label field.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         inner_radius: Inner radius in pixels.
         start_angle: Arc start angle in degrees.
         end_angle: Arc end angle in degrees.
@@ -8836,7 +8836,7 @@ class RadialChart(Component):
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     inner_radius: int = Field(
         default=30, alias="innerRadius", description="Inner radius in pixels"
     )
@@ -8893,7 +8893,7 @@ class Sparkline(Component):
 
     Args:
         data: Flat list of numeric values or reactive interpolation reference.
-        height: Chart height in pixels (default 24px via CSS).
+        height: Chart height in pixels or a reactive expression (default 24px via CSS).
         variant: Visual variant ("default", "success", "warning", "destructive", "info", "muted").
         indicator_class: Tailwind classes for the line/fill (e.g. "stroke-blue-500").
         fill: Show area fill under the line.
@@ -8915,7 +8915,7 @@ class Sparkline(Component):
     data: list[int | float] | RxStr = Field(
         description="Flat list of numeric values or \`{{ interpolation }}\` reference",
     )
-    height: int | None = Field(
+    height: int | RxStr | None = Field(
         default=None, description="Chart height in pixels (default 24px via CSS)"
     )
     variant: SparklineVariant = Field(
@@ -8981,7 +8981,7 @@ class WaterfallChart(Component):
         data_key: Data key for each row's value. Positive values increase the running total, negative values decrease it.
         name_key: Data key for bar labels.
         total_key: Data key marking a row as a total (bool). Total bars are drawn from zero instead of stacking on the running total.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         increase_color: CSS color for increase bars.
         decrease_color: CSS color for decrease bars.
         total_color: CSS color for total bars.
@@ -9034,7 +9034,7 @@ class WaterfallChart(Component):
             "stacking on the running total"
         ),
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     increase_color: str | None = Field(
         default=None, alias="increaseColor", description="CSS color for increase bars"
     )
