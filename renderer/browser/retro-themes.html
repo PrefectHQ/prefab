@@ -11,6 +11,10 @@
 <div id="preview"></div>
 <script type="module">
   import { createShadowSurface } from "/src/shadow-surface.ts";
+  import { createElement as h } from "react";
+  import { createRoot } from "react-dom/client";
+  import { Progress } from "/src/ui/progress.tsx";
+  import { Separator } from "/src/ui/separator.tsx";
   import presets from "/src/playground/themes.json";
   const preset = presets.find(
     (item) => item.name === new URLSearchParams(location.search).get("theme"),
@@ -21,6 +25,26 @@
   );
   surface.setAssets([preset.css], []);
   surface.setDark(preset.mode === "dark");
+  const widgets = document.createElement("div");
+  surface.mount.append(widgets);
+  createRoot(widgets).render(
+    h(
+      "div",
+      null,
+      h(Progress, {
+        id: "vertical-progress",
+        orientation: "vertical",
+        value: 50,
+      }),
+      h(Progress, { id: "horizontal-progress", value: 50 }),
+      h(Separator, {
+        id: "vertical-separator",
+        orientation: "vertical",
+        className: "h-4",
+      }),
+      h(Separator, { id: "horizontal-separator" }),
+    ),
+  );
   for (const parent of [surface.mount, surface.portal]) {
     const popover = document.createElement("div");
     popover.className = "pf-popover-content";

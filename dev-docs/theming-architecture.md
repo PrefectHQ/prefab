@@ -65,7 +65,11 @@ came out of building them and apply to any theme in this class:
   the class (`.pf-progress-indicator.pf-progress-variant-default`) to win.
 - **Nested `pf-progress`.** Progress renders `.pf-progress` inside
   `.pf-progress`. Borders and padding applied to the class land twice; reset the
-  inner one with `.pf-progress .pf-progress`.
+  inner one with `.pf-progress .pf-progress`. Fixed bar heights belong only to
+  horizontal progress; vertical progress keeps its renderer height and uses the
+  theme's bar thickness as its width. Separator height rules likewise target
+  `.pf-separator-horizontal`; vertical separators style their width and preserve
+  the requested height.
 
 Tab active state is `[data-active]`, not `[data-state="active"]`.
 

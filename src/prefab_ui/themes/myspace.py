@@ -166,7 +166,13 @@ h1, h2, h3, h4,
 .pf-progress-track {{
   background: #0a0a0a;
   border: 1px solid #ff69b4;
+}}
+.pf-progress:not(.pf-progress-vertical),
+.pf-progress-track {{
   height: 14px;
+}}
+.pf-progress-vertical {{
+  width: 14px;
 }}
 /* Progress nests .pf-progress inside .pf-progress — flatten the inner one so
    the neon border is drawn once. */
@@ -232,9 +238,13 @@ h1, h2, h3, h4,
   box-shadow: var(--ms-glow-cyan);
 }}
 
-.pf-separator {{
+.pf-separator-horizontal {{
   background: linear-gradient(90deg, transparent, #ff69b4, #00ffff, transparent);
   height: 2px;
+}}
+.pf-separator-vertical {{
+  background: linear-gradient(180deg, transparent, #ff69b4, #00ffff, transparent);
+  width: 2px;
 }}
 
 .pf-alert {{

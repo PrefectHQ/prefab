@@ -26,3 +26,33 @@ for (const [theme, background] of [
     ).toBe(theme === "MySpace" ? "" : null);
   });
 }
+
+for (const theme of ["MySpace", "Windows 2000"]) {
+  test(`${theme} preserves vertical progress height`, async ({ page }) => {
+    await page.goto(
+      `/browser/retro-themes.html?theme=${encodeURIComponent(theme)}`,
+    );
+    await expect(page.locator("#vertical-progress")).toHaveCSS(
+      "height",
+      "160px",
+    );
+    await expect(page.locator("#horizontal-progress")).toHaveCSS(
+      "height",
+      theme === "MySpace" ? "14px" : "20px",
+    );
+  });
+  test(`${theme} preserves vertical separator height`, async ({ page }) => {
+    await page.goto(
+      `/browser/retro-themes.html?theme=${encodeURIComponent(theme)}`,
+    );
+    await expect(page.locator("#vertical-separator")).toHaveCSS(
+      "height",
+      "16px",
+    );
+    await expect(page.locator("#vertical-separator")).toHaveCSS("width", "2px");
+    await expect(page.locator("#horizontal-separator")).toHaveCSS(
+      "height",
+      "2px",
+    );
+  });
+}

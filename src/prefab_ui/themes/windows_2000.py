@@ -229,8 +229,15 @@ _WIN2K_CSS = """\
 .pf-progress-track {
   background: #ffffff;
   box-shadow: var(--w2k-sunken);
-  height: 20px;
   padding: 3px;
+}
+.pf-progress:not(.pf-progress-vertical),
+.pf-progress-track {
+  height: 20px;
+}
+.pf-progress-vertical {
+  width: 20px;
+  --w2k-progress-direction: to top;
 }
 .pf-progress .pf-progress,
 .pf-progress .pf-progress-track {
@@ -247,7 +254,7 @@ _WIN2K_CSS = """\
 .pf-progress-indicator.pf-progress-variant-muted {
   background-color: transparent;
   background-image: repeating-linear-gradient(
-    to right,
+    var(--w2k-progress-direction, to right),
     currentColor 0 10px,
     transparent 10px 12px
   );
@@ -367,11 +374,17 @@ _WIN2K_CSS = """\
 }
 
 /* Etched groove: a shadow line above a highlight line. */
-.pf-separator {
+.pf-separator-horizontal {
   background: transparent;
   border-top: 1px solid #808080;
   border-bottom: 1px solid #ffffff;
   height: 2px;
+}
+.pf-separator-vertical {
+  background: transparent;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #ffffff;
+  width: 2px;
 }
 
 .pf-alert {
