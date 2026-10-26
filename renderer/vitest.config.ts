@@ -10,5 +10,7 @@ export default defineConfig({
   test: {
     include: ["src/**/*.test.ts"],
     environment: "node",
+    // Runtime compiler tests need real bundled CSS, including ?raw imports.
+    css: { include: [/.+/] },
   },
 });

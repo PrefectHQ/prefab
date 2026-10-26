@@ -41,6 +41,8 @@ it("runs isolated local app tools in shadow-root documentation previews", async 
   await act(async () => hosts[0].shadowRoot!.querySelector("button")!.click());
   expect(hosts[0].shadowRoot!.querySelector("span")?.textContent).toBe("3");
   expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("2");
+  await act(async () => mounted[0].setDark(true));
+  expect(hosts[0].shadowRoot!.querySelector("span")?.textContent).toBe("3");
   await act(async () => mounted.shift()!.unmount());
   await act(async () => hosts[1].shadowRoot!.querySelector("button")!.click());
   expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("3");
@@ -94,8 +96,42 @@ it.each([false, true])(
     });
     await act(async () => vi.advanceTimersByTimeAsync(100));
     expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("1");
+    await act(async () => mounted[1].setDark(true));
+    expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("1");
     await act(async () => mounted.shift()!.unmount());
     await act(async () => vi.advanceTimersByTimeAsync(100));
     expect(hosts[1].shadowRoot!.querySelector("span")?.textContent).toBe("2");
   },
 );
+
+it("applies theme assets to preview and portal roots while retaining the public dark handle", async () => {
+  const host = document.createElement("div");
+  document.body.append(host);
+  let handle!: ReturnType<typeof mountPreview>;
+  await act(async () => {
+    handle = mountPreview(
+      host,
+      JSON.stringify({
+        view: { type: "Text", content: "Preview" },
+        css: [".pf-popover-content { border: 7px solid red; }"],
+        stylesheets: ["https://example.com/font.css"],
+      }),
+    );
+    mounted.push(handle);
+  });
+  const portalHost = document.querySelector<HTMLElement>(
+    "[data-prefab-shadow-portal-host]",
+  )!;
+  expect(portalHost).not.toBeNull();
+  for (const shadow of [host.shadowRoot!, portalHost.shadowRoot!]) {
+    expect(
+      shadow.querySelector("[data-prefab-shadow-css]")?.textContent,
+    ).toContain(".pf-popover-content");
+    expect(shadow.querySelector("link")?.getAttribute("href")).toBe(
+      "https://example.com/font.css",
+    );
+  }
+  handle.setDark(true);
+  expect(host.hasAttribute("data-prefab-dark")).toBe(true);
+  expect(portalHost.hasAttribute("data-prefab-dark")).toBe(true);
+});

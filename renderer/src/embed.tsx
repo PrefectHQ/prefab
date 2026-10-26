@@ -6,78 +6,14 @@
  * on document.body so `position: fixed` overlays can use the full viewport.
  */
 
-import { Suspense, useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { Toaster } from "sonner";
-import { PortalContainerProvider } from "./portal-container";
 import { RenderTree, type ComponentNode } from "./renderer";
 import { useStateStore } from "./state";
 import { clearAllIntervals } from "./actions";
 import { AppTools } from "./app-tools";
-import { toShadowDomCss } from "./themes";
-
-// Vite processes this through @tailwindcss/vite and the tailwindShadowDom
-// plugin, which strips @property declarations and emits initial values as
-// regular custom properties. The CSS arrives ready for shadow DOM use.
-import rawCss from "./index.css?inline";
-
-// Sonner ships its own CSS for toast positioning, animations, and theming.
-// In shadow DOM we need to inject it manually since it can't reach `:root`.
-import sonnerCss from "sonner/dist/styles.css?inline";
-
-// --- Shared shadow CSS base ---
-// Both the preview and portal shadow roots reuse the same rewritten Tailwind
-// CSS. `:root` → `:host` for theme variables, `.dark` → `:host(.dark)` for
-// dark mode.
-const rewrittenCss = rawCss
-  .replace(/:root/g, ":host")
-  .replace(/\.dark\s*\{/g, ":host(.dark) {")
-  .replace(/\.dark\s+\./g, ":host(.dark) .")
-  .replace(/\.dark\s+:/g, ":host(.dark) :");
-
-const fontStack = `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
-
-// Preview shadow root: positioned container with background
-const shadowCss =
-  rewrittenCss +
-  sonnerCss +
-  `
-[data-prefab-mount] {
-  position: relative;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ${fontStack};
-  margin: 0;
-  padding: 4rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-synthesis-weight: none;
-  text-rendering: optimizeLegibility;
-}
-/*
- * The mount is a flex-center container, which makes the prefab root Div
- * a flex item sized to max-content by default. That breaks any descendant
- * using width: 100% (sliders, progress bars, etc.) because they resolve
- * against a content-sized parent. Forcing the root to fill width restores
- * a block-like width cascade inside the preview.
- */
-[data-prefab-mount] > .pf-app-root {
-  width: 100%;
-}
-`;
-
-// Portal shadow root: transparent container for overlays
-const portalShadowCss =
-  rewrittenCss +
-  `
-[data-prefab-portal] {
-  font-family: ${fontStack};
-  font-synthesis-weight: none;
-  text-rendering: optimizeLegibility;
-}
-`;
+import { createShadowSurface, type ShadowSurface } from "./shadow-surface";
+import { ShadowPreviewContents } from "./shadow-preview";
 
 interface MountHandle {
   unmount(): void;
@@ -87,12 +23,14 @@ interface MountHandle {
 function EmbedPreview({
   tree,
   initialState,
-  container,
+  surface,
+  dark,
   tools,
 }: {
   tree: ComponentNode;
   initialState: Record<string, unknown>;
-  container: HTMLElement;
+  surface: ShadowSurface;
+  dark: boolean;
   tools?: unknown;
 }) {
   const state = useStateStore(initialState);
@@ -105,56 +43,10 @@ function EmbedPreview({
     };
   }, [appTools, state, tools]);
   return (
-    <PortalContainerProvider container={container}>
-      <Suspense fallback={null}>
-        <RenderTree tree={tree} state={state} app={null} />
-      </Suspense>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 9999,
-        }}
-      >
-        <Toaster />
-      </div>
-    </PortalContainerProvider>
+    <ShadowPreviewContents surface={surface} dark={dark}>
+      <RenderTree tree={tree} state={state} app={null} />
+    </ShadowPreviewContents>
   );
-}
-
-/**
- * Create a body-level portal host with its own shadow root for overlay content.
- *
- * The shadow root gives full CSS isolation from the host page — no style
- * leakage in either direction. The host element sits directly on document.body
- * so `position: fixed` overlays can use the full viewport.
- */
-function getOrCreatePortalHost(id: string, dark: boolean): HTMLElement {
-  let host = document.getElementById(id);
-  let container: HTMLElement;
-
-  if (!host) {
-    host = document.createElement("div");
-    host.id = id;
-    document.body.appendChild(host);
-
-    const shadow = host.attachShadow({ mode: "open" });
-
-    const style = document.createElement("style");
-    style.textContent = portalShadowCss;
-    shadow.appendChild(style);
-
-    container = document.createElement("div");
-    container.setAttribute("data-prefab-portal", "");
-    shadow.appendChild(container);
-  } else {
-    container = host.shadowRoot!.querySelector("[data-prefab-portal]")!;
-  }
-
-  host.classList.toggle("dark", dark);
-  return container;
 }
 
 function isPreviewDark(
@@ -165,30 +57,6 @@ function isPreviewDark(
   return parsed.mode === "dark";
 }
 
-function applyStyleAssets(
-  shadow: ShadowRoot,
-  parsed: Record<string, unknown>,
-): void {
-  if (Array.isArray(parsed.css)) {
-    const themeStyle = document.createElement("style");
-    themeStyle.textContent = parsed.css
-      .filter((entry): entry is string => typeof entry === "string")
-      .map(toShadowDomCss)
-      .join("\n");
-    shadow.appendChild(themeStyle);
-  }
-
-  if (Array.isArray(parsed.stylesheets)) {
-    for (const url of parsed.stylesheets) {
-      if (typeof url !== "string") continue;
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = url;
-      shadow.appendChild(link);
-    }
-  }
-}
-
 export function mountPreview(
   host: HTMLElement,
   json: string,
@@ -197,28 +65,10 @@ export function mountPreview(
   // Parse JSON — envelope uses view/state keys
   const parsed = JSON.parse(json) as Record<string, unknown>;
 
-  const shadow = host.attachShadow({ mode: "open" });
-
-  // Inject processed CSS
-  const style = document.createElement("style");
-  style.textContent = shadowCss;
-  shadow.appendChild(style);
-
-  // Create mount point inside shadow root
-  const mount = document.createElement("div");
-  mount.setAttribute("data-prefab-mount", "");
-  shadow.appendChild(mount);
-
-  const isDark = isPreviewDark(parsed, options);
-
-  // Apply initial dark mode
-  host.classList.toggle("dark", isDark);
-
-  // Body-level portal host with shadow DOM for overlays
-  const portalId = `prefab-portal-${
-    host.id || Math.random().toString(36).slice(2)
-  }`;
-  const portalContainer = getOrCreatePortalHost(portalId, isDark);
+  const surface = createShadowSurface(host, "docs");
+  let isDark = isPreviewDark(parsed, options);
+  surface.setDark(isDark);
+  surface.setAssets(parsed.css, parsed.stylesheets);
 
   const { view, state, tools, theme, css, stylesheets, mode, ...userData } =
     parsed;
@@ -232,29 +82,30 @@ export function mountPreview(
     ...((state as Record<string, unknown> | undefined) ?? {}),
   };
 
-  applyStyleAssets(shadow, parsed);
-
   // Mount React
-  let root: Root | null = createRoot(mount);
-  root.render(
-    <EmbedPreview
-      tree={tree}
-      initialState={initialState}
-      container={portalContainer}
-      tools={tools}
-    />,
-  );
+  let root: Root | null = createRoot(surface.mount);
+  const render = () =>
+    root?.render(
+      <EmbedPreview
+        tree={tree}
+        initialState={initialState}
+        surface={surface}
+        dark={isDark}
+        tools={tools}
+      />,
+    );
+  render();
 
   return {
     unmount() {
       root?.unmount();
       root = null;
-      document.getElementById(portalId)?.remove();
+      surface.dispose();
     },
     setDark(dark: boolean) {
-      host.classList.toggle("dark", dark);
-      const portalHost = document.getElementById(portalId);
-      if (portalHost) portalHost.classList.toggle("dark", dark);
+      isDark = dark;
+      surface.setDark(dark);
+      render();
     },
   };
 }
