@@ -126,6 +126,21 @@ export function acquireShadowFonts(
           if (!document.fonts.has(face)) {
             document.fonts.add(face);
             current.faces.push(face);
+            // Chromium starts loading transferred faces lazily but does not
+            // refresh font matching when they finish in the source document.
+            // Re-register the loaded face so shadow text uses it. Observing
+            // `loaded` does not request unused weights or Unicode ranges.
+            void face.loaded.then(
+              () => {
+                if (cancel.signal.aborted || !document.fonts.has(face)) return;
+                document.fonts.delete(face);
+                document.fonts.add(face);
+              },
+              (error) => {
+                if (!cancel.signal.aborted)
+                  for (const notify of current.listeners) notify(error);
+              },
+            );
           }
         }
         // Unloaded faces retain their source document's loader context. Keep

@@ -93,6 +93,10 @@ If any are stale, CI fails with instructions to rebuild.
 
 **Static analysis** runs ruff, ty, tsc.
 
+**Renderer tests** run Vitest and Playwright Chromium font-rendering regressions.
+For a local browser run, use `cd renderer && npx playwright install chromium &&
+npm run test:browser`. Set `PLAYWRIGHT_CHANNEL=chrome` to use installed Chrome.
+
 ### On GitHub release (`publish-renderer.yml`)
 
 1. `npm ci` — installs renderer dependencies

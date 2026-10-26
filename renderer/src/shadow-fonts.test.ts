@@ -11,7 +11,11 @@ afterEach(() => {
 });
 
 it("shares owned faces, disconnects their source before transfer, and never loads unused variants", async () => {
-  const face = { family: "Proof", load: vi.fn() } as unknown as FontFace;
+  const face = {
+    family: "Proof",
+    load: vi.fn(),
+    loaded: new Promise(() => {}),
+  } as unknown as FontFace;
   const unrelated = { family: "External" } as FontFace;
   const fonts = new Set<FontFace>([unrelated]);
   const add = vi.spyOn(fonts, "add").mockImplementation((font) => {
@@ -116,7 +120,10 @@ it("registers lazy faces without waiting for font downloads and removes its sour
 });
 
 it("waits for inline font imports without reading imported stylesheet rules", async () => {
-  const face = { family: "Imported" } as FontFace;
+  const face = {
+    family: "Imported",
+    loaded: new Promise(() => {}),
+  } as FontFace;
   const fonts = new Set<FontFace>();
   Object.defineProperty(document, "fonts", {
     configurable: true,
@@ -172,4 +179,45 @@ it("reports stylesheet loading failures and releases its helper document", async
   );
   expect(frame.isConnected).toBe(false);
   lease.release();
+});
+
+it("refreshes matching after a transferred face loads, but never restores a released face", async () => {
+  const fonts = new Set<FontFace>();
+  const add = vi.spyOn(fonts, "add");
+  Object.defineProperty(document, "fonts", {
+    configurable: true,
+    value: fonts,
+  });
+  for (const releaseBeforeLoad of [false, true]) {
+    let finish!: (face: FontFace) => void;
+    const face = {
+      family: "Deferred",
+      loaded: new Promise<FontFace>((resolve) => {
+        finish = resolve;
+      }),
+    } as FontFace;
+    const lease = acquireShadowFonts(
+      ["@font-face {font-family: Deferred;src:url(font.ttf)}"],
+      [],
+      vi.fn(),
+    );
+    const frame = document.querySelector<HTMLIFrameElement>(
+      "[data-prefab-font-loader]",
+    )!;
+    Object.defineProperty(frame.contentDocument!, "fonts", {
+      configurable: true,
+      value: new Set([face]),
+    });
+    frame.dispatchEvent(new Event("load"));
+    await lease.ready;
+    const registrations = add.mock.calls.length;
+    if (releaseBeforeLoad) lease.release();
+    finish(face);
+    await Promise.resolve();
+    expect(add.mock.calls.length).toBe(
+      registrations + (releaseBeforeLoad ? 0 : 1),
+    );
+    expect(fonts.has(face)).toBe(!releaseBeforeLoad);
+    lease.release();
+  }
 });

@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Shadow font rendering regression</title>
+<span class="chrome-probe">Toolbar</span>
+<div id="preview"></div>
+<script type="module">
+  import { createShadowSurface } from "/src/shadow-surface.ts";
+  const surface = createShadowSurface(
+    document.querySelector("#preview"),
+    "playground",
+  );
+  const source = new URLSearchParams(location.search).get("source");
+  const face =
+    '@font-face { font-family: Proof; src: url("/browser/fixtures/proof.ttf"); } @font-face { font-family: Proof; src: url("/unused.ttf"); font-weight: 900; }';
+  const rules =
+    ".proof { font-family: Proof, monospace; font-size: 31px; } .chrome-probe { color: rgb(255, 0, 0); }";
+  const url = "https://fonts.prefab.test/nested/font.css";
+  surface.setAssets(
+    source === "inline"
+      ? [face + rules]
+      : source === "import"
+        ? [`@import url("${url}");`]
+        : [],
+    source === "stylesheet" ? [url] : [],
+  );
+  for (const parent of [surface.mount, surface.portal]) {
+    const text = document.createElement("span");
+    text.className = "proof";
+    text.textContent = "iiiiWWWW";
+    parent.append(text);
+  }
+  window.disposeSurface = () => surface.dispose();
+</script>

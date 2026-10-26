@@ -21,7 +21,7 @@ jobs:
   test:
     name: "Renderer unit tests"
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     defaults:
       run:
@@ -44,3 +44,8 @@ jobs:
           npm ci
 
       - run: npm test
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - run: npm run test:browser

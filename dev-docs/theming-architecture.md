@@ -96,12 +96,17 @@ boundary; the existing shared toast store behavior is unchanged.
 
 ### Font resources
 
-The current bridge has an unresolved integrated-browser rendering failure and
-must remain unmerged. Both preview and portal text still measure as fallback
-fonts (149.3125px) even when the registered face reports `loaded`; the matching
-loaded-font control measures 144.58594px. Isolated resource-transfer probes pass,
-but `FontFace.status` alone is insufficient evidence that a shadow preview uses
-the font. This is the remaining compatibility gate for issue #307.
+Transferred fonts must be verified through rendered text, not just
+`FontFace.status`. Chromium can report a transferred face as loaded while shadow
+text still uses fallback metrics. The bridge re-registers the face when its native
+`loaded` promise resolves, refreshing font matching without eagerly requesting
+unused weights or Unicode ranges. Released leases never re-register a late face.
+
+`npm run test:browser` exercises the real shadow surface with inline font rules,
+opaque external stylesheets, and imported stylesheets. Its original minimal font
+has known glyph advances, so tests assert actual text widths in both preview and
+portal roots before adding any document-level font control. The renderer CI runs
+these checks in Chromium alongside the unit suite.
 
 Browser font registration inside shadow styles is inconsistent. `shadow-fonts.ts`
 lets the browser parse inline CSS and external stylesheets in a blank, same-origin
