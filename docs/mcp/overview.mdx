@@ -94,6 +94,9 @@ the same counter and update its display. Define that interaction once with
 use its `.invoke()` method to connect the button.
 
 For an operation backed by Python, pass the registered function to `AppTool`.
+Give the app tool an explicit name and input schema so it works with published
+FastMCP resolvers. The schema describes the backend inputs, including bound
+parameters; Prefab removes those parameters from the inputs exposed to the agent.
 The function runs on your MCP server. The app supplies context from its live
 state through `bind`, applies the response through `on_success`, and returns
 the explicit `result` to the agent. In the counter below, `bind` supplies
@@ -133,6 +136,17 @@ def open_counter() -> PrefabApp:
 
     increment_tool = AppTool(
         increment,
+        name="increment",
+        description="Increment this counter",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "counter_id": {"type": "string"},
+                "amount": {"type": "integer", "default": 1},
+            },
+            "required": ["counter_id"],
+            "additionalProperties": False,
+        },
         bind={"counter_id": STATE.counter_id},
         on_success=SetState("count", RESULT.count),
         on_error=ShowToast(ERROR, variant="error"),

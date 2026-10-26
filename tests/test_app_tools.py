@@ -322,3 +322,23 @@ def test_backend_example_matches_standard_renderer_fixture():
     )
     fixture = EXAMPLE.parents[1] / "renderer/src/testing/backend-counter-app.json"
     assert wire == json.loads(fixture.read_text())
+
+
+def test_backend_example_supports_name_only_fastmcp_resolver():
+    builder = runpy.run_path(str(EXAMPLE.with_name("app_tools_backend.py")))[
+        "counter_app"
+    ]
+    app = builder(backend_increment, "counter-a")
+    wire = app.to_json(tool_resolver=lambda ref: ResolvedTool("registered_increment"))
+    interaction = wire["tools"][1]
+    assert interaction["name"] == "increment"
+    assert interaction["inputSchema"] == {
+        "type": "object",
+        "properties": {"amount": {"type": "integer", "default": 1}},
+        "required": [],
+        "additionalProperties": False,
+    }
+    assert interaction["bind"] == {"counter_id": "{{ counter_id }}"}
+    assert interaction["actions"]["tool"] == "registered_increment"
+    assert interaction["actions"]["arguments"] == "{{ $event }}"
+    assert wire["view"]["children"][1]["onClick"]["tool"] == "increment"

@@ -56,6 +56,17 @@ the added dataclass fields. Prefab imports no FastMCP modules.
 ```python
 interaction = AppTool(
     increment,
+    name="increment",
+    description="Increment this counter",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "counter_id": {"type": "string"},
+            "amount": {"type": "integer", "default": 1},
+        },
+        "required": ["counter_id"],
+        "additionalProperties": False,
+    },
     bind={"counter_id": STATE.counter_id},
     on_success=SetState("count", RESULT.count),
     result={"count": STATE.count},
@@ -144,8 +155,10 @@ The host-side backend handler in these tests is a test implementation, not a
 FastMCP server. A separate FastMCP 3.4.7 smoke test verifies that a named
 browser-only counter's tool definitions and local calls survive the normal
 tool-result path, and its UI resource serves the updated bundled renderer.
-Callable metadata inference with FastMCP still requires the companion resolver
-changes. Live-model verification requires a supporting host and is separate
+Published FastMCP 3.4.11, 4.0.11, and 4.1.4 provide only the backend address.
+The explicit `name` and `input_schema` example above works with these resolvers;
+callable metadata inference still requires companion resolver changes.
+Live-model verification requires a supporting host and is separate
 from these SDK and serialization tests.
 
 The standalone playground preserves `tools` through the Pyodide execution

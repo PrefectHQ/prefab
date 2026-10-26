@@ -168,7 +168,7 @@ By default, all tools registered on your server are visible to the model — inc
 Use `AppConfig(visibility=["app"])` to mark tools as app-only. These tools remain callable via `CallTool` from the UI, but the host should exclude them when presenting tools to the model:
 
 ```python {1,8}
-from fastmcp.server.apps import AppConfig
+from fastmcp.apps import AppConfig
 
 @mcp.tool(app=True)
 def browse() -> PrefabApp:

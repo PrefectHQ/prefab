@@ -2,8 +2,9 @@
 
 Call `counter_app(increment, counter_id, initial_count)` from a FastMCP tool.
 The registered `increment(counter_id: str, amount: int = 1)` returns
-`{"count": new_count}`. FastMCP must supply the enriched ResolvedTool metadata
-when serializing the returned PrefabApp. The backend owns counter storage.
+`{"count": new_count}`. Explicit app-tool metadata supports FastMCP
+resolvers that provide only the registered backend address. The backend owns
+counter storage.
 """
 
 from collections.abc import Callable
@@ -20,6 +21,17 @@ def counter_app(
 ) -> PrefabApp:
     increment_tool = AppTool(
         increment,
+        name="increment",
+        description="Increment this counter",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "counter_id": {"type": "string"},
+                "amount": {"type": "integer", "default": 1},
+            },
+            "required": ["counter_id"],
+            "additionalProperties": False,
+        },
         bind={"counter_id": STATE.counter_id},
         on_success=[SetState("count", RESULT.count), SetState("error", "")],
         on_error=SetState("error", ERROR),
