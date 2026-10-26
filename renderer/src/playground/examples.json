@@ -2042,7 +2042,7 @@
   {
     "title": "Actions",
     "category": "Concepts",
-    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(on_change=CallTool(\"search\", arguments={\"q\": \"{{ $event }}\"}))"
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.actions.mcp import CallTool\nfrom prefab_ui.components import Input, Slider\n\n# Write the emitted value to a different state key\nSlider(name=\"volume\", on_change=SetState(\"last_changed_volume\", \"{{ $event }}\"))\n\n# Pass the emitted value to a server call\nInput(name=\"query\", on_change=CallTool(\"search\", arguments={\"q\": \"{{ query }}\"}))"
   },
   {
     "title": "Python icon=\"python\"",

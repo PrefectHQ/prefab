@@ -34,6 +34,7 @@ function MountEffect({
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
+import { withStateUpdate } from "./state-change-handler";
 import { StateContext } from "./state-context";
 import { useOverlayClose } from "./overlay-context";
 import { RenderProvider } from "./render-context";
@@ -301,9 +302,10 @@ export function RenderNode({
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
-      }
+      finalProps.onValueChange = withStateUpdate(
+        finalProps.onValueChange,
+        (val: string) => state.set(name, val),
+      );
     }
 
     return wrapMount(<Component {...finalProps}>{textContent}</Component>);
@@ -411,9 +413,10 @@ export function RenderNode({
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
-      }
+      finalProps.onValueChange = withStateUpdate(
+        finalProps.onValueChange,
+        (val: string) => state.set(name, val),
+      );
     }
 
     return wrapMount(<Component {...finalProps}>{textContent}</Component>);
@@ -428,20 +431,18 @@ export function RenderNode({
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onChange) {
-        finalProps.onChange = (e: { target: { value: string } }) => {
-          state.set(name, e.target.value);
-        };
-      }
+      finalProps.onChange = withStateUpdate(
+        finalProps.onChange,
+        (e: { target: { value: string } }) => state.set(name, e.target.value),
+      );
     } else if (type === "Checkbox" || type === "Switch") {
       if (stateValue !== undefined) {
         finalProps.value = Boolean(stateValue);
       }
-      if (!finalProps.onCheckedChange) {
-        finalProps.onCheckedChange = (checked: boolean) => {
-          state.set(name, checked);
-        };
-      }
+      finalProps.onCheckedChange = withStateUpdate(
+        finalProps.onCheckedChange,
+        (checked: boolean) => state.set(name, checked),
+      );
     } else if (type === "Slider") {
       const isRange = Boolean(finalProps.range);
       if (stateValue !== undefined) {
@@ -465,14 +466,14 @@ export function RenderNode({
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onSelect) {
-        finalProps.onSelect = (val: unknown) => {
-          state.set(name, val);
-        };
-      }
+      finalProps.onSelect = withStateUpdate(
+        finalProps.onSelect,
+        (val: unknown) => state.set(name, val),
+      );
     } else if (type === "DropZone") {
-      if (!finalProps.onChange) {
-        finalProps.onChange = (val: unknown) => {
+      finalProps.onChange = withStateUpdate(
+        finalProps.onChange,
+        (val: unknown) => {
           if (!Array.isArray(val) || val.length === 0) return;
           if (finalProps.multiple) {
             // Multiple mode: accumulate files into existing array
@@ -482,8 +483,8 @@ export function RenderNode({
             // Single mode: overwrite with new file(s)
             state.set(name, val);
           }
-        };
-      }
+        },
+      );
     }
   }
 

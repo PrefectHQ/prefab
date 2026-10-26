@@ -14,6 +14,8 @@ Actions can also run when a component mounts, on a timer, or through a keyboard 
 
 For the most common case, syncing an interactive component's value to state, the `name` prop handles it automatically. `Input(name="query")` writes to the `query` key on every keystroke without any explicit action. You reach for actions when you need side effects beyond syncing: showing a toast, calling your server, updating multiple keys at once, or running logic conditionally.
 
+Named inputs update their state before running `on_change`. Your actions can read the updated state key, while `$event` contains the value emitted by the interaction. An explicit `SetState` in the handler runs afterward and can override that automatic value.
+
 ## Action Targets
 
 An action's destination determines what it can do and how its response is handled.
@@ -57,12 +59,13 @@ Most of the time you don't need `$event` directly, because the `name` prop alrea
 ```python
 from prefab_ui.actions import SetState
 from prefab_ui.actions.mcp import CallTool
+from prefab_ui.components import Input, Slider
 
 # Write the emitted value to a different state key
 Slider(name="volume", on_change=SetState("last_changed_volume", "{{ $event }}"))
 
 # Pass the emitted value to a server call
-Input(on_change=CallTool("search", arguments={"q": "{{ $event }}"}))
+Input(name="query", on_change=CallTool("search", arguments={"q": "{{ query }}"}))
 ```
 
 The [Expressions](/concepts/expressions) guide has the full table of what each component emits.
