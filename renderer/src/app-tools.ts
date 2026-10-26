@@ -215,6 +215,7 @@ export class AppTools {
                   undefined,
                   {
                     signal: controller.signal,
+                    propagateCallbackFailures: true,
                     intervalOwner: state,
                     registerCleanup: (cleanup) => {
                       if (controller.signal.aborted) {

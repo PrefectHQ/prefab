@@ -261,7 +261,10 @@ Key props: `visible` (int/float/None), `gap`, `direction` (left/right/up/down),
 
 ## Actions
 
-Actions are Pydantic models. All support `on_success` and `on_error`:
+Actions are Pydantic models. All support `on_success` and `on_error`. A failed
+action stops its list after running `on_error`. In ordinary UI actions, a failure
+inside `on_success` ends that callback list; the completed parent still succeeds
+and its outer list continues. App tools propagate nested callback failures.
 
 ```python
 # Client-side (instant)

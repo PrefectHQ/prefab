@@ -108,7 +108,10 @@ fails clearly rather than silently weakening them.
 
 Response callbacks execute before the explicit result is evaluated. The result
 is returned as `structuredContent` and JSON text. Backend output schemas are not
-inherited. Failures return `isError: true`; earlier effects are not rolled back.
+inherited. Failures return `isError: true`; earlier effects are not rolled back. App tools
+opt into propagation of success-callback failures through their action lists.
+Ordinary UI actions retain the completed parent action's outcome when a nested
+success callback fails, preserving continuation of the outer UI list.
 
 ## Execution and lifecycle
 

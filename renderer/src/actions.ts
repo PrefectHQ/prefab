@@ -44,6 +44,8 @@ export interface ActionSpec {
 /** Invocation-scoped cancellation and failure reporting for app tools. */
 export interface ActionExecution {
   signal?: AbortSignal;
+  /** App tools report callback failures; ordinary UI keeps its parent outcome. */
+  propagateCallbackFailures?: boolean;
   /** Original app store, including when actions use a guarded invocation store. */
   intervalOwner?: StateStore;
   reportError?: (message: string) => void;
@@ -607,7 +609,7 @@ export async function executeAction(
   if (!success)
     execution?.reportError?.(errorMessage ?? "Action execution failed");
   if (success && resolved.onSuccess) {
-    success = await executeActions(
+    const callbacksSucceeded = await executeActions(
       resolved.onSuccess,
       app,
       state,
@@ -619,6 +621,7 @@ export async function executeAction(
       resultData,
       execution,
     );
+    if (execution?.propagateCallbackFailures) success = callbacksSucceeded;
   } else if (!success && resolved.onError) {
     await executeActions(
       resolved.onError,
@@ -643,7 +646,7 @@ export async function executeAction(
  * Accepts a single ActionSpec or an array (for composed action chains).
  * The first action that fails stops the chain — its onError callback runs,
  * then no further actions execute. Returns whether the entire chain succeeded,
- * including success callbacks, so app-provided tools can report failures.
+ * including success callbacks when the execution opts into failure propagation.
  */
 export async function executeActions(
   actions: ActionSpec | ActionSpec[],
