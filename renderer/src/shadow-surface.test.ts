@@ -100,3 +100,9 @@ it("adapts each known dark selector without exposing a document dark class", () 
   expect(css.match(/data-prefab-dark/g)).toHaveLength(2);
   expect(css).toContain(".pf-button { color: red; }");
 });
+
+it("adapts Tailwind's compiled dark variant to the shadow host marker", () => {
+  const css = toSurfaceCss(".pf-checkbox:is(.dark *) { background: red; }");
+  expect(css).not.toContain(":is(.dark *)");
+  expect(css).toContain(":host([data-prefab-dark])");
+});

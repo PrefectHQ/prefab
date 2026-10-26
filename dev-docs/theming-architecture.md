@@ -74,7 +74,8 @@ Ring uses SVG `<linearGradient>` `<defs>` in `ring.tsx` with `style={{ stopColor
 Documentation embeds and the playground share a shadow surface. Preview content
 and body-level overlay portals each have their own shadow root. Both roots receive
 base component CSS, the active theme CSS entries, stylesheet links, and the same
-light/dark host marker. Ordinary component selectors stay unchanged inside those
+light/dark host marker. Compiled Tailwind `:is(.dark *)` variants are adapted
+to that host marker along with ordinary dark theme selectors. Other component selectors stay unchanged inside those
 roots, so preview themes cannot style the editor or toolbar popovers.
 
 The playground renders its existing `RenderTree` through a React portal into a
@@ -104,8 +105,9 @@ unused weights or Unicode ranges. Released leases never re-register a late face.
 
 `npm run test:browser` exercises the real shadow surface with inline font rules,
 opaque external stylesheets, and imported stylesheets. Its original minimal font
-has known glyph advances, so tests assert actual text widths in both preview and
-portal roots before adding any document-level font control. The renderer CI runs
+has known glyph advances; tests compare actual text widths in both preview and
+portal roots with a control in a separate document. This preserves native pixel
+rounding without registering a control face in the document under test. The renderer CI runs
 these checks in Chromium alongside the unit suite.
 
 Browser font registration inside shadow styles is inconsistent. `shadow-fonts.ts`

@@ -6,6 +6,16 @@ for (const source of ["inline", "stylesheet", "import"]) {
   test(`renders ${source} fonts in preview and overlay without leaking selectors`, async ({
     page,
   }) => {
+    // A separate document gives us platform-native glyph rounding without
+    // registering a control face in the document being tested.
+    const control = await page.context().newPage();
+    await control.goto("/browser/shadow-fonts.html?source=control");
+    await control.locator(".proof").waitFor();
+    const expected = await control.evaluate(async () => {
+      await document.fonts.load("31px Proof");
+      return document.querySelector(".proof")!.getBoundingClientRect().width;
+    });
+    await control.close();
     const unused: string[] = [];
     await page.route("**/unused.ttf", (route) => {
       unused.push(route.request().url());
@@ -26,7 +36,6 @@ for (const source of ["inline", "stylesheet", "import"]) {
       }),
     );
     await page.goto(`/browser/shadow-fonts.html?source=${source}`);
-    // Eight glyphs with 500-unit advances at 1000 units per em.
     // A loaded FontFace alone does not prove that shadow text uses the font.
     const text = page.locator(".proof");
     await expect(text).toHaveCount(2);
@@ -36,7 +45,7 @@ for (const source of ["inline", "stylesheet", "import"]) {
           nodes.map((node) => node.getBoundingClientRect().width),
         ),
       )
-      .toEqual([124, 124]);
+      .toEqual([expected, expected]);
     await expect(page.locator(".chrome-probe")).not.toHaveCSS(
       "color",
       "rgb(255, 0, 0)",

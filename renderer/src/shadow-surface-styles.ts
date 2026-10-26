@@ -5,10 +5,9 @@ import { toShadowDomCss } from "./themes";
 export function toSurfaceCss(css: string): string {
   // A light-DOM .dark class on the shadow host would also match the surrounding
   // document's theme declarations, which outrank normal :host declarations.
-  return toShadowDomCss(css).replace(
-    /:host\(\.dark\)/g,
-    ":host([data-prefab-dark])",
-  );
+  return toShadowDomCss(css)
+    .replace(/:host\(\.dark\)/g, ":host([data-prefab-dark])")
+    .replace(/:is\(\.dark\s+\*\)/g, ":is(:host([data-prefab-dark]) *)");
 }
 
 const rewrittenCss = toSurfaceCss(rawCss);
