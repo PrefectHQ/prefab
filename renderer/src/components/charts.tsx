@@ -4,6 +4,7 @@
  */
 
 import { useMemo } from "react";
+import { aggregatePieData } from "../pie-aggregation";
 import {
   Bar,
   BarChart,
@@ -415,6 +416,8 @@ export function PrefabPieChart({
   data = [],
   dataKey,
   nameKey,
+  aggregateBelow,
+  aggregateExcept,
   height = 300,
   innerRadius = 0,
   showLabel = false,
@@ -426,11 +429,27 @@ export function PrefabPieChart({
   className,
 }: PieChartWire & { className?: string }) {
   if (typeof data === "string") return null;
-  const config = buildPieConfig(data, nameKey);
+  let rows;
+  try {
+    rows = aggregatePieData(
+      data,
+      dataKey,
+      nameKey,
+      aggregateBelow,
+      aggregateExcept as string[] | null | undefined,
+    );
+  } catch (error) {
+    return (
+      <div role="alert">
+        {error instanceof Error ? error.message : String(error)}
+      </div>
+    );
+  }
+  const config = buildPieConfig(rows, nameKey);
   const valueFormatter = getValueFormatter(valueFormat);
 
   // Inject fill colors into data so Recharts renders them
-  const coloredData = data.map((d, i) => ({
+  const coloredData = rows.map((d, i) => ({
     ...d,
     fill: CHART_COLORS[i % CHART_COLORS.length],
   }));
