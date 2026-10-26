@@ -69,18 +69,65 @@ Tailwind v4's compiler strips `oklch(from ...)` declarations it doesn't understa
 
 Ring uses SVG `<linearGradient>` `<defs>` in `ring.tsx` with `style={{ stopColor: "oklch(from var(--success) calc(l - 0.12) c h)" }}`. The CSS controls which stroke reference to use (`stroke: url(#ring-gradient-success)` vs `stroke: var(--success)` for flat).
 
-## Playground theme scoping
+## Preview theme isolation
 
-### The --color-* rebinding problem
+Documentation embeds and the playground share a shadow surface. Preview content
+and body-level overlay portals each have their own shadow root. Both roots receive
+base component CSS, the active theme CSS entries, stylesheet links, and the same
+light/dark host marker. Ordinary component selectors stay unchanged inside those
+roots, so preview themes cannot style the editor or toolbar popovers.
 
-Tailwind v4's `@theme inline` declares `--color-background: var(--background)` at `:root`. When themes are scoped to `#pg-preview`, setting `--background: #0f1117` in `#pg-preview` doesn't affect `--color-background` inherited from `:root`. The `COLOR_REBIND` constant in `playground.tsx` redeclares all `--color-*` aliases inside `#pg-preview` so they re-resolve.
+The playground renders its existing `RenderTree` through a React portal into a
+stable shadow mount. Theme, stylesheet, and mode changes update owned assets in
+place; they do not recreate state, rerun mount actions, or replace app tools.
+Documentation retains the public `mountPreview` / `setDark` / `unmount` API and its
+centered layout. The playground retains its full-width, padded, scrolling pane.
 
-### Theme picker interaction
+The picker CSS takes precedence over code CSS: choosing Code clears picker CSS
+and restores the code's CSS entries. Stylesheet links remain app assets. Each
+inline CSS entry has a separate style element, preserving leading `@import`
+rules. Assets are removed from both roots when replaced or unmounted; no preview
+asset is injected into the document head.
 
-- `#pg-code-theme`: CSS from PrefabApp in code (suppressed when picker is active)
-- `#pg-theme`: CSS from toolbar picker (always last in DOM via remove+re-append)
-- "Code" in picker = empty picker CSS, code theme active
-- Any picker selection = code theme suppressed, picker theme active
+The body portal host stays fixed, transparent, and outside preview scrolling
+ancestors. Portal descendants receive pointer events, while the host itself does
+not intercept page clicks. Sonner markup and CSS live inside the same isolation
+boundary; the existing shared toast store behavior is unchanged.
+
+### Font resources
+
+The current bridge has an unresolved integrated-browser rendering failure and
+must remain unmerged. Both preview and portal text still measure as fallback
+fonts (149.3125px) even when the registered face reports `loaded`; the matching
+loaded-font control measures 144.58594px. Isolated resource-transfer probes pass,
+but `FontFace.status` alone is insufficient evidence that a shadow preview uses
+the font. This is the remaining compatibility gate for issue #307.
+
+Browser font registration inside shadow styles is inconsistent. `shadow-fonts.ts`
+lets the browser parse inline CSS and external stylesheets in a blank, same-origin
+helper iframe with scripts disabled. It retains the native `FontFace` resources,
+removes the helper's style/link owners, then registers those disconnected faces
+with the parent document. Theme selectors remain inside the helper and preview
+roots; they never enter the parent document's stylesheet collection.
+
+The now-empty helper iframe stays alive for the native font URL loader, so unused
+weights and Unicode ranges load only when used. Identical assets share a
+reference-counted lease. The final release removes owned faces and the helper;
+pending stylesheet loads are cancelled on disposal. Existing native font/CSP
+policies apply, with no extra allowlist. Font resources live in the document's
+`FontFaceSet`, while the rules choosing fonts remain inside each preview.
+
+### Runtime utilities
+
+The document Tailwind browser scanner still styles the toolbar/editor. It cannot
+observe shadow roots, so the playground separately collects class candidates
+from its two owned roots and uses Tailwind's public `compile` / `build` API.
+Scoped mutation observers batch class/subtree changes. Generated utilities are
+injected into both roots, and observers/styles are disposed with that surface.
+The compiler is imported lazily when a playground surface requests runtime utilities;
+documentation embeds use build-time CSS. This preserves arbitrary classes and dynamically added portal classes without
+moving theme selectors into document scope. Shadow property initialization
+matches the build-time handling of Tailwind's internal `@property` defaults.
 
 ### PrefabApp detection
 
@@ -90,6 +137,11 @@ Pydantic v2's Rust validator caches `model_post_init` at class creation, so patc
 
 ```
 renderer/src/
+├── shadow-surface.ts       Stable preview/portal roots and owned style assets
+├── shadow-preview.tsx      React portal adapter preserving live app state
+├── shadow-fonts.ts         Native font-resource leases without global theme CSS
+├── shadow-tailwind.ts      Public Tailwind compiler for shadow candidates
+├── shadow-utilities.ts     Scoped candidate observers and utility injection
 ├── style.css              Component styles (Tailwind @apply)
 ├── style-indicators.css   Ring/Dot/Sparkline styles
 ├── gradients.css          Gradient fills (bypasses Tailwind compiler)

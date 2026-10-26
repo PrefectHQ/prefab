@@ -149,9 +149,16 @@ Three separate CSS paths:
 - Users can use any Tailwind class in `css_class` — no safelist needed
 
 ### Doc previews (embed, shadow DOM)
-- Build-time only: `@tailwindcss/vite` processes `index.css`, inlined into shadow DOM via `embed.tsx`
+- `@tailwindcss/vite` processes `index.css`; the shared shadow surface injects it into preview and overlay roots
 - `@source "../../tools/preview-classes.html"` pulls in classes extracted from rendered previews
-- `@tailwindcss/browser` cannot observe shadow DOM, so build-time CSS is the only option here
+- `mountPreview` keeps the documentation embed API and owns its state/tool teardown
+
+### Playground shadow preview
+- The document's `@tailwindcss/browser` styles the toolbar/editor, but cannot scan shadow roots
+- `shadow-tailwind.ts` uses the same Tailwind package's public compiler with bundled CSS assets
+- `shadow-utilities.ts` observes only preview/overlay roots and injects generated arbitrary/dynamic utilities into both
+- Selected theme CSS and stylesheet links stay inside both roots; asset changes preserve the live React tree
+- `shadow-fonts.ts` leases native font resources through a scripts-disabled helper document, preserving external/imported fonts without global theme selectors
 
 ### Doc site pages
 - Separate Tailwind build via `tools/input.css` → `@tailwindcss/cli`
