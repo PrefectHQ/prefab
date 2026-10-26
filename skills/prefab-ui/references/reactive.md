@@ -14,6 +14,10 @@ Metric(value=slider.rx)              # {{ brightness }}
 Text(f"Value: {slider.rx}")          # "Value: {{ brightness }}"
 ```
 
+Named inputs sync their own state before `on_change` actions run, so the
+handler can read the updated named state. `$event` contains the emitted value.
+An explicit `SetState` in the handler can override the automatically synced value.
+
 Build expressions with Python operators:
 
 ```python
@@ -135,3 +139,10 @@ with PrefabApp(state={"users": [...]}, defs=[defn]) as app:
         with ForEach("users"):
             Use("user-card")
 ```
+
+
+Accessible names on `Use` apply to the referenced template's root:
+`Use("record-button", record_id=1042, aria_label="Open {{ record_id }}")`.
+The instance overrides the corresponding template name; omitted naming kwargs
+keep template defaults. `aria_label` and `aria_labelledby` remain component fields,
+not `let` bindings. Both accept reactive strings.

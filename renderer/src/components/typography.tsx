@@ -3,10 +3,14 @@
  * Maps Python Text/Heading/etc. to styled HTML elements.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-interface TypographyProps {
+interface TypographyProps extends AccessibleNameProps {
   className?: string;
   cssClass?: string;
   bold?: boolean;
@@ -28,9 +32,11 @@ export function Text({
   bold,
   italic,
   children,
+  ...accessibleName
 }: TextProps) {
   return (
     <span
+      {...getAccessibleNameProps(accessibleName)}
       className={cn(
         bold && "font-bold",
         italic && "italic",
@@ -65,10 +71,12 @@ export function Heading({
   bold,
   italic,
   children,
+  ...accessibleName
 }: HeadingProps) {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4";
   return (
     <Tag
+      {...getAccessibleNameProps(accessibleName)}
       className={cn(
         headingStyles[level],
         bold && "font-bold",
@@ -105,6 +113,7 @@ export function P({
 }: TextProps) {
   return (
     <p
+      {...getAccessibleNameProps(props)}
       className={cn(
         "leading-7 m-0",
         bold && "font-bold",
@@ -128,6 +137,7 @@ export function Lead({
 }: TextProps) {
   return (
     <p
+      {...getAccessibleNameProps(props)}
       className={cn(
         "text-xl text-muted-foreground m-0",
         bold && "font-bold",
@@ -151,6 +161,7 @@ export function Large({
 }: TextProps) {
   return (
     <div
+      {...getAccessibleNameProps(props)}
       className={cn(
         "text-lg font-semibold",
         bold && "font-bold",
@@ -174,6 +185,7 @@ export function Small({
 }: TextProps) {
   return (
     <small
+      {...getAccessibleNameProps(props)}
       className={cn(
         "text-sm font-medium leading-none",
         bold && "font-bold",
@@ -197,6 +209,7 @@ export function Muted({
 }: TextProps) {
   return (
     <p
+      {...getAccessibleNameProps(props)}
       className={cn(
         "text-sm text-muted-foreground m-0",
         bold && "font-bold",
@@ -220,6 +233,7 @@ export function BlockQuote({
 }: TextProps) {
   return (
     <blockquote
+      {...getAccessibleNameProps(props)}
       className={cn(
         "border-l-2 border-border pl-6 italic m-0",
         bold && "font-bold",

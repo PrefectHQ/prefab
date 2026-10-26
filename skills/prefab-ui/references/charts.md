@@ -6,7 +6,8 @@ All charts live in `prefab_ui.components.charts`. Every cartesian chart
 Charts animate literal data by default. When `data` is an `Rx` binding or
 interpolation string, animation defaults to off because replacing reactive data
 mid-animation can make Recharts v2 enter a render loop. Pass `animate=True`
-explicitly to override this safety default.
+explicitly to override this safety default. PieChart also defaults animation off
+when `aggregate_except` is a reactive binding.
 
 ## ChartSeries
 
@@ -117,6 +118,32 @@ PieChart(
 )
 ```
 
+PieChart can combine categories into an `Other` slice while preserving the
+original total. Choose one aggregation rule:
+
+- `aggregate_below=0.2` combines slices below 20% of the original total. A slice
+  exactly at the cutoff stays separate; a zero total leaves rows unchanged.
+- `aggregate_except=["US", "MX"]` keeps those `name_key` values individually and
+  combines the rest. Bind it to `STATE.selected_countries` for interactive
+  selection. An empty list combines every row.
+
+Both options default to `None` and are mutually exclusive. Aggregation uses
+finite, non-negative numeric values and distinct `name_key`/`data_key` fields.
+Existing `Other` rows join the combined bucket when one is needed; no bucket
+is added when no rows are combined.
+
+```python
+from prefab_ui.components.charts import PieChart
+from prefab_ui.rx import STATE
+
+PieChart(
+    data=STATE.sales,
+    name_key="country",
+    data_key="revenue",
+    aggregate_except=STATE.selected_countries,
+)
+```
+
 **RadarChart** — spider/radar with series:
 ```python
 from prefab_ui.components.charts import RadarChart, ChartSeries
@@ -138,6 +165,28 @@ RadialChart(
     name_key="name",
 )
 ```
+
+**WaterfallChart** — floating bars showing sequential increases/decreases
+building to a total (no ChartSeries — uses `data_key`/`name_key` like
+PieChart/RadialChart):
+```python
+from prefab_ui.components.charts import WaterfallChart
+
+WaterfallChart(
+    data=[
+        {"label": "Starting Cash", "value": 50000, "total": True},
+        {"label": "Sales", "value": 32000},
+        {"label": "Payroll", "value": -21000},
+        {"label": "Ending Cash", "value": 61000, "total": True},
+    ],
+    data_key="value",
+    name_key="label",
+    total_key="total",  # marks a row as a total: drawn from zero, resets the running sum
+)
+```
+Bars are colored automatically (increase/decrease/total) and connected by
+dashed "bridge" lines by default — set `show_connectors=False` to hide them.
+Override colors with `increase_color`, `decrease_color`, `total_color`.
 
 ## Sparkline
 

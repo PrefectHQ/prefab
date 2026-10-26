@@ -1,8 +1,12 @@
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 
 // ── Video ───────────────────────────────────────────────────────────────
 
-interface VideoProps {
+interface VideoProps extends AccessibleNameProps {
   src: string;
   poster?: string;
   controls?: boolean;
@@ -26,6 +30,7 @@ export function Video({
   height,
   className,
   cssClass,
+  ...accessibleName
 }: VideoProps) {
   const style: React.CSSProperties = {};
   if (width) style.width = width;
@@ -33,6 +38,7 @@ export function Video({
 
   return (
     <video
+      {...getAccessibleNameProps(accessibleName)}
       src={src}
       poster={poster}
       controls={controls}
@@ -47,7 +53,7 @@ export function Video({
 
 // ── Audio ───────────────────────────────────────────────────────────────
 
-interface AudioProps {
+interface AudioProps extends AccessibleNameProps {
   src: string;
   controls?: boolean;
   autoplay?: boolean;
@@ -65,9 +71,11 @@ export function Audio({
   muted = false,
   className,
   cssClass,
+  ...accessibleName
 }: AudioProps) {
   return (
     <audio
+      {...getAccessibleNameProps(accessibleName)}
       src={src}
       controls={controls}
       autoPlay={autoplay}

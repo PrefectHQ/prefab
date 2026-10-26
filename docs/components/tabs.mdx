@@ -377,6 +377,69 @@ with Column(gap=4):
         Button("Go to Advanced", on_click=SetState("activeTab", "advanced"))
 ```
 
+## Change Actions
+
+Tabs writes the selected tab's value to its named state before running
+`on_change`. Your actions can read that updated key or use `$event`, which
+contains the selected tab's value. An explicit `SetState` in the handler can
+choose a different active tab.
+
+This example records the selected section after each change:
+
+<ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"active","value":"overview","type":"Tabs","variant":"default","orientation":"horizontal","onChange":{"action":"setState","key":"last_tab","value":"{{ active }}"},"children":[{"type":"Tab","title":"Overview","value":"overview","disabled":false,"children":[{"content":"Overview content","type":"Text"}]},{"type":"Tab","title":"Details","value":"details","disabled":false,"children":[{"content":"Detailed content","type":"Text"}]}]},{"content":"Last change: {{ last_tab | 'None yet' }}","type":"Text"}]},"state":{"active":"overview"}}} playground="ZnJvbSBwcmVmYWJfdWkuYWN0aW9ucyBpbXBvcnQgU2V0U3RhdGUKZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBUYWIsIFRhYnMsIFRleHQKCndpdGggQ29sdW1uKGdhcD0zKToKICAgIHdpdGggVGFicyhuYW1lPSJhY3RpdmUiLCB2YWx1ZT0ib3ZlcnZpZXciLAogICAgICAgICAgICAgIG9uX2NoYW5nZT1TZXRTdGF0ZSgibGFzdF90YWIiLCAie3sgYWN0aXZlIH19IikpOgogICAgICAgIHdpdGggVGFiKCJPdmVydmlldyIsIHZhbHVlPSJvdmVydmlldyIpOgogICAgICAgICAgICBUZXh0KCJPdmVydmlldyBjb250ZW50IikKICAgICAgICB3aXRoIFRhYigiRGV0YWlscyIsIHZhbHVlPSJkZXRhaWxzIik6CiAgICAgICAgICAgIFRleHQoIkRldGFpbGVkIGNvbnRlbnQiKQogICAgVGV4dCgiTGFzdCBjaGFuZ2U6IHt7IGxhc3RfdGFiIHwgJ05vbmUgeWV0JyB9fSIpCg">
+<CodeGroup>
+```python icon="python"
+from prefab_ui.actions import SetState
+from prefab_ui.components import Column, Tab, Tabs, Text
+
+with Column(gap=3):
+    with Tabs(name="active", value="overview",
+              on_change=SetState("last_tab", "{{ active }}")):
+        with Tab("Overview", value="overview"):
+            Text("Overview content")
+        with Tab("Details", value="details"):
+            Text("Detailed content")
+    Text("Last change: {{ last_tab | 'None yet' }}")
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "gap-3",
+    "type": "Column",
+    "children": [
+      {
+        "name": "active",
+        "value": "overview",
+        "type": "Tabs",
+        "variant": "default",
+        "orientation": "horizontal",
+        "onChange": {"action": "setState", "key": "last_tab", "value": "{{ active }}"},
+        "children": [
+          {
+            "type": "Tab",
+            "title": "Overview",
+            "value": "overview",
+            "disabled": false,
+            "children": [{"content": "Overview content", "type": "Text"}]
+          },
+          {
+            "type": "Tab",
+            "title": "Details",
+            "value": "details",
+            "disabled": false,
+            "children": [{"content": "Detailed content", "type": "Text"}]
+          }
+        ]
+      },
+      {"content": "Last change: {{ last_tab | 'None yet' }}", "type": "Text"}
+    ]
+  },
+  "state": {"active": "overview"}
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
 ## API Reference
 
 <Card icon="code" title="Tabs Parameters">

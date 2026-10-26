@@ -151,10 +151,14 @@ with Card(css_class="p-6"):
 
 ### Tabs
 
+A named `Tabs` writes its selected value before `on_change` actions run.
+The handler sees the updated named state and receives the tab value as `$event`.
+An explicit `SetState` in the handler can override the active selection.
+
 Content goes *inside* each Tab — Tab is a container, not just a header:
 
 ```python
-with Tabs(default_value="overview"):
+with Tabs(value="overview"):
     with Tab("Overview", value="overview"):
         with Card():
             with CardContent():
@@ -257,7 +261,10 @@ Key props: `visible` (int/float/None), `gap`, `direction` (left/right/up/down),
 
 ## Actions
 
-Actions are Pydantic models. All support `on_success` and `on_error`:
+Actions are Pydantic models. All support `on_success` and `on_error`. A failed
+action stops its list after running `on_error`. In ordinary UI actions, a failure
+inside `on_success` ends that callback list; the completed parent still succeeds
+and its outer list continues. App tools propagate nested callback failures.
 
 ```python
 # Client-side (instant)
@@ -282,6 +289,73 @@ Button(
 # Explicit lists remain supported
 Button("Reset", on_click=[SetState("count", 0), ShowToast("Reset")])
 ```
+
+### App-provided tools
+
+`PrefabApp(app_tools=[...])` lets an MCP Apps host invoke actions against the same
+live state as human UI interactions. Import `AppTool` from `prefab_ui.app`.
+Pass a registered backend function or a name with browser-only `actions`.
+Every tool requires an explicit `result` object. `.invoke(**arguments)` creates a
+local action invoking that same definition; include it in `PrefabApp.app_tools`.
+Callable metadata is resolved during serialization, never by executing the
+function. A backend interaction and its button can share one definition:
+
+Keep the direction clear: `AppTool` is an entry point from the host into the
+running app. Its actions may contain `CallTool`, which sends a request back out
+through the host to the MCP server. Python remains on the server.
+
+```python
+from prefab_ui.app import AppTool, PrefabApp
+from prefab_ui.actions import SetState
+from prefab_ui.components import Button
+from prefab_ui.rx import RESULT, STATE
+
+# increment(counter_id, amount=1) is already registered with FastMCP.
+interaction = AppTool(
+    increment,
+    name="increment",
+    description="Increment this counter",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "counter_id": {"type": "string"},
+            "amount": {"type": "integer", "default": 1},
+        },
+        "required": ["counter_id"],
+        "additionalProperties": False,
+    },
+    bind={"counter_id": STATE.counter_id},
+    on_success=SetState("count", RESULT.count),
+    result={"count": STATE.count},
+)
+app = PrefabApp(
+    view=Button("Increment", on_click=interaction.invoke(amount=1)),
+    state={"counter_id": counter_id, "count": 0},
+    app_tools=[interaction],
+)
+```
+
+Published FastMCP resolvers supply the backend address. Give callable app tools
+an explicit `name` and `input_schema`, as above. A resolver that supplies
+`local_name` and `input_schema` can infer them instead. Bound parameters are
+hidden from callers and cannot be
+overridden. Omitted optional arguments stay absent so backend defaults apply.
+`name=` and `description=` override exposed metadata, not the backend address.
+
+For browser-only behavior, use `AppTool("increment", actions=SetState(...),
+result={...})`. `input_schema` accepts a Pydantic model or object JSON Schema;
+omitting it means no arguments. Arguments (plus bindings) are available as
+`EVENT`. `AppTool("get_count", result={"count": STATE.count})` is read-only.
+Results resolve after actions and response callbacks finish. Browser-only
+callbacks go on the individual actions.
+
+Tools survive `to_json()` and use the standard FastMCP renderer. Both invocation
+paths share validation, execution ordering, and replacement cleanup. Only JSON
+Schema validation runs in the browser; Python code stays on the MCP server.
+Host support and an updated renderer are required for model calls. See
+`docs/mcp/overview.mdx` (App-Provided Tools), `docs/reference/app-tools.mdx`,
+`examples/app_tools.py`, and
+`examples/app_tools_backend.py`.
 
 ### on_mount
 
@@ -343,3 +417,25 @@ CallTool("search")           # tool
 SetState("count", 42)        # key, value
 ShowToast("Saved!")          # message
 ```
+
+
+## Accessible names
+
+Use `aria_label="Open record 1042"` for a name independent of visible text,
+or `aria_labelledby="search-label"` to reference an existing DOM label ID.
+Both accept Rx strings. These are separate from state `name` and DOM `id`.
+If both are set, `aria_labelledby` wins. A label alone replaces automatic internal
+label references. Do not add ARIA roles to generic layouts to make names effective.
+
+Names target existing semantic controls: Select/Combobox/DatePicker's primary
+control, Calendar's grid, charts' SVG, and DataTable's table. Dialog/Popover/
+HoverCard/Tooltip name their popup content; name their explicit trigger Button
+separately. Tabs names the tablist, Tab names its trigger, and AccordionItem
+names its generated trigger. Use visible labels where practical.
+
+Names on Text, Metric, Code, Markdown, and Svg are forwarded to existing roots
+without adding semantic roles or renaming embedded HTML. Loader names its status
+SVG. Explicitly named Icons are exposed to assistive technology; unnamed Icons
+remain decorative. Transparent ForEach/Condition/Slot have no DOM root; name the
+actual components they render. Select/Combobox child marker names target their
+corresponding rendered option/group/label/separator elements.

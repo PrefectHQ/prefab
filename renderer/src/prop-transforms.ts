@@ -28,7 +28,7 @@ export const ACTION_PROPS = new Set([
  */
 export const ITEM_CHILD_TYPES: Record<string, string[]> = {
   Select: ["value", "label", "selected", "disabled"],
-  RadioGroup: ["option", "label", "value", "disabled"],
+  RadioGroup: ["id", "option", "label", "value", "disabled"],
 };
 
 /** Child types used for Select option groups. */
@@ -122,6 +122,18 @@ export function mapProps(
   props: Record<string, unknown>,
 ): Record<string, unknown> {
   const mapped = { ...props };
+
+  // These are the only supported common ARIA attributes, not arbitrary DOM props.
+  if ("ariaLabel" in mapped) {
+    mapped["aria-label"] =
+      mapped.ariaLabel == null ? undefined : String(mapped.ariaLabel);
+    delete mapped.ariaLabel;
+  }
+  if ("ariaLabelledBy" in mapped) {
+    mapped["aria-labelledby"] =
+      mapped.ariaLabelledBy == null ? undefined : String(mapped.ariaLabelledBy);
+    delete mapped.ariaLabelledBy;
+  }
 
   // Button/Badge: "label" → children text
   if (type === "Button" || type === "Badge") {
@@ -290,9 +302,12 @@ export function mapProps(
     }
   }
 
-  // Select/RadioGroup/Combobox: onChange → onValueChange
+  // Select/RadioGroup/Combobox/Tabs: onChange → onValueChange
   if (
-    (type === "Select" || type === "RadioGroup" || type === "Combobox") &&
+    (type === "Select" ||
+      type === "RadioGroup" ||
+      type === "Combobox" ||
+      type === "Tabs") &&
     "onChange" in mapped
   ) {
     mapped.onValueChange = mapped.onChange;

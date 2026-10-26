@@ -19,6 +19,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import Action
+from prefab_ui.actions.app_tool import InvokeAppTool
 from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
@@ -43,6 +44,7 @@ from prefab_ui.components.charts import (
     RadialChart,
     ScatterChart,
     Sparkline,
+    WaterfallChart,
 )
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "renderer" / "schemas"
@@ -51,6 +53,7 @@ COMPONENTS_DIR = FIXTURES_DIR / "components"
 ACTIONS_DIR = FIXTURES_DIR / "actions"
 
 ALL_ACTION_CLASSES: list[type[Action]] = [
+    InvokeAppTool,
     CallHandler,
     CallTool,
     RequestDisplayMode,
@@ -188,6 +191,7 @@ def _all_concrete_components() -> list[type[Component]]:
             RadialChart,
             ScatterChart,
             Sparkline,
+            WaterfallChart,
         ]
     )
     return result

@@ -69,7 +69,7 @@ class PyodideSandbox:
             "DENO_V8_FLAGS": "--max-old-space-size=4096",
             "DENO_UNSTABLE_DETECT_CJS": "1",
         }
-        proc = await loop.run_in_executor(
+        starting = loop.run_in_executor(
             None,
             lambda: subprocess.Popen(
                 [
@@ -93,21 +93,39 @@ class PyodideSandbox:
             ),
         )
 
-        # Wait for the runner to signal readiness, collecting stderr
-        assert proc.stderr is not None
-        proc_stderr = proc.stderr
-        stderr_lines: list[str] = []
-        while True:
-            line = await loop.run_in_executor(None, proc_stderr.readline)
-            if not line and proc.poll() is not None:
-                err = "\n".join(stderr_lines)
-                if len(err) > 2000:
-                    err = f"{err[:1000]}\n...\n{err[-1000:]}"
-                raise RuntimeError(f"Pyodide sandbox failed to start:\n{err}")
-            decoded = line.decode().rstrip()
-            stderr_lines.append(decoded)
-            if "pyodide:ready" in decoded:
-                break
+        try:
+            proc = await asyncio.shield(starting)
+        except asyncio.CancelledError:
+            # Popen may still be running in its executor thread. Keep its
+            # result available so the process can be reclaimed when it returns.
+            def discard_startup(
+                future: asyncio.Future[subprocess.Popen[bytes]],
+            ) -> None:
+                if not future.cancelled() and future.exception() is None:
+                    self._stop_process(future.result())
+
+            starting.add_done_callback(discard_startup)
+            raise
+
+        try:
+            # Wait for the runner to signal readiness, collecting stderr
+            assert proc.stderr is not None
+            proc_stderr = proc.stderr
+            stderr_lines: list[str] = []
+            while True:
+                line = await loop.run_in_executor(None, proc_stderr.readline)
+                if not line and proc.poll() is not None:
+                    err = "\n".join(stderr_lines)
+                    if len(err) > 2000:
+                        err = f"{err[:1000]}\n...\n{err[-1000:]}"
+                    raise RuntimeError(f"Pyodide sandbox failed to start:\n{err}")
+                decoded = line.decode().rstrip()
+                stderr_lines.append(decoded)
+                if "pyodide:ready" in decoded:
+                    break
+        except (Exception, asyncio.CancelledError):
+            self._stop_process(proc)
+            raise
 
         self._process = proc
 
@@ -115,17 +133,21 @@ class PyodideSandbox:
         if self._process is not None:
             proc = self._process
             self._process = None
-            if proc.poll() is None:
-                proc.terminate()
-            try:
-                proc.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.communicate()
-            finally:
-                for stream in (proc.stdin, proc.stdout, proc.stderr):
-                    if stream is not None:
-                        stream.close()
+            self._stop_process(proc)
+
+    @staticmethod
+    def _stop_process(proc: subprocess.Popen[bytes]) -> None:
+        if proc.poll() is None:
+            proc.terminate()
+        try:
+            proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.communicate()
+        finally:
+            for stream in (proc.stdin, proc.stdout, proc.stderr):
+                if stream is not None:
+                    stream.close()
 
     async def run(
         self,
@@ -142,6 +164,9 @@ class PyodideSandbox:
 
         Returns:
             Prefab wire protocol dict (`$prefab`, `view`, `state`, etc.)
+
+        Cancellation during startup or execution discards the worker. The next
+        call starts a fresh process. Use `asyncio.wait_for()` to apply a timeout.
 
         Raises:
             RuntimeError: If the code fails or the sandbox is unavailable.

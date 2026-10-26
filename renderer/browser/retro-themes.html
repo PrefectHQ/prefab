@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Retro theme isolation regression</title>
+<style>
+  .pf-popover-content {
+    background: rgb(1, 2, 3);
+    color: rgb(4, 5, 6);
+  }
+</style>
+<div id="toolbar" class="pf-popover-content">Toolbar popover</div>
+<div id="preview"></div>
+<script type="module">
+  import { createShadowSurface } from "/src/shadow-surface.ts";
+  import presets from "/src/playground/themes.json";
+  const preset = presets.find(
+    (item) => item.name === new URLSearchParams(location.search).get("theme"),
+  );
+  const surface = createShadowSurface(
+    document.querySelector("#preview"),
+    "playground",
+  );
+  surface.setAssets([preset.css], []);
+  surface.setDark(preset.mode === "dark");
+  for (const parent of [surface.mount, surface.portal]) {
+    const popover = document.createElement("div");
+    popover.className = "pf-popover-content";
+    popover.textContent = "Preview popover";
+    parent.append(popover);
+  }
+</script>

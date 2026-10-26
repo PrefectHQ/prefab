@@ -17,6 +17,7 @@ const injected = (window as any).__FASTMCP_PREVIEW__ as
       tree: any;
       data: Record<string, unknown>;
       state?: Record<string, unknown>;
+      tools?: unknown;
     }
   | undefined;
 

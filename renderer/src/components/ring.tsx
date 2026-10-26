@@ -1,3 +1,7 @@
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { cn } from "@/lib/utils";
 
 const SIZE_PX: Record<string, number> = {
@@ -21,7 +25,7 @@ const VARIANT_CLASS: Record<string, string> = {
   muted: "pf-ring-variant-muted",
 };
 
-interface RingProps {
+interface RingProps extends AccessibleNameProps {
   value?: number;
   target?: number;
   label?: string;
@@ -47,6 +51,7 @@ export function Ring({
   className,
   cssClass,
   children,
+  ...accessibleName
 }: RingProps) {
   const px = SIZE_PX[size] ?? SIZE_PX.default;
   const half = px / 2;
@@ -91,6 +96,7 @@ export function Ring({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={label ?? `${Math.round(clamped)}%`}
+      {...getAccessibleNameProps(accessibleName)}
       style={{ width: px, height: px }}
     >
       <svg

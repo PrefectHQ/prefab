@@ -8,6 +8,29 @@ import { ComponentPreview } from "/snippets/component-preview.mdx";
 
 Radio buttons let users select exactly one option from a set. Each `Radio` represents a single choice; wrap them in a `RadioGroup` to link them together and track the selected value.
 
+## Accessible labels
+
+`Radio(label="Basic")` labels that individual option. Name the group separately
+with `aria_labelledby` and the DOM ID of an existing label:
+
+```python Accessible radio labels
+from prefab_ui import PrefabApp
+from prefab_ui.components import Column, Label, Radio, RadioGroup
+
+with PrefabApp() as app:
+    with Column():
+        Label("Plan", id="plan-label")
+        with RadioGroup(name="plan", aria_labelledby="plan-label"):
+            Radio(label="Basic", id="basic-plan")
+            Radio(label="Pro", id="pro-plan")
+```
+
+`Label(for_id="plan")` alone cannot label a generic radiogroup container.
+The group's `name` is its state key, while `id` identifies a DOM element.
+Option IDs target their native radio inputs and associated labels; omitted IDs are generated
+uniquely and remain stable across rerenders. Standalone Radio keeps a native
+radio input with the same visible-label association.
+
 ## Basic Usage
 
 A `RadioGroup` is a container that holds `Radio` children. Each radio needs an `option` (what gets stored when selected) and a `label` (what the user sees). The group tracks which radio is selected and stores its `option` string in state:
@@ -64,7 +87,7 @@ with RadioGroup(css_class="w-fit mx-auto"):
 </CodeGroup>
 </ComponentPreview>
 
-## Pre-selected Option
+## Preselected Option
 
 Set `value=True` on a radio to have it selected when the component first renders:
 

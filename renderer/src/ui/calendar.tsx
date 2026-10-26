@@ -4,9 +4,10 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+import { DayButton, DayPicker, MonthGrid, getDefaultClassNames } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
+import { getAccessibleNameProps } from "../accessibility"
 import { Button, buttonVariants } from "@/ui/button"
 
 function Calendar({
@@ -17,6 +18,8 @@ function Calendar({
   buttonVariant = "ghost",
   formatters,
   components,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
@@ -123,6 +126,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
+        MonthGrid: (gridProps) => <MonthGrid {...gridProps} {...getAccessibleNameProps({ "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy })} />,
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div

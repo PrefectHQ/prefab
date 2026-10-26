@@ -22,6 +22,11 @@ vi.mock("./editor", () => ({
 }));
 vi.mock("../renderer", () => ({ RenderTree: () => h("div", null, "Preview") }));
 vi.mock("./example-picker", () => ({ ExamplePicker: () => null }));
+vi.mock("../index.css?inline", () => ({ default: "" }));
+vi.mock("sonner/dist/styles.css?inline", () => ({ default: "" }));
+vi.mock("../shadow-utilities", () => ({
+  startShadowUtilities: () => ({ dispose() {} }),
+}));
 
 let container: HTMLDivElement;
 let root: Root;
@@ -90,7 +95,9 @@ async function rerunCode() {
 }
 
 function isDark() {
-  return document.getElementById("pg-preview")!.classList.contains("dark");
+  return document
+    .getElementById("pg-preview")!
+    .hasAttribute("data-prefab-dark");
 }
 
 it("keeps a dark preset when light-mode code reruns", async () => {

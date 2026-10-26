@@ -22,6 +22,7 @@ from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from prefab_ui.actions import Action
+from prefab_ui.actions.app_tool import InvokeAppTool
 from prefab_ui.actions.custom import CallHandler
 from prefab_ui.actions.fetch import Fetch
 from prefab_ui.actions.file import OpenFilePicker
@@ -46,6 +47,7 @@ from prefab_ui.components.charts import (
     RadialChart,
     ScatterChart,
     Sparkline,
+    WaterfallChart,
 )
 from prefab_ui.components.control_flow import ForEach
 from prefab_ui.rx import reset_counter
@@ -191,6 +193,7 @@ def discover_components() -> dict[str, type[Component]]:
         RadialChart,
         ScatterChart,
         Sparkline,
+        WaterfallChart,
         ForEach,
     ]
     for cls in _SUBMODULE_COMPONENTS:
@@ -204,6 +207,7 @@ def discover_actions() -> dict[str, type[Action]]:
     """Return all concrete action types keyed by their discriminator."""
     actions = [
         CallHandler,
+        InvokeAppTool,
         CallTool,
         RequestDisplayMode,
         SendMessage,

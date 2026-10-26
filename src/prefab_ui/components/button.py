@@ -55,6 +55,8 @@ class Button(Component):
     """A button component with multiple variants and sizes.
 
     Args:
+        aria_label: Accessible name independent of the visible label; accepts Rx strings.
+        aria_labelledby: Space-separated DOM label IDs; takes precedence over aria_label.
         label: Button text
         variant: Visual style - "default", "destructive", "outline", "secondary", "ghost", "link", "success", "warning", "info"
         size: Button size - "default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"

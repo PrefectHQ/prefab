@@ -29,14 +29,14 @@ jobs:
 
     steps:
       - name: Checkout base repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.event.repository.default_branch }}
 
       - name: Generate Marvin App token
         id: marvin-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ secrets.MARVIN_APP_ID }}
           private-key: ${{ secrets.MARVIN_APP_PRIVATE_KEY }}
@@ -106,7 +106,7 @@ jobs:
         run: rm -rf ~/.claude/.locks ~/.local/state/claude/locks || true
 
       - name: Run Marvin for Issue Triage
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@v1.0.252
         with:
           github_token: ${{ steps.marvin-token.outputs.token }}
           bot_name: "Marvin Context Protocol"

@@ -1,0 +1,65 @@
+{
+  "$prefab": {
+    "version": "0.3"
+  },
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "name": "active",
+        "value": "a",
+        "type": "Tabs",
+        "variant": "default",
+        "orientation": "horizontal",
+        "onChange": [
+          {
+            "action": "setState",
+            "key": "calls",
+            "value": "{{ calls + 1 }}"
+          },
+          {
+            "action": "setState",
+            "key": "seen",
+            "value": "{{ active }}"
+          },
+          {
+            "action": "setState",
+            "key": "event",
+            "value": "{{ $event }}"
+          }
+        ],
+        "children": [
+          {
+            "type": "Tab",
+            "title": "Alpha",
+            "value": "a",
+            "disabled": false,
+            "children": [
+              {
+                "content": "Alpha panel",
+                "type": "Text"
+              }
+            ]
+          },
+          {
+            "type": "Tab",
+            "title": "Beta",
+            "value": "b",
+            "disabled": false,
+            "children": [
+              {
+                "content": "Beta panel",
+                "type": "Text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "active": "a",
+    "calls": 0
+  }
+}

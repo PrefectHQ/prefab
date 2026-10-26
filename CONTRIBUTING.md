@@ -36,6 +36,12 @@ An open issue is not an invitation to submit a PR. Issues track problems; whethe
 - **Write tests.** Bug fixes should include a test that fails without the fix.
 - **Fix the cause, not the symptom.**
 
+## Local checks
+
+Install the locked JavaScript tooling with `npm ci --prefix tools` and renderer
+dependencies with `npm ci --prefix renderer` before running `uv run prek run --all-files`.
+The Prettier hook uses the maintained package pinned in `tools/package-lock.json`.
+
 ## The `app.html` merge driver
 
 The bundled renderer (`src/prefab_ui/renderer/app.html`) is a minified, chunked Vite build. Its line contents aren't stable between builds, so trying to merge two branches' versions of it produces nonsense conflicts. We mark it in `.gitattributes` with `merge=ours` so git resolves conflicts by keeping the upstream side, and the `check_generated` CI workflow regenerates it from source afterwards if the final tree actually warrants a different bundle.

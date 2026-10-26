@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Shadow component dark mode regression</title>
+<div id="preview"></div>
+<script type="module">
+  import { createShadowSurface } from "/src/shadow-surface.ts";
+  const surface = createShadowSurface(
+    document.querySelector("#preview"),
+    "playground",
+  );
+  surface.setAssets([":root { --input: rgb(255, 0, 0); }"], []);
+  for (const parent of [surface.mount, surface.portal]) {
+    const box = document.createElement("div");
+    box.className = "pf-checkbox";
+    parent.append(box);
+  }
+  window.setDark = (dark) => surface.setDark(dark);
+</script>

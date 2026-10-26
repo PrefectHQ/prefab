@@ -63,6 +63,20 @@ async with Sandbox() as sandbox:
 
 If the Deno process crashes, the sandbox automatically restarts on the next call.
 
+`run()` has no built-in timeout. Use `asyncio.wait_for()` to apply a deadline to a call. Cancellation during startup or execution closes that worker, and the next call starts a fresh process. When `run()` starts the sandbox lazily, its deadline also covers startup.
+
+```python
+import asyncio
+
+from prefab_ui.sandbox import Sandbox
+
+async with Sandbox() as sandbox:
+    result = await asyncio.wait_for(
+        sandbox.run('from prefab_ui.components import Text\nview = Text("Hello")'),
+        timeout=10,
+    )
+```
+
 ### Security
 
 The packaged `deno.lock` pins npm and URL module dependencies with integrity hashes. The runner uses that lockfile in frozen mode, independently of the current working directory.

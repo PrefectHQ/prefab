@@ -6,7 +6,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Toaster } from "sonner";
 import {
   Moon,
   Sun,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 import { RenderTree, type ComponentNode } from "../renderer";
 import { useStateStore } from "../state";
+import { AppTools } from "../app-tools";
 import { Button } from "@/ui/button";
 import { Badge } from "@/ui/badge";
 import { Alert, AlertDescription } from "@/ui/alert";
@@ -35,59 +35,9 @@ import { ExamplePicker } from "./example-picker";
 import { executePython, loadPyodideRuntime } from "./pyodide";
 import { type Example } from "./examples";
 import { getPresetMode, ThemePicker } from "./theme-picker";
-import { syncStylesheets } from "../style-assets";
+import { ShadowPreview } from "../shadow-preview";
+import { clearAllIntervals } from "../actions";
 import { gzip, ungzip } from "pako";
-
-/**
- * Tailwind v4's `@theme inline` declares `--color-*: var(--*)` aliases at
- * `:root`.  When we scope a theme to `#pg-preview` by setting e.g.
- * `--background: #0f1117`, Tailwind utilities like `bg-background` still
- * read `--color-background` which was inherited from `:root` with the
- * *original* value.  Redeclaring the aliases inside `#pg-preview` forces
- * them to re-resolve against the overridden `--*` values in this scope.
- */
-const COLOR_REBIND = `
-#pg-preview, #pg-preview.dark {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-info: var(--info);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-}`;
-
-/** Rewrite theme CSS selectors to scope to #pg-preview, and rebind
- *  Tailwind's --color-* aliases so they resolve in that scope. */
-function scopeThemeCss(css: string): string {
-  if (!css) return "";
-  const scoped = css
-    .replace(/:root/g, "#pg-preview")
-    .replace(/\.dark\s*\{/g, "#pg-preview.dark {")
-    .replace(/\.dark\s+\./g, "#pg-preview.dark .")
-    .replace(/\.dark\s+:/g, "#pg-preview.dark :");
-  return scoped + "\n" + COLOR_REBIND;
-}
 
 function gzipEncode(str: string): string {
   const compressed = gzip(new TextEncoder().encode(str));
@@ -182,7 +132,12 @@ export function Playground() {
   const [copied, setCopied] = useState(false);
   const [themeCss, setThemeCss] = useState("");
   const [themeMode, setThemeMode] = useState<"light" | "dark" | null>(null);
-  const [codeThemeCss, setCodeThemeCss] = useState("");
+  const [codeThemeCss, setCodeThemeCss] = useState<string[]>([]);
+  const [codeStylesheets, setCodeStylesheets] = useState<string[]>([]);
+  const previewCss = useMemo(
+    () => (themeCss ? [themeCss] : codeThemeCss),
+    [themeCss, codeThemeCss],
+  );
   const [dark, setDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
@@ -198,6 +153,8 @@ export function Playground() {
   const splitRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const state = useStateStore({});
+  const appTools = useMemo(() => new AppTools(null), []);
+  const toolDefinitionsRef = useRef<unknown>(undefined);
   const stateRef = useRef(state);
   stateRef.current = state;
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -221,6 +178,21 @@ export function Playground() {
     },
     [],
   );
+
+  useEffect(
+    () => () => {
+      appTools.clear();
+      clearAllIntervals(stateRef.current);
+    },
+    [appTools],
+  );
+
+  useEffect(() => {
+    const originalDark = document.documentElement.classList.contains("dark");
+    return () => {
+      document.documentElement.classList.toggle("dark", originalDark);
+    };
+  }, []);
 
   // Sync dark class on <html>
   useEffect(() => {
@@ -262,37 +234,6 @@ export function Playground() {
     document.body.style.cursor = "";
     document.body.style.userSelect = "";
   }, []);
-
-  // Inject theme CSS scoped to the preview pane.
-  // Rewrite `:root` → `#pg-preview` and `.dark` → `#pg-preview.dark`
-  // so theme variables don't bleed into the editor.
-  // Always remove + re-append so #pg-theme stays last in <head> and
-  // the picker overrides any code-defined theme (same specificity, later wins).
-  useEffect(() => {
-    const existing = document.getElementById("pg-theme");
-    if (existing) existing.remove();
-    const el = document.createElement("style");
-    el.id = "pg-theme";
-    document.head.appendChild(el);
-    el.textContent = scopeThemeCss(themeCss);
-  }, [themeCss]);
-
-  // Inject theme from PrefabApp in code, scoped to the preview pane.
-  // When the picker has a selection, suppress the code theme entirely
-  // so its variables don't bleed through (e.g. Presentation's dark
-  // background showing under a Basic accent picker selection).
-  // When the picker is empty ("Default"), the code theme is active.
-  useEffect(() => {
-    let el = document.getElementById(
-      "pg-code-theme",
-    ) as HTMLStyleElement | null;
-    if (!el) {
-      el = document.createElement("style");
-      el.id = "pg-code-theme";
-      document.head.appendChild(el);
-    }
-    el.textContent = themeCss ? "" : scopeThemeCss(codeThemeCss);
-  }, [codeThemeCss, themeCss]);
 
   useEffect(() => {
     loadPyodideRuntime(setPyStatus);
@@ -403,31 +344,42 @@ export function Playground() {
 
   // --- Python execution ---
 
-  const executeCode = useCallback(async (source: string) => {
-    if (pyStatusRef.current !== "ready") return;
-    setRunning(true);
-    const result = await executePython(source);
-    setRunning(false);
+  const executeCode = useCallback(
+    async (source: string) => {
+      if (pyStatusRef.current !== "ready") return;
+      setRunning(true);
+      const result = await executePython(source);
+      setRunning(false);
 
-    if (codeRef.current !== source) return;
+      if (codeRef.current !== source) return;
 
-    if (result.error) {
-      setError(result.error);
-      setErrorDetail(result.errorDetail ?? null);
-    } else if (result.tree) {
-      setTree(result.tree);
-      stateRef.current.reset({ ...result.state, ...stateRef.current.getAll() });
-      setCodeThemeCss(result.css?.join("\n") ?? "");
-      syncStylesheets(result.stylesheets);
-      codeModeRef.current =
-        result.mode === "light" || result.mode === "dark" ? result.mode : null;
-      // A picker preset (or its explicit toggle) takes precedence over code.
-      const nextMode = pickerModeRef.current ?? codeModeRef.current;
-      if (nextMode) setDark(nextMode === "dark");
-      setError(null);
-      setErrorDetail(null);
-    }
-  }, []);
+      if (result.error) {
+        appTools.clear();
+        toolDefinitionsRef.current = undefined;
+        setError(result.error);
+        setErrorDetail(result.errorDetail ?? null);
+      } else if (result.tree) {
+        setTree(result.tree);
+        stateRef.current.reset({
+          ...result.state,
+          ...stateRef.current.getAll(),
+        });
+        toolDefinitionsRef.current = result.tools;
+        appTools.replace(result.tools, stateRef.current);
+        setCodeThemeCss(result.css ?? []);
+        setCodeStylesheets(result.stylesheets ?? []);
+        codeModeRef.current =
+          result.mode === "light" || result.mode === "dark"
+            ? result.mode
+            : null;
+        const nextMode = pickerModeRef.current ?? codeModeRef.current;
+        if (nextMode) setDark(nextMode === "dark");
+        setError(null);
+        setErrorDetail(null);
+      }
+    },
+    [appTools],
+  );
 
   useEffect(() => {
     if (pyStatus === "ready") {
@@ -463,15 +415,19 @@ export function Playground() {
       try {
         const parsed = JSON.parse(jsonCode);
         if (parsed.view) {
-          const reserved = new Set(["view", "state"]);
+          const reserved = new Set(["view", "state", "tools"]);
           const data: Record<string, unknown> = {};
           for (const [k, v] of Object.entries(parsed)) {
             if (!reserved.has(k)) data[k] = v;
           }
           setTree(parsed.view as ComponentNode);
           stateRef.current.reset({ ...data, ...(parsed.state ?? {}) });
+          toolDefinitionsRef.current = parsed.tools;
+          appTools.replace(parsed.tools, stateRef.current);
         } else {
           setTree(parsed as ComponentNode);
+          toolDefinitionsRef.current = undefined;
+          appTools.clear();
         }
         setError(null);
       } catch (e: unknown) {
@@ -481,12 +437,17 @@ export function Playground() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [jsonCode, mode]);
+  }, [jsonCode, mode, appTools]);
 
   // --- Mode switching ---
 
   const enterJsonMode = useCallback(() => {
-    const json = tree ? JSON.stringify(tree, null, 2) : "{}";
+    const tools = toolDefinitionsRef.current;
+    const value =
+      tree && Array.isArray(tools) && tools.length
+        ? { view: tree, state: stateRef.current.getAll(), tools }
+        : tree;
+    const json = value ? JSON.stringify(value, null, 2) : "{}";
     setJsonCode(json);
     setJsonDirty(false);
     setMode("json");
@@ -651,11 +612,10 @@ export function Playground() {
           </>
         )}
 
-        <div
-          id="pg-preview"
-          className={`min-w-0 flex-1 overflow-auto bg-background text-foreground p-6${
-            dark ? " dark" : ""
-          }`}
+        <ShadowPreview
+          css={previewCss}
+          stylesheets={codeStylesheets}
+          dark={dark}
         >
           {tree ? (
             <RenderTree tree={tree} state={state} app={null} />
@@ -666,7 +626,7 @@ export function Playground() {
                 : "Preview will appear here"}
             </div>
           )}
-        </div>
+        </ShadowPreview>
       </div>
 
       {/* Error banner — rendered outside the split so it remains
@@ -709,8 +669,6 @@ export function Playground() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <Toaster />
     </div>
   );
 }

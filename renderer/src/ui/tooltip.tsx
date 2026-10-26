@@ -3,8 +3,9 @@ import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
 import { usePortalContainer } from "../portal-container"
+import { getAccessibleNameProps, type AccessibleNameProps } from "../accessibility"
 
-interface TooltipProps {
+interface TooltipProps extends AccessibleNameProps {
   content: string
   side?: "top" | "right" | "bottom" | "left"
   delay?: number
@@ -18,6 +19,7 @@ function SimpleTooltip({
   delay = 700,
   className,
   children,
+  ...accessibleName
 }: TooltipProps) {
   const container = usePortalContainer()
 
@@ -32,7 +34,7 @@ function SimpleTooltip({
       </TooltipPrimitive.Trigger>
       <TooltipPrimitive.Portal container={container}>
         <TooltipPrimitive.Positioner side={side} sideOffset={6}>
-          <TooltipPrimitive.Popup className="pf-tooltip-content">
+          <TooltipPrimitive.Popup {...getAccessibleNameProps(accessibleName)} className="pf-tooltip-content">
             {content}
           </TooltipPrimitive.Popup>
         </TooltipPrimitive.Positioner>

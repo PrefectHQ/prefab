@@ -8,6 +8,7 @@ const CHART_TYPES = new Set([
   "ScatterChart",
   "RadarChart",
   "RadialChart",
+  "WaterfallChart",
 ]);
 
 function containsBinding(value: unknown): boolean {
@@ -28,7 +29,8 @@ function containsBinding(value: unknown): boolean {
  *
  * Python applies the same default for `Rx` values, but raw protocol JSON can
  * reach the renderer directly. This must run before interpolation so a data
- * template is still distinguishable from a literal array.
+ * template is still distinguishable from a literal array. Pie label selection
+ * also changes rendered slices, so reactive selection has the same default.
  */
 export function applyRawPropDefaults(
   type: string,
@@ -36,7 +38,9 @@ export function applyRawPropDefaults(
 ): Record<string, unknown> {
   if (
     CHART_TYPES.has(type) &&
-    (typeof props.data === "string" || containsBinding(props.data)) &&
+    (typeof props.data === "string" ||
+      containsBinding(props.data) ||
+      (type === "PieChart" && containsBinding(props.aggregateExcept))) &&
     props.animate === undefined
   ) {
     return { ...props, animate: false };

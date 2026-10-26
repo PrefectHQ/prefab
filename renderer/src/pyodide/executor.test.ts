@@ -7,6 +7,23 @@ import {
 } from "./executor";
 
 describe("Pyodide executor result normalization", () => {
+  it("preserves app tools for the standalone playground", () => {
+    const tools = [
+      {
+        name: "reset",
+        inputSchema: { type: "object" },
+        actions: { action: "setState", key: "count", value: 0 },
+        result: { count: "{{ count }}" },
+      },
+    ];
+    expect(
+      normalizeExecuteResult({
+        tree: { type: "Text", content: "hello" },
+        tools,
+      }),
+    ).toMatchObject({ tools });
+  });
+
   it("maps legacy theme wire data to CSS and mode", () => {
     const result = normalizeExecuteResult({
       tree: { type: "Text", text: "Hello" },

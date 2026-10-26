@@ -10,6 +10,10 @@
  *   - $event is injected by action handlers only (see actions.ts)
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "./accessibility";
 import type { App } from "@modelcontextprotocol/ext-apps";
 import React, { useEffect, useRef, type ReactNode } from "react";
 
@@ -30,6 +34,7 @@ function MountEffect({
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
+import { bindNamedValueChange, withStateUpdate } from "./state-change-handler";
 import { StateContext } from "./state-context";
 import { useOverlayClose } from "./overlay-context";
 import { RenderProvider } from "./render-context";
@@ -65,12 +70,32 @@ interface RenderNodeProps {
   scope: Record<string, unknown>;
   state: StateStore;
   app: App | null;
+  /** Internal composition hook for an explicit Button used as a trigger. */
+  renderElement?: (element: React.ReactElement) => ReactNode;
 }
 
-/**
- * Render a single node from the JSON component tree.
- */
-export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
+/** Resolve naming metadata for children consumed by compound components. */
+function childAccessibleNameProps(
+  child: ComponentNode,
+  ctx: Record<string, unknown>,
+): AccessibleNameProps {
+  const names = interpolateProps(
+    { ariaLabel: child.ariaLabel, ariaLabelledBy: child.ariaLabelledBy },
+    ctx,
+  );
+  return getAccessibleNameProps(
+    mapProps(child.type, names) as AccessibleNameProps,
+  );
+}
+
+/** Render a single node from the JSON component tree. */
+export function RenderNode({
+  node,
+  scope,
+  state,
+  app,
+  renderElement,
+}: RenderNodeProps) {
   const overlayClose = useOverlayClose();
 
   // $ref resolution: inline a defined template before any other processing
@@ -103,8 +128,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       newScope = { ...newScope, ...evaluated };
     }
     const refCssClass = node["cssClass"] as string | undefined;
+    const template = { ...defNode };
+    for (const key of ["ariaLabel", "ariaLabelledBy"]) {
+      if (node[key] !== undefined) template[key] = node[key];
+    }
     const resolved = (
-      <RenderNode node={defNode} scope={newScope} state={state} app={app} />
+      <RenderNode
+        node={template}
+        scope={newScope}
+        state={state}
+        app={app}
+        renderElement={renderElement}
+      />
     );
     if (refCssClass) {
       return <div className={refCssClass}>{resolved}</div>;
@@ -169,8 +204,14 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Extract onMount — fired via MountEffect wrapper below
   const onMount = mapped.onMount as (() => void) | undefined;
   delete mapped.onMount;
-  const wrapMount = (el: React.ReactElement) =>
-    onMount ? <MountEffect onMount={onMount}>{el}</MountEffect> : el;
+  const wrapMount = (el: React.ReactElement) => {
+    const element = renderElement ? renderElement(el) : el;
+    return onMount ? (
+      <MountEffect onMount={onMount}>{element}</MountEffect>
+    ) : (
+      element
+    );
+  };
 
   // Filter internal props before passing to component
   const finalProps = filterInternalProps(mapped);
@@ -188,20 +229,28 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
 
     if (hasGroups) {
       // Build structured groups data
-      const groups: { label?: string; items: Record<string, unknown>[] }[] = [];
+      const groups: (AccessibleNameProps & {
+        label?: string;
+        labelNames?: AccessibleNameProps;
+        items: Record<string, unknown>[];
+      })[] = [];
       for (const child of children) {
         if (child.type === "ComboboxGroup" && child.children) {
-          const group: { label?: string; items: Record<string, unknown>[] } = {
+          const group: (typeof groups)[number] = {
+            ...childAccessibleNameProps(child, ctx),
             items: [],
           };
           for (const gc of child.children) {
             if (gc.type === "ComboboxLabel" && "label" in gc) {
+              group.labelNames = childAccessibleNameProps(gc, ctx);
               const val = gc.label;
               group.label = (
                 typeof val === "string" ? interpolateString(val, ctx) : val
               ) as string;
             } else if (gc.type === "ComboboxOption") {
-              const item: Record<string, unknown> = {};
+              const item: Record<string, unknown> = {
+                ...childAccessibleNameProps(gc, ctx),
+              };
               for (const field of ["value", "label", "disabled"]) {
                 if (field in gc) {
                   const val = gc[field];
@@ -220,11 +269,15 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       // Flat items with optional separators
       const items: Record<string, unknown>[] = [];
       const separatorIndices: number[] = [];
+      const separatorNames: Record<number, AccessibleNameProps> = {};
       for (const child of children) {
         if (child.type === "ComboboxSeparator") {
           separatorIndices.push(items.length);
+          separatorNames[items.length] = childAccessibleNameProps(child, ctx);
         } else if (child.type === "ComboboxOption") {
-          const item: Record<string, unknown> = {};
+          const item: Record<string, unknown> = {
+            ...childAccessibleNameProps(child, ctx),
+          };
           for (const field of ["value", "label", "disabled"]) {
             if (field in child) {
               const val = child[field];
@@ -238,6 +291,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       finalProps._items = items;
       if (separatorIndices.length > 0) {
         finalProps._separatorIndices = separatorIndices;
+        finalProps._separatorNames = separatorNames;
       }
     }
 
@@ -248,9 +302,10 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
-      }
+      finalProps.onValueChange = withStateUpdate(
+        finalProps.onValueChange,
+        (val: string) => state.set(name, val),
+      );
     }
 
     return wrapMount(<Component {...finalProps}>{textContent}</Component>);
@@ -273,7 +328,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
 
     if (hasStructured) {
       const extractItem = (child: ComponentNode) => {
-        const item: Record<string, unknown> = {};
+        const item: Record<string, unknown> = {
+          ...childAccessibleNameProps(child, ctx),
+        };
         for (const field of SELECT_GROUP_FIELDS) {
           if (field in child) {
             const val = child[field];
@@ -290,8 +347,10 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
         if (child.type === "SelectGroup") {
           const groupItems: Record<string, unknown>[] = [];
           let groupLabel: string | undefined;
+          let labelNames: AccessibleNameProps | undefined;
           for (const gc of child.children ?? []) {
             if (gc.type === "SelectLabel") {
+              labelNames = childAccessibleNameProps(gc, ctx);
               const rawLabel = gc.label;
               groupLabel =
                 typeof rawLabel === "string"
@@ -302,19 +361,28 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             }
           }
           selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
             _type: "group",
+            labelNames,
             label: groupLabel,
             items: groupItems,
           });
         } else if (child.type === "SelectSeparator") {
-          selectChildren.push({ _type: "separator" });
+          selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
+            _type: "separator",
+          });
         } else if (child.type === "SelectLabel") {
           const rawLabel = child.label;
           const label =
             typeof rawLabel === "string"
               ? (interpolateString(rawLabel, ctx) as string)
               : undefined;
-          selectChildren.push({ _type: "label", label });
+          selectChildren.push({
+            ...childAccessibleNameProps(child, ctx),
+            _type: "label",
+            label,
+          });
         } else if (child.type === "SelectOption") {
           selectChildren.push({ _type: "item", ...extractItem(child) });
         }
@@ -323,7 +391,9 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     } else {
       const fields = ITEM_CHILD_TYPES[type];
       const items = children.map((child) => {
-        const item: Record<string, unknown> = {};
+        const item: Record<string, unknown> = {
+          ...childAccessibleNameProps(child, ctx),
+        };
         for (const field of fields) {
           if (field in child) {
             const val = child[field];
@@ -343,9 +413,10 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
-      }
+      finalProps.onValueChange = withStateUpdate(
+        finalProps.onValueChange,
+        (val: string) => state.set(name, val),
+      );
     }
 
     return wrapMount(<Component {...finalProps}>{textContent}</Component>);
@@ -360,20 +431,18 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onChange) {
-        finalProps.onChange = (e: { target: { value: string } }) => {
-          state.set(name, e.target.value);
-        };
-      }
+      finalProps.onChange = withStateUpdate(
+        finalProps.onChange,
+        (e: { target: { value: string } }) => state.set(name, e.target.value),
+      );
     } else if (type === "Checkbox" || type === "Switch") {
       if (stateValue !== undefined) {
         finalProps.value = Boolean(stateValue);
       }
-      if (!finalProps.onCheckedChange) {
-        finalProps.onCheckedChange = (checked: boolean) => {
-          state.set(name, checked);
-        };
-      }
+      finalProps.onCheckedChange = withStateUpdate(
+        finalProps.onCheckedChange,
+        (checked: boolean) => state.set(name, checked),
+      );
     } else if (type === "Slider") {
       const isRange = Boolean(finalProps.range);
       if (stateValue !== undefined) {
@@ -384,8 +453,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       // Always sync slider's own state so the controlled value updates.
       // If the user also provided onValueChange (via on_change), wrap it.
       const userHandler = finalProps.onValueChange as
-        | ((val: number | readonly number[]) => void)
-        | undefined;
+        ((val: number | readonly number[]) => void) | undefined;
       finalProps.onValueChange = (val: number | readonly number[]) => {
         if (isRange) {
           state.set(name, Array.isArray(val) ? val : [val]);
@@ -398,14 +466,14 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onSelect) {
-        finalProps.onSelect = (val: unknown) => {
-          state.set(name, val);
-        };
-      }
+      finalProps.onSelect = withStateUpdate(
+        finalProps.onSelect,
+        (val: unknown) => state.set(name, val),
+      );
     } else if (type === "DropZone") {
-      if (!finalProps.onChange) {
-        finalProps.onChange = (val: unknown) => {
+      finalProps.onChange = withStateUpdate(
+        finalProps.onChange,
+        (val: unknown) => {
           if (!Array.isArray(val) || val.length === 0) return;
           if (finalProps.multiple) {
             // Multiple mode: accumulate files into existing array
@@ -415,8 +483,8 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
             // Single mode: overwrite with new file(s)
             state.set(name, val);
           }
-        };
-      }
+        },
+      );
     }
   }
 
@@ -425,6 +493,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   const COMPOUND_TYPES = new Set(["Tabs", "Accordion", "Pages"]);
   if (COMPOUND_TYPES.has(type) && children) {
     const panels = children.map((child, i) => ({
+      ...childAccessibleNameProps(child, ctx),
       title: (child.title as string) ?? `Item ${i + 1}`,
       value: (child.value as string) ?? (child.title as string) ?? `item-${i}`,
       disabled: (child.disabled as boolean) ?? false,
@@ -450,8 +519,8 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
+      if (type === "Tabs" || !finalProps.onValueChange) {
+        bindNamedValueChange(finalProps, state, name);
       }
     }
 
@@ -470,7 +539,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
     // expressions, such as the unwrapped key produced by a filtered Rx.
     const items =
       typeof source === "string"
-        ? resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx)
+        ? (resolve(source, ctx) ?? interpolateString(`{{ ${source} }}`, ctx))
         : source;
     if (!Array.isArray(items)) return null;
 
@@ -482,8 +551,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
           let itemScope = { ...scope, $index: idx, $item: item };
           // Evaluate let bindings per iteration (can reference $index/$item)
           const forEachLet = rawProps.let as
-            | Record<string, unknown>
-            | undefined;
+            Record<string, unknown> | undefined;
           if (forEachLet) {
             const letCtx = { ...state.getAll(), ...itemScope };
             const evaluated = interpolateProps(forEachLet, letCtx) as Record<
@@ -510,8 +578,7 @@ export function RenderNode({ node, scope, state, app }: RenderNodeProps) {
   // Falls back to else branch if no case matches.
   if (type === "Condition") {
     const cases = rawProps.cases as
-      | { when: string; children?: ComponentNode[] }[]
-      | undefined;
+      { when: string; children?: ComponentNode[] }[] | undefined;
     const elseChildren = rawProps.else as ComponentNode[] | undefined;
     const ctx2 = { ...state.getAll(), ...scope };
     if (cases) {
