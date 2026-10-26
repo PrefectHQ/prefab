@@ -13,7 +13,7 @@ import {
  *
  * Produces a code-split ESM entry (dist/renderer.js) plus lazy chunks for
  * heavy features (charts, code highlighting, calendar, icons). The entry
- * assigns `window.__prefab = { mountPreview }` on load.
+ * preserves `mountPreview` exports and assigns `window.__prefab` on load.
  *
  * Published to npm as part of @prefecthq/prefab-ui. Chunks use relative
  * imports so they resolve from whatever origin serves the entry script.
@@ -36,7 +36,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/embed.tsx"),
       formats: ["es"],
-      fileName: () => "renderer.js",
+      fileName: () => "_renderer/embed-[hash].mjs",
     },
     rollupOptions: {
       output: {

@@ -95,7 +95,9 @@ If any are stale, CI fails with instructions to rebuild.
 
 **Renderer tests** run Vitest and Playwright Chromium font-rendering regressions.
 For a local browser run, use `cd renderer && npx playwright install chromium &&
-npm run test:browser`. Set `PLAYWRIGHT_CHANNEL=chrome` to use installed Chrome.
+npm run test:browser`. This builds the docs embed and tests its public
+`mountPreview` export through the built module graph, alongside the preview
+rendering tests. Set `PLAYWRIGHT_CHANNEL=chrome` to use installed Chrome.
 
 ### On GitHub release (`publish-renderer.yml`)
 

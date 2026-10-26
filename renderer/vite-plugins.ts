@@ -21,7 +21,7 @@ export const rendererBuildTarget = [
  * Mintlify inlines all .js files from the docs directory as non-module
  * <script> tags. Static `import`/`export` statements fail in that context.
  * Dynamic `import()` works in both module and non-module scripts, so we
- * rewrite the thin entry to a one-liner that loads the real chunk.
+ * emit a small script loader while preserving the complete module entry.
  *
  * Chunks use .mjs extension to avoid Mintlify inlining them. On deployed
  * Mintlify, .mjs files can't be served as static assets (the Next.js
@@ -40,20 +40,16 @@ export function rewriteEntryLoader(): Plugin {
     name: "rewrite-entry-loader",
     enforce: "post",
     generateBundle(_options: NormalizedOutputOptions, bundle: OutputBundle) {
-      const entry = bundle["renderer.js"];
-      if (!entry || entry.type !== "chunk") return;
+      const entry = Object.values(bundle).find(
+        (output) => output.type === "chunk" && output.isEntry,
+      );
+      if (!entry || entry.type !== "chunk") {
+        this.error("The docs renderer build is missing its entry chunk");
+      }
 
-      // Find the chunk path from the static import in the generated entry.
-      const match = entry.code.match(/from\s+["'](\.\/_renderer\/[^"']+)['"]/);
-      if (!match) return;
-
-      // Strip leading "./" to get the chunk subpath (e.g. "_renderer/embed-HASH.mjs").
-      const chunkPath = match[1].replace(/^\.\//, "");
-
-      // Emit a stable (unhashed) re-export so the CDN path never changes.
-      // The shim re-exports everything from the hashed chunk via a relative
-      // import, so all files resolve within the same npm package version.
-      const hashedFilename = chunkPath.split("/").pop()!;
+      // Preserve the entire entry, including its exports and initialization.
+      // Bundlers may put application code here and import runtime helpers first.
+      const hashedFilename = entry.fileName.split("/").pop()!;
       this.emitFile({
         type: "asset",
         fileName: "_renderer/embed.mjs",
@@ -62,12 +58,13 @@ export function rewriteEntryLoader(): Plugin {
 
       // On localhost, load from local files (for `mintlify dev`).
       // On production, load from the embed package on jsdelivr CDN.
-      entry.code = [
+      const loader = [
         `(function(){`,
         `var base=window.location.hostname==="localhost"?"/":"${embedCdnBase}";`,
         `window.__prefabReady=import(base+"_renderer/embed.mjs");`,
         `})();\n`,
       ].join("");
+      this.emitFile({ type: "asset", fileName: "renderer.js", source: loader });
     },
   };
 }
