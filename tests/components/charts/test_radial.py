@@ -66,3 +66,104 @@ class TestRadialChart:
             value_format="currency",
         ).to_json()
         assert j["valueFormat"] == "currency"
+
+
+class TestPieAggregation:
+    def test_defaults_omit_options(self):
+        j = PieChart(data=[], data_key="value", name_key="name").to_json()
+        assert "aggregateBelow" not in j
+        assert "aggregateExcept" not in j
+
+    def test_aliases_and_reactive_selection(self):
+        from prefab_ui.rx import Rx
+
+        j = PieChart(
+            data=[], data_key="value", name_key="name", aggregate_below=0.2
+        ).to_json()
+        assert j["aggregateBelow"] == 0.2
+        for selection, expected in [
+            ([], []),
+            (["A"], ["A"]),
+            (Rx("selected"), "{{ selected }}"),
+        ]:
+            j = PieChart(
+                data=[], data_key="value", name_key="name", aggregate_except=selection
+            ).to_json()
+            assert j["aggregateExcept"] == expected
+
+    def test_invalid_options(self):
+        import pytest
+        from pydantic import ValidationError
+
+        for options in [
+            {"aggregate_below": -0.1},
+            {"aggregate_below": 1.1},
+            {"aggregate_below": float("nan")},
+            {"aggregate_below": float("inf")},
+            {"aggregate_below": True},
+            {"aggregate_below": "0.2"},
+            {"aggregate_except": [1]},
+            {"aggregate_below": 0, "aggregate_except": []},
+        ]:
+            with pytest.raises(ValidationError):
+                PieChart(data=[], data_key="value", name_key="name", **options)
+
+    def test_enabled_data_validation(self):
+        import pytest
+        from pydantic import ValidationError
+
+        for value in [-1, float("nan"), float("inf"), "1", True, None]:
+            data = [{"name": "A", "value": value}]
+            with pytest.raises(ValidationError):
+                PieChart(
+                    data=data, data_key="value", name_key="name", aggregate_except=[]
+                )
+            PieChart(data=data, data_key="value", name_key="name")
+        with pytest.raises(ValidationError):
+            PieChart(data=[], data_key="value", name_key="value", aggregate_except=[])
+
+    def test_existing_other_is_allowed(self):
+        data = [{"name": "Other", "value": 9}, {"name": "A", "value": 1}]
+        PieChart(
+            data=data, data_key="value", name_key="name", aggregate_except=["Other"]
+        )
+
+    def test_inline_reactive_values(self):
+        from prefab_ui.rx import STATE
+
+        for value in ["{{ amount }}", STATE.amount]:
+            j = PieChart(
+                data=[{"name": STATE.label, "value": value}],
+                data_key="value",
+                name_key="name",
+                aggregate_below=0.2,
+            ).to_json()
+            assert j["data"] == [{"name": "{{ label }}", "value": "{{ amount }}"}]
+
+    def test_reactive_selection_animation_default(self):
+        from prefab_ui.rx import STATE
+
+        for selection in [STATE.selected, "{{ selected }}"]:
+            chart = PieChart(
+                data=[{"name": "A", "value": 1}],
+                data_key="value",
+                name_key="name",
+                aggregate_except=selection,
+            )
+            assert chart.animate is False
+            assert (
+                PieChart(
+                    data=[],
+                    data_key="value",
+                    name_key="name",
+                    aggregate_except=selection,
+                    animate=True,
+                ).animate
+                is True
+            )
+        assert (
+            PieChart(
+                data=[], data_key="value", name_key="name", aggregate_except=["A"]
+            ).animate
+            is True
+        )

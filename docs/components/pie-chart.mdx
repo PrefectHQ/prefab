@@ -6,7 +6,7 @@ icon: chart-pie
 
 import { ComponentPreview } from '/snippets/component-preview.mdx'
 
-PieChart shows how parts relate to a whole. Unlike the other chart types, it doesn't use series — instead you specify which data field holds the numeric values (`data_key`) and which holds the labels (`name_key`). Set `inner_radius` to turn it into a donut chart.
+PieChart shows how parts relate to a whole. Specify which data field holds the numeric values (`data_key`) and which holds the labels (`name_key`). You can combine categories into an `Other` slice and set `inner_radius` to turn the chart into a donut.
 
 ## Basic Usage
 
@@ -56,6 +56,161 @@ PieChart(
 ```
 </CodeGroup>
 </ComponentPreview>
+
+## Grouping Slices
+
+Combine smaller categories into one `Other` slice to keep a busy chart readable. Aggregation preserves the total: every row contributes either to its own slice or to `Other`. Choose an automatic cutoff or a list of categories to show individually.
+
+### Automatic Cutoff
+
+`aggregate_below` compares each value with a fraction of the original total. With `aggregate_below=0.2`, slices below 20% join `Other`; slices exactly at 20% stay separate. Here the total is 100, so US and MX remain individual slices and IN becomes `Other` with a value of 10.
+
+<ComponentPreview json={{"view":{"type":"PieChart","data":[{"country":"US","revenue":70},{"country":"MX","revenue":20},{"country":"IN","revenue":10}],"dataKey":"revenue","nameKey":"country","aggregateBelow":0.2,"height":300,"innerRadius":0,"showLabel":true,"paddingAngle":0,"showLegend":true,"showTooltip":true,"animate":true,"valueFormat":"auto"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cy5jaGFydHMgaW1wb3J0IFBpZUNoYXJ0CgpQaWVDaGFydCgKICAgIGRhdGE9WwogICAgICAgIHsiY291bnRyeSI6ICJVUyIsICJyZXZlbnVlIjogNzB9LAogICAgICAgIHsiY291bnRyeSI6ICJNWCIsICJyZXZlbnVlIjogMjB9LAogICAgICAgIHsiY291bnRyeSI6ICJJTiIsICJyZXZlbnVlIjogMTB9LAogICAgXSwKICAgIG5hbWVfa2V5PSJjb3VudHJ5IiwKICAgIGRhdGFfa2V5PSJyZXZlbnVlIiwKICAgIGFnZ3JlZ2F0ZV9iZWxvdz0wLjIsCiAgICBzaG93X2xhYmVsPVRydWUsCikK">
+<CodeGroup>
+```python Automatic cutoff icon="python"
+from prefab_ui.components.charts import PieChart
+
+PieChart(
+    data=[
+        {"country": "US", "revenue": 70},
+        {"country": "MX", "revenue": 20},
+        {"country": "IN", "revenue": 10},
+    ],
+    name_key="country",
+    data_key="revenue",
+    aggregate_below=0.2,
+    show_label=True,
+)
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "type": "PieChart",
+    "data": [
+      {"country": "US", "revenue": 70},
+      {"country": "MX", "revenue": 20},
+      {"country": "IN", "revenue": 10}
+    ],
+    "dataKey": "revenue",
+    "nameKey": "country",
+    "aggregateBelow": 0.2,
+    "height": 300,
+    "innerRadius": 0,
+    "showLabel": true,
+    "paddingAngle": 0,
+    "showLegend": true,
+    "showTooltip": true,
+    "animate": true,
+    "valueFormat": "auto"
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+### Selected Slices
+
+Use `aggregate_except` when your app lets users choose which categories deserve their own slices. Its list matches values of `name_key`; all remaining rows contribute to `Other`. Bind the list to state so changing the selection immediately recalculates the chart.
+
+This example starts with US=100 and Other=30. Selecting **Show MX** pulls MX=20 into its own slice and reduces Other to 10. **Group MX** combines it again, keeping the total at 130 throughout.
+
+<ComponentPreview json={{"view":{"cssClass":"pf-app-root","type":"Div","children":[{"type":"Column","children":[{"type":"Row","children":[{"type":"Button","label":"Show MX","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"selected_countries","value":["US","MX"]}},{"type":"Button","label":"Group MX","variant":"default","size":"default","disabled":false,"onClick":{"action":"setState","key":"selected_countries","value":["US"]}}]},{"type":"PieChart","data":"{{ sales }}","dataKey":"revenue","nameKey":"country","aggregateExcept":"{{ selected_countries }}","height":300,"innerRadius":0,"showLabel":true,"paddingAngle":0,"showLegend":true,"showTooltip":true,"animate":false,"valueFormat":"auto"}]}]},"state":{"sales":[{"country":"US","revenue":100},{"country":"MX","revenue":20},{"country":"IN","revenue":10}],"selected_countries":["US"]}}} playground="ZnJvbSBwcmVmYWJfdWkgaW1wb3J0IFByZWZhYkFwcApmcm9tIHByZWZhYl91aS5hY3Rpb25zIGltcG9ydCBTZXRTdGF0ZQpmcm9tIHByZWZhYl91aS5jb21wb25lbnRzIGltcG9ydCBCdXR0b24sIENvbHVtbiwgUm93CmZyb20gcHJlZmFiX3VpLmNvbXBvbmVudHMuY2hhcnRzIGltcG9ydCBQaWVDaGFydApmcm9tIHByZWZhYl91aS5yeCBpbXBvcnQgU1RBVEUKCndpdGggUHJlZmFiQXBwKAogICAgc3RhdGU9ewogICAgICAgICJzYWxlcyI6IFsKICAgICAgICAgICAgeyJjb3VudHJ5IjogIlVTIiwgInJldmVudWUiOiAxMDB9LAogICAgICAgICAgICB7ImNvdW50cnkiOiAiTVgiLCAicmV2ZW51ZSI6IDIwfSwKICAgICAgICAgICAgeyJjb3VudHJ5IjogIklOIiwgInJldmVudWUiOiAxMH0sCiAgICAgICAgXSwKICAgICAgICAic2VsZWN0ZWRfY291bnRyaWVzIjogWyJVUyJdLAogICAgfQopOgogICAgd2l0aCBDb2x1bW4oKToKICAgICAgICB3aXRoIFJvdygpOgogICAgICAgICAgICBCdXR0b24oCiAgICAgICAgICAgICAgICAiU2hvdyBNWCIsCiAgICAgICAgICAgICAgICBvbl9jbGljaz1TZXRTdGF0ZSgic2VsZWN0ZWRfY291bnRyaWVzIiwgWyJVUyIsICJNWCJdKSwKICAgICAgICAgICAgKQogICAgICAgICAgICBCdXR0b24oIkdyb3VwIE1YIiwgb25fY2xpY2s9U2V0U3RhdGUoInNlbGVjdGVkX2NvdW50cmllcyIsIFsiVVMiXSkpCiAgICAgICAgUGllQ2hhcnQoCiAgICAgICAgICAgIGRhdGE9U1RBVEUuc2FsZXMsCiAgICAgICAgICAgIG5hbWVfa2V5PSJjb3VudHJ5IiwKICAgICAgICAgICAgZGF0YV9rZXk9InJldmVudWUiLAogICAgICAgICAgICBhZ2dyZWdhdGVfZXhjZXB0PVNUQVRFLnNlbGVjdGVkX2NvdW50cmllcywKICAgICAgICAgICAgc2hvd19sYWJlbD1UcnVlLAogICAgICAgICkK">
+<CodeGroup>
+```python Selected slices icon="python"
+from prefab_ui import PrefabApp
+from prefab_ui.actions import SetState
+from prefab_ui.components import Button, Column, Row
+from prefab_ui.components.charts import PieChart
+from prefab_ui.rx import STATE
+
+with PrefabApp(
+    state={
+        "sales": [
+            {"country": "US", "revenue": 100},
+            {"country": "MX", "revenue": 20},
+            {"country": "IN", "revenue": 10},
+        ],
+        "selected_countries": ["US"],
+    }
+):
+    with Column():
+        with Row():
+            Button(
+                "Show MX",
+                on_click=SetState("selected_countries", ["US", "MX"]),
+            )
+            Button("Group MX", on_click=SetState("selected_countries", ["US"]))
+        PieChart(
+            data=STATE.sales,
+            name_key="country",
+            data_key="revenue",
+            aggregate_except=STATE.selected_countries,
+            show_label=True,
+        )
+```
+```json Protocol icon="brackets-curly"
+{
+  "view": {
+    "cssClass": "pf-app-root",
+    "type": "Div",
+    "children": [
+      {
+        "type": "Column",
+        "children": [
+          {
+            "type": "Row",
+            "children": [
+              {
+                "type": "Button",
+                "label": "Show MX",
+                "variant": "default",
+                "size": "default",
+                "disabled": false,
+                "onClick": {"action": "setState", "key": "selected_countries", "value": ["US", "MX"]}
+              },
+              {
+                "type": "Button",
+                "label": "Group MX",
+                "variant": "default",
+                "size": "default",
+                "disabled": false,
+                "onClick": {"action": "setState", "key": "selected_countries", "value": ["US"]}
+              }
+            ]
+          },
+          {
+            "type": "PieChart",
+            "data": "{{ sales }}",
+            "dataKey": "revenue",
+            "nameKey": "country",
+            "aggregateExcept": "{{ selected_countries }}",
+            "height": 300,
+            "innerRadius": 0,
+            "showLabel": true,
+            "paddingAngle": 0,
+            "showLegend": true,
+            "showTooltip": true,
+            "animate": false,
+            "valueFormat": "auto"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "sales": [
+      {"country": "US", "revenue": 100},
+      {"country": "MX", "revenue": 20},
+      {"country": "IN", "revenue": 10}
+    ],
+    "selected_countries": ["US"]
+  }
+}
+```
+</CodeGroup>
+</ComponentPreview>
+
+Choose one aggregation option per chart. An empty `aggregate_except` list combines all rows, and `Other` is omitted when no rows are combined. Aggregation accepts finite, non-negative numeric values and distinct label and value fields. An existing category named `Other` joins the combined bucket when one is needed. With a zero total, automatic cutoff leaves the rows unchanged.
 
 ## Donut Chart
 
@@ -255,6 +410,14 @@ PieChart(
   The data field containing labels for each slice.
 </ParamField>
 
+<ParamField body="aggregate_below" type="float | None" default="None">
+  Combine slices below this fraction of the original total into `Other`. Accepts 0 through 1; slices exactly at the cutoff stay separate. Mutually exclusive with `aggregate_except`.
+</ParamField>
+
+<ParamField body="aggregate_except" type="list[str] | Rx | None" default="None">
+  Keep these `name_key` values as individual slices and combine the remaining rows into `Other`. Accepts a literal list or reactive state binding. Mutually exclusive with `aggregate_below`.
+</ParamField>
+
 <ParamField body="height" type="int" default="300">
   Chart height in pixels.
 </ParamField>
@@ -271,7 +434,7 @@ PieChart(
   Angle in degrees between slices.
 </ParamField>
 
-<ParamField body="show_legend" type="bool" default="False">
+<ParamField body="show_legend" type="bool" default="True">
   Show a legend below the chart.
 </ParamField>
 
@@ -298,6 +461,8 @@ PieChart(
   "data": "object[] | string (required)",
   "dataKey": "string (required)",
   "nameKey": "string (required)",
+  "aggregateBelow?": "number",
+  "aggregateExcept?": "string[] | string",
   "height?": "300",
   "innerRadius?": 0,
   "showLabel?": false,
