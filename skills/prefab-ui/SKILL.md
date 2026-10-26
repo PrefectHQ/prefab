@@ -151,10 +151,14 @@ with Card(css_class="p-6"):
 
 ### Tabs
 
+A named `Tabs` writes its selected value before `on_change` actions run.
+The handler sees the updated named state and receives the tab value as `$event`.
+An explicit `SetState` in the handler can override the active selection.
+
 Content goes *inside* each Tab — Tab is a container, not just a header:
 
 ```python
-with Tabs(default_value="overview"):
+with Tabs(value="overview"):
     with Tab("Overview", value="overview"):
         with Card():
             with CardContent():

@@ -44,3 +44,21 @@ class TestTabsComponents:
     def test_tabs_default_value_property(self):
         tabs = Tabs(value="settings")
         assert tabs.default_value == "settings"
+
+    def test_public_change_callback_serializes_in_app_envelope(self):
+        from prefab_ui.actions import SetState
+        from prefab_ui.app import PrefabApp
+
+        with Tabs(
+            name="active", value="a", on_change=SetState("seen", "{{ active }}")
+        ) as tabs:
+            Tab("Alpha", value="a")
+            Tab("Beta", value="b")
+        payload = PrefabApp(view=tabs, state={"active": "a"}).to_json()
+        wire = payload["view"]["children"][0]
+        assert wire["onChange"] == {
+            "action": "setState",
+            "key": "seen",
+            "value": "{{ active }}",
+        }
+        assert "onValueChange" not in wire

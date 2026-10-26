@@ -34,7 +34,7 @@ function MountEffect({
 import { REGISTRY } from "./components/registry";
 import { interpolateProps, interpolateString } from "./interpolation";
 import type { StateStore } from "./state";
-import { withStateUpdate } from "./state-change-handler";
+import { bindNamedValueChange, withStateUpdate } from "./state-change-handler";
 import { StateContext } from "./state-context";
 import { useOverlayClose } from "./overlay-context";
 import { RenderProvider } from "./render-context";
@@ -519,8 +519,8 @@ export function RenderNode({
       if (stateValue !== undefined) {
         finalProps.value = String(stateValue);
       }
-      if (!finalProps.onValueChange) {
-        finalProps.onValueChange = (val: string) => state.set(name, val);
+      if (type === "Tabs" || !finalProps.onValueChange) {
+        bindNamedValueChange(finalProps, state, name);
       }
     }
 

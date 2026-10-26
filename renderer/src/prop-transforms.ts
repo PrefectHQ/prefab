@@ -302,9 +302,12 @@ export function mapProps(
     }
   }
 
-  // Select/RadioGroup/Combobox: onChange → onValueChange
+  // Select/RadioGroup/Combobox/Tabs: onChange → onValueChange
   if (
-    (type === "Select" || type === "RadioGroup" || type === "Combobox") &&
+    (type === "Select" ||
+      type === "RadioGroup" ||
+      type === "Combobox" ||
+      type === "Tabs") &&
     "onChange" in mapped
   ) {
     mapped.onValueChange = mapped.onChange;

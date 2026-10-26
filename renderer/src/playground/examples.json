@@ -1935,6 +1935,11 @@
     "code": "from prefab_ui.components import Button, Column, Row, Tab, Tabs, Text\nfrom prefab_ui.actions import SetState\n\nwith Column(gap=4):\n    with Tabs(name=\"activeTab\", value=\"general\"):\n        with Tab(\"General\", value=\"general\"):\n            Text(\"General settings here.\")\n        with Tab(\"Advanced\", value=\"advanced\"):\n            Text(\"Advanced settings here.\")\n\n    with Row(gap=2):\n        Button(\"Go to General\", on_click=SetState(\"activeTab\", \"general\"))\n        Button(\"Go to Advanced\", on_click=SetState(\"activeTab\", \"advanced\"))"
   },
   {
+    "title": "icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.actions import SetState\nfrom prefab_ui.components import Column, Tab, Tabs, Text\n\nwith Column(gap=3):\n    with Tabs(name=\"active\", value=\"overview\",\n              on_change=SetState(\"last_tab\", \"{{ active }}\")):\n        with Tab(\"Overview\", value=\"overview\"):\n            Text(\"Overview content\")\n        with Tab(\"Details\", value=\"details\"):\n            Text(\"Detailed content\")\n    Text(\"Last change: {{ last_tab | 'None yet' }}\")"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "from prefab_ui.components import Textarea\n\nTextarea(placeholder=\"Enter your message...\")"
