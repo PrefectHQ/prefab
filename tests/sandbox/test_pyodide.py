@@ -231,6 +231,8 @@ async def test_startup_failure_keeps_cause_and_traceback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     process = MagicMock(spec=subprocess.Popen)
+    process.stdin = MagicMock()
+    process.stdout = MagicMock()
     process.stderr = MagicMock()
     process.stderr.readline.side_effect = [
         b"original startup cause\n",
