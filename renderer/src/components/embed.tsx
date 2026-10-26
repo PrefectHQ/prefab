@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 
-interface EmbedProps {
+interface EmbedProps extends AccessibleNameProps {
   url?: string;
   html?: string;
   width?: string;
@@ -20,6 +24,7 @@ export function Embed({
   allow,
   className,
   cssClass,
+  ...accessibleName
 }: EmbedProps) {
   const style: React.CSSProperties = { border: "none" };
   if (width) style.width = width;
@@ -27,6 +32,7 @@ export function Embed({
 
   return (
     <iframe
+      {...getAccessibleNameProps(accessibleName)}
       src={url}
       srcDoc={html}
       sandbox={sandbox}

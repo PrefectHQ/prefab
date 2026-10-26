@@ -3,6 +3,7 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { getAccessibleNameProps } from "../accessibility"
 
 const sliderRangeVariants = cva(
   "pf-slider-range select-none data-horizontal:h-full data-vertical:w-full",
@@ -35,6 +36,8 @@ function Slider({
   indicatorClassName,
   handleStyle,
   handleClassName,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
   ...props
 }: SliderPrimitive.Root.Props &
   VariantProps<typeof sliderRangeVariants> & {
@@ -85,6 +88,7 @@ function Slider({
         </SliderPrimitive.Track>
         {Array.from({ length: _values.length }, (_, index) => (
           <SliderPrimitive.Thumb
+            {...getAccessibleNameProps({ "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy })}
             data-slot="slider-thumb"
             key={index}
             className={cn(

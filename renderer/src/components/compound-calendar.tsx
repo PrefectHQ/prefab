@@ -8,6 +8,10 @@ import { useState, useMemo } from "react";
 import { format, parseISO } from "date-fns";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { Calendar as ShadcnCalendar } from "@/ui/calendar";
 import {
   Popover as ShadcnPopover,
@@ -19,7 +23,7 @@ import type { DateRange } from "react-day-picker";
 
 // ── Calendar ────────────────────────────────────────────────────────────
 
-interface PrefabCalendarProps {
+interface PrefabCalendarProps extends AccessibleNameProps {
   mode?: "single" | "range" | "multiple";
   value?: string;
   onSelect?: (value: unknown) => void;
@@ -31,6 +35,7 @@ export function PrefabCalendar({
   value,
   onSelect,
   className,
+  ...accessibleName
 }: PrefabCalendarProps) {
   const selected = useMemo(() => {
     if (!value) return undefined;
@@ -74,6 +79,7 @@ export function PrefabCalendar({
   if (mode === "range") {
     return (
       <ShadcnCalendar
+        {...getAccessibleNameProps(accessibleName)}
         mode="range"
         numberOfMonths={2}
         defaultMonth={defaultMonth}
@@ -103,6 +109,7 @@ export function PrefabCalendar({
   if (mode === "multiple") {
     return (
       <ShadcnCalendar
+        {...getAccessibleNameProps(accessibleName)}
         mode="multiple"
         defaultMonth={defaultMonth}
         selected={selected as Date[]}
@@ -119,6 +126,7 @@ export function PrefabCalendar({
 
   return (
     <ShadcnCalendar
+      {...getAccessibleNameProps(accessibleName)}
       mode="single"
       defaultMonth={defaultMonth}
       selected={selected as Date | undefined}
@@ -132,7 +140,7 @@ export function PrefabCalendar({
 
 // ── DatePicker ──────────────────────────────────────────────────────────
 
-interface PrefabDatePickerProps {
+interface PrefabDatePickerProps extends AccessibleNameProps {
   placeholder?: string;
   value?: string;
   onSelect?: (value: unknown) => void;
@@ -144,6 +152,7 @@ export function PrefabDatePicker({
   value,
   onSelect,
   className,
+  ...accessibleName
 }: PrefabDatePickerProps) {
   const [open, setOpen] = useState(false);
 
@@ -163,6 +172,7 @@ export function PrefabDatePicker({
   return (
     <ShadcnPopover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
+        {...getAccessibleNameProps(accessibleName)}
         className={cn(
           "pf-button pf-button-variant-outline pf-button-size-default w-full justify-between text-left font-normal",
           !selectedDate && "text-muted-foreground",

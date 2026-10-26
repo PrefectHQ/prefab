@@ -4,6 +4,10 @@
  */
 
 import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
+import {
   Bar,
   ComposedChart,
   Rectangle,
@@ -135,7 +139,9 @@ export function PrefabWaterfallChart({
   valueFormat = "auto",
   className,
   id,
-}: WaterfallChartWire & { className?: string; id?: string }) {
+  ...accessibleName
+}: WaterfallChartWire &
+  AccessibleNameProps & { className?: string; id?: string }) {
   if (typeof data === "string") return null;
 
   const rows = buildWaterfallRows(data, dataKey, totalKey);
@@ -156,7 +162,7 @@ export function PrefabWaterfallChart({
   return (
     <div id={id} className={className}>
       <ChartContainer config={config} style={{ height, aspectRatio: "auto" }}>
-        <ComposedChart data={rows}>
+        <ComposedChart {...getAccessibleNameProps(accessibleName)} data={rows}>
           {showGrid && <CartesianGrid vertical={false} />}
           <XAxis
             dataKey={nameKey}

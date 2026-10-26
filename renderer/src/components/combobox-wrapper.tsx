@@ -15,20 +15,25 @@ import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Separator } from "@base-ui/react/separator";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { usePortalContainer } from "../portal-container";
 
-interface ComboboxItemData {
+interface ComboboxItemData extends AccessibleNameProps {
   value: string;
   label: string;
   disabled?: boolean;
 }
 
-interface ComboboxGroupData {
+interface ComboboxGroupData extends AccessibleNameProps {
+  labelNames?: AccessibleNameProps;
   label?: string;
   items: ComboboxItemData[];
 }
 
-interface PrefabComboboxProps {
+interface PrefabComboboxProps extends AccessibleNameProps {
   placeholder?: string;
   searchPlaceholder?: string;
   name?: string;
@@ -42,11 +47,13 @@ interface PrefabComboboxProps {
   _items?: ComboboxItemData[];
   _groups?: ComboboxGroupData[];
   _separatorIndices?: number[];
+  _separatorNames?: Record<number, AccessibleNameProps>;
 }
 
 function ComboboxItemRow({ item }: { item: ComboboxItemData }) {
   return (
     <ComboboxPrimitive.Item
+      {...getAccessibleNameProps(item)}
       value={item.value}
       disabled={item.disabled}
       className={cn(
@@ -78,6 +85,8 @@ export function PrefabCombobox({
   _items = [],
   _groups = [],
   _separatorIndices = [],
+  _separatorNames = {},
+  ...accessibleName
 }: PrefabComboboxProps) {
   const container = usePortalContainer();
   const hasGroups = _groups.length > 0;
@@ -155,6 +164,7 @@ export function PrefabCombobox({
       disabled={disabled}
     >
       <ComboboxPrimitive.Trigger
+        {...getAccessibleNameProps(accessibleName)}
         aria-invalid={invalid || undefined}
         disabled={disabled}
         className={cn(
@@ -192,9 +202,14 @@ export function PrefabCombobox({
                       {gi > 0 && (
                         <Separator className="pf-combobox-separator" />
                       )}
-                      <div>
+                      <div {...getAccessibleNameProps(group)}>
                         {group.label && (
-                          <div className="pf-combobox-label">{group.label}</div>
+                          <div
+                            {...getAccessibleNameProps(group.labelNames ?? {})}
+                            className="pf-combobox-label"
+                          >
+                            {group.label}
+                          </div>
                         )}
                         {group.items.map((item) => (
                           <ComboboxItemRow key={item.value} item={item} />
@@ -208,7 +223,12 @@ export function PrefabCombobox({
                     return (
                       <React.Fragment key={item.value}>
                         {separatorSet.has(origIdx) && (
-                          <Separator className="pf-combobox-separator" />
+                          <Separator
+                            {...getAccessibleNameProps(
+                              _separatorNames[origIdx] ?? {},
+                            )}
+                            className="pf-combobox-separator"
+                          />
                         )}
                         <ComboboxItemRow item={item} />
                       </React.Fragment>

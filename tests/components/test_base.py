@@ -4,8 +4,19 @@ from __future__ import annotations
 
 import pytest
 
-from prefab_ui.components import Column, Heading, Row, Slider, Text, defer, insert
+from prefab_ui.components import (
+    Button,
+    Column,
+    Heading,
+    Input,
+    Row,
+    Slider,
+    Text,
+    defer,
+    insert,
+)
 from prefab_ui.components.base import ContainerComponent
+from prefab_ui.rx import Rx
 
 
 class TestComponentId:
@@ -348,3 +359,29 @@ class TestParent:
         assert isinstance(root.children[0], Heading)
         assert isinstance(root.children[1], Row)
         assert len(root.children[1].children) == 2
+
+
+class TestAccessibleNames:
+    def test_aria_label_preserves_visible_label(self):
+        data = Button("Open", aria_label="Open record 1042").to_json()
+        assert data["ariaLabel"] == "Open record 1042"
+        assert data["label"] == "Open"
+
+    def test_aria_names_accept_wire_aliases(self):
+        data = Input(
+            ariaLabel="Search records", ariaLabelledBy="search-label"
+        ).to_json()
+        assert data["ariaLabel"] == "Search records"
+        assert data["ariaLabelledBy"] == "search-label"
+
+    def test_aria_names_accept_reactive_strings(self):
+        data = Input(
+            aria_label=Rx("search_label"), aria_labelledby=Rx("label_id")
+        ).to_json()
+        assert data["ariaLabel"] == "{{ search_label }}"
+        assert data["ariaLabelledBy"] == "{{ label_id }}"
+
+    def test_unspecified_aria_names_are_not_serialized(self):
+        data = Button("Open").to_json()
+        assert "ariaLabel" not in data
+        assert "ariaLabelledBy" not in data

@@ -2,6 +2,10 @@
  * Sparkline component — lightweight inline SVG charts.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { cn } from "@/lib/utils";
 import type { SparklineWire } from "@/schemas/chart";
 
@@ -128,7 +132,8 @@ export function PrefabSparkline({
   mode = "line",
   className,
   cssClass,
-}: SparklineWire & { className?: string }) {
+  ...accessibleName
+}: SparklineWire & AccessibleNameProps & { className?: string }) {
   if (typeof data === "string" || data.length === 0) return null;
 
   const variantClass =
@@ -150,6 +155,7 @@ export function PrefabSparkline({
     const barW = (vw - gap * (data.length - 1)) / data.length;
     return (
       <svg
+        {...getAccessibleNameProps(accessibleName)}
         className={cn(
           "pf-sparkline w-full",
           height == null && "h-6",
@@ -209,6 +215,7 @@ export function PrefabSparkline({
 
   return (
     <svg
+      {...getAccessibleNameProps(accessibleName)}
       className={cn("pf-sparkline w-full", variantClass, className, cssClass)}
       viewBox={`0 0 ${vw} ${vh}`}
       preserveAspectRatio="none"

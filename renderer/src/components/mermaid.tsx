@@ -5,10 +5,14 @@
  * showing the raw diagram source in a <pre> block if rendering fails.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-interface MermaidProps {
+interface MermaidProps extends AccessibleNameProps {
   chart: string;
   className?: string;
   cssClass?: string;
@@ -33,7 +37,12 @@ function loadMermaid() {
   return mermaidLoading;
 }
 
-export function Mermaid({ chart, className, cssClass }: MermaidProps) {
+export function Mermaid({
+  chart,
+  className,
+  cssClass,
+  ...accessibleName
+}: MermaidProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,6 +81,7 @@ export function Mermaid({ chart, className, cssClass }: MermaidProps) {
   return (
     <>
       <div
+        {...getAccessibleNameProps(accessibleName)}
         ref={containerRef}
         hidden={error !== null}
         className={
@@ -82,6 +92,7 @@ export function Mermaid({ chart, className, cssClass }: MermaidProps) {
       />
       {error && (
         <pre
+          {...getAccessibleNameProps(accessibleName)}
           className={cn(
             "pf-text-sm pf-text-muted-foreground",
             className,

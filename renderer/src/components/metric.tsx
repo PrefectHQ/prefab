@@ -3,6 +3,10 @@
  * trend indicator and description.
  */
 
+import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/ui/badge";
@@ -10,7 +14,7 @@ import { Badge } from "@/ui/badge";
 type TrendDirection = "up" | "down" | "neutral";
 type TrendSentiment = "positive" | "negative" | "neutral";
 
-interface MetricProps {
+interface MetricProps extends AccessibleNameProps {
   label: string;
   value: string | number;
   description?: string;
@@ -69,6 +73,7 @@ export function PrefabMetric({
   trendSentiment,
   className,
   cssClass,
+  ...accessibleName
 }: MetricProps) {
   const resolvedTrend =
     trend ?? (delta != null ? inferTrend(delta) : undefined);
@@ -83,7 +88,10 @@ export function PrefabMetric({
       : "secondary";
 
   return (
-    <div className={cn("flex flex-col gap-1", className, cssClass)}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn("flex flex-col gap-1", className, cssClass)}
+    >
       <p className="text-sm font-medium text-muted-foreground">{label}</p>
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-3xl font-bold tracking-tight leading-none">

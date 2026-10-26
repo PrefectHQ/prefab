@@ -10,6 +10,10 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import Fade from "embla-carousel-fade";
 import { cn } from "@/lib/utils";
 import {
+  getAccessibleNameProps,
+  type AccessibleNameProps,
+} from "../accessibility";
+import {
   getLoopDuplicationRepeats,
   resolveGap,
   resolveVisible,
@@ -23,7 +27,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-interface CarouselProps {
+interface CarouselProps extends AccessibleNameProps {
   visible?: number | null;
   gap?: number;
   height?: number;
@@ -96,6 +100,7 @@ export function PrefabCarousel({
   className,
   cssClass,
   children,
+  ...accessibleName
 }: CarouselProps) {
   const isVertical = direction === "up" || direction === "down";
   // Distinguish explicit `null` from omitted `undefined`.
@@ -181,6 +186,7 @@ export function PrefabCarousel({
     // Measurement pass: render children invisibly to measure their height
     return (
       <div
+        {...getAccessibleNameProps(accessibleName)}
         ref={measureRef}
         className={cn(className, cssClass)}
         style={{ overflow: "hidden", height: 0, position: "relative" }}
@@ -192,6 +198,7 @@ export function PrefabCarousel({
 
   return (
     <CarouselInner
+      {...getAccessibleNameProps(accessibleName)}
       isVertical={isVertical}
       viewportHeight={verticalViewportHeight}
       validChildren={effectiveChildren}
@@ -244,7 +251,8 @@ function CarouselInner({
   showDots,
   className,
   cssClass,
-}: {
+  ...accessibleName
+}: AccessibleNameProps & {
   isVertical: boolean;
   viewportHeight: number | undefined;
   validChildren: React.ReactNode[];
@@ -448,7 +456,11 @@ function CarouselInner({
       : { right: 8, top: "50%", transform: "translateY(-50%)" };
 
   return (
-    <div className={cn(className, cssClass)} style={{ position: "relative" }}>
+    <div
+      {...getAccessibleNameProps(accessibleName)}
+      className={cn(className, cssClass)}
+      style={{ position: "relative" }}
+    >
       <div style={viewportShellStyle}>
         {/* Embla viewport */}
         <div
