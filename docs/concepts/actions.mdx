@@ -202,6 +202,8 @@ Button(
 
 Callbacks can themselves have callbacks, making it possible to chain dependent server calls: the result of the first determines what to fetch next.
 
+A failure stops the action list in which it occurs, after its `on_error` callback runs. In ordinary UI interactions, a failure inside `on_success` ends that callback list while the completed parent action retains its success outcome, so later actions in the outer list continue. [App-provided tools](/reference/app-tools) propagate callback failures to the caller and stop their outer lists.
+
 ```python
 CallTool(
     "get_user",
