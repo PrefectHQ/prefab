@@ -478,7 +478,7 @@ export function PrefabPieChart({
       : 0;
 
   // Reduce chart height to leave room for external legend
-  const chartHeight = showLegend ? height - 36 : height;
+  const chartHeight = showLegend ? Number(height) - 36 : height;
 
   return (
     <div className={className}>

@@ -15,7 +15,7 @@ const cartesianBase = componentBase.extend({
     .optional(),
   series: z.array(chartSeriesSchema),
   xAxis: z.string().optional(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   animate: z.boolean().optional(),
@@ -62,7 +62,7 @@ export const pieChartSchema = componentBase
       .union([z.array(z.string()), z.string()])
       .nullable()
       .optional(),
-    height: z.number().int().optional(),
+    height: z.union([z.number().int(), z.string()]).optional(),
     innerRadius: z.number().int().optional(),
     showLabel: z.boolean().optional(),
     paddingAngle: z.number().int().optional(),
@@ -119,7 +119,7 @@ export const radarChartSchema = componentBase.extend({
     .optional(),
   series: z.array(chartSeriesSchema),
   axisKey: z.string().optional(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   filled: z.boolean().optional(),
   showDots: z.boolean().optional(),
   showLegend: z.boolean().optional(),
@@ -135,7 +135,7 @@ export const radialChartSchema = componentBase.extend({
     .optional(),
   dataKey: z.string(),
   nameKey: z.string(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   innerRadius: z.number().int().optional(),
   startAngle: z.number().int().optional(),
   endAngle: z.number().int().optional(),
@@ -154,7 +154,7 @@ export const scatterChartSchema = componentBase.extend({
   xAxis: z.string(),
   yAxis: z.string(),
   zAxis: z.string().optional(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   showLegend: z.boolean().optional(),
   showTooltip: z.boolean().optional(),
   animate: z.boolean().optional(),
@@ -169,7 +169,7 @@ export const waterfallChartSchema = componentBase.extend({
   dataKey: z.string(),
   nameKey: z.string(),
   totalKey: z.string().optional(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   increaseColor: z.string().optional(),
   decreaseColor: z.string().optional(),
   totalColor: z.string().optional(),
@@ -186,7 +186,7 @@ export const waterfallChartSchema = componentBase.extend({
 export const sparklineSchema = componentBase.extend({
   type: z.literal("Sparkline"),
   data: z.union([z.array(z.number()), z.string()]).optional(),
-  height: z.number().int().optional(),
+  height: z.union([z.number().int(), z.string()]).optional(),
   variant: z
     .enum(["default", "success", "warning", "destructive", "info", "muted"])
     .or(z.string())

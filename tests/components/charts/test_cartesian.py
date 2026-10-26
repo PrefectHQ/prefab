@@ -201,3 +201,47 @@ class TestScatterChart:
             data="{{ myData }}", series=series, x_axis="x", y_axis="y"
         ).to_json()
         assert j["data"] == "{{ myData }}"
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_barchart_serializes_reactive_height(height):
+    chart = BarChart(data=[], series=[], height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_linechart_serializes_reactive_height(height):
+    chart = LineChart(data=[], series=[], height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_areachart_serializes_reactive_height(height):
+    chart = AreaChart(data=[], series=[], height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )
+
+
+@pytest.mark.parametrize(
+    "height", [420, "{{ rows.length * 30 }}", Rx("rows").length() * 30]
+)
+def test_scatterchart_serializes_reactive_height(height):
+    chart = ScatterChart(data=[], series=[], x_axis="x", y_axis="y", height=height)
+
+    assert chart.to_json()["height"] == (
+        height if isinstance(height, int) else str(height)
+    )

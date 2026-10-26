@@ -24,7 +24,7 @@ class Sparkline(Component):
 
     Args:
         data: Flat list of numeric values or reactive interpolation reference.
-        height: Chart height in pixels (default 24px via CSS).
+        height: Chart height in pixels or a reactive expression (default 24px via CSS).
         variant: Visual variant ("default", "success", "warning", "destructive", "info", "muted").
         indicator_class: Tailwind classes for the line/fill (e.g. "stroke-blue-500").
         fill: Show area fill under the line.
@@ -46,7 +46,7 @@ class Sparkline(Component):
     data: list[int | float] | RxStr = Field(
         description="Flat list of numeric values or `{{ interpolation }}` reference",
     )
-    height: int | None = Field(
+    height: int | RxStr | None = Field(
         default=None, description="Chart height in pixels (default 24px via CSS)"
     )
     variant: SparklineVariant = Field(

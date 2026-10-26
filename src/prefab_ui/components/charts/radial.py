@@ -26,7 +26,7 @@ class PieChart(Component):
         name_key: Label field.
         aggregate_below: Group slices below this fraction of the original total into Other.
         aggregate_except: Keep these labels individually; group all others into Other. Accepts a reactive list reference.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         inner_radius: Inner radius in pixels (> 0 for donut).
         show_label: Show labels on slices.
         padding_angle: Gap between slices in degrees.
@@ -78,7 +78,7 @@ class PieChart(Component):
         description="Keep these labels individually and group other rows into Other",
     )
 
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     inner_radius: int = Field(
         default=0, alias="innerRadius", description="Inner radius (>0 for donut)"
     )
@@ -156,7 +156,7 @@ class RadarChart(Component):
         data: Row data or reactive interpolation reference.
         series: Series to render as radar areas.
         axis_key: Data key for angular axis labels.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         filled: Fill radar polygons (False for lines only).
         show_dots: Show dots at vertices.
         show_legend: Show legend.
@@ -186,7 +186,7 @@ class RadarChart(Component):
     axis_key: str | None = Field(
         default=None, alias="axisKey", description="Data key for angular axis labels"
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     filled: bool = Field(
         default=True, description="Fill radar polygons (False for lines only)"
     )
@@ -221,7 +221,7 @@ class RadialChart(Component):
         data: Row data or reactive interpolation reference.
         data_key: Numeric value field.
         name_key: Label field.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         inner_radius: Inner radius in pixels.
         start_angle: Arc start angle in degrees.
         end_angle: Arc end angle in degrees.
@@ -251,7 +251,7 @@ class RadialChart(Component):
     )
     data_key: str = Field(alias="dataKey", description="Numeric value field")
     name_key: str = Field(alias="nameKey", description="Label field")
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     inner_radius: int = Field(
         default=30, alias="innerRadius", description="Inner radius in pixels"
     )

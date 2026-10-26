@@ -27,7 +27,7 @@ class WaterfallChart(Component):
         data_key: Data key for each row's value. Positive values increase the running total, negative values decrease it.
         name_key: Data key for bar labels.
         total_key: Data key marking a row as a total (bool). Total bars are drawn from zero instead of stacking on the running total.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         increase_color: CSS color for increase bars.
         decrease_color: CSS color for decrease bars.
         total_color: CSS color for total bars.
@@ -80,7 +80,7 @@ class WaterfallChart(Component):
             "stacking on the running total"
         ),
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     increase_color: str | None = Field(
         default=None, alias="increaseColor", description="CSS color for increase bars"
     )

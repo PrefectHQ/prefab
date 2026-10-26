@@ -28,7 +28,7 @@ class BarChart(Component):
         x_axis: Data key for x-axis labels.
         x_axis_label: Human-readable title for the category axis.
         y_axis_label: Human-readable value-axis title, hidden when `show_y_axis=False`.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         stacked: Stack bars instead of grouping side-by-side.
         horizontal: Render as horizontal bar chart.
         bar_radius: Corner radius on bars.
@@ -72,7 +72,7 @@ class BarChart(Component):
         alias="yAxisLabel",
         description="Human-readable title for the value axis",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack bars")
     horizontal: bool = Field(
         default=False, description="Render as horizontal bar chart"
@@ -125,7 +125,7 @@ class LineChart(Component):
         x_axis: Data key for x-axis labels.
         x_axis_label: Human-readable title for the category axis.
         y_axis_label: Human-readable value-axis title, hidden when `show_y_axis=False`.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
         show_legend: Show legend.
@@ -169,7 +169,7 @@ class LineChart(Component):
         alias="yAxisLabel",
         description="Human-readable title for the value axis",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     curve: Literal["linear", "smooth", "step"] = Field(
         default="linear", description="Line interpolation style"
     )
@@ -218,7 +218,7 @@ class AreaChart(Component):
         data: Row data or reactive interpolation reference.
         series: Series to render as areas.
         x_axis: Data key for x-axis labels.
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         stacked: Stack areas instead of overlaying.
         curve: Line interpolation style ("linear", "smooth", or "step").
         show_dots: Show dots at data points.
@@ -252,7 +252,7 @@ class AreaChart(Component):
     x_axis: str | None = Field(
         default=None, alias="xAxis", description="Data key for x-axis labels"
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     stacked: bool = Field(default=False, description="Stack areas")
     curve: Literal["linear", "smooth", "step"] = Field(
         default="linear", description="Line interpolation style"
@@ -304,7 +304,7 @@ class ScatterChart(Component):
         x_axis: Data key for x-axis values.
         y_axis: Data key for y-axis values.
         z_axis: Data key for bubble size (optional).
-        height: Chart height in pixels.
+        height: Chart height in pixels, or a reactive expression resolving to pixels.
         show_legend: Show legend.
         show_tooltip: Show tooltip on hover.
         animate: Animate transitions. Defaults to `False` for reactive data.
@@ -338,7 +338,7 @@ class ScatterChart(Component):
         alias="zAxis",
         description="Data key for bubble size (optional)",
     )
-    height: int = Field(default=300, description="Chart height in pixels")
+    height: int | RxStr = Field(default=300, description="Chart height in pixels")
     show_legend: bool = Field(
         default=True, alias="showLegend", description="Show legend"
     )
