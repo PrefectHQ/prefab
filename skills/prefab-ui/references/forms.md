@@ -27,6 +27,10 @@ Form.from_model(
 )
 ```
 
+Named form inputs keep their values in state even when they have `on_change`
+actions. The automatic write happens first, so handlers see the updated field
+value. Use change actions for additional work such as validation or server calls.
+
 ## Type Mapping
 
 | Python type | Generated input |

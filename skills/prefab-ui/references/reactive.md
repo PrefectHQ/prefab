@@ -14,6 +14,10 @@ Metric(value=slider.rx)              # {{ brightness }}
 Text(f"Value: {slider.rx}")          # "Value: {{ brightness }}"
 ```
 
+Named inputs sync their own state before `on_change` actions run, so the
+handler can read the new value by its name or through `$event`. An explicit
+`SetState` in the handler can override the automatically synced value.
+
 Build expressions with Python operators:
 
 ```python

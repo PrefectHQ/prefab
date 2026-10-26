@@ -35,7 +35,7 @@ Either way, those keys are immediately available to every expression in your com
 
 ## Interactive components as state sources
 
-Interactive components with a `name` prop are the most natural state source. They automatically sync their current value to that key on every interaction.
+Interactive components with a `name` prop are the most natural state source. They automatically sync their current value to that key on every interaction. Adding `on_change` preserves that sync: the state key already contains the new value when your actions run.
 
 <ComponentPreview json={{"view":{"cssClass":"gap-3","type":"Column","children":[{"name":"name_input","type":"Input","inputType":"text","placeholder":"Type your name..","disabled":false,"readOnly":false,"required":false},{"content":"Hello, {{ name_input | 'stranger' }}!","type":"Text"}]}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgQ29sdW1uLCBJbnB1dCwgVGV4dAoKd2l0aCBDb2x1bW4oZ2FwPTMpOgogICAgbmFtZV9pbnB1dCA9IElucHV0KG5hbWU9Im5hbWVfaW5wdXQiLCBwbGFjZWhvbGRlcj0iVHlwZSB5b3VyIG5hbWUuLiIpCiAgICBUZXh0KCJIZWxsbywge3sgbmFtZV9pbnB1dCB8ICdzdHJhbmdlcicgfX0hIikK">
 <CodeGroup>
