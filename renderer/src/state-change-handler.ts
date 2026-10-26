@@ -1,3 +1,5 @@
+import type { StateStore } from "./state";
+
 /** Keep automatic state synchronization independent of user change actions. */
 export function withStateUpdate<T>(
   handler: unknown,
@@ -9,4 +11,15 @@ export function withStateUpdate<T>(
     update(value);
     return userHandler?.(value, ...args);
   };
+}
+
+/** Install the existing string-value state binding on a named control. */
+export function bindNamedValueChange(
+  props: Record<string, unknown>,
+  state: StateStore,
+  name: string,
+) {
+  props.onValueChange = withStateUpdate(props.onValueChange, (value: string) =>
+    state.set(name, value),
+  );
 }
