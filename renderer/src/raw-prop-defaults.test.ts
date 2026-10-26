@@ -50,3 +50,17 @@ describe("applyRawPropDefaults", () => {
     expect(applyRawPropDefaults("DataTable", props)).toBe(props);
   });
 });
+
+it("defaults reactive pie label selection to no animation while retaining explicit settings", () => {
+  const data = [{ name: "A", value: 1 }];
+  const props = { data, aggregateExcept: "{{ selected }}" };
+  expect(applyRawPropDefaults("PieChart", props)).toEqual({
+    ...props,
+    animate: false,
+  });
+  expect(
+    applyRawPropDefaults("PieChart", { ...props, animate: true }).animate,
+  ).toBe(true);
+  const literal = { data, aggregateExcept: ["A"] };
+  expect(applyRawPropDefaults("PieChart", literal)).toBe(literal);
+});

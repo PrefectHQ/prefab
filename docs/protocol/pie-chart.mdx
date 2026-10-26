@@ -73,6 +73,34 @@ Pie or donut chart.
       "description": "Label field",
       "type": "string"
     },
+    "aggregateBelow": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "description": "Group slices below this fraction of the original total into Other"
+    },
+    "aggregateExcept": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Keep these labels individually and group other rows into Other"
+    },
     "height": {
       "default": 300,
       "description": "Chart height in pixels",

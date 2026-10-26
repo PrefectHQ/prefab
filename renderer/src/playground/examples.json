@@ -1420,6 +1420,16 @@
     "code": "from prefab_ui.components.charts import PieChart\n\ndata = [\n    {\"browser\": \"Chrome\", \"visitors\": 275},\n    {\"browser\": \"Safari\", \"visitors\": 200},\n    {\"browser\": \"Firefox\", \"visitors\": 187},\n    {\"browser\": \"Edge\", \"visitors\": 173},\n    {\"browser\": \"Other\", \"visitors\": 90},\n]\n\nPieChart(\n    data=data,\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    show_legend=True,\n)"
   },
   {
+    "title": "Automatic cutoff icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui.components.charts import PieChart\n\nPieChart(\n    data=[\n        {\"country\": \"US\", \"revenue\": 70},\n        {\"country\": \"MX\", \"revenue\": 20},\n        {\"country\": \"IN\", \"revenue\": 10},\n    ],\n    name_key=\"country\",\n    data_key=\"revenue\",\n    aggregate_below=0.2,\n    show_label=True,\n)"
+  },
+  {
+    "title": "Selected slices icon=\"python\"",
+    "category": "Components",
+    "code": "from prefab_ui import PrefabApp\nfrom prefab_ui.actions import SetState\nfrom prefab_ui.components import Button, Column, Row\nfrom prefab_ui.components.charts import PieChart\nfrom prefab_ui.rx import STATE\n\nwith PrefabApp(\n    state={\n        \"sales\": [\n            {\"country\": \"US\", \"revenue\": 100},\n            {\"country\": \"MX\", \"revenue\": 20},\n            {\"country\": \"IN\", \"revenue\": 10},\n        ],\n        \"selected_countries\": [\"US\"],\n    }\n):\n    with Column():\n        with Row():\n            Button(\n                \"Show MX\",\n                on_click=SetState(\"selected_countries\", [\"US\", \"MX\"]),\n            )\n            Button(\"Group MX\", on_click=SetState(\"selected_countries\", [\"US\"]))\n        PieChart(\n            data=STATE.sales,\n            name_key=\"country\",\n            data_key=\"revenue\",\n            aggregate_except=STATE.selected_countries,\n            show_label=True,\n        )"
+  },
+  {
     "title": "Python icon=\"python\"",
     "category": "Components",
     "code": "PieChart(\n    data=[\n        {\"browser\": \"Chrome\", \"visitors\": 275},\n        {\"browser\": \"Safari\", \"visitors\": 200},\n        {\"browser\": \"Firefox\", \"visitors\": 187},\n        {\"browser\": \"Edge\", \"visitors\": 173},\n        {\"browser\": \"Other\", \"visitors\": 90},\n    ],\n    data_key=\"visitors\",\n    name_key=\"browser\",\n    inner_radius=60,\n    show_legend=True,\n)"
