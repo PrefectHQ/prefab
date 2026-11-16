@@ -354,3 +354,29 @@ async def test_startup_failure_closes_process_streams(
     for stream in (process.stdin, process.stdout, process.stderr):
         stream.close.assert_called_once_with()
     assert sandbox._process is None
+
+
+@pytest.mark.timeout(120)
+@pytest.mark.skipif(shutil.which("deno") is None, reason="Deno not installed")
+async def test_validation_error_is_not_truncated_to_the_docs_url() -> None:
+    """A multi-line exception must arrive whole, not just its last line.
+
+    The last line of a pydantic ValidationError is the docs URL; the useful
+    part (model, field, reason) comes before it.
+    """
+    async with PyodideSandbox() as sandbox:
+        with pytest.raises(RuntimeError) as excinfo:
+            await sandbox.run(
+                "from prefab_ui.components import Grid, Text\n"
+                "with Grid(columns={'default': 1, 'lg': [2, 1]}):\n"
+                "    Text('a')\n"
+                "    Text('b')\n"
+            )
+        message = str(excinfo.value)
+        assert "validation error" in message.lower()
+        assert "columns" in message
+        assert "Input should be" in message
+
+        # Single-line errors still surface with their type and message.
+        with pytest.raises(RuntimeError, match="ValueError: boom"):
+            await sandbox.run("raise ValueError('boom')")
