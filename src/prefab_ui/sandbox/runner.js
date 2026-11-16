@@ -131,7 +131,17 @@ for await (const line of readLines(Deno.stdin)) {
   } catch (err) {
     const msg = String(err.message || err);
     const lines = msg.split("\n").filter((l) => l.trim());
-    const short = lines[lines.length - 1] || msg;
+    // Keep everything from the line that starts the exception, not just the
+    // final line: multi-line messages like pydantic's ValidationError end
+    // with a docs URL, so the last line alone loses the useful content.
+    let start = lines.length - 1;
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (/^[A-Za-z_][\w.]*(Error|Exception|Warning)\b/.test(lines[i])) {
+        start = i;
+        break;
+      }
+    }
+    const short = lines.slice(start).join("\n").slice(0, 2000) || msg;
     realLog(JSON.stringify({ id: requestId, error: short }));
   }
 }
