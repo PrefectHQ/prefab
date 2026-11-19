@@ -197,6 +197,10 @@ DataTable(
 
 Use `search_placeholder=` to customize the search input text.
 
+`expand_label=` names each `ExpandableRow` toggle for screen readers
+("Expand <label>" / "Collapse <label>"); its `{{ field }}` templates resolve
+against the row, e.g. `expand_label="{{ name }}"`.
+
 `on_row_click=` actions fire when the row is clicked and receive the clicked row
 as `$event`. Access row fields through `$event`, for example
 `{{ $event.email }}` or `EVENT.email`.

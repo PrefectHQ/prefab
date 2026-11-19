@@ -161,6 +161,9 @@ class DataTable(Component):
         on_row_click: Action(s) when a row is clicked. `$event` is the row dict;
             access row fields with `$event.<field>`. Clicking anywhere in the
             row fires the action.
+        expand_label: Accessible name for each expand toggle, read as
+            "Expand <label>" / "Collapse <label>". `{{ field }}` templates
+            resolve against the row. Defaults to "row".
 
     **Example:**
 
@@ -177,6 +180,7 @@ class DataTable(Component):
             ),
             {"name": "Bob", "email": "bob@example.com"},
         ],
+        expand_label="{{ name }}",
         search=True,
         paginated=True,
     )
@@ -227,6 +231,15 @@ class DataTable(Component):
             "Action(s) when a row is clicked. $event is the row data dict; access"
             " row fields with $event.<field>. Clicking anywhere in the row fires"
             " the action."
+        ),
+    )
+    expand_label: str | None = Field(
+        default=None,
+        alias="expandLabel",
+        description=(
+            "Accessible name for each expand toggle, read as 'Expand <label>' /"
+            " 'Collapse <label>'. {{ field }} templates resolve against the row."
+            " Defaults to 'row'."
         ),
     )
 
