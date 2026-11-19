@@ -231,3 +231,18 @@ class TestExpandableRow:
         assert len(j["rows"]) == 2
         assert "_detail" not in j["rows"][0]
         assert "_detail" not in j["rows"][1]
+
+    def test_expand_label_serialization(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[ExpandableRow({"name": "Alice"}, detail=Text("Details"))],
+            expand_label="{{ name }}",
+        )
+        assert dt.to_json()["expandLabel"] == "{{ name }}"
+
+    def test_expand_label_omitted_by_default(self):
+        dt = DataTable(
+            columns=[DataTableColumn(key="name", header="Name")],
+            rows=[ExpandableRow({"name": "Alice"}, detail=Text("Details"))],
+        )
+        assert "expandLabel" not in dt.to_json()

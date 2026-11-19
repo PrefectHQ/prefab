@@ -434,7 +434,9 @@ Wrap a row dict in `ExpandableRow` to make it expandable. Clicking the toggle re
 
 Rows without `ExpandableRow` render normally. Multiple rows can be expanded at the same time, and expanded state follows the row through sorting and pagination.
 
-<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"time","header":"Time","sortable":true},{"key":"title","header":"Title","sortable":false},{"key":"speaker","header":"Speaker","sortable":false}],"rows":[{"time":"9:00 AM","title":"Opening Keynote","speaker":"Jane Smith","_detail":{"content":"A sweeping overview of where the industry is headed and what to watch for in the coming year.","type":"Text"}},{"time":"10:30 AM","title":"Building Dashboards","speaker":"Bob Lee","_detail":{"content":"Hands-on workshop covering layout patterns, reactive data binding, and chart integration.","type":"Text"}},{"time":"12:00 PM","title":"Lunch Break","speaker":"\u2014"},{"time":"1:00 PM","title":"State Management Deep Dive","speaker":"Carol White","_detail":{"content":"Explores client-side state, server sync, and how to keep your UI responsive under load.","type":"Text"}}],"search":false,"paginated":false,"pageSize":10}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgRGF0YVRhYmxlLAogICAgRGF0YVRhYmxlQ29sdW1uLAogICAgRXhwYW5kYWJsZVJvdywKICAgIEJhZGdlLAogICAgVGV4dCwKKQoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0idGltZSIsIGhlYWRlcj0iVGltZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRpdGxlIiwgaGVhZGVyPSJUaXRsZSIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InNwZWFrZXIiLCBoZWFkZXI9IlNwZWFrZXIiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICBFeHBhbmRhYmxlUm93KAogICAgICAgICAgICB7InRpbWUiOiAiOTowMCBBTSIsICJ0aXRsZSI6ICJPcGVuaW5nIEtleW5vdGUiLCAic3BlYWtlciI6ICJKYW5lIFNtaXRoIn0sCiAgICAgICAgICAgIGRldGFpbD1UZXh0KCJBIHN3ZWVwaW5nIG92ZXJ2aWV3IG9mIHdoZXJlIHRoZSBpbmR1c3RyeSBpcyBoZWFkZWQgYW5kIHdoYXQgdG8gd2F0Y2ggZm9yIGluIHRoZSBjb21pbmcgeWVhci4iKSwKICAgICAgICApLAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxMDozMCBBTSIsICJ0aXRsZSI6ICJCdWlsZGluZyBEYXNoYm9hcmRzIiwgInNwZWFrZXIiOiAiQm9iIExlZSJ9LAogICAgICAgICAgICBkZXRhaWw9VGV4dCgiSGFuZHMtb24gd29ya3Nob3AgY292ZXJpbmcgbGF5b3V0IHBhdHRlcm5zLCByZWFjdGl2ZSBkYXRhIGJpbmRpbmcsIGFuZCBjaGFydCBpbnRlZ3JhdGlvbi4iKSwKICAgICAgICApLAogICAgICAgIHsidGltZSI6ICIxMjowMCBQTSIsICJ0aXRsZSI6ICJMdW5jaCBCcmVhayIsICJzcGVha2VyIjogIuKAlCJ9LAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxOjAwIFBNIiwgInRpdGxlIjogIlN0YXRlIE1hbmFnZW1lbnQgRGVlcCBEaXZlIiwgInNwZWFrZXIiOiAiQ2Fyb2wgV2hpdGUifSwKICAgICAgICAgICAgZGV0YWlsPVRleHQoIkV4cGxvcmVzIGNsaWVudC1zaWRlIHN0YXRlLCBzZXJ2ZXIgc3luYywgYW5kIGhvdyB0byBrZWVwIHlvdXIgVUkgcmVzcG9uc2l2ZSB1bmRlciBsb2FkLiIpLAogICAgICAgICksCiAgICBdLAopCg">
+Each toggle is announced to screen readers as "Expand row" or "Collapse row" and reports its state with `aria-expanded`. Set `expand_label=` to name toggles after their row: `{{ field }}` templates in it resolve against each row's data, so `expand_label="{{ title }}"` reads "Expand Opening Keynote".
+
+<ComponentPreview json={{"view":{"type":"DataTable","columns":[{"key":"time","header":"Time","sortable":true},{"key":"title","header":"Title","sortable":false},{"key":"speaker","header":"Speaker","sortable":false}],"rows":[{"time":"9:00 AM","title":"Opening Keynote","speaker":"Jane Smith","_detail":{"content":"A sweeping overview of where the industry is headed and what to watch for in the coming year.","type":"Text"}},{"time":"10:30 AM","title":"Building Dashboards","speaker":"Bob Lee","_detail":{"content":"Hands-on workshop covering layout patterns, reactive data binding, and chart integration.","type":"Text"}},{"time":"12:00 PM","title":"Lunch Break","speaker":"\u2014"},{"time":"1:00 PM","title":"State Management Deep Dive","speaker":"Carol White","_detail":{"content":"Explores client-side state, server sync, and how to keep your UI responsive under load.","type":"Text"}}],"search":false,"paginated":false,"pageSize":10,"expandLabel":"{{ title }}"}}} playground="ZnJvbSBwcmVmYWJfdWkuY29tcG9uZW50cyBpbXBvcnQgKAogICAgRGF0YVRhYmxlLAogICAgRGF0YVRhYmxlQ29sdW1uLAogICAgRXhwYW5kYWJsZVJvdywKICAgIEJhZGdlLAogICAgVGV4dCwKKQoKRGF0YVRhYmxlKAogICAgY29sdW1ucz1bCiAgICAgICAgRGF0YVRhYmxlQ29sdW1uKGtleT0idGltZSIsIGhlYWRlcj0iVGltZSIsIHNvcnRhYmxlPVRydWUpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InRpdGxlIiwgaGVhZGVyPSJUaXRsZSIpLAogICAgICAgIERhdGFUYWJsZUNvbHVtbihrZXk9InNwZWFrZXIiLCBoZWFkZXI9IlNwZWFrZXIiKSwKICAgIF0sCiAgICByb3dzPVsKICAgICAgICBFeHBhbmRhYmxlUm93KAogICAgICAgICAgICB7InRpbWUiOiAiOTowMCBBTSIsICJ0aXRsZSI6ICJPcGVuaW5nIEtleW5vdGUiLCAic3BlYWtlciI6ICJKYW5lIFNtaXRoIn0sCiAgICAgICAgICAgIGRldGFpbD1UZXh0KCJBIHN3ZWVwaW5nIG92ZXJ2aWV3IG9mIHdoZXJlIHRoZSBpbmR1c3RyeSBpcyBoZWFkZWQgYW5kIHdoYXQgdG8gd2F0Y2ggZm9yIGluIHRoZSBjb21pbmcgeWVhci4iKSwKICAgICAgICApLAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxMDozMCBBTSIsICJ0aXRsZSI6ICJCdWlsZGluZyBEYXNoYm9hcmRzIiwgInNwZWFrZXIiOiAiQm9iIExlZSJ9LAogICAgICAgICAgICBkZXRhaWw9VGV4dCgiSGFuZHMtb24gd29ya3Nob3AgY292ZXJpbmcgbGF5b3V0IHBhdHRlcm5zLCByZWFjdGl2ZSBkYXRhIGJpbmRpbmcsIGFuZCBjaGFydCBpbnRlZ3JhdGlvbi4iKSwKICAgICAgICApLAogICAgICAgIHsidGltZSI6ICIxMjowMCBQTSIsICJ0aXRsZSI6ICJMdW5jaCBCcmVhayIsICJzcGVha2VyIjogIuKAlCJ9LAogICAgICAgIEV4cGFuZGFibGVSb3coCiAgICAgICAgICAgIHsidGltZSI6ICIxOjAwIFBNIiwgInRpdGxlIjogIlN0YXRlIE1hbmFnZW1lbnQgRGVlcCBEaXZlIiwgInNwZWFrZXIiOiAiQ2Fyb2wgV2hpdGUifSwKICAgICAgICAgICAgZGV0YWlsPVRleHQoIkV4cGxvcmVzIGNsaWVudC1zaWRlIHN0YXRlLCBzZXJ2ZXIgc3luYywgYW5kIGhvdyB0byBrZWVwIHlvdXIgVUkgcmVzcG9uc2l2ZSB1bmRlciBsb2FkLiIpLAogICAgICAgICksCiAgICBdLAogICAgZXhwYW5kX2xhYmVsPSJ7eyB0aXRsZSB9fSIsCikK">
 <CodeGroup>
 ```python Python icon="python"
 from prefab_ui.components import (
@@ -466,6 +468,7 @@ DataTable(
             detail=Text("Explores client-side state, server sync, and how to keep your UI responsive under load."),
         ),
     ],
+    expand_label="{{ title }}",
 )
 ```
 ```json Protocol icon="brackets-curly"
@@ -509,7 +512,8 @@ DataTable(
     ],
     "search": false,
     "paginated": false,
-    "pageSize": 10
+    "pageSize": 10,
+    "expandLabel": "{{ title }}"
   }
 }
 ```
@@ -741,6 +745,10 @@ Works with any object that has `.columns` and `.to_dict(orient="records")` (pand
 
 <ParamField body="on_row_click" type="Action | list[Action] | None" default="None">
   Action(s) to fire when a row is clicked. `$event` is the row's data dict; access row fields with `$event.<field>`. Clicking anywhere in the row highlights it and fires the action.
+</ParamField>
+
+<ParamField body="expand_label" type="str | None" default="None">
+  Accessible name for each `ExpandableRow` toggle, read as "Expand" or "Collapse" followed by the label. `{{ field }}` templates resolve against the row's data. When omitted, toggles are named "Expand row" / "Collapse row".
 </ParamField>
 
 <ParamField body="css_class" type="str | None" default="None">

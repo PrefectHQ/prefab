@@ -25,6 +25,7 @@ export const dataTableSchema = componentBase.extend({
   paginated: z.boolean().optional(),
   pageSize: z.number().int().optional(),
   onRowClick: actionOrList.optional(),
+  expandLabel: z.string().optional(),
 });
 
 export type DataTableWire = z.infer<typeof dataTableSchema>;

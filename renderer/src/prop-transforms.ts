@@ -22,6 +22,22 @@ export const ACTION_PROPS = new Set([
 ]);
 
 /**
+ * Template props a component evaluates itself against each item it renders
+ * (a DataTable row), so they must not be resolved against state.
+ */
+const ITEM_TEMPLATE_PROPS: Record<string, string[]> = {
+  DataTable: ["expandLabel"],
+};
+
+/** Whether a prop is passed to the component without render-time interpolation. */
+export function isRawProp(type: string, key: string, value: unknown): boolean {
+  if (ACTION_PROPS.has(key) && value != null && typeof value === "object") {
+    return true;
+  }
+  return ITEM_TEMPLATE_PROPS[type]?.includes(key) ?? false;
+}
+
+/**
  * Types whose children represent data items rather than nested components.
  * The renderer pre-interpolates these children and passes them as `_items`
  * to the wrapper component, which internally composes shadcn primitives.

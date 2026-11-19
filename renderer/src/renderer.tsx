@@ -47,10 +47,10 @@ import {
   resetAutoNameCounter,
 } from "./auto-name";
 import {
-  ACTION_PROPS,
   ITEM_CHILD_TYPES,
   SELECT_GROUP_FIELDS,
   bindActions,
+  isRawProp,
   mapProps,
   filterInternalProps,
 } from "./prop-transforms";
@@ -175,7 +175,7 @@ export function RenderNode({
   const propsToInterpolate: Record<string, unknown> = {};
   const rawActionSpecs: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(rawProps)) {
-    if (ACTION_PROPS.has(key) && value != null && typeof value === "object") {
+    if (isRawProp(type, key, value)) {
       rawActionSpecs[key] = value;
     } else {
       propsToInterpolate[key] = value;

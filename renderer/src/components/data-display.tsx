@@ -67,6 +67,7 @@ interface DataTableProps extends AccessibleNameProps {
   paginated?: boolean;
   pageSize?: number;
   onRowClick?: (rowData: Record<string, unknown>) => void;
+  expandLabel?: string;
   className?: string;
 }
 
@@ -78,6 +79,7 @@ export function PrefabDataTable({
   paginated = false,
   pageSize = 10,
   onRowClick,
+  expandLabel,
   className,
   ...accessibleName
 }: DataTableProps) {
@@ -101,9 +103,15 @@ export function PrefabDataTable({
         header: () => null,
         cell: ({ row }) => {
           if (!row.getCanExpand()) return null;
+          const isExpanded = row.getIsExpanded();
+          const name = expandLabel
+            ? String(interpolateString(expandLabel, row.original))
+            : "row";
           return (
             <button
               className="flex items-center justify-center text-muted-foreground hover:text-foreground"
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${name}`}
               onClick={(e) => {
                 e.stopPropagation();
                 row.toggleExpanded();
@@ -112,7 +120,7 @@ export function PrefabDataTable({
               <span
                 className={cn(
                   "inline-block text-xs transition-transform duration-200",
-                  row.getIsExpanded() && "rotate-90",
+                  isExpanded && "rotate-90",
                 )}
               >
                 ▶
@@ -184,7 +192,7 @@ export function PrefabDataTable({
     }
 
     return cols;
-  }, [columnSpecs, renderNode, hasExpandableRows]);
+  }, [columnSpecs, renderNode, hasExpandableRows, expandLabel]);
 
   const table = useReactTable({
     data: rows,

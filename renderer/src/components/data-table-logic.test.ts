@@ -136,6 +136,34 @@ describe("PrefabDataTable", () => {
     expect(markup).toContain('placeholder="Search contacts..."');
   });
 
+  it("names each expand toggle generically by default", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [{ key: "name", header: "Name" }],
+        rows: [{ name: "Arthur Dent", _detail: { type: "Text" } }],
+      }),
+    );
+
+    expect(markup).toContain('aria-expanded="false"');
+    expect(markup).toContain('aria-label="Expand row"');
+  });
+
+  it("names each expand toggle from the row with an expand label", () => {
+    const markup = renderToStaticMarkup(
+      React.createElement(PrefabDataTable, {
+        columns: [{ key: "name", header: "Name" }],
+        rows: [
+          { name: "Arthur Dent", _detail: { type: "Text" } },
+          { name: "Ford Prefect", _detail: { type: "Text" } },
+        ],
+        expandLabel: "{{ name }}",
+      }),
+    );
+
+    expect(markup).toContain('aria-label="Expand Arthur Dent"');
+    expect(markup).toContain('aria-label="Expand Ford Prefect"');
+  });
+
   it("aligns a sortable right-aligned header label with its cell values", () => {
     const markup = renderToStaticMarkup(
       React.createElement(PrefabDataTable, {
